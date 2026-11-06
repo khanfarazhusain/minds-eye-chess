@@ -1216,8 +1216,8 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'co-ai':P.set.ai=d.v;save();{const y=window.scrollY;render();window.scrollTo(0,y)}break;
    case'ai-go':aiGo(d.k,d.ply!=null?+d.ply:null);break;
    case'gk-save':{const inp=b.closest('.gkey').querySelector('input'),k=(inp.value||'').trim().replace(/\s/g,'');
-     if(!k){GMSG='Paste the key first.';aiRe();break}if(!/^AIza[\w-]{20,}$/.test(k)){GMSG='That does not look like a Gemini key. It should start with AIza. Copy it again.';aiRe();break}
-     gSetKey(k);GMSG='Key saved. Testing it…';aiRe();gAsk('Reply with just the word OK.').then(()=>{GMSG='Key works. You can use the AI coach now.'},e=>{GMSG=gErr(e)}).then(aiRe);break}
+     if(!k){GMSG='Paste the key first.';aiRe();break}
+     gSetKey(k);P.set.gauth=null;GMSG='Key saved. Testing it…';aiRe();gAsk('Reply with just the word OK.').then(()=>{GMSG='Key works. You can use the AI coach now.'},e=>{GMSG='Key saved, but the test failed. '+gErr(e)}).then(aiRe);break}
    case'gk-test':GMSG='Testing…';aiRe();gAsk('Reply with just the word OK.').then(()=>{GMSG='Key works.'},e=>{GMSG=gErr(e)}).then(aiRe);break;
    case'gk-del':if(!V.gdel){V.gdel=true;aiRe();setTimeout(()=>{V.gdel=false;aiRe()},3000)}else{gSetKey('');V.gdel=false;GMSG='';aiRe()}break;
    case'co-ask':{const t=coPrompt(d.k,d.ply!=null?+d.ply:null),ai=AIS[P.set.ai||'claude'];copyText(t);b.href=ai[1].endsWith('?q=')?ai[1]+encodeURIComponent(t):ai[1];break}
@@ -1567,14 +1567,20 @@ const AIR={};let GMSG='';
 async function gAsk(prompt){const key=gKey();if(!key)throw{code:'nokey'};let last={code:'model'};
   const order=P.set.gmodel?[P.set.gmodel,...GMODELS.filter(m=>m!==P.set.gmodel)]:GMODELS;
   for(const model of order){let r,j=null;
-    try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,{method:'POST',headers:{'content-type':'application/json','x-goog-api-key':key},
-      body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:0.6,maxOutputTokens:4096}})})}catch(e){throw{code:'net'}}
-    try{j=await r.json()}catch(e){}
-    const msg=(j&&j.error&&j.error.message)||'',stat=(j&&j.error&&j.error.status)||'';
+    const body=JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:0.6,maxOutputTokens:4096}});
+    const url=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+    // auth styles: API key header, key in URL, bearer token (for newer key formats); remember the one that works
+    const auths=[0,1,2].sort((a,b)=>(a===P.set.gauth?-1:b===P.set.gauth?1:0));let msg='',stat='',authOk=null,msg0='';
+    for(const a of auths){const h={'content-type':'application/json'};if(a===0)h['x-goog-api-key']=key;if(a===2)h['Authorization']='Bearer '+key;
+      try{r=await fetch(a===1?url+'?key='+encodeURIComponent(key):url,{method:'POST',headers:h,body})}catch(e){if(a===auths[auths.length-1])throw{code:'net'};continue}
+      j=null;try{j=await r.json()}catch(e){}msg=(j&&j.error&&j.error.message)||'';stat=(j&&j.error&&j.error.status)||'';
+      const authFail=r.status===401||stat==='UNAUTHENTICATED'||/API_KEY_INVALID|API key not valid|invalid authentication|credential/i.test(msg)||(r.status===400&&/key/i.test(msg));
+      if(!authFail){authOk=a;break}if(!msg0)msg0=msg}
+    if(authOk!=null&&P.set.gauth!==authOk){P.set.gauth=authOk;save()}
     if(r.ok){const c=j&&j.candidates&&j.candidates[0];const t=c&&c.content&&c.content.parts?c.content.parts.map(x=>x.text||'').join('').trim():'';
       if(!t)throw{code:'empty',msg:(c&&c.finishReason)||(j&&j.promptFeedback&&j.promptFeedback.blockReason)||''};
       if(P.set.gmodel!==model){P.set.gmodel=model;save()}return{text:t,model,cut:c.finishReason==='MAX_TOKENS'}}
-    if(/API_KEY_INVALID|API key not valid|API key expired/i.test(msg)||(r.status===400&&/key/i.test(msg)))throw{code:'key',msg};
+    if(authOk==null)throw{code:'key',msg:msg0||msg};
     if(r.status===403||stat==='PERMISSION_DENIED')throw{code:'denied',msg};
     if(r.status===404||(r.status===400&&/model/i.test(msg))){last={code:'model',msg};continue}
     if(r.status===429){last={code:'limit',msg};continue}
@@ -1589,7 +1595,7 @@ function gErr(e){const m={nokey:'Add your free Gemini key first (steps below).',
   net:'Could not reach Gemini. Check your internet. If you opened the app inside Claude, use the GitHub link or the offline file: Claude\'s preview may block outside connections.',
   empty:'Gemini returned no answer'+(e.msg?' ('+e.msg+')':'')+'. Tap Try again.',
   model:'Gemini\'s free models were not found for this key. Try again later or create a new key.',
-  other:'Gemini error: '}[e&&e.code]||'Something went wrong. ';return m+(e&&e.code==='other'?e.msg:'')}
+  other:'Gemini error.'}[e&&e.code]||'Something went wrong.';return m+(e&&e.msg&&e.code!=='empty'?' Google says: "'+e.msg+'"':'')}
 function mdLite(t){const lines=esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<i>$2</i>').split('\n');let h='',ul=false;
   for(let l of lines){l=l.trimEnd();const li=l.match(/^\s*(?:[-*•]|\d+[.)])\s+(.*)$/),hd=l.match(/^#{1,6}\s+(.*)$/);
     if(li){if(!ul){h+='<ul>';ul=true}h+=`<li>${li[1]}</li>`;continue}if(ul){h+='</ul>';ul=false}
@@ -1602,9 +1608,9 @@ function gKeyHTML(){const k=gKey();
   return`<div class="gkey stack"><b>Get your free key (about 2 minutes, once)</b><ol class="cline">
    <li>Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> and sign in with your Google (Gmail) account.</li>
    <li>Tap <b>Create API key</b>. Accept the terms if asked, and pick any project (or let it create one).</li>
-   <li>Tap the <b>copy</b> icon next to the new key. It starts with <span class="mono">AIza</span>.</li>
+   <li>Tap the <b>copy</b> icon next to the new key. It usually starts with <span class="mono">AIza</span> or <span class="mono">AQ.</span></li>
    <li>Come back here, paste it in the box and tap <b>Save key</b>.</li></ol>
-   <input class="gin" type="password" placeholder="Paste key here (AIza…)" autocomplete="off" autocapitalize="off" spellcheck="false">
+   <input class="gin" type="password" placeholder="Paste your key here" autocomplete="off" autocapitalize="off" spellcheck="false">
    <button class="btn primary block" data-act="gk-save">Save key</button>${GMSG?`<p class="warn" style="font-size:14px">${esc(GMSG)}</p>`:''}
    <small class="muted">No card or payment needed. The key stays only on this device. Google may use free-tier questions to improve its products, so the app sends only chess moves, never your name.</small></div>`}
 function aiButtons(kinds,ply){const has=!!gKey();let h=`<div class="aibox"><span class="eyebrow">AI coach (Gemini, free)</span>`;
