@@ -239,6 +239,8 @@ main .qbox.tr.kt .moves{max-height:18vh;max-height:18svh}
 .aians{background:var(--surface2);border-radius:8px;padding:10px 12px;font-size:15px;line-height:1.5}.aians p{margin:0 0 8px}.aians h4{margin:10px 0 4px;font-size:15px}.aians ul{margin:0 0 8px;padding-left:20px}
 .gin{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);font-size:16px;font-family:var(--f-mono)}
 .gkey a{color:var(--accent)}
+.coursecta{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--fg);border-left:4px solid var(--brass)}
+.coursecta b{font-size:17px}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i>♞&#xFE0E;</i>Mind's Eye Chess</div><div class="chips" id="chips"></div></div></header>
@@ -727,9 +729,12 @@ function render(){document.body.classList.toggle('inq',V.name==='q'||V.name==='t
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
   ({path:vPath,stage:vStage,tut:vTut,q:vQ,result:vResult,practice:vPractice,explore:vExplore,play:vPlay,coach:vCoach,coachset:vCoachSet,coachrev:vCoachRev,stats:vStats,trainset:vTrainSet,train:trRender,trainres:vTrainRes})[V.name]()}
 
+const COURSE_URL=(()=>{try{return/github\.io$/.test(location.hostname)?'course.html':'https://khanfarazhusain.github.io/minds-eye-chess/course.html'}catch(e){return'https://khanfarazhusain.github.io/minds-eye-chess/course.html'}})();
+const courseCard=()=>`<a class="card coursecta" href="${COURSE_URL}"${/^https?:/.test(COURSE_URL)?' target="_blank" rel="noopener"':''}><span class="eyebrow">Guided course · 7 levels</span><b>Chess course: basics se pro tak</b><small class="muted">Step-by-step lessons with your own AI tutor. Uses the same Gemini key.</small></a>`;
 function vPath(){const nx=nextLesson();const stars=ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0);const passed=ALL_LESSONS.filter(l=>starsOf(l.id)).length;const mins=(P.train||[]).reduce((a,x)=>a+x.min,0);
   let h=`<div class="stack"><div class="hero"><div class="stack" style="gap:6px"><span class="eyebrow">Board vision training</span><h1>See the board with your eyes closed</h1><p class="muted">${STAGES.length} stages and ${ALL_LESSONS.length} timed board drills. Every drill is hands-on and against the clock, so the board goes into your muscle memory. Pass them in order and you'll be playing whole games blindfold.</p></div>
   <div class="minib">${boardHTML({persp:'w',plain:true,id:'deco',pieces:{e4:'P',f3:'N',c5:'p',d6:'p'}})}</div></div>`;
+  h+=courseCard();
   if(nx){h+=`<div class="card stack"><span class="eyebrow">Up next · Stage ${STAGES.indexOf(nx.stage)+1}</span><h2>${esc(nx.title)}</h2><p class="muted">${esc(nx.stage.title)} · ${esc(TRAIN[nx.m].t)} · target ${nx.target} per minute</p>
    <div class="row">${!P.tuts[nx.stage.id]&&TUT[nx.stage.id]?`<button class="btn" data-act="tut" data-stage="${nx.stage.id}">Read tutorial</button>`:''}<button class="btn primary" style="flex:1" data-act="lesson" data-id="${nx.id}">Start drill</button></div></div>`}
   else h+=`<div class="card"><h2>Every drill passed</h2><p class="muted">Go for three stars, keep your daily drills going, and play blindfold games.</p></div>`;
@@ -1656,6 +1661,7 @@ function vCoachSet(){const o=V.co||(V.co={color:'w',lvl:P.set.colvl!=null?P.set.
   <button class="btn primary block" data-act="co-new">Start game</button>${P.cgame?`<button class="btn block" data-act="co-resume">Continue last game (${P.cgame.sans.length} moves)</button>`:''}${CG&&!CG.over?`<button class="btn block" data-act="co-back">Back to current game</button>`:''}</div>`;
   if(hist.length){const last=hist.slice(0,10);h+=`<div class="card stack"><h3>Coach games</h3><div class="gstat"><span>Average accuracy (last ${last.length})</span><b class="mono">${Math.round(last.reduce((a,x)=>a+x.acc,0)/last.length)}%</b></div>
     ${last.map(x=>`<div class="gstat"><span>${new Date(x.d).toLocaleDateString()} · ${CLV[x.lvl].n} · ${{w:'Won',l:'Lost',d:'Draw'}[x.r]}</span><span class="mono">${x.acc}% · ${x.c.blunder}?? ${x.c.mistake}? ${x.c.inacc}?!</span></div>`).join('')}</div>`}
+  h+=courseCard();
   h+=`<div class="card stack"><h3>AI coach in the app (free)</h3><p class="muted" style="font-size:14px">Optional. With a free Google Gemini key the coach can also give a GM-style explanation in Hinglish inside the app. Needs internet. Without it, the built-in coach still explains every move offline.</p>${gKeyHTML()}</div>`;
   h+=`<div class="card stack"><h3>What the coach can and can't do</h3><p class="muted" style="font-size:14px"><b>Can:</b> judge every move with ${SF.failed?'the built-in engine (Stockfish could not start on this device)':SF.ready?'Stockfish 10, a very strong engine, built into the app and working offline':'Stockfish 10 (loading…), built into the app and working offline'}; show the better move and the best line move by move; spot hanging pieces, forks, mates and threats; describe pawn structure, outposts and weak squares, king safety, piece activity and open files; name the opening and its usual plans.</p>
   <p class="muted" style="font-size:14px"><b>Can't:</b> think like a human GM about long-term strategy or explain why one quiet move is better in deep positions. The explanations come from the engine's numbers plus chess rules of thumb. For a deeper, human-style talk, add the free Gemini key above and tap <b>Explain with AI</b>.</p><small class="muted">Stockfish is free software (GPL v3).</small></div></div>`;
