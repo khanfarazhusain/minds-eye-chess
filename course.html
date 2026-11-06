@@ -1,0 +1,1119 @@
+<!doctype html>
+<html lang="hi-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#23664A">
+<title>Chess Course</title>
+<meta name="description" content="Chess basics se pro tak: guided lessons, puzzles, drills aur AI coach.">
+<style>
+:root{
+  --bg:#EDF1EC; --surface:#FFFFFF; --surface2:#E1E8E1; --fg:#17211B; --muted:#56655B; --line:#C9D4CB;
+  --accent:#23664A; --accent-fg:#FFFFFF; --brass:#9C7216; --good:#1F7D4C; --bad:#B53D27; --good-soft:#D7EEDF; --bad-soft:#F6DCD5;
+  --sq-light:#E7DFC4; --sq-dark:#789560; --sq-plain:#B9C0B7; --sq-plain2:#AEB5AC; --hl:#F0BE45; --pc-w:#FFFFFF; --pc-b:#151515; --coord-l:#5E7A49; --coord-d:#EEE7CF;
+  --f-display:"Barlow Condensed","Arial Narrow",sans-serif; --f-body:"Barlow",system-ui,-apple-system,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1512; --surface:#17201B; --surface2:#202B25; --fg:#E3EBE5; --muted:#98A79D; --line:#2D3A33;
+  --accent:#5DBB8A; --accent-fg:#0A1A11; --brass:#E2B552; --good:#55C688; --bad:#EF7B64; --good-soft:#173826; --bad-soft:#41201A;
+  --sq-light:#D8CFAF; --sq-dark:#68844F; --sq-plain:#5C655F; --sq-plain2:#535B55; --coord-l:#4F6A3B; --coord-d:#E6DDBF; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1512; --surface:#17201B; --surface2:#202B25; --fg:#E3EBE5; --muted:#98A79D; --line:#2D3A33;
+  --accent:#5DBB8A; --accent-fg:#0A1A11; --brass:#E2B552; --good:#55C688; --bad:#EF7B64; --good-soft:#173826; --bad-soft:#41201A;
+  --sq-light:#D8CFAF; --sq-dark:#68844F; --sq-plain:#5C655F; --sq-plain2:#535B55; --coord-l:#4F6A3B; --coord-d:#E6DDBF; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--hl);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding-block:10px;gap:12px}
+.brand{font-family:var(--f-display);font-weight:700;font-size:22px;letter-spacing:.02em;display:flex;align-items:center;gap:8px}
+.brand i{font-style:normal;font-size:20px;color:var(--accent)}
+.chips{display:flex;gap:8px;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.chip{background:var(--surface2);border-radius:999px;padding:3px 10px;white-space:nowrap}
+main{padding-block:16px 110px}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding-block:6px}
+nav.tabs button{background:none;border:0;padding:6px 0;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:1px;font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+nav.tabs button span{font-size:20px;line-height:1}
+nav.tabs button.on{color:var(--accent);background:var(--surface2)}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.1;margin:0;text-wrap:balance;letter-spacing:.01em}
+h1{font-size:32px}h2{font-size:24px}h3{font-size:19px}
+p{margin:0}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.muted{color:var(--muted)}
+.eyebrow{font-family:var(--f-display);font-weight:600;text-transform:uppercase;letter-spacing:.12em;font-size:13px;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.btn{border:0;border-radius:8px;padding:12px 16px;font-weight:600;background:var(--surface2);text-align:center}
+.btn.primary{background:var(--accent);color:var(--accent-fg)}
+.btn.block{width:100%}
+.btn.small{padding:7px 12px;font-size:14px}
+.btn:disabled{opacity:.45;cursor:default}
+.mono,.n{font-family:var(--f-mono);font-weight:700}
+.n{background:var(--surface2);padding:0 6px;border-radius:5px;white-space:nowrap}
+.hero{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+.hero h1{font-size:34px}
+.minib{width:104px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.tile b{display:block;font-family:var(--f-display);font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.tile small{color:var(--muted);font-size:13px}
+.stagelist{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
+.stagerow{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:14px 4px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;width:100%}
+.stagerow .num{font-family:var(--f-display);font-size:30px;font-weight:700;color:var(--accent);text-align:center;font-variant-numeric:tabular-nums}
+.stagerow.locked .num{color:var(--muted)}
+.stagerow.locked{opacity:.6}
+.stagerow .t{font-weight:600}
+.stagerow .d{font-size:14px;color:var(--muted)}
+.bar{height:6px;border-radius:3px;background:var(--surface2);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.stars{font-size:15px;letter-spacing:1px;color:var(--brass);white-space:nowrap;font-variant-numeric:tabular-nums}
+.stars .off{color:var(--line)}
+.lessons{display:flex;flex-direction:column;gap:6px}
+.lesson{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 14px;border-radius:8px;background:var(--surface);border:1px solid var(--line);text-align:left;width:100%}
+.lesson.locked{opacity:.5}
+.lesson.next{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.lesson small{display:block;color:var(--muted);font-size:13px}
+.tier{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px}
+/* board */
+.board{display:grid;grid-template-columns:repeat(8,1fr);width:100%;max-width:440px;aspect-ratio:1;margin:0 auto;border-radius:6px;overflow:hidden;box-shadow:0 0 0 2px var(--line);user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.sq{position:relative;display:flex;align-items:center;justify-content:center;container-type:size}
+.sq.l{background:var(--sq-light)}.sq.d{background:var(--sq-dark)}
+.plain .sq.l,.plain .sq.d{background:var(--sq-plain)}
+.plain .sq{box-shadow:inset 0 0 0 .5px var(--sq-plain2)}
+.sq .cf,.sq .cr{position:absolute;font-family:var(--f-mono);font-size:10px;font-weight:700;line-height:1}
+.sq .cf{right:3px;bottom:2px}.sq .cr{left:3px;top:3px}
+.sq.l .cf,.sq.l .cr{color:var(--coord-l)}.sq.d .cf,.sq.d .cr{color:var(--coord-d)}
+.plain .sq .cf,.plain .sq .cr{color:var(--fg);opacity:.7}
+.sq .lab{font-family:var(--f-mono);font-size:11px;font-weight:700;opacity:.75}
+.sq.l .lab{color:var(--coord-l)}.sq.d .lab{color:var(--coord-d)}
+.pc{font-size:78cqh;line-height:1;font-family:"Segoe UI Symbol","Noto Sans Symbols 2","DejaVu Sans",serif;pointer-events:none}
+.pc.w{color:var(--pc-w);text-shadow:0 0 1px #000,0 0 1px #000,0 0 1px #000,0 1px 1px rgba(0,0,0,.5)}
+.pc.b{color:var(--pc-b);text-shadow:0 0 1px rgba(255,255,255,.35)}
+.sq.hl{box-shadow:inset 0 0 0 4px var(--hl)}
+.sq.hl::after{content:"";position:absolute;inset:0;background:var(--hl);opacity:.45}
+.sq.m-sel::after,.sq.m-good::after,.sq.m-bad::after,.sq.m-miss::after{content:"";position:absolute;inset:0}
+.sq.m-sel::after{background:var(--hl);opacity:.55}
+.sq.m-good::after{background:var(--good);opacity:.6}
+.sq.m-bad::after{background:var(--bad);opacity:.6}
+.sq.m-miss::after{box-shadow:inset 0 0 0 4px var(--good)}
+.sq.m-ring::after{content:"";position:absolute;inset:8%;border-radius:50%;box-shadow:0 0 0 3px var(--hl),0 0 0 5px rgba(0,0,0,.35)}
+.sq.dot::before{content:"";position:absolute;width:28%;height:28%;border-radius:50%;background:rgba(20,30,20,.45);z-index:1}
+.sq.from{box-shadow:inset 0 0 0 4px var(--accent)}
+.qhead{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px}
+.x{border:0;background:var(--surface2);width:36px;height:36px;border-radius:50%;font-size:18px}
+.prog{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.count{font-family:var(--f-mono);font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.timer{height:4px;background:transparent;border-radius:2px;overflow:hidden}
+.timer i{display:block;height:100%;background:var(--brass);width:100%}
+.prompt{font-size:21px;font-weight:600;line-height:1.3;text-wrap:balance}
+.prompt .n{font-size:20px}
+.pos{font-family:var(--f-mono);font-size:15px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:4px}
+.pos b{font-family:var(--f-body);font-weight:600;color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-right:6px}
+.moves{font-family:var(--f-mono);font-size:17px;line-height:1.8;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;word-spacing:2px}
+.moves .mn{color:var(--muted)}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choices.one{grid-template-columns:1fr}
+.choice{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:14px 10px;font-weight:600;font-size:17px}
+.choice.sw-l{background:var(--sq-light);color:#2C3A23;border-color:transparent}
+.choice.sw-d{background:var(--sq-dark);color:#F6F1DE;border-color:transparent}
+.choice.good{outline:3px solid var(--good)}.choice.bad{outline:3px solid var(--bad)}
+.fb{border-radius:var(--r);padding:12px 14px;display:grid;gap:6px}
+.fb.ok{background:var(--good-soft)}.fb.no{background:var(--bad-soft)}
+.fb h3{color:var(--good)}.fb.no h3{color:var(--bad)}
+.memo{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.memo b{font-family:var(--f-display);font-size:28px;font-variant-numeric:tabular-nums}
+/* tutorial */
+.tut p{max-width:65ch}
+.tut ul{margin:0;padding-left:20px;display:grid;gap:4px}
+.seg{display:inline-flex;background:var(--surface2);border-radius:8px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:none;padding:6px 10px;border-radius:6px;font-size:14px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.gstat{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:600}
+.big{font-family:var(--f-display);font-weight:700;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+.gamemoves{font-family:var(--f-mono);font-size:15px;line-height:1.7;max-height:150px;overflow-y:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.warn{color:var(--bad);font-weight:600}
+.sidetag{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px}.sidetag.w{background:#F4F0E2;color:#2C3A23;box-shadow:inset 0 0 0 1px var(--line)}.sidetag.b{background:#222;color:#F4F0E2}
+
+/* course additions */
+.bwrap{position:relative;width:100%;max-width:440px;margin:0 auto}
+.arrows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ar{stroke-width:.17;stroke-linecap:round;opacity:.8}.ah{opacity:.8}
+.ar.g{stroke:#1F9D5A}.ah.g{fill:#1F9D5A}.ar.r{stroke:#D2462C}.ah.r{fill:#D2462C}.ar.y{stroke:#E8A317}.ah.y{fill:#E8A317}.ar.b{stroke:#2F6FD0}.ah.b{fill:#2F6FD0}
+.sq.m-last::after{content:"";position:absolute;inset:0;background:var(--hl);opacity:.32}
+.sq.m-pick::after{content:"";position:absolute;inset:0;background:#2F6FD0;opacity:.45}
+.promo{position:absolute;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;z-index:3;border-radius:6px}
+.promobox{background:var(--surface);border-radius:10px;padding:12px;display:grid;gap:8px;justify-items:center}
+.promobox .pc{font-size:34px}.promobox .btn{padding:6px 10px}
+.step{padding-block:10px 0}
+.tut{display:grid;gap:10px}.tut p,.tut li{font-size:17px;line-height:1.5}
+.note{min-height:48px}
+.moves .mv{white-space:nowrap}.moves .mv.cur{background:var(--hl);color:#1b1b1b;border-radius:4px;padding:0 3px}.moves .mv.fut{opacity:.35}
+.big2{font-size:22px!important}
+.foot{position:sticky;bottom:calc(70px + env(safe-area-inset-bottom,0px));padding-top:14px;background:linear-gradient(transparent,var(--bg) 30%);z-index:2}
+.fab{position:fixed;right:16px;bottom:calc(140px + env(safe-area-inset-bottom,0px));width:52px;height:52px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-fg);font-size:24px;box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:4}
+@media(min-width:640px){.fab{right:calc(50% - 300px)}}
+.coach{background:linear-gradient(135deg,var(--surface),var(--good-soft))}
+.ava{width:46px;height:46px;flex:none;border-radius:50%;background:var(--accent);display:grid;place-items:center;font-size:24px}
+.task{display:flex;gap:10px;align-items:center;font-size:16px}.task i{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:14px;flex:none;color:var(--accent-fg)}
+.task.ok i{background:var(--good);border-color:var(--good)}.task.ok{color:var(--muted);text-decoration:line-through}
+.lvl,.les{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;text-align:left}
+.lvl b,.les b{font-size:17px}.lvl small,.les small{color:var(--muted);font-size:13px}
+.lnum{font-family:var(--f-display);font-weight:700;font-size:26px;width:40px;height:40px;border-radius:10px;background:var(--surface2);display:grid;place-items:center}
+.lst{font-family:var(--f-mono);font-size:14px;color:var(--muted)}
+.lck{width:32px;height:32px;border-radius:50%;background:var(--surface2);display:grid;place-items:center;font-weight:700;font-family:var(--f-mono)}
+.les.test{border-color:var(--brass)}.locked{opacity:.55}
+.prog.sm{height:5px;margin-top:4px}
+.back{background:none;border:0;padding:0;color:var(--accent);font-weight:600;text-align:left}
+.center{text-align:center;align-items:center}.center .btn{width:100%}.center .card{width:100%}
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center}
+.sheetin{background:var(--bg);width:100%;max-width:560px;max-height:88vh;max-height:88svh;border-radius:16px 16px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;overflow:auto}
+.chat{display:flex;flex-direction:column;gap:8px;overflow-y:auto;min-height:80px;max-height:44vh}
+.bub{border-radius:12px;padding:10px 12px;max-width:92%;font-size:15px;display:grid;gap:6px}.bub p{margin:0}.bub ul{margin:0;padding-left:18px}
+.bub.ai{background:var(--surface);border:1px solid var(--line);align-self:flex-start}.bub.me{background:var(--accent);color:var(--accent-fg);align-self:flex-end}
+.bub h4{margin:4px 0 0;font-size:15px}
+.quick{display:flex;gap:6px;flex-wrap:wrap}
+.ask{display:flex;gap:8px}.ask input,.gin{flex:1;min-width:0;font:inherit;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+.gin{width:100%}
+.gkey ol{margin:0;padding-left:20px;display:grid;gap:4px;font-size:15px}
+.typing{color:var(--muted);font-style:italic}
+.chip{font-family:var(--f-mono);font-size:13px}
+.tut .n{font-size:15px}
+h1{font-size:30px}
+a{color:var(--accent)}
+.qhead{grid-template-columns:auto 1fr auto auto!important}.tbtn{white-space:nowrap}
+.brand{white-space:nowrap;font-size:20px}
+.foot{position:static!important;background:none!important;padding:14px 0 8px}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="brand" href="#/" style="color:inherit;text-decoration:none"><i>♞</i> Chess Course</a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span><button class="chip" id="tutorbtn" style="border:0" aria-label="AI coach">🤖</button></div></div></header>
+<main><div class="wrap" id="app"></div></main>
+<nav class="tabs"><div class="wrap">
+<button data-tab="course" data-go="#/"><span>📚</span>Course</button>
+<button data-tab="puz" data-go="#/puzzles"><span>🧩</span>Puzzles</button>
+<button data-tab="play" data-go="#/play"><span>♟</span>Khelo</button>
+<button onclick="location.href='index.html'"><span>👁</span>Trainer</button>
+</div></nav>
+<script>
+'use strict';
+const FILES='abcdefgh';
+const sn=s=>FILES[s&7]+((s>>3)+1);
+const si=n=>FILES.indexOf(n[0])+(+n[1]-1)*8;
+const light=s=>((s&7)+(s>>3))%2===1;
+const rnd=n=>Math.floor(Math.random()*n);
+const pick=a=>a[rnd(a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const ALL=[...Array(64).keys()];
+const isW=p=>!!p&&p===p.toUpperCase();
+const PNAME={K:'king',Q:'queen',R:'rook',B:'bishop',N:'knight',P:'pawn'};
+const plabel=p=>(isW(p)?'White ':'Black ')+PNAME[p.toUpperCase()];
+const GLYPH={K:'♚',Q:'♛',R:'♜',B:'♝',N:'♞',P:'♟'};
+const ord=n=>n+(['th','st','nd','rd'][(n%100-20)%10]||['th','st','nd','rd'][n%100]||'th');
+const T=n=>`<b class="n">${n}</b>`;
+const side=p=>p==='w'?"White's":"Black's";
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function sq(f,r){return(f<0||f>7||r<0||r>7)?-1:r*8+f}
+const N_OFF=[[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1],[-2,1],[-1,2]];
+const K_OFF=[[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];
+const B_DIR=[[1,1],[1,-1],[-1,1],[-1,-1]],R_DIR=[[1,0],[-1,0],[0,1],[0,-1]],Q_DIR=[...B_DIR,...R_DIR];
+const EMPTY=()=>Array(64).fill(null);
+function rays(b,s,dirs,slide){const out=[],f=s&7,r=s>>3;for(const[df,dr]of dirs){let ff=f+df,rr=r+dr;while(ff>=0&&ff<8&&rr>=0&&rr<8){const t=rr*8+ff;out.push(t);if(!slide||b[t])break;ff+=df;rr+=dr}}return out}
+function pieceAttacks(b,s,p){p=p||b[s];const U=p.toUpperCase();
+  if(U==='N')return rays(b,s,N_OFF,false);if(U==='K')return rays(b,s,K_OFF,false);
+  if(U==='B')return rays(b,s,B_DIR,true);if(U==='R')return rays(b,s,R_DIR,true);if(U==='Q')return rays(b,s,Q_DIR,true);
+  const d=isW(p)?1:-1;return[-1,1].map(df=>sq((s&7)+df,(s>>3)+d)).filter(t=>t>=0)}
+const emptyAtt=(s,p)=>pieceAttacks(EMPTY(),s,p);
+const toMap=b=>{const m={};b.forEach((p,i)=>{if(p)m[sn(i)]=p});return m};
+
+/* ================= chess engine ================= */
+function startState(){const b=EMPTY(),back='RNBQKBNR';for(let f=0;f<8;f++){b[f]=back[f];b[8+f]='P';b[48+f]='p';b[56+f]=back[f].toLowerCase()}return{b,w:true,c:{K:1,Q:1,k:1,q:1},ep:-1,hm:0,fm:1}}
+function attacked(b,s,byW){const f=s&7,r=s>>3;
+  const pr=byW?r-1:r+1,P=byW?'P':'p';for(const df of[-1,1]){const t=sq(f+df,pr);if(t>=0&&b[t]===P)return true}
+  const Nn=byW?'N':'n';for(const[df,dr]of N_OFF){const t=sq(f+df,r+dr);if(t>=0&&b[t]===Nn)return true}
+  const Kk=byW?'K':'k';for(const[df,dr]of K_OFF){const t=sq(f+df,r+dr);if(t>=0&&b[t]===Kk)return true}
+  const B=byW?'B':'b',R=byW?'R':'r',Q=byW?'Q':'q';
+  for(const[df,dr]of B_DIR){let ff=f+df,rr=r+dr;while(ff>=0&&ff<8&&rr>=0&&rr<8){const p=b[rr*8+ff];if(p){if(p===B||p===Q)return true;break}ff+=df;rr+=dr}}
+  for(const[df,dr]of R_DIR){let ff=f+df,rr=r+dr;while(ff>=0&&ff<8&&rr>=0&&rr<8){const p=b[rr*8+ff];if(p){if(p===R||p===Q)return true;break}ff+=df;rr+=dr}}
+  return false}
+const kingSq=(b,w)=>b.indexOf(w?'K':'k');
+const inCheck=st=>attacked(st.b,kingSq(st.b,st.w),!st.w);
+function pseudo(st){const b=st.b,w=st.w,mv=[];
+  for(let s=0;s<64;s++){const p=b[s];if(!p||isW(p)!==w)continue;const U=p.toUpperCase(),f=s&7,r=s>>3;
+    if(U==='P'){const d=w?1:-1,start=w?1:6,last=w?7:0;
+      const add=(t,cap,ep)=>{if((t>>3)===last){for(const pr of'QRBN')mv.push({f:s,t,p,cap,promo:pr})}else mv.push({f:s,t,p,cap,ep})};
+      const one=sq(f,r+d);if(one>=0&&!b[one]){add(one);const two=sq(f,r+2*d);if(r===start&&!b[two])mv.push({f:s,t:two,p,dbl:1})}
+      for(const df of[-1,1]){const c=sq(f+df,r+d);if(c<0)continue;if(b[c]&&isW(b[c])!==w)add(c,b[c]);else if(c===st.ep)add(c,w?'p':'P',1)}
+    }else{const dirs=U==='N'?N_OFF:U==='K'?K_OFF:U==='B'?B_DIR:U==='R'?R_DIR:Q_DIR,slide='BRQ'.includes(U);
+      for(const t of rays(b,s,dirs,slide)){if(!b[t])mv.push({f:s,t,p});else if(isW(b[t])!==w)mv.push({f:s,t,p,cap:b[t]})}}}
+  if(w){if(st.c.K&&b[4]==='K'&&b[7]==='R'&&!b[5]&&!b[6]&&!attacked(b,4,false)&&!attacked(b,5,false)&&!attacked(b,6,false))mv.push({f:4,t:6,p:'K',castle:'K'});
+    if(st.c.Q&&b[4]==='K'&&b[0]==='R'&&!b[1]&&!b[2]&&!b[3]&&!attacked(b,4,false)&&!attacked(b,3,false)&&!attacked(b,2,false))mv.push({f:4,t:2,p:'K',castle:'Q'})}
+  else{if(st.c.k&&b[60]==='k'&&b[63]==='r'&&!b[61]&&!b[62]&&!attacked(b,60,true)&&!attacked(b,61,true)&&!attacked(b,62,true))mv.push({f:60,t:62,p:'k',castle:'k'});
+    if(st.c.q&&b[60]==='k'&&b[56]==='r'&&!b[57]&&!b[58]&&!b[59]&&!attacked(b,60,true)&&!attacked(b,59,true)&&!attacked(b,58,true))mv.push({f:60,t:58,p:'k',castle:'q'})}
+  return mv}
+function make(st,m){const b=st.b.slice();b[m.f]=null;b[m.t]=m.promo?(st.w?m.promo:m.promo.toLowerCase()):m.p;
+  if(m.ep)b[m.t+(st.w?-8:8)]=null;
+  if(m.castle){const[a,z]={K:[7,5],Q:[0,3],k:[63,61],q:[56,59]}[m.castle];b[z]=b[a];b[a]=null}
+  const c={...st.c};if(m.p==='K'){c.K=0;c.Q=0}if(m.p==='k'){c.k=0;c.q=0}
+  for(const x of[m.f,m.t]){if(x===0)c.Q=0;if(x===7)c.K=0;if(x===56)c.q=0;if(x===63)c.k=0}
+  return{b,w:!st.w,c,ep:m.dbl?(m.f+m.t)/2:-1,hm:(m.p.toUpperCase()==='P'||m.cap)?0:st.hm+1,fm:st.fm+(st.w?0:1)}}
+function legal(st){return pseudo(st).filter(m=>{const n=make(st,m);return!attacked(n.b,kingSq(n.b,st.w),!st.w)})}
+function san(st,m,list){let s;
+  if(m.castle)s=(m.castle.toUpperCase()==='K')?'O-O':'O-O-O';
+  else{const U=m.p.toUpperCase();
+    if(U==='P'){s=(m.cap?FILES[m.f&7]+'x':'')+sn(m.t)+(m.promo?'='+m.promo:'')}
+    else{s=U;const amb=list.filter(o=>o.f!==m.f&&o.p===m.p&&o.t===m.t&&!o.castle);
+      if(amb.length){const sf=amb.some(o=>(o.f&7)===(m.f&7)),sr=amb.some(o=>(o.f>>3)===(m.f>>3));s+=!sf?FILES[m.f&7]:!sr?String((m.f>>3)+1):sn(m.f)}
+      s+=(m.cap?'x':'')+sn(m.t)}}
+  const n=make(st,m);if(inCheck(n))s+=legal(n).length?'+':'#';return s}
+const normSan=s=>s.trim().replace(/0/g,'O').replace(/o/g,'O').replace(/[+#x=!?\s]/g,'').replace(/e\.?p\.?$/,'');
+function findMove(st,input){const list=legal(st);const raw=input.trim();
+  const cm=raw.toLowerCase().match(/^([a-h][1-8])-?([a-h][1-8])([qrbn])?$/);
+  if(cm){const f=si(cm[1]),t=si(cm[2]),pr=(cm[3]||'q').toUpperCase();return list.find(m=>m.f===f&&m.t===t&&(!m.promo||m.promo===pr))||null}
+  let want=normSan(raw);
+  for(const m of list){if(normSan(san(st,m,list))===want)return m}
+  // pawn promotion without piece letter -> queen
+  for(const m of list){if(m.promo==='Q'&&normSan(san(st,m,list)).replace(/Q$/,'')===want)return m}
+  // over-disambiguated input like Ngf3
+  const pm=want.match(/^([KQRBN])([a-h]?[1-8]?)([a-h][1-8])$/);
+  if(pm){const c=list.filter(m=>m.p.toUpperCase()===pm[1]&&m.t===si(pm[3])&&sn(m.f).includes(pm[2]));if(c.length===1)return c[0]}
+  return null}
+const VAL={P:100,N:320,B:330,R:500,Q:900,K:0};
+function evalW(b){let s=0,mat=0;for(let i=0;i<64;i++){const p=b[i];if(p&&p.toUpperCase()!=='K'&&p.toUpperCase()!=='P')mat+=VAL[p.toUpperCase()]}
+  const eg=mat<=1400;
+  for(let i=0;i<64;i++){const p=b[i];if(!p)continue;const U=p.toUpperCase(),w=isW(p),f=i&7,r=i>>3;
+  let v=VAL[U];const c=7-(Math.abs(3.5-f)+Math.abs(3.5-r));
+  if(U==='N')v+=c*6;else if(U==='B')v+=c*3;else if(U==='Q')v+=c;
+  else if(U==='P'){const adv=w?r-1:6-r;v+=eg?adv*adv*6:adv*5+(f>=2&&f<=5?adv*4:0)}
+  else if(U==='K'){v+=eg?c*8:((w?r===0:r===7)?(f===6||f===2?25:10):-15)}
+  s+=w?v:-v}
+  if(eg){const wk=b.indexOf('K'),bk=b.indexOf('k');if(wk>=0&&bk>=0){const d=Math.max(Math.abs((wk&7)-(bk&7)),Math.abs((wk>>3)-(bk>>3)));
+    if(s>300)s+=(14-d)*6;else if(s<-300)s-=(14-d)*6}}
+  return s}
+const mvv=(a,c)=>((c.cap?VAL[c.cap.toUpperCase()]*10-VAL[c.p.toUpperCase()]:0)+(c.promo?800:0))-((a.cap?VAL[a.cap.toUpperCase()]*10-VAL[a.p.toUpperCase()]:0)+(a.promo?800:0));
+function qs(st,al,be,d){const stand=(st.w?1:-1)*evalW(st.b);if(stand>=be)return be;if(stand>al)al=stand;if(d<=0)return al;
+  const caps=pseudo(st).filter(m=>m.cap||m.promo).sort(mvv);
+  for(const m of caps){const n=make(st,m);if(attacked(n.b,kingSq(n.b,st.w),!st.w))continue;const sc=-qs(n,-be,-al,d-1);if(sc>=be)return be;if(sc>al)al=sc}return al}
+function search(st,d,al,be,ply){const ms=legal(st);if(!ms.length)return inCheck(st)?-99999+ply:0;if(st.hm>=100)return 0;if(d<=0)return qs(st,al,be,4);
+  ms.sort(mvv);for(const m of ms){const sc=-search(make(st,m),d-1,-be,-al,ply+1);if(sc>=be)return be;if(sc>al)al=sc}return al}
+function engineMove(st,level){const ms=legal(st);if(!ms.length)return null;const depth=[1,2,3][level-1]||2,noise=[140,35,6][level-1]||35;
+  let best=null,bs=-Infinity;for(const m of shuffle(ms)){const sc=-search(make(st,m),depth-1,-Infinity,Infinity,1)+Math.random()*noise;if(sc>bs){bs=sc;best=m}}return best}
+function boardHTML(o){const persp=o.persp||'w';let h=`<div class="board${o.plain?' plain':''}${o.cls?' '+o.cls:''}" data-board="${o.id||'main'}">`;
+  for(let row=0;row<8;row++)for(let col=0;col<8;col++){const r=persp==='w'?7-row:row,f=persp==='w'?col:7-col,s=r*8+f,name=sn(s);
+    const c=['sq',light(s)?'l':'d'];if(o.hl&&o.hl.includes(name))c.push('hl');const mk=o.marks&&o.marks[name];if(mk)c.push('m-'+mk);if(o.dots&&o.dots.includes(name))c.push('dot');if(o.from===name)c.push('from');
+    let inner='';if(o.coords){if(row===7)inner+=`<span class="cf">${FILES[f]}</span>`;if(col===0)inner+=`<span class="cr">${r+1}</span>`}
+    if(o.labels)inner+=`<span class="lab">${name}</span>`;
+    const p=o.pieces&&o.pieces[name];if(p)inner+=`<span class="pc ${isW(p)?'w':'b'}">${GLYPH[p.toUpperCase()]}︎</span>`;
+    const st=o.heat&&o.heat[name]!=null?` style="background:${o.heat[name]}"`:'';
+    h+=`<div class="${c.join(' ')}" data-sq="${name}"${st}>${o.heat&&o.heatLab?name:inner}</div>`}
+  return h+'</div>'}
+
+const START_FEN='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+const COURSE=[];
+/* ===================== LEVEL 1: SHURUAAT ===================== */
+COURSE.push({id:'l1',title:'Shuruaat: board aur pieces',sub:'Rules, pieces ki chaal, special moves, check-mate, notation',
+intro:'Yahan se chess ki neev banegi. Har cheez board par khud kar ke seekhoge. Jaldi mat karo: yeh basics pakke hue to aage sab aasaan lagega.',
+lessons:[
+{id:'board',title:'Chessboard ko jaano',sub:'Squares, files, ranks, center',steps:[
+{t:'info',h:'Board: 64 squares',fen:START_FEN,md:'Chessboard mein **8×8 = 64 squares** hote hain: 32 light, 32 dark.\n\n**Golden rule:** board aise rakho ki **right side ke neeche wala corner light** square ho. ("Light on right")\n\nWhite ke pieces neeche (rank 1-2) aur Black ke upar (rank 7-8) se shuru hote hain. **White hamesha pehli chaal chalta hai.**'},
+{t:'info',h:'Files aur ranks',fen:'8/8/8/8/8/8/8/8 w - - 0 1',hl:['e1','e2','e3','e4','e5','e6','e7','e8'],md:'Khadi lines (upar-neeche) ko **files** kehte hain: **a se h** tak.\n\nAadi lines (left-right) ko **ranks** kehte hain: **1 se 8** tak.\n\nHar square ka naam = file + rank. Jaise peeli line **e-file** hai, aur us par ek square hai `e4`.'},
+{t:'tap',q:'Yeh square tap karo:',rand:6,why:'Square ke naam tez yaad hone se notation padhna aur games analyse karna aasaan ho jaata hai.'},
+{t:'info',h:'Center sabse important',fen:'8/8/8/8/8/8/8/8 w - - 0 1',hl:['d4','e4','d5','e5'],md:'Beech ke 4 squares `d4` `e4` `d5` `e5` ko **center** kehte hain.\n\nCenter mein baitha piece zyada squares control karta hai. Isliye opening mein sab center ke liye ladte hain.\n\n**Diagonal** = tirchhi line, jaise `a1` se `h8`.'},
+{t:'quiz',q:'Kaunsa square **light** hai?',opts:['a1','h1'],a:1,why:'"Light on right": White ki taraf right corner `h1` light hota hai. `a1` dark hai.'},
+{t:'quiz',q:'`e4` mein **e** kya batata hai?',opts:['File (khadi line)','Rank (aadi line)'],a:0,why:'Pehle letter = file (a-h), phir number = rank (1-8).'},
+{t:'tap',q:'Black ki side se dekho. Yeh square tap karo:',rand:4,flip:true,why:'Black ki taraf se board ulta dikhta hai. Dono taraf se squares pehchanna zaroori hai.'}
+]},
+{id:'pieces',title:'Pieces kaise chalte hain',sub:'King, queen, rook, bishop, knight, pawn',steps:[
+{t:'info',h:'Rook ♜',fen:'4k3/8/8/8/3R4/8/8/4K3 w - - 0 1',arr:[['d4','d8'],['d4','a4'],['d4','h4'],['d4','d1']],md:'**Rook** seedha chalta hai: upar, neeche, left, right. Jitne marzi squares, jab tak koi raste mein na aaye.\n\nValue: **5 points**.'},
+{t:'reach',q:'Rook `d4` kahan-kahan ja sakta hai? **Saare squares tap karo**, phir Check karo.',fen:'4k3/3n4/8/8/3R4/8/8/4K3 w - - 0 1',from:'d4',why:'Rook `d7` ke knight ko capture kar sakta hai, par uske aage nahi ja sakta. Capture karne ke liye dushman ke square par jaate hain.'},
+{t:'info',h:'Bishop ♝',fen:'4k3/8/8/8/3B4/8/8/4K3 w - - 0 1',arr:[['d4','h8'],['d4','a7'],['d4','a1'],['d4','g1']],md:'**Bishop** sirf diagonal (tirchha) chalta hai. Light square wala bishop hamesha light squares par hi rahega.\n\nValue: **3 points**.'},
+{t:'reach',q:'Bishop `c4` ke saare squares tap karo.',fen:'4k3/5p2/8/8/2B5/1P6/8/4K3 w - - 0 1',from:'c4',why:'Apna pawn `b3` raasta rok raha hai. `f7` ka black pawn capture ho sakta hai.'},
+{t:'info',h:'Queen ♛',fen:'4k3/8/8/8/3Q4/8/8/4K3 w - - 0 1',arr:[['d4','d8'],['d4','h8'],['d4','h4'],['d4','g1'],['d4','d1'],['d4','a1'],['d4','a4'],['d4','a7']],md:'**Queen** = rook + bishop. Seedha bhi, tirchha bhi. Sabse taakatwar piece.\n\nValue: **9 points**. Isko faltu mein mat khona!'},
+{t:'reach',q:'Queen `d4` ke saare squares tap karo.',fen:'4k3/8/8/8/3Q4/8/8/4K3 w - - 0 1',from:'d4',why:'Center mein queen 27 squares tak control karti hai!'},
+{t:'info',h:'Knight ♞',fen:'4k3/8/8/8/3N4/8/8/4K3 w - - 0 1',arr:[['d4','e6'],['d4','c6'],['d4','f5'],['d4','f3'],['d4','e2'],['d4','c2'],['d4','b3'],['d4','b5']],md:'**Knight** "L" shape mein chalta hai: 2 square ek taraf, phir 1 square side mein.\n\nKnight hi akela piece hai jo **doosre pieces ke upar se kood** sakta hai. Har chaal mein woh light se dark (ya dark se light) square par jaata hai.\n\nValue: **3 points**.'},
+{t:'reach',q:'Knight `d4` ke saare squares tap karo.',fen:'4k3/8/8/8/3N4/8/8/4K3 w - - 0 1',from:'d4',why:'Center mein knight 8 squares, corner mein sirf 2. "Knight on the rim is dim": kinare par knight kamzor hota hai.'},
+{t:'reach',q:'Corner wala knight `a1`: kitne squares?',fen:'4k3/8/8/8/8/8/8/N3K3 w - - 0 1',from:'a1',why:'Sirf 2! Isliye knights ko center ki taraf lao.'},
+{t:'info',h:'Pawn ♟',fen:'4k3/8/8/8/8/3n4/4P3/4K3 w - - 0 1',arr:[['e2','e4'],['e2','d3','r']],md:'**Pawn** sirf aage chalta hai, ek square. **Pehli chaal mein 2 square** bhi ja sakta hai.\n\nPar **capture tirchha** karta hai (ek square aage diagonal). Seedha aage koi ho to pawn ruk jaata hai.\n\nPawn kabhi peeche nahi jaata. Value: **1 point**.'},
+{t:'reach',q:'Pawn `e2` kahan ja sakta hai? Saare squares tap karo.',fen:'4k3/8/8/8/8/3n4/4P3/4K3 w - - 0 1',from:'e2',why:'`e3`, `e4` (pehli chaal) aur `d3` par knight ko capture.'},
+{t:'info',h:'King ♚',fen:'7k/8/8/r7/4K3/8/8/8 w - - 0 1',arr:[['a5','h5','r']],md:'**King** har taraf sirf **1 square** chalta hai.\n\nKing ko kabhi aise square par nahi le ja sakte jahan dushman attack kar raha ho. Yahan black rook poori 5th rank control kar raha hai.\n\nKing ki value infinite hai: king gaya to game gaya.'},
+{t:'reach',q:'King `e4` kahan ja sakta hai?',fen:'7k/8/8/r7/4K3/8/8/8 w - - 0 1',from:'e4',why:'`d5`, `e5`, `f5` par rook ka attack hai, isliye king wahan nahi ja sakta.'},
+{t:'quiz',q:'Kaunsa piece doosre pieces ke **upar se kood** sakta hai?',opts:['Bishop','Knight','Rook','Queen'],a:1,why:'Sirf knight jump karta hai.'},
+{t:'quiz',q:'Pawn capture kaise karta hai?',opts:['Seedha aage','Tirchha aage (diagonal)','Peeche','Side mein'],a:1,why:'Pawn seedha chalta hai par tirchha capture karta hai.'}
+]},
+{id:'special',title:'Special moves',sub:'Castling, en passant, promotion',steps:[
+{t:'info',h:'Castling: king ki suraksha',fen:'r3k2r/pppq1ppp/2npbn2/2b1p3/2B1P3/2NPBN2/PPPQ1PPP/R3K2R w KQkq - 0 1',arr:[['e1','g1'],['h1','f1','b']],md:'**Castling** mein ek hi chaal mein king 2 square rook ki taraf jaata hai, aur rook king ke doosri taraf aa jaata hai.\n\n- Kingside: `O-O` (king g1, rook f1)\n- Queenside: `O-O-O` (king c1, rook d1)\n\nShart: king aur rook pehle kabhi na chale hon, beech mein koi piece na ho, king **check mein na ho**, aur king jis square se guzre ya pahunche woh **attack mein na ho**.'},
+{t:'move',free:1,q:'Kingside castle karo (`O-O`). King ko `g1` par tap karo.',fen:'r3k2r/pppq1ppp/2npbn2/2b1p3/2B1P3/2NPBN2/PPPQ1PPP/R3K2R w KQkq - 0 1',line:['O-O'],why:'King ab safe corner mein hai aur rook center ki taraf aa gaya.'},
+{t:'quiz',q:'Kya White yahan kingside castle kar sakta hai?',fen:'4k3/8/8/8/2b5/8/8/4K2R w K - 0 1',arr:[['c4','f1','r']],opts:['Haan','Nahi: f1 attack mein hai','Nahi: king check mein hai'],a:1,why:'King `f1` se guzrega, aur `c4` ka bishop `f1` ko attack kar raha hai. Isliye castling allowed nahi.'},
+{t:'info',h:'En passant',fen:'4k3/8/8/3pP3/8/8/8/4K3 w - d6 0 1',arr:[['e5','d6']],md:'Agar dushman ka pawn **2 square chal kar** tumhare pawn ke **bilkul bagal** mein aa jaaye, to tum use aise capture kar sakte ho jaise woh 1 hi square chala ho.\n\nIse **en passant** kehte hain. Yeh sirf **turant agli chaal** mein hi ho sakta hai.\n\nYahan Black ne abhi `d7-d5` khela.'},
+{t:'move',free:1,q:'En passant karo: `e5` pawn se `d6` par capture.',fen:'4k3/8/8/3pP3/8/8/8/4K3 w - d6 0 1',line:['exd6'],why:'Pawn `d6` par gaya aur `d5` ka black pawn board se hat gaya.'},
+{t:'info',h:'Promotion',fen:'8/4P1k1/8/8/8/8/8/4K3 w - - 0 1',arr:[['e7','e8']],md:'Pawn jab aakhri rank (White ke liye 8th) par pahunchta hai, to woh **queen, rook, bishop ya knight** ban jaata hai. Zyadatar queen banate hain.\n\nIsliye endgame mein pawns bahut keemti ho jaate hain.'},
+{t:'move',free:1,q:'Pawn ko queen banao.',fen:'8/4P1k1/8/8/8/8/8/4K3 w - - 0 1',line:['e8=Q'],ok:['e8=Q','e8=R'],why:'Ab White ke paas queen hai, aur yeh jeetne wali position hai.'},
+{t:'move',q:'Kabhi queen nahi, **knight** banana better hota hai! Sabse achhi chaal dhundo.',fen:'8/2q1P3/5k2/8/8/8/PP6/1K6 w - - 0 1',sol:'e8=N+',n:2,hint:'Naya piece check bhi de aur queen ko bhi attack kare.',why:'`e8=N+` check deta hai aur `c7` ki queen par bhi attack karta hai (fork). King hatega, phir knight queen le lega. Ise **underpromotion** kehte hain.'}
+]},
+{id:'mate',title:'Check, checkmate, stalemate',sub:'Game kaise jeette hain',steps:[
+{t:'info',h:'Check',fen:'4k3/8/8/1B6/8/8/8/4K3 b - - 0 1',arr:[['b5','e8','r']],md:'Jab king par attack ho to use **check** kehte hain. Check se **turant** bachna zaroori hai. 3 tareeke:\n\n- **King ko hatao** safe square par\n- **Beech mein piece rakho** (block)\n- **Attack karne wale piece ko capture karo**'},
+{t:'info',h:'Checkmate = jeet',fen:'R5k1/5ppp/8/8/8/8/8/6K1 b - - 0 1',arr:[['a8','g8','r']],md:'Agar king check mein hai aur bachne ka **koi tareeka nahi**, to yeh **checkmate** hai. Game khatam, jisne mate diya woh jeeta.\n\nYahan Black king ke apne pawns hi uska raasta rok rahe hain. Ise **back-rank mate** kehte hain.'},
+{t:'move',mate:1,q:'Mate in 1: ek chaal mein checkmate karo!',fen:'6k1/5ppp/8/8/8/8/8/R5K1 w - - 0 1',sol:'Ra8#',n:1,hint:'Black king ki aakhri rank khaali hai, par pawns ne uska raasta band kiya hai.',why:'`Ra8#`: back-rank mate. King ke paas koi square nahi.'},
+{t:'move',mate:1,q:'Mate in 1: queen aur king ki team-work.',fen:'7k/8/6K1/8/8/8/8/1Q6 w - - 0 1',sol:'Qb8#',n:1,hint:'King `g6` already `g7` aur `h7` ko control kar raha hai.',why:'King escape squares band karta hai, queen 8th rank par check deti hai: `Qb8#`.'},
+{t:'info',h:'Stalemate = draw!',fen:'7k/5Q2/6K1/8/8/8/8/8 b - - 0 1',md:'Agar jiski chaal hai uska king **check mein nahi**, par usse **koi bhi legal chaal nahi** hai, to yeh **stalemate** hai. Stalemate = **draw**.\n\nYahan Black ki chaal hai: king `h8` hilega to attack mein aayega, aur koi aur piece nahi. Jeeta hua game draw ho gaya! Jeetne wale ko is se bachna hai.'},
+{t:'quiz',q:'Black ki chaal hai. Yeh kya hai?',fen:'k7/2Q5/1K6/8/8/8/8/8 b - - 0 1',opts:['Check','Checkmate','Stalemate','Normal position'],a:2,why:'Black king check mein nahi hai par uski har chaal attack mein jaati hai. Koi aur piece nahi, to stalemate (draw).'},
+{t:'move',mate:1,q:'Mate karo, **stalemate nahi**! Dhyan se.',fen:'7k/8/6K1/8/8/8/8/5Q2 w - - 0 1',sol:'Qf8#',n:1,hint:'`Qf7` stalemate hoga. Check dena zaroori hai.',why:'`Qf8#` check deta hai. Agar `Qf7` khelte to Black ke paas koi chaal na hoti aur check bhi na hota: stalemate.'},
+{t:'quiz',q:'Check se bachne ka kaunsa tareeka **galat** hai?',opts:['King hatana','Beech mein piece rakhna','Attacker ko capture karna','Apni koi bhi doosri chaal chalna'],a:3,why:'Check mein ho to sirf woh chaal chal sakte ho jo check hataye.'}
+]},
+{id:'draws',title:'Draw ke rules',sub:'Kab game barabar khatam hota hai',steps:[
+{t:'info',h:'Draw ke 5 tareeke',md:'- **Stalemate**: chaal hai, par koi legal move nahi aur check bhi nahi.\n- **3-fold repetition**: same position 3 baar aaye (same player ki chaal ke saath).\n- **50-move rule**: 50 chaalein (dono taraf) bina pawn move ya capture ke.\n- **Insufficient material**: mate karna namumkin. Jaise King vs King, King+Bishop vs King, King+Knight vs King.\n- **Agreement**: dono players draw maan lein.'},
+{t:'quiz',q:'King + ek Knight vs akela King: kya hoga?',opts:['White jeet sakta hai','Draw: mate ke liye material kam hai'],a:1,why:'Akele knight ya bishop se mate nahi diya ja sakta.'},
+{t:'quiz',q:'King + Rook vs akela King?',opts:['Draw','Jeet: rook se mate diya ja sakta hai'],a:1,why:'Rook (ya queen) ke saath mate force kar sakte hain. Yeh technique Level 2 mein seekhoge.'},
+{t:'quiz',q:'Dono players ek hi chaal baar-baar repeat karte hain aur position 3 baar same hoti hai. Kya hoga?',opts:['Kuch nahi','Draw (3-fold repetition)','Jisne pehle repeat kiya woh haara'],a:1,why:'3 baar same position = draw claim kar sakte hain. Isko "perpetual check" mein bhi dekhoge.'}
+]},
+{id:'values',title:'Pieces ki keemat aur trades',sub:'Kab lena hai, kab nahi',steps:[
+{t:'info',h:'Point system',md:'- Pawn = **1**\n- Knight = **3**\n- Bishop = **3** (thoda zyada jab dono bishops ho)\n- Rook = **5**\n- Queen = **9**\n- King = anmol\n\nTrade karte waqt points jodo. Bishop (3) dekar rook (5) mila to tumne **"exchange" jeeta**. Yeh sirf guide hai: position zyada important hai, par shuru mein yeh bahut kaam aata hai.'},
+{t:'quiz',q:'Tumhara knight dekar dushman ka rook mile. Achha trade?',opts:['Haan: 3 dekar 5 mile','Nahi: barabar hai','Nahi: nuksaan hai'],a:0,why:'+2 points ka fayda.'},
+{t:'quiz',q:'Queen (9) ke badle do rooks (5+5). Points mein kaun aage?',opts:['Queen wala','Do rooks wala','Barabar'],a:1,why:'10 vs 9: do rooks thode zyada. Real game mein dono kaafi barabar hote hain.'},
+{t:'move',q:'Koi piece **free** mein mil raha hai. Lelo!',fen:'4k3/8/8/3q4/8/8/8/3RK3 w - - 0 1',sol:'Rxd5',n:1,why:'Queen ko kisi ne protect nahi kiya tha. Hamesha dekho: kya koi piece bina protection ke hai? ("hanging piece")'},
+{t:'move',q:'Black ki queen ne galti ki. Saza do!',fen:'rnb1kbnr/pppp1ppp/8/4p3/4P2q/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3',sol:'Nxh4',n:1,hint:'`f3` ka knight kise attack kar raha hai?',why:'`Nxh4`: knight ne queen le li. 9 points free!'},
+{t:'quiz',q:'Yahan White `Nxe5` khel sakta hai. Kya yeh achha hai?',fen:'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3',arr:[['f3','e5'],['c6','e5','r']],opts:['Haan, pawn free hai','Nahi: Nc6 pawn ko protect kar raha hai'],a:1,why:'`Nxe5 Nxe5` ke baad White ne knight (3) diya aur pawn (1) liya. Pehle **attackers aur defenders gino**.'}
+]},
+{id:'notation',title:'Notation: moves likhna aur padhna',sub:'Chess ki bhasha',steps:[
+{t:'info',h:'Algebraic notation',md:'Har chaal = **piece ka letter + square**.\n\n- K = King, Q = Queen, R = Rook, B = Bishop, N = Knight\n- Pawn ka koi letter nahi: `e4` matlab pawn e4 par gaya\n- `x` = capture: `Nxe5` (knight ne e5 par capture kiya), `exd5` (e-pawn ne d5 par)\n- `+` = check, `#` = checkmate\n- `O-O` = kingside castle, `O-O-O` = queenside\n- `e8=Q` = promotion\n\nAnnotation: `!` achhi chaal, `!!` shandaar, `?` galti, `??` blunder, `!?` interesting, `?!` doubtful.'},
+{t:'quiz',q:'`Bxf7+` ka matlab?',opts:['Bishop f7 par gaya','Bishop ne f7 par capture kiya aur check diya','Bishop ne check-mate kiya'],a:1,why:'B = bishop, x = capture, + = check.'},
+{t:'quiz',q:'`O-O-O` kya hai?',opts:['Kingside castle','Queenside castle','Draw offer'],a:1,why:'Teen O = lamba castle (queen ki taraf).'},
+{t:'quiz',q:'`exd5` mein kaunsa piece chala?',opts:['e-file ka pawn','King','Knight'],a:0,why:'Pawn capture mein uski file likhte hain: e-pawn ne d5 par capture kiya.'},
+{t:'line',h:"Sabse chhota game: Fool's mate",moves:'f3 e5 g4 Qh4#',md:"Notation padh kar game samjho. Yeh duniya ka sabse chhota checkmate hai (sirf 2 chaal).",notes:{1:'`1.f3?` King ke saamne ka pawn kamzor kiya.',2:'`1...e5` Black ne center liya aur queen ka raasta khola.',3:'`2.g4??` Bahut badi galti! `e1-h4` diagonal poora khul gaya.',4:'`2...Qh4#` Checkmate! **Seekh:** opening mein f aur g pawns ko faltu mat chalao.'}},
+{t:'move',free:1,q:'Notation se chaal chalo: `Nf3`',fen:START_FEN,line:['Nf3'],why:'Knight g1 se f3 par. Bahut achhi opening chaal hai.'}
+]}],
+test:[
+{t:'tap',q:'Square tap karo:',rand:5,of:'board'},
+{t:'reach',of:'pieces',q:'Knight `e5` ke saare squares tap karo.',fen:'4k3/8/8/4N3/8/8/8/4K3 w - - 0 1',from:'e5'},
+{t:'reach',of:'pieces',q:'Bishop `f1` kahan ja sakta hai?',fen:'4k3/8/8/8/2p5/8/6P1/4KB2 w - - 0 1',from:'f1'},
+{t:'quiz',of:'special',q:'En passant kab ho sakta hai?',opts:['Kabhi bhi','Sirf jab dushman pawn 2 square chal kar bagal mein aaye, turant agli chaal mein','Sirf endgame mein'],a:1},
+{t:'move',of:'mate',mate:1,q:'Mate in 1',fen:'6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1',sol:'Rd8#',n:1},
+{t:'quiz',of:'mate',q:'Black ki chaal. Yeh kya hai?',fen:'7k/5Q2/6K1/8/8/8/8/8 b - - 0 1',opts:['Checkmate','Stalemate (draw)','Check'],a:1},
+{t:'quiz',of:'values',q:'Rook ki value kitni hai?',opts:['3','5','9'],a:1},
+{t:'move',of:'values',q:'Free piece lo!',fen:'4k3/8/8/8/3n4/8/8/3QK3 w - - 0 1',sol:'Qxd4',n:1},
+{t:'quiz',of:'notation',q:'`Qh5+` ka matlab?',opts:['Queen h5 par, check','Queen ne h5 par capture kiya','Queen h5 par, checkmate'],a:0},
+{t:'quiz',of:'draws',q:'King+Bishop vs King?',opts:['Bishop wala jeetega','Draw'],a:1}
+]});
+
+/* ===================== LEVEL 2: PEHLI JEET ===================== */
+COURSE.push({id:'l2',title:'Pehli jeet: mate aur safety',sub:'Basic mates, hanging pieces, opening principles, sochne ka tareeka',
+intro:'Ab game jeetna seekhenge: akele king ko mate dena, pieces bachana, aur achhi opening. Har lesson ke baad board par khud karke dekhna.',
+lessons:[
+{id:'kqk',title:'Queen se mate (K+Q vs K)',sub:'Box method',steps:[
+{t:'info',h:'Box method',fen:'8/8/8/4k3/8/8/8/3QK3 w - - 0 1',md:'Queen + King se mate dene ke steps:\n\n- Queen ko **knight ki doori** par rakho dushman king se. Isse king ek "box" mein band hota hai.\n- Box ko **chhota karte jao**, jab tak king kinare (edge) par na aa jaaye.\n- Ab apne **king ko paas lao**.\n- Queen se mate do, king ki help se.\n\n**Khatra:** stalemate! Har chaal ke baad dekho ki Black ke paas koi chaal bachi hai.'},
+{t:'info',h:'Final picture',fen:'4k3/4Q3/4K3/8/8/8/8/8 b - - 0 1',md:'Aisi position mein mate hota hai: queen king ke saamne, aur apna king queen ko protect kar raha hai. Ya queen poori edge rank par check de jabki king saamne khada ho.'},
+{t:'play',q:'Ab tum karo: Black king ko **20 chaal** ke andar mate do.',fen:'8/8/8/4k3/8/8/8/3QK3 w - - 0 1',goal:'mate',max:20,why:'Queen ko king ke paas mat le jao jahan woh protect na ho!'}
+]},
+{id:'krk',title:'Rook se mate (K+R vs K)',sub:'Opposition aur rook ki deewar',steps:[
+{t:'info',h:'Rook ki deewar',fen:'8/8/8/4k3/8/8/8/R3K3 w - - 0 1',md:'Rook ek **deewar** banata hai jo king ko ek taraf band rakhti hai.\n\n- Rook se king ko ek rank/file mein band karo.\n- Apne king ko dushman king ke **saamne** lao (beech mein ek square) = **opposition**.\n- Jab kings aamne-saamne hon, rook se check do: king peeche jaayega.\n- Aise edge tak dhakelo, phir edge par check = mate.\n\nRook ko dushman king se door rakho taaki woh use pakad na le.'},
+{t:'info',h:'Mate ki picture',fen:'4k3/8/4K3/8/8/8/8/R7 w - - 0 1',arr:[['a1','a8']],md:'Kings aamne-saamne. Ab `Ra8#`: rook poori 8th rank par check deta hai, aur apna king `d7`, `e7`, `f7` band karta hai.'},
+{t:'move',mate:1,q:'Mate in 1',fen:'4k3/8/4K3/8/8/8/8/R7 w - - 0 1',sol:'Ra8#',n:1},
+{t:'play',q:'Ab poora karo: **30 chaal** mein rook se mate.',fen:'8/8/8/4k3/8/8/8/R3K3 w - - 0 1',goal:'mate',max:30}
+]},
+{id:'ladder',title:'Do rooks ki seedhi (ladder mate)',sub:'Sabse aasaan mate',steps:[
+{t:'info',h:'Ladder mate',fen:'6k1/8/R7/8/8/8/8/1R4K1 w - - 0 1',arr:[['a6','a7'],['b1','b8']],md:'Do rooks seedhi ki tarah chalte hain: ek rook ek rank band karta hai, doosra agli rank par check deta hai. Phir pehla aage badhta hai.\n\nKing ki zaroorat nahi! Bas dhyan rahe ki king rooks ke paas aa kar unhe capture na kar le: tab rook ko door (doosre kinare) le jao.'},
+{t:'move',mate:1,q:'Mate in 2: seedhi chalo.',fen:'6k1/8/R7/8/8/8/8/1R4K1 w - - 0 1',sol:'Ra7',n:2,hint:'Pehle 7th rank band karo.',why:'`Ra7` se 7th rank band, phir `Rb8#`.'},
+{t:'play',q:'Do rooks se **12 chaal** mein mate karo.',fen:'8/8/8/4k3/8/8/8/RR2K3 w - - 0 1',goal:'mate',max:12}
+]},
+{id:'safety',title:'Hanging pieces aur safety',sub:'Attackers vs defenders',steps:[
+{t:'info',h:'Blunder se bacho',md:'Beginners zyada games **pieces free mein dene** se haarte hain, galat plan se nahi.\n\nHar chaal se pehle:\n\n- Kya meri chaal ke baad koi piece **bina protection** ke reh jaayega?\n- Opponent ki pichli chaal ne **kya attack** kiya?\n- Kisi square par **attackers gino aur defenders gino**. Attackers zyada = piece khatre mein.'},
+{t:'quiz',q:'Black ka knight `c6` attack mein hai. Kitne White pieces use attack kar rahe hain aur kitne Black defend?',fen:'r1bqkbnr/ppp2ppp/2np4/1B2p3/3PP3/5N2/PPP2PPP/RNBQK2R b KQkq - 0 4',arr:[['b5','c6','r'],['b7','c6','g']],opts:['1 attacker, 1 defender','2 attackers, 0 defender','0 attackers'],a:0,why:'`Bb5` attack karta hai, `b7` pawn defend karta hai. Barabar: abhi khatra nahi. Lekin bishop ne knight ko **pin** kiya hai (Level 3).'},
+{t:'move',q:'Tum Black ho. White ne `Nxe5` khel kar pawn liya, par knight ab hanging hai. Saza do!',fen:'r1bqkbnr/pppp1ppp/2n5/4N3/4P3/8/PPPP1PPP/RNBQKB1R b KQkq - 0 3',sol:'Nxe5',n:1,hint:'Kaunsa black piece `e5` ko attack kar raha hai?',why:'`Nxe5`: knight (3) ke badle sirf pawn (1) mila White ko. Attackers aur defenders ginna kabhi mat bhoolo.'},
+{t:'move',q:'White ki chaal. Black ne bishop `g4` par rakha, par woh protected nahi hai.',fen:'rn1qkbnr/ppp2ppp/3p4/4p3/4P1b1/5N1P/PPPP1PP1/RNBQKB1R w KQkq - 1 4',sol:'hxg4',n:1,hint:'`h3` ka pawn kise attack kar raha hai?',why:'`hxg4`: pawn (1) ne bishop (3) le liya. Black ne `h3` pawn ka attack nahi dekha.'}
+]},
+{id:'opening',title:'Opening ke 10 principles',sub:'Pehli 10-12 chaalein kaise khelein',steps:[
+{t:'info',h:'Opening principles',fen:'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4',md:'- **Center lo**: `e4`, `d4` (ya `e5`, `d5`) pawns se.\n- **Pieces develop karo**: knights aur bishops ko pehle bahar lao. Knights pehle, bishops baad mein.\n- **Jaldi castle karo** (pehli 10 chaal mein).\n- Ek piece ko **baar-baar mat chalao** bina wajah.\n- **Queen ko jaldi mat nikaalo**: chhote pieces use bhaga dete hain aur tum time khote ho.\n- **Rooks ko connect karo** aur open files par lao.\n- Faltu pawn moves (a4, h4) mat karo shuru mein.\n- Pawn ke liye development mat chhodo.'},
+{t:'quiz',q:'Start position mein sabse achhi chaal kaunsi?',fen:START_FEN,opts:['a4','h4','Nf3','Qh5 jaisa jaldi queen'],a:2,why:'`Nf3` center (`e5`, `d4`) control karta hai aur castling ki taiyaari.'},
+{t:'line',h:"Scholar's mate: trap aur bachaav",moves:'e4 e5 Bc4 Nc6 Qh5 Nf6 Qxf7#',md:"Yeh beginner ka sabse common trap hai. Dekho aur phir bachna seekho.",notes:{3:'`2.Bc4` bishop `f7` ko dekh raha hai. `f7` sirf king protect karta hai: kamzor square.',5:'`3.Qh5` queen + bishop dono `f7` par. Saath mein `e5` par bhi attack.',6:'`3...Nf6??` Knight ne queen ko attack kiya, par `f7` bhool gaya.',7:'`4.Qxf7#` Checkmate. **Seekh:** `f7`/`f2` square ko dhyan se protect karo.'}},
+{t:'move',free:1,q:'Black ho. White ne `Qh5` khela. Mate se bachao **aur** `e5` bhi bachao.',fen:'r1bqkbnr/pppp1ppp/2n5/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 3 3',line:['g6'],ok:['g6','Qe7','Qf6'],hint:'Queen ko bhagao, ya f7 ko protect karo.',why:'`3...g6!` queen ko bhagata hai. `3...Qe7` bhi theek hai. Phir `Nf6` aur development: White ki queen ka time waste hua.'},
+{t:'move',mate:1,q:"White ki chaal. Black ne galti ki: Scholar's mate do!",fen:'r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4',sol:'Qxf7#',n:1}
+]},
+{id:'think',title:'Sochne ka tareeka: CCT',sub:'Checks, Captures, Threats',steps:[
+{t:'info',h:'Har chaal se pehle CCT',md:'Grandmasters bhi har position mein pehle **forcing moves** dekhte hain:\n\n- **C**hecks: kya main check de sakta hoon?\n- **C**aptures: kya main kuch capture kar sakta hoon?\n- **T**hreats: kya main koi bada attack bana sakta hoon (mate threat, queen par attack)?\n\nPhir yahi **opponent ke liye** socho: woh kya karna chahta hai?\n\nAakhir mein **blunder check**: "Kya meri chaal se koi piece hanging hoga?"'},
+{t:'move',q:'CCT use karo: pehle saare checks dekho. Sabse achhi chaal?',fen:'r5k1/6pp/8/8/8/8/5PPP/3Q2K1 w - - 0 1',sol:'Qd5+',n:1,hint:'Ek check aisa hai jo saath mein `a8` rook ko bhi attack kare.',why:'`Qd5+` check deta hai aur `a8` rook par bhi attack. King hatega, phir `Qxa8+`. Checks pehle dekhne se yeh turant milta hai.'},
+{t:'quiz',q:'Opponent ne abhi apni queen tumhare king ke paas laayi. Sabse pehle kya socho?',opts:['Apna plan chalu rakho','Woh kya threat bana raha hai (mate?)','Pawn aage badhao'],a:1,why:'Opponent ki threat dekhna = aadhe blunders khatam.'}
+]}],
+test:[
+{t:'move',of:'kqk',mate:1,q:'Mate in 1',fen:'k7/8/1K6/8/8/8/7Q/8 w - - 0 1',sol:'Qh8#',n:1},
+{t:'move',of:'krk',mate:1,q:'Mate in 1',fen:'7k/8/7K/8/8/8/8/1R6 w - - 0 1',sol:'Rb8#',n:1},
+{t:'move',of:'ladder',mate:1,q:'Mate in 2',fen:'1k6/8/8/8/8/8/7R/6RK w - - 0 1',sol:'Rh7',n:2},
+{t:'move',of:'safety',q:'Tum Black ho. White ki queen ne galti ki!',fen:'rnbqkbnr/ppp2ppp/3p4/4p3/4P1Q1/8/PPPP1PPP/RNB1KBNR b KQkq - 1 3',sol:'Bxg4',n:1},
+{t:'quiz',of:'opening',q:'Opening mein kya **nahi** karna chahiye?',opts:['Knights develop karna','Castle karna','Queen ko baar-baar chalana','Center mein pawns'],a:2},
+{t:'move',of:'opening',mate:1,q:'Mate in 1',fen:'r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4',sol:'Qxf7#',n:1},
+{t:'quiz',of:'think',q:'CCT ka matlab?',opts:['Castle, Center, Tempo','Checks, Captures, Threats','Calculate, Check, Trade'],a:1},
+{t:'move',of:'kqk',mate:1,q:'Mate karo (stalemate nahi!)',fen:'k7/8/2K5/8/8/8/8/1Q6 w - - 0 1',sol:'Qb7#',n:1}
+]});
+
+/* ===================== LEVEL 3: TACTICS ===================== */
+COURSE.push({id:'l3',title:'Tactics: chhote hathiyaar',sub:'Fork, pin, skewer, discovered attack, mate patterns, calculation',
+intro:'"Chess is 99% tactics." Zyadatar games tactics se jeete jaate hain. Har motif pehle samjho, phir puzzles se haath saaf karo.',
+lessons:[
+{id:'fork',title:'Fork (do pe ek saath attack)',sub:'Knight, queen aur pawn forks',steps:[
+{t:'info',h:'Fork kya hai',fen:'r3k3/pp3ppp/2N5/8/8/8/PP3PPP/4K3 b - - 0 1',arr:[['c6','a7'],['c6','e7']],md:'**Fork** = ek piece se **do ya zyada** dushman pieces par ek saath attack. Opponent ek hi bacha sakta hai.\n\nKnight fork sabse khatarnaak hota hai kyunki knight ka attack block nahi hota. Sabse best fork: **king + kuch aur** (check ke saath), kyunki check pehle bachana padta hai.'},
+{t:'move',q:'Knight fork dhundo!',fen:'r3k3/pp3ppp/8/3N4/8/8/PP3PPP/4K3 w - - 0 1',sol:'Nc7+',n:2,hint:'Ek square se knight king aur rook dono ko attack karega.',why:'`Nc7+` king aur `a8` rook ka fork. King hatega, phir `Nxa8`.'},
+{t:'move',q:'Queen fork: check + rook.',fen:'r5k1/6pp/8/8/8/8/5PPP/3Q2K1 w - - 0 1',sol:'Qd5+',n:1,hint:'Diagonal `a8-g8` dono ko dekho.',why:'`Qd5+` king ko check aur `a8` rook ko attack. Phir `Qxa8`.'},
+{t:'move',q:'Pawn bhi fork karta hai!',fen:'4k3/pp4pp/8/2b1n3/8/2PP4/PP4PP/1KB3N1 w - - 0 1',sol:'d4',n:1,hint:'Pawn tirchha attack karta hai.',why:'`d4` bishop aur knight dono par attack. `c3` pawn `d4` ko protect karta hai. Ek piece jaayega.'},
+{t:'move',q:'Royal fork: king aur queen.',fen:'2q1k3/pp3ppp/8/8/4N3/8/PP3PPP/4K2R w K - 0 1',sol:'Nd6+',n:2,hint:'Knight ko aise square par lao jo `e8` aur `c8` dono ko dekhe.',why:'`Nd6+` king + queen fork. Queen jeet li.'}
+]},
+{id:'pin',title:'Pin',sub:'Piece hil nahi sakta',steps:[
+{t:'info',h:'Pin kya hai',fen:'r1bqk2r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',arr:[['b5','e8','r']],md:'**Pin** = ek piece hil nahi sakta (ya hilna nahi chahiye) kyunki uske peeche zyada keemti piece hai.\n\n- **Absolute pin**: peeche king hai. Pinned piece kanoonan hil hi nahi sakta.\n- **Relative pin**: peeche queen/rook hai. Hil sakta hai par nuksaan hoga.\n\nPin ka fayda: **pinned piece par aur attack karo** (jaise pawn se).'},
+{t:'move',q:'Pin karke queen jeeto.',fen:'7k/p6p/8/4q3/8/2P5/PP3B2/6K1 w - - 0 1',sol:'Bd4',n:1,hint:'Bishop ko us diagonal par lao jahan queen ke peeche king hai.',why:'`Bd4!` queen `h8` king ke saath pin hai. Woh hat nahi sakti: `Qxd4 cxd4` ke baad Black ne queen (9) dekar bishop (3) liya.'},
+{t:'move',q:'Pinned knight par attack karo!',fen:'4k3/pp3ppp/2n5/1B6/3P4/8/PP3PPP/4K3 w - - 0 1',sol:'d5',n:1,hint:'Pinned piece bhaag nahi sakta.',why:'`d5!` knight pinned hai (peeche king). Woh bhaag nahi sakta, agli chaal `dxc6` se piece jeet.'},
+{t:'quiz',q:'Yahan `c6` ka knight kis type ke pin mein hai?',fen:'r1bqk2r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1',arr:[['b5','e8','r']],opts:['Absolute pin (peeche king)','Relative pin','Koi pin nahi'],a:0,why:'`Bb5` se `e8` king tak diagonal: knight beech mein hai aur kanoonan hil nahi sakta.'}
+]},
+{id:'skewer',title:'Skewer',sub:'Ulta pin',steps:[
+{t:'info',h:'Skewer',fen:'8/8/8/8/R1k3q1/8/7K/8 b - - 0 1',arr:[['a4','g4','r']],md:'**Skewer** pin ka ulta hai: **keemti piece aage** hai (aksar king), aur kam keemti peeche. Aage wala hatega, to peeche wala capture.\n\nRooks, bishops aur queens skewer karte hain (seedhi line wale pieces).'},
+{t:'move',q:'Rook skewer!',fen:'8/8/8/8/2k3q1/8/7K/R7 w - - 0 1',sol:'Ra4+',n:2,hint:'King aur queen ek hi rank par hain.',why:'`Ra4+` king ko check, woh hatega, phir `Rxg4`.'},
+{t:'move',q:'Bishop skewer!',fen:'6q1/8/8/3k4/8/8/PP6/3B3K w - - 0 1',sol:'Bb3+',n:2,hint:'King aur queen ek diagonal par hain.',why:'`Bb3+` king hatega, phir `Bxg8`.'}
+]},
+{id:'disc',title:'Discovered attack aur double check',sub:'Chhupa hua attack',steps:[
+{t:'info',h:'Discovered attack',fen:'4k3/8/8/8/4N3/2q5/8/4R1K1 w - - 0 1',arr:[['e1','e8','r'],['e4','c3']],md:'Jab ek piece hatta hai aur uske **peeche wale piece ka attack khul** jaata hai, use **discovered attack** kehte hain. Agar khula attack king par ho to **discovered check**.\n\nKhatarnaak kyunki hatne wala piece bhi kuch attack kar sakta hai: do threats ek saath!\n\n**Double check**: dono pieces check dein. Iska jawab sirf **king ko hatana** hai.'},
+{t:'move',q:'Discovered check se queen jeeto.',fen:'4k3/8/8/8/4N3/2q5/8/4R1K1 w - - 0 1',sol:'Nxc3+',n:1,why:'Knight ne queen li aur rook ka check khul gaya. Black ko check bachana padega.'},
+{t:'move',mate:1,q:'Double check se mate in 1!',fen:'3rkb2/3p1p2/8/8/4N3/8/8/4R1K1 w - - 0 1',sol:'Nd6#',n:1,hint:'Knight aur rook dono check dein.',why:'`Nd6#`: knight + rook ka double check. King ke saare squares band, aur double check block ya capture nahi hota.'}
+]},
+{id:'remove',title:'Defender hatao, deflection, overloading',sub:'Raksha karne wale ko khatam karo',steps:[
+{t:'info',h:'Defender ko hatao',md:'- **Removing the defender**: jo piece kisi square/piece ko bacha raha hai, use capture karo ya bhagao.\n- **Deflection**: defender ko **zabardasti door** le jao (aksar sacrifice se).\n- **Overloading**: ek defender ke paas **do kaam** hain. Ek kaam par attack karo, doosra khul jaayega.\n- **Decoy**: dushman piece ko kharab square par **lalchao** (sacrifice se).'},
+{t:'move',q:'Defender hatao, phir mate ki threat.',fen:'r4rk1/pp3ppp/5n2/6BQ/8/3B4/PP3PPP/R5K1 w - - 0 1',sol:'Bxf6',n:1,hint:'`h7` ko kaun protect kar raha hai?',why:'`Nf6` hi `h7` ko bacha raha tha. `Bxf6` ke baad `Qxh7#` ki threat, isliye White piece jeet leta hai.'},
+{t:'move',q:'Deflection: queen le lo! Socho: kya Black wapas le sakta hai?',fen:'4r1k1/4qppp/8/8/1Q6/8/5PPP/3R2K1 w - - 0 1',sol:'Qxe7',n:1,hint:'Agar `e8` ka rook `e7` par aaye, to 8th rank kaun bachayega?',why:'`Qxe7!` Agar `...Rxe7` to `Rd8+ Re8 Rxe8#`: rook ko back rank chhodni padi. Isliye Black wapas nahi le sakta aur queen gayi.'}
+]},
+{id:'mates',title:'Mate patterns (zaroor yaad karo)',sub:'Back rank, smothered, Anastasia, Arabian, Boden',steps:[
+{t:'info',h:'Patterns = shortcuts',md:'Strong players har mate ko calculate nahi karte, woh **pattern pehchante** hain. Yeh patterns yaad karo:\n\n- **Back-rank mate**: king apne pawns ke peeche band.\n- **Smothered mate**: king apne hi pieces se ghira, knight mate deta hai.\n- **Anastasia mate**: knight + rook, king kinare par.\n- **Arabian mate**: rook + knight corner mein.\n- **Boden mate**: do bishops criss-cross.\n- **Legal mate**: opening trap, queen sacrifice.\n- **Greek gift**: `Bxh7+` sacrifice castled king par.'},
+{t:'move',mate:1,q:'Smothered mate in 1',fen:'6rk/6pp/8/6N1/8/8/8/6K1 w - - 0 1',sol:'Nf7#',n:1,why:'King apne rook aur pawns mein "dum ghut" kar mara gaya.'},
+{t:'move',mate:1,q:'Anastasia mate in 1',fen:'5r2/4Nppk/8/8/8/3R4/6PP/6K1 w - - 0 1',sol:'Rh3#',n:1,why:'`Ne7` ne `g6` aur `g8` band kiye, rook h-file par mate.'},
+{t:'move',mate:1,q:'Arabian mate in 1',fen:'7k/1R6/5N2/8/8/8/8/6K1 w - - 0 1',sol:'Rh7#',n:1,why:'Knight `f6` rook ko protect karta hai aur `g8` band karta hai.'},
+{t:'move',mate:1,q:'Boden mate in 1',fen:'2kr4/p2n4/2p5/8/5B2/3B4/8/6K1 w - - 0 1',sol:'Ba6#',n:1,why:'Do bishops: ek `b8`/`c7` band karta hai, doosra check deta hai.'},
+{t:'move',mate:1,q:'Mate in 1: queen ka kiss',fen:'6k1/5p1p/6pB/8/8/8/8/3Q2K1 w - - 0 1',sol:'Qd8#',n:1,why:'Bishop `h6` ne `g7` aur `f8` band kiye.'},
+{t:'line',h:"Legal's mate (trap)",moves:'e4 e5 Nf3 d6 Bc4 Bg4 Nc3 g6 Nxe5 Bxd1 Bxf7+ Ke7 Nd5#',md:'Ek famous opening trap jahan White queen sacrifice karta hai.',notes:{6:'`3...Bg4` knight ko pin kiya (relative pin, peeche queen).',8:'`4...g6?` slow chaal.',9:'`5.Nxe5!` Pin tod diya! Queen de di.',10:'`5...Bxd1??` Lalach. `5...dxe5` behtar tha.',11:'`6.Bxf7+` King ko bahar kheencha.',13:'`7.Nd5#` Teen minor pieces ka mate!'}},
+{t:'move',mate:1,q:"Philidor's legacy (smothered mate): mate in 5! Sirf checks.",fen:'r5k1/1p4pp/8/4N3/8/8/6PP/3Q2K1 w - - 0 1',sol:'Qd5+',ok:['Qb3+'],n:5,hint:'Check do. Phir knight se checks (`Nf7+`, `Nh6+`). Aakhir mein queen sacrifice `g8` par.',why:'`Qd5+ Kh8 Nf7+ Kg8 Nh6+ Kh8 Qg8+!! Rxg8 Nf7#`. Smothered mate: king apne hi rook se band.'},
+{t:'move',q:'Greek gift: `h7` par sacrifice!',fen:'rnbq1rk1/pppn1ppp/4p3/3pP3/1b1P4/2NB1N2/PPP2PPP/R1BQK2R w KQ - 0 7',sol:'Bxh7+',n:2,hint:'Bishop `d3` `h7` ko dekh raha hai. Phir knight `g5` aur queen `h5`.',why:'`Bxh7+ Kxh7 Ng5+` aur queen `h5`/`d3` se attack. Shart: `f6` par black knight na ho aur `g5` par knight safe ho.'}
+]},
+{id:'more',title:'Aur tactics: zwischenzug, x-ray, interference',sub:'Advanced motifs',steps:[
+{t:'info',h:'Advanced motifs',md:'- **Zwischenzug** (in-between move): expected recapture ki jagah pehle ek **zyada forcing chaal** (check/threat) khelo.\n- **X-ray**: piece dushman piece ke **aar-paar** ek square ko control karta hai.\n- **Interference**: do dushman pieces ke **beech mein** apna piece rakh kar unka connection kaato.\n- **Clearance**: apne hi piece ko hata kar line/square khaali karo.\n- **Desperado**: jo piece waise bhi jaane wala hai, use jitna ho sake mehenga becho.\n- **Perpetual check**: haarti position mein lagaataar check de kar draw.'},
+{t:'quiz',q:'Opponent ne tumhara knight capture kiya. Recapture ki jagah tum pehle check dete ho jo queen ko bhi attack karta hai. Yeh kya kehlata hai?',opts:['Zwischenzug','Pin','Stalemate'],a:0,why:'In-between move: pehle bada threat, recapture baad mein.'},
+{t:'quiz',q:'Tum haar rahe ho, par opponent ke king ko lagaataar check de sakte ho. Kya milega?',opts:['Kuch nahi','Draw (perpetual check / repetition)','Jeet'],a:1,why:'Lagaataar checks se same position repeat hoti hai = draw.'}
+]},
+{id:'calc',title:'Calculation aur visualization',sub:'Dimaag mein board dekhna',steps:[
+{t:'info',h:'Calculation kaise karein',md:'- **Candidate moves** chuno: 2-4 achhi chaalein (pehle CCT).\n- Har ek ko **ek-ek karke** dekho, beech mein mat koodo.\n- Opponent ka **sabse achha jawab** socho, sabse bura nahi.\n- Line ke end mein position ko **evaluate** karo: kaun behtar?\n- **Forcing lines** (check, capture) pehle aur gehri dekho: inme opponent ke option kam hote hain.\n\n**Visualization** badhane ke liye: blindfold puzzles, notation padh kar board dimaag mein dekhna. Iske liye **Mind\'s Eye trainer** (neeche Trainer tab) bana hi hai!'},
+{t:'quiz',q:'Board nahi dikhega. Socho: **White: Kg1, Ra1. Black: Kg8, pawns f7 g7 h7.** White ki chaal. Mate in 1 kya hai?',pos:['White: Kg1 Ra1','Black: Kg8 f7 g7 h7'],opts:['Ra7','Ra8#','Rf1'],a:1,why:'Back-rank mate: `Ra8#`.'},
+{t:'quiz',q:'Dimaag mein: knight `a1` se `h8` tak sabse kam kitni chaal mein pahunchega?',opts:['4','5','6','7'],a:2,why:'6 chaal. Knight lambi doori par dheema hai.'},
+{t:'quiz',q:'Bina board: `1.e4 e5 2.Nf3 Nc6 3.Bb5` ke baad `b5` bishop kis black piece ko attack kar raha hai?',opts:['c6 knight','d7 pawn','e8 king'],a:0,why:'Yeh Ruy Lopez hai: bishop `c6` knight par.'}
+]}],
+test:[
+{t:'move',of:'fork',q:'Fork dhundo',fen:'2q1k3/pp3ppp/8/8/4N3/8/PP3PPP/4K2R w K - 0 1',sol:'Nd6+',n:2},
+{t:'move',of:'fork',q:'Fork dhundo',fen:'r3k3/pp3ppp/8/3N4/8/8/PP3PPP/4K3 w - - 0 1',sol:'Nc7+',n:2},
+{t:'move',of:'pin',q:'Pin karke jeeto',fen:'7k/p6p/8/4q3/8/2P5/PP3B2/6K1 w - - 0 1',sol:'Bd4',n:1},
+{t:'move',of:'skewer',q:'Skewer',fen:'6q1/8/8/3k4/8/8/PP6/3B3K w - - 0 1',sol:'Bb3+',n:2},
+{t:'move',of:'disc',mate:1,q:'Mate in 1',fen:'3rkb2/3p1p2/8/8/4N3/8/8/4R1K1 w - - 0 1',sol:'Nd6#',n:1},
+{t:'move',of:'mates',mate:1,q:'Mate in 1',fen:'6rk/6pp/8/6N1/8/8/8/6K1 w - - 0 1',sol:'Nf7#',n:1},
+{t:'move',of:'mates',mate:1,q:'Mate in 1',fen:'7k/1R6/5N2/8/8/8/8/6K1 w - - 0 1',sol:'Rh7#',n:1},
+{t:'move',of:'remove',q:'Deflection',fen:'4r1k1/4qppp/8/8/1Q6/8/5PPP/3R2K1 w - - 0 1',sol:'Qxe7',n:1},
+{t:'quiz',of:'disc',q:'Double check ka jawab kya ho sakta hai?',opts:['Block karna','Capture karna','Sirf king hatana'],a:2},
+{t:'quiz',of:'calc',q:'Candidate moves mein sabse pehle kaunsi dekhte hain?',opts:['Quiet moves','Forcing moves: checks, captures, threats','Pawn moves'],a:1}
+]});
+
+/* ===================== LEVEL 4: OPENINGS ===================== */
+COURSE.push({id:'l4',title:'Openings: shuruaat mazboot',sub:'e4 aur d4 openings, traps, apna repertoire',
+intro:'Openings ratne ki cheez nahi: har chaal ka **idea** samjho. Har opening pehle dekho (walkthrough), phir **khud yaad se khelo**.',
+lessons:[
+{id:'ideas',title:'Opening ke ideas',sub:'Center, development, king safety',steps:[
+{t:'info',h:'Teen kaam',fen:'r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 1 5',md:'Har opening teen kaam karti hai:\n\n- **Center control** (pawns aur pieces se)\n- **Development** (saare minor pieces bahar)\n- **King safety** (castling)\n\nOpenings do family mein aati hain:\n\n- **Open games** `1.e4 e5`: tez, tactical.\n- **Semi-open** `1.e4` ke against `c5`, `e6`, `c6`: Sicilian, French, Caro-Kann.\n- **Closed** `1.d4 d5`: positional, plans lambe.\n- **Indian** `1.d4 Nf6`: flexible, hypermodern (pieces se center control).'},
+{t:'quiz',q:'`1.e4 e5 2.Nf3` ke baad Black ki sabse natural chaal?',fen:'rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',opts:['Nc6','h6','Qh4','a5'],a:0,why:'`Nc6` develop karta hai aur `e5` ko protect.'}
+]},
+{id:'italian',title:'Italian Game',sub:'1.e4 e5 2.Nf3 Nc6 3.Bc4',steps:[
+{t:'line',h:'Italian Game (Giuoco Piano)',moves:'e4 e5 Nf3 Nc6 Bc4 Bc5 c3 Nf6 d3 d6 O-O O-O Re1 a6 Bb3 Ba7',drill:'w',md:'Beginners ke liye sabse achhi opening: simple development aur saaf plans.',notes:{1:'Center mein pawn aur bishop/queen ke liye raasta.',3:'Knight develop, `e5` par attack.',5:'`3.Bc4` bishop `f7` (kamzor square) ko dekhta hai.',6:'Black bhi bishop `c5` par: `f2` ko dekhta hai.',7:'`4.c3` idea: baad mein `d4` se center.',9:'`5.d3` shaant aur solid (Giuoco Pianissimo).',11:'Castle! King safe.',13:'`Re1` rook ko center file par.',15:'`Bb3` bishop ko `...Na5` ya `...d5` se bachaya.',16:'Dono taraf development poora. Plan: White `Nbd2-f1-g3`, `h3`, aur `d4` ka break.'}},
+{t:'line',h:'Two Knights: Fried Liver ka khatra',moves:'e4 e5 Nf3 Nc6 Bc4 Nf6 Ng5 d5 exd5 Na5',md:'`3...Nf6` ke baad White `4.Ng5` se `f7` par attack karta hai.',notes:{7:'`4.Ng5` f7 par do attackers.',8:'`4...d5!` sahi jawab: bishop ka raasta band.',9:'`5.exd5`',10:'`5...Na5!` Sahi! Agar `5...Nxd5?` to `6.Nxf7!` (Fried Liver): king bahar aata hai aur bada attack.'}},
+{t:'quiz',q:'Italian Game mein White ka bishop `c4` kis kamzor square ko target karta hai?',opts:['f7','a7','h7'],a:0,why:'`f7` shuru mein sirf king protect karta hai.'}
+]},
+{id:'ruy',title:'Ruy Lopez (Spanish)',sub:'1.e4 e5 2.Nf3 Nc6 3.Bb5',steps:[
+{t:'line',h:'Ruy Lopez: main line',moves:'e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O Be7 Re1 b5 Bb3 d6 c3 O-O h3',drill:'w',md:'World Championship level ki opening. 500 saal purani, aaj bhi sabse popular.',notes:{5:'`3.Bb5` `e5` ke defender (`c6` knight) par pressure.',6:'`3...a6` bishop se seedha sawaal (Morphy Defense).',7:'`4.Ba4` bishop pressure banaye rakhta hai.',9:'`5.O-O` castle pehle. `e4` pawn ka khatra nahi kyunki baad mein `Re1`.',11:'`6.Re1` `e4` protect.',12:'`6...b5` bishop ko door kiya.',15:'`8.c3` taaki `d4` khel sakein aur bishop ke liye `c2` ka ghar.',17:'`9.h3` `...Bg4` pin rokta hai. Plan: `d4`, `Nbd2-f1-g3`.'}},
+{t:'quiz',q:'Ruy Lopez mein `3.Bb5` ka main idea?',opts:['Black king ko check','e5 ke defender (Nc6) par pressure','Queen ko trap'],a:1}
+]},
+{id:'sicilian',title:'Sicilian Defense',sub:'1.e4 c5: sabse fighting jawab',steps:[
+{t:'line',h:'Open Sicilian: Najdorf',moves:'e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 a6 Be3 e5 Nb3 Be6 f3',drill:'b',flip:true,md:'Sicilian `1.e4` ke against sabse popular aur jeetne wala jawab. Kasparov aur Fischer ki favourite.',notes:{2:'`1...c5` side se center par attack. Position asymmetric = jeet ke chances.',5:'`3.d4` White center kholta hai.',6:'`3...cxd4` Black ko extra center pawn mila (d-pawn).',8:'`4...Nf6` `e4` par attack.',10:'`5...a6` Najdorf! `b5` square control aur flexible.',12:'`6...e5` center mein space, knight ko bhagaya.',14:'`7...Be6` development.',15:'English Attack: `f3`, `Qd2`, `O-O-O`, `g4`. Dono taraf opposite castling = tez attack race.'}},
+{t:'quiz',q:'Sicilian (`1...c5`) kyun popular hai?',opts:['Black ko hamesha draw milta hai','Position asymmetric hoti hai: Black jeet ke liye khel sakta hai','Isme theory nahi hai'],a:1}
+]},
+{id:'french',title:'French aur Caro-Kann',sub:'1.e4 e6 aur 1.e4 c6: solid defenses',steps:[
+{t:'line',h:'French Defense',moves:'e4 e6 d4 d5 Nc3 Nf6 e5 Nfd7 f4 c5 Nf3 Nc6 Be3',drill:'b',flip:true,md:'Solid aur counter-attacking. Pawn chain samajhna zaroori.',notes:{2:'`1...e6` taiyaari `d5` ki.',4:'`2...d5` center ko challenge.',7:'`4.e5` space! Ab pawn chain bani: `d4-e5`.',9:'`5.f4` chain ko mazboot.',10:'`5...c5!` **chain ki base (`d4`) par attack**: French ka main idea.',13:'Black ki problem: `c8` bishop band hai (bad bishop). Plan: `...Qb6`, `...cxd4`, `...f6`.'}},
+{t:'line',h:'Caro-Kann Defense',moves:'e4 c6 d4 d5 Nc3 dxe4 Nxe4 Bf5 Ng3 Bg6 h4 h6 Nf3 Nd7 h5 Bh7',drill:'b',flip:true,md:'Bahut solid. French jaisa, par light bishop bahar aata hai.',notes:{2:'`1...c6` taiyaari `d5` ki, bina bishop band kiye.',6:'`3...dxe4` Classical.',8:'`4...Bf5` bishop bahar! French se fark.',10:'`5...Bg6` bishop peeche hata.',11:'`6.h4` bishop ko pareshan.',12:'`6...h6` bishop ke liye `h7` ka ghar.',16:'Solid position: plan `...e6`, `...Ngf6`, `...Be7`, `...c5`.'}},
+{t:'quiz',q:'French Defense mein Black ka sabse common pawn break?',opts:['...c5 (chain ki base par attack)','...h5','...a5'],a:0}
+]},
+{id:'qg',title:"Queen's Gambit aur London",sub:'1.d4 openings',steps:[
+{t:'line',h:"Queen's Gambit Declined",moves:'d4 d5 c4 e6 Nc3 Nf6 Bg5 Be7 e3 O-O Nf3 Nbd7 Rc1 c6',drill:'w',md:'Classical aur strategic. "Gambit" naam hai par pawn asli mein free nahi.',notes:{3:'`2.c4` side se `d5` par attack. Agar `...dxc4`, White aksar pawn wapas le leta hai.',4:'`2...e6` Declined: `d5` ko pawn se support.',7:'`4.Bg5` `f6` knight ka pin.',9:'`5.e3` solid.',13:'`7.Rc1` c-file par pressure.',14:'Plans: White **minority attack** (`b4-b5`), Black `...dxc4` aur `...e5`/`...c5` breaks.'}},
+{t:'line',h:'Slav Defense',moves:'d4 d5 c4 c6 Nf3 Nf6 Nc3 dxc4 a4 Bf5 e3 e6 Bxc4',md:'`2...c6` se `d5` support, aur light bishop band nahi hota.',notes:{4:'`2...c6` Slav.',8:'`4...dxc4` pawn liya, `b5` se bachane ki koshish ho sakti hai.',9:'`5.a4` `...b5` roka.',10:'`5...Bf5` bishop bahar.',13:'White ne pawn wapas liya. Barabar position.'}},
+{t:'line',h:'London System',moves:'d4 d5 Bf4 Nf6 e3 e6 Nf3 c5 c3 Nc6 Nbd2 Bd6 Bg3 O-O Bd3',drill:'w',md:'Ek "system": lagbhag har jawab ke against same setup. Club players mein bahut popular.',notes:{3:'`2.Bf4` bishop pawn chain ke bahar, pehle.',5:'`3.e3`',9:'`5.c3` triangle: `c3-d4-e3` solid center.',12:'Black `...Bd6` se bishop trade maangta hai.',13:'`7.Bg3` bishop bacha, h-file khul sakti hai.',15:'Plan: `O-O`, `Ne5`, `f4`, kingside attack.'}},
+{t:'quiz',q:'London System ki khaasiyat?',opts:['Har jawab ke against same simple setup','Pehli chaal mein queen','Sirf e4 ke liye'],a:0}
+]},
+{id:'indian',title:"King's Indian, Nimzo-Indian, English",sub:'Hypermodern openings',steps:[
+{t:'line',h:"King's Indian Defense",moves:'d4 Nf6 c4 g6 Nc3 Bg7 e4 d6 Nf3 O-O Be2 e5 O-O Nc6 d5 Ne7',drill:'b',flip:true,md:'Black White ko center lene deta hai, phir `...e5`/`...f5` se attack. Fischer aur Kasparov ki pasand.',notes:{4:'`2...g6` fianchetto ki taiyaari.',6:'`3...Bg7` bishop long diagonal par.',7:'White ne bada center liya.',10:'Pehle castle.',12:'`6...e5` center par vaar.',15:'`8.d5` center band. Ab White queenside (`c5`), Black kingside (`...f5`, `...g5`) par attack karega.'}},
+{t:'line',h:'Nimzo-Indian Defense',moves:'d4 Nf6 c4 e6 Nc3 Bb4 Qc2 O-O a3 Bxc3+ Qxc3 b6',md:'`3...Bb4` knight ko pin karta hai aur `e4` ko rokta hai.',notes:{6:'`3...Bb4` pin!',7:'`4.Qc2` (Classical) doubled pawns se bachne ke liye.',10:'Bishop pair dekar knight liya.',12:'`...b6` aur `...Bb7` se `e4` par control.'}},
+{t:'line',h:'English Opening',moves:'c4 e5 Nc3 Nf6 g3 d5 cxd5 Nxd5 Bg2 Nb6 Nf3 Nc6',md:'`1.c4`: ulta Sicilian. Flexible aur positional.',notes:{1:'`1.c4` side se `d5` control.',5:'`3.g3` fianchetto: bishop `g2` se long diagonal.',9:'Bishop `g2` `b7` aur center ko dekhta hai.'}},
+{t:'quiz',q:"King's Indian mein center band hone ke baad Black kahan attack karta hai?",opts:['Queenside','Kingside (...f5, ...g5)','Kahin nahi'],a:1}
+]},
+{id:'traps',title:'Famous traps',sub:'Inse bacho, aur kabhi use karo',steps:[
+{t:'line',h:'Blackburne Shilling trap',moves:'e4 e5 Nf3 Nc6 Bc4 Nd4 Nxe5 Qg5 Nxf7 Qxg2 Rf1 Qxe4+ Be2 Nf3#',md:'`3...Nd4` ek trick hai. Agar White lalach kare to mate!',notes:{6:'`3...Nd4?!` pawn `e5` "free" lagta hai.',7:'`4.Nxe5?` lalach. Behtar: `4.Nxd4` ya `4.O-O`.',8:'`4...Qg5!` `g2` aur `e5` par attack.',9:'`5.Nxf7??` aur lalach.',10:'`5...Qxg2`',11:'`6.Rf1`',12:'`6...Qxe4+`',13:'`7.Be2`',14:'`7...Nf3#` Smothered mate! **Seekh:** opponent ki trick chaal par pehle socho "kyun?".'}},
+{t:'quiz',q:'Jab opponent koi pawn "free" chhod de, sabse pehle kya socho?',opts:['Turant le lo','Yeh trap to nahi? Lene ke baad unki CCT kya hai?','Resign'],a:1}
+]},
+{id:'rep',title:'Apna repertoire banao',sub:'Kya khelna hai, kaise yaad karna hai',steps:[
+{t:'info',h:'Simple repertoire (beginner se club level)',md:'- **White**: `1.e4` aur Italian Game. (Ya `1.d4` + London System agar positional pasand ho.)\n- **Black vs 1.e4**: `1...e5` (open games) ya Caro-Kann (solid).\n- **Black vs 1.d4**: Queen\'s Gambit Declined ya Slav.\n\n**Kaise seekhein:**\n\n- Pehle 6-8 chaalon ke **ideas** samjho, lambi theory nahi.\n- Har game ke baad dekho kahan opening se bahar aaye, wahan ka sahi move note karo.\n- 1600+ ke baad dheere-dheere gehri lines aur sideline traps.\n- Master games dekho apni openings ke: plans wahi se aate hain.'},
+{t:'quiz',q:'1200 rating par opening kaise padhni chahiye?',opts:['20 chaal tak theory ratna','Ideas aur principles, 6-8 chaal','Har game alag opening'],a:1}
+]}],
+test:[
+{t:'quiz',of:'italian',q:'`1.e4 e5 2.Nf3 Nc6 3.Bc4` kaunsi opening hai?',opts:['Ruy Lopez','Italian Game','Sicilian'],a:1},
+{t:'quiz',of:'ruy',q:'`1.e4 e5 2.Nf3 Nc6 3.Bb5`?',opts:['Ruy Lopez (Spanish)','French','London'],a:0},
+{t:'quiz',of:'sicilian',q:'`1.e4 c5`?',opts:['Caro-Kann','Sicilian','French'],a:1},
+{t:'quiz',of:'french',q:'`1.e4 c6`?',opts:['Caro-Kann','Slav','English'],a:0},
+{t:'quiz',of:'qg',q:'`1.d4 d5 2.c4`?',opts:["Queen's Gambit",'London','Nimzo-Indian'],a:0},
+{t:'quiz',of:'indian',q:'`1.d4 Nf6 2.c4 e6 3.Nc3 Bb4`?',opts:["King's Indian",'Nimzo-Indian','Slav'],a:1},
+{t:'move',of:'italian',free:1,q:'Two Knights: `4.Ng5 d5 5.exd5` ke baad Black ki sahi chaal?',fen:'r1bqkb1r/ppp2ppp/2n2n2/3Pp1N1/2B5/8/PPPP1PPP/RNBQK2R b KQkq - 0 5',line:['Na5'],why:'`5...Na5!` `5...Nxd5?` ke baad `Nxf7` (Fried Liver) khatarnaak.'},
+{t:'move',of:'traps',mate:1,q:'Trap ka end: mate in 1 (Black)',fen:'r1b1kbnr/pppp1Npp/8/8/3nq3/8/PPPPBP1P/RNBQKR2 b Qkq - 1 7',sol:'Nf3#',n:1},
+{t:'quiz',of:'ideas',q:'Opening ke teen main kaam?',opts:['Center, development, king safety','Queen attack, pawn storm, trade','Sirf castling'],a:0}
+]});
+
+/* ===================== LEVEL 5: ENDGAMES ===================== */
+COURSE.push({id:'l5',title:'Endgames: jeet pakki karo',sub:'King activity, opposition, pawn endings, rook endings, theoretical positions',
+intro:'Capablanca ne kaha tha: **pehle endgame seekho**. Endgame mein king ek fighter ban jaata hai, aur ek pawn bhi game jeeta deta hai.',
+lessons:[
+{id:'kp',title:'King aur pawn: opposition',sub:'K+P vs K, key squares',steps:[
+{t:'info',h:'Endgame mein king ladta hai',fen:'8/4k3/8/4K3/8/4P3/8/8 w - - 0 1',md:'Endgame mein **king ko center mein lao**: woh ek strong piece hai (lagbhag 4 points).\n\n**Opposition**: jab kings ek hi line mein ho aur **beech mein ek square** ho, to jisne **chaal nahi chalni** uske paas opposition hai. Opposition wala king doosre ko peeche dhakelta hai.\n\n**Key squares**: pawn ke 2 square aage wali row ke 3 squares. Agar tumhara king wahan pahunch gaya, pawn queen banega.'},
+{t:'quiz',q:'Black ki chaal hai. Opposition kiske paas hai?',fen:'8/8/8/4k3/8/4K3/8/8 b - - 0 1',opts:['White','Black'],a:0,why:'Kings aamne-saamne, beech mein ek square, aur Black ko chalna padega: White ke paas opposition.'},
+{t:'play',q:'King ko aage lao, opposition lo, aur pawn ko **queen banao** (25 chaal).',fen:'8/4k3/8/4K3/8/4P3/8/8 w - - 0 1',goal:'promote',max:25,hint:'Pehle king aage, pawn baad mein. Pawn ko king ke peeche rakho.'},
+{t:'info',h:'Square ka rule',fen:'8/8/8/4k3/P7/8/8/7K b - - 0 1',hl:['a4','b4','c4','d4','e4','a5','b5','c5','d5','e5','a6','b6','c6','d6','e6','a7','b7','c7','d7','e7','a8','b8','c8','d8','e8'],md:'Pawn se promotion square tak ek **square (box)** banao. Agar dushman king (apni chaal ke saath) is box ke **andar** aa sakta hai, to woh pawn ko pakad lega.\n\nYahan Black ki chaal hai aur king `e5` box ke andar hai: woh pawn pakad lega.'},
+{t:'quiz',q:'White ki chaal. Kya Black king `f5` pawn ko pakad sakta hai?',fen:'8/8/8/5k2/P7/8/8/7K w - - 0 1',opts:['Haan','Nahi: pawn queen banega'],a:1,why:'`a5` ke baad box `a5-d5-d8-a8` hai. `f5` king bahar hai: pakad nahi payega.'}
+]},
+{id:'pawnend',title:'Pawn endgame tricks',sub:'Breakthrough, outside passer, triangulation',steps:[
+{t:'info',h:'Passed pawn',md:'**Passed pawn**: jiske raste mein ya bagal ki files mein koi dushman pawn na ho. "Passed pawns must be pushed!"\n\n- **Outside passed pawn** (kinare wala): dushman king ko door kheenchta hai, tumhara king doosri taraf pawns kha leta hai.\n- **Protected passed pawn**: apne pawn se protected = bahut strong.\n- **Triangulation**: king teen squares ka triangle bana kar ek **tempo** waste karta hai taaki opposition mile.'},
+{t:'move',q:'Breakthrough! Teen pawns vs teen pawns.',fen:'8/ppp3k1/8/PPP5/8/8/6K1/8 w - - 0 1',sol:'b6',n:3,hint:'Beech wala pawn pehle aage, sacrifice!',why:'`1.b6!` agar `cxb6` to `2.a6!` aur `bxa6 3.c6` queen banega. Agar `axb6` to `2.c6!`.'},
+{t:'quiz',q:'Pawn endgame mein "outside passed pawn" kyun strong hai?',opts:['Woh jaldi queen banta hai hamesha','Dushman king ko ek kinare kheench leta hai, apna king doosri taraf jeet jaata hai','Woh capture nahi hota'],a:1}
+]},
+{id:'rook',title:'Rook endgames: Lucena aur Philidor',sub:'Sabse common endgame',steps:[
+{t:'info',h:'Rook endgames sabse zyada aate hain',md:'Lagbhag aadhe endgames mein rooks hote hain. 2 positions zaroor yaad karo:\n\n- **Lucena** (jeet): pawn 7th rank par, king uske aage. Technique: **"bridge banao"** rook se.\n- **Philidor** (draw): defending side ka rook **3rd rank** (apni taraf se 6th) par, jab tak pawn aage na aaye. Pawn aaya to rook peeche jaa kar **check dete raho**.\n\nAur rule: **rook passed pawn ke peeche** rakho (Tarrasch rule), aage nahi. **Active rook** passive rook se behtar.'},
+{t:'line',h:'Lucena: bridge banana',fen:'1K6/1P1k4/8/8/8/8/r7/2R5 w - - 0 1',moves:'Rd1+ Ke7 Rd4 Ra1 Kc7 Rc1+ Kb6 Rb1+ Kc6 Rc1+ Kb5 Rb1+ Rb4',md:'White ka king `b8` pawn ke aage atka hai. Black rook side se check dega.',notes:{1:'`1.Rd1+` black king ko ek file door dhakelo.',3:'`2.Rd4!` rook 4th rank par: yahi **bridge** banega.',5:'`3.Kc7` king bahar.',6:'Checks shuru.',7:'King rook ki taraf aata hai.',13:'`7.Rb4!` Bridge! Checks khatam, pawn queen banega.'}},
+{t:'play',q:'Ab tum Lucena jeeto: pawn ko queen banao (20 chaal).',fen:'1K6/1P1k4/8/8/8/8/r7/2R5 w - - 0 1',goal:'promote',max:20,hint:'Rd1+, phir rook 4th rank par (Rd4), phir king bahar.'},
+{t:'info',h:'Philidor: draw kaise bachayein',fen:'4k3/7R/1r6/3KP3/8/8/8/8 b - - 0 1',arr:[['b6','h6','b']],md:'Black ka rook **6th rank** par white king ko aage aane se rokta hai.\n\nAgar White `e6` khele, to ab king ke liye `6th` rank par koi chhupne ki jagah nahi. Tab Black rook ko **peeche (1st rank)** le jaata hai aur peeche se **checks** deta rehta hai. Draw!'},
+{t:'play',q:'Tum Black ho. **15 chaal** tak draw bachao. Rook 6th rank par rakho jab tak pawn `e6` na aaye.',fen:'4k3/7R/1r6/3KP3/8/8/8/8 b - - 0 1',goal:'draw',max:15},
+{t:'quiz',q:'Passed pawn ke saath rook kahan rakhna chahiye?',opts:['Pawn ke aage','Pawn ke peeche','Pawn ke bagal mein'],a:1,why:'Tarrasch rule: rook pawn ke peeche se uske saath aage badhta hai, aur zyada active hota hai.'}
+]},
+{id:'minor',title:'Minor pieces aur theory',sub:'Good/bad bishop, wrong corner, kaun jeetta hai',steps:[
+{t:'info',h:'Kaunse endgames jeet, kaunse draw',md:'- K+Q vs K, K+R vs K: **jeet**\n- K+B+N vs K: **jeet** par mushkil (corner us color ka jo bishop control karta hai)\n- K+N+N vs K: **draw** (force nahi kar sakte)\n- K+B vs K, K+N vs K: **draw**\n- K+Q vs K+R: aksar **jeet** (technique lambi)\n- K+R vs K+B, K+R vs K+N: aksar **draw**\n- K+R+P vs K+R: depends: Lucena jeet, Philidor draw\n- Opposite color bishops + pawns: aksar **draw** chahe ek-do pawn zyada ho'},
+{t:'quiz',q:'Wrong bishop: White ke paas h-pawn aur light-square bishop hai. Black king `h8` corner mein. Result?',fen:'7k/8/5K1P/8/8/3B4/8/8 w - - 0 1',opts:['White jeet','Draw: bishop h8 (dark square) control nahi karta'],a:1,why:'Corner square ka color bishop se alag hai, king nikala nahi ja sakta. Famous draw!'},
+{t:'quiz',q:'K + do knights vs akela K?',opts:['Jeet','Draw (force nahi hota)'],a:1},
+{t:'quiz',q:'Bishop vs knight endgame: pawns dono kinaron par hain, board open hai. Kaun behtar?',opts:['Bishop','Knight'],a:0,why:'Bishop lambi doori se dono taraf kaam karta hai. Knight band positions mein behtar.'}
+]}],
+test:[
+{t:'quiz',of:'kp',q:'Black ki chaal. Opposition kiske paas?',fen:'8/8/3k4/8/3K4/8/8/8 b - - 0 1',opts:['White','Black'],a:0},
+{t:'quiz',of:'kp',q:'Black ki chaal. King `e5` pawn `a4` ko pakad lega?',fen:'8/8/8/4k3/P7/8/8/7K b - - 0 1',opts:['Haan','Nahi'],a:0},
+{t:'move',of:'pawnend',q:'Breakthrough',fen:'8/ppp3k1/8/PPP5/8/8/6K1/8 w - - 0 1',sol:'b6',n:3},
+{t:'quiz',of:'rook',q:'Lucena position mein jeet ki technique?',opts:['Bridge banana (rook 4th rank)','Rook trade','King ko corner mein rakhna'],a:0},
+{t:'quiz',of:'rook',q:'Philidor defense mein rook kahan?',opts:['Apni taraf se 3rd rank (6th)','Apni 1st rank shuru se','Pawn ke aage'],a:0},
+{t:'quiz',of:'minor',q:'K+R vs K+B usually?',opts:['Jeet','Draw'],a:1},
+{t:'move',of:'kp',free:1,q:'K+P: White ki chaal. Jeetne ka plan: king pawn ke aage, opposition ke saath. Sahi chaal?',fen:'8/4k3/8/4K3/8/4P3/8/8 w - - 0 1',line:['Kd5'],ok:['Kd5','Kf5','e4'],why:'King aage (`Kd5`/`Kf5`) aur `e3-e4` ka spare tempo: dono se White opposition jeet leta hai.'}
+]});
+
+/* ===================== LEVEL 6: STRATEGY ===================== */
+COURSE.push({id:'l6',title:'Strategy: plan banana',sub:'Pawn structure, weak squares, open files, prophylaxis, sacrifices',
+intro:'Jab koi tactic na ho, tab kya karein? Strategy batati hai **kahan khelna hai** aur **kaunsa plan**. Yahi 1500 se 2000+ ka fark hai.',
+lessons:[
+{id:'pawns',title:'Pawn structure',sub:'Isolated, doubled, backward, passed, chains',steps:[
+{t:'info',h:'Pawns = position ki haddi',md:'"Pawns are the soul of chess" (Philidor). Pawns peeche nahi jaate, isliye har pawn move **permanent** hai. Pawn structure decide karta hai pieces kahan achhe honge.'},
+{t:'info',h:'Isolated pawn (IQP)',fen:'r1bq1rk1/pp2bppp/2n1pn2/8/3P4/2NB1N2/PP3PPP/R1BQ1RK1 w - - 0 1',hl:['d4'],marks:{d5:'ring'},md:'`d4` pawn ke bagal (c, e files) mein koi apna pawn nahi: **isolated**.\n\n- Kamzori: pawn se protect nahi hota, aur uske aage `d5` square **blockade** ke liye perfect (Black knight `d5` par).\n- Taakat: active pieces, `d5` break aur kingside attack.\n\nIQP wala attack kare, doosra pieces trade karke endgame mein jaaye.'},
+{t:'info',h:'Doubled aur backward pawns',fen:'r1bqkb1r/1p3ppp/p1np1n2/4p3/4P3/1NN5/PPP1BPPP/R1BQK2R w KQkq - 0 1',hl:['d6'],marks:{d5:'ring'},md:'**Backward pawn**: bagal ke pawns aage nikal gaye, aur yeh aage nahi badh sakta kyunki aage ka square dushman control karta hai. Yahan Black ka `d6` backward hai aur `d5` ek **hole** hai: White ke knight ke liye perfect ghar.\n\n**Doubled pawns** (ek file par do): aksar kamzor, par open file deta hai.'},
+{t:'info',h:'Pawn chain',fen:'rnbqkbnr/pp3ppp/4p3/2ppP3/3P4/8/PPP2PPP/RNBQKBNR w KQkq - 0 1',arr:[['c5','d4','r'],['f2','f4','g']],md:'Pawn chain `d4-e5` (White) aur `e6-d5` (Black). Rule (Nimzowitsch): **chain ki base par attack** karo.\n\nBlack `...c5` se `d4` (base) par vaar karta hai. White kingside par (`f4-f5`) attack karta hai, kyunki chain ka sira us taraf ishaara karta hai.'},
+{t:'quiz',q:'Isolated pawn ke saamne wala square kis kaam ka hai?',opts:['Dushman ke knight ke liye blockade ghar','Kuch nahi','Apne king ke liye'],a:0},
+{t:'quiz',q:'Pawn chain par attack kahan karna chahiye?',opts:['Sabse aage wale pawn par','Chain ki base par','Kahin nahi'],a:1}
+]},
+{id:'squares',title:'Weak squares aur outposts',sub:'Pieces ke liye ghar',steps:[
+{t:'info',h:'Outpost',fen:'r4rk1/1p3ppp/p2p4/3Np3/4P3/8/PPP2PPP/R4RK1 w - - 0 1',hl:['d5'],md:'**Outpost**: aisa square jahan tumhara piece baith sake aur **koi dushman pawn use bhaga na sake**, aur aksar apne pawn se protected ho.\n\n`d5` par knight: Black ke `c` aur `e` pawns use kabhi attack nahi kar sakte. Aisa knight ek rook jitna strong ho sakta hai!\n\n**Weak square** = jo pawns se protect na ho sake. Pawn move karte waqt socho: kaunse squares kamzor ho rahe hain?'},
+{t:'info',h:'Good bishop vs bad bishop',fen:'4k3/8/3p4/2pPp3/2P1P3/8/4B3/4K3 w - - 0 1',hl:['c4','d5','e4'],md:'White ke pawns **light squares** par hain (`c4`, `d5`, `e4`), aur bishop bhi light-square ka hai: woh apne hi pawns se ruka hai = **bad bishop**.\n\nRule: pawns ko apne bishop ke **ulte color** par rakho. Bad bishop ko trade karo ya pawns ke bahar laao.'},
+{t:'quiz',q:'Knight ke liye sabse achha square?',opts:['Kinare par','Center mein outpost jahan pawn bhaga na sake','Apni pehli rank par'],a:1}
+]},
+{id:'files',title:'Open files, 7th rank, piece activity',sub:'Rooks aur pieces ko zinda karo',steps:[
+{t:'info',h:'Rooks ko kaam do',fen:'6k1/1R3ppp/8/8/8/8/5PPP/6K1 w - - 0 1',hl:['a7','b7','c7','d7','e7','f7','g7','h7'],md:'- Rooks ko **open file** (jisme koi pawn nahi) par lao, ya **half-open** file par.\n- File kabze ke baad **7th rank** par ghuso: wahan pawns aur king dono atakte hain. Do rooks 7th par = "pigs on the 7th", aksar jeet.\n- **Doubling**: do rooks ek file par.\n\nGeneral rule: **sabse kharab piece ko behtar karo**. Har position mein socho: mera kaunsa piece kuch nahi kar raha?'},
+{t:'quiz',q:'Koi tactic nahi, koi threat nahi. Achha general plan?',opts:['Random pawn move','Sabse kharab piece ko behtar square par lao','Queen se akela attack'],a:1}
+]},
+{id:'plans',title:'Plan kaise banayein',sub:'Imbalances aur attack',steps:[
+{t:'info',h:'Imbalances dekho',md:'Plan banane ke liye **farq** (imbalances) dekho:\n\n- **Material**: kaun aage?\n- **Minor pieces**: bishop vs knight, bishop pair?\n- **Pawn structure**: kamzor pawns, passed pawns, majorities\n- **Space**: kiske paas zyada jagah?\n- **Open files / weak squares**\n- **Development aur king safety**\n\nPhir: **jahan tum strong ho wahan khelo**. Space zyada hai to us taraf attack karo. Kamzori hai to use theek karo ya trades se bacho.'},
+{t:'info',h:'Opposite side castling = pawn storm',fen:'2kr3r/ppp2ppp/2n5/8/8/5N2/PPP2PPP/2KR3R w - - 0 1',md:'Jab kings **alag-alag taraf** castle karein, to dono apne pawns dushman king ki taraf daudaate hain (**pawn storm**). Yahan speed sab kuch hai: jo pehle file kholega woh jeetega.\n\nSame side castle ho to pawns aage badhana apne king ko kamzor karta hai: wahan center ya queenside mein khelo.'},
+{t:'info',h:'Minority attack',fen:'4k3/pp3ppp/2p5/3p4/3P4/4P3/PP3PPP/4K3 w - - 0 1',arr:[['b2','b5']],md:"Queen's Gambit structure (Carlsbad): White **kam pawns wali side** (queenside: a, b vs a, b, c) se attack karta hai: `b4-b5`. Maksad: `c6` par ek **kamzor pawn** banana.\n\nYeh dikhata hai: plan pawn structure se aata hai."},
+{t:'quiz',q:'Tumhare paas kingside mein zyada space hai aur kings alag taraf castled hain. Plan?',opts:['Queenside pawns chalao','Kingside pawn storm aur attack','Kuch mat karo'],a:1}
+]},
+{id:'prophy',title:'Prophylaxis aur restriction',sub:'Opponent ka plan pehle roko',steps:[
+{t:'info',h:'Prophylaxis',md:'**Prophylaxis** (Nimzowitsch, Karpov, Petrosian): apni chaal se pehle poocho **"Opponent kya karna chahta hai?"** aur use pehle hi rok do.\n\n- `h3` khelna taaki `...Bg4` pin na ho\n- Rook ko us file par rakhna jo khulne wali hai\n- King ko pehle hi safe square (`Kh1`) par le jaana taaki baad mein checks na aayein\n\n**Restriction**: dushman pieces ke achhe squares cheen lo. Jo piece hil nahi sakta, woh piece nahi.'},
+{t:'quiz',q:'Ruy Lopez mein White `h3` kyun khelta hai?',opts:['Attack ke liye','Black bishop ko g4 aane se rokne ke liye (prophylaxis)','Time pass'],a:1}
+]},
+{id:'sacs',title:'Positional sacrifices',sub:'Material dekar position lena',steps:[
+{t:'info',h:'Exchange sacrifice',fen:'2r2rk1/pp1bppbp/3p1np1/q7/3NP3/1BN1BP2/PPPQ2PP/2KR3R b - - 0 1',arr:[['c8','c3','r']],md:'**Exchange sacrifice**: rook (5) dekar minor piece (3) lena, position ke liye. Sicilian Dragon mein `...Rxc3!` famous hai: White ke king ke saamne pawns toot jaate hain, aur `e4` kamzor hota hai.\n\nKab karein: jab sacrifice se **dushman king khul jaaye**, ya tumhe **dominant piece** aur pawns milein, ya dushman ka rook kaam ka na ho.\n\n**Pawn sacrifice** (gambit) se bhi development, open lines ya initiative milta hai.'},
+{t:'quiz',q:'Positional sacrifice ka maksad?',opts:['Turant mate','Lambe samay ka fayda: king safety tootna, strong pieces, initiative','Material bachana'],a:1}
+]}],
+test:[
+{t:'quiz',of:'pawns',q:'Jis pawn ke bagal ki files mein apna koi pawn nahi?',opts:['Passed','Isolated','Doubled'],a:1},
+{t:'quiz',of:'pawns',q:'Jis pawn ke raste aur bagal ki files mein koi dushman pawn nahi?',opts:['Passed','Backward','Isolated'],a:0},
+{t:'quiz',of:'squares',q:'Bad bishop kab hota hai?',opts:['Jab apne pawns usi color ke squares par hon','Jab bishop center mein ho','Jab woh fianchetto ho'],a:0},
+{t:'quiz',of:'files',q:'Rooks ke liye sabse achhi jagah?',opts:['Band files','Open files aur 7th rank','Corner'],a:1},
+{t:'quiz',of:'plans',q:'Opposite side castling mein sabse important?',opts:['Speed: pehle pawn storm se file kholna','Draw offer','Pieces trade karna'],a:0},
+{t:'quiz',of:'prophy',q:'Prophylaxis ka pehla sawaal?',opts:['Main kya capture karun?','Opponent kya karna chahta hai?','Kitna time bacha hai?'],a:1},
+{t:'quiz',of:'sacs',q:'Sicilian Dragon mein `...Rxc3` kis type ka sacrifice?',opts:['Exchange sacrifice','Queen sacrifice','Pawn gambit'],a:0}
+]});
+
+/* ===================== LEVEL 7: PRO ===================== */
+COURSE.push({id:'l7',title:'Pro level: practical chess',sub:'Deep calculation, time, tournaments, psychology, analysis, master games, training plan',
+intro:'Ab board ke bahar ki cheezein: time management, tournaments, dimaag ka khel, aur Elo badhane ka roz ka plan.',
+lessons:[
+{id:'calc2',title:'Deep calculation',sub:'Grandmaster ki tarah sochna',steps:[
+{t:'info',h:'Calculation ke pro tips',md:'- **Tree banao**: candidate moves → har ek ke 1-2 best jawab → aage. Har branch ek baar, saaf.\n- **Kotov rule**: ek line ko baar-baar mat dekho. Ek baar gehra dekho, faisla karo.\n- **Comparison**: aksar perfect calculation ki zaroorat nahi, bas kaunsi line behtar hai.\n- **Quiet moves** ko mat bhoolo: forcing line ke beech ek shaant chaal bhi hoti hai.\n- **Blunder check** (aakhri 10 second): "Opponent ka sabse forcing jawab kya hai?"\n- **Intuition + calculation**: pehle feel, phir calculation se check.\n\nTraining: roz 15-30 min tough puzzles **bina board chhuye** solve karo, poori line dimaag mein.'},
+{t:'move',mate:1,q:"Calculate karo: mate in 5! (Philidor's legacy, saari chaalein forcing)",fen:'r5k1/1p4pp/8/4N3/8/8/6PP/3Q2K1 w - - 0 1',sol:'Qd5+',ok:['Qb3+'],n:5,hint:'Check, phir knight ke checks (Nf7+, Nh6+), phir queen sacrifice `g8` par.',why:'`Qd5+ Kh8 Nf7+ Kg8 Nh6+ Kh8 Qg8+! Rxg8 Nf7#`. Smothered mate: forcing moves ko end tak calculate karna seekho.'},
+{t:'quiz',q:'Calculation ke end mein sabse zaroori kya hai?',opts:['Jaldi move kar dena','Blunder check: opponent ke checks/captures/threats','Draw offer'],a:1}
+]},
+{id:'time',title:'Time management',sub:'Clock bhi opponent hai',steps:[
+{t:'info',h:'Clock ka khel',md:'**Time controls** (FIDE):\n\n- **Classical**: har player 60+ minute (jaise 90 min + 30 sec/move)\n- **Rapid**: 10 se 60 minute\n- **Blitz**: 10 minute ya kam (jaise 3+2, 5+0)\n- **Bullet**: 3 minute se kam (online)\n\n**Increment** (`+2`): har chaal ke baad 2 second judte hain.\n\n**Tips:**\n- Opening jaldi (jo aata hai), sabse zyada time **critical positions** mein (jab plan badle, ya tactics ho).\n- Ek chaal par **total time ka 10% se zyada** kam hi lagao.\n- **Time trouble** se bacho: simple, safe chaalein.\n- Opponent ke time mein bhi socho (general plans).'},
+{t:'quiz',q:'5+3 blitz mein "+3" ka matlab?',opts:['3 minute extra shuru mein','Har chaal ke baad 3 second judte hain','3 games'],a:1},
+{t:'quiz',q:'Sabse zyada time kahan lagana chahiye?',opts:['Opening ki yaad ki hui chaalon par','Critical positions: tactics, plan badalne ka mauka','Har chaal barabar'],a:1}
+]},
+{id:'tourney',title:'Tournament rules aur ratings',sub:'OTB khelne ke liye zaroori',steps:[
+{t:'info',h:'Over-the-board rules',md:'- **Touch-move**: jo piece chhua, wahi chalana padega. Apna piece theek karna ho to pehle **"adjust"** (ya "J\'adoube") bolo.\n- Piece chhod diya = chaal poori.\n- **Clock usi haath se** dabao jisse chaal chali.\n- **Illegal move**: rapid/blitz mein opponent ko extra time; doosri illegal move par haar (FIDE rules ke hisaab se).\n- Classical mein **notation likhna** zaroori (scoresheet).\n- **Phone** pass mein ho aur baj jaaye = aksar haar.\n- Draw offer apni chaal chalne ke baad, clock dabane se pehle.\n\n**Rating**: Elo system. Jeet se rating badhti hai, haar se ghatti. Stronger player ko harane par zyada points.\n\n**FIDE titles**: CM (2200), FM (2300), IM (2400 + norms), GM (2500 + 3 GM norms). Women: WCM, WFM, WIM, WGM.'},
+{t:'quiz',q:'Apna piece theek se rakhna hai bina chaal chale. Kya bolo?',opts:['Kuch nahi','"Adjust" / "J\'adoube"','"Check"'],a:1},
+{t:'quiz',q:'GM title ke liye kya chahiye?',opts:['Sirf 2000 rating','2500 rating aur 3 GM norms','Ek tournament jeetna'],a:1}
+]},
+{id:'psych',title:'Psychology aur practical play',sub:'Dimaag ko control karo',steps:[
+{t:'info',h:'Mental game',md:'- **Tilt**: ek haar ke baad gusse mein games mat khelo. Break lo.\n- **Stronger opponent**: darr ke draw mat khelo, normal achhi chaalein. Rating board par nahi khelti.\n- **Jeeti position**: relax mat ho. "The hardest game to win is a won game." Safe moves, counterplay rokna.\n- **Haarti position**: resist karo! Complications, traps, time pressure: comeback hote hain.\n- **Draw offers**: position aur tournament situation dekh kar.\n- **Fitness, neend, paani**: lambe games mein bahut fark padta hai.\n- **Routine**: game se pehle halka warm-up (puzzles), phone door.'},
+{t:'quiz',q:'Lagaataar 3 blitz haar gaye aur gussa aa raha hai. Kya karein?',opts:['Aur 10 game khelo','Break lo, phir analyse karo','Rating chhupa do'],a:1}
+]},
+{id:'analysis',title:'Apne games analyse karo',sub:'Sabse tez improvement',steps:[
+{t:'info',h:'Analysis ka sahi tareeka',md:'- Game ke baad **pehle khud** analyse karo (bina engine): kahan socha, kya miss kiya. Apne thoughts likho.\n- **Critical moments** dhundo: jahan eval bada badla ya plan badla.\n- Opening: kahan theory se bahar aaye? Sahi chaal note karo.\n- **Phir engine** se check karo. Sirf "best move" mat dekho: **kyun** best hai, samjho.\n- Galtiyon ko category mein daalo: tactic miss, blunder, time, plan, endgame technique. Jo zyada ho, wahi train karo.\n- Haare games sabse zyada sikhate hain.\n\nIs app ke **Trainer** mein Stockfish coach tumhare games ki galtiyan samjhata hai. Aur yahan ka 🤖 **AI coach** se bhi pooch sakte ho.'},
+{t:'quiz',q:'Game ke baad engine kab use karein?',opts:['Turant, khud soche bina','Pehle khud analysis, phir engine se check','Kabhi nahi'],a:1}
+]},
+{id:'masters',title:'Master games aur chess ka itihaas',sub:'Opera Game, world champions',steps:[
+{t:'line',h:'Opera Game: Morphy vs Duke & Count (1858)',moves:'e4 e5 Nf3 d6 d4 Bg4 dxe5 Bxf3 Qxf3 dxe5 Bc4 Nf6 Qb3 Qe7 Nc3 c6 Bg5 b5 Nxb5 cxb5 Bxb5+ Nbd7 O-O-O Rd8 Rxd7 Rxd7 Rd1 Qe6 Bxd7+ Nxd7 Qb8+ Nxb8 Rd8#',md:'Sabse famous game: development, open lines aur sacrifices ka perfect example.',notes:{6:'`3...Bg4?!` bishop jaldi trade hoga.',9:'`5.Qxf3` White ki queen active, development aage.',13:'`7.Qb3!` `f7` aur `b7` dono par attack.',17:'`9.Bg5` ek aur piece develop. Black ke pieces bandh rahe hain.',19:'`10.Nxb5!` sacrifice: lines kholo!',23:'`12.O-O-O` rook seedha d-file par.',25:'`13.Rxd7!` aur sacrifice.',29:'`15.Bxd7+`',31:'`16.Qb8+!!` Queen sacrifice!',33:'`17.Rd8#` Mate! Seekh: **development + open lines = attack**.'}},
+{t:'info',h:'Chess ki kahani',md:'- Chess ka janam **Bharat** mein hua: 6th century ka **Chaturanga** (4 ang: haathi, ghoda, rath, paidal).\n- Persia mein **Shatranj**, phir Europe. ~1475 mein Spain mein modern queen aur bishop ki chaal.\n- Pehle official World Champion: **Wilhelm Steinitz** (1886).\n- Legends: Capablanca, Alekhine, Botvinnik, Tal, **Bobby Fischer**, Karpov, **Garry Kasparov**, **Magnus Carlsen**.\n- Bharat ke heroes: **Viswanathan Anand** (5 baar World Champion), aur **D. Gukesh** jo 2024 mein sabse kam umar ke World Champion bane. Praggnanandhaa, Arjun Erigaisi, Koneru Humpy, Divya Deshmukh bhi top par.\n- **Chess960 (Freestyle)**: pieces ki starting position random, theory kam, samajh zyada.'},
+{t:'quiz',q:'Chess ka janam kahan hua?',opts:['Bharat (Chaturanga)','China','England'],a:0},
+{t:'quiz',q:'Opera Game ka main lesson?',opts:['Pawns ko jaldi chalao','Development aur open lines se attack','Queen pehle nikalo'],a:1}
+]},
+{id:'plan',title:'Elo badhane ka training plan',sub:'Roz kya karein',steps:[
+{t:'info',h:'Rating ke hisaab se focus',md:'- **0-1000**: rules pakke, hanging pieces na dena, basic mates (Level 1-2). Roz 20 easy puzzles.\n- **1000-1400**: tactics, tactics, tactics (Level 3). Opening principles. 15+10 rapid games.\n- **1400-1800**: calculation, basic endgames (Level 5), ek repertoire, apne games analyse.\n- **1800-2200**: strategy (Level 6), master games, gehri endgame theory, classical games.\n- **2200+**: coach, deep opening prep, tournaments, physical aur mental training.'},
+{t:'info',h:'Roz ka routine (45-60 min)',md:'- **15 min**: puzzles (is app ka Puzzles tab + review)\n- **15 min**: ek lesson ya endgame study\n- **20 min**: ek slow game (15+10 ya zyada), blitz kam\n- **10 min**: us game ka analysis\n- Hafte mein ek baar: ek master game dhyan se\n\n**Books** (jab taiyaar ho): "Logical Chess: Move by Move" (Chernev), "Silman\'s Complete Endgame Course", "How to Reassess Your Chess" (Silman), "My System" (Nimzowitsch), "Dvoretsky\'s Endgame Manual" (advanced).\n\n**Sabse badi baat**: roz thoda, lagaataar. 3 mahine ki consistency = bada jump.'},
+{t:'quiz',q:'1200 rating par sabse zyada fayda kisse?',opts:['Opening theory ratna','Roz tactics puzzles + slow games + analysis','Sirf bullet games'],a:1}
+]}],
+test:[
+{t:'quiz',of:'time',q:'Blitz ki FIDE definition?',opts:['10 minute ya kam','30 minute','2 ghante'],a:0},
+{t:'quiz',of:'tourney',q:'Touch-move rule?',opts:['Chhua piece chalana padega','Chhua piece capture hoga','Koi rule nahi'],a:0},
+{t:'quiz',of:'tourney',q:'IM title ke liye rating?',opts:['2200','2400 (+ norms)','2700'],a:1},
+{t:'quiz',of:'psych',q:'Jeeti hui position mein sabse badi galti?',opts:['Relax ho jaana aur counterplay bhool jaana','Simple moves khelna','Trades karna'],a:0},
+{t:'quiz',of:'analysis',q:'Analysis ka pehla step?',opts:['Engine kholna','Khud analysis aur apne thoughts likhna','Game delete karna'],a:1},
+{t:'quiz',of:'masters',q:'Pehle official World Champion?',opts:['Steinitz','Fischer','Anand'],a:0},
+{t:'move',of:'calc2',mate:1,q:'Mate in 2',fen:'6k1/8/R7/8/8/8/8/1R4K1 w - - 0 1',sol:'Ra7',n:2},
+{t:'quiz',of:'plan',q:'Improvement ka sabse bada raaz?',opts:['Roz thoda, lagaataar practice','Ek din 10 ghante','Sirf videos dekhna'],a:0}
+]});
+
+/* placement test: 2 test questions per level (levels 1-6) */
+const PLACEMENT=['l1.T.4','l1.T.6','l2.T.2','l2.T.3','l3.T.0','l3.T.7','l4.T.0','l4.T.6','l5.T.0','l5.T.3','l6.T.1','l6.T.5'];
+if(typeof module!=='undefined')module.exports={COURSE,PLACEMENT};
+
+const LINES={"l1.special.7":{"line":["e8=N+","Ke5","Nxc7"]},"l1.mate.2":{"line":["Ra8#"]},"l1.mate.3":{"line":["Qb8#"]},"l1.mate.6":{"line":["Qf8#"]},"l1.values.3":{"line":["Rxd5"]},"l1.values.4":{"line":["Nxh4"]},"l1.T.4":{"line":["Rd8#"]},"l1.T.7":{"line":["Qxd4"]},"l2.krk.2":{"line":["Ra8#"]},"l2.ladder.1":{"line":["Ra7","Kh8","Rb8#"]},"l2.safety.2":{"line":["Nxe5"]},"l2.safety.3":{"line":["hxg4"]},"l2.opening.4":{"line":["Qxf7#"]},"l2.think.1":{"line":["Qd5+"]},"l2.T.0":{"line":["Qh8#"]},"l2.T.1":{"line":["Rb8#"]},"l2.T.2":{"line":["Rh7","Kc8","Rg8#"]},"l2.T.3":{"line":["Bxg4"]},"l2.T.5":{"line":["Qxf7#"]},"l2.T.7":{"line":["Qb7#"]},"l3.fork.1":{"line":["Nc7+","Kd7","Nxa8"]},"l3.fork.2":{"line":["Qd5+"]},"l3.fork.3":{"line":["d4"]},"l3.fork.4":{"line":["Nd6+","Kd7","Nxc8"]},"l3.pin.1":{"line":["Bd4"]},"l3.pin.2":{"line":["d5"]},"l3.skewer.1":{"line":["Ra4+","Kd3","Rxg4"]},"l3.skewer.2":{"line":["Bb3+","Kd6","Bxg8"]},"l3.disc.1":{"line":["Nxc3+"]},"l3.disc.2":{"line":["Nd6#"]},"l3.remove.1":{"line":["Bxf6"]},"l3.remove.2":{"line":["Qxe7"]},"l3.mates.1":{"line":["Nf7#"]},"l3.mates.2":{"line":["Rh3#"]},"l3.mates.3":{"line":["Rh7#"]},"l3.mates.4":{"line":["Ba6#"]},"l3.mates.5":{"line":["Qd8#"]},"l3.mates.7":{"line":["Qd5+","Kh8","Nf7+","Kg8","Nh6+","Kh8","Qg8+","Rxg8","Nf7#"]},"l3.mates.8":{"line":["Bxh7+","Kxh7","Ng5+"]},"l3.T.0":{"line":["Nd6+","Kd7","Nxc8"]},"l3.T.1":{"line":["Nc7+","Kd7","Nxa8"]},"l3.T.2":{"line":["Bd4"]},"l3.T.3":{"line":["Bb3+","Kd6","Bxg8"]},"l3.T.4":{"line":["Nd6#"]},"l3.T.5":{"line":["Nf7#"]},"l3.T.6":{"line":["Rh7#"]},"l3.T.7":{"line":["Qxe7"]},"l4.T.7":{"line":["Nf3#"]},"l5.pawnend.1":{"line":["b6","axb6","c6","bxc6","a6"]},"l5.T.2":{"line":["b6","axb6","c6","bxc6","a6"]},"l7.calc2.1":{"line":["Qd5+","Kh8","Nf7+","Kg8","Nh6+","Kh8","Qg8+","Rxg8","Nf7#"]},"l7.T.6":{"line":["Ra7","Kh8","Rb8#"]}};
+/* ================= course app ================= */
+const $=(s,r)=>(r||document).querySelector(s);
+const h=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e};
+function parseFEN(fen){const[pos,side,cas,ep]=fen.trim().split(/\s+/);const b=EMPTY();const rows=pos.split('/');
+  for(let i=0;i<8;i++){let f=0;for(const ch of rows[i]){if(/\d/.test(ch))f+=+ch;else{b[(7-i)*8+f]=ch;f++}}}
+  const c=cas||'-';return{b,w:side!=='b',c:{K:+c.includes('K'),Q:+c.includes('Q'),k:+c.includes('k'),q:+c.includes('q')},ep:ep&&ep!=='-'?si(ep):-1,hm:0,fm:1}}
+const sanOf=(st,m)=>san(st,m,legal(st));
+const mates=st=>inCheck(st)&&!legal(st).length;
+const posKey=st=>st.b.map(p=>p||'.').join('')+(st.w?'w':'b')+st.ep;
+function sameSan(a,b){return normSan(a)===normSan(b)}
+function md(s){if(!s)return'';return s.split(/\n\n+/).map(par=>{const t=par.trim();
+  if(t.startsWith('- '))return'<ul>'+t.split(/\n/).map(l=>'<li>'+inl(l.replace(/^- /,''))+'</li>').join('')+'</ul>';
+  return'<p>'+inl(t).replace(/\n/g,'<br>')+'</p>'}).join('')}
+function inl(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`(.+?)`/g,'<span class="n">$1</span>')}
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const dayNum=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/864e5);
+
+/* ---------- progress (saved on this device) ---------- */
+const KEY='mindseye.course.v1';
+const DEF=()=>({v:1,done:{},tests:{},xp:0,streak:{last:'',n:0},stat:{},rev:{},day:{d:'',lesson:0,puz:0,rev:0,xp:0},placed:0,solved:{}});
+let PR=(()=>{try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j&&j.v===1)return Object.assign(DEF(),j)}catch(e){}return DEF()})();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(PR))}catch(e){}}
+function touchDay(){const t=today();if(PR.day.d!==t)PR.day={d:t,lesson:0,puz:0,rev:0,xp:0};
+  if(PR.streak.last!==t){const y=new Date(Date.now()-864e5);const ys=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');
+    PR.streak.n=PR.streak.last===ys?PR.streak.n+1:1;PR.streak.last=t}}
+function addXP(n){touchDay();PR.xp+=n;PR.day.xp+=n;save();chips()}
+function chips(){$('#xp').textContent=PR.xp+' XP';$('#streak').textContent='🔥 '+(PR.streak.last===today()||isYesterday(PR.streak.last)?PR.streak.n:0)}
+function isYesterday(d){const y=new Date(Date.now()-864e5);return d===y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0')}
+/* result of one graded step: feeds weak-topic stats and the review queue */
+function grade(step,ok){if(!step.id)return;const les=step.les;touchDay();
+  const s=PR.stat[les]||(PR.stat[les]={ok:0,bad:0});ok?s.ok++:s.bad++;
+  const r=PR.rev[step.id];
+  if(!ok)PR.rev[step.id]={due:dayNum()+1,box:0};
+  else if(r){r.box++;if(r.box>3)delete PR.rev[step.id];else r.due=dayNum()+[1,3,7,14][r.box]}
+  if(ok&&step.t==='move')PR.solved[step.id]=1;save()}
+
+/* ---------- course index ---------- */
+const STEPS={};const ALLLES=[];
+COURSE.forEach((L,li)=>{L.li=li;L.lessons.forEach((les,lj)=>{les.li=li;les.lj=lj;les.key=L.id+'.'+les.id;ALLLES.push(les);
+  les.steps.forEach((s,k)=>{s.id=les.key+'.'+k;s.les=les.key;s.li=li;STEPS[s.id]=s})});
+  (L.test||[]).forEach((s,k)=>{s.id=L.id+'.T.'+k;s.les=s.of?L.id+'.'+s.of:L.id+'.test';s.li=li;STEPS[s.id]=s})});
+for(const id in LINES){const s=STEPS[id];if(s)Object.assign(s,LINES[id])}
+const lesByKey=k=>ALLLES.find(l=>l.key===k);
+const graded=s=>['quiz','move','reach','tap'].includes(s.t);
+function levelUnlocked(li){return li===0||li<=PR.placed||PR.tests[COURSE[li-1].id]>=70||COURSE[li].lessons.some(l=>PR.done[l.key])}
+function lessonUnlocked(les){if(!levelUnlocked(les.li))return false;if(les.lj===0||les.li<PR.placed)return true;const prev=COURSE[les.li].lessons[les.lj-1];return!!PR.done[prev.key]||!!PR.done[les.key]}
+function nextLesson(){for(const L of COURSE){if(L.li<PR.placed)continue;for(const les of L.lessons)if(!PR.done[les.key])return{les};if(!(PR.tests[L.id]>=70))return{test:L}}return null}
+function weakTopics(){return Object.entries(PR.stat).map(([k,s])=>({k,s,n:s.ok+s.bad,acc:s.ok/Math.max(1,s.ok+s.bad)})).filter(x=>x.n>=3&&x.acc<0.7).sort((a,b)=>a.acc-b.acc)}
+function dueReviews(){const d=dayNum();return Object.entries(PR.rev).filter(([id,r])=>r.due<=d&&STEPS[id]).map(([id])=>STEPS[id])}
+const lesName=k=>{const l=lesByKey(k);if(l)return l.title;const L=COURSE.find(L=>L.id+'.test'===k);return L?L.title+' test':k};
+
+/* ---------- board ---------- */
+function xy(n,p){const f=FILES.indexOf(n[0]),r=+n[1]-1;return p==='b'?[7-f+.5,r+.5]:[f+.5,7-r+.5]}
+function arrowsSVG(arr,p){if(!arr||!arr.length)return'';let s='<svg class="arrows" viewBox="0 0 8 8" aria-hidden="true">';
+  for(const a of arr){const[x1,y1]=xy(a[0],p),[x2,y2]=xy(a[1],p);const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L;
+    const hx=x2-ux*.18,hy=y2-uy*.18,bx=hx-ux*.42,by=hy-uy*.42,px=-uy*.24,py=ux*.24,cl=a[2]||'g';
+    s+=`<line x1="${x1}" y1="${y1}" x2="${bx}" y2="${by}" class="ar ${cl}"/><polygon points="${hx},${hy} ${bx+px},${by+py} ${bx-px},${by-py}" class="ah ${cl}"/>`}
+  return s+'</svg>'}
+function Board(host,o){const el=h('div','bwrap');host.appendChild(el);
+  const B={o:Object.assign({persp:'w',coords:true},o),sel:null,dots:[],last:null,marks:{},lock:false,el};
+  B.draw=()=>{const o=B.o;const pieces=o.st?toMap(o.st.b):(o.pieces||{});const marks=Object.assign({},o.marks||{},B.marks);
+    if(B.last)for(const q of B.last)if(!marks[q])marks[q]='last';if(B.sel)marks[B.sel]='sel';
+    el.innerHTML=boardHTML({persp:o.persp,coords:o.coords,labels:o.labels,hl:o.hl,marks,dots:B.dots,pieces})+arrowsSVG(o.arr,o.persp)};
+  B.set=(o2)=>{Object.assign(B.o,o2);B.draw()};
+  B.clear=()=>{B.sel=null;B.dots=[];B.marks={};};
+  el.addEventListener('click',e=>{const d=e.target.closest('[data-sq]');if(!d)return;const name=d.dataset.sq;
+    if(B.o.onTap){B.o.onTap(name);return}
+    const st=B.o.st;if(!B.o.side||!st||B.lock)return;if(st.w!==(B.o.side==='w'))return;
+    const ms=legal(st);
+    if(B.sel){const cand=ms.filter(m=>sn(m.f)===B.sel&&sn(m.t)===name);
+      if(cand.length){B.sel=null;B.dots=[];
+        if(cand.length>1&&cand[0].promo)promoPick(el,st.w,pr=>{B.draw();B.o.onMove(cand.find(m=>m.promo===pr))});else B.o.onMove(cand[0]);return}}
+    const p=st.b[si(name)];
+    if(p&&isW(p)===st.w&&B.sel!==name){B.sel=name;B.dots=ms.filter(m=>sn(m.f)===name).map(m=>sn(m.t))}else{B.sel=null;B.dots=[]}
+    B.draw()});
+  B.draw();return B}
+function promoPick(el,w,cb){const ov=h('div','promo');ov.innerHTML='<div class="promobox"><b>Pawn ko kya banana hai?</b><div class="row">'+'QRBN'.split('').map(p=>`<button class="btn" data-p="${p}"><span class="pc ${w?'w':'b'}">${GLYPH[p]}︎</span></button>`).join('')+'</div></div>';
+  ov.addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b)return;ov.remove();cb(b.dataset.p)});el.appendChild(ov)}
+
+/* ---------- AI tutor (Gemini free key, same key as the trainer) ---------- */
+const GKEY='mindseye.gemini.key';
+const gKey=()=>{try{return localStorage.getItem(GKEY)||''}catch(e){return''}};
+function gSetKey(k){try{k?localStorage.setItem(GKEY,k):localStorage.removeItem(GKEY)}catch(e){}}
+const GMODELS=['gemini-flash-latest','gemini-2.5-flash','gemini-2.0-flash','gemini-flash-lite-latest','gemini-2.5-flash-lite'];
+const GMKEY='mindseye.course.gmodel';
+async function gAsk(prompt){const key=gKey();if(!key)throw{code:'nokey'};let last={code:'model'};let pref='';try{pref=localStorage.getItem(GMKEY)||''}catch(e){}
+  const order=pref?[pref,...GMODELS.filter(m=>m!==pref)]:GMODELS;
+  for(const model of order){let r,j=null;
+    try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,{method:'POST',headers:{'content-type':'application/json','x-goog-api-key':key},
+      body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:0.6,maxOutputTokens:2048}})})}catch(e){throw{code:'net'}}
+    try{j=await r.json()}catch(e){}
+    const msg=(j&&j.error&&j.error.message)||'',stat=(j&&j.error&&j.error.status)||'';
+    if(r.ok){const c=j&&j.candidates&&j.candidates[0];const t=c&&c.content&&c.content.parts?c.content.parts.map(x=>x.text||'').join('').trim():'';
+      if(!t)throw{code:'empty',msg:(c&&c.finishReason)||''};try{localStorage.setItem(GMKEY,model)}catch(e){}return{text:t,cut:c.finishReason==='MAX_TOKENS'}}
+    if(/API_KEY_INVALID|API key not valid|API key expired/i.test(msg)||(r.status===400&&/key/i.test(msg)))throw{code:'key',msg};
+    if(r.status===403||stat==='PERMISSION_DENIED')throw{code:'denied',msg};
+    if(r.status===404||(r.status===400&&/model/i.test(msg))){last={code:'model',msg};continue}
+    if(r.status===429){last={code:'limit',msg};continue}
+    if(r.status>=500){last={code:'busy',msg};continue}
+    throw{code:'other',msg:r.status+' '+msg}}
+  throw last}
+function gErr(e){return({nokey:'Pehle free Gemini key add karo (neeche steps hain).',key:'Yeh key sahi nahi hai. aistudio.google.com/apikey se key dobara copy karke save karo.',
+  denied:'Google ne yeh key mana kar di. AI Studio mein nayi key banao.',limit:'Free limit abhi bhar gayi. 1 minute baad dobara try karo. Agar phir bhi na chale to kal try karo.',
+  busy:'Gemini abhi busy hai. 1 minute baad try karo.',net:'Gemini tak nahi pahunch paaye. Internet check karo. Claude ke preview mein yeh block ho sakta hai: GitHub wala link kholo.',
+  empty:'Gemini ne khali jawab diya. Dobara try karo.',model:'Is key ke liye free model nahi mila. Baad mein try karo ya nayi key banao.'}[e&&e.code])||('Kuch gadbad hui. '+((e&&e.msg)||''))}
+function mdLite(t){const lines=esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<i>$2</i>').split('\n');let o='',ul=false;
+  for(let l of lines){l=l.trimEnd();const li=l.match(/^\s*(?:[-*•]|\d+[.)])\s+(.*)$/),hd=l.match(/^#{1,6}\s+(.*)$/);
+    if(li){if(!ul){o+='<ul>';ul=true}o+=`<li>${li[1]}</li>`;continue}if(ul){o+='</ul>';ul=false}
+    if(hd)o+=`<h4>${hd[1]}</h4>`;else if(l.trim())o+=`<p>${l}</p>`}return o+(ul?'</ul>':'')}
+const TUTOR_SYS=`Tum ek friendly chess coach ho jo ek student ko basics se pro level tak haath pakad ke sikha rahe ho. Simple Hinglish mein jawab do (Roman script, jaise "Yeh move achha hai kyunki..."). Chess terms English mein rakho (fork, pin, check). Chhote paragraphs aur bullet points use karo. Jawab 180 words se kam rakho jab tak student lamba na maange. Moves hamesha standard notation mein likho (Nf3, exd5). Agar position di gayi hai to usi par focus karo aur galat moves invent mat karo. Har jawab ke end mein ek chhota sa practice tip ya sawal do.`;
+let TUT={open:false,ctx:null,chat:[],busy:false,msg:''};
+function tutorCtx(){return TUT.ctx||{where:'Home screen'}}
+function ctxText(c){let t=`Student abhi yahan hai: ${c.where}.`;if(c.lesson)t+=`\nLesson: ${c.lesson}.`;if(c.text)t+=`\nLesson ka text: ${c.text.slice(0,900)}`;
+  if(c.fen)t+=`\nBoard position (FEN): ${c.fen}`;if(c.task)t+=`\nTask: ${c.task}`;if(c.answer)t+=`\nSahi jawab: ${c.answer}`;if(c.tried)t+=`\nStudent ne try kiya: ${c.tried}`;
+  const w=weakTopics().slice(0,3).map(x=>lesName(x.k)+' '+Math.round(x.acc*100)+'%');if(w.length)t+=`\nStudent ke weak topics: ${w.join(', ')}.`;
+  t+=`\nCourse progress: ${Object.keys(PR.done).length}/${ALLLES.length} lessons done.`;return t}
+function offlineTip(c){const tips=[];if(c.why)tips.push(c.why);if(c.hint)tips.push('Hint: '+c.hint);
+  if(!tips.length)tips.push('Har chaal se pehle 3 cheezein dekho: Checks, Captures, Threats (CCT). Pehle apne forcing moves dekho, phir opponent ke.');return tips.join('\n\n')}
+function openTutor(){TUT.open=true;drawTutor()}
+function closeTutor(){TUT.open=false;const s=$('#tutor');if(s)s.remove()}
+function tutorQuick(){const c=tutorCtx();const q=[];
+  if(c.lesson)q.push(['explain','Yeh lesson aasaan bhasha mein samjhao'],['example','Ek aur example do']);
+  if(c.tried)q.push(['mistake','Meri galti samjhao']);
+  if(c.fen&&!c.tried)q.push(['hint','Hint do, jawab mat batao']);
+  q.push(['plan','Mera aaj ka training plan batao']);return q}
+const QUICK={explain:'Is lesson ko aur aasaan bhasha mein samjhao, ek chhote example ke saath.',example:'Is topic ka ek aur example do (position aur moves ke saath) aur samjhao.',
+  mistake:'Maine galat chaal chali. Samjhao meri chaal kyun galat thi aur sahi chaal kyun sahi hai. Phir ek tip do ki aage aisi galti na ho.',
+  hint:'Is puzzle ka ek chhota hint do, poora jawab mat batao.',plan:'Mere progress aur weak topics dekh kar aaj ka 20-30 minute ka training plan do.'};
+function drawTutor(){let s=$('#tutor');if(!TUT.open)return;if(!s){s=h('div','sheet');s.id='tutor';document.body.appendChild(s);
+    s.addEventListener('click',tutorClick)}
+  const c=tutorCtx(),key=gKey();
+  let o=`<div class="sheetin"><div class="row" style="justify-content:space-between"><h3>🤖 AI Coach</h3><button class="x" data-tu="close" aria-label="Close">✕</button></div>
+  <p class="muted" style="font-size:14px">${esc(c.lesson?('Lesson: '+c.lesson):c.where)}</p><div class="chat">`;
+  if(!TUT.chat.length)o+=`<div class="bub ai">${md(offlineTip(c))}<small class="muted">Built-in coach (offline)</small></div>`;
+  for(const m of TUT.chat)o+=`<div class="bub ${m.r}">${m.r==='ai'?mdLite(m.t):esc(m.t)}</div>`;
+  if(TUT.busy)o+=`<div class="bub ai"><span class="typing">Soch raha hoon…</span></div>`;
+  if(TUT.msg)o+=`<p class="warn" style="font-size:14px">${esc(TUT.msg)}</p>`;
+  o+=`</div>`;
+  if(key){o+=`<div class="quick">${tutorQuick().map(([k,l])=>`<button class="btn small" data-tu="q" data-k="${k}">${esc(l)}</button>`).join('')}</div>
+    <form class="ask" data-tu="form"><input id="tq" placeholder="Apna sawal likho… (jaise: pin kya hota hai?)" autocomplete="off"><button class="btn primary" data-tu="send">Pucho</button></form>
+    <small class="muted">Gemini (free). Key sirf is phone mein saved hai, trainer app ke saath shared.</small>`}
+  else o+=keyHTML();
+  o+='</div>';s.innerHTML=o;const ch=s.querySelector('.chat');ch.scrollTop=ch.scrollHeight;
+  const f=s.querySelector('form.ask');if(f)f.addEventListener('submit',e=>{e.preventDefault();const v=$('#tq').value.trim();if(v)askTutor(v)})}
+function keyHTML(){return`<div class="gkey stack"><b>AI coach chalu karo (free, ek baar, ~2 minute)</b><ol class="cline">
+   <li><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> kholo aur Google (Gmail) se sign in karo.</li>
+   <li><b>Create API key</b> dabao.</li><li>Key ke saath wala <b>copy</b> icon dabao. Key <span class="mono">AIza</span> se shuru hoti hai.</li><li>Yahan paste karke <b>Save key</b> dabao.</li></ol>
+   <input class="gin" type="password" placeholder="Key yahan paste karo (AIza…)" autocomplete="off" autocapitalize="off" spellcheck="false">
+   <button class="btn primary block" data-tu="save">Save key</button>
+   <small class="muted">Trainer app mein key pehle se daali hai to yahan apne aap chalegi. Key ke bina bhi poora course aur built-in coach chalta hai.</small></div>`}
+async function askTutor(q,label){if(TUT.busy)return;TUT.chat.push({r:'me',t:label||q});TUT.busy=true;TUT.msg='';drawTutor();
+  const hist=TUT.chat.slice(-7,-1).map(m=>(m.r==='me'?'Student: ':'Coach: ')+m.t).join('\n');
+  const prompt=`${TUTOR_SYS}\n\n${ctxText(tutorCtx())}\n\n${hist?'Pichli baat-cheet:\n'+hist+'\n\n':''}Student ka sawal: ${q}`;
+  try{const r=await gAsk(prompt);TUT.chat.push({r:'ai',t:r.text})}catch(e){TUT.msg=gErr(e)}TUT.busy=false;drawTutor()}
+function tutorClick(e){const b=e.target.closest('[data-tu]');if(!b)return;const a=b.dataset.tu;
+  if(a==='close')closeTutor();
+  else if(a==='q')askTutor(QUICK[b.dataset.k],b.textContent);
+  else if(a==='save'){const k=(b.closest('.gkey').querySelector('input').value||'').trim().replace(/\s/g,'');
+    if(!/^AIza[\w-]{20,}$/.test(k)){TUT.msg='Yeh Gemini key jaisi nahi lagti. AIza se shuru honi chahiye.';drawTutor();return}
+    gSetKey(k);TUT.msg='';TUT.chat.push({r:'ai',t:'Key save ho gayi! Ab mujhse kuch bhi pucho.'});drawTutor()}}
+function setCtx(c){TUT.ctx=c;if(TUT.open)drawTutor()}
+
+/* ---------- step player ---------- */
+// renderStep(step, ctx) -> element. ctx.done(ok) when finished; ctx.test = single attempt
+function renderStep(s,ctx){const el=h('div','stack step');
+  const base={where:ctx.where||'Lesson',lesson:ctx.lessonTitle,text:s.md||s.q,fen:s.fen,why:s.why,hint:s.hint};setCtx(base);
+  if(s.h)el.appendChild(h('h2','',inl(s.h)));
+  ({info:stInfo,quiz:stQuiz,move:stMove,reach:stReach,tap:stTap,line:stLine,play:stPlay})[s.t](s,el,ctx,base);
+  return el}
+function fb(el,ok,title,body){let f=el.querySelector('.fb');if(!f){f=h('div','fb');el.appendChild(f)}f.className='fb '+(ok?'ok':'no');f.innerHTML=`<h3>${title}</h3>${body?md(body):''}`;return f}
+function stInfo(s,el,ctx){if(s.fen||s.pieces){const bh=h('div');el.appendChild(bh);Board(bh,{st:s.fen?parseFEN(s.fen):null,pieces:s.pieces,hl:s.hl,arr:s.arr,persp:s.flip?'b':'w',marks:s.marks})}
+  el.appendChild(h('div','tut',md(s.md)));ctx.done(null)}
+function stQuiz(s,el,ctx,base){if(s.fen){const bh=h('div');el.appendChild(bh);Board(bh,{st:parseFEN(s.fen),hl:s.hl,arr:s.arr,persp:s.flip?'b':'w'})}
+  if(s.pos)el.appendChild(h('div','pos',s.pos.map(l=>`<div>${inl(l)}</div>`).join('')));
+  el.appendChild(h('p','prompt',inl(s.q)));const ch=h('div','choices'+(s.opts.some(o=>o.length>18)?' one':''));el.appendChild(ch);let first=true,fin=false;
+  s.opts.forEach((o,i)=>{const b=h('button','choice',inl(o));ch.appendChild(b);b.onclick=()=>{if(fin)return;
+    if(i===s.a){b.classList.add('good');fin=true;fb(el,true,first?'Sahi! ✓':'Ab sahi ✓',s.why);if(first)addXP(10);grade(s,first);ctx.done(first)}
+    else{b.classList.add('bad');setCtx(Object.assign({},base,{tried:o,answer:s.opts[s.a]}));
+      if(ctx.test){fin=true;ch.children[s.a].classList.add('good');fb(el,false,'Galat',`Sahi jawab: **${s.opts[s.a]}**\n\n${s.why||''}`);grade(s,false);ctx.done(false)}
+      else{first=false;fb(el,false,'Nahi, dobara socho',s.hint||'')}}}})}
+/* puzzle: find the move(s) */
+function stMove(s,el,ctx,base){const st0=parseFEN(s.fen);let st=st0;const side=st0.w?'w':'b';
+  const line=s.line||[];const nUser=Math.ceil(line.length/2);let ply=0,first=true,fin=false,tried=[];
+  const top=h('div','row');top.innerHTML=`<span class="sidetag ${side}">${side==='w'?'White':'Black'} ki chaal</span>`+(s.mate?`<span class="chip">Mate in ${nUser}</span>`:'');el.appendChild(top);
+  el.appendChild(h('p','prompt',inl(s.q||(side==='w'?'White':'Black')+' ke liye sabse achhi chaal dhundo')));
+  const bh=h('div');el.appendChild(bh);
+  const B=Board(bh,{st,side,persp:s.flip||side==='b'?'b':'w',hl:s.hl,onMove});
+  const bar=h('div','row');el.appendChild(bar);
+  const hintB=h('button','btn small','💡 Hint'),showB=h('button','btn small','Jawab dikhao'),resetB=h('button','btn small','↺ Dobara');
+  if(!ctx.test){bar.append(hintB,showB,resetB)}
+  hintB.onclick=()=>{const f=line[ply]?findMove(st,line[ply]):null;if(f){B.marks={[sn(f.f)]:'ring'};B.draw()}fb(el,true,'Hint',s.hint||'Jo piece ring mein hai, usse chalo.');first=false};
+  showB.onclick=()=>{first=false;autoplay()};
+  resetB.onclick=()=>{st=st0;ply=0;fin=false;B.last=null;B.clear();B.lock=false;B.set({st});const f=el.querySelector('.fb');if(f)f.remove()};
+  function autoplay(){B.lock=true;const go=()=>{if(ply>=line.length){finish(false,true);return}const m=findMove(st,line[ply]);B.last=[sn(m.f),sn(m.t)];st=make(st,m);ply++;B.set({st});setTimeout(go,650)};go()}
+  function finish(ok,shown){fin=true;B.lock=true;
+    if(shown){fb(el,true,'Jawab: '+line.filter((_,i)=>i%2===0).join(', '),s.why);grade(s,false);ctx.done(false);return}
+    fb(el,true,(first?'Shabaash! ✓ ':'Ho gaya ✓ ')+(s.mate?'Checkmate!':''),s.why);if(first)addXP(15);grade(s,first);ctx.done(first)}
+  function wrong(m,msg){tried.push(sanOf(st,m));setCtx(Object.assign({},base,{fen:fenOf(st),tried:tried.join(', '),answer:line.join(' ')}));
+    if(ctx.test){B.lock=true;fin=true;fb(el,false,'Galat',`Tumne **${tried[tried.length-1]}** khela. Sahi: **${line.filter((_,i)=>i%2===0).join(', ')}**\n\n${s.why||''}`);grade(s,false);ctx.done(false);return}
+    first=false;fb(el,false,msg||'Yeh chaal nahi. Dobara try karo.',s.hint?('Hint: '+s.hint):'');B.clear();B.draw()}
+  function onMove(m){if(fin)return;const mySan=sanOf(st,m),exp=line[ply];const remaining=nUser-Math.floor(ply/2);
+    let ok=exp&&sameSan(mySan,exp),dyn=false;
+    if(!ok&&s.mate&&remaining<=2){const n=make(st,m);ok=remaining===1?mates(n):(legal(n).length>0&&legal(n).every(r=>legal(make(n,r)).some(x=>mates(make(make(n,r),x)))));dyn=ok}
+    if(!ok&&s.acc&&s.acc[ply]&&s.acc[ply].some(a=>sameSan(a,mySan))){ok=ply>=line.length-1;if(!ok){B.clear();B.draw();fb(el,true,'Achhi chaal! 👍','Yeh bhi chal sakti hai, par is puzzle ki main line try karo.');return}}
+    if(!ok&&s.ok&&ply===0&&s.ok.some(a=>sameSan(a,mySan)))ok=true;
+    if(!ok){wrong(m);return}
+    B.last=[sn(m.f),sn(m.t)];st=make(st,m);ply++;B.clear();B.set({st});
+    if(mates(st)||ply>=line.length||(s.ok&&ply===1&&line.length<=1)){finish(true);return}
+    if(dyn&&!sameSan(mySan,exp)){// left the stored line: answer with any reply, keep checking for mate
+      const reps=legal(st);if(!reps.length){finish(true);return}const r=reps.sort((a,b)=>legal(make(st,b)).length-legal(make(st,a)).length)[0];
+      const rs=sanOf(st,r);B.lock=true;setTimeout(()=>{B.last=[sn(r.f),sn(r.t)];st=make(st,r);ply++;B.lock=false;B.set({st});fb(el,true,'Achha! Ab mate do',`Opponent ne **${rs}** khela.`)},500);return}
+    B.lock=true;setTimeout(()=>{const r=findMove(st,line[ply]);B.last=[sn(r.f),sn(r.t)];st=make(st,r);ply++;B.lock=false;B.set({st});
+      fb(el,true,'Sahi! Aage badho',`Opponent: **${line[ply-1]}**. Ab tumhari chaal.`)},550)}}
+function fenOf(st){let o='';for(let r=7;r>=0;r--){let e=0;for(let f=0;f<8;f++){const p=st.b[r*8+f];if(!p)e++;else{if(e){o+=e;e=0}o+=p}}if(e)o+=e;if(r)o+='/'}
+  const c=(st.c.K?'K':'')+(st.c.Q?'Q':'')+(st.c.k?'k':'')+(st.c.q?'q':'');return o+' '+(st.w?'w':'b')+' '+(c||'-')+' '+(st.ep>=0?sn(st.ep):'-')+' '+st.hm+' '+st.fm}
+/* tap every square a piece can reach */
+function stReach(s,el,ctx){const st=parseFEN(s.fen);const ans=legal(st).filter(m=>sn(m.f)===s.from).map(m=>sn(m.t)).filter((v,i,a)=>a.indexOf(v)===i);
+  el.appendChild(h('p','prompt',inl(s.q)));const bh=h('div');el.appendChild(bh);const pick=new Set();let fin=false,first=true;
+  const B=Board(bh,{st,marks:{[s.from]:'sel'},onTap:n=>{if(fin||n===s.from)return;pick.has(n)?pick.delete(n):pick.add(n);B.marks={};pick.forEach(q=>B.marks[q]='pick');B.draw();cnt.textContent=pick.size+' chune'}});
+  const row=h('div','row');const cnt=h('span','muted','0 chune');const go=h('button','btn primary','Check karo');row.append(go,cnt);el.appendChild(row);
+  go.onclick=()=>{if(fin)return;const miss=ans.filter(q=>!pick.has(q)),bad=[...pick].filter(q=>!ans.includes(q));B.marks={};
+    ans.forEach(q=>B.marks[q]=pick.has(q)?'good':'miss');bad.forEach(q=>B.marks[q]='bad');B.draw();
+    if(!miss.length&&!bad.length){fin=true;fb(el,true,(first?'Perfect! ✓ ':'Sahi ✓ ')+ans.length+' squares',s.why);if(first)addXP(10);grade(s,first);ctx.done(first)}
+    else if(ctx.test){fin=true;fb(el,false,'Poora sahi nahi',`${miss.length} square chhoot gaye (hare ring), ${bad.length} galat (laal). ${s.why||''}`);grade(s,false);ctx.done(false)}
+    else{first=false;fb(el,false,'Lagbhag!',`${miss.length?miss.length+' square chhoot gaye (hare ring wale). ':''}${bad.length?bad.length+' galat (laal). ':''}Galat wale hata ke dobara Check karo.`);
+      bad.forEach(q=>pick.delete(q));miss.forEach(q=>pick.add(q));setTimeout(()=>{B.marks={};pick.forEach(q=>B.marks[q]='pick');B.draw()},1400)}}}
+/* tap the named square (random drill or fixed) */
+function stTap(s,el,ctx){const n=s.rand||1;let i=0,ok=0,first=true;const targets=s.ans?[s.ans]:Array.from({length:n},()=>sn(rnd(64)));
+  const p=h('p','prompt');el.appendChild(p);const bh=h('div');el.appendChild(bh);const sc=h('p','muted');el.appendChild(sc);
+  const B=Board(bh,{st:s.fen?parseFEN(s.fen):null,coords:s.coords!==false,persp:s.flip?'b':'w',onTap:q=>{if(i>=targets.length)return;const t=targets[i];
+    if(q===t){B.marks={[q]:'good'};ok++;i++}else{B.marks={[q]:'bad',[t]:'miss'};first=false;i++}B.draw();setTimeout(next,600)}});
+  function next(){if(i>=targets.length){const good=ok>=Math.ceil(targets.length*0.8);fb(el,good,good?`Shabaash! ${ok}/${targets.length} ✓`:`${ok}/${targets.length}. Thodi aur practice!`,s.why);
+      if(good)addXP(5+ok);grade(s,good);ctx.done(good);return}
+    B.marks={};B.draw();p.innerHTML=(s.q||'Square tap karo:')+` <span class="n big2">${targets[i]}</span>`;sc.textContent=`${i+1}/${targets.length}`}
+  next()}
+/* walk through a line of moves with notes; optional recall drill */
+function stLine(s,el,ctx){const st0=parseFEN(s.fen||START_FEN);const moves=s.moves.split(' ');const sts=[st0],mv=[];
+  for(const x of moves){const st=sts[sts.length-1];const m=findMove(st,x);if(!m){el.appendChild(h('p','warn','Line error: '+x));break}mv.push(m);sts.push(make(st,m))}
+  let i=0;const bh=h('div');el.appendChild(bh);const B=Board(bh,{st:st0,persp:s.flip?'b':'w'});
+  const ml=h('div','moves');el.appendChild(ml);const note=h('div','tut note');el.appendChild(note);
+  const nav=h('div','row nav');const pb=h('button','btn','‹ Peeche'),nb=h('button','btn primary','Agli chaal ›');nav.append(pb,nb);el.appendChild(nav);
+  const fm0=st0.fm||1,wfirst=st0.w;
+  function lbl(k){const idx=k+(wfirst?0:1);return Math.floor(idx/2)+fm0+(idx%2?'…':'.')}
+  function draw(){B.last=i?[sn(mv[i-1].f),sn(mv[i-1].t)]:null;B.set({st:sts[i]});
+    ml.innerHTML=moves.map((x,k)=>`<span class="mv${k===i-1?' cur':''}${k>=i?' fut':''}">${(k===0||(k+(wfirst?0:1))%2===0)?`<span class="mn">${lbl(k)}</span> `:''}${esc(x)}</span>`).join(' ');
+    note.innerHTML=md(i===0?(s.md||'Chalo is line ko chaal-dar-chaal dekhte hain.'):(s.notes&&s.notes[i])||'');
+    pb.disabled=i===0;nb.textContent=i>=moves.length?(s.drill?'Ab khud khelo ›':'Ho gaya ✓'):'Agli chaal ›';
+    setCtx({where:'Opening/line walkthrough',lesson:ctx.lessonTitle,text:(s.h||'')+' '+s.moves,fen:fenOf(sts[i])})}
+  pb.onclick=()=>{if(i>0){i--;draw()}};
+  nb.onclick=()=>{if(i<moves.length){i++;draw();if(i>=moves.length&&!s.drill)ctx.done(null)}else if(s.drill)drill()};
+  function drill(){nav.remove();note.innerHTML=md(`Ab yaad se khelo! Tum **${s.drill==='w'?'White':'Black'}** ho. Opponent apne aap khelega.`);let k=0,mist=0;
+    const me=s.drill==='w';B.o.persp=me?'w':'b';
+    const step=()=>{ml.innerHTML=moves.slice(0,k).map(esc).join(' ');B.set({st:sts[k]});
+      if(k>=moves.length){fb(el,mist<=1,mist?`Line poori! ${mist} galti`:'Perfect! Poori line yaad hai ✓','');if(mist<=1)addXP(15);ctx.done(mist<=1);return}
+      if(sts[k].w===me){B.o.side=me?'w':'b';B.lock=false}else{B.lock=true;setTimeout(()=>{B.last=[sn(mv[k].f),sn(mv[k].t)];k++;step()},500)}};
+    B.o.onMove=m=>{if(sameSan(sanOf(sts[k],m),moves[k])){B.last=[sn(m.f),sn(m.t)];k++;const f=el.querySelector('.fb');if(f)f.remove();step()}
+      else{mist++;const e=findMove(sts[k],moves[k]);B.marks={[sn(e.f)]:'ring'};B.draw();B.marks={};fb(el,false,'Nahi, yeh line ki chaal nahi','Ring wala piece chalo. Sahi chaal: **'+moves[k]+'**')}};
+    step()}
+  draw()}
+/* play a position against the built-in engine to reach a goal */
+function stPlay(s,el,ctx){const st0=parseFEN(s.fen);const me=st0.w;let st=st0,n=0,fin=false,hist=[];
+  el.appendChild(h('p','prompt',inl(s.q)));const info=h('div','row');el.appendChild(info);const bh=h('div');el.appendChild(bh);
+  const B=Board(bh,{st,side:me?'w':'b',persp:me?'w':'b',onMove});const msg=h('p','muted');el.appendChild(msg);
+  const bar=h('div','row');const rb=h('button','btn small','↺ Shuru se'),hb=h('button','btn small','💡 Coach hint'),ub=h('button','btn small','↶ Wapas');bar.append(rb,ub,hb);el.appendChild(bar);
+  const goalTxt={mate:'Checkmate karo',promote:'Pawn ko queen banao',draw:'Draw bachao (haaro mat)'}[s.goal];
+  function status(t){info.innerHTML=`<span class="chip">${goalTxt}</span><span class="chip">Chaal ${n}/${s.max}</span>`;msg.innerHTML=t?inl(t):''}
+  rb.onclick=()=>{st=st0;n=0;fin=false;hist=[];B.last=null;B.lock=false;B.marks={};B.set({st});status('');const f=el.querySelector('.fb');if(f)f.remove()};
+  ub.onclick=()=>{if(!hist.length||B.lock)return;const p=hist.pop();st=p.st;n=p.n;fin=false;B.lock=false;B.last=null;B.marks={};B.set({st});status('Ek chaal wapas li.');const f=el.querySelector('.fb');if(f)f.remove()};
+  hb.onclick=()=>{if(fin||B.lock)return;const m=engineMove(st,3);if(m){B.marks={[sn(m.f)]:'ring',[sn(m.t)]:'ring'};B.draw();B.marks={};status('Coach: ring wale piece ko ring wale square par le jao (ek idea).')}};
+  function end(ok,t){fin=true;B.lock=true;fb(el,ok,ok?'Mission poora! ✓':'Is baar nahi',t+(ok?'':'\n\n**↺ Shuru se** dabake dobara try karo.'));if(ok){addXP(20);grade(s,true);ctx.done(true)}else grade(s,false)}
+  function myMat(b){return b.filter(p=>p&&isW(p)===me&&p.toUpperCase()!=='K').length}
+  function check(after){// after: who just moved is me? returns true if game ended
+    const L=legal(st);
+    if(!L.length){if(inCheck(st)){if(st.w!==me)end(true,'Checkmate! Tumne jeet liya.');else end(false,'Tum checkmate ho gaye.')}
+      else end(s.goal==='draw','Stalemate! '+(s.goal==='draw'?'Draw bach gaya.':'Draw ho gaya. Opponent ke king ko kam se kam ek chaal chhodo.'));return true}
+    if(s.goal==='promote'){const pr=after&&st.b.some((p,i)=>p===(me?'Q':'q')&&((i>>3)===(me?7:0)));if(pr){const qi=st.b.findIndex((p,i)=>p===(me?'Q':'q')&&((i>>3)===(me?7:0)));
+      if(!attacked(st.b,qi,!me)||attacked(st.b,qi,me)){end(true,'Pawn queen ban gaya aur safe hai!');return true}}
+      if(!st.b.some(p=>p===(me?'P':'p'))&&!st.b.some(p=>p===(me?'Q':'q'))){end(false,'Pawn chala gaya. Ab jeet nahi sakte.');return true}}
+    if(s.goal==='mate'&&myMat(st.b)===0){end(false,'Tumhara piece chala gaya. Ab mate nahi ho sakta.');return true}
+    if(s.goal==='draw'&&!after&&st.b.some((p,i)=>p===(me?'q':'Q'))){end(false,'Opponent ka pawn queen ban gaya.');return true}
+    if(n>=s.max&&!after){if(s.goal==='draw')end(true,`${s.max} chaalein bach gaye. Yeh draw hai!`);else end(false,`${s.max} chaalein ho gayi. Thoda tez plan chahiye.`);return true}
+    return false}
+  function onMove(m){if(fin)return;hist.push({st,n});B.last=[sn(m.f),sn(m.t)];st=make(st,m);n++;B.set({st});status('');if(check(true))return;
+    B.lock=true;status('Opponent soch raha hai…');setTimeout(()=>{const r=engineMove(st,s.lvl||3);const rs=sanOf(st,r);B.last=[sn(r.f),sn(r.t)];st=make(st,r);B.lock=false;B.set({st});status('Opponent: `'+rs+'`');check(false)},350)}
+  // fix status text after reply (san must be computed before the move)
+  status('')}
+
+/* ---------- views ---------- */
+let VIEW={};
+function go(hash){if(location.hash!==hash)location.hash=hash;else route()}
+window.addEventListener('hashchange',route);
+function route(){closeTutor();const p=(location.hash||'#/').slice(2).split('/');const app=$('#app');app.innerHTML='';window.scrollTo(0,0);
+  tabs(p[0]==='puzzles'?'puz':p[0]==='play'?'play':'course');
+  if(p[0]==='level')vLevel(+p[1]);else if(p[0]==='lesson')vLesson(+p[1],+p[2]);else if(p[0]==='test')vTest(+p[1]);
+  else if(p[0]==='review')vReview();else if(p[0]==='puzzles')vPuzzles();else if(p[0]==='play')vPlay();else if(p[0]==='place')vPlace();else vHome();chips()}
+function tabs(on){document.querySelectorAll('nav.tabs [data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===on))}
+function coachLine(){const nx=nextLesson(),due=dueReviews().length,weak=weakTopics()[0];touchDay();
+  if(!Object.keys(PR.done).length&&!PR.placed)return'Namaste! Main tumhara chess coach hoon. Hum bilkul shuru se chalenge, ek-ek step. Agar thoda chess aata hai to pehle **placement test** de do, main sahi level se shuru karunga.';
+  if(due)return`Kal ki kuch galtiyan dobara dekhni hain (${due}). Pehle **Review** karo, phir naya lesson. Yahi pro players ka tareeka hai.`;
+  if(weak)return`Tumhara weak topic: **${lesName(weak.k)}** (${Math.round(weak.acc*100)}% sahi). Is lesson ko dobara karo, phir aage badhenge.`;
+  if(nx&&nx.test)return`**${nx.test.title}** ke saare lessons ho gaye! Ab test do. 70% aaye to agla level khulega.`;
+  if(!nx)return'Wah! Poora course ho gaya. Ab roz puzzles, coach ke saath games aur master games dekhte raho.';
+  return`Aaj ka agla lesson: **${nx.les.title}**. Chalo shuru karte hain!`}
+function vHome(){const app=$('#app');touchDay();save();const nx=nextLesson(),due=dueReviews(),D=PR.day;
+  const doneN=Object.keys(PR.done).length,pct=Math.round(doneN/ALLLES.length*100);
+  const tasks=[[D.lesson>=1,'1 lesson poora karo'],[D.puz>=5,`5 puzzles solve karo (${Math.min(D.puz,5)}/5)`],[!due.length||D.rev>=Math.min(due.length+D.rev,8),'Review: purani galtiyan dobara'],[D.xp>=60,`60 XP kamao (${Math.min(D.xp,60)}/60)`]];
+  let o=`<div class="stack">
+  <div class="card coach"><div class="row" style="gap:12px;flex-wrap:nowrap"><div class="ava">🤖</div><div class="stack" style="gap:6px"><span class="eyebrow">Tumhara coach</span><div class="tut">${md(coachLine())}</div></div></div>
+   <div class="row">${nx?`<button class="btn primary" data-go="${nx.test?'#/test/'+nx.test.li:'#/lesson/'+nx.les.li+'/'+nx.les.lj}">${nx.test?'Test do ›':'Agla lesson ›'}</button>`:''}
+   ${due.length?`<button class="btn" data-go="#/review">Review (${due.length})</button>`:''}${!doneN&&!PR.placed?'<button class="btn" data-go="#/place">Placement test</button>':''}<button class="btn" data-act="tutor">Coach se pucho</button></div></div>
+  <div class="card stack"><div class="row" style="justify-content:space-between"><h3>Aaj ke kaam</h3><small class="muted">${today()}</small></div>
+   ${tasks.map(([d,t])=>`<div class="task${d?' ok':''}"><i>${d?'✓':''}</i>${esc(t)}</div>`).join('')}</div>
+  <div class="row" style="justify-content:space-between;align-items:end"><h2>Course: basics se pro tak</h2><small class="muted">${pct}%</small></div>
+  <div class="prog"><i style="width:${pct}%"></i></div>`;
+  for(const L of COURSE){const n=L.lessons.filter(l=>PR.done[l.key]).length,un=levelUnlocked(L.li),t=PR.tests[L.id];
+    o+=`<button class="lvl${un?'':' locked'}" data-go="#/level/${L.li}"><span class="lnum">${L.li+1}</span><span class="stack" style="gap:2px;text-align:left"><b>${esc(L.title)}</b><small>${esc(L.sub)}</small>
+     <span class="prog sm"><i style="width:${n/L.lessons.length*100}%"></i></span></span><span class="lst">${!un?'🔒':t>=70?'🏅':n+'/'+L.lessons.length}</span></button>`}
+  o+=`<p class="muted" style="font-size:13px">Progress sirf is phone/browser mein save hota hai. Internet ke bina bhi chalta hai (AI coach ko chhod ke).</p></div>`;app.innerHTML=o;
+  setCtx({where:'Home screen (aaj ka plan)'})}
+function vLevel(li){const L=COURSE[li],app=$('#app');if(!L)return go('#/');const un=levelUnlocked(li);
+  let o=`<div class="stack"><button class="back" data-go="#/">‹ Course</button><span class="eyebrow">Level ${li+1}</span><h1>${esc(L.title)}</h1><div class="tut">${md(L.intro||L.sub)}</div>`;
+  if(!un)o+=`<div class="card"><p>🔒 Yeh level band hai. Pichle level ka test 70% se pass karo, ya <a href="#/place">placement test</a> do.</p></div>`;
+  L.lessons.forEach((les,lj)=>{const d=PR.done[les.key],u=lessonUnlocked(les),s=PR.stat[les.key];
+    o+=`<button class="les${u?'':' locked'}" ${u?`data-go="#/lesson/${li}/${lj}"`:'disabled'}><span class="lck">${d?'✓':u?lj+1:'🔒'}</span><span class="stack" style="gap:2px;text-align:left"><b>${esc(les.title)}</b><small>${esc(les.sub||'')}${s&&s.ok+s.bad?` · ${Math.round(s.ok/(s.ok+s.bad)*100)}% sahi`:''}</small></span></button>`});
+  if(L.test){const t=PR.tests[L.id];const u=un&&L.lessons.every(l=>PR.done[l.key])||t!=null||li<PR.placed;
+    o+=`<button class="les test${u?'':' locked'}" ${u?`data-go="#/test/${li}"`:'disabled'}><span class="lck">${t>=70?'🏅':'📝'}</span><span class="stack" style="gap:2px;text-align:left"><b>Level test</b><small>${t!=null?'Best: '+t+'%':u?'70% par agla level khulega':'Pehle saare lessons poore karo'}</small></span></button>`}
+  o+=`<button class="btn block" data-go="#/play">♟ Coach ke saath game khelo</button></div>`;app.innerHTML=o;setCtx({where:'Level '+(li+1)+': '+L.title})}
+function player(app,steps,opt){// generic step-by-step player for lessons, tests, reviews
+  let i=0;const res=[];const top=h('div','qhead');top.innerHTML=`<button class="x" aria-label="Back">‹</button><div class="prog"><i></i></div><span class="count"></span><button class="btn small tbtn">🤖 Coach</button>`;top.querySelector('.tbtn').onclick=openTutor;app.appendChild(top);
+  top.querySelector('.x').onclick=()=>go(opt.back);
+  const stage=h('div');app.appendChild(stage);const foot=h('div','foot');const nb=h('button','btn primary block','Aage ›');foot.appendChild(nb);app.appendChild(foot);
+  function show(){const s=steps[i];top.querySelector('.prog i').style.width=(i/steps.length*100)+'%';top.querySelector('.count').textContent=(i+1)+'/'+steps.length;
+    stage.innerHTML='';nb.disabled=true;nb.textContent=i===steps.length-1?'Poora karo ✓':'Aage ›';
+    if(opt.head)stage.appendChild(h('p','eyebrow',esc(opt.head(s))));
+    stage.appendChild(renderStep(s,{test:opt.test,lessonTitle:opt.title(s),where:opt.where,done:ok=>{res[i]=ok;nb.disabled=false;if(ok!=null)setTimeout(()=>{const f=stage.querySelector('.fb');(f||foot).scrollIntoView({behavior:'smooth',block:'nearest'})},80)}}));
+    if(s.t==='info')nb.disabled=false;window.scrollTo(0,0)}
+  nb.onclick=()=>{if(i<steps.length-1){i++;show()}else opt.finish(res)};show()}
+function vLesson(li,lj){const L=COURSE[li],les=L&&L.lessons[lj];if(!les)return go('#/');const app=$('#app');
+  if(!lessonUnlocked(les)){app.innerHTML=`<div class="card stack"><p>🔒 Pehle pichla lesson poora karo.</p><button class="btn" data-go="#/level/${li}">‹ Level</button></div>`;return}
+  player(app,les.steps,{back:'#/level/'+li,title:()=>les.title,where:'Lesson',finish:res=>{const first=!PR.done[les.key];PR.done[les.key]=1;touchDay();if(first)PR.day.lesson++;save();if(first)addXP(25);
+    const g=res.filter(x=>x!=null),ok=g.filter(Boolean).length;
+    const nxt=L.lessons[lj+1];app.innerHTML=`<div class="stack center"><div class="big">🎉</div><h1>Lesson poora!</h1><p>${esc(les.title)}</p>${g.length?`<p class="muted">Pehli koshish mein sahi: ${ok}/${g.length}</p>`:''}
+     <div class="card tut">${md(ok<g.length*0.7&&g.length?'Kuch sawaal mushkil lage. Koi baat nahi: yeh review list mein chale gaye, kal dobara aayenge. Chaho to lesson abhi ek baar aur kar lo.':'Bahut badhiya! Coach khush hai. Chalo agla step.')}</div>
+     ${nxt?`<button class="btn primary block" data-go="#/lesson/${li}/${lj+1}">Agla lesson: ${esc(nxt.title)} ›</button>`:L.test?`<button class="btn primary block" data-go="#/test/${li}">Level test do ›</button>`:''}
+     <button class="btn block" data-go="#/lesson/${li}/${lj}" data-re="1">Dobara karo</button><button class="btn block" data-go="#/">Home</button></div>`}})}
+function vTest(li){const L=COURSE[li],app=$('#app');if(!L||!L.test)return go('#/');
+  player(app,L.test,{test:true,back:'#/level/'+li,title:()=>L.title+' test',where:'Level test',head:s=>s.les&&lesByKey(s.les)?lesByKey(s.les).title:'Test',finish:res=>{
+    const ok=res.filter(Boolean).length,pct=Math.round(ok/L.test.length*100);const prev=PR.tests[L.id];PR.tests[L.id]=Math.max(prev||0,pct);save();if(pct>=70&&!(prev>=70))addXP(50);
+    const by={};L.test.forEach((s,k)=>{const n=s.les?lesName(s.les):'Test';(by[n]=by[n]||[0,0]);by[n][1]++;if(res[k])by[n][0]++});
+    const weak=Object.entries(by).filter(([n,[a,b]])=>a<b);
+    const summary=`Level test: ${L.title}. Score ${pct}%. `+Object.entries(by).map(([n,[a,b]])=>`${n}: ${a}/${b}`).join(', ');
+    app.innerHTML=`<div class="stack center"><div class="big">${pct>=70?'🏅':'📘'}</div><h1>${pct}%</h1><p>${pct>=70?'Pass! Agla level khul gaya.':'Abhi pass nahi (70% chahiye). Kamzor topics dobara karo, phir test do.'}</p>
+     <div class="card stack" style="text-align:left"><h3>Coach ka feedback</h3>${weak.length?'<p>In topics par dhyan do:</p><ul>'+weak.map(([n,[a,b]])=>`<li>${esc(n)}: ${a}/${b}</li>`).join('')+'</ul>':'<p>Har topic mein sab sahi. Kamaal!</p>'}
+     <div id="aifb"></div>${gKey()?'<button class="btn" id="aib">🤖 AI coach se detailed feedback lo</button>':'<small class="muted">AI coach (free Gemini key) se detailed feedback bhi mil sakta hai: 🤖 button dabao.</small>'}</div>
+     ${pct>=70&&COURSE[li+1]?`<button class="btn primary block" data-go="#/level/${li+1}">Level ${li+2} shuru karo ›</button>`:`<button class="btn primary block" data-go="#/test/${li}" data-re="1">Test dobara do</button>`}<button class="btn block" data-go="#/level/${li}">Level par wapas</button></div>`;
+    const ab=$('#aib');if(ab)ab.onclick=()=>{ab.disabled=true;$('#aifb').innerHTML='<p class="muted">Coach soch raha hai…</p>';
+      gAsk(`${TUTOR_SYS}\n\n${summary}\n\nIs result ko dekh kar student ko feedback do: kya achha hai, kya kamzor hai, aur agle 3 din ka chhota practice plan.`).then(r=>{$('#aifb').innerHTML=mdLite(r.text)},e=>{$('#aifb').innerHTML=`<p class="warn">${esc(gErr(e))}</p>`;ab.disabled=false})};
+    setCtx({where:'Test result',text:summary})}})}
+function vReview(){const app=$('#app');const due=shuffle(dueReviews()).slice(0,8);
+  if(!due.length){app.innerHTML=`<div class="stack center"><div class="big">✅</div><h2>Aaj koi review baaki nahi</h2><button class="btn primary block" data-go="#/">Home</button></div>`;return}
+  player(app,due,{test:false,back:'#/',title:s=>lesName(s.les),head:s=>'Review · '+lesName(s.les),where:'Review (purani galtiyan)',finish:res=>{touchDay();PR.day.rev+=due.length;save();
+    const ok=res.filter(Boolean).length;app.innerHTML=`<div class="stack center"><div class="big">🔁</div><h1>Review poora</h1><p>${ok}/${due.length} pehli baar mein sahi. Jo galat hue woh kal phir aayenge.</p><button class="btn primary block" data-go="#/">Home</button></div>`}})}
+function vPlace(){const app=$('#app');const steps=PLACEMENT.map(id=>STEPS[id]).filter(Boolean);
+  player(app,steps,{test:true,back:'#/',title:()=>'Placement test',head:()=>'Placement test',where:'Placement test',finish:res=>{
+    let lvl=0;for(let k=0;k<steps.length;k+=2){if(res[k]&&res[k+1])lvl=k/2+1;else break}lvl=Math.min(lvl,COURSE.length-1);PR.placed=lvl;save();
+    app.innerHTML=`<div class="stack center"><div class="big">🎯</div><h1>Level ${lvl+1} se shuru</h1><p>${lvl?`Pehle ${lvl} level tumhare liye khul gaye (chaho to unke lessons bhi kar sakte ho).`:'Hum bilkul basics se shuru karenge. Koi tension nahi, step by step!'}</p><button class="btn primary block" data-go="#/level/${lvl}">Chalo ›</button></div>`}})}
+function vPuzzles(){const app=$('#app');const pool=Object.values(STEPS).filter(s=>s.t==='move'&&!s.free&&s.line&&levelUnlocked(s.li));
+  const fresh=pool.filter(s=>!PR.solved[s.id]);const list=shuffle(fresh.length?fresh:pool);let i=0;
+  app.innerHTML=`<div class="stack"><h1>Puzzles</h1><p class="muted">${Object.keys(PR.solved).length}/${pool.length} solve kiye. Roz 5 puzzle = tez dimaag. (Khule levels ke puzzles hi aate hain.)</p><div id="pz"></div></div>`;
+  function show(){const s=list[i%list.length];const box=$('#pz');box.innerHTML='';box.appendChild(h('p','eyebrow',esc(lesName(s.les))));
+    box.appendChild(renderStep(s,{where:'Puzzles tab',lessonTitle:lesName(s.les),done:ok=>{if(ok!=null){touchDay();PR.day.puz++;save()}nb.disabled=false}}));
+    const nb=h('button','btn primary block','Agla puzzle ›');nb.disabled=true;nb.onclick=()=>{i++;show();window.scrollTo(0,0)};box.appendChild(nb)}
+  if(list.length)show();else $('#pz').innerHTML='<p>Abhi koi puzzle nahi.</p>'}
+/* free game vs built-in coach */
+let G=null;
+function vPlay(){const app=$('#app');if(!G)G={st:parseFEN(START_FEN),me:'w',lvl:2,hist:[],sans:[],keys:[],over:''};
+  app.innerHTML=`<div class="stack"><h1>Coach ke saath khelo</h1><div class="row"><div class="seg" id="lv">${['Aasaan','Medium','Mushkil'].map((t,k)=>`<button data-l="${k+1}" class="${G.lvl===k+1?'on':''}">${t}</button>`).join('')}</div>
+   <div class="seg" id="sd"><button data-s="w" class="${G.me==='w'?'on':''}">White</button><button data-s="b" class="${G.me==='b'?'on':''}">Black</button></div></div><div id="gb"></div><p id="gs" class="gstat"></p><div class="gamemoves" id="gm"></div>
+   <div class="row"><button class="btn" id="gn">Naya game</button><button class="btn" id="gu">↶ Wapas</button><button class="btn" id="gh">💡 Hint</button></div>
+   <div class="card stack"><p style="font-size:14px">Is game mein ek chhota built-in coach khelta hai (phone par, internet ke bina). Har move ka detailed analysis aur Stockfish coach ke liye <a href="index.html">Mind's Eye trainer</a> kholo.</p></div></div>`;
+  const B=Board($('#gb'),{st:G.st,side:G.me,persp:G.me,onMove:m=>{play(m);setTimeout(reply,250)}});
+  function draw(){B.set({st:G.st});$('#gm').innerHTML=G.sans.map((x,k)=>(k%2===0?`<span class="mn">${k/2+1}.</span> `:'')+esc(x)).join(' ')||'<span class="muted">Moves yahan dikhenge</span>';
+    $('#gs').textContent=G.over||((G.st.w?'White':'Black')+' ki chaal'+(inCheck(G.st)?' · Check!':''));B.lock=!!G.over||(G.st.w?'w':'b')!==G.me;
+    setCtx({where:'Coach ke saath game',fen:fenOf(G.st),task:'Moves ab tak: '+G.sans.join(' ')})}
+  function over(){const L=legal(G.st);if(!L.length)return inCheck(G.st)?((G.st.w?'Black':'White')+' jeeta (checkmate)'):'Draw (stalemate)';
+    if(G.st.hm>=100)return'Draw (50-move rule)';const k=posKey(G.st);if(G.keys.filter(x=>x===k).length>=3)return'Draw (3 baar same position)';
+    const left=G.st.b.filter(p=>p&&p.toUpperCase()!=='K');if(!left.length||(left.length===1&&'BNbn'.includes(left[0])))return'Draw (mate ke liye material nahi)';return''}
+  function play(m){G.hist.push({st:G.st,n:G.sans.length});G.sans.push(sanOf(G.st,m));B.last=[sn(m.f),sn(m.t)];G.st=make(G.st,m);G.keys.push(posKey(G.st));G.over=over();draw()}
+  function reply(){if(G.over||(G.st.w?'w':'b')===G.me)return;const m=engineMove(G.st,G.lvl);if(m)play(m)}
+  $('#lv').onclick=e=>{const b=e.target.closest('[data-l]');if(b){G.lvl=+b.dataset.l;vPlay()}};
+  $('#sd').onclick=e=>{const b=e.target.closest('[data-s]');if(b){G={st:parseFEN(START_FEN),me:b.dataset.s,lvl:G.lvl,hist:[],sans:[],keys:[],over:''};vPlay()}};
+  $('#gn').onclick=()=>{G={st:parseFEN(START_FEN),me:G.me,lvl:G.lvl,hist:[],sans:[],keys:[],over:''};vPlay()};
+  $('#gu').onclick=()=>{let p=G.hist.pop();if(p&&(p.st.w?'w':'b')!==G.me)p=G.hist.pop()||p;if(p){G.st=p.st;G.sans=G.sans.slice(0,p.n);G.keys=G.keys.slice(0,p.n);G.over='';B.last=null;draw()}};
+  $('#gh').onclick=()=>{if(G.over||B.lock)return;const m=engineMove(G.st,3);if(m){B.marks={[sn(m.f)]:'ring',[sn(m.t)]:'ring'};B.draw();B.marks={}}};
+  draw();setTimeout(reply,300)}
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();const t=g.dataset.go;if(location.hash===t)route();else go(t);return}
+  const a=e.target.closest('[data-act]');if(a&&a.dataset.act==='tutor')openTutor()});
+$('#tutorbtn').onclick=openTutor;
+touchDay();save();route();
+
+</script>
+</body>
+</html>
