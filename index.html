@@ -236,6 +236,9 @@ main .qbox.tr.kt .moves{max-height:18vh;max-height:18svh}
 .cm-inacc{color:var(--brass);font-weight:700}.cm-mistake,.cm-blunder{color:var(--bad);font-weight:700}
 .corow{flex-wrap:nowrap;gap:6px}.corow .btn{flex:1;padding-left:4px;padding-right:4px;min-width:0}
 .coachcta{display:flex;flex-direction:column;gap:8px;border:2px solid var(--accent)}
+.aians{background:var(--surface2);border-radius:8px;padding:10px 12px;font-size:15px;line-height:1.5}.aians p{margin:0 0 8px}.aians h4{margin:10px 0 4px;font-size:15px}.aians ul{margin:0 0 8px;padding-left:20px}
+.gin{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);font-size:16px;font-family:var(--f-mono)}
+.gkey a{color:var(--accent)}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i>♞&#xFE0E;</i>Mind's Eye Chess</div><div class="chips" id="chips"></div></div></header>
@@ -1148,6 +1151,7 @@ function vStats(){const stars=ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0),passe
   const heat={};for(const s of ALL.map(sn)){const x=P.sq[s];heat[s]=x&&x.n?`color-mix(in srgb, var(--good) ${Math.round(x.c/x.n*100)}%, var(--bad))`:'var(--surface2)'}
   h+=`<div class="heat">${boardHTML({persp:V.hp||'w',heat,heatLab:true,id:'heat'})}</div><div class="row" style="justify-content:space-between"><div class="seg">${['w','b'].map(p=>`<button class="${(V.hp||'w')===p?'on':''}" data-act="hp" data-v="${p}">${p==='w'?'White':'Black'} side</button>`).join('')}</div><span class="muted" style="font-size:13px">${Object.keys(P.srs).length} items in review</span></div></div>
   <div class="card stack"><h3>Blindfold play</h3><div class="gstat"><span>Blindfold games</span><span class="mono">${P.games.w}W ${P.games.d}D ${P.games.l}L</span></div></div>
+  <div class="card stack"><h3>AI coach key (Gemini, free)</h3>${gKeyHTML()}</div>
   <div class="card"><h3>Settings</h3>
    <label class="toggle"><span>Unlock all stages<br><small class="muted">Skip ahead without passing earlier lessons</small></span><input type="checkbox" class="sw" id="set-unlock" ${P.set.unlockAll?'checked':''}></label>
    <label class="toggle"><span>Read questions aloud<br><small class="muted">Each question and its moves are spoken, so you can train with eyes closed</small></span><input type="checkbox" class="sw" id="set-speakq" ${P.set.speakQ?'checked':''}></label>
@@ -1210,7 +1214,13 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'co-ri':V.ri=+d.v;vCoachRev();break;
    case'co-better':CG.show.better=!CG.show.better;vCoach();break;
    case'co-ai':P.set.ai=d.v;save();{const y=window.scrollY;render();window.scrollTo(0,y)}break;
-   case'co-ask':{const t=coPrompt(d.k),ai=AIS[P.set.ai||'claude'];copyText(t);b.href=ai[1].endsWith('?q=')?ai[1]+encodeURIComponent(t):ai[1];break}
+   case'ai-go':aiGo(d.k,d.ply!=null?+d.ply:null);break;
+   case'gk-save':{const inp=b.closest('.gkey').querySelector('input'),k=(inp.value||'').trim().replace(/\s/g,'');
+     if(!k){GMSG='Paste the key first.';aiRe();break}if(!/^AIza[\w-]{20,}$/.test(k)){GMSG='That does not look like a Gemini key. It should start with AIza. Copy it again.';aiRe();break}
+     gSetKey(k);GMSG='Key saved. Testing it…';aiRe();gAsk('Reply with just the word OK.').then(()=>{GMSG='Key works. You can use the AI coach now.'},e=>{GMSG=gErr(e)}).then(aiRe);break}
+   case'gk-test':GMSG='Testing…';aiRe();gAsk('Reply with just the word OK.').then(()=>{GMSG='Key works.'},e=>{GMSG=gErr(e)}).then(aiRe);break;
+   case'gk-del':if(!V.gdel){V.gdel=true;aiRe();setTimeout(()=>{V.gdel=false;aiRe()},3000)}else{gSetKey('');V.gdel=false;GMSG='';aiRe()}break;
+   case'co-ask':{const t=coPrompt(d.k,d.ply!=null?+d.ply:null),ai=AIS[P.set.ai||'claude'];copyText(t);b.href=ai[1].endsWith('?q=')?ai[1]+encodeURIComponent(t):ai[1];break}
    case'tr':trSetup(d.m,d.from);break;
    case'tr-ready':if(TR){TR.phase='ask';trNext()}break;
    case'tr-opt':{const o=P.trset,v=d.v;o[d.k]=d.k==='min'?+v:d.k==='speed'?(v==='auto'?'auto':+v):v==='true'?true:v==='false'?false:v;save();vTrainSet();break}
@@ -1431,10 +1441,10 @@ const CLV=[{n:'Beginner',elo:'~900',skill:0,mt:50,d:1,js:1},{n:'Casual',elo:'~12
 const CLS={best:['Best','best'],good:['Good','good'],inacc:['Inaccuracy','inacc'],mistake:['Mistake','mistake'],blunder:['Blunder','blunder'],book:['Book','good']};
 const CMARK={inacc:'?!',mistake:'?',blunder:'??'};
 let CG=null;
-function coNew(o){const human=o.color==='r'?pick(['w','b']):o.color;CG={st:startState(),states:[startState()],moves:[],human,lvl:o.lvl,sel:null,busy:'',fb:null,tok:0,over:null,hint:false,show:{}};
+function coNew(o){const human=o.color==='r'?pick(['w','b']):o.color;CG={st:startState(),states:[startState()],moves:[],human,lvl:o.lvl,sel:null,busy:'',fb:null,tok:0,over:null,hint:false,show:{},id:Date.now()};
   sfStart();coSaveCur();go({name:'coach'});if(human==='b')coEngine();else coPre()}
 function coSaveCur(){if(!CG||CG.over){delete P.cgame}else P.cgame={human:CG.human,lvl:CG.lvl,sans:CG.moves.map(x=>x.san),fbs:CG.moves.map(x=>x.fb?{cls:x.fb.cls,loss:x.fb.loss}:null)};save()}
-function coResume(){const g=P.cgame;if(!g)return;CG={st:startState(),states:[startState()],moves:[],human:g.human,lvl:g.lvl,sel:null,busy:'',fb:null,tok:0,over:null,hint:false,show:{}};
+function coResume(){const g=P.cgame;if(!g)return;CG={st:startState(),states:[startState()],moves:[],human:g.human,lvl:g.lvl,sel:null,busy:'',fb:null,tok:0,over:null,hint:false,show:{},id:Date.now()};
   for(let i=0;i<g.sans.length;i++){const m=findMove(CG.st,g.sans[i]);if(!m)break;const by=(CG.st.w===(g.human==='w'))?'h':'e';CG.moves.push({m,san:g.sans[i],by,fb:g.fbs&&g.fbs[i]&&{...g.fbs[i],lite:1}});CG.st=make(CG.st,m);CG.states.push(CG.st)}
   sfStart();go({name:'coach'});coCheckEnd();if(CG.over)return;if(CG.st.w===(CG.human==='w'))coPre();else coEngine()}
 const coMyTurn=()=>CG&&!CG.over&&CG.st.w===(CG.human==='w');
@@ -1516,7 +1526,7 @@ function coFbHTML(fb,full){if(!fb)return'';if(fb.lite)return`<div class="card"><
   if(y.bestLine&&fb.cls!=='best')h+=`<details${full?' open':''}><summary>Better was ${esc(y.bestSan)}: the plan, move by move</summary>${y.bestLine.html}${Math.abs(y.bestLine.gain)>=80?`<p class="muted">At the end of this line you are ${matWord(y.bestLine.gain)} ${y.bestLine.gain>0?'up':'down'} compared with now.</p>`:''}</details>`;
   else if(y.bestLine)h+=`<details><summary>The engine's plan from here</summary>${y.bestLine.html}</details>`;
   if(fb.pre&&fb.pre.lines.length>1)h+=`<details><summary>Other good moves</summary><ul class="cline">${fb.pre.lines.map(l=>{const m=fromUci(fb.st0,l.pv[0]);return m?`<li><b>${esc(san(fb.st0,m,legal(fb.st0)))}</b> <span class="muted">${evTxt(l,w)} · ${esc(moveNote(fb.st0,m))}</span></li>`:''}).join('')}</ul></details>`;
-  return h+(full?aiButtons(['move']):'')+'</div>'}
+  return h+(full?aiButtons(['move'],fb.ply):'')+'</div>'}
 function coPosHTML(){const g=CG,w=g.human==='w',st=g.st,sans=g.moves.map(x=>x.san);const pn=positionNotes(st,w,sans);
   let h=`<div class="card stack"><h3>Position and plan</h3>`;
   if(pn.opening)h+=`<p><b>${esc(pn.opening[1])}.</b> <span class="muted">${esc(pn.opening[2])}</span></p>`;
@@ -1533,7 +1543,7 @@ function coEngHTML(){const g=CG,last=g.moves[g.moves.length-1];if(!last||last.by
 /* ================= coach: ask a free AI ================= */
 const AIS={claude:['Claude','https://claude.ai/new?q='],chatgpt:['ChatGPT','https://chatgpt.com/?q='],gemini:['Gemini','https://gemini.google.com/app']};
 function pgnOf(moves){return moves.map((x,i)=>(i%2===0?(i/2+1)+'. ':'')+x.san).join(' ')}
-function coPrompt(kind){const g=CG;if(!g)return'';const w=g.human==='w',me=w?'White':'Black';let fb=g.fb;
+function coPrompt(kind,ply){const g=CG;if(!g)return'';const w=g.human==='w',me=w?'White':'Black';let fb=ply!=null&&g.moves[ply]?g.moves[ply].fb:g.fb;
   let t=`You are a chess grandmaster and a patient coach. Explain in simple Hinglish (Hindi/Urdu in Roman letters mixed with English chess words), like a GM coach talking to a club player who wants to improve their Elo.\n\nI am playing ${me} against a computer.\nGame so far: ${pgnOf(g.moves)||'(no moves yet)'}\n`;
   if(kind==='move'&&fb&&!fb.lite){const y=coWhy(fb),evB=fb.pre&&fb.pre.lines[0];
     t+=`\nPosition BEFORE my move (FEN): ${toFEN(fb.st0)}\nMy move: ${fb.st0.fm}${w?'.':'...'} ${fb.san}\nStockfish verdict: ${CLS[fb.cls][0]}. My win chance went from ${Math.round(fb.before*100)}% to ${Math.round(fb.after*100)}%. Eval before: ${evB?evTxt(evB,w):'?'} (from White's side).\n`;
@@ -1548,8 +1558,70 @@ function coPrompt(kind){const g=CG;if(!g)return'';const w=g.human==='w',me=w?'Wh
     t+=`\nPlease explain this position like a GM coach: who stands better and why, the pawn structure, weak squares and outposts, piece activity, king safety, what each side threatens, the right plan for me for the next few moves, and the typical ideas of this opening or middlegame.`}
   return t+'\n\nUse the FEN for the exact position. Keep it practical and easy to remember.'}
 const AIK={move:'Explain my last move',pos:'Explain this position',game:'Review my whole game'};
-function aiButtons(kinds){const pick=P.set.ai||'claude';return`<div class="aibox"><div class="row" style="align-items:center;gap:8px"><span class="eyebrow" style="flex:1">Ask a free AI coach</span><div class="seg sm">${Object.entries(AIS).map(([k,v])=>`<button class="${pick===k?'on':''}" data-act="co-ai" data-v="${k}">${v[0]}</button>`).join('')}</div></div>
-  ${kinds.map(k=>`<a class="btn block" data-act="co-ask" data-k="${k}" href="#" target="_blank" rel="noopener">${AIK[k]} in ${AIS[pick][0]} ↗</a>`).join('')}<small class="muted">Free: it copies a full question (position, moves, Stockfish eval and best line) and opens ${AIS[pick][0]}. If the chat box is empty there, tap and paste. Needs internet and a free ${AIS[pick][0]} account.</small></div>`}
+/* in-app AI coach: Google Gemini free tier, key kept only in this browser */
+const GKEY='mindseye.gemini.key';
+const gKey=()=>{try{return localStorage.getItem(GKEY)||''}catch(e){return''}};
+function gSetKey(k){try{k?localStorage.setItem(GKEY,k):localStorage.removeItem(GKEY)}catch(e){}}
+const GMODELS=['gemini-flash-latest','gemini-2.5-flash','gemini-2.0-flash','gemini-flash-lite-latest','gemini-2.5-flash-lite'];
+const AIR={};let GMSG='';
+async function gAsk(prompt){const key=gKey();if(!key)throw{code:'nokey'};let last={code:'model'};
+  const order=P.set.gmodel?[P.set.gmodel,...GMODELS.filter(m=>m!==P.set.gmodel)]:GMODELS;
+  for(const model of order){let r,j=null;
+    try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,{method:'POST',headers:{'content-type':'application/json','x-goog-api-key':key},
+      body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:0.6,maxOutputTokens:4096}})})}catch(e){throw{code:'net'}}
+    try{j=await r.json()}catch(e){}
+    const msg=(j&&j.error&&j.error.message)||'',stat=(j&&j.error&&j.error.status)||'';
+    if(r.ok){const c=j&&j.candidates&&j.candidates[0];const t=c&&c.content&&c.content.parts?c.content.parts.map(x=>x.text||'').join('').trim():'';
+      if(!t)throw{code:'empty',msg:(c&&c.finishReason)||(j&&j.promptFeedback&&j.promptFeedback.blockReason)||''};
+      if(P.set.gmodel!==model){P.set.gmodel=model;save()}return{text:t,model,cut:c.finishReason==='MAX_TOKENS'}}
+    if(/API_KEY_INVALID|API key not valid|API key expired/i.test(msg)||(r.status===400&&/key/i.test(msg)))throw{code:'key',msg};
+    if(r.status===403||stat==='PERMISSION_DENIED')throw{code:'denied',msg};
+    if(r.status===404||(r.status===400&&/model/i.test(msg))){last={code:'model',msg};continue}
+    if(r.status===429){last={code:'limit',msg};continue}
+    if(r.status>=500){last={code:'busy',msg};continue}
+    throw{code:'other',msg:r.status+' '+msg}}
+  throw last}
+function gErr(e){const m={nokey:'Add your free Gemini key first (steps below).',
+  key:'This key is not valid. Open aistudio.google.com/apikey, copy the key again and save it here.',
+  denied:'Google refused this key. Create a new key in AI Studio and paste it here.',
+  limit:'Free limit reached. Wait one minute and tap Try again. If it still fails, today\'s free limit is used up: try again tomorrow. The built-in coach above still works.',
+  busy:'Gemini is busy right now. Try again in a minute.',
+  net:'Could not reach Gemini. Check your internet. If you opened the app inside Claude, use the GitHub link or the offline file: Claude\'s preview may block outside connections.',
+  empty:'Gemini returned no answer'+(e.msg?' ('+e.msg+')':'')+'. Tap Try again.',
+  model:'Gemini\'s free models were not found for this key. Try again later or create a new key.',
+  other:'Gemini error: '}[e&&e.code]||'Something went wrong. ';return m+(e&&e.code==='other'?e.msg:'')}
+function mdLite(t){const lines=esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<i>$2</i>').split('\n');let h='',ul=false;
+  for(let l of lines){l=l.trimEnd();const li=l.match(/^\s*(?:[-*•]|\d+[.)])\s+(.*)$/),hd=l.match(/^#{1,6}\s+(.*)$/);
+    if(li){if(!ul){h+='<ul>';ul=true}h+=`<li>${li[1]}</li>`;continue}if(ul){h+='</ul>';ul=false}
+    if(hd)h+=`<h4>${hd[1]}</h4>`;else if(l.trim())h+=`<p>${l}</p>`}return h+(ul?'</ul>':'')}
+const aiKey=(k,ply)=>CG.id+':'+k+':'+(k==='move'?(ply!=null?ply:CG.fb?CG.fb.ply:-1):CG.moves.length);
+function gKeyHTML(){const k=gKey();
+  if(k)return`<div class="gkey stack"><div class="gstat"><span>Gemini key saved</span><span class="mono">${esc(k.slice(0,4))}…${esc(k.slice(-4))}</span></div>
+   <div class="row"><button class="btn" style="flex:1" data-act="gk-test">Test key</button><button class="btn" style="flex:1" data-act="gk-del">${V.gdel?'Tap again':'Remove key'}</button></div>${GMSG?`<p class="muted" style="font-size:14px">${esc(GMSG)}</p>`:''}
+   <small class="muted">Saved only in this browser on this device, never synced. Free answers are limited per minute and per day.</small></div>`;
+  return`<div class="gkey stack"><b>Get your free key (about 2 minutes, once)</b><ol class="cline">
+   <li>Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> and sign in with your Google (Gmail) account.</li>
+   <li>Tap <b>Create API key</b>. Accept the terms if asked, and pick any project (or let it create one).</li>
+   <li>Tap the <b>copy</b> icon next to the new key. It starts with <span class="mono">AIza</span>.</li>
+   <li>Come back here, paste it in the box and tap <b>Save key</b>.</li></ol>
+   <input class="gin" type="password" placeholder="Paste key here (AIza…)" autocomplete="off" autocapitalize="off" spellcheck="false">
+   <button class="btn primary block" data-act="gk-save">Save key</button>${GMSG?`<p class="warn" style="font-size:14px">${esc(GMSG)}</p>`:''}
+   <small class="muted">No card or payment needed. The key stays only on this device. Google may use free-tier questions to improve its products, so the app sends only chess moves, never your name.</small></div>`}
+function aiButtons(kinds,ply){const has=!!gKey();let h=`<div class="aibox"><span class="eyebrow">AI coach (Gemini, free)</span>`;
+  if(has){for(const k of kinds){const r=AIR[aiKey(k,ply)];
+    if(!r)h+=`<button class="btn primary block" data-act="ai-go" data-k="${k}"${ply!=null?` data-ply="${ply}"`:''}>✦ ${AIK[k]} with AI</button>`;
+    else if(r.state==='load')h+=`<div class="aians muted">AI coach is thinking… (${AIK[k].toLowerCase()})</div>`;
+    else if(r.state==='err')h+=`<div class="aians"><p class="warn">${esc(gErr(r.e))}</p><button class="btn block" data-act="ai-go" data-k="${k}"${ply!=null?` data-ply="${ply}"`:''}>Try again</button></div>`;
+    else h+=`<div class="aians"><div class="row" style="justify-content:space-between"><b>${AIK[k]}</b><small class="muted">Gemini</small></div>${mdLite(r.text)}${r.cut?'<p class="muted">(answer was cut short)</p>':''}<button class="btn small" data-act="ai-go" data-k="${k}"${ply!=null?` data-ply="${ply}"`:''}>Ask again</button></div>`}}
+  else h+=`<p class="muted" style="font-size:14px">Get a GM-style explanation in Hinglish right here in the app. It is free: you only need a free Google Gemini key, once.</p><details><summary>Set up the free AI coach</summary>${gKeyHTML()}</details>`;
+  const pick=P.set.ai||'claude';
+  h+=`<details><summary>Backup: ask in another app</summary><div class="stack" style="margin-top:6px"><div class="seg sm">${Object.entries(AIS).map(([k,v])=>`<button class="${pick===k?'on':''}" data-act="co-ai" data-v="${k}">${v[0]}</button>`).join('')}</div>
+  ${kinds.map(k=>`<a class="btn block" data-act="co-ask" data-k="${k}"${ply!=null?` data-ply="${ply}"`:''} href="#" target="_blank" rel="noopener">${AIK[k]} in ${AIS[pick][0]} ↗</a>`).join('')}<small class="muted">Copies the question and opens ${AIS[pick][0]}. Paste it there if the box is empty.</small></div></details></div>`;
+  return h}
+async function aiGo(k,ply){if(!CG)return;const key=aiKey(k,ply);if(AIR[key]&&AIR[key].state==='load')return;AIR[key]={state:'load'};aiRe();
+  const prompt=coPrompt(k,ply)+'\n\nAnswer in about 200-300 words. Use short headings and bullet points. Write in Hinglish.';
+  try{const r=await gAsk(prompt);AIR[key]={state:'ok',text:r.text,cut:r.cut}}catch(e){AIR[key]={state:'err',e}}aiRe()}
+function aiRe(){if(['coach','coachrev','coachset','stats'].includes(V.name)){const y=window.scrollY;render();window.scrollTo(0,y)}}
 function copyText(t){const fb=()=>{const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()};
   try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).catch(fb);else fb()}catch(e){fb()}}
 
@@ -1562,8 +1634,9 @@ function vCoachSet(){const o=V.co||(V.co={color:'w',lvl:P.set.colvl!=null?P.set.
   <button class="btn primary block" data-act="co-new">Start game</button>${P.cgame?`<button class="btn block" data-act="co-resume">Continue last game (${P.cgame.sans.length} moves)</button>`:''}${CG&&!CG.over?`<button class="btn block" data-act="co-back">Back to current game</button>`:''}</div>`;
   if(hist.length){const last=hist.slice(0,10);h+=`<div class="card stack"><h3>Coach games</h3><div class="gstat"><span>Average accuracy (last ${last.length})</span><b class="mono">${Math.round(last.reduce((a,x)=>a+x.acc,0)/last.length)}%</b></div>
     ${last.map(x=>`<div class="gstat"><span>${new Date(x.d).toLocaleDateString()} · ${CLV[x.lvl].n} · ${{w:'Won',l:'Lost',d:'Draw'}[x.r]}</span><span class="mono">${x.acc}% · ${x.c.blunder}?? ${x.c.mistake}? ${x.c.inacc}?!</span></div>`).join('')}</div>`}
+  h+=`<div class="card stack"><h3>AI coach in the app (free)</h3><p class="muted" style="font-size:14px">Optional. With a free Google Gemini key the coach can also give a GM-style explanation in Hinglish inside the app. Needs internet. Without it, the built-in coach still explains every move offline.</p>${gKeyHTML()}</div>`;
   h+=`<div class="card stack"><h3>What the coach can and can't do</h3><p class="muted" style="font-size:14px"><b>Can:</b> judge every move with ${SF.failed?'the built-in engine (Stockfish could not start on this device)':SF.ready?'Stockfish 10, a very strong engine, built into the app and working offline':'Stockfish 10 (loading…), built into the app and working offline'}; show the better move and the best line move by move; spot hanging pieces, forks, mates and threats; describe pawn structure, outposts and weak squares, king safety, piece activity and open files; name the opening and its usual plans.</p>
-  <p class="muted" style="font-size:14px"><b>Can't:</b> think like a human GM about long-term strategy or explain why one quiet move is better in deep positions. The explanations come from the engine's numbers plus chess rules of thumb. For a deeper, human-style talk, use the free <b>Ask AI coach</b> button: it copies the position and opens Claude, ChatGPT or Gemini.</p><small class="muted">Stockfish is free software (GPL v3).</small></div></div>`;
+  <p class="muted" style="font-size:14px"><b>Can't:</b> think like a human GM about long-term strategy or explain why one quiet move is better in deep positions. The explanations come from the engine's numbers plus chess rules of thumb. For a deeper, human-style talk, add the free Gemini key above and tap <b>Explain with AI</b>.</p><small class="muted">Stockfish is free software (GPL v3).</small></div></div>`;
   main.innerHTML=h}
 function coDrawSide(){const el=document.getElementById('coside');if(el)el.innerHTML=coSideHTML();const ev=document.getElementById('coev');if(ev)ev.outerHTML=coEvalHTML()}
 function coEvalHTML(){const g=CG;let l=null,stw=true;if(g.pre&&g.pre.lines[0]&&!g.busy){l=g.pre.lines[0];stw=g.st.w}else if(g.fb&&g.fb.post&&g.fb.post.lines[0]){l=g.fb.post.lines[0];stw=g.fb.st1.w}
