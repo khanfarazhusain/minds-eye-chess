@@ -189,6 +189,8 @@ h1{font-size:30px}
 a{color:var(--accent)}
 .qhead{grid-template-columns:auto 1fr auto auto!important}.tbtn{white-space:nowrap}
 .brand{white-space:nowrap;font-size:20px}
+.notescta{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--fg);border-left:4px solid var(--brass)}
+.notescta b{font-size:17px}
 .foot{position:static!important;background:none!important;padding:14px 0 8px}
 </style>
 </head>
@@ -1042,14 +1044,15 @@ function vHome(){const app=$('#app');touchDay();save();const nx=nextLesson(),due
   <div class="card stack"><div class="row" style="justify-content:space-between"><h3>Aaj ke kaam</h3><small class="muted">${today()}</small></div>
    ${tasks.map(([d,t])=>`<div class="task${d?' ok':''}"><i>${d?'✓':''}</i>${esc(t)}</div>`).join('')}</div>
   <div class="row" style="justify-content:space-between;align-items:end"><h2>Course: basics se pro tak</h2><small class="muted">${pct}%</small></div>
-  <div class="prog"><i style="width:${pct}%"></i></div>`;
+  <div class="prog"><i style="width:${pct}%"></i></div>
+  <a class="card notescta" href="notes.html"><span class="eyebrow">📝 Study notes</span><b>Poore course ke notes, diagrams ke saath</b><small class="muted">Har lesson ka saar, board diagrams aur sawal-jawab. Revision ke liye.</small></a>`;
   for(const L of COURSE){const n=L.lessons.filter(l=>PR.done[l.key]).length,un=levelUnlocked(L.li),t=PR.tests[L.id];
     o+=`<button class="lvl${un?'':' locked'}" data-go="#/level/${L.li}"><span class="lnum">${L.li+1}</span><span class="stack" style="gap:2px;text-align:left"><b>${esc(L.title)}</b><small>${esc(L.sub)}</small>
      <span class="prog sm"><i style="width:${n/L.lessons.length*100}%"></i></span></span><span class="lst">${!un?'🔒':t>=70?'🏅':n+'/'+L.lessons.length}</span></button>`}
   o+=`<p class="muted" style="font-size:13px">Progress sirf is phone/browser mein save hota hai. Internet ke bina bhi chalta hai (AI coach ko chhod ke).</p></div>`;app.innerHTML=o;
   setCtx({where:'Home screen (aaj ka plan)'})}
 function vLevel(li){const L=COURSE[li],app=$('#app');if(!L)return go('#/');const un=levelUnlocked(li);
-  let o=`<div class="stack"><button class="back" data-go="#/">‹ Course</button><span class="eyebrow">Level ${li+1}</span><h1>${esc(L.title)}</h1><div class="tut">${md(L.intro||L.sub)}</div>`;
+  let o=`<div class="stack"><button class="back" data-go="#/">‹ Course</button><span class="eyebrow">Level ${li+1}</span><h1>${esc(L.title)}</h1><div class="tut">${md(L.intro||L.sub)}</div><a class="btn small" style="align-self:flex-start;text-decoration:none" href="notes.html#${L.id}">📝 Is level ke notes</a>`;
   if(!un)o+=`<div class="card"><p>🔒 Yeh level band hai. Pichle level ka test 70% se pass karo, ya <a href="#/place">placement test</a> do.</p></div>`;
   L.lessons.forEach((les,lj)=>{const d=PR.done[les.key],u=lessonUnlocked(les),s=PR.stat[les.key];
     o+=`<button class="les${u?'':' locked'}" ${u?`data-go="#/lesson/${li}/${lj}"`:'disabled'}><span class="lck">${d?'✓':u?lj+1:'🔒'}</span><span class="stack" style="gap:2px;text-align:left"><b>${esc(les.title)}</b><small>${esc(les.sub||'')}${s&&s.ok+s.bad?` · ${Math.round(s.ok/(s.ok+s.bad)*100)}% sahi`:''}</small></span></button>`});
@@ -1073,7 +1076,7 @@ function vLesson(li,lj){const L=COURSE[li],les=L&&L.lessons[lj];if(!les)return g
     const nxt=L.lessons[lj+1];app.innerHTML=`<div class="stack center"><div class="big">🎉</div><h1>Lesson poora!</h1><p>${esc(les.title)}</p>${g.length?`<p class="muted">Pehli koshish mein sahi: ${ok}/${g.length}</p>`:''}
      <div class="card tut">${md(ok<g.length*0.7&&g.length?'Kuch sawaal mushkil lage. Koi baat nahi: yeh review list mein chale gaye, kal dobara aayenge. Chaho to lesson abhi ek baar aur kar lo.':'Bahut badhiya! Coach khush hai. Chalo agla step.')}</div>
      ${nxt?`<button class="btn primary block" data-go="#/lesson/${li}/${lj+1}">Agla lesson: ${esc(nxt.title)} ›</button>`:L.test?`<button class="btn primary block" data-go="#/test/${li}">Level test do ›</button>`:''}
-     <button class="btn block" data-go="#/lesson/${li}/${lj}" data-re="1">Dobara karo</button><button class="btn block" data-go="#/">Home</button></div>`}})}
+     <a class="btn block" style="text-decoration:none" href="notes.html#${L.id}-${les.id}">📝 Is lesson ke notes</a><button class="btn block" data-go="#/lesson/${li}/${lj}" data-re="1">Dobara karo</button><button class="btn block" data-go="#/">Home</button></div>`}})}
 function vTest(li){const L=COURSE[li],app=$('#app');if(!L||!L.test)return go('#/');
   player(app,L.test,{test:true,back:'#/level/'+li,title:()=>L.title+' test',where:'Level test',head:s=>s.les&&lesByKey(s.les)?lesByKey(s.les).title:'Test',finish:res=>{
     const ok=res.filter(Boolean).length,pct=Math.round(ok/L.test.length*100);const prev=PR.tests[L.id];PR.tests[L.id]=Math.max(prev||0,pct);save();if(pct>=70&&!(prev>=70))addXP(50);
