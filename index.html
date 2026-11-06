@@ -1214,6 +1214,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'co-ri':V.ri=+d.v;vCoachRev();break;
    case'co-better':CG.show.better=!CG.show.better;vCoach();break;
    case'co-ai':P.set.ai=d.v;save();{const y=window.scrollY;render();window.scrollTo(0,y)}break;
+   case'ai-auto':P.set.autoai=d.v==='1';save();if(P.set.autoai&&CG&&CG.fb&&!CG.fb.lite&&!AIR[aiKey('move')])aiGo('move',CG.fb.ply,true);else aiRe();break;
    case'ai-go':aiGo(d.k,d.ply!=null?+d.ply:null);break;
    case'gk-save':{const inp=b.closest('.gkey').querySelector('input'),k=(inp.value||'').trim().replace(/\s/g,'');
      if(!k){GMSG='Paste the key first.';aiRe();break}
@@ -1453,7 +1454,7 @@ async function coHuman(m){const g=CG,t=g.tok,st0=g.st,list=legal(st0),s=san(st0,
   const st1=make(st0,m);g.st=st1;g.states.push(st1);const rec={m,san:s,by:'h',fb:null};g.moves.push(rec);vCoach();
   const pre=await g.preP;if(CG!==g||g.tok!==t)return;
   let post=legal(st1).length?await sfGo(st1,{multipv:1,movetime:700,depth:16}):{lines:[]};if(CG!==g||g.tok!==t)return;
-  rec.fb=coJudge(st0,m,s,st1,pre,post);g.fb=rec.fb;g.busy='';coSaveCur();coCheckEnd();if(g.over){coFinish();return}coEngine()}
+  rec.fb=coJudge(st0,m,s,st1,pre,post);g.fb=rec.fb;g.busy='';if(aiAuto())aiGo('move',rec.fb.ply,true);coSaveCur();coCheckEnd();if(g.over){coFinish();return}coEngine()}
 function coJudge(st0,m,s,st1,pre,post){const w=st0.w,best=pre&&pre.lines[0],u=uciOf(m);const fb={st0,m,san:s,st1,pre,post,w,ply:CG.moves.length-1};
   const before=best?wpOf(scCp(best)):.5;let after;
   if(!legal(st1).length)after=inCheck(st1)?1:.5;else after=post.lines[0]?1-wpOf(scCp(post.lines[0])):before;
@@ -1560,8 +1561,17 @@ function coPrompt(kind,ply){const g=CG;if(!g)return'';const w=g.human==='w',me=w
 const AIK={move:'Explain my last move',pos:'Explain this position',game:'Review my whole game'};
 /* in-app AI coach: Google Gemini free tier, key kept only in this browser */
 const GKEY='mindseye.gemini.key';
-const gKey=()=>{try{return localStorage.getItem(GKEY)||''}catch(e){return''}};
-function gSetKey(k){try{k?localStorage.setItem(GKEY,k):localStorage.removeItem(GKEY)}catch(e){}}
+let GK_MEM='';
+function gCookie(){try{const m=document.cookie.match(/(?:^|; )mecgk=([^;]*)/);return m?decodeURIComponent(m[1]):''}catch(e){return''}}
+const gKey=()=>{let k='';try{k=localStorage.getItem(GKEY)||''}catch(e){}return k||GK_MEM||gCookie()};
+function gIdb(fn){try{const r=indexedDB.open('mindseye-kv',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>{try{fn(r.result.transaction('kv','readwrite').objectStore('kv'))}catch(e){}}}catch(e){}}
+function gSetKey(k){GK_MEM=k||'';try{k?localStorage.setItem(GKEY,k):localStorage.removeItem(GKEY)}catch(e){}
+  try{document.cookie='mecgk='+(k?encodeURIComponent(k)+'; max-age=31536000':'; max-age=0')+'; path=/; SameSite=Strict'+(location.protocol==='https:'?'; Secure':'')}catch(e){}
+  gIdb(st=>k?st.put(k,'gkey'):st.delete('gkey'));try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}}
+function gRestore(){let ls='';try{ls=localStorage.getItem(GKEY)||''}catch(e){}if(ls){GK_MEM=ls;if(!gCookie())gSetKey(ls);return}
+  const c=gCookie();if(c){gSetKey(c);return}
+  gIdb(st=>{const q=st.get('gkey');q.onsuccess=()=>{if(q.result&&!gKey()){gSetKey(q.result);if(V.name&&V.name.startsWith('coach'))aiRe()}}})}
+gRestore();
 const GMODELS=['gemini-flash-latest','gemini-2.5-flash','gemini-2.0-flash','gemini-flash-lite-latest','gemini-2.5-flash-lite'];
 const AIR={};let GMSG='';
 async function gAsk(prompt){const key=gKey();if(!key)throw{code:'nokey'};let last={code:'model'};
@@ -1604,7 +1614,7 @@ const aiKey=(k,ply)=>CG.id+':'+k+':'+(k==='move'?(ply!=null?ply:CG.fb?CG.fb.ply:
 function gKeyHTML(){const k=gKey();
   if(k)return`<div class="gkey stack"><div class="gstat"><span>Gemini key saved</span><span class="mono">${esc(k.slice(0,4))}…${esc(k.slice(-4))}</span></div>
    <div class="row"><button class="btn" style="flex:1" data-act="gk-test">Test key</button><button class="btn" style="flex:1" data-act="gk-del">${V.gdel?'Tap again':'Remove key'}</button></div>${GMSG?`<p class="muted" style="font-size:14px">${esc(GMSG)}</p>`:''}
-   <small class="muted">Saved only in this browser on this device, never synced. Free answers are limited per minute and per day.</small></div>`;
+   <small class="muted">Saved on this device only, never synced. On iPhone the home-screen app and Safari keep separate storage, so save the key once in each. Free answers are limited per minute and per day.</small></div>`;
   return`<div class="gkey stack"><b>Get your free key (about 2 minutes, once)</b><ol class="cline">
    <li>Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> and sign in with your Google (Gmail) account.</li>
    <li>Tap <b>Create API key</b>. Accept the terms if asked, and pick any project (or let it create one).</li>
@@ -1614,19 +1624,25 @@ function gKeyHTML(){const k=gKey();
    <button class="btn primary block" data-act="gk-save">Save key</button>${GMSG?`<p class="warn" style="font-size:14px">${esc(GMSG)}</p>`:''}
    <small class="muted">No card or payment needed. The key stays only on this device. Google may use free-tier questions to improve its products, so the app sends only chess moves, never your name.</small></div>`}
 function aiButtons(kinds,ply){const has=!!gKey();let h=`<div class="aibox"><span class="eyebrow">AI coach (Gemini, free)</span>`;
+  if(has&&kinds.includes('move')&&ply==null)h+=`<div class="gstat" style="font-weight:500"><span style="font-size:14px">Explain every move automatically</span><div class="seg sm"><button class="${aiAuto()?'on':''}" data-act="ai-auto" data-v="1">On</button><button class="${aiAuto()?'':'on'}" data-act="ai-auto" data-v="0">Off</button></div></div>`;
   if(has){for(const k of kinds){const r=AIR[aiKey(k,ply)];
     if(!r)h+=`<button class="btn primary block" data-act="ai-go" data-k="${k}"${ply!=null?` data-ply="${ply}"`:''}>✦ ${AIK[k]} with AI</button>`;
     else if(r.state==='load')h+=`<div class="aians muted">AI coach is thinking… (${AIK[k].toLowerCase()})</div>`;
-    else if(r.state==='err')h+=`<div class="aians"><p class="warn">${esc(gErr(r.e))}</p><button class="btn block" data-act="ai-go" data-k="${k}"${ply!=null?` data-ply="${ply}"`:''}>Try again</button></div>`;
+    else if(r.state==='err')h+=`<div class="aians"><p class="warn">${esc(gErr(r.e))}</p>${r.auto?'<p class="muted">The built-in coach explanation above still applies. Auto AI will try again on your next move.</p>':''}<button class="btn block" data-act="ai-go" data-k="${k}"${ply!=null?` data-ply="${ply}"`:''}>Try again</button></div>`;
     else h+=`<div class="aians"><div class="row" style="justify-content:space-between"><b>${AIK[k]}</b><small class="muted">Gemini</small></div>${mdLite(r.text)}${r.cut?'<p class="muted">(answer was cut short)</p>':''}<button class="btn small" data-act="ai-go" data-k="${k}"${ply!=null?` data-ply="${ply}"`:''}>Ask again</button></div>`}}
   else h+=`<p class="muted" style="font-size:14px">Get a GM-style explanation in Hinglish right here in the app. It is free: you only need a free Google Gemini key, once.</p><details><summary>Set up the free AI coach</summary>${gKeyHTML()}</details>`;
   const pick=P.set.ai||'claude';
   h+=`<details><summary>Backup: ask in another app</summary><div class="stack" style="margin-top:6px"><div class="seg sm">${Object.entries(AIS).map(([k,v])=>`<button class="${pick===k?'on':''}" data-act="co-ai" data-v="${k}">${v[0]}</button>`).join('')}</div>
   ${kinds.map(k=>`<a class="btn block" data-act="co-ask" data-k="${k}"${ply!=null?` data-ply="${ply}"`:''} href="#" target="_blank" rel="noopener">${AIK[k]} in ${AIS[pick][0]} ↗</a>`).join('')}<small class="muted">Copies the question and opens ${AIS[pick][0]}. Paste it there if the box is empty.</small></div></details></div>`;
   return h}
-async function aiGo(k,ply){if(!CG)return;const key=aiKey(k,ply);if(AIR[key]&&AIR[key].state==='load')return;AIR[key]={state:'load'};aiRe();
-  const prompt=coPrompt(k,ply)+'\n\nAnswer in about 200-300 words. Use short headings and bullet points. Write in Hinglish.';
-  try{const r=await gAsk(prompt);AIR[key]={state:'ok',text:r.text,cut:r.cut}}catch(e){AIR[key]={state:'err',e}}aiRe()}
+let AIQ=Promise.resolve(),AI_LAST=0,AI_PAUSE=0;
+const aiAuto=()=>!!gKey()&&P.set.autoai!==false;
+function aiGo(k,ply,auto){if(!CG)return;const key=aiKey(k,ply);if(AIR[key]&&AIR[key].state==='load')return;
+  if(auto&&Date.now()<AI_PAUSE){AIR[key]={state:'err',e:{code:'limit',msg:''},auto:1};aiRe();return}
+  AIR[key]={state:'load'};aiRe();const g=CG;
+  AIQ=AIQ.then(async()=>{if(CG!==g)return;const gap=4500-(Date.now()-AI_LAST);if(gap>0)await new Promise(r=>setTimeout(r,gap));AI_LAST=Date.now();
+    const prompt=coPrompt(k,ply)+'\n\nAnswer in about 200-300 words. Use short headings and bullet points. Write in Hinglish.';
+    try{const r=await gAsk(prompt);AIR[key]={state:'ok',text:r.text,cut:r.cut}}catch(e){AIR[key]={state:'err',e,auto};if(e&&e.code==='limit')AI_PAUSE=Date.now()+60000}aiRe()})}
 function aiRe(){if(['coach','coachrev','coachset','stats'].includes(V.name)){const y=window.scrollY;render();window.scrollTo(0,y)}}
 function copyText(t){const fb=()=>{const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()};
   try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).catch(fb);else fb()}catch(e){fb()}}
@@ -1662,8 +1678,8 @@ function vCoach(){const g=CG;if(!g){go({name:'coachset'});return}const my=coMyTu
   h+=`<div class="row corow">${g.over?`<button class="btn primary" style="flex:1" data-act="co-review">Game review</button><button class="btn" data-act="co-setup">New game</button>`:`<button class="btn" data-act="co-hint" ${my&&!g.busy?'':'disabled'}>Hint</button><button class="btn" data-act="co-undo" ${g.moves.some(x=>x.by==='h')&&!String(g.busy).startsWith('Coach')?'':'disabled'}>Take back</button><button class="btn" data-act="co-resign">${g.confirmResign?'Tap again':'Resign'}</button><button class="btn" data-act="co-setup">Menu</button>`}</div>`;
   h+=`<div id="coside">${coSideHTML()}</div>`+coEngHTML();
   if(g.fb){h+=coFbHTML(g.fb);if(g.fb.cls!=='best'&&!g.fb.lite)h+=`<button class="btn small" data-act="co-better">${g.show.better?'Show the game position':'Show the better move on the board'}</button>`}
-  if(!g.over)h+=coPosHTML();
   h+=`<div class="card">${aiButtons(g.fb&&!g.fb.lite?['move','pos']:['pos'])}</div>`;
+  if(!g.over)h+=coPosHTML();
   h+=`<div class="gamemoves">${g.moves.length?coMovesHTML(g.moves):'<span class="muted">No moves yet</span>'}</div></div>`;
   main.innerHTML=h;onSq=coTap}
 function coMovesHTML(moves){let h='';moves.forEach((x,i)=>{if(i%2===0)h+=`<span class="mn">${i/2+1}.</span>&nbsp;`;const c=x.fb&&CMARK[x.fb.cls];h+=`<span class="${c?'cm-'+x.fb.cls:''}">${esc(x.san)}${c||''}</span>`+(i%2?' &nbsp; ':'&nbsp; ')});return h}
