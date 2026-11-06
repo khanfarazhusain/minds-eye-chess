@@ -1,0 +1,4666 @@
+CHESS COURSE NOTES (basics se pro tak) - 7 levels, 47 lessons
+Online (diagrams ke saath): https://khanfarazhusain.github.io/minds-eye-chess/notes.html
+
+Diagram kaise padhein:
+  Bade letters = White, chhote letters = Black
+  K king, Q queen, R rook, B bishop, N knight, P pawn
+  * = piece yahan ja sakta hai,  # = important (highlighted) square,  . = khaali
+  Arrows sirf Word/online version mein dikhte hain.
+
+==============================================================================
+Basics se pro tak · 7 levels · 47 lessons
+
+Chess course ke notes
+
+Har lesson ka saar, board diagrams, abhyaas positions aur sawal-jawab. Har
+sawal ke neeche jawab diya hai: padhne se pehle khud socho.
+
+Level 1: Shuruaat: board aur pieces
+
+Rules, pieces ki chaal, special moves, check-mate, notation
+
+Yahan se chess ki neev banegi. Har cheez board par khud kar ke seekhoge. Jaldi
+mat karo: yeh basics pakke hue to aage sab aasaan lagega.
+
+1.1 Chessboard ko jaano
+
+Squares, files, ranks, center
+
+Yaad rakho
+
+-   Board 8×8 = 64 squares. Light on right: neeche right corner (h1) hamesha
+    light.
+-   Files = khadi lines a-h, ranks = aadi lines 1-8. Square ka naam = file +
+    rank (e4).
+-   Center = d4 e4 d5 e5. Center ke pieces zyada squares control karte hain.
+-   White hamesha pehli chaal chalta hai.
+
+Board: 64 squares
+
+Chessboard mein 8×8 = 64 squares hote hain: 32 light, 32 dark.
+
+Golden rule: board aise rakho ki right side ke neeche wala corner light square
+ho. ("Light on right")
+
+White ke pieces neeche (rank 1-2) aur Black ke upar (rank 7-8) se shuru hote
+hain. White hamesha pehli chaal chalta hai.
+
+    8 | r n b q k b n r
+    7 | p p p p p p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | P P P P P P P P
+    1 | R N B Q K B N R
+       ----------------
+        a b c d e f g h
+
+Files aur ranks
+
+Khadi lines (upar-neeche) ko files kehte hain: a se h tak.
+
+Aadi lines (left-right) ko ranks kehte hain: 1 se 8 tak.
+
+Har square ka naam = file + rank. Jaise peeli line e-file hai, aur us par ek
+square hai e4.
+
+    8 | . . . . # . . .
+    7 | . . . . # . . .
+    6 | . . . . # . . .
+    5 | . . . . # . . .
+    4 | . . . . # . . .
+    3 | . . . . # . . .
+    2 | . . . . # . . .
+    1 | . . . . # . . .
+       ----------------
+        a b c d e f g h
+
+Center sabse important
+
+Beech ke 4 squares d4 e4 d5 e5 ko center kehte hain.
+
+Center mein baitha piece zyada squares control karta hai. Isliye opening mein
+sab center ke liye ladte hain.
+
+Diagonal = tirchhi line, jaise a1 se h8.
+
+    8 | . . . . . . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . # # . . .
+    4 | . . . # # . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+[Sawal] Kaunsa square light hai?
+
+Jawab:
+
+✓ h1
+
+"Light on right": White ki taraf right corner h1 light hota hai. a1 dark hai.
+
+[Sawal] e4 mein e kya batata hai?
+
+Jawab:
+
+✓ File (khadi line)
+
+Pehle letter = file (a-h), phir number = rank (1-8).
+
+    8 | . . . . . . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+Har square ka naam (White ki taraf se)
+
+1.2 Pieces kaise chalte hain
+
+King, queen, rook, bishop, knight, pawn
+
+Yaad rakho
+
+-   Rook seedha (5), bishop tirchha (3), queen dono (9), knight "L" shape (3),
+    king 1 square, pawn aage 1 (pehli baar 2).
+-   Sirf knight pieces ke upar se kood sakta hai.
+-   Pawn seedha chalta hai par tirchha capture karta hai, aur kabhi peeche
+    nahi jaata.
+-   King attack wale square par kabhi nahi ja sakta.
+-   Center mein pieces sabse taakatwar: knight center mein 8 squares, corner
+    mein sirf 2.
+
+Rook ♜
+
+Rook seedha chalta hai: upar, neeche, left, right. Jitne marzi squares, jab
+tak koi raste mein na aaye.
+
+Value: 5 points.
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . R . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+[Board par dekho] Rook d4 kahan-kahan ja sakta hai?
+
+    8 | . . . . k . . .
+    7 | . . . n . . . .
+    6 | . . . * . . . .
+    5 | . . . * . . . .
+    4 | * * * R * * * *
+    3 | . . . * . . . .
+    2 | . . . * . . . .
+    1 | . . . * K . . .
+       ----------------
+        a b c d e f g h
+
+13 squares: a4, b4, c4, d1, d2, d3, d5, d6, d7, e4, f4, g4, h4
+
+Rook d7 ke knight ko capture kar sakta hai, par uske aage nahi ja sakta.
+Capture karne ke liye dushman ke square par jaate hain.
+
+Bishop ♝
+
+Bishop sirf diagonal (tirchha) chalta hai. Light square wala bishop hamesha
+light squares par hi rahega.
+
+Value: 3 points.
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . B . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+[Board par dekho] Bishop c4
+
+    8 | . . . . k . . .
+    7 | . . . . . p . .
+    6 | * . . . * . . .
+    5 | . * . * . . . .
+    4 | . . B . . . . .
+    3 | . P . * . . . .
+    2 | . . . . * . . .
+    1 | . . . . K * . .
+       ----------------
+        a b c d e f g h
+
+8 squares: a6, b5, d3, d5, e2, e6, f1, f7
+
+Apna pawn b3 raasta rok raha hai. f7 ka black pawn capture ho sakta hai.
+
+Queen ♛
+
+Queen = rook + bishop. Seedha bhi, tirchha bhi. Sabse taakatwar piece.
+
+Value: 9 points. Isko faltu mein mat khona!
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . Q . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+[Board par dekho] Queen d4
+
+    8 | . . . * k . . *
+    7 | * . . * . . * .
+    6 | . * . * . * . .
+    5 | . . * * * . . .
+    4 | * * * Q * * * *
+    3 | . . * * * . . .
+    2 | . * . * . * . .
+    1 | * . . * K . * .
+       ----------------
+        a b c d e f g h
+
+27 squares: a1, a4, a7, b2, b4, b6, c3, c4, c5, d1, d2, d3, d5, d6, d7, d8,
+e3, e4, e5, f2, f4, f6, g1, g4, g7, h4, h8
+
+Center mein queen 27 squares tak control karti hai!
+
+Knight ♞
+
+Knight "L" shape mein chalta hai: 2 square ek taraf, phir 1 square side mein.
+
+Knight hi akela piece hai jo doosre pieces ke upar se kood sakta hai. Har
+chaal mein woh light se dark (ya dark se light) square par jaata hai.
+
+Value: 3 points.
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . N . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+[Board par dekho] Knight d4
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . * . * . . .
+    5 | . * . . . * . .
+    4 | . . . N . . . .
+    3 | . * . . . * . .
+    2 | . . * . * . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+8 squares: b3, b5, c2, c6, e2, e6, f3, f5
+
+Center mein knight 8 squares, corner mein sirf 2. "Knight on the rim is dim":
+kinare par knight kamzor hota hai.
+
+[Board par dekho] Corner wala knight a1: kitne squares?
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . * . . . . . .
+    2 | . . * . . . . .
+    1 | N . . . K . . .
+       ----------------
+        a b c d e f g h
+
+2 squares: b3, c2
+
+Sirf 2! Isliye knights ko center ki taraf lao.
+
+Pawn ♟
+
+Pawn sirf aage chalta hai, ek square. Pehli chaal mein 2 square bhi ja sakta
+hai.
+
+Par capture tirchha karta hai (ek square aage diagonal). Seedha aage koi ho to
+pawn ruk jaata hai.
+
+Pawn kabhi peeche nahi jaata. Value: 1 point.
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . n . . . .
+    2 | . . . . P . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+[Board par dekho] Pawn e2 kahan ja sakta hai?
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . n . . . .
+    2 | . . . . P . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+1 squares: d3
+
+e3, e4 (pehli chaal) aur d3 par knight ko capture.
+
+King ♚
+
+King har taraf sirf 1 square chalta hai.
+
+King ko kabhi aise square par nahi le ja sakte jahan dushman attack kar raha
+ho. Yahan black rook poori 5th rank control kar raha hai.
+
+King ki value infinite hai: king gaya to game gaya.
+
+    8 | . . . . . . . k
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | r . . . . . . .
+    4 | . . . . K . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+[Board par dekho] King e4 kahan ja sakta hai?
+
+    8 | . . . . . . . k
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | r . . . . . . .
+    4 | . . . * K * . .
+    3 | . . . * * * . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+5 squares: d3, d4, e3, f3, f4
+
+d5, e5, f5 par rook ka attack hai, isliye king wahan nahi ja sakta.
+
+[Sawal] Kaunsa piece doosre pieces ke upar se kood sakta hai?
+
+Jawab:
+
+✓ Knight
+
+Sirf knight jump karta hai.
+
+[Sawal] Pawn capture kaise karta hai?
+
+Jawab:
+
+✓ Tirchha aage (diagonal)
+
+Pawn seedha chalta hai par tirchha capture karta hai.
+
+1.3 Special moves
+
+Castling, en passant, promotion
+
+Yaad rakho
+
+-   Castling: king 2 square rook ki taraf, rook doosri taraf. O-O kingside,
+    O-O-O queenside.
+-   Castling tab nahi: king/rook pehle chal chuke, beech mein piece, king
+    check mein, ya king attacked square se guzre.
+-   En passant: dushman pawn 2 square chal kar bagal mein aaye to turant agli
+    chaal mein capture.
+-   Promotion: aakhri rank par pawn queen/rook/bishop/knight banta hai. Kabhi
+    knight (underpromotion) best hota hai.
+
+Castling: king ki suraksha
+
+Castling mein ek hi chaal mein king 2 square rook ki taraf jaata hai, aur rook
+king ke doosri taraf aa jaata hai.
+
+-   Kingside: O-O (king g1, rook f1)
+-   Queenside: O-O-O (king c1, rook d1)
+
+Shart: king aur rook pehle kabhi na chale hon, beech mein koi piece na ho,
+king check mein na ho, aur king jis square se guzre ya pahunche woh attack
+mein na ho.
+
+    8 | r . . . k . . r
+    7 | p p p q . p p p
+    6 | . . n p b n . .
+    5 | . . b . p . . .
+    4 | . . B . P . . .
+    3 | . . N P B N . .
+    2 | P P P Q . P P P
+    1 | R . . . K . . R
+       ----------------
+        a b c d e f g h
+
+[Abhyaas] 
+
+Kingside castle karo (O-O). King ko g1 par tap karo.
+
+    8 | r . . . k . . r
+    7 | p p p q . p p p
+    6 | . . n p b n . .
+    5 | . . b . p . . .
+    4 | . . B . P . . .
+    3 | . . N P B N . .
+    2 | P P P Q . P P P
+    1 | R . . . K . . R
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. O-O
+
+King ab safe corner mein hai aur rook center ki taraf aa gaya.
+
+    8 | r . . . k . . r
+    7 | p p p q . p p p
+    6 | . . n p b n . .
+    5 | . . b . p . . .
+    4 | . . B . P . . .
+    3 | . . N P B N . .
+    2 | P P P Q . P P P
+    1 | R . . . . R K .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Sawal] Kya White yahan kingside castle kar sakta hai?
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . b . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . K . . R
+       ----------------
+        a b c d e f g h
+
+Jawab:
+
+✓ Nahi: f1 attack mein hai
+
+King f1 se guzrega, aur c4 ka bishop f1 ko attack kar raha hai. Isliye
+castling allowed nahi.
+
+En passant
+
+Agar dushman ka pawn 2 square chal kar tumhare pawn ke bilkul bagal mein aa
+jaaye, to tum use aise capture kar sakte ho jaise woh 1 hi square chala ho.
+
+Ise en passant kehte hain. Yeh sirf turant agli chaal mein hi ho sakta hai.
+
+Yahan Black ne abhi d7-d5 khela.
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . p P . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+[Abhyaas] 
+
+En passant karo: e5 pawn se d6 par capture.
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . p P . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. exd6
+
+Pawn d6 par gaya aur d5 ka black pawn board se hat gaya.
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . P . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+Promotion
+
+Pawn jab aakhri rank (White ke liye 8th) par pahunchta hai, to woh queen,
+rook, bishop ya knight ban jaata hai. Zyadatar queen banate hain.
+
+Isliye endgame mein pawns bahut keemti ho jaate hain.
+
+    8 | . . . . . . . .
+    7 | . . . . P . k .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+[Abhyaas] 
+
+Pawn ko queen banao.
+
+    8 | . . . . . . . .
+    7 | . . . . P . k .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. e8=Q
+
+Ye bhi sahi: e8=R
+
+Ab White ke paas queen hai, aur yeh jeetne wali position hai.
+
+    8 | . . . . Q . . .
+    7 | . . . . . . k .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Abhyaas] 
+
+Kabhi queen nahi, knight banana better hota hai! Sabse achhi chaal dhundo.
+
+    8 | . . . . . . . .
+    7 | . . q . P . . .
+    6 | . . . . . k . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | P P . . . . . .
+    1 | . K . . . . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. e8=N+ Ke5 2. Nxc7
+
+e8=N+ check deta hai aur c7 ki queen par bhi attack karta hai (fork). King
+hatega, phir knight queen le lega. Ise underpromotion kehte hain.
+
+    8 | . . . . . . . .
+    7 | . . N . . . . .
+    6 | . . . . . . . .
+    5 | . . . . k . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | P P . . . . . .
+    1 | . K . . . . . .
+       ----------------
+        a b c d e f g h
+
+Line ke baad position
+
+1.4 Check, checkmate, stalemate
+
+Game kaise jeette hain
+
+Yaad rakho
+
+-   Check se bachne ke 3 tareeke: king hatao, block karo, attacker ko capture
+    karo.
+-   Checkmate = check + bachne ka koi raasta nahi = jeet.
+-   Stalemate = check nahi par koi legal chaal nahi = draw. Jeette waqt iska
+    dhyan rakho!
+-   Back-rank mate: king apne hi pawns ke peeche band.
+
+Check
+
+Jab king par attack ho to use check kehte hain. Check se turant bachna zaroori
+hai. 3 tareeke:
+
+-   King ko hatao safe square par
+-   Beech mein piece rakho (block)
+-   Attack karne wale piece ko capture karo
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . B . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+Checkmate = jeet
+
+Agar king check mein hai aur bachne ka koi tareeka nahi, to yeh checkmate hai.
+Game khatam, jisne mate diya woh jeeta.
+
+Yahan Black king ke apne pawns hi uska raasta rok rahe hain. Ise back-rank
+mate kehte hain.
+
+    8 | R . . . . . k .
+    7 | . . . . . p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+[Abhyaas]  Mate in 1
+
+Mate in 1: ek chaal mein checkmate karo!
+
+    8 | . . . . . . k .
+    7 | . . . . . p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | R . . . . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Ra8#
+
+Ra8#: back-rank mate. King ke paas koi square nahi.
+
+    8 | R . . . . . k .
+    7 | . . . . . p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Abhyaas]  Mate in 1
+
+Mate in 1: queen aur king ki team-work.
+
+    8 | . . . . . . . k
+    7 | . . . . . . . .
+    6 | . . . . . . K .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . Q . . . . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Qb8#
+
+King escape squares band karta hai, queen 8th rank par check deti hai: Qb8#.
+
+    8 | . Q . . . . . k
+    7 | . . . . . . . .
+    6 | . . . . . . K .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+Stalemate = draw!
+
+Agar jiski chaal hai uska king check mein nahi, par usse koi bhi legal chaal
+nahi hai, to yeh stalemate hai. Stalemate = draw.
+
+Yahan Black ki chaal hai: king h8 hilega to attack mein aayega, aur koi aur
+piece nahi. Jeeta hua game draw ho gaya! Jeetne wale ko is se bachna hai.
+
+    8 | . . . . . . . k
+    7 | . . . . . Q . .
+    6 | . . . . . . K .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+[Sawal] Black ki chaal hai. Yeh kya hai?
+
+    8 | k . . . . . . .
+    7 | . . Q . . . . .
+    6 | . K . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+Jawab:
+
+✓ Stalemate
+
+Black king check mein nahi hai par uski har chaal attack mein jaati hai. Koi
+aur piece nahi, to stalemate (draw).
+
+[Abhyaas]  Mate in 1
+
+Mate karo, stalemate nahi! Dhyan se.
+
+    8 | . . . . . . . k
+    7 | . . . . . . . .
+    6 | . . . . . . K .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . Q . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Qf8#
+
+Qf8# check deta hai. Agar Qf7 khelte to Black ke paas koi chaal na hoti aur
+check bhi na hota: stalemate.
+
+    8 | . . . . . Q . k
+    7 | . . . . . . . .
+    6 | . . . . . . K .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Sawal] Check se bachne ka kaunsa tareeka galat hai?
+
+Jawab:
+
+✓ Apni koi bhi doosri chaal chalna
+
+Check mein ho to sirf woh chaal chal sakte ho jo check hataye.
+
+1.5 Draw ke rules
+
+Kab game barabar khatam hota hai
+
+Yaad rakho
+
+-   Draw ke 5 tareeke: stalemate, 3-fold repetition, 50-move rule,
+    insufficient material, agreement.
+-   K+N vs K aur K+B vs K = draw (mate namumkin).
+-   K+R vs K aur K+Q vs K = jeet.
+-   Haarti position mein repetition / perpetual check se draw bacha sakte ho.
+
+Draw ke 5 tareeke
+
+-   Stalemate: chaal hai, par koi legal move nahi aur check bhi nahi.
+-   3-fold repetition: same position 3 baar aaye (same player ki chaal ke
+    saath).
+-   50-move rule: 50 chaalein (dono taraf) bina pawn move ya capture ke.
+-   Insufficient material: mate karna namumkin. Jaise King vs King,
+    King+Bishop vs King, King+Knight vs King.
+-   Agreement: dono players draw maan lein.
+
+[Sawal] King + ek Knight vs akela King: kya hoga?
+
+Jawab:
+
+✓ Draw: mate ke liye material kam hai
+
+Akele knight ya bishop se mate nahi diya ja sakta.
+
+[Sawal] King + Rook vs akela King?
+
+Jawab:
+
+✓ Jeet: rook se mate diya ja sakta hai
+
+Rook (ya queen) ke saath mate force kar sakte hain. Yeh technique Level 2 mein
+seekhoge.
+
+[Sawal] Dono players ek hi chaal baar-baar repeat karte hain aur position 3
+baar same hoti hai. Kya hoga?
+
+Jawab:
+
+✓ Draw (3-fold repetition)
+
+3 baar same position = draw claim kar sakte hain. Isko "perpetual check" mein
+bhi dekhoge.
+
+    8 | k . . . . . . .
+    7 | . . Q . . . . .
+    6 | . K . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+Stalemate: Black ki chaal, check nahi, par koi legal chaal nahi
+
+    8 | . . . . . . . .
+    7 | . . . . . . . .
+    6 | . . . . k . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . N . . . . .
+    2 | . . . . K . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+Insufficient material: K+N vs K, mate namumkin = draw
+
+1.6 Pieces ki keemat aur trades
+
+Kab lena hai, kab nahi
+
+Yaad rakho
+
+-   Pawn 1, knight 3, bishop 3, rook 5, queen 9, king anmol.
+-   Trade se pehle points jodo: 3 dekar 5 mila = exchange jeeta.
+-   Har chaal mein dekho: koi piece hanging (bina protection) to nahi?
+-   Capture se pehle attackers aur defenders gino.
+
+Point system
+
+-   Pawn = 1
+-   Knight = 3
+-   Bishop = 3 (thoda zyada jab dono bishops ho)
+-   Rook = 5
+-   Queen = 9
+-   King = anmol
+
+Trade karte waqt points jodo. Bishop (3) dekar rook (5) mila to tumne
+"exchange" jeeta. Yeh sirf guide hai: position zyada important hai, par shuru
+mein yeh bahut kaam aata hai.
+
+[Sawal] Tumhara knight dekar dushman ka rook mile. Achha trade?
+
+Jawab:
+
+✓ Haan: 3 dekar 5 mile
+
++2 points ka fayda.
+
+[Sawal] Queen (9) ke badle do rooks (5+5). Points mein kaun aage?
+
+Jawab:
+
+✓ Do rooks wala
+
+10 vs 9: do rooks thode zyada. Real game mein dono kaafi barabar hote hain.
+
+[Abhyaas] 
+
+Koi piece free mein mil raha hai. Lelo!
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . q . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . R K . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Rxd5
+
+Queen ko kisi ne protect nahi kiya tha. Hamesha dekho: kya koi piece bina
+protection ke hai? ("hanging piece")
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . R . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Abhyaas] 
+
+Black ki queen ne galti ki. Saza do!
+
+    8 | r n b . k b n r
+    7 | p p p p . p p p
+    6 | . . . . . . . .
+    5 | . . . . p . . .
+    4 | . . . . P . . q
+    3 | . . . . . N . .
+    2 | P P P P . P P P
+    1 | R N B Q K B . R
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Nxh4
+
+Nxh4: knight ne queen le li. 9 points free!
+
+    8 | r n b . k b n r
+    7 | p p p p . p p p
+    6 | . . . . . . . .
+    5 | . . . . p . . .
+    4 | . . . . P . . N
+    3 | . . . . . . . .
+    2 | P P P P . P P P
+    1 | R N B Q K B . R
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Sawal] Yahan White Nxe5 khel sakta hai. Kya yeh achha hai?
+
+    8 | r . b q k b n r
+    7 | p p p p . p p p
+    6 | . . n . . . . .
+    5 | . . . . p . . .
+    4 | . . . . P . . .
+    3 | . . . . . N . .
+    2 | P P P P . P P P
+    1 | R N B Q K B . R
+       ----------------
+        a b c d e f g h
+
+Jawab:
+
+✓ Nahi: Nc6 pawn ko protect kar raha hai
+
+Nxe5 Nxe5 ke baad White ne knight (3) diya aur pawn (1) liya. Pehle attackers
+aur defenders gino.
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . r . . . .
+    4 | . . . . . . . .
+    3 | . . N . . . . .
+    2 | . . . . . . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+Exchange: knight (3) ke badle rook (5). Nxd5 ke baad White +2
+
+1.7 Notation: moves likhna aur padhna
+
+Chess ki bhasha
+
+Yaad rakho
+
+-   Chaal = piece letter + square: Nf3, Bc4. Pawn ka letter nahi: e4.
+-   x capture, + check, # mate, O-O / O-O-O castling, e8=Q promotion.
+-   ! achhi, !! shandaar, ? galti, ?? blunder, !? interesting, ?! doubtful.
+-   Fool's mate seekh: opening mein f aur g pawns faltu mat chalao.
+
+Algebraic notation
+
+Har chaal = piece ka letter + square.
+
+-   K = King, Q = Queen, R = Rook, B = Bishop, N = Knight
+-   Pawn ka koi letter nahi: e4 matlab pawn e4 par gaya
+-   x = capture: Nxe5 (knight ne e5 par capture kiya), exd5 (e-pawn ne d5 par)
+-   + = check, # = checkmate
+-   O-O = kingside castle, O-O-O = queenside
+-   e8=Q = promotion
+
+Annotation: ! achhi chaal, !! shandaar, ? galti, ?? blunder, !? interesting,
+?! doubtful.
+
+[Sawal] Bxf7+ ka matlab?
+
+Jawab:
+
+✓ Bishop ne f7 par capture kiya aur check diya
+
+B = bishop, x = capture, + = check.
+
+[Sawal] O-O-O kya hai?
+
+Jawab:
+
+✓ Queenside castle
+
+Teen O = lamba castle (queen ki taraf).
+
+[Sawal] exd5 mein kaunsa piece chala?
+
+Jawab:
+
+✓ e-file ka pawn
+
+Pawn capture mein uski file likhte hain: e-pawn ne d5 par capture kiya.
+
+Sabse chhota game: Fool's mate
+
+Notation padh kar game samjho. Yeh duniya ka sabse chhota checkmate hai (sirf
+2 chaal).
+
+1. f3 e5 2. g4 Qh4#
+
+-   1.f3? King ke saamne ka pawn kamzor kiya.
+-   1...e5 Black ne center liya aur queen ka raasta khola.
+-   2.g4?? Bahut badi galti! e1-h4 diagonal poora khul gaya.
+-   2...Qh4# Checkmate! Seekh: opening mein f aur g pawns ko faltu mat chalao.
+
+    8 | r n b . k b n r
+    7 | p p p p . p p p
+    6 | . . . . . . . .
+    5 | . . . . p . . .
+    4 | . . . . . . P q
+    3 | . . . . . P . .
+    2 | P P P P P . . P
+    1 | R N B Q K B N R
+       ----------------
+        a b c d e f g h
+
+Final position (2…Qh4#)
+
+[Abhyaas] 
+
+Notation se chaal chalo: Nf3
+
+    8 | r n b q k b n r
+    7 | p p p p p p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | P P P P P P P P
+    1 | R N B Q K B N R
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Nf3
+
+Knight g1 se f3 par. Bahut achhi opening chaal hai.
+
+    8 | r n b q k b n r
+    7 | p p p p p p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . N . .
+    2 | P P P P P P P P
+    1 | R N B Q K B . R
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+Level 2: Pehli jeet: mate aur safety
+
+Basic mates, hanging pieces, opening principles, sochne ka tareeka
+
+Ab game jeetna seekhenge: akele king ko mate dena, pieces bachana, aur achhi
+opening. Har lesson ke baad board par khud karke dekhna.
+
+2.1 Queen se mate (K+Q vs K)
+
+Box method
+
+Yaad rakho
+
+-   Queen ko dushman king se knight ki doori par rakho: box chhota karte jao.
+-   King edge par aa jaaye to apna king paas lao.
+-   Mate queen + king ki team se hota hai.
+-   Har chaal ke baad check karo: Black ke paas chaal bachi hai? Warna
+    stalemate.
+
+Box method
+
+Queen + King se mate dene ke steps:
+
+-   Queen ko knight ki doori par rakho dushman king se. Isse king ek "box"
+    mein band hota hai.
+-   Box ko chhota karte jao, jab tak king kinare (edge) par na aa jaaye.
+-   Ab apne king ko paas lao.
+-   Queen se mate do, king ki help se.
+
+Khatra: stalemate! Har chaal ke baad dekho ki Black ke paas koi chaal bachi
+hai.
+
+    8 | . . . . . . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . k . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . Q K . . .
+       ----------------
+        a b c d e f g h
+
+Final picture
+
+Aisi position mein mate hota hai: queen king ke saamne, aur apna king queen ko
+protect kar raha hai. Ya queen poori edge rank par check de jabki king saamne
+khada ho.
+
+    8 | . . . . k . . .
+    7 | . . . . Q . . .
+    6 | . . . . K . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+[Khud khelo]  Checkmate karo
+
+Ab tum karo: Black king ko 20 chaal ke andar mate do.
+
+Queen ko king ke paas mat le jao jahan woh protect na ho!
+
+    8 | . . . . . . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . k . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . Q K . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+2.2 Rook se mate (K+R vs K)
+
+Opposition aur rook ki deewar
+
+Yaad rakho
+
+-   Rook ek deewar banata hai: king ko ek taraf band karo.
+-   Apne king ko saamne lao (beech mein ek square) = opposition.
+-   Kings aamne-saamne hon tab rook se check: king peeche jaata hai.
+-   Rook ko dushman king se door rakho taaki woh capture na ho.
+
+Rook ki deewar
+
+Rook ek deewar banata hai jo king ko ek taraf band rakhti hai.
+
+-   Rook se king ko ek rank/file mein band karo.
+-   Apne king ko dushman king ke saamne lao (beech mein ek square) =
+    opposition.
+-   Jab kings aamne-saamne hon, rook se check do: king peeche jaayega.
+-   Aise edge tak dhakelo, phir edge par check = mate.
+
+Rook ko dushman king se door rakho taaki woh use pakad na le.
+
+    8 | . . . . . . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . k . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | R . . . K . . .
+       ----------------
+        a b c d e f g h
+
+Mate ki picture
+
+Kings aamne-saamne. Ab Ra8#: rook poori 8th rank par check deta hai, aur apna
+king d7, e7, f7 band karta hai.
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . K . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | R . . . . . . .
+       ----------------
+        a b c d e f g h
+
+[Abhyaas]  Mate in 1
+
+Mate in 1
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . K . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | R . . . . . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Ra8#
+
+    8 | R . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . K . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Khud khelo]  Checkmate karo
+
+Ab poora karo: 30 chaal mein rook se mate.
+
+    8 | . . . . . . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . k . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | R . . . K . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+2.3 Do rooks ki seedhi (ladder mate)
+
+Sabse aasaan mate
+
+Yaad rakho
+
+-   Do rooks seedhi ki tarah: ek rank band, doosra agli rank par check.
+-   King ki zaroorat nahi.
+-   Dushman king rook ke paas aaye to rook ko doosre kinare le jao.
+
+Ladder mate
+
+Do rooks seedhi ki tarah chalte hain: ek rook ek rank band karta hai, doosra
+agli rank par check deta hai. Phir pehla aage badhta hai.
+
+King ki zaroorat nahi! Bas dhyan rahe ki king rooks ke paas aa kar unhe
+capture na kar le: tab rook ko door (doosre kinare) le jao.
+
+    8 | . . . . . . k .
+    7 | . . . . . . . .
+    6 | R . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . R . . . . K .
+       ----------------
+        a b c d e f g h
+
+[Abhyaas]  Mate in 2
+
+Mate in 2: seedhi chalo.
+
+    8 | . . . . . . k .
+    7 | . . . . . . . .
+    6 | R . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . R . . . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Ra7 Kh8 2. Rb8#
+
+Ra7 se 7th rank band, phir Rb8#.
+
+    8 | . R . . . . . k
+    7 | R . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+Line ke baad position
+
+[Khud khelo]  Checkmate karo
+
+Do rooks se 12 chaal mein mate karo.
+
+    8 | . . . . . . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . k . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | R R . . K . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+2.4 Hanging pieces aur safety
+
+Attackers vs defenders
+
+Yaad rakho
+
+-   Beginners zyada games pieces free mein dene se haarte hain.
+-   Har chaal se pehle: koi piece bina protection? Opponent ki pichli chaal ne
+    kya attack kiya?
+-   Attackers > defenders = piece khatre mein.
+-   Opponent ka hanging piece dikhe to turant saza do.
+
+Blunder se bacho
+
+Beginners zyada games pieces free mein dene se haarte hain, galat plan se
+nahi.
+
+Har chaal se pehle:
+
+-   Kya meri chaal ke baad koi piece bina protection ke reh jaayega?
+-   Opponent ki pichli chaal ne kya attack kiya?
+-   Kisi square par attackers gino aur defenders gino. Attackers zyada = piece
+    khatre mein.
+
+[Sawal] Black ka knight c6 attack mein hai. Kitne White pieces use attack kar
+rahe hain aur kitne Black defend?
+
+    8 | r . b q k b n r
+    7 | p p p . . p p p
+    6 | . . n p . . . .
+    5 | . B . . p . . .
+    4 | . . . P P . . .
+    3 | . . . . . N . .
+    2 | P P P . . P P P
+    1 | R N B Q K . . R
+       ----------------
+        a b c d e f g h
+
+Jawab:
+
+✓ 1 attacker, 1 defender
+
+Bb5 attack karta hai, b7 pawn defend karta hai. Barabar: abhi khatra nahi.
+Lekin bishop ne knight ko pin kiya hai (Level 3).
+
+[Abhyaas] 
+
+Tum Black ho. White ne Nxe5 khel kar pawn liya, par knight ab hanging hai.
+Saza do!
+
+    1 | R . B K Q B N R
+    2 | P P P . P P P P
+    3 | . . . . . . . .
+    4 | . . . P . . . .
+    5 | . . . N . . . .
+    6 | . . . . . n . .
+    7 | p p p . p p p p
+    8 | r n b k q b . r
+       ----------------
+        h g f e d c b a
+
+(Black ki chaal)
+
+Jawab:
+
+1… Nxe5
+
+Nxe5: knight (3) ke badle sirf pawn (1) mila White ko. Attackers aur defenders
+ginna kabhi mat bhoolo.
+
+    1 | R . B K Q B N R
+    2 | P P P . P P P P
+    3 | . . . . . . . .
+    4 | . . . P . . . .
+    5 | . . . n . . . .
+    6 | . . . . . . . .
+    7 | p p p . p p p p
+    8 | r n b k q b . r
+       ----------------
+        h g f e d c b a
+
+Chaal ke baad
+
+[Abhyaas] 
+
+White ki chaal. Black ne bishop g4 par rakha, par woh protected nahi hai.
+
+    8 | r n . q k b n r
+    7 | p p p . . p p p
+    6 | . . . p . . . .
+    5 | . . . . p . . .
+    4 | . . . . P . b .
+    3 | . . . . . N . P
+    2 | P P P P . P P .
+    1 | R N B Q K B . R
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. hxg4
+
+hxg4: pawn (1) ne bishop (3) le liya. Black ne h3 pawn ka attack nahi dekha.
+
+    8 | r n . q k b n r
+    7 | p p p . . p p p
+    6 | . . . p . . . .
+    5 | . . . . p . . .
+    4 | . . . . P . P .
+    3 | . . . . . N . .
+    2 | P P P P . P P .
+    1 | R N B Q K B . R
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+    8 | r . b q k b n r
+    7 | p p p p . p p p
+    6 | . . n . . . . .
+    5 | . . . . p . . .
+    4 | . . . . P . . .
+    3 | . . . . . N . .
+    2 | P P P P . P P P
+    1 | R N B Q K B . R
+       ----------------
+        a b c d e f g h
+
+Attackers vs defenders: e5 par 1 white attacker (Nf3), 1 black defender (Nc6).
+Lena bekaar.
+
+2.5 Opening ke 10 principles
+
+Pehli 10-12 chaalein kaise khelein
+
+Yaad rakho
+
+-   Center lo (e4/d4), knights aur bishops develop karo, jaldi castle.
+-   Ek piece baar-baar mat chalao, queen jaldi mat nikaalo.
+-   Rooks connect karke open files par lao.
+-   f7/f2 sabse kamzor square: Scholar's mate se bacho (...g6 ya ...Qe7).
+
+Opening principles
+
+-   Center lo: e4, d4 (ya e5, d5) pawns se.
+-   Pieces develop karo: knights aur bishops ko pehle bahar lao. Knights
+    pehle, bishops baad mein.
+-   Jaldi castle karo (pehli 10 chaal mein).
+-   Ek piece ko baar-baar mat chalao bina wajah.
+-   Queen ko jaldi mat nikaalo: chhote pieces use bhaga dete hain aur tum time
+    khote ho.
+-   Rooks ko connect karo aur open files par lao.
+-   Faltu pawn moves (a4, h4) mat karo shuru mein.
+-   Pawn ke liye development mat chhodo.
+
+    8 | r . b q k b . r
+    7 | p p p p . p p p
+    6 | . . n . . n . .
+    5 | . . . . p . . .
+    4 | . . B . P . . .
+    3 | . . . . . N . .
+    2 | P P P P . P P P
+    1 | R N B Q K . . R
+       ----------------
+        a b c d e f g h
+
+[Sawal] Start position mein sabse achhi chaal kaunsi?
+
+    8 | r n b q k b n r
+    7 | p p p p p p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | P P P P P P P P
+    1 | R N B Q K B N R
+       ----------------
+        a b c d e f g h
+
+Jawab:
+
+✓ Nf3
+
+Nf3 center (e5, d4) control karta hai aur castling ki taiyaari.
+
+Scholar's mate: trap aur bachaav
+
+Yeh beginner ka sabse common trap hai. Dekho aur phir bachna seekho.
+
+1. e4 e5 2. Bc4 Nc6 3. Qh5 Nf6 4. Qxf7#
+
+-   2.Bc4 bishop f7 ko dekh raha hai. f7 sirf king protect karta hai: kamzor
+    square.
+-   3.Qh5 queen + bishop dono f7 par. Saath mein e5 par bhi attack.
+-   3...Nf6?? Knight ne queen ko attack kiya, par f7 bhool gaya.
+-   4.Qxf7# Checkmate. Seekh: f7/f2 square ko dhyan se protect karo.
+
+    8 | r . b q k b . r
+    7 | p p p p . Q p p
+    6 | . . n . . n . .
+    5 | . . . . p . . .
+    4 | . . B . P . . .
+    3 | . . . . . . . .
+    2 | P P P P . P P P
+    1 | R N B . K . N R
+       ----------------
+        a b c d e f g h
+
+Final position (4.Qxf7#)
+
+[Abhyaas] 
+
+Black ho. White ne Qh5 khela. Mate se bachao aur e5 bhi bachao.
+
+    1 | R N . K . B N R
+    2 | P P P . P P P P
+    3 | . . . . . . . .
+    4 | . . . P . B . .
+    5 | Q . . p . . . .
+    6 | . . . . . n . .
+    7 | p p p . p p p p
+    8 | r n b k q b . r
+       ----------------
+        h g f e d c b a
+
+(Black ki chaal)
+
+Jawab:
+
+1… g6
+
+Ye bhi sahi: Qe7 Qf6
+
+3...g6! queen ko bhagata hai. 3...Qe7 bhi theek hai. Phir Nf6 aur development:
+White ki queen ka time waste hua.
+
+    1 | R N . K . B N R
+    2 | P P P . P P P P
+    3 | . . . . . . . .
+    4 | . . . P . B . .
+    5 | Q . . p . . . .
+    6 | . p . . . n . .
+    7 | p . p . p p p p
+    8 | r n b k q b . r
+       ----------------
+        h g f e d c b a
+
+Chaal ke baad
+
+[Abhyaas]  Mate in 1
+
+White ki chaal. Black ne galti ki: Scholar's mate do!
+
+    8 | r . b q k b . r
+    7 | p p p p . p p p
+    6 | . . n . . n . .
+    5 | . . . . p . . Q
+    4 | . . B . P . . .
+    3 | . . . . . . . .
+    2 | P P P P . P P P
+    1 | R N B . K . N R
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Qxf7#
+
+    8 | r . b q k b . r
+    7 | p p p p . Q p p
+    6 | . . n . . n . .
+    5 | . . . . p . . .
+    4 | . . B . P . . .
+    3 | . . . . . . . .
+    2 | P P P P . P P P
+    1 | R N B . K . N R
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+2.6 Sochne ka tareeka: CCT
+
+Checks, Captures, Threats
+
+Yaad rakho
+
+-   Har chaal se pehle CCT: Checks, Captures, Threats.
+-   Pehle apne liye, phir opponent ke liye socho.
+-   Aakhir mein blunder check: meri chaal se kuch hanging to nahi?
+-   Opponent ki har chaal par poocho: "Iski threat kya hai?"
+
+Har chaal se pehle CCT
+
+Grandmasters bhi har position mein pehle forcing moves dekhte hain:
+
+-   Checks: kya main check de sakta hoon?
+-   Captures: kya main kuch capture kar sakta hoon?
+-   Threats: kya main koi bada attack bana sakta hoon (mate threat, queen par
+    attack)?
+
+Phir yahi opponent ke liye socho: woh kya karna chahta hai?
+
+Aakhir mein blunder check: "Kya meri chaal se koi piece hanging hoga?"
+
+[Abhyaas] 
+
+CCT use karo: pehle saare checks dekho. Sabse achhi chaal?
+
+    8 | r . . . . . k .
+    7 | . . . . . . p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . P P P
+    1 | . . . Q . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Qd5+
+
+Qd5+ check deta hai aur a8 rook par bhi attack. King hatega, phir Qxa8+.
+Checks pehle dekhne se yeh turant milta hai.
+
+    8 | r . . . . . k .
+    7 | . . . . . . p p
+    6 | . . . . . . . .
+    5 | . . . Q . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . P P P
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Sawal] Opponent ne abhi apni queen tumhare king ke paas laayi. Sabse pehle
+kya socho?
+
+Jawab:
+
+✓ Woh kya threat bana raha hai (mate?)
+
+Opponent ki threat dekhna = aadhe blunders khatam.
+
+Level 3: Tactics: chhote hathiyaar
+
+Fork, pin, skewer, discovered attack, mate patterns, calculation
+
+"Chess is 99% tactics." Zyadatar games tactics se jeete jaate hain. Har motif
+pehle samjho, phir puzzles se haath saaf karo.
+
+3.1 Fork (do pe ek saath attack)
+
+Knight, queen aur pawn forks
+
+Yaad rakho
+
+-   Fork = ek piece se do ya zyada pieces par ek saath attack.
+-   Knight fork sabse khatarnaak: uska attack block nahi hota.
+-   Best fork = check + kuch aur: pehle king bachana padta hai.
+-   Pawn aur queen bhi fork karte hain. Royal fork = king + queen.
+
+Fork kya hai
+
+Fork = ek piece se do ya zyada dushman pieces par ek saath attack. Opponent ek
+hi bacha sakta hai.
+
+Knight fork sabse khatarnaak hota hai kyunki knight ka attack block nahi hota.
+Sabse best fork: king + kuch aur (check ke saath), kyunki check pehle bachana
+padta hai.
+
+    8 | r . . . k . . .
+    7 | p p . . . p p p
+    6 | . . N . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | P P . . . P P P
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+[Abhyaas] 
+
+Knight fork dhundo!
+
+    8 | r . . . k . . .
+    7 | p p . . . p p p
+    6 | . . . . . . . .
+    5 | . . . N . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | P P . . . P P P
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Nc7+ Kd7 2. Nxa8
+
+Nc7+ king aur a8 rook ka fork. King hatega, phir Nxa8.
+
+    8 | N . . . . . . .
+    7 | p p . k . p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | P P . . . P P P
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+Line ke baad position
+
+[Abhyaas] 
+
+Queen fork: check + rook.
+
+    8 | r . . . . . k .
+    7 | . . . . . . p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . P P P
+    1 | . . . Q . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Qd5+
+
+Qd5+ king ko check aur a8 rook ko attack. Phir Qxa8.
+
+    8 | r . . . . . k .
+    7 | . . . . . . p p
+    6 | . . . . . . . .
+    5 | . . . Q . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . P P P
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Abhyaas] 
+
+Pawn bhi fork karta hai!
+
+    8 | . . . . k . . .
+    7 | p p . . . . p p
+    6 | . . . . . . . .
+    5 | . . b . n . . .
+    4 | . . . . . . . .
+    3 | . . P P . . . .
+    2 | P P . . . . P P
+    1 | . K B . . . N .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. d4
+
+d4 bishop aur knight dono par attack. c3 pawn d4 ko protect karta hai. Ek
+piece jaayega.
+
+    8 | . . . . k . . .
+    7 | p p . . . . p p
+    6 | . . . . . . . .
+    5 | . . b . n . . .
+    4 | . . . P . . . .
+    3 | . . P . . . . .
+    2 | P P . . . . P P
+    1 | . K B . . . N .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Abhyaas] 
+
+Royal fork: king aur queen.
+
+    8 | . . q . k . . .
+    7 | p p . . . p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . N . . .
+    3 | . . . . . . . .
+    2 | P P . . . P P P
+    1 | . . . . K . . R
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Nd6+ Kd7 2. Nxc8
+
+Nd6+ king + queen fork. Queen jeet li.
+
+    8 | . . N . . . . .
+    7 | p p . k . p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | P P . . . P P P
+    1 | . . . . K . . R
+       ----------------
+        a b c d e f g h
+
+Line ke baad position
+
+3.2 Pin
+
+Piece hil nahi sakta
+
+Yaad rakho
+
+-   Pin: aage wala piece hil nahi sakta kyunki peeche zyada keemti piece hai.
+-   Absolute pin (peeche king): kanoonan hil nahi sakta. Relative pin (peeche
+    queen/rook): hilega to nuksaan.
+-   Pinned piece par aur attack karo (aksar pawn se).
+-   Bishop, rook, queen hi pin karte hain.
+
+Pin kya hai
+
+Pin = ek piece hil nahi sakta (ya hilna nahi chahiye) kyunki uske peeche zyada
+keemti piece hai.
+
+-   Absolute pin: peeche king hai. Pinned piece kanoonan hil hi nahi sakta.
+-   Relative pin: peeche queen/rook hai. Hil sakta hai par nuksaan hoga.
+
+Pin ka fayda: pinned piece par aur attack karo (jaise pawn se).
+
+    8 | r . b q k . . r
+    7 | p p p p . p p p
+    6 | . . n . . n . .
+    5 | . B . . p . . .
+    4 | . . . . P . . .
+    3 | . . . . . N . .
+    2 | P P P P . P P P
+    1 | R N B Q K . . R
+       ----------------
+        a b c d e f g h
+
+[Abhyaas] 
+
+Pin karke queen jeeto.
+
+    8 | . . . . . . . k
+    7 | p . . . . . . p
+    6 | . . . . . . . .
+    5 | . . . . q . . .
+    4 | . . . . . . . .
+    3 | . . P . . . . .
+    2 | P P . . . B . .
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Bd4
+
+Bd4! queen h8 king ke saath pin hai. Woh hat nahi sakti: Qxd4 cxd4 ke baad
+Black ne queen (9) dekar bishop (3) liya.
+
+    8 | . . . . . . . k
+    7 | p . . . . . . p
+    6 | . . . . . . . .
+    5 | . . . . q . . .
+    4 | . . . B . . . .
+    3 | . . P . . . . .
+    2 | P P . . . . . .
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Abhyaas] 
+
+Pinned knight par attack karo!
+
+    8 | . . . . k . . .
+    7 | p p . . . p p p
+    6 | . . n . . . . .
+    5 | . B . . . . . .
+    4 | . . . P . . . .
+    3 | . . . . . . . .
+    2 | P P . . . P P P
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. d5
+
+d5! knight pinned hai (peeche king). Woh bhaag nahi sakta, agli chaal dxc6 se
+piece jeet.
+
+    8 | . . . . k . . .
+    7 | p p . . . p p p
+    6 | . . n . . . . .
+    5 | . B . P . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | P P . . . P P P
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Sawal] Yahan c6 ka knight kis type ke pin mein hai?
+
+    8 | r . b q k . . r
+    7 | p p p p . p p p
+    6 | . . n . . n . .
+    5 | . B . . p . . .
+    4 | . . . . P . . .
+    3 | . . . . . N . .
+    2 | P P P P . P P P
+    1 | R N B Q K . . R
+       ----------------
+        a b c d e f g h
+
+Jawab:
+
+✓ Absolute pin (peeche king)
+
+Bb5 se e8 king tak diagonal: knight beech mein hai aur kanoonan hil nahi
+sakta.
+
+3.3 Skewer
+
+Ulta pin
+
+Yaad rakho
+
+-   Skewer = ulta pin: keemti piece aage (aksar king), kam keemti peeche.
+-   Aage wala hatega, peeche wala capture.
+-   Line pieces (rook, bishop, queen) hi skewer karte hain.
+
+Skewer
+
+Skewer pin ka ulta hai: keemti piece aage hai (aksar king), aur kam keemti
+peeche. Aage wala hatega, to peeche wala capture.
+
+Rooks, bishops aur queens skewer karte hain (seedhi line wale pieces).
+
+    8 | . . . . . . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | R . k . . . q .
+    3 | . . . . . . . .
+    2 | . . . . . . . K
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+[Abhyaas] 
+
+Rook skewer!
+
+    8 | . . . . . . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . k . . . q .
+    3 | . . . . . . . .
+    2 | . . . . . . . K
+    1 | R . . . . . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Ra4+ Kd3 2. Rxg4
+
+Ra4+ king ko check, woh hatega, phir Rxg4.
+
+    8 | . . . . . . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . R .
+    3 | . . . k . . . .
+    2 | . . . . . . . K
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+Line ke baad position
+
+[Abhyaas] 
+
+Bishop skewer!
+
+    8 | . . . . . . q .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . k . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | P P . . . . . .
+    1 | . . . B . . . K
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Bb3+ Kd6 2. Bxg8
+
+Bb3+ king hatega, phir Bxg8.
+
+    8 | . . . . . . B .
+    7 | . . . . . . . .
+    6 | . . . k . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | P P . . . . . .
+    1 | . . . . . . . K
+       ----------------
+        a b c d e f g h
+
+Line ke baad position
+
+3.4 Discovered attack aur double check
+
+Chhupa hua attack
+
+Yaad rakho
+
+-   Discovered attack: aage wala piece hate to peeche wale ka attack khul
+    jaata hai.
+-   Hatne wala piece bhi kuch attack kare = do threats ek saath.
+-   Double check ka jawab sirf king ko hatana hai: block ya capture nahi.
+
+Discovered attack
+
+Jab ek piece hatta hai aur uske peeche wale piece ka attack khul jaata hai,
+use discovered attack kehte hain. Agar khula attack king par ho to discovered
+check.
+
+Khatarnaak kyunki hatne wala piece bhi kuch attack kar sakta hai: do threats
+ek saath!
+
+Double check: dono pieces check dein. Iska jawab sirf king ko hatana hai.
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . N . . .
+    3 | . . q . . . . .
+    2 | . . . . . . . .
+    1 | . . . . R . K .
+       ----------------
+        a b c d e f g h
+
+[Abhyaas] 
+
+Discovered check se queen jeeto.
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . N . . .
+    3 | . . q . . . . .
+    2 | . . . . . . . .
+    1 | . . . . R . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Nxc3+
+
+Knight ne queen li aur rook ka check khul gaya. Black ko check bachana padega.
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . N . . . . .
+    2 | . . . . . . . .
+    1 | . . . . R . K .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Abhyaas]  Mate in 1
+
+Double check se mate in 1!
+
+    8 | . . . r k b . .
+    7 | . . . p . p . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . N . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . R . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Nd6#
+
+Nd6#: knight + rook ka double check. King ke saare squares band, aur double
+check block ya capture nahi hota.
+
+    8 | . . . r k b . .
+    7 | . . . p . p . .
+    6 | . . . N . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . R . K .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+3.5 Defender hatao, deflection, overloading
+
+Raksha karne wale ko khatam karo
+
+Yaad rakho
+
+-   Removing the defender: bachaane wale piece ko capture karo ya bhagao.
+-   Deflection: defender ko zabardasti door le jao.
+-   Overloading: ek defender ke do kaam, ek par vaar karo.
+-   Decoy: dushman piece ko kharab square par lalchao.
+
+Defender ko hatao
+
+-   Removing the defender: jo piece kisi square/piece ko bacha raha hai, use
+    capture karo ya bhagao.
+-   Deflection: defender ko zabardasti door le jao (aksar sacrifice se).
+-   Overloading: ek defender ke paas do kaam hain. Ek kaam par attack karo,
+    doosra khul jaayega.
+-   Decoy: dushman piece ko kharab square par lalchao (sacrifice se).
+
+[Abhyaas] 
+
+Defender hatao, phir mate ki threat.
+
+    8 | r . . . . r k .
+    7 | p p . . . p p p
+    6 | . . . . . n . .
+    5 | . . . . . . B Q
+    4 | . . . . . . . .
+    3 | . . . B . . . .
+    2 | P P . . . P P P
+    1 | R . . . . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Bxf6
+
+Nf6 hi h7 ko bacha raha tha. Bxf6 ke baad Qxh7# ki threat, isliye White piece
+jeet leta hai.
+
+    8 | r . . . . r k .
+    7 | p p . . . p p p
+    6 | . . . . . B . .
+    5 | . . . . . . . Q
+    4 | . . . . . . . .
+    3 | . . . B . . . .
+    2 | P P . . . P P P
+    1 | R . . . . . K .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Abhyaas] 
+
+Deflection: queen le lo! Socho: kya Black wapas le sakta hai?
+
+    8 | . . . . r . k .
+    7 | . . . . q p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . Q . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . P P P
+    1 | . . . R . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Qxe7
+
+Qxe7! Agar ...Rxe7 to Rd8+ Re8 Rxe8#: rook ko back rank chhodni padi. Isliye
+Black wapas nahi le sakta aur queen gayi.
+
+    8 | . . . . r . k .
+    7 | . . . . Q p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . P P P
+    1 | . . . R . . K .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+3.6 Mate patterns (zaroor yaad karo)
+
+Back rank, smothered, Anastasia, Arabian, Boden
+
+Yaad rakho
+
+-   Strong players mate pattern pehchante hain, har baar calculate nahi karte.
+-   Back-rank, smothered, Anastasia, Arabian, Boden: shakal yaad karo.
+-   Legal's mate: pinned knight se queen sacrifice, teen minor pieces se mate.
+-   Greek gift Bxh7+: tab jab f6 par black knight na ho aur Ng5 safe ho.
+-   Philidor's legacy: Qg8+!! Rxg8 Nf7# smothered mate.
+
+Patterns = shortcuts
+
+Strong players har mate ko calculate nahi karte, woh pattern pehchante hain.
+Yeh patterns yaad karo:
+
+-   Back-rank mate: king apne pawns ke peeche band.
+-   Smothered mate: king apne hi pieces se ghira, knight mate deta hai.
+-   Anastasia mate: knight + rook, king kinare par.
+-   Arabian mate: rook + knight corner mein.
+-   Boden mate: do bishops criss-cross.
+-   Legal mate: opening trap, queen sacrifice.
+-   Greek gift: Bxh7+ sacrifice castled king par.
+
+[Abhyaas]  Mate in 1
+
+Smothered mate in 1
+
+    8 | . . . . . . r k
+    7 | . . . . . . p p
+    6 | . . . . . . . .
+    5 | . . . . . . N .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Nf7#
+
+King apne rook aur pawns mein "dum ghut" kar mara gaya.
+
+    8 | . . . . . . r k
+    7 | . . . . . N p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Abhyaas]  Mate in 1
+
+Anastasia mate in 1
+
+    8 | . . . . . r . .
+    7 | . . . . N p p k
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . R . . . .
+    2 | . . . . . . P P
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Rh3#
+
+Ne7 ne g6 aur g8 band kiye, rook h-file par mate.
+
+    8 | . . . . . r . .
+    7 | . . . . N p p k
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . R
+    2 | . . . . . . P P
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Abhyaas]  Mate in 1
+
+Arabian mate in 1
+
+    8 | . . . . . . . k
+    7 | . R . . . . . .
+    6 | . . . . . N . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Rh7#
+
+Knight f6 rook ko protect karta hai aur g8 band karta hai.
+
+    8 | . . . . . . . k
+    7 | . . . . . . . R
+    6 | . . . . . N . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Abhyaas]  Mate in 1
+
+Boden mate in 1
+
+    8 | . . k r . . . .
+    7 | p . . n . . . .
+    6 | . . p . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . B . .
+    3 | . . . B . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Ba6#
+
+Do bishops: ek b8/c7 band karta hai, doosra check deta hai.
+
+    8 | . . k r . . . .
+    7 | p . . n . . . .
+    6 | B . p . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . B . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+[Abhyaas]  Mate in 1
+
+Mate in 1: queen ka kiss
+
+    8 | . . . . . . k .
+    7 | . . . . . p . p
+    6 | . . . . . . p B
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . Q . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Qd8#
+
+Bishop h6 ne g7 aur f8 band kiye.
+
+    8 | . . . Q . . k .
+    7 | . . . . . p . p
+    6 | . . . . . . p B
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+Chaal ke baad
+
+Legal's mate (trap)
+
+Ek famous opening trap jahan White queen sacrifice karta hai.
+
+1. e4 e5 2. Nf3 d6 3. Bc4 Bg4 4. Nc3 g6 5. Nxe5 Bxd1 6. Bxf7+ Ke7 7. Nd5#
+
+-   3...Bg4 knight ko pin kiya (relative pin, peeche queen).
+-   4...g6? slow chaal.
+-   5.Nxe5! Pin tod diya! Queen de di.
+-   5...Bxd1?? Lalach. 5...dxe5 behtar tha.
+-   6.Bxf7+ King ko bahar kheencha.
+-   7.Nd5# Teen minor pieces ka mate!
+
+    8 | r n . q k b n r
+    7 | p p p . . p p p
+    6 | . . . p . . . .
+    5 | . . . . p . . .
+    4 | . . B . P . b .
+    3 | . . . . . N . .
+    2 | P P P P . P P P
+    1 | R N B Q K . . R
+       ----------------
+        a b c d e f g h
+
+Position after 3…Bg4
+
+    8 | r n . q . b n r
+    7 | p p p . k B . p
+    6 | . . . p . . p .
+    5 | . . . N N . . .
+    4 | . . . . P . . .
+    3 | . . . . . . . .
+    2 | P P P P . P P P
+    1 | R . B b K . . R
+       ----------------
+        a b c d e f g h
+
+Final position (7.Nd5#)
+
+[Abhyaas]  Mate in 5
+
+Philidor's legacy (smothered mate): mate in 5! Sirf checks.
+
+    8 | r . . . . . k .
+    7 | . p . . . . p p
+    6 | . . . . . . . .
+    5 | . . . . N . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . P P
+    1 | . . . Q . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Qd5+ Kh8 2. Nf7+ Kg8 3. Nh6+ Kh8 4. Qg8+ Rxg8 5. Nf7#
+
+Qd5+ Kh8 Nf7+ Kg8 Nh6+ Kh8 Qg8+!! Rxg8 Nf7#. Smothered mate: king apne hi rook
+se band.
+
+    8 | . . . . . . r k
+    7 | . p . . . N p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . P P
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+Line ke baad position
+
+[Abhyaas] 
+
+Greek gift: h7 par sacrifice!
+
+    8 | r n b q . r k .
+    7 | p p p n . p p p
+    6 | . . . . p . . .
+    5 | . . . p P . . .
+    4 | . b . P . . . .
+    3 | . . N B . N . .
+    2 | P P P . . P P P
+    1 | R . B Q K . . R
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Bxh7+ Kxh7 2. Ng5+
+
+Bxh7+ Kxh7 Ng5+ aur queen h5/d3 se attack. Shart: f6 par black knight na ho
+aur g5 par knight safe ho.
+
+    8 | r n b q . r . .
+    7 | p p p n . p p k
+    6 | . . . . p . . .
+    5 | . . . p P . N .
+    4 | . b . P . . . .
+    3 | . . N . . . . .
+    2 | P P P . . P P P
+    1 | R . B Q K . . R
+       ----------------
+        a b c d e f g h
+
+Line ke baad position
+
+3.7 Aur tactics: zwischenzug, x-ray, interference
+
+Advanced motifs
+
+Yaad rakho
+
+-   Zwischenzug: recapture se pehle ek zyada forcing chaal.
+-   X-ray: piece dushman piece ke aar-paar square control karta hai.
+-   Interference: do dushman pieces ke beech apna piece rakh kar connection
+    kaato.
+-   Clearance, desperado, perpetual check: ye bhi yaad rakho.
+
+Advanced motifs
+
+-   Zwischenzug (in-between move): expected recapture ki jagah pehle ek zyada
+    forcing chaal (check/threat) khelo.
+-   X-ray: piece dushman piece ke aar-paar ek square ko control karta hai.
+-   Interference: do dushman pieces ke beech mein apna piece rakh kar unka
+    connection kaato.
+-   Clearance: apne hi piece ko hata kar line/square khaali karo.
+-   Desperado: jo piece waise bhi jaane wala hai, use jitna ho sake mehenga
+    becho.
+-   Perpetual check: haarti position mein lagaataar check de kar draw.
+
+[Sawal] Opponent ne tumhara knight capture kiya. Recapture ki jagah tum pehle
+check dete ho jo queen ko bhi attack karta hai. Yeh kya kehlata hai?
+
+Jawab:
+
+✓ Zwischenzug
+
+In-between move: pehle bada threat, recapture baad mein.
+
+[Sawal] Tum haar rahe ho, par opponent ke king ko lagaataar check de sakte ho.
+Kya milega?
+
+Jawab:
+
+✓ Draw (perpetual check / repetition)
+
+Lagaataar checks se same position repeat hoti hai = draw.
+
+    8 | . . . r k . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . R . . . .
+    1 | . . . R K . . .
+       ----------------
+        a b c d e f g h
+
+X-ray: Rd1 ka attack apne Rd2 ke aar-paar d8 tak (doubling)
+
+3.8 Calculation aur visualization
+
+Dimaag mein board dekhna
+
+Yaad rakho
+
+-   2-4 candidate moves chuno (pehle CCT).
+-   Har line ek-ek karke dekho, opponent ka sabse achha jawab socho.
+-   Line ke end mein position evaluate karo.
+-   Visualization: notation padh kar board dimaag mein dekho, blindfold
+    puzzles karo.
+
+Calculation kaise karein
+
+-   Candidate moves chuno: 2-4 achhi chaalein (pehle CCT).
+-   Har ek ko ek-ek karke dekho, beech mein mat koodo.
+-   Opponent ka sabse achha jawab socho, sabse bura nahi.
+-   Line ke end mein position ko evaluate karo: kaun behtar?
+-   Forcing lines (check, capture) pehle aur gehri dekho: inme opponent ke
+    option kam hote hain.
+
+Visualization badhane ke liye: blindfold puzzles, notation padh kar board
+dimaag mein dekhna. Iske liye Mind's Eye trainer (neeche Trainer tab) bana hi
+hai!
+
+[Sawal] Board nahi dikhega. Socho: White: Kg1, Ra1. Black: Kg8, pawns f7 g7
+h7. White ki chaal. Mate in 1 kya hai?
+
+White: Kg1 Ra1
+
+Black: Kg8 f7 g7 h7
+
+Jawab:
+
+✓ Ra8#
+
+Back-rank mate: Ra8#.
+
+[Sawal] Dimaag mein: knight a1 se h8 tak sabse kam kitni chaal mein
+pahunchega?
+
+Jawab:
+
+✓ 6
+
+6 chaal. Knight lambi doori par dheema hai.
+
+[Sawal] Bina board: 1.e4 e5 2.Nf3 Nc6 3.Bb5 ke baad b5 bishop kis black piece
+ko attack kar raha hai?
+
+Jawab:
+
+✓ c6 knight
+
+Yeh Ruy Lopez hai: bishop c6 knight par.
+
+Level 4: Openings: shuruaat mazboot
+
+e4 aur d4 openings, traps, apna repertoire
+
+Openings ratne ki cheez nahi: har chaal ka idea samjho. Har opening pehle
+dekho (walkthrough), phir khud yaad se khelo.
+
+4.1 Opening ke ideas
+
+Center, development, king safety
+
+Yaad rakho
+
+-   Har opening ke 3 kaam: center, development, king safety.
+-   Open games (1.e4 e5) tactical, semi-open (Sicilian/French/Caro-Kann),
+    closed (1.d4 d5) positional, Indian (1.d4 Nf6) hypermodern.
+-   Openings ratne ki jagah har chaal ka idea samjho.
+
+Teen kaam
+
+Har opening teen kaam karti hai:
+
+-   Center control (pawns aur pieces se)
+-   Development (saare minor pieces bahar)
+-   King safety (castling)
+
+Openings do family mein aati hain:
+
+-   Open games 1.e4 e5: tez, tactical.
+-   Semi-open 1.e4 ke against c5, e6, c6: Sicilian, French, Caro-Kann.
+-   Closed 1.d4 d5: positional, plans lambe.
+-   Indian 1.d4 Nf6: flexible, hypermodern (pieces se center control).
+
+    8 | r . b q k . . r
+    7 | p p p p . p p p
+    6 | . . n . . n . .
+    5 | . . b . p . . .
+    4 | . . B . P . . .
+    3 | . . . P . N . .
+    2 | P P P . . P P P
+    1 | R N B Q K . . R
+       ----------------
+        a b c d e f g h
+
+[Sawal] 1.e4 e5 2.Nf3 ke baad Black ki sabse natural chaal?
+
+    8 | r n b q k b n r
+    7 | p p p p . p p p
+    6 | . . . . . . . .
+    5 | . . . . p . . .
+    4 | . . . . P . . .
+    3 | . . . . . N . .
+    2 | P P P P . P P P
+    1 | R N B Q K B . R
+       ----------------
+        a b c d e f g h
+
+Jawab:
+
+✓ Nc6
+
+Nc6 develop karta hai aur e5 ko protect.
+
+4.2 Italian Game
+
+1.e4 e5 2.Nf3 Nc6 3.Bc4
+
+Yaad rakho
+
+-   1.e4 e5 2.Nf3 Nc6 3.Bc4: bishop kamzor f7 ko dekhta hai.
+-   Giuoco Piano plan: c3 + d3, castle, Re1, Bb3, phir d4 break.
+-   Two Knights mein 4.Ng5 d5! 5.exd5 Na5! sahi. 5...Nxd5? par Fried Liver
+    6.Nxf7!.
+
+Italian Game (Giuoco Piano)
+
+Beginners ke liye sabse achhi opening: simple development aur saaf plans.
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 4. c3 Nf6 5. d3 d6 6. O-O O-O 7. Re1 a6 8. Bb3
+Ba7
+
+-   1.e4 Center mein pawn aur bishop/queen ke liye raasta.
+-   2.Nf3 Knight develop, e5 par attack.
+-   3.Bc4 bishop f7 (kamzor square) ko dekhta hai.
+-   3…Bc5 Black bhi bishop c5 par: f2 ko dekhta hai.
+-   4.c3 idea: baad mein d4 se center.
+-   5.d3 shaant aur solid (Giuoco Pianissimo).
+-   6.O-O Castle! King safe.
+-   Re1 rook ko center file par.
+-   Bb3 bishop ko ...Na5 ya ...d5 se bachaya.
+-   8…Ba7 Dono taraf development poora. Plan: White Nbd2-f1-g3, h3, aur d4 ka
+    break.
+
+    8 | r . b q k . n r
+    7 | p p p p . p p p
+    6 | . . n . . . . .
+    5 | . . b . p . . .
+    4 | . . B . P . . .
+    3 | . . P . . N . .
+    2 | P P . P . P P P
+    1 | R N B Q K . . R
+       ----------------
+        a b c d e f g h
+
+Position after 4.c3
+
+    8 | r . b q . r k .
+    7 | b p p . . p p p
+    6 | p . n p . n . .
+    5 | . . . . p . . .
+    4 | . . . . P . . .
+    3 | . B P P . N . .
+    2 | P P . . . P P P
+    1 | R N B Q R . K .
+       ----------------
+        a b c d e f g h
+
+Final position (8…Ba7)
+
+Two Knights: Fried Liver ka khatra
+
+3...Nf6 ke baad White 4.Ng5 se f7 par attack karta hai.
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 d5 5. exd5 Na5
+
+-   4.Ng5 f7 par do attackers.
+-   4...d5! sahi jawab: bishop ka raasta band.
+-   5.exd5
+-   5...Na5! Sahi! Agar 5...Nxd5? to 6.Nxf7! (Fried Liver): king bahar aata
+    hai aur bada attack.
+
+    8 | r . b q k b . r
+    7 | p p p . . p p p
+    6 | . . . . . n . .
+    5 | n . . P p . N .
+    4 | . . B . . . . .
+    3 | . . . . . . . .
+    2 | P P P P . P P P
+    1 | R N B Q K . . R
+       ----------------
+        a b c d e f g h
+
+Final position (5…Na5)
+
+[Sawal] Italian Game mein White ka bishop c4 kis kamzor square ko target karta
+hai?
+
+Jawab:
+
+✓ f7
+
+f7 shuru mein sirf king protect karta hai.
+
+4.3 Ruy Lopez (Spanish)
+
+1.e4 e5 2.Nf3 Nc6 3.Bb5
+
+Yaad rakho
+
+-   3.Bb5: e5 ke defender c6 knight par pressure.
+-   Morphy Defense 3...a6, White Ba4, O-O, Re1, c3, h3.
+-   h3 = prophylaxis: ...Bg4 pin roka. Plan d4 aur Nbd2-f1-g3.
+
+Ruy Lopez: main line
+
+World Championship level ki opening. 500 saal purani, aaj bhi sabse popular.
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3
+O-O 9. h3
+
+-   3.Bb5 e5 ke defender (c6 knight) par pressure.
+-   3...a6 bishop se seedha sawaal (Morphy Defense).
+-   4.Ba4 bishop pressure banaye rakhta hai.
+-   5.O-O castle pehle. e4 pawn ka khatra nahi kyunki baad mein Re1.
+-   6.Re1 e4 protect.
+-   6...b5 bishop ko door kiya.
+-   8.c3 taaki d4 khel sakein aur bishop ke liye c2 ka ghar.
+-   9.h3 ...Bg4 pin rokta hai. Plan: d4, Nbd2-f1-g3.
+
+    8 | r . b q k b . r
+    7 | . p p p . p p p
+    6 | p . n . . n . .
+    5 | . . . . p . . .
+    4 | B . . . P . . .
+    3 | . . . . . N . .
+    2 | P P P P . P P P
+    1 | R N B Q . R K .
+       ----------------
+        a b c d e f g h
+
+Position after 5.O-O
+
+    8 | r . b q . r k .
+    7 | . . p . b p p p
+    6 | p . n p . n . .
+    5 | . p . . p . . .
+    4 | . . . . P . . .
+    3 | . B P . . N . P
+    2 | P P . P . P P .
+    1 | R N B Q R . K .
+       ----------------
+        a b c d e f g h
+
+Final position (9.h3)
+
+[Sawal] Ruy Lopez mein 3.Bb5 ka main idea?
+
+Jawab:
+
+✓ e5 ke defender (Nc6) par pressure
+
+4.4 Sicilian Defense
+
+1.e4 c5: sabse fighting jawab
+
+Yaad rakho
+
+-   1...c5: side se center par attack, asymmetric position = jeet ke chances.
+-   Open Sicilian: 2.Nf3 3.d4 cxd4 4.Nxd4. Black ko extra center pawn milta
+    hai.
+-   Najdorf 5...a6. English Attack (Be3, f3, Qd2, O-O-O, g4) = opposite
+    castling attack race.
+
+Open Sicilian: Najdorf
+
+Sicilian 1.e4 ke against sabse popular aur jeetne wala jawab. Kasparov aur
+Fischer ki favourite.
+
+1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. Be3 e5 7. Nb3 Be6 8. f3
+
+-   1...c5 side se center par attack. Position asymmetric = jeet ke chances.
+-   3.d4 White center kholta hai.
+-   3...cxd4 Black ko extra center pawn mila (d-pawn).
+-   4...Nf6 e4 par attack.
+-   5...a6 Najdorf! b5 square control aur flexible.
+-   6...e5 center mein space, knight ko bhagaya.
+-   7...Be6 development.
+-   8.f3 English Attack: f3, Qd2, O-O-O, g4. Dono taraf opposite castling =
+    tez attack race.
+
+    1 | R . B K Q B N R
+    2 | P P P . . P P P
+    3 | . . . . . . . .
+    4 | . . . P N . . .
+    5 | . . . . . . . .
+    6 | . . n . p . . .
+    7 | p p p p . . p p
+    8 | r . b k q b n r
+       ----------------
+        h g f e d c b a
+
+Position after 4…Nf6
+
+    1 | R . B K Q . . R
+    2 | P P . . . P P P
+    3 | . . P B . N N .
+    4 | . . . P . . . .
+    5 | . . . p . . . .
+    6 | . . n b p . . p
+    7 | p p p . . . p .
+    8 | r . b k q . n r
+       ----------------
+        h g f e d c b a
+
+Final position (8.f3)
+
+[Sawal] Sicilian (1...c5) kyun popular hai?
+
+Jawab:
+
+✓ Position asymmetric hoti hai: Black jeet ke liye khel sakta hai
+
+4.5 French aur Caro-Kann
+
+1.e4 e6 aur 1.e4 c6: solid defenses
+
+Yaad rakho
+
+-   French 1...e6 2...d5: pawn chain d4-e5 banti hai, Black ...c5 se base par
+    vaar karta hai.
+-   French ki kamzori: c8 bishop band (bad bishop).
+-   Caro-Kann 1...c6 2...d5: solid, aur light bishop ...Bf5 se bahar aata hai.
+
+French Defense
+
+Solid aur counter-attacking. Pawn chain samajhna zaroori.
+
+1. e4 e6 2. d4 d5 3. Nc3 Nf6 4. e5 Nfd7 5. f4 c5 6. Nf3 Nc6 7. Be3
+
+-   1...e6 taiyaari d5 ki.
+-   2...d5 center ko challenge.
+-   4.e5 space! Ab pawn chain bani: d4-e5.
+-   5.f4 chain ko mazboot.
+-   5...c5! chain ki base (d4) par attack: French ka main idea.
+-   7.Be3 Black ki problem: c8 bishop band hai (bad bishop). Plan: ...Qb6,
+    ...cxd4, ...f6.
+
+    1 | R N B K Q B . R
+    2 | P P P . . P P P
+    3 | . . . . . N . .
+    4 | . . . . P . . .
+    5 | . . . P p . . .
+    6 | . . n p . . . .
+    7 | p p p . . p p p
+    8 | r . b k q b n r
+       ----------------
+        h g f e d c b a
+
+Position after 4.e5
+
+    1 | R . B K Q . . R
+    2 | P P . . . P P P
+    3 | . . N B . N . .
+    4 | . . P . P . . .
+    5 | . . . P p p . .
+    6 | . . . p . n . .
+    7 | p p p . n . p p
+    8 | r . b k q b . r
+       ----------------
+        h g f e d c b a
+
+Final position (7.Be3)
+
+Caro-Kann Defense
+
+Bahut solid. French jaisa, par light bishop bahar aata hai.
+
+1. e4 c6 2. d4 d5 3. Nc3 dxe4 4. Nxe4 Bf5 5. Ng3 Bg6 6. h4 h6 7. Nf3 Nd7 8. h5
+Bh7
+
+-   1...c6 taiyaari d5 ki, bina bishop band kiye.
+-   3...dxe4 Classical.
+-   4...Bf5 bishop bahar! French se fark.
+-   5...Bg6 bishop peeche hata.
+-   6.h4 bishop ko pareshan.
+-   6...h6 bishop ke liye h7 ka ghar.
+-   8…Bh7 Solid position: plan ...e6, ...Ngf6, ...Be7, ...c5.
+
+    1 | R N B K Q B . R
+    2 | P P P . . P P P
+    3 | . . . . . . . .
+    4 | . . . N P . . .
+    5 | . . b . . . . .
+    6 | . . . . . p . .
+    7 | p p p p . . p p
+    8 | r n b k q . n r
+       ----------------
+        h g f e d c b a
+
+Position after 4…Bf5
+
+    1 | R . B K Q B . R
+    2 | . P P . . P P P
+    3 | . N N . . . . .
+    4 | . . . . P . . .
+    5 | P . . . . . . .
+    6 | p . . . . p . .
+    7 | b p p p n . p p
+    8 | r n b k q . . r
+       ----------------
+        h g f e d c b a
+
+Final position (8…Bh7)
+
+[Sawal] French Defense mein Black ka sabse common pawn break?
+
+Jawab:
+
+✓ ...c5 (chain ki base par attack)
+
+4.6 Queen's Gambit aur London
+
+1.d4 openings
+
+Yaad rakho
+
+-   Queen's Gambit 1.d4 d5 2.c4: pawn asli mein free nahi.
+-   QGD 2...e6: solid. White plan minority attack b4-b5.
+-   Slav 2...c6: d5 support aur light bishop bahar.
+-   London Bf4, e3, c3, Nf3, Nbd2, Bd3: har jawab ke against same setup.
+
+Queen's Gambit Declined
+
+Classical aur strategic. "Gambit" naam hai par pawn asli mein free nahi.
+
+1. d4 d5 2. c4 e6 3. Nc3 Nf6 4. Bg5 Be7 5. e3 O-O 6. Nf3 Nbd7 7. Rc1 c6
+
+-   2.c4 side se d5 par attack. Agar ...dxc4, White aksar pawn wapas le leta
+    hai.
+-   2...e6 Declined: d5 ko pawn se support.
+-   4.Bg5 f6 knight ka pin.
+-   5.e3 solid.
+-   7.Rc1 c-file par pressure.
+-   7…c6 Plans: White minority attack (b4-b5), Black ...dxc4 aur ...e5/...c5
+    breaks.
+
+    8 | r n b q k b . r
+    7 | p p p . . p p p
+    6 | . . . . p n . .
+    5 | . . . p . . B .
+    4 | . . P P . . . .
+    3 | . . N . . . . .
+    2 | P P . . P P P P
+    1 | R . . Q K B N R
+       ----------------
+        a b c d e f g h
+
+Position after 4.Bg5
+
+    8 | r . b q . r k .
+    7 | p p . n b p p p
+    6 | . . p . p n . .
+    5 | . . . p . . B .
+    4 | . . P P . . . .
+    3 | . . N . P N . .
+    2 | P P . . . P P P
+    1 | . . R Q K B . R
+       ----------------
+        a b c d e f g h
+
+Final position (7…c6)
+
+Slav Defense
+
+2...c6 se d5 support, aur light bishop band nahi hota.
+
+1. d4 d5 2. c4 c6 3. Nf3 Nf6 4. Nc3 dxc4 5. a4 Bf5 6. e3 e6 7. Bxc4
+
+-   2...c6 Slav.
+-   4...dxc4 pawn liya, b5 se bachane ki koshish ho sakti hai.
+-   5.a4 ...b5 roka.
+-   5...Bf5 bishop bahar.
+-   7.Bxc4 White ne pawn wapas liya. Barabar position.
+
+    8 | r n b q k b . r
+    7 | p p . . p p p p
+    6 | . . p . . n . .
+    5 | . . . . . . . .
+    4 | . . p P . . . .
+    3 | . . N . . N . .
+    2 | P P . . P P P P
+    1 | R . B Q K B . R
+       ----------------
+        a b c d e f g h
+
+Position after 4…dxc4
+
+    8 | r n . q k b . r
+    7 | p p . . . p p p
+    6 | . . p . p n . .
+    5 | . . . . . b . .
+    4 | P . B P . . . .
+    3 | . . N . P N . .
+    2 | . P . . . P P P
+    1 | R . B Q K . . R
+       ----------------
+        a b c d e f g h
+
+Final position (7.Bxc4)
+
+London System
+
+Ek "system": lagbhag har jawab ke against same setup. Club players mein bahut
+popular.
+
+1. d4 d5 2. Bf4 Nf6 3. e3 e6 4. Nf3 c5 5. c3 Nc6 6. Nbd2 Bd6 7. Bg3 O-O 8. Bd3
+
+-   2.Bf4 bishop pawn chain ke bahar, pehle.
+-   3.e3
+-   5.c3 triangle: c3-d4-e3 solid center.
+-   6…Bd6 Black ...Bd6 se bishop trade maangta hai.
+-   7.Bg3 bishop bacha, h-file khul sakti hai.
+-   8.Bd3 Plan: O-O, Ne5, f4, kingside attack.
+
+    8 | r n b q k b . r
+    7 | p p . . . p p p
+    6 | . . . . p n . .
+    5 | . . p p . . . .
+    4 | . . . P . B . .
+    3 | . . P . P N . .
+    2 | P P . . . P P P
+    1 | R N . Q K B . R
+       ----------------
+        a b c d e f g h
+
+Position after 5.c3
+
+    8 | r . b q . r k .
+    7 | p p . . . p p p
+    6 | . . n b p n . .
+    5 | . . p p . . . .
+    4 | . . . P . . . .
+    3 | . . P B P N B .
+    2 | P P . N . P P P
+    1 | R . . Q K . . R
+       ----------------
+        a b c d e f g h
+
+Final position (8.Bd3)
+
+[Sawal] London System ki khaasiyat?
+
+Jawab:
+
+✓ Har jawab ke against same simple setup
+
+4.7 King's Indian, Nimzo-Indian, English
+
+Hypermodern openings
+
+Yaad rakho
+
+-   King's Indian: Black center White ko deta hai, phir ...e5/...f5 se vaar.
+    Center band ho to Black kingside, White queenside.
+-   Nimzo-Indian 3...Bb4: c3 knight ka pin aur e4 par control.
+-   English 1.c4: ulta Sicilian, g3 + Bg2 fianchetto.
+
+King's Indian Defense
+
+Black White ko center lene deta hai, phir ...e5/...f5 se attack. Fischer aur
+Kasparov ki pasand.
+
+1. d4 Nf6 2. c4 g6 3. Nc3 Bg7 4. e4 d6 5. Nf3 O-O 6. Be2 e5 7. O-O Nc6 8. d5
+Ne7
+
+-   2...g6 fianchetto ki taiyaari.
+-   3...Bg7 bishop long diagonal par.
+-   4.e4 White ne bada center liya.
+-   5…O-O Pehle castle.
+-   6...e5 center par vaar.
+-   8.d5 center band. Ab White queenside (c5), Black kingside (...f5, ...g5)
+    par attack karega.
+
+    1 | R N B K Q B . R
+    2 | P P P . . . P P
+    3 | . . . . . N . .
+    4 | . . . P P P . .
+    5 | . . . . . . . .
+    6 | . p n . . . . .
+    7 | p b p p p p p p
+    8 | r . . k q b n r
+       ----------------
+        h g f e d c b a
+
+Position after 4.e4
+
+    1 | . K R . Q B . R
+    2 | P P P B . . P P
+    3 | . . N . . N . .
+    4 | . . . P . P . .
+    5 | . . . p P . . .
+    6 | . p n . p . . .
+    7 | p b p n . p p p
+    8 | . k r . q b . r
+       ----------------
+        h g f e d c b a
+
+Final position (8…Ne7)
+
+Nimzo-Indian Defense
+
+3...Bb4 knight ko pin karta hai aur e4 ko rokta hai.
+
+1. d4 Nf6 2. c4 e6 3. Nc3 Bb4 4. Qc2 O-O 5. a3 Bxc3+ 6. Qxc3 b6
+
+-   3...Bb4 pin!
+-   4.Qc2 (Classical) doubled pawns se bachne ke liye.
+-   5…Bxc3+ Bishop pair dekar knight liya.
+-   ...b6 aur ...Bb7 se e4 par control.
+
+    8 | r n b q k . . r
+    7 | p p p p . p p p
+    6 | . . . . p n . .
+    5 | . . . . . . . .
+    4 | . b P P . . . .
+    3 | . . N . . . . .
+    2 | P P . . P P P P
+    1 | R . B Q K B N R
+       ----------------
+        a b c d e f g h
+
+Position after 3…Bb4
+
+    8 | r n b q . r k .
+    7 | p . p p . p p p
+    6 | . p . . p n . .
+    5 | . . . . . . . .
+    4 | . . P P . . . .
+    3 | P . Q . . . . .
+    2 | . P . . P P P P
+    1 | R . B . K B N R
+       ----------------
+        a b c d e f g h
+
+Final position (6…b6)
+
+English Opening
+
+1.c4: ulta Sicilian. Flexible aur positional.
+
+1. c4 e5 2. Nc3 Nf6 3. g3 d5 4. cxd5 Nxd5 5. Bg2 Nb6 6. Nf3 Nc6
+
+-   1.c4 side se d5 control.
+-   3.g3 fianchetto: bishop g2 se long diagonal.
+-   5.Bg2 Bishop g2 b7 aur center ko dekhta hai.
+
+    8 | r n b q k b . r
+    7 | p p p p . p p p
+    6 | . . . . . n . .
+    5 | . . . . p . . .
+    4 | . . P . . . . .
+    3 | . . N . . . P .
+    2 | P P . P P P . P
+    1 | R . B Q K B N R
+       ----------------
+        a b c d e f g h
+
+Position after 3.g3
+
+    8 | r . b q k b . r
+    7 | p p p . . p p p
+    6 | . n n . . . . .
+    5 | . . . . p . . .
+    4 | . . . . . . . .
+    3 | . . N . . N P .
+    2 | P P . P P P B P
+    1 | R . B Q K . . R
+       ----------------
+        a b c d e f g h
+
+Final position (6…Nc6)
+
+[Sawal] King's Indian mein center band hone ke baad Black kahan attack karta
+hai?
+
+Jawab:
+
+✓ Kingside (...f5, ...g5)
+
+4.8 Famous traps
+
+Inse bacho, aur kabhi use karo
+
+Yaad rakho
+
+-   Opponent koi pawn "free" chhode to pehle socho: trap to nahi?
+-   Blackburne Shilling: 3...Nd4 ke baad 4.Nxe5? lalach, ...Qg5! aur smothered
+    mate.
+-   Sahi jawab: 4.Nxd4 ya 4.O-O.
+
+Blackburne Shilling trap
+
+3...Nd4 ek trick hai. Agar White lalach kare to mate!
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nd4 4. Nxe5 Qg5 5. Nxf7 Qxg2 6. Rf1 Qxe4+ 7. Be2
+Nf3#
+
+-   3...Nd4?! pawn e5 "free" lagta hai.
+-   4.Nxe5? lalach. Behtar: 4.Nxd4 ya 4.O-O.
+-   4...Qg5! g2 aur e5 par attack.
+-   5.Nxf7?? aur lalach.
+-   5...Qxg2
+-   6.Rf1
+-   6...Qxe4+
+-   7.Be2
+-   7...Nf3# Smothered mate! Seekh: opponent ki trick chaal par pehle socho
+    "kyun?".
+
+    8 | r . b q k b n r
+    7 | p p p p . p p p
+    6 | . . . . . . . .
+    5 | . . . . N . . .
+    4 | . . B n P . . .
+    3 | . . . . . . . .
+    2 | P P P P . P P P
+    1 | R N B Q K . . R
+       ----------------
+        a b c d e f g h
+
+Position after 4.Nxe5
+
+    8 | r . b . k b n r
+    7 | p p p p . N p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . q . . .
+    3 | . . . . . n . .
+    2 | P P P P B P . P
+    1 | R N B Q K R . .
+       ----------------
+        a b c d e f g h
+
+Final position (7…Nf3#)
+
+[Sawal] Jab opponent koi pawn "free" chhod de, sabse pehle kya socho?
+
+Jawab:
+
+✓ Yeh trap to nahi? Lene ke baad unki CCT kya hai?
+
+4.9 Apna repertoire banao
+
+Kya khelna hai, kaise yaad karna hai
+
+Yaad rakho
+
+-   White: 1.e4 + Italian (ya 1.d4 + London).
+-   Black vs 1.e4: 1...e5 ya Caro-Kann. Black vs 1.d4: QGD ya Slav.
+-   Pehle 6-8 chaalon ke ideas; har game ke baad opening check karo.
+
+Simple repertoire (beginner se club level)
+
+-   White: 1.e4 aur Italian Game. (Ya 1.d4 + London System agar positional
+    pasand ho.)
+-   Black vs 1.e4: 1...e5 (open games) ya Caro-Kann (solid).
+-   Black vs 1.d4: Queen's Gambit Declined ya Slav.
+
+Kaise seekhein:
+
+-   Pehle 6-8 chaalon ke ideas samjho, lambi theory nahi.
+-   Har game ke baad dekho kahan opening se bahar aaye, wahan ka sahi move
+    note karo.
+-   1600+ ke baad dheere-dheere gehri lines aur sideline traps.
+-   Master games dekho apni openings ke: plans wahi se aate hain.
+
+[Sawal] 1200 rating par opening kaise padhni chahiye?
+
+Jawab:
+
+✓ Ideas aur principles, 6-8 chaal
+
+Level 5: Endgames: jeet pakki karo
+
+King activity, opposition, pawn endings, rook endings, theoretical positions
+
+Capablanca ne kaha tha: pehle endgame seekho. Endgame mein king ek fighter ban
+jaata hai, aur ek pawn bhi game jeeta deta hai.
+
+5.1 King aur pawn: opposition
+
+K+P vs K, key squares
+
+Yaad rakho
+
+-   Endgame mein king center mein lao: woh fighter hai (~4 points).
+-   Opposition: kings aamne-saamne, beech mein ek square; jisne chaal nahi
+    chalni uske paas opposition.
+-   Key squares: pawn ke 2 square aage ki row ke 3 squares. King wahan = pawn
+    queen.
+-   Square ka rule: dushman king pawn ke box mein aa sake to pawn pakda
+    jaayega.
+
+Endgame mein king ladta hai
+
+Endgame mein king ko center mein lao: woh ek strong piece hai (lagbhag 4
+points).
+
+Opposition: jab kings ek hi line mein ho aur beech mein ek square ho, to jisne
+chaal nahi chalni uske paas opposition hai. Opposition wala king doosre ko
+peeche dhakelta hai.
+
+Key squares: pawn ke 2 square aage wali row ke 3 squares. Agar tumhara king
+wahan pahunch gaya, pawn queen banega.
+
+    8 | . . . . . . . .
+    7 | . . . . k . . .
+    6 | . . . . . . . .
+    5 | . . . . K . . .
+    4 | . . . . . . . .
+    3 | . . . . P . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+[Sawal] Black ki chaal hai. Opposition kiske paas hai?
+
+    8 | . . . . . . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . k . . .
+    4 | . . . . . . . .
+    3 | . . . . K . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+Jawab:
+
+✓ White
+
+Kings aamne-saamne, beech mein ek square, aur Black ko chalna padega: White ke
+paas opposition.
+
+[Khud khelo]  Pawn ko queen banao
+
+King ko aage lao, opposition lo, aur pawn ko queen banao (25 chaal).
+
+Hint: Pehle king aage, pawn baad mein. Pawn ko king ke peeche rakho.
+
+    8 | . . . . . . . .
+    7 | . . . . k . . .
+    6 | . . . . . . . .
+    5 | . . . . K . . .
+    4 | . . . . . . . .
+    3 | . . . . P . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Square ka rule
+
+Pawn se promotion square tak ek square (box) banao. Agar dushman king (apni
+chaal ke saath) is box ke andar aa sakta hai, to woh pawn ko pakad lega.
+
+Yahan Black ki chaal hai aur king e5 box ke andar hai: woh pawn pakad lega.
+
+    8 | # # # # # . . .
+    7 | # # # # # . . .
+    6 | # # # # # . . .
+    5 | # # # # k . . .
+    4 | P # # # # . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . K
+       ----------------
+        a b c d e f g h
+
+[Sawal] White ki chaal. Kya Black king f5 pawn ko pakad sakta hai?
+
+    8 | . . . . . . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . k . .
+    4 | P . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . K
+       ----------------
+        a b c d e f g h
+
+Jawab:
+
+✓ Nahi: pawn queen banega
+
+a5 ke baad box a5-d5-d8-a8 hai. f5 king bahar hai: pakad nahi payega.
+
+5.2 Pawn endgame tricks
+
+Breakthrough, outside passer, triangulation
+
+Yaad rakho
+
+-   Passed pawn ko aage badhao: "passed pawns must be pushed".
+-   Outside passed pawn dushman king ko kinare kheenchta hai.
+-   Triangulation: king teen squares mein ghoom kar tempo waste karta hai.
+-   Breakthrough: 3 vs 3 pawns mein b6! jaisi sacrifice se passed pawn.
+
+Passed pawn
+
+Passed pawn: jiske raste mein ya bagal ki files mein koi dushman pawn na ho.
+"Passed pawns must be pushed!"
+
+-   Outside passed pawn (kinare wala): dushman king ko door kheenchta hai,
+    tumhara king doosri taraf pawns kha leta hai.
+-   Protected passed pawn: apne pawn se protected = bahut strong.
+-   Triangulation: king teen squares ka triangle bana kar ek tempo waste karta
+    hai taaki opposition mile.
+
+[Abhyaas] 
+
+Breakthrough! Teen pawns vs teen pawns.
+
+    8 | . . . . . . . .
+    7 | p p p . . . k .
+    6 | . . . . . . . .
+    5 | P P P . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . K .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. b6 axb6 2. c6 bxc6 3. a6
+
+1.b6! agar cxb6 to 2.a6! aur bxa6 3.c6 queen banega. Agar axb6 to 2.c6!.
+
+    8 | . . . . . . . .
+    7 | . . p . . . k .
+    6 | P p p . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . K .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+Line ke baad position
+
+[Sawal] Pawn endgame mein "outside passed pawn" kyun strong hai?
+
+Jawab:
+
+✓ Dushman king ko ek kinare kheench leta hai, apna king doosri taraf jeet
+jaata hai
+
+5.3 Rook endgames: Lucena aur Philidor
+
+Sabse common endgame
+
+Yaad rakho
+
+-   Aadhe endgames rook endgames hote hain.
+-   Lucena (jeet): rook 4th rank par la kar bridge banao.
+-   Philidor (draw): rook 6th rank par; pawn aage aaye to rook peeche jaa kar
+    checks.
+-   Tarrasch rule: rook passed pawn ke peeche. Active rook > passive rook.
+
+Rook endgames sabse zyada aate hain
+
+Lagbhag aadhe endgames mein rooks hote hain. 2 positions zaroor yaad karo:
+
+-   Lucena (jeet): pawn 7th rank par, king uske aage. Technique: "bridge
+    banao" rook se.
+-   Philidor (draw): defending side ka rook 3rd rank (apni taraf se 6th) par,
+    jab tak pawn aage na aaye. Pawn aaya to rook peeche jaa kar check dete
+    raho.
+
+Aur rule: rook passed pawn ke peeche rakho (Tarrasch rule), aage nahi. Active
+rook passive rook se behtar.
+
+Lucena: bridge banana
+
+White ka king b8 pawn ke aage atka hai. Black rook side se check dega.
+
+    8 | . K . . . . . .
+    7 | . P . k . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | r . . . . . . .
+    1 | . . R . . . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal) Shuruaati position
+
+1. Rd1+ Ke7 2. Rd4 Ra1 3. Kc7 Rc1+ 4. Kb6 Rb1+ 5. Kc6 Rc1+ 6. Kb5 Rb1+ 7. Rb4
+
+-   1.Rd1+ black king ko ek file door dhakelo.
+-   2.Rd4! rook 4th rank par: yahi bridge banega.
+-   3.Kc7 king bahar.
+-   3…Rc1+ Checks shuru.
+-   4.Kb6 King rook ki taraf aata hai.
+-   7.Rb4! Bridge! Checks khatam, pawn queen banega.
+
+    8 | . . . . . . . .
+    7 | . P K . k . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . R . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . r . . . . .
+       ----------------
+        a b c d e f g h
+
+Position after 3…Rc1+
+
+    8 | . . . . . . . .
+    7 | . P . . k . . .
+    6 | . . . . . . . .
+    5 | . K . . . . . .
+    4 | . R . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . r . . . . . .
+       ----------------
+        a b c d e f g h
+
+Final position (7.Rb4)
+
+[Khud khelo]  Pawn ko queen banao
+
+Ab tum Lucena jeeto: pawn ko queen banao (20 chaal).
+
+Hint: Rd1+, phir rook 4th rank par (Rd4), phir king bahar.
+
+    8 | . K . . . . . .
+    7 | . P . k . . . .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | r . . . . . . .
+    1 | . . R . . . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Philidor: draw kaise bachayein
+
+Black ka rook 6th rank par white king ko aage aane se rokta hai.
+
+Agar White e6 khele, to ab king ke liye 6th rank par koi chhupne ki jagah
+nahi. Tab Black rook ko peeche (1st rank) le jaata hai aur peeche se checks
+deta rehta hai. Draw!
+
+    8 | . . . . k . . .
+    7 | . . . . . . . R
+    6 | . r . . . . . .
+    5 | . . . K P . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+[Khud khelo]  Draw bachao
+
+Tum Black ho. 15 chaal tak draw bachao. Rook 6th rank par rakho jab tak pawn
+e6 na aaye.
+
+    1 | . . . . . . . .
+    2 | . . . . . . . .
+    3 | . . . . . . . .
+    4 | . . . . . . . .
+    5 | . . . P K . . .
+    6 | . . . . . . r .
+    7 | R . . . . . . .
+    8 | . . . k . . . .
+       ----------------
+        h g f e d c b a
+
+(Black ki chaal)
+
+[Sawal] Passed pawn ke saath rook kahan rakhna chahiye?
+
+Jawab:
+
+✓ Pawn ke peeche
+
+Tarrasch rule: rook pawn ke peeche se uske saath aage badhta hai, aur zyada
+active hota hai.
+
+5.4 Minor pieces aur theory
+
+Good/bad bishop, wrong corner, kaun jeetta hai
+
+Yaad rakho
+
+-   K+Q vs K, K+R vs K jeet. K+B vs K, K+N vs K, K+N+N vs K draw.
+-   K+B+N vs K jeet par mushkil: bishop ke color wale corner mein mate.
+-   Wrong bishop + h-pawn: corner ka color bishop se alag = draw.
+-   Open board, dono kinaron par pawns = bishop behtar. Band position =
+    knight.
+-   Opposite color bishops: aksar draw.
+
+Kaunse endgames jeet, kaunse draw
+
+-   K+Q vs K, K+R vs K: jeet
+-   K+B+N vs K: jeet par mushkil (corner us color ka jo bishop control karta
+    hai)
+-   K+N+N vs K: draw (force nahi kar sakte)
+-   K+B vs K, K+N vs K: draw
+-   K+Q vs K+R: aksar jeet (technique lambi)
+-   K+R vs K+B, K+R vs K+N: aksar draw
+-   K+R+P vs K+R: depends: Lucena jeet, Philidor draw
+-   Opposite color bishops + pawns: aksar draw chahe ek-do pawn zyada ho
+
+[Sawal] Wrong bishop: White ke paas h-pawn aur light-square bishop hai. Black
+king h8 corner mein. Result?
+
+    8 | . . . . . . . k
+    7 | . . . . . . . .
+    6 | . . . . . K . P
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . B . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+Jawab:
+
+✓ Draw: bishop h8 (dark square) control nahi karta
+
+Corner square ka color bishop se alag hai, king nikala nahi ja sakta. Famous
+draw!
+
+[Sawal] K + do knights vs akela K?
+
+Jawab:
+
+✓ Draw (force nahi hota)
+
+[Sawal] Bishop vs knight endgame: pawns dono kinaron par hain, board open hai.
+Kaun behtar?
+
+Jawab:
+
+✓ Bishop
+
+Bishop lambi doori se dono taraf kaam karta hai. Knight band positions mein
+behtar.
+
+    8 | . . . . . . . k
+    7 | . . . . . . . .
+    6 | . . . . . K . P
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . B . .
+       ----------------
+        a b c d e f g h
+
+Wrong bishop: light bishop h8 (dark) control nahi karta = draw
+
+Level 6: Strategy: plan banana
+
+Pawn structure, weak squares, open files, prophylaxis, sacrifices
+
+Jab koi tactic na ho, tab kya karein? Strategy batati hai kahan khelna hai aur
+kaunsa plan. Yahi 1500 se 2000+ ka fark hai.
+
+6.1 Pawn structure
+
+Isolated, doubled, backward, passed, chains
+
+Yaad rakho
+
+-   Pawn moves permanent hain: structure decide karta hai pieces kahan achhe.
+-   IQP: kamzor pawn, par active pieces. IQP wala attack kare, doosra trade
+    kare.
+-   Backward pawn ke aage ka square ek hole banta hai.
+-   Pawn chain: base par attack karo (Nimzowitsch).
+
+Pawns = position ki haddi
+
+"Pawns are the soul of chess" (Philidor). Pawns peeche nahi jaate, isliye har
+pawn move permanent hai. Pawn structure decide karta hai pieces kahan achhe
+honge.
+
+Isolated pawn (IQP)
+
+d4 pawn ke bagal (c, e files) mein koi apna pawn nahi: isolated.
+
+-   Kamzori: pawn se protect nahi hota, aur uske aage d5 square blockade ke
+    liye perfect (Black knight d5 par).
+-   Taakat: active pieces, d5 break aur kingside attack.
+
+IQP wala attack kare, doosra pieces trade karke endgame mein jaaye.
+
+    8 | r . b q . r k .
+    7 | p p . . b p p p
+    6 | . . n . p n . .
+    5 | . . . . . . . .
+    4 | . . . P . . . .
+    3 | . . N B . N . .
+    2 | P P . . . P P P
+    1 | R . B Q . R K .
+       ----------------
+        a b c d e f g h
+
+Doubled aur backward pawns
+
+Backward pawn: bagal ke pawns aage nikal gaye, aur yeh aage nahi badh sakta
+kyunki aage ka square dushman control karta hai. Yahan Black ka d6 backward
+hai aur d5 ek hole hai: White ke knight ke liye perfect ghar.
+
+Doubled pawns (ek file par do): aksar kamzor, par open file deta hai.
+
+    8 | r . b q k b . r
+    7 | . p . . . p p p
+    6 | p . n p . n . .
+    5 | . . . . p . . .
+    4 | . . . . P . . .
+    3 | . N N . . . . .
+    2 | P P P . B P P P
+    1 | R . B Q K . . R
+       ----------------
+        a b c d e f g h
+
+Pawn chain
+
+Pawn chain d4-e5 (White) aur e6-d5 (Black). Rule (Nimzowitsch): chain ki base
+par attack karo.
+
+Black ...c5 se d4 (base) par vaar karta hai. White kingside par (f4-f5) attack
+karta hai, kyunki chain ka sira us taraf ishaara karta hai.
+
+    8 | r n b q k b n r
+    7 | p p . . . p p p
+    6 | . . . . p . . .
+    5 | . . p p P . . .
+    4 | . . . P . . . .
+    3 | . . . . . . . .
+    2 | P P P . . P P P
+    1 | R N B Q K B N R
+       ----------------
+        a b c d e f g h
+
+[Sawal] Isolated pawn ke saamne wala square kis kaam ka hai?
+
+Jawab:
+
+✓ Dushman ke knight ke liye blockade ghar
+
+[Sawal] Pawn chain par attack kahan karna chahiye?
+
+Jawab:
+
+✓ Chain ki base par
+
+6.2 Weak squares aur outposts
+
+Pieces ke liye ghar
+
+Yaad rakho
+
+-   Outpost = jahan dushman pawn tumhare piece ko bhaga na sake.
+-   Outpost par knight rook jitna strong ho sakta hai.
+-   Bad bishop: apne hi pawns usi color par. Pawns bishop ke ulte color par
+    rakho.
+
+Outpost
+
+Outpost: aisa square jahan tumhara piece baith sake aur koi dushman pawn use
+bhaga na sake, aur aksar apne pawn se protected ho.
+
+d5 par knight: Black ke c aur e pawns use kabhi attack nahi kar sakte. Aisa
+knight ek rook jitna strong ho sakta hai!
+
+Weak square = jo pawns se protect na ho sake. Pawn move karte waqt socho:
+kaunse squares kamzor ho rahe hain?
+
+    8 | r . . . . r k .
+    7 | . p . . . p p p
+    6 | p . . p . . . .
+    5 | . . . N p . . .
+    4 | . . . . P . . .
+    3 | . . . . . . . .
+    2 | P P P . . P P P
+    1 | R . . . . R K .
+       ----------------
+        a b c d e f g h
+
+Good bishop vs bad bishop
+
+White ke pawns light squares par hain (c4, d5, e4), aur bishop bhi
+light-square ka hai: woh apne hi pawns se ruka hai = bad bishop.
+
+Rule: pawns ko apne bishop ke ulte color par rakho. Bad bishop ko trade karo
+ya pawns ke bahar laao.
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . p . . . .
+    5 | . . p P p . . .
+    4 | . . P . P . . .
+    3 | . . . . . . . .
+    2 | . . . . B . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+[Sawal] Knight ke liye sabse achha square?
+
+Jawab:
+
+✓ Center mein outpost jahan pawn bhaga na sake
+
+6.3 Open files, 7th rank, piece activity
+
+Rooks aur pieces ko zinda karo
+
+Yaad rakho
+
+-   Rooks ko open / half-open files par lao, phir 7th rank par ghuso.
+-   Do rooks 7th par ("pigs on the 7th") aksar jeet.
+-   Golden rule: sabse kharab piece ko behtar karo.
+
+Rooks ko kaam do
+
+-   Rooks ko open file (jisme koi pawn nahi) par lao, ya half-open file par.
+-   File kabze ke baad 7th rank par ghuso: wahan pawns aur king dono atakte
+    hain. Do rooks 7th par = "pigs on the 7th", aksar jeet.
+-   Doubling: do rooks ek file par.
+
+General rule: sabse kharab piece ko behtar karo. Har position mein socho: mera
+kaunsa piece kuch nahi kar raha?
+
+    8 | . . . . . . k .
+    7 | # R # # # p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . P P P
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+[Sawal] Koi tactic nahi, koi threat nahi. Achha general plan?
+
+Jawab:
+
+✓ Sabse kharab piece ko behtar square par lao
+
+    8 | . . . . . . k .
+    7 | . R . . . p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . P P P
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+Rook open file se 7th rank par ("pig on the 7th")
+
+6.4 Plan kaise banayein
+
+Imbalances aur attack
+
+Yaad rakho
+
+-   Plan imbalances se banta hai: material, minor pieces, pawn structure,
+    space, files, king safety.
+-   Jahan strong ho wahan khelo.
+-   Opposite side castling = pawn storm race; same side castling mein
+    center/queenside khelo.
+-   Minority attack (b4-b5): Carlsbad structure mein c6 par kamzor pawn
+    banana.
+
+Imbalances dekho
+
+Plan banane ke liye farq (imbalances) dekho:
+
+-   Material: kaun aage?
+-   Minor pieces: bishop vs knight, bishop pair?
+-   Pawn structure: kamzor pawns, passed pawns, majorities
+-   Space: kiske paas zyada jagah?
+-   Open files / weak squares
+-   Development aur king safety
+
+Phir: jahan tum strong ho wahan khelo. Space zyada hai to us taraf attack
+karo. Kamzori hai to use theek karo ya trades se bacho.
+
+Opposite side castling = pawn storm
+
+Jab kings alag-alag taraf castle karein, to dono apne pawns dushman king ki
+taraf daudaate hain (pawn storm). Yahan speed sab kuch hai: jo pehle file
+kholega woh jeetega.
+
+Same side castle ho to pawns aage badhana apne king ko kamzor karta hai: wahan
+center ya queenside mein khelo.
+
+    8 | . . k r . . . r
+    7 | p p p . . p p p
+    6 | . . n . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . N . .
+    2 | P P P . . P P P
+    1 | . . K R . . . R
+       ----------------
+        a b c d e f g h
+
+Minority attack
+
+Queen's Gambit structure (Carlsbad): White kam pawns wali side (queenside: a,
+b vs a, b, c) se attack karta hai: b4-b5. Maksad: c6 par ek kamzor pawn
+banana.
+
+Yeh dikhata hai: plan pawn structure se aata hai.
+
+    8 | . . . . k . . .
+    7 | p p . . . p p p
+    6 | . . p . . . . .
+    5 | . . . p . . . .
+    4 | . . . P . . . .
+    3 | . . . . P . . .
+    2 | P P . . . P P P
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+[Sawal] Tumhare paas kingside mein zyada space hai aur kings alag taraf
+castled hain. Plan?
+
+Jawab:
+
+✓ Kingside pawn storm aur attack
+
+6.5 Prophylaxis aur restriction
+
+Opponent ka plan pehle roko
+
+Yaad rakho
+
+-   Har chaal se pehle: "Opponent kya chahta hai?" Use pehle roko.
+-   Misaal: h3 (...Bg4 roko), Kh1 (checks se pehle hi bacho).
+-   Restriction: dushman pieces ke achhe squares cheen lo.
+
+Prophylaxis
+
+Prophylaxis (Nimzowitsch, Karpov, Petrosian): apni chaal se pehle poocho
+"Opponent kya karna chahta hai?" aur use pehle hi rok do.
+
+-   h3 khelna taaki ...Bg4 pin na ho
+-   Rook ko us file par rakhna jo khulne wali hai
+-   King ko pehle hi safe square (Kh1) par le jaana taaki baad mein checks na
+    aayein
+
+Restriction: dushman pieces ke achhe squares cheen lo. Jo piece hil nahi
+sakta, woh piece nahi.
+
+[Sawal] Ruy Lopez mein White h3 kyun khelta hai?
+
+Jawab:
+
+✓ Black bishop ko g4 aane se rokne ke liye (prophylaxis)
+
+6.6 Positional sacrifices
+
+Material dekar position lena
+
+Yaad rakho
+
+-   Exchange sac (rook dekar minor piece) position ke liye: Dragon ka
+    ...Rxc3!.
+-   Kab: dushman king khule, dominant piece mile, ya dushman rook bekaar ho.
+-   Gambit = pawn dekar development / initiative.
+
+Exchange sacrifice
+
+Exchange sacrifice: rook (5) dekar minor piece (3) lena, position ke liye.
+Sicilian Dragon mein ...Rxc3! famous hai: White ke king ke saamne pawns toot
+jaate hain, aur e4 kamzor hota hai.
+
+Kab karein: jab sacrifice se dushman king khul jaaye, ya tumhe dominant piece
+aur pawns milein, ya dushman ka rook kaam ka na ho.
+
+Pawn sacrifice (gambit) se bhi development, open lines ya initiative milta
+hai.
+
+    8 | . . r . . r k .
+    7 | p p . b p p b p
+    6 | . . . p . n p .
+    5 | q . . . . . . .
+    4 | . . . N P . . .
+    3 | . B N . B P . .
+    2 | P P P Q . . P P
+    1 | . . K R . . . R
+       ----------------
+        a b c d e f g h
+
+[Sawal] Positional sacrifice ka maksad?
+
+Jawab:
+
+✓ Lambe samay ka fayda: king safety tootna, strong pieces, initiative
+
+Level 7: Pro level: practical chess
+
+Deep calculation, time, tournaments, psychology, analysis, master games,
+training plan
+
+Ab board ke bahar ki cheezein: time management, tournaments, dimaag ka khel,
+aur Elo badhane ka roz ka plan.
+
+7.1 Deep calculation
+
+Grandmaster ki tarah sochna
+
+Yaad rakho
+
+-   Candidate moves ka tree banao, har branch ek baar.
+-   Kotov rule: line baar-baar mat dekho, ek baar gehra dekho aur faisla karo.
+-   Forcing line ke beech quiet moves mat bhoolo.
+-   Aakhri check: opponent ka sabse forcing jawab kya hai?
+
+Calculation ke pro tips
+
+-   Tree banao: candidate moves → har ek ke 1-2 best jawab → aage. Har branch
+    ek baar, saaf.
+-   Kotov rule: ek line ko baar-baar mat dekho. Ek baar gehra dekho, faisla
+    karo.
+-   Comparison: aksar perfect calculation ki zaroorat nahi, bas kaunsi line
+    behtar hai.
+-   Quiet moves ko mat bhoolo: forcing line ke beech ek shaant chaal bhi hoti
+    hai.
+-   Blunder check (aakhri 10 second): "Opponent ka sabse forcing jawab kya
+    hai?"
+-   Intuition + calculation: pehle feel, phir calculation se check.
+
+Training: roz 15-30 min tough puzzles bina board chhuye solve karo, poori line
+dimaag mein.
+
+[Abhyaas]  Mate in 5
+
+Calculate karo: mate in 5! (Philidor's legacy, saari chaalein forcing)
+
+    8 | r . . . . . k .
+    7 | . p . . . . p p
+    6 | . . . . . . . .
+    5 | . . . . N . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . P P
+    1 | . . . Q . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Qd5+ Kh8 2. Nf7+ Kg8 3. Nh6+ Kh8 4. Qg8+ Rxg8 5. Nf7#
+
+Qd5+ Kh8 Nf7+ Kg8 Nh6+ Kh8 Qg8+! Rxg8 Nf7#. Smothered mate: forcing moves ko
+end tak calculate karna seekho.
+
+    8 | . . . . . . r k
+    7 | . p . . . N p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . P P
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+Line ke baad position
+
+[Sawal] Calculation ke end mein sabse zaroori kya hai?
+
+Jawab:
+
+✓ Blunder check: opponent ke checks/captures/threats
+
+7.2 Time management
+
+Clock bhi opponent hai
+
+Yaad rakho
+
+-   Classical 60+ min, rapid 10-60, blitz ≤10, bullet <3. +2 = har chaal par 2
+    second.
+-   Opening jaldi, time critical positions mein lagao.
+-   Ek chaal par total time ka 10% se zyada kam hi.
+-   Time trouble mein simple, safe chaalein.
+
+Clock ka khel
+
+Time controls (FIDE):
+
+-   Classical: har player 60+ minute (jaise 90 min + 30 sec/move)
+-   Rapid: 10 se 60 minute
+-   Blitz: 10 minute ya kam (jaise 3+2, 5+0)
+-   Bullet: 3 minute se kam (online)
+
+Increment (+2): har chaal ke baad 2 second judte hain.
+
+Tips:
+- Opening jaldi (jo aata hai), sabse zyada time critical positions mein (jab
+plan badle, ya tactics ho).
+- Ek chaal par total time ka 10% se zyada kam hi lagao.
+- Time trouble se bacho: simple, safe chaalein.
+- Opponent ke time mein bhi socho (general plans).
+
+[Sawal] 5+3 blitz mein "+3" ka matlab?
+
+Jawab:
+
+✓ Har chaal ke baad 3 second judte hain
+
+[Sawal] Sabse zyada time kahan lagana chahiye?
+
+Jawab:
+
+✓ Critical positions: tactics, plan badalne ka mauka
+
+7.3 Tournament rules aur ratings
+
+OTB khelne ke liye zaroori
+
+Yaad rakho
+
+-   Touch-move: chhua piece chalana padega. Theek karna ho to "adjust" /
+    "J'adoube".
+-   Clock usi haath se dabao jisse chaal chali. Phone bajna = aksar haar.
+-   Draw offer apni chaal ke baad, clock se pehle.
+-   Titles: CM 2200, FM 2300, IM 2400 + norms, GM 2500 + 3 norms.
+
+Over-the-board rules
+
+-   Touch-move: jo piece chhua, wahi chalana padega. Apna piece theek karna ho
+    to pehle "adjust" (ya "J'adoube") bolo.
+-   Piece chhod diya = chaal poori.
+-   Clock usi haath se dabao jisse chaal chali.
+-   Illegal move: rapid/blitz mein opponent ko extra time; doosri illegal move
+    par haar (FIDE rules ke hisaab se).
+-   Classical mein notation likhna zaroori (scoresheet).
+-   Phone pass mein ho aur baj jaaye = aksar haar.
+-   Draw offer apni chaal chalne ke baad, clock dabane se pehle.
+
+Rating: Elo system. Jeet se rating badhti hai, haar se ghatti. Stronger player
+ko harane par zyada points.
+
+FIDE titles: CM (2200), FM (2300), IM (2400 + norms), GM (2500 + 3 GM norms).
+Women: WCM, WFM, WIM, WGM.
+
+[Sawal] Apna piece theek se rakhna hai bina chaal chale. Kya bolo?
+
+Jawab:
+
+✓ "Adjust" / "J'adoube"
+
+[Sawal] GM title ke liye kya chahiye?
+
+Jawab:
+
+✓ 2500 rating aur 3 GM norms
+
+7.4 Psychology aur practical play
+
+Dimaag ko control karo
+
+Yaad rakho
+
+-   Haar ke baad gussa (tilt) = break lo.
+-   Stronger opponent se mat daro, normal achhi chaalein.
+-   Jeeti position mein relax mat ho; haarti position mein resist karo.
+-   Neend, paani, fitness aur warm-up routine.
+
+Mental game
+
+-   Tilt: ek haar ke baad gusse mein games mat khelo. Break lo.
+-   Stronger opponent: darr ke draw mat khelo, normal achhi chaalein. Rating
+    board par nahi khelti.
+-   Jeeti position: relax mat ho. "The hardest game to win is a won game."
+    Safe moves, counterplay rokna.
+-   Haarti position: resist karo! Complications, traps, time pressure:
+    comeback hote hain.
+-   Draw offers: position aur tournament situation dekh kar.
+-   Fitness, neend, paani: lambe games mein bahut fark padta hai.
+-   Routine: game se pehle halka warm-up (puzzles), phone door.
+
+[Sawal] Lagaataar 3 blitz haar gaye aur gussa aa raha hai. Kya karein?
+
+Jawab:
+
+✓ Break lo, phir analyse karo
+
+7.5 Apne games analyse karo
+
+Sabse tez improvement
+
+Yaad rakho
+
+-   Pehle khud analyse karo, phir engine.
+-   Critical moments dhundo, aur engine ki chaal kyun best hai samjho.
+-   Galtiyon ki category banao (tactic, blunder, time, plan, endgame) aur wahi
+    train karo.
+
+Analysis ka sahi tareeka
+
+-   Game ke baad pehle khud analyse karo (bina engine): kahan socha, kya miss
+    kiya. Apne thoughts likho.
+-   Critical moments dhundo: jahan eval bada badla ya plan badla.
+-   Opening: kahan theory se bahar aaye? Sahi chaal note karo.
+-   Phir engine se check karo. Sirf "best move" mat dekho: kyun best hai,
+    samjho.
+-   Galtiyon ko category mein daalo: tactic miss, blunder, time, plan, endgame
+    technique. Jo zyada ho, wahi train karo.
+-   Haare games sabse zyada sikhate hain.
+
+Is app ke Trainer mein Stockfish coach tumhare games ki galtiyan samjhata hai.
+Aur yahan ka 🤖 AI coach se bhi pooch sakte ho.
+
+[Sawal] Game ke baad engine kab use karein?
+
+Jawab:
+
+✓ Pehle khud analysis, phir engine se check
+
+7.6 Master games aur chess ka itihaas
+
+Opera Game, world champions
+
+Yaad rakho
+
+-   Opera Game (Morphy 1858): development + open lines = attack.
+-   Chess ka janam Bharat mein: Chaturanga (6th century).
+-   Pehle World Champion Steinitz (1886). Bharat: Anand (5 baar), Gukesh
+    (2024, sabse kam umar).
+
+Opera Game: Morphy vs Duke & Count (1858)
+
+Sabse famous game: development, open lines aur sacrifices ka perfect example.
+
+1. e4 e5 2. Nf3 d6 3. d4 Bg4 4. dxe5 Bxf3 5. Qxf3 dxe5 6. Bc4 Nf6 7. Qb3 Qe7
+8. Nc3 c6 9. Bg5 b5 10. Nxb5 cxb5 11. Bxb5+ Nbd7 12. O-O-O Rd8 13. Rxd7 Rxd7
+14. Rd1 Qe6 15. Bxd7+ Nxd7 16. Qb8+ Nxb8 17. Rd8#
+
+-   3...Bg4?! bishop jaldi trade hoga.
+-   5.Qxf3 White ki queen active, development aage.
+-   7.Qb3! f7 aur b7 dono par attack.
+-   9.Bg5 ek aur piece develop. Black ke pieces bandh rahe hain.
+-   10.Nxb5! sacrifice: lines kholo!
+-   12.O-O-O rook seedha d-file par.
+-   13.Rxd7! aur sacrifice.
+-   15.Bxd7+
+-   16.Qb8+!! Queen sacrifice!
+-   17.Rd8# Mate! Seekh: development + open lines = attack.
+
+    8 | r n . . k b . r
+    7 | p p . . q p p p
+    6 | . . p . . n . .
+    5 | . . . . p . B .
+    4 | . . B . P . . .
+    3 | . Q N . . . . .
+    2 | P P P . . P P P
+    1 | R . . . K . . R
+       ----------------
+        a b c d e f g h
+
+Position after 9.Bg5
+
+    8 | . n . R k b . r
+    7 | p . . . . p p p
+    6 | . . . . q . . .
+    5 | . . . . p . B .
+    4 | . . . . P . . .
+    3 | . . . . . . . .
+    2 | P P P . . P P P
+    1 | . . K . . . . .
+       ----------------
+        a b c d e f g h
+
+Final position (17.Rd8#)
+
+Chess ki kahani
+
+-   Chess ka janam Bharat mein hua: 6th century ka Chaturanga (4 ang: haathi,
+    ghoda, rath, paidal).
+-   Persia mein Shatranj, phir Europe. ~1475 mein Spain mein modern queen aur
+    bishop ki chaal.
+-   Pehle official World Champion: Wilhelm Steinitz (1886).
+-   Legends: Capablanca, Alekhine, Botvinnik, Tal, Bobby Fischer, Karpov,
+    Garry Kasparov, Magnus Carlsen.
+-   Bharat ke heroes: Viswanathan Anand (5 baar World Champion), aur D. Gukesh
+    jo 2024 mein sabse kam umar ke World Champion bane. Praggnanandhaa, Arjun
+    Erigaisi, Koneru Humpy, Divya Deshmukh bhi top par.
+-   Chess960 (Freestyle): pieces ki starting position random, theory kam,
+    samajh zyada.
+
+[Sawal] Chess ka janam kahan hua?
+
+Jawab:
+
+✓ Bharat (Chaturanga)
+
+[Sawal] Opera Game ka main lesson?
+
+Jawab:
+
+✓ Development aur open lines se attack
+
+7.7 Elo badhane ka training plan
+
+Roz kya karein
+
+Yaad rakho
+
+-   0-1000: rules, hanging pieces, basic mates. 1000-1400: tactics. 1400-1800:
+    calculation + endgames. 1800+: strategy.
+-   Roz 45-60 min: puzzles, lesson, ek slow game, analysis.
+-   Roz thoda, lagaataar: 3 mahine ki consistency = bada jump.
+
+Rating ke hisaab se focus
+
+-   0-1000: rules pakke, hanging pieces na dena, basic mates (Level 1-2). Roz
+    20 easy puzzles.
+-   1000-1400: tactics, tactics, tactics (Level 3). Opening principles. 15+10
+    rapid games.
+-   1400-1800: calculation, basic endgames (Level 5), ek repertoire, apne
+    games analyse.
+-   1800-2200: strategy (Level 6), master games, gehri endgame theory,
+    classical games.
+-   2200+: coach, deep opening prep, tournaments, physical aur mental
+    training.
+
+Roz ka routine (45-60 min)
+
+-   15 min: puzzles (is app ka Puzzles tab + review)
+-   15 min: ek lesson ya endgame study
+-   20 min: ek slow game (15+10 ya zyada), blitz kam
+-   10 min: us game ka analysis
+-   Hafte mein ek baar: ek master game dhyan se
+
+Books (jab taiyaar ho): "Logical Chess: Move by Move" (Chernev), "Silman's
+Complete Endgame Course", "How to Reassess Your Chess" (Silman), "My System"
+(Nimzowitsch), "Dvoretsky's Endgame Manual" (advanced).
+
+Sabse badi baat: roz thoda, lagaataar. 3 mahine ki consistency = bada jump.
+
+[Sawal] 1200 rating par sabse zyada fayda kisse?
+
+Jawab:
+
+✓ Roz tactics puzzles + slow games + analysis
+
+Notes course.html ke lessons se bane hain. Course mein har lesson interactive
+hai: wahan khud khel kar pakka karo.

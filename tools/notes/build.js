@@ -121,6 +121,7 @@ ${css}
 <main><div class="wrap">
 <div class="hero"><span class="eyebrow">Basics se pro tak · 7 levels · ${nLes} lessons</span><h1>Chess course ke notes</h1>
 <p class="muted">Har lesson ka saar, board diagrams, abhyaas positions aur sawal-jawab. Jawab chhupe hain: pehle khud socho, phir "Jawab dekho" dabao.</p>
+<div class="dl"><a class="btn" href="downloads/Chess-Course-Notes.docx" download>⬇ Word file (.docx)</a><a class="btn" href="downloads/Chess-Course-Notes.txt" download>⬇ Text file (.txt)</a></div>
 <div class="legend"><span><i class="lg arrow"></i> Arrow = chaal / attack</span><span><i class="lg hlb"></i> Peela = important square</span><span><i class="lg dotb"></i> Dot = piece yahan ja sakta hai</span></div></div>
 <h2 class="toch">Fehrist (contents)</h2>
 <div class="toc">${toc}</div>

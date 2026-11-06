@@ -7,3 +7,5 @@
 - `notes.css`: styles for the notes page.
 
 After changing the course, run `node tools/notes/build.js` and commit `notes.html`.
+
+Word and text downloads (`downloads/`): run `node tools/notes/export.js` (needs Playwright), then in its `out/` folder run pandoc on `docx.html` (to .docx) and `txt.html` (to plain text).
