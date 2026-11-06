@@ -733,7 +733,7 @@ const dayNum=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/86
 
 /* ---------- progress (saved on this device) ---------- */
 const KEY='mindseye.course.v1';
-const DEF=()=>({v:1,done:{},tests:{},xp:0,streak:{last:'',n:0},stat:{},rev:{},day:{d:'',lesson:0,puz:0,rev:0,xp:0},placed:0,solved:{}});
+const DEF=()=>({v:1,g:{},done:{},tests:{},xp:0,streak:{last:'',n:0},stat:{},rev:{},day:{d:'',lesson:0,puz:0,rev:0,xp:0},placed:0,solved:{}});
 let PR=(()=>{try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j&&j.v===1)return Object.assign(DEF(),j)}catch(e){}return DEF()})();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(PR))}catch(e){}}
 function touchDay(){const t=today();if(PR.day.d!==t)PR.day={d:t,lesson:0,puz:0,rev:0,xp:0};
@@ -795,20 +795,35 @@ function promoPick(el,w,cb){const ov=h('div','promo');ov.innerHTML='<div class="
 
 /* ---------- AI tutor (Gemini free key, same key as the trainer) ---------- */
 const GKEY='mindseye.gemini.key';
-const gKey=()=>{try{return localStorage.getItem(GKEY)||''}catch(e){return''}};
-function gSetKey(k){try{k?localStorage.setItem(GKEY,k):localStorage.removeItem(GKEY)}catch(e){}}
+let GK_MEM='';
+function gCookie(){try{const m=document.cookie.match(/(?:^|; )mecgk=([^;]*)/);return m?decodeURIComponent(m[1]):''}catch(e){return''}}
+const gKey=()=>{let k='';try{k=localStorage.getItem(GKEY)||''}catch(e){}return k||GK_MEM||gCookie()};
+function gIdb(fn){try{const r=indexedDB.open('mindseye-kv',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>{try{fn(r.result.transaction('kv','readwrite').objectStore('kv'))}catch(e){}}}catch(e){}}
+function gSetKey(k){GK_MEM=k||'';try{k?localStorage.setItem(GKEY,k):localStorage.removeItem(GKEY)}catch(e){}
+  try{document.cookie='mecgk='+(k?encodeURIComponent(k)+'; max-age=31536000':'; max-age=0')+'; path=/; SameSite=Strict'+(location.protocol==='https:'?'; Secure':'')}catch(e){}
+  gIdb(st=>k?st.put(k,'gkey'):st.delete('gkey'));try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}}
+function gRestore(){let ls='';try{ls=localStorage.getItem(GKEY)||''}catch(e){}if(ls){GK_MEM=ls;if(!gCookie())gSetKey(ls);return}
+  const c=gCookie();if(c){gSetKey(c);return}
+  gIdb(st=>{const q=st.get('gkey');q.onsuccess=()=>{if(q.result&&!gKey()){gSetKey(q.result);if(typeof TUT!=='undefined'&&TUT.open)drawTutor()}}})}
+gRestore();
 const GMODELS=['gemini-flash-latest','gemini-2.5-flash','gemini-2.0-flash','gemini-flash-lite-latest','gemini-2.5-flash-lite'];
-const GMKEY='mindseye.course.gmodel';
-async function gAsk(prompt){const key=gKey();if(!key)throw{code:'nokey'};let last={code:'model'};let pref='';try{pref=localStorage.getItem(GMKEY)||''}catch(e){}
-  const order=pref?[pref,...GMODELS.filter(m=>m!==pref)]:GMODELS;
+async function gAsk(prompt){const key=gKey();if(!key)throw{code:'nokey'};let last={code:'model'};
+  const order=PR.g.gmodel?[PR.g.gmodel,...GMODELS.filter(m=>m!==PR.g.gmodel)]:GMODELS;
   for(const model of order){let r,j=null;
-    try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,{method:'POST',headers:{'content-type':'application/json','x-goog-api-key':key},
-      body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:0.6,maxOutputTokens:2048}})})}catch(e){throw{code:'net'}}
-    try{j=await r.json()}catch(e){}
-    const msg=(j&&j.error&&j.error.message)||'',stat=(j&&j.error&&j.error.status)||'';
+    const body=JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:0.6,maxOutputTokens:2048}});
+    const url=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+    // auth styles: API key header, key in URL, bearer token (for newer key formats); remember the one that works
+    const auths=[0,1,2].sort((a,b)=>(a===PR.g.gauth?-1:b===PR.g.gauth?1:0));let msg='',stat='',authOk=null,msg0='';
+    for(const a of auths){const h={'content-type':'application/json'};if(a===0)h['x-goog-api-key']=key;if(a===2)h['Authorization']='Bearer '+key;
+      try{r=await fetch(a===1?url+'?key='+encodeURIComponent(key):url,{method:'POST',headers:h,body})}catch(e){if(a===auths[auths.length-1])throw{code:'net'};continue}
+      j=null;try{j=await r.json()}catch(e){}msg=(j&&j.error&&j.error.message)||'';stat=(j&&j.error&&j.error.status)||'';
+      const authFail=r.status===401||stat==='UNAUTHENTICATED'||/API_KEY_INVALID|API key not valid|invalid authentication|credential/i.test(msg)||(r.status===400&&/key/i.test(msg));
+      if(!authFail){authOk=a;break}if(!msg0)msg0=msg}
+    if(authOk!=null&&PR.g.gauth!==authOk){PR.g.gauth=authOk;save()}
     if(r.ok){const c=j&&j.candidates&&j.candidates[0];const t=c&&c.content&&c.content.parts?c.content.parts.map(x=>x.text||'').join('').trim():'';
-      if(!t)throw{code:'empty',msg:(c&&c.finishReason)||''};try{localStorage.setItem(GMKEY,model)}catch(e){}return{text:t,cut:c.finishReason==='MAX_TOKENS'}}
-    if(/API_KEY_INVALID|API key not valid|API key expired/i.test(msg)||(r.status===400&&/key/i.test(msg)))throw{code:'key',msg};
+      if(!t)throw{code:'empty',msg:(c&&c.finishReason)||(j&&j.promptFeedback&&j.promptFeedback.blockReason)||''};
+      if(PR.g.gmodel!==model){PR.g.gmodel=model;save()}return{text:t,model,cut:c.finishReason==='MAX_TOKENS'}}
+    if(authOk==null)throw{code:'key',msg:msg0||msg};
     if(r.status===403||stat==='PERMISSION_DENIED')throw{code:'denied',msg};
     if(r.status===404||(r.status===400&&/model/i.test(msg))){last={code:'model',msg};continue}
     if(r.status===429){last={code:'limit',msg};continue}
@@ -860,8 +875,8 @@ function drawTutor(){let s=$('#tutor');if(!TUT.open)return;if(!s){s=h('div','she
   const f=s.querySelector('form.ask');if(f)f.addEventListener('submit',e=>{e.preventDefault();const v=$('#tq').value.trim();if(v)askTutor(v)})}
 function keyHTML(){return`<div class="gkey stack"><b>AI coach chalu karo (free, ek baar, ~2 minute)</b><ol class="cline">
    <li><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> kholo aur Google (Gmail) se sign in karo.</li>
-   <li><b>Create API key</b> dabao.</li><li>Key ke saath wala <b>copy</b> icon dabao. Key <span class="mono">AIza</span> se shuru hoti hai.</li><li>Yahan paste karke <b>Save key</b> dabao.</li></ol>
-   <input class="gin" type="password" placeholder="Key yahan paste karo (AIza…)" autocomplete="off" autocapitalize="off" spellcheck="false">
+   <li><b>Create API key</b> dabao.</li><li>Key ke saath wala <b>copy</b> icon dabao. Key aksar <span class="mono">AIza</span> ya <span class="mono">AQ.</span> se shuru hoti hai.</li><li>Yahan paste karke <b>Save key</b> dabao.</li></ol>
+   <input class="gin" type="password" placeholder="Key yahan paste karo" autocomplete="off" autocapitalize="off" spellcheck="false">
    <button class="btn primary block" data-tu="save">Save key</button>
    <small class="muted">Trainer app mein key pehle se daali hai to yahan apne aap chalegi. Key ke bina bhi poora course aur built-in coach chalta hai.</small></div>`}
 async function askTutor(q,label){if(TUT.busy)return;TUT.chat.push({r:'me',t:label||q});TUT.busy=true;TUT.msg='';drawTutor();
@@ -872,8 +887,8 @@ function tutorClick(e){const b=e.target.closest('[data-tu]');if(!b)return;const 
   if(a==='close')closeTutor();
   else if(a==='q')askTutor(QUICK[b.dataset.k],b.textContent);
   else if(a==='save'){const k=(b.closest('.gkey').querySelector('input').value||'').trim().replace(/\s/g,'');
-    if(!/^AIza[\w-]{20,}$/.test(k)){TUT.msg='Yeh Gemini key jaisi nahi lagti. AIza se shuru honi chahiye.';drawTutor();return}
-    gSetKey(k);TUT.msg='';TUT.chat.push({r:'ai',t:'Key save ho gayi! Ab mujhse kuch bhi pucho.'});drawTutor()}}
+    if(!k){TUT.msg='Pehle key paste karo.';drawTutor();return}PR.g.gauth=null;save();
+    gSetKey(k);TUT.msg='';TUT.chat.push({r:'ai',t:'Key save ho gayi! Test kar raha hoon…'});drawTutor();gAsk('Reply with just the word OK.').then(()=>{TUT.chat.push({r:'ai',t:'Key chal rahi hai. Ab mujhse kuch bhi pucho!'})},e=>{TUT.msg='Key save hui, par test fail: '+gErr(e)}).then(drawTutor)}}
 function setCtx(c){TUT.ctx=c;if(TUT.open)drawTutor()}
 
 /* ---------- step player ---------- */
