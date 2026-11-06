@@ -1,0 +1,1209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mind's Eye Chess</title>
+</head>
+<body>
+<title>Mind's Eye Chess</title>
+<style>
+/* Layout: one phone-width column; sticky score header, the board as the hero of every screen, bottom tab bar. */
+:root{
+  --bg:#EDF1EC; --surface:#FFFFFF; --surface2:#E1E8E1; --fg:#17211B; --muted:#56655B; --line:#C9D4CB;
+  --accent:#23664A; --accent-fg:#FFFFFF; --brass:#9C7216; --good:#1F7D4C; --bad:#B53D27; --good-soft:#D7EEDF; --bad-soft:#F6DCD5;
+  --sq-light:#E7DFC4; --sq-dark:#789560; --sq-plain:#B9C0B7; --sq-plain2:#AEB5AC; --hl:#F0BE45; --pc-w:#FFFFFF; --pc-b:#151515; --coord-l:#5E7A49; --coord-d:#EEE7CF;
+  --f-display:"Barlow Condensed","Arial Narrow",sans-serif; --f-body:"Barlow",system-ui,-apple-system,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1512; --surface:#17201B; --surface2:#202B25; --fg:#E3EBE5; --muted:#98A79D; --line:#2D3A33;
+  --accent:#5DBB8A; --accent-fg:#0A1A11; --brass:#E2B552; --good:#55C688; --bad:#EF7B64; --good-soft:#173826; --bad-soft:#41201A;
+  --sq-light:#D8CFAF; --sq-dark:#68844F; --sq-plain:#5C655F; --sq-plain2:#535B55; --coord-l:#4F6A3B; --coord-d:#E6DDBF; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1512; --surface:#17201B; --surface2:#202B25; --fg:#E3EBE5; --muted:#98A79D; --line:#2D3A33;
+  --accent:#5DBB8A; --accent-fg:#0A1A11; --brass:#E2B552; --good:#55C688; --bad:#EF7B64; --good-soft:#173826; --bad-soft:#41201A;
+  --sq-light:#D8CFAF; --sq-dark:#68844F; --sq-plain:#5C655F; --sq-plain2:#535B55; --coord-l:#4F6A3B; --coord-d:#E6DDBF; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--hl);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding-block:10px;gap:12px}
+.brand{font-family:var(--f-display);font-weight:700;font-size:22px;letter-spacing:.02em;display:flex;align-items:center;gap:8px}
+.brand i{font-style:normal;font-size:20px;color:var(--accent)}
+.chips{display:flex;gap:8px;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.chip{background:var(--surface2);border-radius:999px;padding:3px 10px;white-space:nowrap}
+main{padding-block:16px 110px}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding-block:6px}
+nav.tabs button{background:none;border:0;padding:6px 0;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:1px;font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+nav.tabs button span{font-size:20px;line-height:1}
+nav.tabs button.on{color:var(--accent);background:var(--surface2)}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.1;margin:0;text-wrap:balance;letter-spacing:.01em}
+h1{font-size:32px}h2{font-size:24px}h3{font-size:19px}
+p{margin:0}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.muted{color:var(--muted)}
+.eyebrow{font-family:var(--f-display);font-weight:600;text-transform:uppercase;letter-spacing:.12em;font-size:13px;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.btn{border:0;border-radius:8px;padding:12px 16px;font-weight:600;background:var(--surface2);text-align:center}
+.btn.primary{background:var(--accent);color:var(--accent-fg)}
+.btn.block{width:100%}
+.btn.small{padding:7px 12px;font-size:14px}
+.btn:disabled{opacity:.45;cursor:default}
+.mono,.n{font-family:var(--f-mono);font-weight:700}
+.n{background:var(--surface2);padding:0 6px;border-radius:5px;white-space:nowrap}
+.hero{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+.hero h1{font-size:34px}
+.minib{width:104px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.tile b{display:block;font-family:var(--f-display);font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.tile small{color:var(--muted);font-size:13px}
+.stagelist{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
+.stagerow{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:14px 4px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;width:100%}
+.stagerow .num{font-family:var(--f-display);font-size:30px;font-weight:700;color:var(--accent);text-align:center;font-variant-numeric:tabular-nums}
+.stagerow.locked .num{color:var(--muted)}
+.stagerow.locked{opacity:.6}
+.stagerow .t{font-weight:600}
+.stagerow .d{font-size:14px;color:var(--muted)}
+.bar{height:6px;border-radius:3px;background:var(--surface2);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.stars{font-size:15px;letter-spacing:1px;color:var(--brass);white-space:nowrap;font-variant-numeric:tabular-nums}
+.stars .off{color:var(--line)}
+.lessons{display:flex;flex-direction:column;gap:6px}
+.lesson{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 14px;border-radius:8px;background:var(--surface);border:1px solid var(--line);text-align:left;width:100%}
+.lesson.locked{opacity:.5}
+.lesson.next{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.lesson small{display:block;color:var(--muted);font-size:13px}
+.tier{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px}
+/* board */
+.board{display:grid;grid-template-columns:repeat(8,1fr);width:100%;max-width:440px;aspect-ratio:1;margin:0 auto;border-radius:6px;overflow:hidden;box-shadow:0 0 0 2px var(--line);user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.sq{position:relative;display:flex;align-items:center;justify-content:center;container-type:size}
+.sq.l{background:var(--sq-light)}.sq.d{background:var(--sq-dark)}
+.plain .sq.l,.plain .sq.d{background:var(--sq-plain)}
+.plain .sq{box-shadow:inset 0 0 0 .5px var(--sq-plain2)}
+.sq .cf,.sq .cr{position:absolute;font-family:var(--f-mono);font-size:10px;font-weight:700;line-height:1}
+.sq .cf{right:3px;bottom:2px}.sq .cr{left:3px;top:3px}
+.sq.l .cf,.sq.l .cr{color:var(--coord-l)}.sq.d .cf,.sq.d .cr{color:var(--coord-d)}
+.plain .sq .cf,.plain .sq .cr{color:var(--fg);opacity:.7}
+.sq .lab{font-family:var(--f-mono);font-size:11px;font-weight:700;opacity:.75}
+.sq.l .lab{color:var(--coord-l)}.sq.d .lab{color:var(--coord-d)}
+.pc{font-size:78cqh;line-height:1;font-family:"Segoe UI Symbol","Noto Sans Symbols 2","DejaVu Sans",serif;pointer-events:none}
+.pc.w{color:var(--pc-w);text-shadow:0 0 1px #000,0 0 1px #000,0 0 1px #000,0 1px 1px rgba(0,0,0,.5)}
+.pc.b{color:var(--pc-b);text-shadow:0 0 1px rgba(255,255,255,.35)}
+.sq.hl{box-shadow:inset 0 0 0 4px var(--hl)}
+.sq.hl::after{content:"";position:absolute;inset:0;background:var(--hl);opacity:.45}
+.sq.m-sel::after,.sq.m-good::after,.sq.m-bad::after,.sq.m-miss::after{content:"";position:absolute;inset:0}
+.sq.m-sel::after{background:var(--hl);opacity:.55}
+.sq.m-good::after{background:var(--good);opacity:.6}
+.sq.m-bad::after{background:var(--bad);opacity:.6}
+.sq.m-miss::after{box-shadow:inset 0 0 0 4px var(--good)}
+.sq.m-ring::after{content:"";position:absolute;inset:8%;border-radius:50%;box-shadow:0 0 0 3px var(--hl),0 0 0 5px rgba(0,0,0,.35)}
+.sq.dot::before{content:"";position:absolute;width:28%;height:28%;border-radius:50%;background:rgba(20,30,20,.45);z-index:1}
+.sq.from{box-shadow:inset 0 0 0 4px var(--accent)}
+/* question */
+.qhead{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px}
+.x{border:0;background:var(--surface2);width:36px;height:36px;border-radius:50%;font-size:18px}
+.prog{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.count{font-family:var(--f-mono);font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.timer{height:4px;background:transparent;border-radius:2px;overflow:hidden}
+.timer i{display:block;height:100%;background:var(--brass);width:100%}
+.prompt{font-size:21px;font-weight:600;line-height:1.3;text-wrap:balance}
+.prompt .n{font-size:20px}
+.pos{font-family:var(--f-mono);font-size:15px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:4px}
+.pos b{font-family:var(--f-body);font-weight:600;color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-right:6px}
+.moves{font-family:var(--f-mono);font-size:17px;line-height:1.8;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;word-spacing:2px}
+.moves .mn{color:var(--muted)}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choices.one{grid-template-columns:1fr}
+.choice{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:14px 10px;font-weight:600;font-size:17px}
+.choice.sw-l{background:var(--sq-light);color:#2C3A23;border-color:transparent}
+.choice.sw-d{background:var(--sq-dark);color:#F6F1DE;border-color:transparent}
+.choice.good{outline:3px solid var(--good)}.choice.bad{outline:3px solid var(--bad)}
+.pad{display:grid;gap:6px}
+.pad .keys{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}
+.key{border:0;border-radius:7px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);padding:11px 0;font-family:var(--f-mono);font-weight:700;font-size:16px}
+.key.on{background:var(--accent);color:var(--accent-fg);box-shadow:none}
+.key.wide{grid-column:span 2;font-family:var(--f-body);font-size:14px}
+.key.go{background:var(--accent);color:var(--accent-fg);box-shadow:none}
+.slot{font-family:var(--f-mono);font-size:30px;font-weight:700;text-align:center;letter-spacing:.1em;min-height:42px}
+.slot .muted{font-size:16px;letter-spacing:0;font-weight:500;font-family:var(--f-body)}
+.pad .slot .muted{font-size:30px;font-family:var(--f-mono)}
+.fb{border-radius:var(--r);padding:12px 14px;display:grid;gap:6px}
+.fb.ok{background:var(--good-soft)}.fb.no{background:var(--bad-soft)}
+.fb h3{color:var(--good)}.fb.no h3{color:var(--bad)}
+.memo{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.memo b{font-family:var(--f-display);font-size:28px;font-variant-numeric:tabular-nums}
+/* tutorial */
+.tut p{max-width:65ch}
+.tut ul{margin:0;padding-left:20px;display:grid;gap:4px}
+.dots{display:flex;gap:6px;justify-content:center}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--accent)}
+.caption{font-family:var(--f-mono);font-size:14px;text-align:center;min-height:22px;color:var(--muted)}
+.seg{display:inline-flex;background:var(--surface2);border-radius:8px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:none;padding:6px 10px;border-radius:6px;font-size:14px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drill{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:12px;text-align:left;display:grid;gap:2px;min-width:0}
+.drill b{font-weight:600;font-size:15px}
+.drill small{color:var(--muted);font-size:13px}
+.skillbar{display:grid;grid-template-columns:100px 1fr 48px;gap:10px;align-items:center;font-size:14px}
+.skillbar .bar{margin:0;height:8px}
+.skillbar span:last-child{font-family:var(--f-mono);text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.heat .sq{font-family:var(--f-mono);font-size:10px;font-weight:700;color:#fff;text-shadow:0 0 2px rgba(0,0,0,.6)}
+.legend{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.sw{appearance:none;width:46px;height:28px;border-radius:14px;background:var(--line);position:relative;flex:none;cursor:pointer}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--surface);transition:left .15s}
+.sw:checked{background:var(--accent)}.sw:checked::after{left:21px}
+.gstat{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:600}
+.big{font-family:var(--f-display);font-weight:700;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+.gamemoves{font-family:var(--f-mono);font-size:15px;line-height:1.7;max-height:150px;overflow-y:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.lastmove{font-family:var(--f-mono);font-size:30px;font-weight:700;text-align:center}
+.npad{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.npad .key{padding:11px 0}
+.ipad .keys{grid-template-columns:repeat(8,1fr)}
+.warn{color:var(--bad);font-weight:600}
+.cbar{fill:var(--accent);opacity:.35}.cdot{fill:var(--accent)}.cline{fill:none;stroke:var(--accent);stroke-width:2}.cgrid{stroke:var(--line);stroke-width:1}.clab{fill:var(--muted);font-size:9px;font-family:var(--f-mono)}
+.resgrid{display:flex;gap:4px;flex-wrap:wrap}
+.resgrid i{width:18px;height:18px;border-radius:4px;background:var(--good)}
+.resgrid i.no{background:var(--bad)}
+.speedflash{transition:background .2s}
+.setrow{display:grid;gap:6px}.setrow b{font-size:14px}
+.trstat{display:flex;gap:10px;flex-wrap:wrap;font-size:14px;align-items:center}
+.big2{font-size:28px}
+.qbox.tr{transition:background .12s}.qbox.fl-ok{background:var(--good-soft)}.qbox.fl-no{background:var(--bad-soft)}
+.trmsg{font-weight:600;margin-top:-4px}
+.trt{width:100%;border-collapse:collapse;font-size:13px}.trt th{text-align:left;color:var(--muted);font-weight:600;padding:4px 4px}.trt td{padding:5px 4px;border-top:1px solid var(--line);vertical-align:top}
+.mbars{display:flex;gap:8px;align-items:flex-end;overflow-x:auto;padding-bottom:4px}
+.mb{display:grid;justify-items:center;gap:2px;min-width:38px}.mb i{width:24px;min-height:2px;background:var(--accent);border-radius:3px 3px 0 0;display:block}.mb small{font-size:11px;color:var(--muted)}
+.pad .keys.k7{grid-template-columns:repeat(7,1fr)}
+.sidetag{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px}.sidetag.w{background:#F4F0E2;color:#2C3A23;box-shadow:inset 0 0 0 1px var(--line)}.sidetag.b{background:#222;color:#F4F0E2}
+.qlimit{height:5px;border-radius:3px;background:var(--surface2);overflow:hidden;margin-top:-6px}
+.qbox.tr.ql .board{max-width:max(180px,min(440px,calc(100vh - 385px)));max-width:max(180px,min(440px,calc(100svh - 385px)))}.qlimit i{display:block;height:100%;background:var(--brass)}
+.lineslots{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-top:8px}.ls{display:grid;justify-items:center;gap:2px;border:1px solid var(--line);border-radius:6px;padding:3px 0;background:var(--surface);min-height:52px}.ls.cur{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}.ls small{font-size:11px;color:var(--muted)}.ls .pc{font-size:24px}.ls i{font-style:normal;color:var(--muted);font-size:18px}
+.pad .keys.k4{grid-template-columns:repeat(4,1fr);max-width:320px;margin:0 auto;width:100%}.pad .keys.mix .key{font-size:18px}
+.key.pk{padding:3px 0!important;line-height:1}.key.pk .pc{font-size:26px}
+.qbox.tr .board{max-width:max(210px,min(440px,calc(100vh - 330px)));max-width:max(210px,min(440px,calc(100svh - 330px)))}
+.qbox.tr.k-file .board,.qbox.tr.k-rank .board{max-width:max(190px,min(440px,calc(100vh - 360px)));max-width:max(190px,min(440px,calc(100svh - 360px)))}
+.qbox.tr.k-name .board{max-width:max(190px,min(440px,calc(100vh - 360px)));max-width:max(190px,min(440px,calc(100svh - 360px)))}.qbox.tr.k-piece .board{max-width:max(190px,min(440px,calc(100vh - 350px)));max-width:max(190px,min(440px,calc(100svh - 350px)))}
+.qbox.tr .prompt{font-size:19px;min-height:1.3em}
+.board[data-board="tr"] .sq.hl{box-shadow:inset 0 0 0 5px #E0A100}.board[data-board="tr"] .sq.hl::after{background:#F2B705;opacity:.8}
+/* keep every exercise on one screen */
+body.inq nav.tabs{display:none}
+body.inq main{padding-block:10px 20px}
+.qbox{gap:10px}
+.qbox .board{max-width:max(210px,min(440px,calc(100vh - 290px)));max-width:max(210px,min(440px,calc(100svh - 290px)))}
+.qbox.k-multi .board{max-width:max(210px,min(440px,calc(100vh - 350px)));max-width:max(210px,min(440px,calc(100svh - 350px)))}
+.qbox.k-choice .board{max-width:max(200px,min(440px,calc(100vh - 380px)));max-width:max(200px,min(440px,calc(100svh - 380px)))}
+.qbox.k-sq .board,.qbox.k-file .board,.qbox.k-order .board{max-width:max(190px,min(440px,calc(100vh - 430px)));max-width:max(190px,min(440px,calc(100svh - 430px)))}
+.qbox.k-num .board{max-width:max(190px,min(440px,calc(100vh - 470px)));max-width:max(190px,min(440px,calc(100svh - 470px)))}
+.qbox.k-memo .board{max-width:max(220px,min(440px,calc(100vh - 300px)));max-width:max(220px,min(440px,calc(100svh - 300px)))}
+.qbox .prompt{font-size:19px}
+.qbox .moves{max-height:26vh;max-height:26svh;overflow-y:auto;font-size:15px;line-height:1.7;padding:8px 12px}
+.qbox .key{padding:9px 0}
+.qbox .slot{min-height:34px;font-size:26px}
+.board.playb{max-width:max(220px,min(440px,calc(100vh - 470px)));max-width:max(220px,min(440px,calc(100svh - 470px)))}
+@media (max-width:380px){.prompt{font-size:19px}.tiles{grid-template-columns:repeat(3,1fr)}.tile b{font-size:22px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+main .qbox.tr.k-name .board{max-width:max(180px,min(440px,calc(100vh - 395px)));max-width:max(180px,min(440px,calc(100svh - 395px)))}
+main .qbox.tr.ql.k-name .board{max-width:max(170px,min(440px,calc(100vh - 415px)));max-width:max(170px,min(440px,calc(100svh - 415px)))}
+main .qbox.tr.ql.k-file .board,main .qbox.tr.ql.k-rank .board{max-width:max(180px,min(440px,calc(100vh - 380px)));max-width:max(180px,min(440px,calc(100svh - 380px)))}
+main .qbox.tr.kt .board{max-width:max(180px,min(440px,calc(100vh - 420px)));max-width:max(180px,min(440px,calc(100svh - 420px)))}
+main .qbox.tr.kt .moves{max-height:18vh;max-height:18svh}
+</style>
+
+<header class="top"><div class="wrap"><div class="brand"><i>♞&#xFE0E;</i>Mind's Eye Chess</div><div class="chips" id="chips"></div></div></header>
+<main id="main" class="wrap"></main>
+<nav class="tabs"><div class="wrap" id="tabs">
+  <button data-tab="path"><span>♜&#xFE0E;</span>Path</button>
+  <button data-tab="practice"><span>◎</span>Practice</button>
+  <button data-tab="play"><span>♚&#xFE0E;</span>Blind play</button>
+  <button data-tab="stats"><span>▦</span>Progress</button>
+</div></nav>
+
+<script>
+'use strict';
+/* ================= helpers ================= */
+const FILES='abcdefgh';
+const sn=s=>FILES[s&7]+((s>>3)+1);
+const si=n=>FILES.indexOf(n[0])+(+n[1]-1)*8;
+const light=s=>((s&7)+(s>>3))%2===1;
+const rnd=n=>Math.floor(Math.random()*n);
+const pick=a=>a[rnd(a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const ALL=[...Array(64).keys()];
+const isW=p=>!!p&&p===p.toUpperCase();
+const PNAME={K:'king',Q:'queen',R:'rook',B:'bishop',N:'knight',P:'pawn'};
+const plabel=p=>(isW(p)?'White ':'Black ')+PNAME[p.toUpperCase()];
+const GLYPH={K:'♚',Q:'♛',R:'♜',B:'♝',N:'♞',P:'♟'};
+const ord=n=>n+(['th','st','nd','rd'][(n%100-20)%10]||['th','st','nd','rd'][n%100]||'th');
+const T=n=>`<b class="n">${n}</b>`;
+const side=p=>p==='w'?"White's":"Black's";
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function sq(f,r){return(f<0||f>7||r<0||r>7)?-1:r*8+f}
+const N_OFF=[[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1],[-2,1],[-1,2]];
+const K_OFF=[[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];
+const B_DIR=[[1,1],[1,-1],[-1,1],[-1,-1]],R_DIR=[[1,0],[-1,0],[0,1],[0,-1]],Q_DIR=[...B_DIR,...R_DIR];
+const EMPTY=()=>Array(64).fill(null);
+function rays(b,s,dirs,slide){const out=[],f=s&7,r=s>>3;for(const[df,dr]of dirs){let ff=f+df,rr=r+dr;while(ff>=0&&ff<8&&rr>=0&&rr<8){const t=rr*8+ff;out.push(t);if(!slide||b[t])break;ff+=df;rr+=dr}}return out}
+function pieceAttacks(b,s,p){p=p||b[s];const U=p.toUpperCase();
+  if(U==='N')return rays(b,s,N_OFF,false);if(U==='K')return rays(b,s,K_OFF,false);
+  if(U==='B')return rays(b,s,B_DIR,true);if(U==='R')return rays(b,s,R_DIR,true);if(U==='Q')return rays(b,s,Q_DIR,true);
+  const d=isW(p)?1:-1;return[-1,1].map(df=>sq((s&7)+df,(s>>3)+d)).filter(t=>t>=0)}
+const emptyAtt=(s,p)=>pieceAttacks(EMPTY(),s,p);
+const toMap=b=>{const m={};b.forEach((p,i)=>{if(p)m[sn(i)]=p});return m};
+function posText(b){const order='KQRBNP';const L=w=>b.map((p,i)=>p&&isW(p)===w?[p.toUpperCase(),i]:null).filter(Boolean).sort((a,c)=>order.indexOf(a[0])-order.indexOf(c[0])).map(([u,i])=>u+sn(i)).join(' ');
+  return `<div class="pos"><div><b>White</b>${L(true)}</div><div><b>Black</b>${L(false)}</div></div>`}
+
+/* ================= chess engine ================= */
+function startState(){const b=EMPTY(),back='RNBQKBNR';for(let f=0;f<8;f++){b[f]=back[f];b[8+f]='P';b[48+f]='p';b[56+f]=back[f].toLowerCase()}return{b,w:true,c:{K:1,Q:1,k:1,q:1},ep:-1,hm:0,fm:1}}
+function attacked(b,s,byW){const f=s&7,r=s>>3;
+  const pr=byW?r-1:r+1,P=byW?'P':'p';for(const df of[-1,1]){const t=sq(f+df,pr);if(t>=0&&b[t]===P)return true}
+  const Nn=byW?'N':'n';for(const[df,dr]of N_OFF){const t=sq(f+df,r+dr);if(t>=0&&b[t]===Nn)return true}
+  const Kk=byW?'K':'k';for(const[df,dr]of K_OFF){const t=sq(f+df,r+dr);if(t>=0&&b[t]===Kk)return true}
+  const B=byW?'B':'b',R=byW?'R':'r',Q=byW?'Q':'q';
+  for(const[df,dr]of B_DIR){let ff=f+df,rr=r+dr;while(ff>=0&&ff<8&&rr>=0&&rr<8){const p=b[rr*8+ff];if(p){if(p===B||p===Q)return true;break}ff+=df;rr+=dr}}
+  for(const[df,dr]of R_DIR){let ff=f+df,rr=r+dr;while(ff>=0&&ff<8&&rr>=0&&rr<8){const p=b[rr*8+ff];if(p){if(p===R||p===Q)return true;break}ff+=df;rr+=dr}}
+  return false}
+const kingSq=(b,w)=>b.indexOf(w?'K':'k');
+const inCheck=st=>attacked(st.b,kingSq(st.b,st.w),!st.w);
+function pseudo(st){const b=st.b,w=st.w,mv=[];
+  for(let s=0;s<64;s++){const p=b[s];if(!p||isW(p)!==w)continue;const U=p.toUpperCase(),f=s&7,r=s>>3;
+    if(U==='P'){const d=w?1:-1,start=w?1:6,last=w?7:0;
+      const add=(t,cap,ep)=>{if((t>>3)===last){for(const pr of'QRBN')mv.push({f:s,t,p,cap,promo:pr})}else mv.push({f:s,t,p,cap,ep})};
+      const one=sq(f,r+d);if(one>=0&&!b[one]){add(one);const two=sq(f,r+2*d);if(r===start&&!b[two])mv.push({f:s,t:two,p,dbl:1})}
+      for(const df of[-1,1]){const c=sq(f+df,r+d);if(c<0)continue;if(b[c]&&isW(b[c])!==w)add(c,b[c]);else if(c===st.ep)add(c,w?'p':'P',1)}
+    }else{const dirs=U==='N'?N_OFF:U==='K'?K_OFF:U==='B'?B_DIR:U==='R'?R_DIR:Q_DIR,slide='BRQ'.includes(U);
+      for(const t of rays(b,s,dirs,slide)){if(!b[t])mv.push({f:s,t,p});else if(isW(b[t])!==w)mv.push({f:s,t,p,cap:b[t]})}}}
+  if(w){if(st.c.K&&b[4]==='K'&&b[7]==='R'&&!b[5]&&!b[6]&&!attacked(b,4,false)&&!attacked(b,5,false)&&!attacked(b,6,false))mv.push({f:4,t:6,p:'K',castle:'K'});
+    if(st.c.Q&&b[4]==='K'&&b[0]==='R'&&!b[1]&&!b[2]&&!b[3]&&!attacked(b,4,false)&&!attacked(b,3,false)&&!attacked(b,2,false))mv.push({f:4,t:2,p:'K',castle:'Q'})}
+  else{if(st.c.k&&b[60]==='k'&&b[63]==='r'&&!b[61]&&!b[62]&&!attacked(b,60,true)&&!attacked(b,61,true)&&!attacked(b,62,true))mv.push({f:60,t:62,p:'k',castle:'k'});
+    if(st.c.q&&b[60]==='k'&&b[56]==='r'&&!b[57]&&!b[58]&&!b[59]&&!attacked(b,60,true)&&!attacked(b,59,true)&&!attacked(b,58,true))mv.push({f:60,t:58,p:'k',castle:'q'})}
+  return mv}
+function make(st,m){const b=st.b.slice();b[m.f]=null;b[m.t]=m.promo?(st.w?m.promo:m.promo.toLowerCase()):m.p;
+  if(m.ep)b[m.t+(st.w?-8:8)]=null;
+  if(m.castle){const[a,z]={K:[7,5],Q:[0,3],k:[63,61],q:[56,59]}[m.castle];b[z]=b[a];b[a]=null}
+  const c={...st.c};if(m.p==='K'){c.K=0;c.Q=0}if(m.p==='k'){c.k=0;c.q=0}
+  for(const x of[m.f,m.t]){if(x===0)c.Q=0;if(x===7)c.K=0;if(x===56)c.q=0;if(x===63)c.k=0}
+  return{b,w:!st.w,c,ep:m.dbl?(m.f+m.t)/2:-1,hm:(m.p.toUpperCase()==='P'||m.cap)?0:st.hm+1,fm:st.fm+(st.w?0:1)}}
+function legal(st){return pseudo(st).filter(m=>{const n=make(st,m);return!attacked(n.b,kingSq(n.b,st.w),!st.w)})}
+function san(st,m,list){let s;
+  if(m.castle)s=(m.castle.toUpperCase()==='K')?'O-O':'O-O-O';
+  else{const U=m.p.toUpperCase();
+    if(U==='P'){s=(m.cap?FILES[m.f&7]+'x':'')+sn(m.t)+(m.promo?'='+m.promo:'')}
+    else{s=U;const amb=list.filter(o=>o.f!==m.f&&o.p===m.p&&o.t===m.t&&!o.castle);
+      if(amb.length){const sf=amb.some(o=>(o.f&7)===(m.f&7)),sr=amb.some(o=>(o.f>>3)===(m.f>>3));s+=!sf?FILES[m.f&7]:!sr?String((m.f>>3)+1):sn(m.f)}
+      s+=(m.cap?'x':'')+sn(m.t)}}
+  const n=make(st,m);if(inCheck(n))s+=legal(n).length?'+':'#';return s}
+const normSan=s=>s.trim().replace(/0/g,'O').replace(/o/g,'O').replace(/[+#x=!?\s]/g,'').replace(/e\.?p\.?$/,'');
+function findMove(st,input){const list=legal(st);const raw=input.trim();
+  const cm=raw.toLowerCase().match(/^([a-h][1-8])-?([a-h][1-8])([qrbn])?$/);
+  if(cm){const f=si(cm[1]),t=si(cm[2]),pr=(cm[3]||'q').toUpperCase();return list.find(m=>m.f===f&&m.t===t&&(!m.promo||m.promo===pr))||null}
+  let want=normSan(raw);
+  for(const m of list){if(normSan(san(st,m,list))===want)return m}
+  // pawn promotion without piece letter -> queen
+  for(const m of list){if(m.promo==='Q'&&normSan(san(st,m,list)).replace(/Q$/,'')===want)return m}
+  // over-disambiguated input like Ngf3
+  const pm=want.match(/^([KQRBN])([a-h]?[1-8]?)([a-h][1-8])$/);
+  if(pm){const c=list.filter(m=>m.p.toUpperCase()===pm[1]&&m.t===si(pm[3])&&sn(m.f).includes(pm[2]));if(c.length===1)return c[0]}
+  return null}
+const VAL={P:100,N:320,B:330,R:500,Q:900,K:0};
+function evalW(b){let s=0;for(let i=0;i<64;i++){const p=b[i];if(!p)continue;const U=p.toUpperCase(),w=isW(p),f=i&7,r=i>>3;
+  let v=VAL[U];const c=7-(Math.abs(3.5-f)+Math.abs(3.5-r));
+  if(U==='N')v+=c*6;else if(U==='B')v+=c*3;else if(U==='Q')v+=c;
+  else if(U==='P'){const adv=w?r-1:6-r;v+=adv*5+(f>=2&&f<=5?adv*4:0)}
+  else if(U==='K'){v+=(w?r===0:r===7)?(f===6||f===2?25:10):-15}
+  s+=w?v:-v}return s}
+const mvv=(a,c)=>((c.cap?VAL[c.cap.toUpperCase()]*10-VAL[c.p.toUpperCase()]:0)+(c.promo?800:0))-((a.cap?VAL[a.cap.toUpperCase()]*10-VAL[a.p.toUpperCase()]:0)+(a.promo?800:0));
+function qs(st,al,be,d){const stand=(st.w?1:-1)*evalW(st.b);if(stand>=be)return be;if(stand>al)al=stand;if(d<=0)return al;
+  const caps=pseudo(st).filter(m=>m.cap||m.promo).sort(mvv);
+  for(const m of caps){const n=make(st,m);if(attacked(n.b,kingSq(n.b,st.w),!st.w))continue;const sc=-qs(n,-be,-al,d-1);if(sc>=be)return be;if(sc>al)al=sc}return al}
+function search(st,d,al,be,ply){const ms=legal(st);if(!ms.length)return inCheck(st)?-99999+ply:0;if(st.hm>=100)return 0;if(d<=0)return qs(st,al,be,4);
+  ms.sort(mvv);for(const m of ms){const sc=-search(make(st,m),d-1,-be,-al,ply+1);if(sc>=be)return be;if(sc>al)al=sc}return al}
+function engineMove(st,level){const ms=legal(st);if(!ms.length)return null;const depth=[1,2,3][level-1]||2,noise=[140,35,6][level-1]||35;
+  let best=null,bs=-Infinity;for(const m of shuffle(ms)){const sc=-search(make(st,m),depth-1,-Infinity,Infinity,1)+Math.random()*noise;if(sc>bs){bs=sc;best=m}}return best}
+const BOOK=['e4 e5 Nf3 Nc6 Bc4 Bc5 c3 Nf6 d3 d6 O-O O-O','e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O Be7 Re1 b5 Bb3 d6','e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 a6 Be2 e5','e4 e6 d4 d5 Nc3 Nf6 Bg5 Be7 e5 Nfd7 Bxe7 Qxe7','e4 c6 d4 d5 Nc3 dxe4 Nxe4 Bf5 Ng3 Bg6 h4 h6','d4 d5 c4 e6 Nc3 Nf6 Bg5 Be7 e3 O-O Nf3 h6','d4 d5 c4 c6 Nf3 Nf6 Nc3 dxc4 a4 Bf5 e3 e6','d4 Nf6 c4 g6 Nc3 Bg7 e4 d6 Nf3 O-O Be2 e5','d4 d5 Bf4 Nf6 e3 e6 Nf3 c5 c3 Nc6 Nbd2 Bd6','c4 e5 Nc3 Nf6 g3 d5 cxd5 Nxd5 Bg2 Nb6 Nf3 Nc6','e4 e5 Nf3 Nc6 d4 exd4 Nxd4 Nf6 Nxc6 bxc6 e5 Qe7','e4 d5 exd5 Qxd5 Nc3 Qa5 d4 Nf6 Nf3 Bf5 Bc4 e6','e4 e5 Nf3 Nc6 Bc4 Nf6 Ng5 d5 exd5 Nxd5 Nxf7 Kxf7','e4 e5 f4 exf4 Nf3 g5 h4 g4 Ne5 Nf6 Bc4 d5','d4 Nf6 c4 e6 Nc3 Bb4 Qc2 O-O a3 Bxc3+ Qxc3 b6','e4 c5 Nc3 Nc6 g3 g6 Bg2 Bg7 d3 d6 Be3 e6'];
+function makeSeq(plies,fixed){let st=startState();const sans=[],dests=[];const line=(fixed||pick(BOOK)).split(' ');if(fixed)plies=Math.min(plies,line.length);
+  for(let i=0;i<plies;i++){let m=null;if(i<line.length)m=findMove(st,line[i]);
+    if(!m&&fixed)break;if(!m){const ms=legal(st);if(!ms.length)break;let bs=-Infinity;for(const x of shuffle(ms)){const sc=-qs(make(st,x),-Infinity,Infinity,3)+Math.random()*90;if(sc>bs){bs=sc;m=x}}}
+    const list=legal(st);sans.push(san(st,m,list));dests.push(m.t);if(m.castle)dests.push({K:5,Q:3,k:61,q:59}[m.castle]);st=make(st,m)}
+  return{sans,st,dests}}
+function movesHTML(sans,startFm){let h='';sans.forEach((s,i)=>{if(i%2===0)h+=`<span class="mn">${(startFm||1)+i/2}.</span>&nbsp;`;h+=esc(s)+(i%2?' &nbsp; ':'&nbsp; ')});return h}
+
+/* ================= board view ================= */
+function boardHTML(o){const persp=o.persp||'w';let h=`<div class="board${o.plain?' plain':''}${o.cls?' '+o.cls:''}" data-board="${o.id||'main'}">`;
+  for(let row=0;row<8;row++)for(let col=0;col<8;col++){const r=persp==='w'?7-row:row,f=persp==='w'?col:7-col,s=r*8+f,name=sn(s);
+    const c=['sq',light(s)?'l':'d'];if(o.hl&&o.hl.includes(name))c.push('hl');const mk=o.marks&&o.marks[name];if(mk)c.push('m-'+mk);if(o.dots&&o.dots.includes(name))c.push('dot');if(o.from===name)c.push('from');
+    let inner='';if(o.coords){if(row===7)inner+=`<span class="cf">${FILES[f]}</span>`;if(col===0)inner+=`<span class="cr">${r+1}</span>`}
+    if(o.labels)inner+=`<span class="lab">${name}</span>`;
+    const p=o.pieces&&o.pieces[name];if(p)inner+=`<span class="pc ${isW(p)?'w':'b'}">${GLYPH[p.toUpperCase()]}︎</span>`;
+    const st=o.heat&&o.heat[name]!=null?` style="background:${o.heat[name]}"`:'';
+    h+=`<div class="${c.join(' ')}" data-sq="${name}"${st}>${o.heat&&o.heatLab?name:inner}</div>`}
+  return h+'</div>'}
+
+/* ================= persistence ================= */
+const KEY='mindseye.chess.v1';
+const DEF=()=>({v:1,updated:0,lessons:{},srs:{},stats:{},sq:{},days:[],best:{},games:{w:0,l:0,d:0},set:{unlockAll:false,speak:false},answered:0,correct:0,tuts:{}});
+function loadLocal(){try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j&&j.v===1)return Object.assign(DEF(),j)}catch(e){}return DEF()}
+let P=loadLocal(),dbRef=null,cloud=false,saveTimer=null,writing=Promise.resolve();
+function save(){P.updated=Date.now();try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}
+  clearTimeout(saveTimer);saveTimer=setTimeout(()=>{if(!dbRef)return;const data={json:JSON.stringify(P),updated:P.updated};writing=writing.then(()=>dbRef.set(data)).catch(()=>{})},1500)}
+async function initCloud(){try{if(!window.claude||!window.claude.use)return;const[db,user]=await Promise.all([claude.use('db'),claude.use('user')]);if(!db||!user)return;
+  const id=await user.id();if(!id)return;const ref=db.doc('data/users/'+id+'/progress');
+  let snap=null;await Promise.race([ref.get().then(s=>{snap=s}),new Promise(r=>setTimeout(r,10000))]);if(!snap)return;
+  dbRef=ref;cloud=true;
+  if(snap.exists){const d=snap.data();if(d&&d.updated>P.updated&&d.json){try{P=Object.assign(DEF(),JSON.parse(d.json));localStorage.setItem(KEY,d.json)}catch(e){}if(!S&&!G)render()}else if(P.updated>(d&&d.updated||0))save()}
+  else if(P.updated)save();
+  renderChips();if(V.name==='stats')render()}catch(e){}}
+
+/* ================= progress model ================= */
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+function streak(){const set=new Set(P.days);let n=0;const d=new Date();if(!set.has(today()))d.setDate(d.getDate()-1);
+  for(;;){const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(set.has(k)){n++;d.setDate(d.getDate()-1)}else break}return n}
+const BOXES=[0,10*60e3,24*36e5,3*24*36e5,7*24*36e5,21*24*36e5];
+function record(q,ok,ms){const hd=P.hist||(P.hist={});const hk=today();const h=hd[hk]||(hd[hk]={n:0,c:0,ms:0});h.n++;if(ok)h.c++;h.ms+=Math.min(ms||0,60000);P.answered++;if(ok)P.correct++;const st=P.stats[q.skill]||(P.stats[q.skill]={n:0,c:0});st.n++;if(ok)st.c++;
+  if(q.item){const r=P.srs[q.item]||(P.srs[q.item]={b:0,d:0});r.b=ok?Math.min(r.b+1,5):0;r.d=Date.now()+(ok?BOXES[r.b]:60e3);
+    const s=q.item.split(':')[1];const x=P.sq[s]||(P.sq[s]={n:0,c:0});x.n++;if(ok)x.c++}
+  const t=today();if(!P.days.includes(t)){P.days.push(t);if(P.days.length>400)P.days.shift()}save()}
+const dueItems=()=>{const now=Date.now();return Object.entries(P.srs).filter(([k,r])=>r.d<=now).sort((a,b)=>a[1].d-b[1].d).map(e=>e[0])};
+
+/* ================= drills ================= */
+const yn=a=>({kind:'choice',options:['Yes','No'],answer:a?'Yes':'No'});
+const rp=p=>p==='x'?pick(['w','b']):(p||'w');
+function nameExplain(n,persp){const f=si(n)&7,r=si(n)>>3;const who=persp==='w'?'White':'Black';
+  return `${T(n)} is the ${n[0]}-file (${ord(persp==='w'?f+1:8-f)} file from ${who}'s left) and rank ${r+1} (${ord(persp==='w'?r+1:8-r)} row from ${who}'s edge).`}
+function colorExplain(s){const f=(s&7)+1,r=(s>>3)+1;return `${T(sn(s))}: ${FILES[f-1]} = ${f}, rank ${r}. ${f} + ${r} = ${f+r}, ${(f+r)%2?'odd, so light':'even, so dark'}.`}
+function kbfs(a){const dist=Array(64).fill(-1),par=Array(64).fill(-1);dist[a]=0;const q=[a];while(q.length){const x=q.shift();for(const t of emptyAtt(x,'N'))if(dist[t]<0){dist[t]=dist[x]+1;par[t]=x;q.push(t)}}return{dist,par}}
+const DIRS={'forward':[0,1],'back':[0,-1],'left':[-1,0],'right':[1,0],'diagonally forward-left':[-1,1],'diagonally forward-right':[1,1],'diagonally back-left':[-1,-1],'diagonally back-right':[1,-1]};
+function randPos(nExtra,opts={}){for(;;){const b=EMPTY();const wk=rnd(64),bk=rnd(64);if(Math.max(Math.abs((wk&7)-(bk&7)),Math.abs((wk>>3)-(bk>>3)))<2)continue;b[wk]='K';b[bk]='k';
+  const pool=opts.pool||'QRRBBNNPPPPqrrbbnnpppp';for(let i=0;i<nExtra;i++){let s,p;do{s=rnd(64);p=pick(pool)}while(b[s]||(p.toUpperCase()==='P'&&((s>>3)===0||(s>>3)===7)));b[s]=p}
+  if(attacked(b,wk,false)||attacked(b,bk,true))continue;return b}}
+function whatOptions(correct,b){const labels=new Set([correct]);const pool=shuffle(['Empty',...new Set(b.filter(Boolean).map(plabel)),'White knight','Black bishop','White pawn','Black rook','White queen','Black pawn']);
+  for(const l of pool){if(labels.size>=4)break;labels.add(l)}return shuffle([...labels])}
+
+const SQS=(fs,rs)=>{const o=[];for(const r of rs)for(const f of fs)o.push(f+r);return o};
+const LM={
+ corners:{n:'the four corners',s:['a1','h1','a8','h8'],w:'a1 is dark on White’s left; h1 is light on White’s right. a8 and h8 are their mirrors.'},
+ centre:{n:'the four centre squares',s:['d4','e4','d5','e5'],w:'d4 and e5 are dark, e4 and d5 are light.'},
+ bigcentre:{n:'the big centre: all 16 squares from c3 to f6',s:SQS('cdef','3456'),w:'Files c to f, ranks 3 to 6.'},
+ diagDark:{n:'the long dark diagonal, a1 to h8',s:['a1','b2','c3','d4','e5','f6','g7','h8'],w:'The file number equals the rank: a1, b2, c3 … h8.'},
+ diagLight:{n:'the long light diagonal, h1 to a8',s:['h1','g2','f3','e4','d5','c6','b7','a8'],w:'File number plus rank makes 9: h1, g2, f3 … a8.'},
+ knightHome:{n:'the four knights’ starting squares',s:['b1','g1','b8','g8'],w:'Knights start next to the rooks, on the b- and g-files.'},
+ knightDev:{n:'the squares knights usually develop to first',s:['c3','f3','c6','f6'],w:'Knights from b1, g1, b8, g8 go forward toward the centre: c3, f3, c6, f6.'},
+ fianchetto:{n:'the four fianchetto squares',s:['b2','g2','b7','g7'],w:'A bishop “fianchettoed” sits one diagonal step in from the corner: b2, g2, b7, g7.'},
+ castleK:{n:'where king and rook stand after castling kingside, both colours',s:['g1','f1','g8','f8'],w:'O-O: king to g, rook to f.'},
+ castleQ:{n:'where king and rook stand after castling queenside, both colours',s:['c1','d1','c8','d8'],w:'O-O-O: king to c, rook to d.'},
+ weakF:{n:'the two weakest squares in the starting position',s:['f2','f7'],w:'f2 and f7 are guarded only by the king, which is why early attacks aim there.'},
+ kingsQueens:{n:'the starting squares of both kings and both queens',s:['d1','e1','d8','e8'],w:'Queens on d, kings on e. The queen starts on her own colour.'}
+};
+const NAMED=[['the dark corner on White’s left','a1'],['the light corner on White’s right','h1'],['the light corner on Black’s right','a8'],['the dark corner on Black’s left','h8'],
+ ['the light centre square nearest White','e4'],['the dark centre square nearest White','d4'],['the light centre square nearest Black','d5'],['the dark centre square nearest Black','e5'],
+ ['where White’s king lands after castling kingside','g1'],['where White’s rook lands after castling kingside','f1'],['where Black’s king lands after castling queenside','c8'],['where Black’s rook lands after castling queenside','d8'],['where White’s king lands after castling queenside','c1'],['where Black’s king lands after castling kingside','g8'],
+ ['White’s kingside fianchetto square','g2'],['White’s queenside fianchetto square','b2'],['Black’s kingside fianchetto square','g7'],['Black’s queenside fianchetto square','b7'],
+ ['Black’s weakest square at the start','f7'],['White’s weakest square at the start','f2'],
+ ['where White’s g1 knight usually goes first','f3'],['where Black’s b8 knight usually goes first','c6'],['where Black’s g8 knight usually goes first','f6'],['where White’s b1 knight usually goes first','c3'],
+ ['the square in front of White’s king at the start','e2'],['the square in front of Black’s queen at the start','d7'],['the middle of the long light diagonal nearest Black','d5'],['the end of the long dark diagonal in Black’s right corner','h8']];
+const RING=['the edge','the 2nd ring','the 3rd ring','the centre'];
+const QUAD=['White’s queenside quarter (a1–d4)','White’s kingside quarter (e1–h4)','Black’s queenside quarter (a5–d8)','Black’s kingside quarter (e5–h8)'];
+const OPENINGS=[['Italian Game','e4 e5 Nf3 Nc6 Bc4 Bc5 c3 Nf6 d3 d6 O-O O-O'],['Ruy Lopez','e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O Be7 Re1 b5 Bb3 d6'],['Sicilian Najdorf','e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 a6 Be2 e5'],['French Defence','e4 e6 d4 d5 Nc3 Nf6 Bg5 Be7 e5 Nfd7 Bxe7 Qxe7'],['Caro-Kann Defence','e4 c6 d4 d5 Nc3 dxe4 Nxe4 Bf5 Ng3 Bg6 h4 h6'],['Queen\u2019s Gambit Declined','d4 d5 c4 e6 Nc3 Nf6 Bg5 Be7 e3 O-O Nf3 h6'],['Slav Defence','d4 d5 c4 c6 Nf3 Nf6 Nc3 dxc4 a4 Bf5 e3 e6'],['King\u2019s Indian Defence','d4 Nf6 c4 g6 Nc3 Bg7 e4 d6 Nf3 O-O Be2 e5'],['London System','d4 d5 Bf4 Nf6 e3 e6 Nf3 c5 c3 Nc6 Nbd2 Bd6'],['English Opening','c4 e5 Nc3 Nf6 g3 d5 cxd5 Nxd5 Bg2 Nb6 Nf3 Nc6'],['Scotch Game','e4 e5 Nf3 Nc6 d4 exd4 Nxd4 Nf6 Nxc6 bxc6 e5 Qe7'],['Scandinavian Defence','e4 d5 exd5 Qxd5 Nc3 Qa5 d4 Nf6 Nf3 Bf5 Bc4 e6'],['Fried Liver Attack','e4 e5 Nf3 Nc6 Bc4 Nf6 Ng5 d5 exd5 Nxd5 Nxf7 Kxf7'],['King\u2019s Gambit','e4 e5 f4 exf4 Nf3 g5 h4 g4 Ne5 Nf6 Bc4 d5'],['Nimzo-Indian Defence','d4 Nf6 c4 e6 Nc3 Bb4 Qc2 O-O a3 Bxc3+ Qxc3 b6'],['Closed Sicilian','e4 c5 Nc3 Nc6 g3 g6 Bg2 Bg7 d3 d6 Be3 e6'],['Petrov Defence','e4 e5 Nf3 Nf6 Nxe5 d6 Nf3 Nxe4 d4 d5 Bd3 Be7'],['Grünfeld Defence','d4 Nf6 c4 g6 Nc3 d5 cxd5 Nxd5 e4 Nxc3 bxc3 Bg7'],['Dutch Defence','d4 f5 g3 Nf6 Bg2 e6 Nf3 Be7 O-O O-O c4 d6'],['Pirc Defence','e4 d6 d4 Nf6 Nc3 g6 f4 Bg7 Nf3 O-O Bd3 Na6']];
+const FAMOUS=[['Fool\u2019s Mate','the fastest checkmate possible','f3 e5 g4 Qh4#'],['Scholar\u2019s Mate','the beginner\u2019s trap on f7','e4 e5 Bc4 Nc6 Qh5 Nf6 Qxf7#'],['Légal\u2019s Mate','Paris, about 1750: a queen sacrifice and three minor pieces','e4 e5 Nf3 d6 Bc4 Bg4 Nc3 g6 Nxe5 Bxd1 Bxf7+ Ke7 Nd5#'],['Smothered mate in the Caro-Kann','a knight mates on move 6','e4 c6 d4 d5 Nc3 dxe4 Nxe4 Nd7 Qe2 Ngf6 Nd6#'],['Réti vs Tartakower','Vienna 1910: queen sacrifice and double check','e4 c6 d4 d5 Nc3 dxe4 Nxe4 Nf6 Qd3 e5 dxe5 Qa5+ Bd2 Qxe5 O-O-O Nxe4 Qd8+ Kxd8 Bg5+ Kc7 Bd8#'],['Blackburne Shilling Trap','a cheap trap that wins on move 7','e4 e5 Nf3 Nc6 Bc4 Nd4 Nxe5 Qg5 Nxf7 Qxg2 Rf1 Qxe4+ Be2 Nf3#'],['Englund Gambit Trap','Black\u2019s queen mates on c1','d4 e5 dxe5 Nc6 Nf3 Qe7 Bf4 Qb4+ Bd2 Qxb2 Bc3 Bb4 Qd2 Bxc3 Qxc3 Qc1#'],['Morphy\u2019s Opera Game','Paris 1858, Morphy vs the Duke and the Count','e4 e5 Nf3 d6 d4 Bg4 dxe5 Bxf3 Qxf3 dxe5 Bc4 Nf6 Qb3 Qe7 Nc3 c6 Bg5 b5 Nxb5 cxb5 Bxb5+ Nbd7 O-O-O Rd8 Rxd7 Rxd7 Rd1 Qe6 Bxd7+ Nxd7 Qb8+ Nxb8 Rd8#'],['Fried Liver Attack','White sacrifices a knight to drag the king out','e4 e5 Nf3 Nc6 Bc4 Nf6 Ng5 d5 exd5 Nxd5 Nxf7 Kxf7 Qf3+ Ke6 Nc3 Ncb4 a3 Nxc2+ Kd1 Nxa1 Nxd5 Kd6 d4 c6 Bg5 Qd7 Bf4+'],['Budapest Trap','Black wins the queen with a discovered attack','d4 Nf6 c4 e5 dxe5 Ng4 Bf4 Nc6 Nf3 Bb4+ Nbd2 Qe7 a3 Ngxe5 axb4 Nd3#']];
+const STORY={a1:'White\u2019s queenside rook in the dark corner',b1:'White\u2019s queenside knight\u2019s stable',c1:'White\u2019s dark-squared bishop starts here',d1:'the White queen on her light square',e1:'the White king\u2019s throne',f1:'White\u2019s light-squared bishop starts here',g1:'White\u2019s kingside knight, and the king\u2019s castled home',h1:'the light corner on White\u2019s right: kingside rook',
+a2:'White\u2019s a-pawn, guarding the queenside corner',b2:'the poisoned pawn: queens that grab b2 get trapped',c2:'the queen\u2019s safe post in the Nimzo-Indian (Qc2)',d2:'Nbd2 and Bd2: White\u2019s quiet development square',e2:'in front of White\u2019s king, where Be2 develops',f2:'White\u2019s weakest square at the start',g2:'White\u2019s fianchetto bishop square',h2:'the target of Black\u2019s Greek Gift ...Bxh2+',
+a3:'a3 asks the Nimzo bishop on b4 what it wants',b3:'Larsen\u2019s 1.b3, and the Italian bishop retreat Bb3',c3:'where the b1 knight jumps: Nc3',d3:'Bd3 aims at h7 in the Colle and Queen\u2019s Gambit',e3:'the London and Colle pawn, e3',f3:'Nf3: the most popular first knight move',g3:'g3 prepares the kingside fianchetto',h3:'h3: luft, a breathing hole for White\u2019s king',
+a4:'a4 stops Black\u2019s ...b5',b4:'the Evans Gambit pawn sacrifice, b4',c4:'1.c4 the English, and Bc4 in the Italian Game',d4:'1.d4, the Queen\u2019s Pawn Opening',e4:'1.e4, \u201cbest by test\u201d said Fischer',f4:'1.f4 Bird\u2019s Opening and the King\u2019s Gambit',g4:'g4: the pawn storm square (Grob 1.g4)',h4:'h4: the h-pawn charges at a castled king',
+a5:'the Scandinavian queen on a5 (...Qa5)',b5:'Bb5: the Ruy Lopez bishop',c5:'1...c5: the Sicilian Defence',d5:'1...d5: Black\u2019s classical answer to 1.d4',e5:'1...e5: the Open Game',f5:'1...f5: the Dutch Defence',g5:'Bg5: the pin on Black\u2019s f6 knight',h5:'Qh5: the Scholar\u2019s Mate queen',
+a6:'...a6: the Najdorf\u2019s useful little move',b6:'...b6: the Queen\u2019s Indian fianchetto',c6:'1...c6 Caro-Kann, and the knight on c6',d6:'...d6: the Pirc, Philidor and King\u2019s Indian',e6:'1...e6: the French Defence',f6:'...Nf6: where Black\u2019s Indian defences begin',g6:'...g6: the King\u2019s Indian and the Modern',h6:'...h6: luft for Black, and it asks the g5 bishop',
+a7:'Black\u2019s a-pawn: trap square for a greedy bishop (Bxa7? b6!)',b7:'Black\u2019s queenside fianchetto bishop',c7:'a rook on the 7th eats c7',d7:'Nbd7: Black\u2019s quiet development square',e7:'Be7: Black\u2019s classical bishop square',f7:'Black\u2019s weakest square: the Fried Liver target',g7:'Black\u2019s fianchetto bishop on the long dark diagonal',h7:'the Greek Gift sacrifice Bxh7+',
+a8:'the light corner on Black\u2019s right: queenside rook',b8:'Black\u2019s queenside knight\u2019s stable',c8:'Black\u2019s light-squared bishop starts here',d8:'the Black queen on her dark square',e8:'the Black king\u2019s throne',f8:'Black\u2019s dark-squared bishop starts here',g8:'Black\u2019s kingside knight, and Black\u2019s castled home',h8:'the dark corner on Black\u2019s left: kingside rook'};
+function seqQ(sans,st,dests,head,o){const b=st.b,map=toMap(b);o=o||{};const text=`<div class="moves">${movesHTML(sans)}</div>`;
+  const uniq=[];for(const p of'QKqk'){if(b.filter(x=>x===p).length===1)uniq.push(p)}
+  if(o.king){const p=st.w?'K':'k',at=sn(b.indexOf(p));return{pre:head,text,prompt:`The game ends here. Which square is the <b>${plabel(p).toLowerCase()}</b> on?`,kind:'sq',accept:[at],reveal:{persp:'w',coords:true,pieces:map,marks:{[at]:'ring'}},explain:`The ${plabel(p).toLowerCase()} is on ${at}.`}}
+  if(Math.random()<.35&&uniq.length){const p=pick(uniq),at=sn(b.indexOf(p));
+    return{pre:head,text,prompt:`Where is the <b>${plabel(p).toLowerCase()}</b> now?`,kind:'sq',accept:[at],reveal:{persp:'w',coords:true,pieces:map,marks:{[at]:'ring'}},explain:`The ${plabel(p).toLowerCase()} is on ${at}.`}}
+  const cand=Math.random()<.7?dests.slice(-6):ALL;const n=sn(pick(cand));const correct=map[n]?plabel(map[n]):'Empty';
+  return{pre:head,text,prompt:`What stands on ${T(n)} now?`,kind:'choice',options:whatOptions(correct,b),answer:correct,reveal:{persp:'w',coords:true,pieces:map,marks:{[n]:'ring'}},explain:`${n}: ${correct==='Empty'?'empty':correct.toLowerCase()}. The board above is the final position.`}}
+function minMoves(a,b,p){if(a===b)return 0;if(p==='B'&&light(a)!==light(b))return -1;const dist=Array(64).fill(-1);dist[a]=0;const q=[a];while(q.length){const x=q.shift();for(const t of emptyAtt(x,p))if(dist[t]<0){dist[t]=dist[x]+1;if(t===b)return dist[t];q.push(t)}}return -1}
+const mirrorF=f=>FILES[7-FILES.indexOf(f)];
+const DR={
+ journeyCount:{name:'Fewest moves',skill:'journeys',T:15,gen(){for(;;){const p=pick('NBRQKN'),a=rnd(64),b=rnd(64);if(a===b)continue;const d=minMoves(a,b,p);if(p!=='B'&&d<1)continue;if(d===1&&Math.random()<.6)continue;
+   const ans=d<0?'Never':String(d);return{prompt:`On an empty board, what is the fewest number of moves a <b>${PNAME[p]}</b> needs from ${T(sn(a))} to ${T(sn(b))}?`,kind:'choice',options:['1','2','3','4','5','6','Never'].filter(x=>x!=='6'||p==='N'),answer:ans,reveal:{persp:'w',coords:true,pieces:{[sn(a)]:p},marks:{[sn(b)]:'good'}},
+     explain:d<0?`Never: ${sn(a)} and ${sn(b)} are different colours and a bishop keeps its colour.`:{N:`A knight needs ${d}.`,B:`Bishops need at most 2 moves to any square of their colour; ${d===1?'here they share a diagonal':'here the diagonals cross in between'}.`,R:`A rook needs 1 move if the squares share a file or rank, otherwise 2.`,Q:`A queen needs 1 move along a line, otherwise 2.`,K:`King distance is the larger of the file and rank gaps: ${d}.`}[p]}}}},
+ journeyMid:{name:'Two-move route',skill:'journeys',T:18,gen(){for(;;){const p=pick('RQKN'),a=rnd(64),b=rnd(64);if(a===b)continue;if(minMoves(a,b,p)!==2)continue;const acc=emptyAtt(a,p).filter(z=>emptyAtt(z,p).includes(b)).map(sn);
+   return{prompt:`A <b>${PNAME[p]}</b> goes from ${T(sn(a))} to ${T(sn(b))} in two moves on an empty board. Name a square it can stop on in between.`,sub:acc.length>1?`${acc.length} squares work`:'',kind:'sq',accept:acc,reveal:{persp:'w',coords:true,pieces:{[sn(a)]:p},marks:{[sn(b)]:'good',...Object.fromEntries(acc.map(x=>[x,'sel']))}},explain:`Any of: ${acc.join(', ')}.`}}}},
+ knightFirst:{name:'Knight’s first step',skill:'journeys',T:18,gen(){for(;;){const a=rnd(64),b=rnd(64),{dist}=kbfs(b);const d=dist[a];if(d<2||d>4)continue;const acc=emptyAtt(a,'N').filter(z=>dist[z]===d-1).map(sn);
+   return{prompt:`A knight on ${T(sn(a))} wants to reach ${T(sn(b))} as fast as possible (${d} moves). Name a good first jump.`,kind:'sq',accept:acc,reveal:{persp:'w',coords:true,pieces:{[sn(a)]:'N'},marks:{[sn(b)]:'good',...Object.fromEntries(acc.map(x=>[x,'sel']))}},explain:`Any of: ${acc.join(', ')}. From there it needs ${d-1} more.`}}}},
+ storyName:{name:'Which square has this story?',skill:'stories',T:10,gen(o){const n=o.sq||sn(rnd(64));
+   return{prompt:`Which square is <b>“${STORY[n]}”</b>?`,kind:'sq',accept:[n],item:'story:'+n,reveal:{persp:'w',coords:true,pieces:START,marks:{[n]:'good'}},explain:`${T(n)}: ${STORY[n]}.`}}},
+ storyPick:{name:'Pick the story',skill:'stories',T:10,gen(o){const n=o.sq||sn(rnd(64));const others=shuffle(Object.keys(STORY).filter(k=>k!==n)).slice(0,3);
+   return{prompt:`What is the story of ${T(n)}?`,kind:'choice',options:shuffle([n,...others]).map(k=>STORY[k]),answer:STORY[n],item:'story:'+n,reveal:{persp:'w',coords:true,marks:{[n]:'ring'}},explain:`${T(n)}: ${STORY[n]}.`}}},
+ storyTap:{name:'Tap the story square',skill:'stories',T:10,gen(o){const persp=rp(o.persp),n=sn(rnd(64));
+   return{prompt:`Tap the square: <b>“${STORY[n]}”</b>`,sub:`No coordinates · seen from ${side(persp)} side`,kind:'tap',accept:[n],board:{persp},item:'story:'+n,reveal:{persp,coords:true,marks:{[n]:'good'}},explain:`${T(n)}: ${STORY[n]}.`}}},
+ opening:{name:'Openings in your head',skill:'openings',T:40,gen(o){const[name,line]=pick(OPENINGS);const L=line.split(' ').length;const plies=Math.min(L,o.plies||L);const{sans,st,dests}=makeSeq(plies,line);
+   return{...seqQ(sans,st,dests,`<b>${esc(name)}.</b> Play these moves in your head from the starting position:`),name}}},
+ famous:{name:'Famous games',skill:'famous',T:60,gen(o){const[name,about,line]=pick(FAMOUS);const L=line.split(' ').length;const cut=o.end?L:Math.max(4,Math.round(L*(.45+Math.random()*.35)));const{sans,st,dests}=makeSeq(cut,line);
+   const head=`<b>${esc(name)}</b>: ${esc(about)}. ${o.end?'Here is the whole game':'Here is how it starts'}. Follow it in your head:`;
+   return seqQ(sans,st,dests,head,{king:o.end&&Math.random()<.6})}},
+ landmarkTap:{name:'Landmark squares',skill:'landmarks',T:14,gen(o){const persp=rp(o.persp),k=pick(Object.keys(LM)),g=LM[k];
+   return{prompt:`Tap all of <b>${g.n}</b>`,sub:`${g.s.length} squares · seen from ${side(persp)} side${o.coords?'':' · no coordinates'}`,kind:'multi',accept:g.s,board:{persp,coords:o.coords},reveal:{persp,coords:true,hl:g.s},explain:`${g.s.join(', ')}. ${g.w}`}}},
+ landmarkName:{name:'Name the landmark',skill:'landmarks',T:8,gen(){const[d,a]=pick(NAMED);
+   return{prompt:`Name the square: <b>${d}</b>`,kind:'sq',accept:[a],reveal:{persp:'w',coords:true,pieces:START,marks:{[a]:'good'}},explain:`It is ${T(a)}, a ${light(si(a))?'light':'dark'} square.`}}},
+ mirror:{name:'Mirror squares',skill:'landmarks',T:8,gen(){const s=rnd(64),n=sn(s),f=n[0],r=+n[1];const t=rnd(3);let a,how,why;
+   if(t===0){a=f+(9-r);how=`the same square seen from Black’s side (flip top to bottom)`;why=`Keep the file, and the ranks pair up to make 9: ${r} + ${9-r} = 9. White’s ${n} is Black’s ${a}.`}
+   else if(t===1){a=mirrorF(f)+r;how=`its mirror on the other wing (flip left to right)`;why=`Files pair up a↔h, b↔g, c↔f, d↔e. Keep the rank.`}
+   else{a=mirrorF(f)+(9-r);how=`diagonally opposite (turn the board round 180°)`;why=`Flip both: files a↔h, b↔g, c↔f, d↔e, and ranks add to 9.`}
+   return{prompt:`Start on ${T(n)}. Which square is ${how}?`,kind:'sq',accept:[a],reveal:{persp:'w',coords:true,marks:{[n]:'sel',[a]:'good'}},explain:`${T(a)}. ${why}`}}},
+ zone:{name:'Which zone?',skill:'landmarks',T:7,gen(){const s=rnd(64),n=sn(s),f=s&7,r=s>>3;
+   if(Math.random()<.5){const ring=Math.min(f,7-f,r,7-r);return{prompt:`Which ring of the board is ${T(n)} on?`,kind:'choice',options:RING,answer:RING[ring],reveal:{persp:'w',coords:true,hl:ALL.filter(x=>Math.min(x&7,7-(x&7),x>>3,7-(x>>3))===ring).map(sn),marks:{[n]:'ring'}},explain:`${n} is on ${RING[ring]}. The edge has 28 squares, the 2nd ring 20, the 3rd ring 12 and the centre 4.`}}
+   const q=(r>=4?2:0)+(f>=4?1:0);return{prompt:`Which quarter of the board is ${T(n)} in?`,kind:'choice',options:QUAD,answer:QUAD[q],reveal:{persp:'w',coords:true,hl:ALL.filter(x=>((x>>3)>=4?2:0)+((x&7)>=4?1:0)===q).map(sn),marks:{[n]:'ring'}},explain:`${n}: files a–d are the queenside, e–h the kingside; ranks 1–4 are White’s half, 5–8 Black’s.`}}},
+
+ fileOrder:{name:'Files and ranks',skill:'files',T:5,gen(o){const persp=rp(o.persp),who=persp==='w'?'White':'Black',seq=persp==='w'?'abcdefgh':'hgfedcba',ranks=persp==='w'?'12345678':'87654321';
+   const lineF=`From ${who}'s left to right the files are <b class="mono">${seq.split('').join(' ')}</b>.`,lineR=`From ${who}'s edge outward the ranks are <b class="mono">${ranks.split('').join(' ')}</b>.`;const t=rnd(5);
+   if(t===0){const i=rnd(8);return{prompt:`Sitting on ${side(persp)} side, which file is the <b>${ord(i+1)}</b> from your left?`,kind:'file',accept:[seq[i]],reveal:{persp,coords:true,hl:ALL.filter(x=>FILES[x&7]===seq[i]).map(sn)},explain:lineF}}
+   if(t===1){const i=rnd(8);return{prompt:`Sitting on ${side(persp)} side, which file is the <b>${ord(i+1)}</b> from your right?`,kind:'file',accept:[seq[7-i]],reveal:{persp,coords:true,hl:ALL.filter(x=>FILES[x&7]===seq[7-i]).map(sn)},explain:lineF}}
+   if(t===2){const i=rnd(7),right=Math.random()<.5;const a=right?seq[i]:seq[i+1],b=right?seq[i+1]:seq[i];return{prompt:`Sitting on ${side(persp)} side, which file is directly to the <b>${right?'right':'left'}</b> of the ${T(a)}-file?`,kind:'file',accept:[b],reveal:{persp,coords:true,hl:ALL.filter(x=>FILES[x&7]===b).map(sn)},explain:lineF}}
+   if(t===3){const f=FILES[rnd(8)],i=seq.indexOf(f);return{prompt:`Sitting on ${side(persp)} side, how many files from your left is the ${T(f)}-file?`,kind:'num',answer:i+1,reveal:{persp,coords:true,hl:ALL.filter(x=>FILES[x&7]===f).map(sn)},explain:`The ${f}-file is ${ord(i+1)} from ${who}'s left. ${lineF}`}}
+   const i=rnd(8);return{prompt:`Sitting on ${side(persp)} side, which rank is the <b>${ord(i+1)}</b> row from you?`,kind:'num',answer:+ranks[i],reveal:{persp,coords:true,hl:ALL.filter(x=>(x>>3)+1===+ranks[i]).map(sn)},explain:lineR}}},
+ fileRecite:{name:'Say them in order',skill:'files',T:12,gen(o){const persp=rp(o.persp),who=persp==='w'?'White':'Black',rev=Math.random()<.5,rank=Math.random()<.3;
+   let seq=rank?(persp==='w'?'12345678':'87654321'):(persp==='w'?'abcdefgh':'hgfedcba');if(rev)seq=seq.split('').reverse().join('');
+   const what=rank?`ranks from ${rev?'the far side back toward you':'your side outward'}`:`files from your ${rev?'right to your left':'left to your right'}`;
+   return{prompt:`Sitting on ${side(persp)} side, tap all the ${what}.`,sub:`${rank?'Numbers':'Letters'} in order, all 8`,kind:'order',alpha:rank?'12345678':FILES,answer:seq,reveal:{persp,coords:true},explain:`${who}: <b class="mono">${seq.split('').join(' ')}</b>.`}}},
+ fileTap:{name:'Find the file or rank',skill:'files',T:6,gen(o){const persp=rp(o.persp),isF=Math.random()<.6,k=rnd(8);const line=ALL.filter(x=>isF?(x&7)===k:(x>>3)===k).map(sn);const nm=isF?`${FILES[k]}-file`:`rank ${k+1}`;
+   return{prompt:`Tap any square on the ${T(nm)}`,sub:`No coordinates · seen from ${side(persp)} side`,kind:'tap',accept:line,board:{persp},reveal:{persp,coords:true,hl:line},explain:isF?`From ${persp==='w'?'White':'Black'}'s side the ${FILES[k]}-file is ${ord(persp==='w'?k+1:8-k)} from the left.`:`From ${persp==='w'?'White':'Black'}'s side rank ${k+1} is the ${ord(persp==='w'?k+1:8-k)} row out.`}}},
+ startWhat:{name:'What starts here?',skill:'start',T:6,gen(o){const b=startState().b;let s;if(o.sq)s=si(o.sq);else{const r=Math.random()<.85?pick([0,1,6,7]):2+rnd(4);s=r*8+rnd(8)}const n=sn(s),p=b[s],correct=p?plabel(p):'Empty';
+   const opts=new Set([correct]);const near=[s-1,s+1,s^56].filter(x=>x>=0&&x<64&&(x>>3)===(s>>3)||x===(s^56)).map(x=>b[x]?plabel(b[x]):'Empty');
+   for(const l of shuffle([...near,...shuffle(['White rook','White knight','White bishop','White queen','White king','Black rook','Black knight','Black bishop','Black queen','Black king','White pawn','Black pawn','Empty'])])){if(opts.size>=4)break;opts.add(l)}
+   return{prompt:`In the starting position, what stands on ${T(n)}?`,kind:'choice',options:shuffle([...opts]),answer:correct,item:'start:'+n,reveal:{persp:'w',coords:true,pieces:START,marks:{[n]:'ring'}},explain:`${n}: ${correct==='Empty'?'empty. Ranks 3 to 6 start empty':correct.toLowerCase()}. Back ranks from a to h: <b class="mono">R N B Q K B N R</b>. Pawns fill ranks 2 and 7.`}}},
+ startName:{name:'Name the starting square',skill:'start',T:7,gen(){const L=[['White king','e1'],['Black king','e8'],['White queen','d1'],['Black queen','d8'],['White queenside rook','a1'],['White kingside rook','h1'],['Black queenside rook','a8'],['Black kingside rook','h8'],['White queenside knight','b1'],['White kingside knight','g1'],['Black queenside knight','b8'],['Black kingside knight','g8'],['White dark-squared bishop','c1'],['White light-squared bishop','f1'],['Black light-squared bishop','c8'],['Black dark-squared bishop','f8']];
+   let nm,at;if(Math.random()<.2){const f=FILES[rnd(8)],w=Math.random()<.5;nm=`${w?'White':'Black'} ${f}-pawn`;at=f+(w?2:7)}else[nm,at]=pick(L);
+   return{prompt:`Name the starting square of the <b>${nm}</b>`,kind:'sq',accept:[at],reveal:{persp:'w',coords:true,pieces:START,marks:{[at]:'good'}},explain:`The ${nm.toLowerCase()} starts on ${T(at)}. Queenside is the a to d half, kingside e to h. The queen starts on her own colour: White d1 light, Black d8 dark.`}}},
+ startWhere:{name:'Set up the board',skill:'start',T:12,gen(o){const persp=rp(o.persp),p=pick('KQRBNPkqrbnp');const b=startState().b;const acc=ALL.filter(x=>b[x]===p).map(sn);const plural=acc.length>1;
+   return{prompt:`Tap the starting square${plural?'s':''} of the <b>${plabel(p).toLowerCase()}${plural?'s':''}</b>`,sub:`${acc.length} square${plural?'s':''} · seen from ${side(persp)} side${o.coords?'':' · no coordinates'}`,kind:'multi',accept:acc,board:{persp,coords:o.coords},reveal:{persp,coords:true,pieces:START},explain:`${plabel(p)}${plural?'s':''}: ${acc.join(', ')}.`}}},
+ nameTap:{name:'Find the square',skill:'names',T:6,gen(o){const persp=rp(o.persp),n=o.sq||sn(rnd(64));
+   return{prompt:`Tap ${T(n)}`,sub:`Seen from ${side(persp)} side${o.coords?'':' · no coordinates'}`,kind:'tap',accept:[n],board:{persp,coords:o.coords},reveal:{persp,coords:true,marks:{[n]:'good'}},item:`name${persp.toUpperCase()}:${n}`,explain:nameExplain(n,persp)}}},
+ nameRead:{name:'Name the square',skill:'names',T:7,gen(o){const persp=rp(o.persp),n=o.sq||sn(rnd(64));
+   return{prompt:`Name the highlighted square`,sub:`Seen from ${side(persp)} side`,kind:'sq',accept:[n],board:{persp,hl:[n]},reveal:{persp,coords:true,marks:{[n]:'good'}},item:`name${persp.toUpperCase()}:${n}`,explain:nameExplain(n,persp)}}},
+ direction:{name:'Walk the board',skill:'names',T:15,gen(o,tier){const persp=rp(o.persp),m=persp==='w'?1:-1;
+   for(;;){const s=rnd(64);let f=s&7,r=s>>3,ok=true;const steps=[];const k=tier>=3?3:2;
+     for(let i=0;i<k;i++){const d=pick(Object.keys(DIRS)),n=1+rnd(3),[df,dr]=DIRS[d];const nf=f+df*n*m,nr=r+dr*n*m;if(nf<0||nf>7||nr<0||nr>7){ok=false;break}f=nf;r=nr;steps.push(`<b>${n} ${d}</b>`)}
+     if(!ok)continue;const end=sn(r*8+f);
+     return{prompt:`You sit on ${side(persp)} side. Start on ${T(sn(s))}, go ${steps.join(', then ')}. Where are you?`,kind:'sq',accept:[end],reveal:{persp,coords:true,marks:{[sn(s)]:'sel',[end]:'good'}},
+       explain:`You end on ${T(end)}. For ${persp==='w'?'White, forward is toward rank 8 and right is toward the h-file':'Black, forward is toward rank 1 and right is toward the a-file'}.`}}}},
+ colorOf:{name:'Light or dark?',skill:'colours',T:4,gen(o){const s=o.sq?si(o.sq):rnd(64),n=sn(s);
+   return{prompt:`What colour is ${T(n)}?`,kind:'choice',options:['Light','Dark'],answer:light(s)?'Light':'Dark',swatch:true,item:'col:'+n,reveal:{persp:'w',coords:true,marks:{[n]:'ring'}},explain:colorExplain(s)}}},
+ colorPair:{name:'Same colour?',skill:'colours',T:6,gen(){const a=rnd(64);let b;do{b=rnd(64)}while(b===a);
+   return{prompt:`Are ${T(sn(a))} and ${T(sn(b))} the same colour?`,...yn(light(a)===light(b)),reveal:{persp:'w',coords:true,marks:{[sn(a)]:'ring',[sn(b)]:'ring'}},explain:`${sn(a)} is ${light(a)?'light':'dark'}, ${sn(b)} is ${light(b)?'light':'dark'}. ${colorExplain(a)}`}}},
+ colorHidden:{name:'Colours hidden',skill:'colours',T:15,gen(o){const persp=rp(o.persp),isFile=Math.random()<.5,k=rnd(8),want=Math.random()<.5;
+   const line=ALL.filter(s=>isFile?(s&7)===k:(s>>3)===k),acc=line.filter(s=>light(s)===want).map(sn);const lname=isFile?`${FILES[k]}-file`:`${ord(k+1)} rank`;
+   return{prompt:`The colours are hidden. Tap every <b>${want?'light':'dark'}</b> square on the ${lname}.`,sub:`${acc.length} squares · seen from ${side(persp)} side`,kind:'multi',accept:acc,board:{persp,coords:true,plain:true},reveal:{persp,coords:true},
+     explain:`On the ${lname}: ${acc.join(', ')} are ${want?'light':'dark'}. Squares on any line alternate colour, so once you know one you know them all.`}}},
+ diagSame:{name:'Same diagonal?',skill:'geometry',T:8,gen(){const a=rnd(64),yes=Math.random()<.5;let b;
+   if(yes)b=pick(emptyAtt(a,'B'));else{const pool=ALL.filter(s=>s!==a&&light(s)===light(a)&&!emptyAtt(a,'B').includes(s));b=pick(pool)}
+   const df=Math.abs((a&7)-(b&7)),dr=Math.abs((a>>3)-(b>>3));
+   return{prompt:`Are ${T(sn(a))} and ${T(sn(b))} on the same diagonal?`,...yn(yes),reveal:{persp:'w',coords:true,marks:{[sn(a)]:'sel',[sn(b)]:'sel'},dots:emptyAtt(a,'B').map(sn)},explain:`They are ${df} files and ${dr} rank${dr===1?'':'s'} apart. Same diagonal only when those two numbers match: ${df===dr?'they do':'they don’t'}.`}}},
+ queenAttack:{name:'Queen lines',skill:'geometry',T:8,gen(){const a=rnd(64),yes=Math.random()<.5,att=emptyAtt(a,'Q');const b=yes?pick(att):pick(ALL.filter(s=>s!==a&&!att.includes(s)));
+   return{prompt:`On an empty board, does a queen on ${T(sn(a))} attack ${T(sn(b))}?`,...yn(yes),reveal:{persp:'w',coords:true,pieces:{[sn(a)]:'Q'},marks:{[sn(b)]:yes?'good':'bad'},dots:att.map(sn)},explain:yes?`${sn(b)} shares a ${(a&7)===(b&7)?'file':(a>>3)===(b>>3)?'rank':'diagonal'} with ${sn(a)}.`:`${sn(b)} shares no file, rank or diagonal with ${sn(a)}.`}}},
+ countAttacks:{name:'Count the squares',skill:'geometry',T:12,gen(o){const s=rnd(64),p=o.piece,att=emptyAtt(s,p);
+   const tip={B:'A bishop sees 7 squares on the edge, 9 one ring in, 11 two rings in and 13 in the centre.',Q:'A queen always sees 14 along her file and rank, plus the bishop count: 21, 23, 25 or 27.',K:'A king sees 8 squares, 5 on an edge, 3 in a corner.',N:'Knight: 8 in the centre, 6 near, 4 on an edge, 3 and 2 toward corners.'}[p];
+   return{prompt:`On an empty board, how many squares does a ${PNAME[p]} on ${T(sn(s))} control?`,kind:'num',answer:att.length,reveal:{persp:'w',coords:true,pieces:{[sn(s)]:p},dots:att.map(sn)},explain:`${att.length} squares. ${tip}`}}},
+ kingDist:{name:'King distance',skill:'king',T:8,gen(){const a=rnd(64);let b;do{b=rnd(64)}while(b===a);const df=Math.abs((a&7)-(b&7)),dr=Math.abs((a>>3)-(b>>3)),d=Math.max(df,dr);
+   return{prompt:`How many moves does a king need from ${T(sn(a))} to ${T(sn(b))}?`,kind:'num',answer:d,reveal:{persp:'w',coords:true,pieces:{[sn(a)]:'K'},marks:{[sn(b)]:'good'}},explain:`${df} files and ${dr} rank${dr===1?'':'s'} apart. Diagonal steps cover both at once, so the king needs the larger number: ${d}.`}}},
+ knightMulti:{name:'Knight targets',skill:'knight',T:15,gen(o){const persp=rp(o.persp),s=o.sq?si(o.sq):rnd(64),n=sn(s),att=emptyAtt(s,'N').map(sn);
+   return{prompt:`Tap every square the knight on ${T(n)} can jump to`,sub:`${o.coords?'':'No coordinates · '}seen from ${side(persp)} side`,kind:'multi',accept:att,board:{persp,coords:o.coords,pieces:{[n]:'N'}},reveal:{persp,coords:true,pieces:{[n]:'N'}},item:'kn:'+n,explain:`From ${n}: ${att.sort().join(', ')}. Every jump lands on the opposite colour.`}}},
+ knightCan:{name:'One jump?',skill:'knight',T:6,gen(){const a=rnd(64),yes=Math.random()<.5,att=emptyAtt(a,'N');let b;
+   if(yes)b=pick(att);else{const near=ALL.filter(s=>s!==a&&!att.includes(s)&&Math.abs((s&7)-(a&7))<=2&&Math.abs((s>>3)-(a>>3))<=2);b=pick(near)}
+   return{prompt:`Can a knight on ${T(sn(a))} reach ${T(sn(b))} in one move?`,...yn(yes),reveal:{persp:'w',coords:true,pieces:{[sn(a)]:'N'},marks:{[sn(b)]:yes?'good':'bad'},dots:att.map(sn)},explain:yes?`Yes: two squares one way and one the other.`:`No. A knight on ${sn(a)} jumps to ${att.map(sn).join(', ')}.${light(a)===light(b)?' A quick check: one jump always changes colour, and these squares are the same colour.':''}`}}},
+ knightCount:{name:'Knight count',skill:'knight',T:8,gen(){const s=rnd(64),att=emptyAtt(s,'N');
+   return{prompt:`How many squares can a knight on ${T(sn(s))} jump to?`,kind:'num',answer:att.length,reveal:{persp:'w',coords:true,pieces:{[sn(s)]:'N'},dots:att.map(sn)},explain:`${att.length}: ${att.map(sn).join(', ')}.`}}},
+ knightName:{name:'Name a jump',skill:'knight',T:10,gen(){const s=rnd(64),att=emptyAtt(s,'N'),t=pick(att),r=t>>3,acc=att.filter(x=>(x>>3)===r).map(sn);
+   return{prompt:`A knight stands on ${T(sn(s))}. Name a square it can jump to on rank ${r+1}.`,kind:'sq',accept:acc,reveal:{persp:'w',coords:true,pieces:{[sn(s)]:'N'},dots:att.map(sn)},explain:`On rank ${r+1}: ${acc.join(' or ')}.`}}},
+ knightPath:{name:'Knight route',skill:'knight',T:20,gen(o,tier){for(;;){const a=rnd(64),{dist,par}=kbfs(a),b=rnd(64);const d=dist[b];if(d<2||(tier===1&&d>3))continue;
+   const path=[b];let x=b;while(par[x]>=0){x=par[x];path.unshift(x)}
+   return{prompt:`What is the fewest number of moves a knight needs from ${T(sn(a))} to ${T(sn(b))}?`,kind:'num',answer:d,reveal:{persp:'w',coords:true,pieces:{[sn(a)]:'N'},marks:Object.fromEntries(path.slice(1).map(s=>[sn(s),'sel']))},explain:`${d} moves, for example ${path.map(sn).join(' → ')}.`}}}},
+ bishopReach:{name:'Can the bishop get there?',skill:'bishop',T:5,gen(){const a=rnd(64);let b;do{b=rnd(64)}while(b===a);
+   return{prompt:`Can a bishop on ${T(sn(a))} ever reach ${T(sn(b))}?`,...yn(light(a)===light(b)),reveal:{persp:'w',coords:true,marks:{[sn(a)]:'ring',[sn(b)]:'ring'}},explain:`${sn(a)} is ${light(a)?'light':'dark'} and ${sn(b)} is ${light(b)?'light':'dark'}. A bishop never changes colour.`}}},
+ bishopRoute:{name:'Two-move bishop route',skill:'bishop',T:20,gen(){for(;;){const a=rnd(64),b=rnd(64);if(a===b||light(a)!==light(b))continue;const da=emptyAtt(a,'B');if(da.includes(b))continue;
+   const acc=da.filter(z=>emptyAtt(z,'B').includes(b)).map(sn);if(!acc.length)continue;
+   return{prompt:`A bishop goes from ${T(sn(a))} to ${T(sn(b))} in two moves on an empty board. Name the square in between.`,sub:acc.length>1?'There are two right answers':'',kind:'sq',accept:acc,reveal:{persp:'w',coords:true,pieces:{[sn(a)]:'B'},marks:{[sn(b)]:'good',...Object.fromEntries(acc.map(s=>[s,'sel']))}},explain:`The diagonals of ${sn(a)} and ${sn(b)} cross on ${acc.join(' and ')}.`}}}},
+ lineAttack:{name:'Does it attack?',skill:'attack',T:15,gen(o){for(let tries=0;tries<200;tries++){const b=EMPTY(),P=pick('QRBN'),s=rnd(64);b[s]=P;const nb=2+rnd(3);
+   for(let i=0;i<nb;i++){let x;do{x=rnd(64)}while(b[x]);b[x]=pick('pPnBp')}
+   const yes=Math.random()<.5,att=pieceAttacks(b,s);let pool;
+   if(yes)pool=att.filter(x=>!b[x]);else{pool=emptyAtt(s,P).filter(x=>!b[x]&&!att.includes(x));if(!pool.length)pool=ALL.filter(x=>!b[x]&&!att.includes(x))}
+   if(!pool.length)continue;const t=pick(pool),tp=pick('rnbq');b[t]=tp;
+   const blk=!yes&&emptyAtt(s,P).includes(t);
+   return{prompt:`Does the White ${PNAME[P]} on ${T(sn(s))} attack the ${plabel(tp).toLowerCase()} on ${T(sn(t))}?`,text:o.board?'':posText(b),...yn(yes),board:o.board?{persp:'w',coords:true,pieces:toMap(b)}:null,reveal:{persp:'w',coords:true,pieces:toMap(b),marks:{[sn(t)]:yes?'good':'bad'},dots:att.map(sn)},
+     explain:yes?`Yes, the path from ${sn(s)} to ${sn(t)} is clear.`:blk?`No. ${sn(t)} is on the ${PNAME[P]}'s line, but a piece stands in the way.`:`No. ${sn(t)} is not on any line the ${PNAME[P]} moves along.`}}}},
+ checkQ:{name:'Is it check?',skill:'attack',T:20,gen(){const want=Math.random()<.5;for(let i=0;i<500;i++){const b=EMPTY();const bk=rnd(64);b[bk]='k';let wk;do{wk=rnd(64)}while(Math.max(Math.abs((wk&7)-(bk&7)),Math.abs((wk>>3)-(bk>>3)))<2);b[wk]='K';
+   for(let j=0;j<2+rnd(2);j++){let x,p;do{x=rnd(64);p=pick('QRBNP')}while(b[x]||(p==='P'&&((x>>3)===0||(x>>3)===7)));b[x]=p}
+   for(let j=0;j<1+rnd(2);j++){let x,p;do{x=rnd(64);p=pick('pnbr')}while(b[x]||(p==='p'&&((x>>3)===0||(x>>3)===7)));b[x]=p}
+   if(attacked(b,wk,false))continue;const chk=attacked(b,bk,true);if(chk!==want)continue;
+   const by=ALL.filter(x=>b[x]&&isW(b[x])&&pieceAttacks(b,x).includes(bk));
+   return{prompt:`Is the Black king in check?`,text:posText(b),...yn(chk),reveal:{persp:'w',coords:true,pieces:toMap(b),marks:Object.fromEntries([[sn(bk),chk?'bad':'ring'],...by.map(x=>[sn(x),'sel'])])},
+     explain:chk?`Yes: ${by.map(x=>b[x]+sn(x)).join(' and ')} ${by.length>1?'give':'gives'} check to the king on ${sn(bk)}.`:`No. Scan out from ${sn(bk)} along the 8 lines, the knight squares and the pawn diagonals: nothing White hits the king.`}}}},
+ memory:{name:'Memorise the position',skill:'memory',T:15,gen(o){const b=randPos(o.n-2);const map=toMap(b);const occ=Object.keys(map);
+   if(Math.random()<.55){const n=Math.random()<.65?pick(occ):sn(pick(ALL.filter(x=>!b[x])));const correct=map[n]?plabel(map[n]):'Empty';
+     return{memo:{pieces:map,secs:o.secs},prompt:`What stood on ${T(n)}?`,kind:'choice',options:whatOptions(correct,b),answer:correct,board:{persp:'w',coords:true},reveal:{persp:'w',coords:true,pieces:map,marks:{[n]:'ring'}},explain:`${n} held ${correct==='Empty'?'nothing':'the '+correct.toLowerCase()}.`}}
+   const p=map[pick(occ)];const acc=occ.filter(n=>map[n]===p);
+   return{memo:{pieces:map,secs:o.secs},prompt:`Tap where the <b>${plabel(p).toLowerCase()}</b> stood`,kind:'tap',accept:acc,board:{persp:'w',coords:true},reveal:{persp:'w',coords:true,pieces:map,marks:Object.fromEntries(acc.map(a=>[a,'ring']))},explain:`The ${plabel(p).toLowerCase()} was on ${acc.join(' and ')}.`}}},
+ sequence:{name:'Moves in your head',skill:'sequence',T:40,gen(o){const{sans,st,dests}=makeSeq(o.plies);if(Math.random()<2)return seqQ(sans,st,dests,`Start from the opening position and play these moves in your head:`);const b=st.b,map=toMap(b);
+   const uniq=[];for(const p of'QKqk'){if(b.filter(x=>x===p).length===1)uniq.push(p)}
+   const head=`Start from the opening position and play these moves in your head:`;const text=`<div class="moves">${movesHTML(sans)}</div>`;
+   if(Math.random()<.35&&uniq.length){const p=pick(uniq),at=sn(b.indexOf(p));
+     return{pre:head,text,prompt:`Where is the <b>${plabel(p).toLowerCase()}</b> now?`,kind:'sq',accept:[at],reveal:{persp:'w',coords:true,pieces:map,marks:{[at]:'ring'}},explain:`The ${plabel(p).toLowerCase()} is on ${at}.`}}
+   const cand=Math.random()<.7?dests.slice(-6):ALL;const n=sn(pick(cand));const correct=map[n]?plabel(map[n]):'Empty';
+   return{pre:head,text,prompt:`What stands on ${T(n)} now?`,kind:'choice',options:whatOptions(correct,b),answer:correct,reveal:{persp:'w',coords:true,pieces:map,marks:{[n]:'ring'}},explain:`${n}: ${correct==='Empty'?'empty':correct.toLowerCase()}. The board above is the final position.`}}}
+};
+
+/* ================= curriculum ================= */
+const STEPS={
+ mirrors:[['mirname',{kind:'v'},'Up-down mirror, by name',15],['mirname',{kind:'h'},'Left-right mirror, by name',15],['mirname',{kind:'r'},'Turned around, by name',12],['mirtap',{kind:'v',persp:'w'},'Tap the up-down mirror',15],['mirtap',{kind:'h',persp:'w'},'Tap the left-right mirror',15],['mirtap',{kind:'r',persp:'b'},'Tap the turned-around square, Black\u2019s side',12],['mirname',{kind:'mix'},'All three mirrors mixed, by name',12],['mirtap',{kind:'mix',persp:'q'},'All three mixed, side changes every question',12]],
+ files:[['file',{persp:'w'},'Files from White’s side',20],['file',{persp:'b'},'Files from Black’s side',20],['rank',{persp:'w'},'Ranks from White’s side',20],['rank',{persp:'b'},'Ranks from Black’s side',20],['file',{persp:'x'},'Files, side switches every minute',20],['rank',{persp:'x'},'Ranks, side switches every minute',20],['file',{persp:'q'},'Files, side changes every question',18],['rank',{persp:'q'},'Ranks, side changes every question',18]],
+ start:[['start',{},'What starts on this square?',15],['startsq',{},'Where does this piece start?',10],['start',{},'What starts here, master speed',25],['startsq',{},'Where does it start, master speed',15],['start3',{},'One square, three answers',20],['startline',{},'Say the whole rank or file',25],['startside',{},'Think from your side: left, right, corners',10],['startmoves',{},'What stands there after the first moves',8]],
+ 'names-w':[['find',{persp:'w',zone:'centre'},'Find the square: centre only',18],['name',{persp:'w',zone:'centre'},'Name the square: centre only',14],['find',{persp:'w'},'Find the square',15],['name',{persp:'w'},'Name the square',12],['name',{persp:'w',speed:'auto'},'Name the square, getting faster (3 s to 1 s)',15],['mirror',{persp:'w'},'Mirror: name it, then turned around',12]],
+ 'names-b':[['find',{persp:'b',zone:'centre'},'Find the square: centre only',18],['find',{persp:'b'},'Find the square',15],['name',{persp:'b'},'Name the square',12],['mirror',{persp:'b'},'Mirror from Black\u2019s side',12],['find',{persp:'q'},'Find it, side changes every question',14],['name',{persp:'q'},'Name it, side changes every question',11],['name',{persp:'q',speed:'auto'},'Side changes every question, getting faster',14]],
+ landmarks:[['lm',{persp:'w'},'Landmarks, White’s side',15],['lm',{persp:'b'},'Landmarks, Black’s side',15],['lm',{persp:'q'},'Landmarks, side changes every question',14]],
+ stories:[['story',{persp:'w'},'Story squares, White’s side',6],['story',{persp:'b'},'Story squares, Black’s side',6],['story',{persp:'q'},'Story squares, side changes every question',6]],
+ colors:[['colour',{},'Light or dark',20],['colour',{},'Light or dark at master speed',30],['colourtap',{persp:'w'},'Colour by position, White\u2019s side',20],['colourtap',{persp:'b'},'Colour by position, Black\u2019s side',20],['colourall',{persp:'w'},'Tap the light or dark squares on a line',25]],
+ lines:[['R',{persp:'w'},'Rook lines',35],['B',{persp:'w'},'Bishop lines',30],['Q',{persp:'w'},'Queen lines',35],['Q',{persp:'b'},'Queen lines, Black’s side',35],['Q',{persp:'w',hidden:true},'Queen lines, queen not shown',30],['B',{persp:'b',hidden:true},'Bishop lines, bishop not shown, Black\u2019s side',25]],
+ king:[['K',{persp:'w'},'King steps',35],['K',{persp:'b'},'King steps, Black’s side',35],['K',{persp:'q',hidden:true},'King not shown, side changes every question',30]],
+ knight:[['N',{persp:'w'},'Knight jumps',20],['N',{persp:'b'},'Knight jumps, Black’s side',20],['N',{persp:'w',hidden:true},'Knight jumps, knight not shown',18],['N',{persp:'q',hidden:true},'Knight not shown, side changes every question',16]],
+ bishop:[['B',{persp:'w'},'Bishop lines, White’s side',35],['B',{persp:'b'},'Bishop lines, Black’s side',30],['B',{persp:'q',hidden:true},'Bishop not shown, side changes every question',25]],
+ journeys:[['route',{persp:'w'},'Knight routes',10],['route',{persp:'b'},'Knight routes, Black’s side',10],['route',{persp:'q'},'Knight routes, side changes every question',9]],
+ together:[['att',{persp:'w'},'Blocked lines',25],['att',{persp:'b'},'Blocked lines, Black’s side',25],['att',{persp:'q'},'Blocked lines, side changes every question',22]],
+ memory:[['memory',{persp:'w',n:3,secs:5},'3 pieces, 5 seconds',8],['memory',{persp:'w',n:5,secs:7},'5 pieces, 7 seconds',7],['memory',{persp:'w',n:7,secs:9},'7 pieces, 9 seconds',6],['memory',{persp:'w',n:10,secs:12},'10 pieces, 12 seconds',5],['memory',{persp:'b',n:7,secs:9},'7 pieces from Black\u2019s side',6]],
+ sequence:[['moves',{persp:'w',src:'book'},'Play real moves, pieces shown',15],['moves',{persp:'w',src:'book',hide:true},'Play real moves, pieces hidden',8],['trace',{persp:'w',src:'book'},'Where is it now? Empty board',6],['trace',{persp:'b',src:'book'},'Where is it now? Black\u2019s side',6]],
+ openings:[['moves',{persp:'w',src:'open'},'Play the openings, pieces shown',15],['moves',{persp:'w',src:'open',hide:true},'Openings with pieces hidden',8],['moves',{persp:'b',src:'open',hide:true},'Openings from Black’s side, hidden',8],['trace',{persp:'w',src:'open'},'Where is it now, after the opening',6]],
+ famous:[['moves',{persp:'w',src:'famous'},'Play the famous games, pieces shown',15],['moves',{persp:'w',src:'famous',hide:true},'Famous games with pieces hidden',8],['trace',{persp:'w',src:'famous'},'Where is it now, in a famous game',6]]
+};
+const STAGES=[
+ {id:'files',steps:STEPS['files'],title:'Files and ranks, both directions',mastery:true,blurb:'a to h from White\u2019s side, h to a from Black\u2019s. Must be perfect before you move on.',drills:[['fileOrder',{persp:'w'},'Files and ranks from White\u2019s side'],['fileOrder',{persp:'b'},'Files and ranks from Black\u2019s side'],['fileRecite',{persp:'w'},'Recite in order, White\u2019s side'],['fileRecite',{persp:'b'},'Recite in order, Black\u2019s side'],['fileTap',{persp:'w'},'Find the file or rank, White\u2019s side'],['fileTap',{persp:'b'},'Find the file or rank, Black\u2019s side'],['fileOrder',{persp:'x'},'Both sides mixed']]},
+ {id:'start',steps:STEPS['start'],title:'Where every piece starts',mastery:true,blurb:'The starting square of all 32 pieces. Must be perfect before you move on.',drills:[['startWhat',{},'What starts on this square?'],['startName',{},'Name the starting square'],['startWhere',{persp:'w',coords:true},'Set up the board, White\u2019s side'],['startWhere',{persp:'b',coords:false},'Set up the board, Black\u2019s side, no coordinates']]},
+ {id:'names-w',steps:STEPS['names-w'],title:'Square names from White',blurb:'Files, ranks and landmarks with White at the bottom.',drills:[['nameTap',{persp:'w',coords:true},'Find the square, coordinates on'],['nameTap',{persp:'w',coords:false},'Find the square, no coordinates'],['nameRead',{persp:'w'},'Name the highlighted square'],['direction',{persp:'w'},'Walk the board from White’s side']]},
+ {id:'names-b',steps:STEPS['names-b'],title:'Square names from Black',blurb:'The same board turned around: h-file on your left, rank 8 nearest.',drills:[['nameTap',{persp:'b',coords:true},'Find the square, coordinates on'],['nameTap',{persp:'b',coords:false},'Find the square, no coordinates'],['nameRead',{persp:'b'},'Name the highlighted square'],['direction',{persp:'b'},'Walk the board from Black’s side'],['nameTap',{persp:'x',coords:false},'Board flips every question']]},
+ {id:'mirrors',steps:STEPS['mirrors'],title:'Mirror tricks',blurb:'Up-down, left-right and turned-around mirror pairs for every square, so one square instantly gives you three more.',drills:[]},
+ {id:'landmarks',steps:STEPS['landmarks'],title:'Landmark squares and memory tricks',blurb:'Corners, centre, long diagonals, castling and fianchetto squares, mirrors and zones.',drills:[['landmarkTap',{persp:'w',coords:true},'Tap the landmarks, White\u2019s side'],['landmarkName',{},'Name the landmark square'],['mirror',{},'Mirror squares'],['zone',{},'Which ring or quarter?'],['landmarkTap',{persp:'b',coords:false},'Landmarks from Black\u2019s side, no coordinates']]},
+ {id:'stories',steps:STEPS['stories'],title:'Square stories',blurb:'A memory hook for all 64 squares, taken from real openings and attacks.',drills:[['storyPick',{},'Pick the story of a square'],['storyName',{},'Name the square from its story'],['storyTap',{persp:'w'},'Tap the story square, White\u2019s side'],['storyTap',{persp:'b'},'Tap the story square, Black\u2019s side']]},
+ {id:'colors',steps:STEPS['colors'],title:'Square colours',blurb:'Know the colour of any square instantly, with no board in front of you.',drills:[['colorOf',{},'Light or dark?'],['colorPair',{},'Same colour?'],['colorHidden',{persp:'w'},'Colours hidden, White’s side'],['colorHidden',{persp:'b'},'Colours hidden, Black’s side']]},
+ {id:'lines',steps:STEPS['lines'],title:'Lines and diagonals',blurb:'Which squares share a file, rank or diagonal.',drills:[['diagSame',{},'Same diagonal?'],['queenAttack',{},'Queen lines'],['countAttacks',{piece:'B'},'Count bishop squares'],['countAttacks',{piece:'Q'},'Count queen squares']]},
+ {id:'king',steps:STEPS['king'],title:'King geometry',blurb:'King distance, the rule behind every king race and endgame.',drills:[['kingDist',{},'King distance'],['countAttacks',{piece:'K'},'Count king squares']]},
+ {id:'knight',steps:STEPS['knight'],title:'Knight jumps',blurb:'The hardest piece to see. Jumps, counts and shortest routes.',drills:[['knightMulti',{persp:'w',coords:true},'Tap the knight’s targets'],['knightMulti',{persp:'b',coords:false},'Targets from Black’s side, no coordinates'],['knightCan',{},'One jump?'],['knightCount',{},'Count knight squares'],['knightName',{},'Name a jump, no board'],['knightPath',{},'Shortest knight route']]},
+ {id:'bishop',steps:STEPS['bishop'],title:'Bishop journeys',blurb:'Colour complexes and two-move routes.',drills:[['bishopReach',{},'Can the bishop get there?'],['bishopRoute',{},'Two-move bishop route']]},
+ {id:'journeys',steps:STEPS['journeys'],title:'Piece journeys',blurb:'Shortest routes for every piece between any two squares.',drills:[['journeyCount',{},'Fewest moves, any piece'],['knightFirst',{},'Knight\u2019s best first jump'],['journeyMid',{},'Two-move routes for rook, queen, king and knight']]},
+ {id:'together',steps:STEPS['together'],title:'Pieces together',blurb:'Lines blocked by other pieces, and spotting check from a list of pieces.',drills:[['lineAttack',{board:true},'Does it attack? Board shown'],['lineAttack',{board:false},'Does it attack? Blindfold'],['checkQ',{},'Is it check? Blindfold']]},
+ {id:'memory',steps:STEPS['memory'],title:'Position memory',blurb:'Look, remember, answer with the pieces gone.',drills:[['memory',{n:3,secs:6},'3 pieces, 6 seconds'],['memory',{n:5,secs:8},'5 pieces, 8 seconds'],['memory',{n:7,secs:10},'7 pieces, 10 seconds'],['memory',{n:10,secs:14},'10 pieces, 14 seconds']]},
+ {id:'sequence',steps:STEPS['sequence'],title:'Moves in your head',blurb:'Follow a game from the start with no board at all.',drills:[['sequence',{plies:4},'4 moves'],['sequence',{plies:8},'8 moves'],['sequence',{plies:12},'12 moves'],['sequence',{plies:18},'18 moves']]},
+ {id:'openings',steps:STEPS['openings'],title:'Openings in your head',blurb:'Twenty named openings played with no board: Italian, Ruy Lopez, Sicilian, Queen\u2019s Gambit and more.',drills:[['opening',{plies:6},'First 6 moves'],['opening',{plies:10},'First 10 moves'],['opening',{},'Full opening line']]},
+ {id:'famous',steps:STEPS['famous'],title:'Famous games in your head',blurb:'Classic short games, from Fool\u2019s Mate to Morphy\u2019s Opera Game.',drills:[['famous',{},'Follow the start of a famous game'],['famous',{end:true},'Follow it to the end']]},
+ {id:'play',title:'Blindfold games',blurb:'Play a full game against the computer with the pieces hidden.',play:true}
+];
+const TIERS=[{n:'Learn',d:'untimed'},{n:'Practise',d:'timed'},{n:'Master',d:'half the time'}];
+const LPQ=10;
+const LCACHE=new Map();
+function lessonsOf(st){if(st.play)return[];if(LCACHE.has(st))return LCACHE.get(st);const out=(st.steps||[]).map((d,i)=>({id:`${st.id}.t${i}`,stage:st,m:d[0],params:d[1],title:d[2],target:d[3]}));LCACHE.set(st,out);return out}
+const ALL_LESSONS=STAGES.flatMap(lessonsOf);
+const TOTAL_EX=ALL_LESSONS.length*LPQ;
+const starsOf=id=>(P.lessons[id]&&P.lessons[id].s)||0;
+const tierTime=(drill,tier)=>tier===1?0:tier===2?DR[drill].T:Math.ceil(DR[drill].T/2);
+function stageUnlocked(i){if(P.set.unlockAll||i===0)return true;if(!stageUnlocked(i-1))return false;const prev=STAGES[i-1];if(prev.play)return true;return lessonsOf(prev).every(l=>starsOf(l.id)>0)}
+function lessonUnlocked(l){if(P.set.unlockAll)return true;const si_=STAGES.indexOf(l.stage);if(!stageUnlocked(si_))return false;const ls=lessonsOf(l.stage),i=ls.indexOf(l);return i===0||starsOf(ls[i-1].id)>0}
+function nextLesson(){return ALL_LESSONS.find(l=>lessonUnlocked(l)&&!starsOf(l.id))||null}
+const starStr=n=>`<span class="stars" aria-label="${n} of 3 stars">${'★'.repeat(n)}<span class="off">${'★'.repeat(3-n)}</span></span>`;
+
+/* ================= tutorials ================= */
+const START=toMap(startState().b);
+const TUT={
+ 'files':[
+  {h:'Files forwards: White\u2019s view',p:`<p>The columns are <b>files</b>. Sitting as White, they run <b class="mono">a b c d e f g h</b> from your left to your right. The rows are <b>ranks</b>, numbered <b class="mono">1 to 8</b> starting from your side.</p><p>Tap squares to hear their names. Say the files out loud forwards until it is automatic.</p>`,b:{persp:'w',coords:true}},
+  {h:'Files backwards: Black\u2019s view',p:`<p>Sitting as Black, the same files run <b class="mono">h g f e d c b a</b> from your left to your right, and the ranks run <b class="mono">8 7 6 5 4 3 2 1</b> from your side outward.</p><p>A quick translation: White's 1st file from the left is a; Black's is h. The <b>n</b>th file from Black's left is the <b>(9 − n)</b>th from White's.</p>`,b:{persp:'b',coords:true}},
+  {h:'Drill both ways',p:`<ul><li>Recite a→h and h→a without stopping</li><li>Name the 3rd, 5th, 7th file from either side instantly</li><li>Know which file sits to the left or right of any other, from either chair</li></ul><p>Every drill here needs <b>95% right with no peeking</b>. That is on purpose: everything later is built on this.</p>`}],
+  mirrors:[
+  {h:'Up-down mirror',p:`<p>Fold the board across the middle. The file stays the same and the rank flips: <b class="mono">1↔8, 2↔7, 3↔6, 4↔5</b>. The two ranks always add up to <b>9</b>.</p><p>e2 ↔ e7 (the king pawns), d1 ↔ d8 (the queens), c3 ↔ c6, a4 ↔ a5.</p>`,b:{persp:'w',coords:true,marks:{e2:'sel',e7:'sel',c3:'good',c6:'good'}}},
+  {h:'Left-right mirror',p:`<p>Fold the board down the middle. The rank stays the same and the file flips: <b class="mono">a↔h, b↔g, c↔f, d↔e</b>. Counting a = 1 … h = 8, the two files always add up to <b>9</b>.</p><p>c3 ↔ f3 (the knight squares), b2 ↔ g2 (the fianchetto squares), d4 ↔ e4.</p>`,b:{persp:'w',coords:true,marks:{c3:'sel',f3:'sel',b2:'good',g2:'good'}}},
+  {h:'Turned around',p:`<p>Spin the board half a turn, which is what Black sees. Both flip: a1 ↔ h8, b2 ↔ g7, e4 ↔ d5, c1 ↔ f8.</p><p>Square colours: the up-down and left-right mirrors always have the <b>opposite</b> colour, and the turned-around square has the <b>same</b> colour. Use this as a check.</p>`,b:{persp:'w',coords:true,marks:{a1:'sel',h8:'sel',e4:'good',d5:'good'}}},
+  {h:'Why it helps',p:`<p>Learn one square and you get three more for free. When you know e4 cold, you also know e5, d4 and d5. When you play Black, the turned-around square tells you where White's plan lands on your side.</p>`}],
+ 'start':[
+  {h:'The back rank',p:`<p>From a to h both back ranks read <b class="mono">R N B Q K B N R</b>: rook, knight, bishop, queen, king, bishop, knight, rook. White's are on rank 1, Black's on rank 8, facing each other file for file.</p><p>Pawns fill rank 2 (White) and rank 7 (Black). Ranks 3 to 6 are empty.</p>`,b:{persp:'w',coords:true,pieces:START}},
+  {h:'Queen on her colour',p:`<p>The queen always starts on a square of her own colour: White queen on light ${T('d1')}, Black queen on dark ${T('d8')}. The kings sit next to them on the e-file: ${T('e1')} and ${T('e8')}.</p>`,b:{persp:'w',coords:true,pieces:START,hl:['d1','d8','e1','e8']}},
+  {h:'Names for every piece',p:`<p>Pieces are named by their side of the board. <b>Queenside</b> (a to d): rook a1/a8, knight b1/b8, bishop c1/c8. <b>Kingside</b> (e to h): bishop f1/f8, knight g1/g8, rook h1/h8.</p><p>White's c1 bishop runs on dark squares, the f1 bishop on light ones. For Black, c8 is light and f8 is dark.</p>`,b:{persp:'w',coords:true,pieces:START}},
+  {h:'Now from Black\u2019s chair',p:`<p>From Black's side the board is turned around: your king on ${T('e8')} is to the <b>left</b> of your queen on ${T('d8')}. Learn both views.</p>`,b:{persp:'b',coords:true,pieces:START}}],
+ 'names-w':[
+  {h:'Every square has an address',p:`<p>Files are the columns, lettered <b>a to h</b> from White's left to right. Ranks are the rows, numbered <b>1 to 8</b> starting from White's side. A square's name is its file then its rank: ${T('e4')} is the e-file, 4th rank.</p><p>Tap any square below to hear its name.</p>`,b:{persp:'w',coords:true}},
+  {h:'Learn the landmarks',p:`<p>Anchor yourself with a few squares you never have to think about:</p><ul><li>Corners: ${T('a1')} ${T('h1')} ${T('a8')} ${T('h8')}</li><li>The centre: ${T('d4')} ${T('e4')} ${T('d5')} ${T('e5')}</li><li>The kings start on ${T('e1')} and ${T('e8')}</li></ul>`,b:{persp:'w',coords:true,hl:['a1','h1','a8','h8','d4','e4','d5','e5','e1','e8']}},
+  {h:'Files are named by the pieces',p:`<p>In the starting position each file has a piece you already know: <b>a/h</b> rooks, <b>b/g</b> knights, <b>c/f</b> bishops, <b>d</b> queen, <b>e</b> king. The a–d half is the <b>queenside</b>, e–h the <b>kingside</b>.</p>`,b:{persp:'w',coords:true,pieces:START}},
+  {h:'How to practise',p:`<p>Say each square out loud as you tap it, and picture where it lives before you look. Start with coordinates on, then take them away. Speed comes on its own once the picture is clear.</p>`}],
+ 'names-b':[
+  {h:'Same names, turned around',p:`<p>From Black's chair the board is rotated: the <b>h-file is on your left</b> and <b>rank 8 is nearest</b> to you. Square names never change. ${T('e4')} is always ${T('e4')}; only your view of it moves.</p>`,b:{persp:'b',coords:true}},
+  {h:'Translate quickly',p:`<p>For Black, a rank's distance from you is <b>9 minus the rank</b>: ${T('e5')} is Black's 4th row. Counting files from Black's left: h is 1st, g 2nd … a is 8th.</p><p>Black's king starts on ${T('e8')}, to the <b>left</b> of where it would feel natural if you only ever play White.</p>`,b:{persp:'b',coords:true,pieces:START}},
+  {h:'Flip often',p:`<p>Strong blindfold players can see the board from either side. The final drill in this stage flips the board at random, so train both views until it feels the same.</p>`}],
+ 'landmarks':[
+  {h:'The four corners',p:`<p>${T('a1')} is the <b>dark</b> corner on White's left and ${T('h1')} the <b>light</b> corner on the right: "light on the right". Opposite corners share a colour: ${T('a1')} and ${T('h8')} are dark, ${T('h1')} and ${T('a8')} are light.</p>`,b:{persp:'w',coords:true,hl:['a1','h1','a8','h8']}},
+  {h:'The centre four',p:`<p>${T('d4')} ${T('e4')} ${T('d5')} ${T('e5')} are the most important squares in chess. Two are dark (${T('d4')}, ${T('e5')}) and two are light (${T('e4')}, ${T('d5')}). Each colour pair sits on one of the long diagonals.</p>`,b:{persp:'w',coords:true,hl:['d4','e4','d5','e5']}},
+  {h:'The big centre',p:`<p>Around the centre four is a 16-square box from ${T('c3')} to ${T('f6')}: files c to f, ranks 3 to 6. Pieces placed here control the most squares.</p>`,b:{persp:'w',coords:true,hl:SQS('cdef','3456')}},
+  {h:'The two long diagonals',p:`<p><b>Dark diagonal</b> ${T('a1')}–${T('h8')}: the letter's number equals the rank (a1, b2, c3, d4, e5, f6, g7, h8).</p><p><b>Light diagonal</b> ${T('h1')}–${T('a8')}: letter number plus rank makes 9 (h1, g2, f3, e4, d5, c6, b7, a8).</p>`,b:{persp:'w',coords:true,hl:['a1','b2','c3','d4','e5','f6','g7','h8','h1','g2','f3','e4','d5','c6','b7','a8']}},
+  {h:'Knight squares',p:`<p>Knights start on ${T('b1')} ${T('g1')} ${T('b8')} ${T('g8')} and usually jump first to ${T('c3')} ${T('f3')} ${T('c6')} ${T('f6')}. Picture each knight hopping one step toward the centre.</p>`,b:{persp:'w',coords:true,hl:['b1','g1','b8','g8','c3','f3','c6','f6']}},
+  {h:'Fianchetto squares',p:`<p>A bishop on the long diagonal next to its corner is "fianchettoed": ${T('b2')} ${T('g2')} ${T('b7')} ${T('g7')}. These four squares are also on the long diagonals.</p>`,b:{persp:'w',coords:true,hl:['b2','g2','b7','g7']}},
+  {h:'Castling squares',p:`<p><b>Kingside (O-O):</b> king to ${T('g1')}/${T('g8')}, rook to ${T('f1')}/${T('f8')}.</p><p><b>Queenside (O-O-O):</b> king to ${T('c1')}/${T('c8')}, rook to ${T('d1')}/${T('d8')}. Trick: the king always moves two squares and the rook jumps over it.</p>`,b:{persp:'w',coords:true,hl:['g1','f1','g8','f8','c1','d1','c8','d8']}},
+  {h:'The weak f-squares',p:`<p>${T('f2')} and ${T('f7')} are guarded only by the king at the start. That's why early attacks such as the Fried Liver aim at ${T('f7')}.</p>`,b:{persp:'w',coords:true,pieces:START,hl:['f2','f7']}},
+  {h:'The mirror trick',p:`<p>Files pair up <b>a↔h, b↔g, c↔f, d↔e</b>, and ranks pair up <b>1↔8, 2↔7, 3↔6, 4↔5</b>. Every pair adds to 9.</p><ul><li>Flip top to bottom: White's ${T('e4')} is Black's ${T('e5')}</li><li>Flip left to right: ${T('c3')} mirrors ${T('f3')}</li><li>Turn round: ${T('b2')} is opposite ${T('g7')}</li></ul><p>Learn one half of the board and you know the other.</p>`,b:{persp:'w',coords:true,hl:['e4','e5','c3','f3']}},
+  {h:'Quarters and rings',p:`<p>Split the board into four quarters: queenside a–d, kingside e–h, White's half ranks 1–4, Black's half 5–8. Also think in rings: the <b>edge</b> (28 squares), the <b>2nd ring</b> (20), the <b>3rd ring</b> (12) and the <b>centre</b> (4). When you hear a square, first place it in its quarter, then its ring.</p>`,b:{persp:'w',coords:true,hl:SQS('bcdefg','27').concat(['b3','b4','b5','b6','g3','g4','g5','g6'])}}],
+ 'stories':[
+  {h:'Give every square a story',p:`<p>A bare name like ${T('f7')} is hard to hold. A story is easy: ${T('f7')} is <b>Black's weakest square, the Fried Liver target</b>. Each square below has a hook taken from real openings and attacks. Tap any square to read its story.</p>`,b:{persp:'w',coords:true},stories:true},
+  {h:'White\u2019s opening moves',p:`<p>Ranks 3 and 4 hold White's most famous first moves: ${T('e4')} "best by test", ${T('d4')} the Queen's Pawn, ${T('c4')} the English, ${T('f4')} Bird's Opening, ${T('f3')} and ${T('c3')} the knights' first jumps.</p>`,b:{persp:'w',coords:true,hl:['e4','d4','c4','f4','f3','c3','b3','g3']},stories:true},
+  {h:'Black\u2019s replies',p:`<p>Ranks 5 and 6 are Black's defences: ${T('c5')} Sicilian, ${T('e6')} French, ${T('c6')} Caro-Kann, ${T('f5')} Dutch, ${T('g6')} King's Indian, ${T('a6')} Najdorf.</p>`,b:{persp:'w',coords:true,hl:['c5','e6','c6','f5','g6','a6','d5','e5','f6','d6']},stories:true},
+  {h:'Attack squares',p:`<p>Some squares are where games are won: ${T('h7')} and ${T('h2')} for the Greek Gift, ${T('f7')} and ${T('f2')} the weak f-squares, ${T('h5')} the Scholar's Mate queen, ${T('g5')} the pinning bishop.</p>`,b:{persp:'w',coords:true,hl:['h7','h2','f7','f2','h5','g5']},stories:true}],
+ 'journeys':[
+  {h:'Every piece has a distance',p:`<ul><li><b>Rook:</b> 1 move along a file or rank, otherwise 2.</li><li><b>Bishop:</b> 1 on a diagonal, 2 to any other square of its colour, never to the other colour.</li><li><b>Queen:</b> 1 along any line, otherwise 2.</li><li><b>King:</b> the larger of the file and rank gaps.</li><li><b>Knight:</b> count it out: 3 to a neighbour, 2 to a diagonal neighbour.</li></ul>`},
+  {h:'Plan the route',p:`<p>For a two-move rook trip from ${T('a1')} to ${T('h8')}, stop on ${T('a8')} or ${T('h1')}: the corners of the rectangle the two squares make. For a knight, choose a first jump that gets closer: from ${T('a1')} to ${T('e5')} start with ${T('c2')} or ${T('b3')}.</p>`,b:{persp:'w',coords:true,pieces:{a1:'R'},marks:{h8:'good',a8:'sel',h1:'sel'}}}],
+ 'openings':[
+  {h:'Name, then moves',p:`<p>Each question names a real opening and gives its moves. Play them in your head one at a time, saying each one in full: "pawn to e4, pawn to e5, knight to f3". Knowing the name helps: in the <b>Italian Game</b> White's bishop goes to ${T('c4')}, in the <b>Ruy Lopez</b> to ${T('b5')}.</p>`},
+  {h:'Know the typical setups',p:`<p>After a few lessons you'll recognise the shape each opening leaves: the King's Indian bishop on ${T('g7')}, the London bishop on ${T('f4')}, the French pawns on ${T('e6')} and ${T('d5')}. That shape makes the rest of the game easier to hold.</p>`}],
+ 'famous':[
+  {h:'Games worth knowing by heart',p:`<p>These short games are famous because of one beautiful idea: Légal's queen sacrifice, Réti's double check, Morphy's Opera Game finish. Follow the moves, then answer where the pieces are. In the full-game lessons you're often asked where the mated king stands.</p>`}],
+ 'colors':[
+  {h:'a1 is dark',p:`<p>Every square's colour follows from one fact: ${T('a1')} is dark. Each player has a <b>light square in the right-hand corner</b>: ${T('h1')} for White, ${T('a8')} for Black.</p>`,b:{persp:'w',coords:true,hl:['a1','h1','a8','h8']}},
+  {h:'The number rule',p:`<p>Number the files a=1 … h=8. Add the file number and the rank.</p><ul><li><b>Even</b> total → dark</li><li><b>Odd</b> total → light</li></ul><p>${T('e4')}: 5 + 4 = 9, odd, so light. ${T('c7')}: 3 + 7 = 10, even, so dark.</p>`,b:{persp:'w',coords:true}},
+  {h:'A faster shortcut',p:`<p>On the <b>a, c, e, g</b> files, odd ranks are dark. On the <b>b, d, f, h</b> files, odd ranks are light. So ${T('g3')} is dark and ${T('f3')} is light.</p>`},
+  {h:'Diagonals keep their colour',p:`<p>The long diagonal ${T('a1')}–${T('h8')} is all dark, ${T('h1')}–${T('a8')} is all light. A bishop never leaves its colour. A knight <b>always</b> changes colour. A queen starts on her own colour: White's on light ${T('d1')}, Black's on dark ${T('d8')}.</p>`,b:{persp:'w',coords:true,hl:['a1','b2','c3','d4','e5','f6','g7','h8']}}],
+ 'lines':[
+  {h:'Same diagonal: count both ways',p:`<p>Two squares share a diagonal when the number of files between them equals the number of ranks. ${T('c1')} and ${T('h6')}: 5 files, 5 ranks, so yes.</p>`,b:{persp:'w',coords:true,hl:['c1','d2','e3','f4','g5','h6']}},
+  {h:'Queen = rook + bishop',p:`<p>A rook sees its whole file and rank, always 14 squares on an empty board. A bishop sees 7 to 13 depending on how central it is. A queen adds them: 21 on the edge up to 27 in the centre.</p>`,b:{persp:'w',coords:true,pieces:{d4:'Q'},dots:emptyAtt(si('d4'),'Q').map(sn)}}],
+ 'king':[
+  {h:'King distance',p:`<p>The number of moves a king needs is the <b>larger</b> of the file gap and the rank gap, because a diagonal step closes both at once. ${T('a1')} to ${T('h8')} is 7 moves, the same as ${T('a1')} to ${T('a8')}.</p><p>This is how you count pawn races and king walks in endgames without moving a piece.</p>`,b:{persp:'w',coords:true,pieces:{c2:'K'},dots:emptyAtt(si('c2'),'K').map(sn)}}],
+ 'knight':[
+  {h:'Two and one',p:`<p>A knight moves two squares in one direction and one to the side. From the centre it has <b>8</b> jumps, on an edge 4, in a corner only 2. Tap squares on the board to see each one's jumps.</p>`,b:{persp:'w',coords:true,pieces:{e4:'N'},dots:emptyAtt(si('e4'),'N').map(sn)},explore:'N'},
+  {h:'Colour check',p:`<p>Every knight jump changes the colour of its square. If two squares are the same colour, a knight needs an <b>even</b> number of moves between them, so it can never get there in one.</p>`},
+  {h:'Useful distances',p:`<p>A knight needs <b>3 moves</b> to reach a square right next to it (${T('e4')} to ${T('e5')}) and <b>2 moves</b> for a diagonal neighbour (${T('e4')} to ${T('f5')}). Corners are slower: ${T('a1')} to ${T('b2')} takes 4.</p>`}],
+ 'bishop':[
+  {h:'Half the board',p:`<p>A bishop lives on 32 squares of one colour. Any square of that colour can be reached in at most <b>two</b> moves on an empty board.</p>`},
+  {h:'Find where diagonals cross',p:`<p>To go from ${T('c1')} to ${T('h4')}, trace both diagonals and find the crossing: ${T('g5')}. So the route is c1 → g5 → h4.</p>`,b:{persp:'w',coords:true,pieces:{c1:'B'},marks:{g5:'sel',h4:'good'},dots:['d2','e3','f4','g5','h6','b2','a3']}}],
+ 'together':[
+  {h:'Blockers stop lines',p:`<p>Queens, rooks and bishops stop at the first piece on their line. Walk the line one square at a time in your head and ask "is something here?" Knights and pawns can't be blocked.</p>`},
+  {h:'Scanning for check',p:`<p>From the king, look out along the 4 straight lines (rooks, queens), the 4 diagonals (bishops, queens, and pawns one step away), then the 8 knight squares. Do it in the same order every time.</p>`}],
+ 'memory':[
+  {h:'Group the pieces',p:`<p>Don't memorise pieces one by one. Group them: "kings on g1 and g8, white knight next to its king, black rook on the open file". Say each piece with its square out loud. Use the colour of the square as a second hook.</p>`}],
+ 'sequence':[
+  {h:'Update one picture',p:`<p>Read a move, say it in full ("knight from g1 to f3"), and change only that part of your mental board. Note captures: the piece that was on the square is gone.</p><p>Castling moves two pieces: O-O puts White's king on ${T('g1')} and rook on ${T('f1')}.</p>`},
+  {h:'Check your picture',p:`<p>After each answer you'll see the final position. Compare it with what you imagined and look for the move where the two drifted apart.</p>`}],
+ 'play':[
+  {h:'Start with an empty board',p:`<p>In <b>empty board</b> mode you see coordinates but no pieces. Tap the square a piece is on, then where it goes, or type the move on the keypad (Nf3, exd5, O-O).</p>`},
+  {h:'Then go fully blind',p:`<p>In <b>no board</b> mode you only have the move list. Use <b>Peek</b> when you're lost: it shows the board for 3 seconds and is counted. Turn on <b>Read moves aloud</b> in Progress to hear the computer's moves.</p>`}]
+};
+
+/* ================= app state & render ================= */
+let V={name:'path'},S=null,G=null,timerInt=null,autoNext=null,onSq=null;
+const main=document.getElementById('main');
+function go(v){clearTimers();if(v.name!=='q'&&v.name!=='result')S=null;V=v;render();window.scrollTo(0,0)}
+function clearTimers(){clearInterval(timerInt);timerInt=null;clearTimeout(autoNext);autoNext=null}
+function renderChips(){const d=dueItems().length;document.getElementById('chips').innerHTML=`<span class="chip" title="Day streak">${streak()}d streak</span><span class="chip" title="Stars">★ ${ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0)}</span>`}
+function render(){document.body.classList.toggle('inq',V.name==='q'||V.name==='train');renderChips();onSq=null;const tab={path:'path',stage:'path',tut:'path',q:S&&S.from||'path',result:S&&S.from||'path',practice:'practice',explore:'practice',play:'play',stats:'stats',trainset:V.from==='practice'?'practice':'path',train:TR&&TR.back==='practice'?'practice':'path',trainres:TR&&TR.back==='practice'?'practice':'path'}[V.name];
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
+  ({path:vPath,stage:vStage,tut:vTut,q:vQ,result:vResult,practice:vPractice,explore:vExplore,play:vPlay,stats:vStats,trainset:vTrainSet,train:trRender,trainres:vTrainRes})[V.name]()}
+
+function vPath(){const nx=nextLesson();const stars=ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0);const passed=ALL_LESSONS.filter(l=>starsOf(l.id)).length;const mins=(P.train||[]).reduce((a,x)=>a+x.min,0);
+  let h=`<div class="stack"><div class="hero"><div class="stack" style="gap:6px"><span class="eyebrow">Board vision training</span><h1>See the board with your eyes closed</h1><p class="muted">${STAGES.length} stages and ${ALL_LESSONS.length} timed board drills. Every drill is hands-on and against the clock, so the board goes into your muscle memory. Pass them in order and you'll be playing whole games blindfold.</p></div>
+  <div class="minib">${boardHTML({persp:'w',plain:true,id:'deco',pieces:{e4:'P',f3:'N',c5:'p',d6:'p'}})}</div></div>`;
+  if(nx){h+=`<div class="card stack"><span class="eyebrow">Up next · Stage ${STAGES.indexOf(nx.stage)+1}</span><h2>${esc(nx.title)}</h2><p class="muted">${esc(nx.stage.title)} · ${esc(TRAIN[nx.m].t)} · target ${nx.target} per minute</p>
+   <div class="row">${!P.tuts[nx.stage.id]&&TUT[nx.stage.id]?`<button class="btn" data-act="tut" data-stage="${nx.stage.id}">Read tutorial</button>`:''}<button class="btn primary" style="flex:1" data-act="lesson" data-id="${nx.id}">Start drill</button></div></div>`}
+  else h+=`<div class="card"><h2>Every drill passed</h2><p class="muted">Go for three stars, keep your daily drills going, and play blindfold games.</p></div>`;
+  h+=`<div class="tiles"><div class="tile"><b>${passed}/${ALL_LESSONS.length}</b><small>drills passed</small></div><div class="tile"><b>${stars}</b><small>of ${ALL_LESSONS.length*3} stars</small></div><div class="tile"><b>${mins}</b><small>minutes trained</small></div></div>`;
+  h+=`<div><h3 style="margin-bottom:6px">The path</h3><div class="stagelist">`;
+  STAGES.forEach((st,i)=>{const un=stageUnlocked(i),ls=lessonsOf(st),got=ls.reduce((a,l)=>a+starsOf(l.id),0),max=ls.length*3,ps=ls.filter(l=>starsOf(l.id)).length;
+    h+=`<button class="stagerow${un?'':' locked'}" data-act="stage" data-stage="${st.id}"><span class="num">${i+1}</span><span style="min-width:0"><span class="t">${esc(st.title)}</span><span class="d" style="display:block">${esc(st.blurb)}</span>${st.play?'':`<span class="bar"><i style="width:${max?got/max*100:0}%"></i></span>`}</span><span class="muted mono" style="font-size:13px">${un?(st.play?'▶':ps+'/'+ls.length):'🔒&#xFE0E;'}</span></button>`});
+  h+=`</div></div></div>`;main.innerHTML=h}
+
+function vStage(){const st=STAGES.find(s=>s.id===V.stage),i=STAGES.indexOf(st),un=stageUnlocked(i);const ls=lessonsOf(st),nx=nextLesson();
+  let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="path">← Path</button><span class="eyebrow">Stage ${i+1} of ${STAGES.length}</span><h1>${esc(st.title)}</h1><p class="muted">${esc(st.blurb)}</p>`;
+  if(st.mastery)h+=`<div class="card"><b>Foundation stage.</b> <span class="muted">Every drill here needs 95% right with no peeking, and all of them must be passed before Stage ${i+2} opens.</span></div>`;
+  if(!un)h+=`<div class="card"><b>Locked.</b> <span class="muted">Pass every drill in Stage ${i} to open this stage, or turn on "Unlock all stages" in Progress.</span></div>`;
+  if(TUT[st.id])h+=`<button class="btn block${P.tuts[st.id]?'':' primary'}" data-act="tut" data-stage="${st.id}">${P.tuts[st.id]?'Re-read':'Start with'} the tutorial · ${TUT[st.id].length} step${TUT[st.id].length>1?'s':''}</button>`;
+  if(st.play){h+=`<button class="btn primary block" data-act="tab" data-tab="play">Open blindfold play</button></div>`;main.innerHTML=h;return}
+  h+=`<h3>Timed board drills</h3><div class="lessons">`;
+  for(const l of ls){const u=lessonUnlocked(l),s=starsOf(l.id),b=(P.lessons[l.id]||{}).b;
+    h+=`<button class="lesson${u?'':' locked'}${nx===l?' next':''}" ${u?`data-act="lesson" data-id="${l.id}"`:'disabled'}><span style="min-width:0">${esc(l.title)}<small>${esc(TRAIN[l.m].t)} · target ${l.target} per minute${b?` · best ${fmt1(b)}`:''}</small></span>${u?starStr(s):'<span class="muted">🔒&#xFE0E;</span>'}</button>`}
+  h+=`</div><p class="muted" style="font-size:14px">You choose how many minutes. To pass, reach the target average per minute with ${st.mastery?95:90}% right, no peeking, and let the clock run out. 1.25 times the target earns two stars, 1.5 times earns three.</p></div>`;main.innerHTML=h}
+
+function vTut(){const st=STAGES.find(s=>s.id===V.stage),steps=TUT[st.id],k=V.step||0,s=steps[k];
+  let h=`<div class="stack tut"><div class="qhead"><button class="x" data-act="stage" data-stage="${st.id}" aria-label="Close">✕</button><div class="dots">${steps.map((_,i)=>`<i class="${i===k?'on':''}"></i>`).join('')}</div><span class="count">${k+1}/${steps.length}</span></div>
+  <span class="eyebrow">${esc(st.title)} · tutorial</span><h2>${s.h}</h2>${s.p}`;
+  if(s.b){h+=boardHTML({...s.b,id:'tut'})+`<div class="caption" id="cap">Tap a square</div>`}
+  h+=`<div class="row">${k>0?`<button class="btn" data-act="tutstep" data-step="${k-1}">Back</button>`:''}<button class="btn primary" style="flex:1" data-act="${k<steps.length-1?'tutstep':'tutdone'}" data-step="${k+1}">${k<steps.length-1?'Next':'Start the lessons'}</button></div></div>`;
+  main.innerHTML=h;
+  if(s.b)onSq=(n)=>{const x=si(n);let msg=`${n} · ${light(x)?'light':'dark'} square`;
+    if(s.explore==='N'){const a=emptyAtt(x,'N').map(sn);main.querySelector('.board').outerHTML=boardHTML({...s.b,id:'tut',pieces:{[n]:'N'},dots:a});msg+=` · knight jumps: ${a.join(' ')}`}
+    else{if(s.stories)msg=`${n}: ${STORY[n]}`;main.querySelectorAll('.board .sq.m-sel').forEach(e=>e.classList.remove('m-sel'));const el=main.querySelector(`.board [data-sq="${n}"]`);if(el)el.classList.add('m-sel')}
+    document.getElementById('cap').textContent=msg;speak(n.split('').join(' '))}}
+
+/* ---------- sessions ---------- */
+const ITEM_GEN={story:s=>['storyPick',{sq:s}],start:s=>['startWhat',{sq:s}],col:s=>['colorOf',{sq:s}],nameW:s=>['nameRead',{persp:'w',sq:s}],nameB:s=>['nameRead',{persp:'b',sq:s}],kn:s=>['knightMulti',{persp:'w',coords:true,sq:s}]};
+function startLesson(id){const l=ALL_LESSONS.find(x=>x.id===id);startSession({mode:'lesson',lesson:l,drill:l.drill,params:l.params,tier:l.tier,count:LPQ,title:l.title,from:'path'})}
+function startSession(cfg){clearTimers();S={...cfg,i:0,score:0,results:[],q:null};V={name:'q'};nextQ()}
+function nextQ(){clearTimers();if(S.mode!=='practice'&&S.mode!=='speed'&&S.i>=S.count)return finish();
+  let drill=S.drill,params=S.params;if(S.items){const key=S.items[S.i],[pre,s]=key.split(':');[drill,params]=ITEM_GEN[pre](s)}
+  const sig=q=>q.prompt+'|'+(q.sub||'')+'|'+(q.text||'')+'|'+(q.board?JSON.stringify([q.board.persp,q.board.hl,q.board.pieces,q.board.marks]):'');
+  S.seen=S.seen||new Set();let q;for(let k=0;k<40;k++){q=DR[drill].gen(params,S.tier||1);if(S.items||!S.seen.has(sig(q)))break}S.seen.add(sig(q));if(S.seen.size>60)S.seen=new Set([sig(q)]);q.skill=DR[drill].skill;q.drill=drill;
+  S.q=q;S.answered=false;S.sel=new Set();S.input='';S.resp=null;S.phase=q.memo?'memo':'ask';
+  render();window.scrollTo(0,0);
+  if(S.phase==='memo')startMemo();else startClock()}
+function startClock(){S.t0=Date.now();if(P.set.speakQ&&S.mode!=='speed')speakQ(S.q);const lim=S.mode==='speed'?0:tierTime(S.q.drill,S.tier||1);S.limit=lim;if(!lim&&S.mode!=='speed')return;
+  const t0=Date.now();timerInt=setInterval(()=>{const bar=document.getElementById('tbar');
+    if(S.mode==='speed'){const left=S.endAt-Date.now();if(bar)bar.style.width=Math.max(0,left/600)+'%';const c=document.getElementById('spd');if(c)c.textContent=Math.max(0,Math.ceil(left/1000))+'s';if(left<=0){clearTimers();finish()}return}
+    const left=lim*1000-(Date.now()-t0);if(bar)bar.style.width=Math.max(0,left/(lim*10))+'%';if(left<=0){clearInterval(timerInt);submit(null)}},100)}
+function startMemo(){const t0=Date.now(),secs=S.q.memo.secs;timerInt=setInterval(()=>{const left=secs*1000-(Date.now()-t0);const el=document.getElementById('memot');if(el)el.textContent=Math.max(0,Math.ceil(left/1000))+'s';const bar=document.getElementById('tbar');if(bar)bar.style.width=Math.max(0,left/(secs*10))+'%';if(left<=0)endMemo()},100)}
+function endMemo(){clearTimers();S.phase='ask';render();startClock()}
+function check(q,r){if(r==null)return false;if(q.kind==='choice')return r===q.answer;if(q.kind==='num')return+r===q.answer;if(q.kind==='order')return r===q.answer;if(q.kind==='multi'){return r.size===q.accept.length&&q.accept.every(a=>r.has(a))}return q.accept.includes(r)}
+function submit(r){if(!S||S.answered)return;clearTimers();const q=S.q,ok=check(q,r);S.answered=true;S.resp=r;S.ok=ok;
+  record(q,ok,Date.now()-(S.t0||Date.now()));S.results.push(ok);if(ok)S.score++;S.i++;
+  if(S.mode==='speed'){main.querySelector('.qbox').style.background=ok?'var(--good-soft)':'var(--bad-soft)';setTimeout(()=>{if(S&&S.mode==='speed'&&Date.now()<S.endAt){nextQ()}else if(S)finish()},ok?180:500);return}
+  render();if(ok)autoNext=setTimeout(()=>{if(S&&S.answered)nextQ()},1100)}
+function finish(){clearTimers();const s=S;if(s.mode==='lesson'){const stars=s.score>=10?3:s.lesson.stage.mastery?0:s.score>=9?2:s.score>=8?1:0;const old=P.lessons[s.lesson.id]||{s:0,b:0};P.lessons[s.lesson.id]={s:Math.max(old.s,stars),b:Math.max(old.b,s.score)};s.stars=stars;save()}
+  if(s.mode==='speed'){const k='speed:'+s.speedKey;s.prevBest=P.best[k]||0;if(s.score>s.prevBest){P.best[k]=s.score;save()}}
+  V={name:'result'};render()}
+
+function vQ(){const q=S.q,total=S.mode==='practice'?null:S.count;let h=`<div class="stack qbox speedflash k-${S.answered?'done':S.phase==='memo'?'memo':q.kind}" style="border-radius:var(--r)">`;
+  h+=`<div class="qhead"><button class="x" data-act="quit" aria-label="Stop">✕</button>${S.mode==='speed'?`<div class="prog"><i style="width:100%" id="tbar"></i></div><span class="count"><span id="spd">${Math.max(0,Math.ceil((S.endAt-Date.now())/1000))}s</span> · ${S.score}</span>`:total?`<div class="prog"><i style="width:${(S.i-(S.answered?1:0))/total*100}%"></i></div><span class="count">${Math.min(S.i+(S.answered?0:1),total)}/${total}</span>`:`<div class="prog"><i style="width:0"></i></div><span class="count">${S.score}/${S.results.length}</span>`}</div>`;
+  if(S.mode!=='speed')h+=`<div class="timer"><i id="tbar" style="width:${S.limit||S.phase==='memo'?100:0}%"></i></div>`;
+  if(S.phase==='memo'){h+=`<div class="memo"><div><span class="eyebrow">Memorise this position</span><p class="muted">The pieces will vanish.</p></div><b id="memot">${q.memo.secs}s</b></div>`+boardHTML({persp:'w',coords:true,pieces:q.memo.pieces})+`<button class="btn primary block" data-act="memodone">I've got it</button></div>`;main.innerHTML=h;return}
+  if(q.pre)h+=`<p class="muted">${q.pre}</p>`;if(q.text&&!(S.answered&&q.drill==='sequence'&&false))h+=q.text;
+  h+=`<div class="prompt">${q.prompt}</div>`;if(q.sub)h+=`<div class="muted" style="font-size:14px;margin-top:-6px">${q.sub}</div>`;
+  if(S.answered){const fb=revealBoard(q);
+    h+=`<div class="fb ${S.ok?'ok':'no'}"><h3>${S.ok?'Correct':S.resp==null?'Out of time':'Not quite'}</h3><p>${!S.ok&&q.kind==='choice'?`Answer: <b>${esc(q.answer)}</b>. `:''}${!S.ok&&q.kind==='num'?`Answer: <b>${q.answer}</b>. `:''}${!S.ok&&(q.kind==='sq'||q.kind==='file')?`Answer: ${q.accept.map(T).join(' or ')}. `:''}${!S.ok&&q.kind==='tap'?`Answer: ${q.accept.length>2?'any square shown':q.accept.map(T).join(' or ')}. `:''}${!S.ok&&q.kind==='order'?`You entered <b class="mono">${esc(S.resp||'').split('').join(' ')}</b>. `:''}${q.explain}</p></div>`;
+    h+=`<button class="btn primary block" data-act="next">${S.mode!=='practice'&&S.i>=S.count?'See results':'Next'}</button>`;if(fb)h+=boardHTML(fb);
+    if(S.mode==='practice')h+=`<button class="btn block" data-act="quit">Finish practice</button>`;h+='</div>';main.innerHTML=h;return}
+  if(q.board)h+=boardHTML({...q.board,marks:q.kind==='multi'?Object.fromEntries([...S.sel].map(s=>[s,'sel'])):null});
+  if(q.kind==='choice'){h+=`<div class="choices${q.options.length>2&&q.options.some(o=>o.length>14)?' one':''}">${q.options.map(o=>`<button class="choice${q.swatch?(o==='Light'?' sw-l':' sw-d'):''}" data-act="ans" data-v="${esc(o)}">${esc(o)}</button>`).join('')}</div>`}
+  else if(q.kind==='num'){h+=`<div class="slot">${S.input||'<span class="muted">?</span>'}</div><div class="npad">${[1,2,3,4,5,6,7,8,9,0].map(d=>`<button class="key" data-act="num" data-v="${d}">${d}</button>`).join('')}<button class="key wide" data-act="numdel">Delete</button><button class="key wide go" data-act="numok" style="grid-column:span 3">Check</button></div>`}
+  else if(q.kind==='sq'){h+=sqPad(S.input)}
+  else if(q.kind==='file'){h+=`<div class="pad"><div class="keys">${[...FILES].map(x=>`<button class="key" data-act="ans" data-v="${x}">${x}</button>`).join('')}</div></div>`}
+  else if(q.kind==='order'){h+=orderPad()}
+  else if(q.kind==='multi'){h+=`<button class="btn primary block" data-act="multiok">Check (${S.sel.size} selected)</button>`}
+  if(q.kind==='tap'&&!q.board)h+=sqPad(S.input);
+  h+='</div>';main.innerHTML=h;
+  if(q.kind==='tap'&&q.board)onSq=n=>submit(n);
+  if(q.kind==='multi')onSq=n=>{S.sel.has(n)?S.sel.delete(n):S.sel.add(n);const el=main.querySelector(`[data-sq="${n}"]`);if(el)el.classList.toggle('m-sel');const b=main.querySelector('[data-act="multiok"]');if(b)b.textContent=`Check (${S.sel.size} selected)`}}
+function orderPad(){const q=S.q;return`<div class="pad" id="opad"><div class="slot">${S.input?S.input.split('').join(' '):'<span class="muted">_</span>'}</div><div class="keys">${[...q.alpha].map(x=>`<button class="key${S.input.includes(x)?' on':''}" data-act="ord" data-v="${x}">${x}</button>`).join('')}</div><button class="btn small" data-act="orddel">Delete last</button></div>`}
+function sqPad(inp){const f=inp[0]||'',r=inp[1]||'';return`<div class="pad"><div class="slot">${f||'<span class="muted">_</span>'}${r||'<span class="muted">_</span>'}</div><div class="keys">${[...FILES].map(x=>`<button class="key${x===f?' on':''}" data-act="sqf" data-v="${x}">${x}</button>`).join('')}</div><div class="keys">${[1,2,3,4,5,6,7,8].map(x=>`<button class="key" data-act="sqr" data-v="${x}">${x}</button>`).join('')}</div></div>`}
+function revealBoard(q){if(!q.reveal)return null;const o={...q.reveal,marks:{...(q.reveal.marks||{})}};
+  if(q.kind==='multi'){for(const a of q.accept)o.marks[a]=S.resp&&S.resp.has(a)?'good':'miss';if(S.resp)for(const s of S.resp)if(!q.accept.includes(s))o.marks[s]='bad';o.dots=null}
+  if((q.kind==='tap'||q.kind==='sq')&&S.resp&&!S.ok)o.marks[S.resp]='bad';
+  return o}
+function vResult(){const s=S;let h=`<div class="stack">`;
+  if(s.mode==='speed'){h+=`<span class="eyebrow">Speed run · 60 seconds</span><h1>${esc(s.title)}</h1><div class="big">${s.score}</div><p class="muted">${s.score>s.prevBest?(s.prevBest?`New best, up from ${s.prevBest}.`:'Your first score on this run.'):`Best: ${s.prevBest}.`} ${s.results.length-s.score} wrong.</p>
+    <div class="row"><button class="btn" data-act="tab" data-tab="practice">Done</button><button class="btn primary" style="flex:1" data-act="speed" data-k="${s.speedKey}">Go again</button></div></div>`;main.innerHTML=h;return}
+  const pct=s.results.length?Math.round(s.score/s.results.length*100):0;
+  h+=`<span class="eyebrow">${s.mode==='lesson'?esc(s.lesson.stage.title)+' · '+TIERS[s.tier-1].n:s.mode==='review'?'Review':'Practice'}</span><h1>${esc(s.title)}</h1><div class="row" style="align-items:baseline"><span class="big">${s.score}/${s.results.length}</span>${s.mode==='lesson'?starStr(s.stars):`<span class="muted">${pct}%</span>`}</div><div class="resgrid">${s.results.map(r=>`<i class="${r?'':'no'}"></i>`).join('')}</div>`;
+  if(s.mode==='lesson'){const passed=s.stars>0;const nx=nextLesson();
+    h+=`<p>${passed?(s.stars===3?'Perfect.':'Passed.')+' The next lesson is open.':(s.lesson.stage.mastery?'This is a foundation stage, so you need 10 out of 10 to pass. Go again until it is automatic.':'You need 8 out of 10 to pass. The squares you missed have been added to your reviews.')}</p><div class="row"><button class="btn" data-act="lesson" data-id="${s.lesson.id}">Retry</button>${passed&&nx?`<button class="btn primary" style="flex:1" data-act="lesson" data-id="${nx.id}">Next: ${esc(nx.title)}</button>`:`<button class="btn primary" style="flex:1" data-act="stage" data-stage="${s.lesson.stage.id}">Back to stage</button>`}</div>`}
+  else h+=`<div class="row"><button class="btn primary block" data-act="tab" data-tab="${s.from||'practice'}">Done</button></div>`;
+  main.innerHTML=h+'</div>'}
+
+/* ================= timed board drills (muscle memory) ================= */
+const TRAIN={
+ file:{t:'Name the file',d:'A square lights up. Tap its file letter.',ans:'file'},
+ rank:{t:'Name the rank',d:'A square lights up. Tap its rank number.',ans:'rank'},
+ name:{t:'Name the square',d:'A square lights up. Tap its file letter, then its rank number.',ans:'name'},
+ mirname:{t:'Mirror the square',d:'A square name appears with no board. Tap the name of its mirror square.',ans:'name'},
+ mirtap:{t:'Tap the mirror',d:'A square lights up. Tap its mirror square on the board.',ans:'tap'},
+ colourtap:{t:'Colour by position',d:'The board has no colours. A square lights up: is it light or dark?',ans:'colour'},
+ colourall:{t:'Tap the light or dark squares',d:'The board has no colours. Tap every light or dark square on the named line.',ans:'all'},
+ trace:{t:'Where is it now?',d:'Moves are played in words only. Tap where the named piece stands now, on an empty board.',ans:'tap'},
+ mirror:{t:'Mirror squares',d:'A square lights up. Name it, then name the square in the same spot when the board is turned around.',ans:'name'},
+ namevoice:{t:'Say the square',d:'A square lights up. Say its name out loud, like \u201cf three\u201d. You can also tap the letter and number.',ans:'name'},
+ find:{t:'Find the square',d:'A square name appears. Tap that square on the board.',ans:'tap'},
+ colour:{t:'Light or dark',d:'A square name appears with no board. Tap its colour.',ans:'colour'},
+ start:{t:'What starts here?',d:'A square name appears, with no board to look at. Tap the piece that starts there, or Empty.',ans:'piece'},
+ startsq:{t:'Where does it start?',d:'A piece is named, such as Black\u2019s kingside knight. Tap its starting square: file letter, then rank number.',ans:'name'},
+ start3:{t:'One square, three answers',d:'A square name appears. Tap the piece that starts there, then its colour, then the colour of the square itself.',ans:'piece3'},
+ startline:{t:'Say the whole line',d:'A rank or a file is named. Tap what starts on each of its squares, in order.',ans:'line'},
+ startside:{t:'Think from your side',d:'You sit on White\u2019s or Black\u2019s side. A square is described from where you sit, like your right-hand corner. Tap what starts there.',ans:'piece'},
+ startmoves:{t:'After the first moves',d:'A few opening moves are played, in words only. Tap what stands on the named square now.',ans:'piece'},
+ startvoice:{t:'Answer by voice',d:'The app says a square out loud. Say what starts there, like \u201cblack pawn\u201d or \u201cempty\u201d. You can also tap.',ans:'piece'},
+ lm:{t:'Landmark squares',d:'A landmark is named, such as the four corners or the long diagonal. Tap all of its squares.',ans:'all'},
+ story:{t:'Story squares',d:'A square story appears. Tap that square on the board.',ans:'tap'},
+ N:{t:'Knight jumps',d:'A knight appears. Tap every square it can jump to.',ans:'all',piece:'N'},
+ B:{t:'Bishop lines',d:'A bishop appears on an empty board. Tap every square it can reach.',ans:'all',piece:'B'},
+ R:{t:'Rook lines',d:'A rook appears on an empty board. Tap every square it can reach.',ans:'all',piece:'R'},
+ Q:{t:'Queen lines',d:'A queen appears on an empty board. Tap every square it can reach.',ans:'all',piece:'Q'},
+ K:{t:'King steps',d:'A king appears. Tap every square it can step to.',ans:'all',piece:'K'},
+ route:{t:'Knight routes',d:'Walk the knight to the gold square by the shortest route, one jump at a time.',ans:'route'},
+ att:{t:'Blocked lines',d:'Other pieces stand in the way. Tap every square the white piece attacks or defends.',ans:'all'},
+ memory:{t:'Position memory',d:'Remember the position. When the pieces vanish, tap what stood on each gold square.',ans:'piece',def:{n:5,secs:7}},
+ moves:{t:'Play the moves',d:'A move from a real game appears. Tap the piece, then the square it moves to.',ans:'move',def:{src:'open'}}
+};
+const START_PC=toMap(startState().b);
+const ZONES={centre:{n:'Big centre (c3 to f6)',s:SQS('cdef','3456')},wq:{n:'White\u2019s queenside quarter (a1 to d4)',s:SQS('abcd','1234')},wk:{n:'White\u2019s kingside quarter (e1 to h4)',s:SQS('efgh','1234')},bq:{n:'Black\u2019s queenside quarter (a5 to d8)',s:SQS('abcd','5678')},bk:{n:'Black\u2019s kingside quarter (e5 to h8)',s:SQS('efgh','5678')}};
+const ZONED=['file','rank','name','find','mirror','namevoice','mirname','mirtap','colourtap'];
+const SPEEDED=['file','rank','name','find','colour','mirname','mirtap','colourtap','start','startsq','mirror','story','startside'];
+const rotSq=q=>FILES[7-FILES.indexOf(q[0])]+(9-+q[1]);
+const MIRK={v:'up-down mirror',h:'left-right mirror',r:'turned-around square'};
+const mirSq=(q,k)=>k==='v'?q[0]+(9-+q[1]):k==='h'?FILES[7-FILES.indexOf(q[0])]+q[1]:rotSq(q);
+function parseSquare(t){t=t.toLowerCase().replace(/[.,!?]/g,' ');const m=t.match(/\b([a-h])\s*-?\s*([1-8])\b/);if(m)return m[1]+m[2];
+  const L={a:'a',ay:'a',hey:'a',eh:'a',b:'b',be:'b',bee:'b',c:'c',see:'c',sea:'c',si:'c',d:'d',dee:'d',e:'e',ee:'e',f:'f',ef:'f',eff:'f',g:'g',gee:'g',ji:'g',h:'h',aitch:'h',edge:'h',age:'h'};
+  const N={one:1,won:1,'1':1,two:2,to:2,too:2,'2':2,three:3,tree:3,'3':3,four:4,for:4,fore:4,'4':4,five:5,'5':5,six:6,sex:6,'6':6,seven:7,'7':7,eight:8,ate:8,'8':8};
+  const w=t.split(/\s+/).filter(Boolean);for(let i=0;i<w.length-1;i++){if(L[w[i]]&&N[w[i+1]])return L[w[i]]+N[w[i+1]]}
+  return null}
+function startDesc(q){const f=q[0],r=+q[1],who=r<=2?'White\u2019s':'Black\u2019s';if(r===2||r===7)return`${who} ${f}-pawn`;
+  const side='abcd'.includes(f)?'queenside':'kingside';const t={a:'rook',h:'rook',b:'knight',g:'knight',c:'bishop',f:'bishop',d:'queen',e:'king'}[f];
+  return t==='queen'||t==='king'?`${who} ${t}`:`${who} ${side} ${t}`}
+let TR=null;
+function trBest(m){const L=(P.train||[]).filter(x=>x.m===m);return L.length?Math.max(...L.map(x=>x.c/x.min)):0}
+const fmt1=n=>(Math.round(n*10)/10).toString();
+const trOpts=()=>P.trset||(P.trset={min:2,persp:'w',peek:true,coords:false});
+function trSetup(m,from){trOpts();V={name:'trainset',m,from:from||'practice'};render();window.scrollTo(0,0)}
+function trLesson(id){const l=ALL_LESSONS.find(x=>x.id===id);if(!l)return;trOpts();V={name:'trainset',m:l.m,from:l.stage.id,lesson:l};render();window.scrollTo(0,0)}
+function lessonGoal(l){const mast=l.stage.mastery;return`Pass: <b>${l.target}</b> correct per minute, ${mast?95:90}% right, no peeking.`}
+function vTrainSet(){const m=V.m,t=TRAIN[m],o=trOpts(),l=V.lesson,lp=l?l.params:{};
+  const seg=(k,opts)=>`<div class="seg">${opts.map(([v,lb])=>`<button class="${o[k]===v?'on':''}" data-act="tr-opt" data-k="${k}" data-v="${v}">${lb}</button>`).join('')}</div>`;
+  const L=(P.train||[]).filter(x=>l?x.lid===l.id:x.m===m).slice(-6).reverse();
+  const sideFree=!['colour','start','startsq','start3','startline','startside','startmoves','startvoice','mirname'].includes(m)&&!lp.persp,coordsFree=false;
+  let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tr-back">← Back</button><span class="eyebrow">${l?`Stage ${STAGES.indexOf(l.stage)+1} · ${esc(l.stage.title)}`:'Timed board drill'}</span><h1>${esc(l?l.title:t.t)}</h1><p class="muted">${esc(t.d)} Answer as many as you can before the time runs out. Every minute is recorded.</p>
+  ${l?`<div class="card"><p>${lp.zone?`<b>${esc(ZONES[lp.zone].n)} only.</b> `:''}${lp.speed?`<b>${lp.speed==='auto'?'Time per answer starts at 3 seconds and shrinks to 1 second.':lp.speed+' seconds per answer.'}</b> `:''}${lp.persp==='q'?'<b>The side changes every question.</b> ':''}${lessonGoal(l)} ${starsOf(l.id)?starStr(starsOf(l.id)):''}</p><p class="muted" style="font-size:14px">1.25 times the target earns two stars, 1.5 times earns three. The board has no labels. Use Peek while you learn.</p></div>`:''}
+  <div class="card stack"><div class="setrow"><b>Minutes</b>${seg('min',[[1,'1'],[2,'2'],[3,'3'],[5,'5'],[10,'10']])}</div>
+  ${sideFree?`<div class="setrow"><b>Side</b>${seg('persp',[['w','White'],['b','Black'],['x','Switch each minute'],['q','Every question']])}</div>`:''}
+  ${!l&&ZONED.includes(m)?`<div class="setrow"><b>Part of the board</b>${seg('zone',[['','Whole board'],['centre','Centre'],['wq','White queenside'],['wk','White kingside'],['bq','Black queenside'],['bk','Black kingside']])}</div>`:''}
+  ${!l&&SPEEDED.includes(m)?`<div class="setrow"><b>Time per answer</b>${seg('speed',[[0,'No limit'],[3,'3 s'],[2,'2 s'],[1,'1 s'],['auto','3 s down to 1 s']])}</div>`:''}
+  ${coordsFree?`<div class="setrow"><b>Labels</b>${seg('coords',[[false,'Hidden'],[true,'Always on']])}</div>`:''}
+  ${!['colour','start','startsq','start3','startline','startside','startmoves','startvoice','mirname'].includes(m)?`<div class="setrow"><b>Peek button</b>${seg('peek',[[true,'On'],[false,'Off']])}</div>`:''}</div>
+  <button class="btn primary block" data-act="tr-go">Start · ${o.min} minute${o.min>1?'s':''}</button>
+  <div class="card stack"><h3>Your record</h3><div class="tiles"><div class="tile"><b>${fmt1(l?((P.lessons[l.id]||{}).b||0):trBest(m))}</b><small>best correct per minute</small></div><div class="tile"><b>${L.length?(P.train||[]).filter(x=>l?x.lid===l.id:x.m===m).length:0}</b><small>drills done</small></div><div class="tile"><b>${(P.train||[]).filter(x=>l?x.lid===l.id:x.m===m).reduce((a,x)=>a+x.min,0)}</b><small>minutes trained</small></div></div>
+  ${L.length?trTable(L):'<p class="muted">No drills yet. Start with 1 or 2 minutes.</p>'}</div></div>`;
+  main.innerHTML=h}
+function trTable(L){return`<table class="trt"><tr><th>Date</th><th>Side</th><th>Min</th><th>Per minute</th><th>Avg</th></tr>${L.map(x=>`<tr><td>${new Date(x.d).toLocaleDateString(undefined,{day:'numeric',month:'short'})}</td><td>${x.p==='w'?'White':x.p==='b'?'Black':x.p==='x'?'Both':x.p==='q'?'Mixed':'–'}</td><td>${x.min}</td><td class="mono">${x.pm.join(' ')}</td><td class="mono"><b>${fmt1(x.c/x.min)}</b>${x.ok?' ✓':''}</td></tr>`).join('')}</table>`}
+function trDeck(T){const m=T.m;const _d=trDeck0(T);if(ZONED.includes(m)&&P.miss){const zs=T.o&&T.o.zone&&ZONES[T.o.zone]?ZONES[T.o.zone].s:null;const extra=Object.keys(P.miss).filter(q=>!zs||zs.includes(q)).sort((a,b)=>P.miss[b]-P.miss[a]).slice(0,6);for(const q of extra)_d.splice(rnd(Math.min(10,_d.length)+1),0,q)}return _d}
+function trDeck0(T){const m=T.m;
+  if(m==='start')return shuffle([...Object.keys(START_PC),...shuffle(SQS([...FILES],[3,4,5,6])).slice(0,12)]);
+  if(m==='startsq')return shuffle(Object.keys(START_PC));
+  if(m==='start3'||m==='startvoice')return shuffle([...Object.keys(START_PC),...shuffle(SQS([...FILES],[3,4,5,6])).slice(0,12)]);
+  if(m==='startline')return shuffle([...[1,2,7,8].flatMap(r=>['rw'+r,'rb'+r]),...[...FILES].flatMap(f=>['fw'+f,'fb'+f])]);
+  if(m==='story')return shuffle(Object.keys(STORY));
+  if(m==='lm')return shuffle([...NAMED.map((x,i)=>'n'+i),...Object.keys(LM).map(k=>'g'+k)]);
+  if(T.o&&T.o.zone&&ZONES[T.o.zone]&&ZONED.includes(m))return shuffle(ZONES[T.o.zone].s);
+  return shuffle(ALL.map(sn))}
+function trDraw(T,keyOf){if(!T.deck.length)T.deck=trDeck(T);let i=T.deck.findIndex(x=>keyOf(x)!==T.lastKey&&x!==T.lastItem);if(i<0)i=0;const x=T.deck.splice(i,1)[0];T.lastKey=keyOf(x);T.lastItem=x;return x}
+function trPersp(T){return T.mode2==='x'?(T.minute%2?'b':'w'):T.mode2==='q'?(Math.random()<.5?'w':'b'):T.mode2}
+function trStart(){const o=trOpts(),m=V.m,l=V.lesson,lp=l?l.params:{};const opt={...(TRAIN[m].def||{}),...lp};if(!l){opt.zone=ZONED.includes(m)?(o.zone||''):'';opt.speed=SPEEDED.includes(m)?(o.speed||0):0}
+  const mode2=['colour','start','startsq','start3','startline','startside','startmoves','startvoice','mirname'].includes(m)?'w':(lp.persp||o.persp);const coords=false;
+  const T={m,o:opt,lesson:l||null,back:V.from,min:o.min,mode2,peekOn:o.peek,coords,start:Date.now(),c:0,w:0,pm:Array(o.min).fill(0),wm:Array(o.min).fill(0),peeks:0,minute:0,deck:[],lastKey:null,flash:null,asks:[],auto:3000,missSq:{}};
+  T.end=T.start+o.min*60000;TR=T;V={name:'train'};trNext();
+  timerInt=setInterval(trTick,200)}
+function trTick(){const T=TR;if(!T||V.name!=='train'){clearInterval(timerInt);return}const now=Date.now();if(now>=T.end){trFinish();return}
+  if(T.qLimit&&!T.flash&&T.phase!=='memo'){const el=now-T.qStart;const qb=document.getElementById('qbar');if(qb)qb.style.width=Math.max(0,100-el/T.qLimit*100)+'%';if(el>T.qLimit){trMark(false);trFlash(false,{v:'timeout'});return}}
+  const mi=Math.floor((now-T.start)/60000);if(mi!==T.minute){const was=trPersp(T);T.minute=mi;if(trPersp(T)!==was&&!T.flash){T.asks=[];trNext();return}}
+  if(T.phase==='memo'){const el=document.getElementById('memot');const l=T.memoUntil-now;if(l<=0){T.phase='ask';trNext();return}if(el)el.textContent=Math.ceil(l/1000)+'s'}
+  const left=T.end-now;const el=document.getElementById('trt');if(el)el.textContent=Math.floor(left/60000)+':'+String(Math.floor(left/1000)%60).padStart(2,'0');const bar=document.getElementById('tbar');if(bar)bar.style.width=(left/(T.min*600))+'%';
+  const cm=document.getElementById('trm');if(cm)cm.textContent=T.pm[Math.min(T.minute,T.min-1)]}
+function trNewLine(T){const src=T.o.src||'open';let name,line;
+  if(src==='book'){line=pick(BOOK);name='A real opening line'}else if(src==='famous'){const f=pick(FAMOUS);name=f[0];line=f[2]}else{const f=pick(OPENINGS);name=f[0];line=f[1]}
+  T.lineName=name;T.line=line.split(' ');T.li=0;T.st=startState();T.played=[]}
+function trNext(){const T=TR,m=T.m;T.persp=trPersp(T);T.tgt=null;T.fk=shuffle([...FILES]);T.rk=shuffle([1,2,3,4,5,6,7,8]);T.found=new Set();T.inp='';T.sel=null;T.bad=null;
+  if(m==='file')T.q=trDraw(T,x=>x[0]);else if(m==='rank')T.q=trDraw(T,x=>x[1]);
+  else if(m==='moves'){if(!T.line||T.li>=T.line.length)trNewLine(T);const s=T.line[T.li],mv=findMove(T.st,s);if(!mv){T.line=null;return trNext()}T.q=s;T.mv=mv}
+  else if(m==='memory'){if(T.phase==='ask'&&T.asks.length){T.q=T.asks.shift()}
+    else{const b=randPos(Math.max(0,(T.o.n||5)-2));T.b=b;const occ=shuffle(ALL.filter(s=>b[s]&&b[s].toUpperCase()!=='K').map(sn)),emp=shuffle(ALL.filter(s=>!b[s]).map(sn));T.asks=shuffle([...occ.slice(0,2),Math.random()<.5?emp[0]:(occ[2]||emp[0])]);T.phase='memo';T.memoUntil=Date.now()+(T.o.secs||7)*1000;T.q=null}}
+  else if(m==='route'){const A=trDraw(T,x=>x),a=si(A);const d=kbfs(a).dist;const cand=ALL.filter(s=>d[s]>=2&&d[s]<=4);const B=sn(pick(cand));T.q=A;T.goal=B;T.cur=A;T.path=[A];T.distB=kbfs(si(B)).dist}
+  else if(m==='startline'){const k=trDraw(T,x=>x);T.q=k;const w=k[1]==='w';if(k[0]==='r'){const r=k.slice(2);const fs=w?[...FILES]:[...FILES].reverse();T.lineSqs=fs.map(f=>f+r);T.lineLabel=`Rank ${r}, ${w?'a to h (White\u2019s left to right)':'h to a (Black\u2019s left to right)'}`}else{const f=k.slice(2);const rs=w?[1,2,3,4,5,6,7,8]:[8,7,6,5,4,3,2,1];T.lineSqs=rs.map(r=>f+r);T.lineLabel=`The ${f}-file, ${w?'rank 1 up to rank 8 (from White\u2019s side)':'rank 8 down to rank 1 (from Black\u2019s side)'}`}T.lineIdx=0}
+  else if(m==='namevoice'){T.q=trDraw(T,x=>x);T.heard='';T.voiceMsg=''}
+  else if(m==='mirname'||m==='mirtap'){T.q=trDraw(T,x=>x);T.mk=T.o.kind==='mix'||!T.o.kind?pick(['v','h','r']):T.o.kind;T.tgt=mirSq(T.q,T.mk);if(T.tgt===T.q)return trNext()}
+  else if(m==='colourall'){const isR=Math.random()<.5,k=rnd(8),dark=Math.random()<.5;T.q=(isR?'r':'f')+k+(dark?'d':'l');if(T.q===T.lastItem)return trNext();T.lastItem=T.q;const line=ALL.filter(x=>isR?(x>>3)===k:(x&7)===k);T.targets=line.filter(x=>light(x)!==dark).map(sn);T.lmName=`every ${dark?'dark':'light'} square on ${isR?'rank '+(k+1):'the '+FILES[k]+'-file'}`}
+  else if(m==='trace'){const src=T.o.src||'book';let line;if(src==='famous')line=pick(FAMOUS)[2];else if(src==='open')line=pick(OPENINGS)[1];else line=pick(BOOK);const L=line.split(' ');const plies=Math.min(L.length,4+rnd(9));
+    let st=startState();const orig=Array(64).fill(null);for(let i=0;i<64;i++)if(st.b[i])orig[i]=i;const sans=[];
+    for(const x of L.slice(0,plies)){const mv=findMove(st,x);if(!mv)break;sans.push(san(st,mv,legal(st)));const o=orig[mv.f];orig[mv.f]=null;orig[mv.t]=o;
+      if(mv.p.toUpperCase()==='K'&&Math.abs((mv.t&7)-(mv.f&7))===2){const r=mv.f>>3,ks=(mv.t&7)===6,rf=r*8+(ks?7:0),rt=r*8+(ks?5:3);orig[rt]=orig[rf];orig[rf]=null}
+      if(mv.ep||(mv.p.toUpperCase()==='P'&&(mv.f&7)!==(mv.t&7)&&!st.b[mv.t])){}st=make(st,mv)}
+    const cand=[];for(let i=0;i<64;i++)if(st.b[i]&&orig[i]!=null){const moved=orig[i]!==i;const pc=st.b[i];if(moved||'KQ'.includes(pc.toUpperCase()))cand.push([i,orig[i],pc,moved])}
+    const mv2=cand.filter(c=>c[3]);const c=mv2.length&&Math.random()<.8?pick(mv2):pick(cand);const[cur,o,pc]=c;const who=isW(pc)?'White':'Black';const U=pc.toUpperCase();
+    const desc=U==='K'?`${who}\u2019s king`:U==='Q'&&'d1d8'.includes(sn(o))?`${who}\u2019s queen`:U==='P'?`${who}\u2019s ${sn(o)[0]}-pawn`:`the ${who} ${PNAME[U]} that started on ${sn(o)}`;
+    T.sans=sans;T.traceDesc=desc;T.q=sn(cur);T.tgt=sn(cur)}
+  else if(m==='start3'||m==='startvoice'){T.q=trDraw(T,x=>x);T.step=0;T.heard='';T.voiceMsg=''}
+  else if(m==='startside'){let key;if(T.miss&&T.miss.length&&Math.random()<.4)key=T.miss.shift();else{const pw=pick(['w','b']),row=pick([0,0,0,1,1,2,3,4]),k=rnd(8),fromLeft=Math.random()<.6;key=[pw,row,k,fromLeft?1:0].join('|')}
+    T.sideKey=key;const[pw,row,k,fl]=key.split('|');const rk=+row,kk=+k,isW=pw==='w';
+    const rankFromMe=[1,2,8,7,3][rk];const rank=isW?rankFromMe:9-rankFromMe;const leftFiles=isW?[...FILES]:[...FILES].reverse();const f=(+fl?leftFiles:[...leftFiles].reverse())[kk];T.q=f+rank;
+    const rowName=['your back row (nearest you)','your pawn row','your opponent\u2019s back row (farthest away)','your opponent\u2019s pawn row','the 3rd row from you'][rk];
+    const pos=kk===0&&(rk===0||rk===2)?`the ${+fl?'left':'right'}-hand corner`:`the ${ord(kk+1)} square from your ${+fl?'left':'right'}`;
+    T.sideText=`You are <b>${isW?'White':'Black'}</b>. On ${rowName}, ${pos}: what starts there?`}
+  else if(m==='startmoves'){const plies=2+rnd(5);const line=pick(BOOK).split(' ').slice(0,plies);let st=startState();const sans=[],touched=[];for(const x of line){const mv=findMove(st,x);if(!mv)break;sans.push(san(st,mv,legal(st)));touched.push(sn(mv.f),sn(mv.t));st=make(st,mv)}
+    T.b=st.b;T.sans=sans;const pool=Math.random()<.75?touched:Object.keys(START_PC);let q;for(let i=0;i<10;i++){q=pick(pool);if(q!==T.lastItem)break}T.q=q;T.lastItem=q}
+  else if(m==='lm'){const k=trDraw(T,x=>x);if(k[0]==='n'){const x=NAMED[+k.slice(1)];T.lmName=x[0];T.targets=[x[1]]}else{const g=LM[k.slice(1)];T.lmName=g.n;T.targets=g.s.slice()}T.q=k}
+  else if(m==='att'){const s=trDraw(T,x=>x),p=pick((T.o.pieces||'QRB').split(''));const b=EMPTY();b[si(s)]=p;let k=0;while(k<6){const x=rnd(64);if(b[x])continue;b[x]=pick('PNBRQpnbrq'.split(''));if((b[x]==='P'||b[x]==='p')&&((x>>3)===0||(x>>3)===7)){b[x]=null;continue}k++}
+    T.q=s;T.attP=p;T.b=b;T.targets=pieceAttacks(b,si(s),p).map(sn)}
+  else T.q=trDraw(T,x=>x);
+  if(TRAIN[m].piece){T.targets=emptyAtt(si(T.q),TRAIN[m].piece).map(sn)}
+  if(P.set.speakQ&&m==='find')sayAny(T.q.split('').join(' '));
+  if(m==='mirror')T.step=0;T.qStart=Date.now();T.qLimit=T.o.speed==='auto'?T.auto:(T.o.speed||0)*1000;
+  render();if(m==='startvoice'||m==='namevoice')trVoiceAsk()}
+function trMark(ok){const T=TR,mi=Math.min(Math.floor((Date.now()-T.start)/60000),T.min-1);if(ok){T.c++;T.pm[mi]++}else{T.w++;T.wm[mi]++;if(ZONED.includes(T.m)&&T.q)T.missSq[T.q]=(T.missSq[T.q]||0)+1}
+  const hd=P.hist||(P.hist={}),hk=today(),h=hd[hk]||(hd[hk]={n:0,c:0,ms:0});h.n++;if(ok)h.c++;P.answered++;if(ok)P.correct++;if(!P.days.includes(hk))P.days.push(hk);
+  if(['file','rank','name','find','colour','start'].includes(T.m)){const s=T.q;const x=P.sq[s]||(P.sq[s]={n:0,c:0});x.n++;if(ok)x.c++}}
+function trFlash(ok,extra){const T=TR;T.flash={ok,...extra};if(T.o.speed==='auto')T.auto=ok?Math.max(1000,T.auto-100):Math.min(3000,T.auto+250);if(!ok&&T.lastItem&&T.deck){T.deck.splice(Math.min(2+rnd(3),T.deck.length),0,T.lastItem)}if(!ok&&T.m==='startside')(T.miss||(T.miss=[])).push(T.sideKey);trRender();clearTimeout(autoNext);autoNext=setTimeout(()=>{if(TR!==T||V.name!=='train')return;T.flash=null;trNext()},ok?160:900)}
+function trWrongTap(n){const T=TR;trMark(false);T.bad=n;trRender();setTimeout(()=>{if(TR===T&&T.bad===n){T.bad=null;if(V.name==='train')trRender()}},350)}
+function trAnswer(v){const T=TR;if(!T||T.flash||T.phase==='memo')return;const m=T.m,q=T.q;let ok;
+  if(m==='file')ok=v===q[0];else if(m==='rank')ok=v===q[1];else if(m==='colour'||m==='colourtap')ok=v===(light(si(q))?'Light':'Dark');
+  else if(m==='start'||m==='startside'||m==='startvoice')ok=v===(START_PC[q]||'-');else if(m==='startmoves')ok=v===(T.b[si(q)]||'-');
+  else if(m==='start3'){const pc=START_PC[q]||'-';
+    if(T.step===0){ok=v===pc.toUpperCase();if(ok){trMark(true);T.step=pc==='-'?2:1;trRender();return}}
+    else if(T.step===1){ok=v===(isW(pc)?'White':'Black');if(ok){trMark(true);T.step=2;trRender();return}}
+    else{ok=v===(light(si(q))?'Light':'Dark')}}
+  else if(m==='startline'){const sq=T.lineSqs[T.lineIdx],want=START_PC[sq]||'-';if(v===want){trMark(true);T.lineIdx++;T.badKey=null;if(T.lineIdx>=8){trFlash(true,{});return}trRender()}else{trMark(false);T.badKey=v;trRender()}return}else if(m==='memory')ok=v===(T.b[si(q)]||'-');
+  else if(m==='namevoice'&&v.length===2){ok=v===q}
+  else if(m==='mirname'){if(T.inp.length===0&&/[a-h]/.test(v)){T.inp=v;trRender();return}if(T.inp.length===1&&/[1-8]/.test(v)){ok=T.inp+v===T.tgt}else return}
+  else if(m==='mirror'){if(T.inp.length===0&&/[a-h]/.test(v)){T.inp=v;trRender();return}if(T.inp.length===1&&/[1-8]/.test(v)){v=T.inp+v;const want=T.step===0?q:rotSq(q);ok=v===want;if(ok&&T.step===0){trMark(true);T.step=1;T.inp='';T.qStart=Date.now();trRender();return}}else return}
+  else if(m==='name'||m==='startsq'||m==='namevoice'){if(T.inp.length===0&&/[a-h]/.test(v)){T.inp=v;trRender();return}if(T.inp.length===1&&/[1-8]/.test(v)){v=T.inp+v;ok=v===q}else return}
+  else return;
+  trMark(ok);trFlash(ok,{v})}
+function trTap(n){const T=TR;if(!T||T.flash||T.phase==='memo')return;const m=T.m,a=TRAIN[m].ans;
+  if(a==='tap'){const ok=n===(T.tgt||T.q);trMark(ok);trFlash(ok,{v:n})}
+  else if(a==='all'){if(T.found.has(n))return;if(T.targets.includes(n)){T.found.add(n);trMark(true);if(T.found.size===T.targets.length)trFlash(true,{});else trRender()}else trWrongTap(n)}
+  else if(a==='route'){const cur=si(T.cur),x=si(n);if(emptyAtt(cur,'N').includes(x)&&T.distB[x]===T.distB[cur]-1){trMark(true);T.cur=n;T.path.push(n);if(n===T.goal)trFlash(true,{});else trRender()}else trWrongTap(n)}
+  else if(a==='move'){const mv=T.mv,hide=T.o.hide,own=x=>T.st.b[si(x)]&&isW(T.st.b[si(x)])===T.st.w;
+    if(!T.sel){if(hide||own(n)){T.sel=n;trRender()}return}
+    if(n===T.sel){T.sel=null;trRender();return}
+    if(!hide&&own(n)){T.sel=n;trRender();return}
+    const ok=sn(mv.f)===T.sel&&sn(mv.t)===n;trMark(ok);T.st=make(T.st,mv);T.played.push(T.q);T.li++;trFlash(ok,{f:sn(mv.f),t:sn(mv.t)})}}
+function parseSpoken(t){t=' '+t.toLowerCase()+' ';if(/empty|nothing|none|no piece/.test(t))return'-';const c=/white|right/.test(t)?'w':/black|block|plack/.test(t)?'b':null;
+  const p=/king|kings/.test(t)?'K':/queen/.test(t)?'Q':/rook|rock|brook|ruk/.test(t)?'R':/bishop/.test(t)?'B':/knight|night|horse|nite/.test(t)?'N':/pawn|porn|pond|pon|paun/.test(t)?'P':null;
+  if(!c||!p)return null;return c==='w'?p:p.toLowerCase()}
+function trStopVoice(){const T=TR;if(T&&T.recog){try{T.recog.abort()}catch(e){}T.recog=null}T&&(T.listening=false)}
+function trVoiceAsk(){const T=TR;if(!T||(T.m!=='startvoice'&&T.m!=='namevoice'))return;trStopVoice();const q=T.q;const go=()=>{if(TR===T&&T.q===q&&!T.flash&&V.name==='train')trListen()};if(T.m==='namevoice'){setTimeout(go,150);return}
+  try{const u=new SpeechSynthesisUtterance(q[0]+' '+q[1]);u.rate=1;u.onend=go;u.onerror=go;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){go()}}
+function trListen(){const T=TR;const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R){T.voiceMsg='This browser cannot listen. Tap your answer instead.';trRender();return}
+  try{const r=new R();r.lang='en-US';r.interimResults=false;r.maxAlternatives=4;T.recog=r;T.listening=true;const q=T.q;
+    r.onresult=e=>{if(TR!==T||T.q!==q||T.flash)return;const alts=[...e.results[0]].map(a=>a.transcript);let v=null;const prs=T.m==='namevoice'?parseSquare:parseSpoken;for(const a of alts){v=prs(a);if(v)break}T.listening=false;
+      if(v){T.voiceMsg='Heard: '+alts[0];trAnswer(v)}else{T.voiceMsg=`Heard \u201c${alts[0]}\u201d. ${T.m==='namevoice'?'Say a letter and a number, like f three, or tap.':'Say a colour and a piece, or tap.'}`;trRender();setTimeout(()=>{if(TR===T&&T.q===q&&!T.flash)trListen()},300)}};
+    r.onerror=e=>{T.listening=false;T.voiceMsg=e.error==='not-allowed'||e.error==='service-not-allowed'?'The microphone is blocked. Allow it, or tap your answer.':e.error==='network'?'Voice needs internet on this phone. Tap your answer.':e.error==='no-speech'?'Nothing heard. Tap the square name again or tap your answer.':'';if(TR===T)trRender()};
+    r.onend=()=>{if(TR===T&&T.listening){T.listening=false;trRender()}};r.start();trRender()}catch(e){T.voiceMsg='Voice is not available here. Tap your answer.';trRender()}}
+function trPeek(){const T=TR;if(!T||T.peek)return;T.peek=true;T.peeks++;trRender();setTimeout(()=>{if(TR===T){T.peek=false;if(V.name==='train')trRender()}},1500)}
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+function pieceKeys(){return`<div class="pad"><div class="keys k7">${'KQRBNP'.split('').map(p=>`<button class="key pk" data-act="tr-k" data-v="${p}" aria-label="White ${PNAME[p]}"><span class="pc w">${GLYPH[p]}&#xFE0E;</span></button>`).join('')}<button class="key wide2" data-act="tr-k" data-v="-">Empty</button></div><div class="keys k7">${'kqrbnp'.split('').map(p=>`<button class="key pk" data-act="tr-k" data-v="${p}" aria-label="Black ${PNAME[p.toUpperCase()]}"><span class="pc b">${GLYPH[p.toUpperCase()]}&#xFE0E;</span></button>`).join('')}</div></div>`}
+function trRender(){const T=TR,m=T.m,t=TRAIN[m],a=t.ans,fl=T.flash;const left=Math.max(0,T.end-Date.now());const mi=Math.min(Math.floor((Date.now()-T.start)/60000),T.min-1);
+  const memo=T.phase==='memo'&&m==='memory';
+  let h=`<div class="stack qbox tr${T.qLimit?' ql':''}${m==='trace'?' kt':''} k-${memo?'memo':a}${fl?(fl.ok?' fl-ok':' fl-no'):''}" style="border-radius:var(--r)"><div class="qhead"><button class="x" data-act="tr-quit" aria-label="Stop">✕</button><div class="prog"><i id="tbar" style="width:${left/(T.min*600)}%"></i></div><span class="count"><span id="trt">${Math.floor(left/60000)}:${String(Math.floor(left/1000)%60).padStart(2,'0')}</span></span></div>
+  <div class="trstat"><span>✓ <b>${T.c}</b></span><span>✗ <b>${T.w}</b></span><span>This min <b id="trm">${T.pm[mi]}</b>${T.lesson?`<span class="muted">/${T.lesson.target}</span>`:''}</span>${!['colour','start','startsq','start3','startline','startside','startmoves','startvoice','mirname'].includes(m)?`<span class="sidetag ${T.persp}">You are ${T.persp==='w'?'White':'Black'}</span>`:''}</div>`;
+  let prompt='';
+  if(m==='file')prompt='Which file?';else if(m==='rank')prompt='Which rank?';else if(m==='name')prompt=`Name this square: <span class="mono">${T.inp||'_'}_</span>`;
+  else if(m==='find')prompt=`Tap <b class="mono big2">${T.q}</b>`;else if(m==='mirname')prompt=`The ${MIRK[T.mk]} of <b class="mono big2">${T.q}</b> is <span class="mono">${T.inp||'_'}_</span>`;else if(m==='mirtap')prompt=`Tap the <b>${MIRK[T.mk]}</b> of the gold square`;else if(m==='colourtap')prompt='Light or dark?';else if(m==='colourall')prompt=`Tap ${T.lmName} <span class="muted">(${T.found.size}/${T.targets.length})</span>`;else if(m==='trace')prompt=`<div class="moves" style="font-size:15px">${movesHTML(T.sans)}</div>Where is <b>${esc(T.traceDesc)}</b> now? Tap it.`;else if(m==='mirror')prompt=T.step===0?`Name this square: <span class="mono">${T.inp||'_'}_</span>`:`Board turned around: which square is here? <span class="mono">${T.inp||'_'}_</span>`;else if(m==='namevoice')prompt=`Say this square <span class="mono">${T.inp||'_'}_</span> <button class="btn small" data-act="tr-say">${T.listening?'Listening…':'Listen'}</button>${T.voiceMsg?`<br><span class="muted" style="font-size:14px">${esc(T.voiceMsg)}</span>`:''}`;else if(m==='story')prompt=`Tap: ${esc(STORY[T.q])}`;
+  else if(m==='colour')prompt=`<span class="mono big2">${T.q}</span>`;else if(m==='start')prompt=`What starts on <span class="mono big2">${T.q}</span>?`;else if(m==='start3')prompt=[`What starts on <span class="mono big2">${T.q}</span>?`,`<span class="mono big2">${T.q}</span>: what colour is the ${PNAME[(START_PC[T.q]||'P').toUpperCase()]}?`,`Is the square <span class="mono big2">${T.q}</span> itself light or dark?`][T.step];
+  else if(m==='startline')prompt=`${T.lineLabel}<div class="lineslots">${T.lineSqs.map((sq,i)=>`<span class="ls${i===T.lineIdx?' cur':''}"><small class="mono">${i<T.lineIdx||i===T.lineIdx?sq:'·'}</small>${i<T.lineIdx?(START_PC[sq]?`<span class="pc ${isW(START_PC[sq])?'w':'b'}">${GLYPH[START_PC[sq].toUpperCase()]}&#xFE0E;</span>`:'<i>–</i>'):'<i>&nbsp;</i>'}</span>`).join('')}</div>${T.badKey?'<span class="warn" style="font-size:15px">Not that one. Try again.</span>':''}`;
+  else if(m==='startside')prompt=T.sideText;
+  else if(m==='startmoves')prompt=`<div class="moves" style="font-size:16px">${movesHTML(T.sans)}</div>What stands on <span class="mono big2">${T.q}</span> now?`;
+  else if(m==='startvoice')prompt=`What starts on <span class="mono big2">${T.q}</span>? <span class="muted" style="font-size:15px">Say it or tap it.</span> <button class="btn small" data-act="tr-say">Say again</button><br><span class="muted" style="font-size:14px">${T.voiceMsg?esc(T.voiceMsg):T.listening?'Listening…':''}</span>`;
+  else if(m==='startsq')prompt=`${startDesc(T.q)}<br><span class="muted" style="font-size:15px">starts on</span> <span class="mono big2">${T.inp||'_'}_</span>`;
+  else if(m==='lm')prompt=`Tap ${esc(T.lmName)} <span class="muted">(${T.found.size}/${T.targets.length})</span>`;
+  else if(m==='att')prompt=`White ${PNAME[T.attP]} on <b class="mono">${T.q}</b>: tap every square it attacks or defends <span class="muted">(${T.found.size}/${T.targets.length})</span>`;
+  else if(t.piece)prompt=`${cap(PNAME[t.piece])} on <b class="mono">${T.q}</b>${T.o.hidden?' <span class="muted">(not shown)</span>':''}: tap all ${T.targets.length} squares <span class="muted">(${T.found.size} found)</span>`;
+  else if(m==='route')prompt=`Knight from <b class="mono">${T.q}</b> to <b class="mono">${T.goal}</b> in ${T.distB[si(T.q)]} jumps. Tap each jump.`;
+  else if(m==='memory')prompt=memo?`Remember this position <b class="mono" id="memot">${Math.ceil((T.memoUntil-Date.now())/1000)}s</b>`:'What stood on the gold square?';
+  else if(m==='moves'){const n=Math.floor(T.li/2)+1;const prev=T.played.slice(-4);prompt=`<span class="muted" style="font-size:14px">${esc(T.lineName)}${prev.length?` · …${esc(prev.join(' '))}`:''}</span><br>Play <b class="mono big2">${n}.${T.li%2?'..':''} ${esc(T.q)}</b>${T.o.hide?' <span class="muted" style="font-size:14px">(pieces hidden)</span>':''}`}
+  h+=`<div class="prompt">${prompt}</div>`;if(T.qLimit)h+=`<div class="qlimit"><i id="qbar" style="width:100%"></i></div>`;
+  if(fl&&!fl.ok){let msg='';if(m==='file')msg=`It was the <b>${T.q[0]}</b>-file (${T.q}).`;else if(m==='rank')msg=`It was rank <b>${T.q[1]}</b> (${T.q}).`;else if(m==='name'||m==='namevoice')msg=`It was <b>${T.q}</b>.`;else if(m==='mirname'||m==='mirtap')msg=`The ${MIRK[T.mk]} of ${T.q} is <b>${T.tgt}</b>.`;else if(m==='colourtap')msg=`${T.q} is <b>${light(si(T.q))?'light':'dark'}</b>.`;else if(m==='trace')msg=`It is on <b>${T.tgt}</b>.`;else if(m==='mirror')msg=`This square is <b>${T.q}</b>. Turned around, the same spot is <b>${rotSq(T.q)}</b>. Tip: the files pair up a–h, b–g, c–f, d–e, and the two ranks always add up to 9.`;else if(m==='startsq')msg=`${startDesc(T.q)} starts on <b>${T.q}</b>.`;else if(m==='start3'||m==='startside'||m==='startvoice')msg=START_PC[T.q]?`${plabel(START_PC[T.q])} starts on <b>${T.q}</b>, a ${light(si(T.q))?'light':'dark'} square.`:`<b>${T.q}</b> is empty at the start (a ${light(si(T.q))?'light':'dark'} square).`;else if(m==='startmoves')msg=T.b[si(T.q)]?`It is a ${plabel(T.b[si(T.q)]).toLowerCase()}.`:`${T.q} is empty now.`;else if(m==='colour')msg=`${T.q} is <b>${light(si(T.q))?'light':'dark'}</b>.`;else if(m==='start')msg=START_PC[T.q]?`${plabel(START_PC[T.q])} starts on ${T.q}.`:`${T.q} is empty at the start.`;else if(m==='memory')msg=T.b[si(T.q)]?`It was a ${plabel(T.b[si(T.q)]).toLowerCase()}.`:`${T.q} was empty.`;else if(a==='tap')msg=fl.v==='timeout'?'The answer is marked green.':`That was ${fl.v}. The answer is marked green.`;else if(m==='moves')msg=`The move goes ${fl.f} to ${fl.t}.`;if(fl.v==='timeout')msg='Too slow. '+msg;h+=`<div class="trmsg">${msg}</div>`}
+  if(!['colour','start','startsq','start3','startline','startside','startmoves','startvoice','mirname'].includes(m)){const showC=T.coords||T.peek;const o={persp:T.persp,coords:showC,id:'tr',marks:{},hl:[]};
+    if(['file','rank','name','start','mirror','namevoice'].includes(m))o.hl=[T.q];
+    if(a==='all'){if(t.piece&&!T.o.hidden)o.pieces={[T.q]:t.piece};if(t.piece&&T.o.hidden&&fl)o.pieces={[T.q]:t.piece};if(m==='att'){o.pieces=toMap(T.b);o.from=T.q}for(const s of T.found)o.marks[s]='good';if(T.bad)o.marks[T.bad]='bad';if(fl)for(const s of T.targets)o.marks[s]='good'}
+    if(a==='tap'&&fl){o.marks[T.tgt||T.q]='good';if(!fl.ok&&fl.v!=='timeout')o.marks[fl.v]='bad'}if(m==='mirtap'){o.hl=[T.q]}if(m==='colourtap'){o.plain=true;o.hl=[T.q]}if(m==='colourall')o.plain=true;
+    if(m==='route'){o.pieces={[T.cur]:'N'};o.hl=[T.goal];for(const s of T.path.slice(0,-1))o.marks[s]='good';if(T.bad)o.marks[T.bad]='bad'}
+    if(m==='memory'){if(memo||fl)o.pieces=toMap(T.b);if(!memo)o.hl=[T.q]}
+    if(m==='moves'){if(!T.o.hide||T.peek||fl)o.pieces=toMap(T.st.b);if(T.sel)o.marks[T.sel]='sel';if(fl){o.marks[fl.f]=fl.ok?'good':'miss';o.marks[fl.t]=fl.ok?'good':'miss'}}
+    if(m==='start'&&fl&&START_PC[T.q])o.pieces={[T.q]:START_PC[T.q]};
+    h+=boardHTML(o)}
+  const kc=['name','startsq','mirror','namevoice','mirname'].includes(m)?'keys mix':'keys k4 mix';
+  if(['file','name','startsq','mirror','namevoice','mirname'].includes(m))h+=`<div class="pad"><div class="${kc}">${T.fk.map(x=>`<button class="key${T.inp===x?' on':''}" data-act="tr-k" data-v="${x}">${x}</button>`).join('')}</div>${['name','startsq','mirror','namevoice','mirname'].includes(m)?`<div class="${kc}">${T.rk.map(x=>`<button class="key" data-act="tr-k" data-v="${x}">${x}</button>`).join('')}</div>`:''}</div>`;
+  if(m==='rank')h+=`<div class="pad"><div class="${kc}">${T.rk.map(x=>`<button class="key" data-act="tr-k" data-v="${x}">${x}</button>`).join('')}</div></div>`;
+  if(m==='colour'||m==='colourtap')h+=`<div class="choices"><button class="choice sw-l" data-act="tr-k" data-v="Light">Light</button><button class="choice sw-d" data-act="tr-k" data-v="Dark">Dark</button></div>`;
+  if(['start','startside','startmoves','startvoice','startline'].includes(m)||(m==='memory'&&!memo))h+=pieceKeys();
+  if(m==='start3'){if(T.step===0)h+=`<div class="pad"><div class="keys k7">${'KQRBNP'.split('').map(p=>`<button class="key pk" data-act="tr-k" data-v="${p}" aria-label="${PNAME[p]}"><span class="pc w">${GLYPH[p]}&#xFE0E;</span></button>`).join('')}<button class="key wide2" data-act="tr-k" data-v="-">Empty</button></div></div>`;
+    else if(T.step===1)h+=`<div class="choices"><button class="choice" data-act="tr-k" data-v="White">White</button><button class="choice" data-act="tr-k" data-v="Black">Black</button></div>`;
+    else h+=`<div class="choices"><button class="choice" data-act="tr-k" data-v="Light">Light square</button><button class="choice" data-act="tr-k" data-v="Dark">Dark square</button></div>`}
+  if(memo)h+=`<button class="btn primary block" data-act="tr-ready">I've got it</button>`;
+  else if(T.peekOn&&!T.coords&&!['colour','start','startsq','start3','startline','startside','startmoves','startvoice','mirname'].includes(m))h+=`<button class="btn small block" data-act="tr-peek">${T.peek?'Peeking…':m==='moves'&&T.o.hide?'Peek at the pieces and labels':'Peek at the labels'}${T.peeks?` · used ${T.peeks}`:''}</button>`;
+  main.innerHTML=h+'</div>';onSq=trTap}
+function trFinish(){clearTimers();const T=TR;if(!T)return;trStopVoice();T.flash=null;const done=Math.min(T.min,Math.max(1,Math.ceil((Math.min(Date.now(),T.end)-T.start)/60000)));
+  const rec={m:T.m,p:['colour','start','startsq','start3','startline','startside','startmoves','startvoice','mirname'].includes(T.m)?'-':T.mode2,min:done,c:T.c,w:T.w,pm:T.pm.slice(0,done),wm:T.wm.slice(0,done),pk:T.peeks,d:Date.now(),full:Date.now()>=T.end-300};
+  const avg=rec.c/rec.min,acc=rec.c+rec.w?rec.c/(rec.c+rec.w):0;{const mm=P.miss||(P.miss={});for(const[q,n] of Object.entries(T.missSq||{}))mm[q]=(mm[q]||0)+n}T.prevBest=T.lesson?((P.lessons[T.lesson.id]||{}).b||0):trBest(T.m);
+  if(T.lesson){const l=T.lesson,need=l.stage.mastery?.95:.9;rec.lid=l.id;const okBase=rec.full&&!rec.pk&&acc>=need;const st=!okBase?0:avg>=l.target*1.5?3:avg>=l.target*1.25?2:avg>=l.target?1:0;rec.ok=st>0;T.stars=st;
+    const old=P.lessons[l.id]||{s:0,b:0};P.lessons[l.id]={s:Math.max(old.s||0,st),b:Math.max(old.b||0,avg)}}
+  if(T.c+T.w>0){(P.train||(P.train=[])).push(rec);if(P.train.length>400)P.train.splice(0,P.train.length-400)}save();T.rec=rec;V={name:'trainres'};render();window.scrollTo(0,0)}
+function vTrainRes(){const T=TR,r=T.rec,t=TRAIN[T.m],l=T.lesson;const avg=r.c/r.min,acc=r.c+r.w?Math.round(r.c/(r.c+r.w)*100):0;const mx=Math.max(1,...r.pm);
+  const L=(P.train||[]).filter(x=>l?x.lid===l.id:x.m===T.m).slice(-8).reverse();
+  let verdict='';if(l){const need=l.stage.mastery?95:90;const nx=nextLesson();
+    if(T.stars)verdict=`<div class="fb ok"><h3>Passed ${starStr(T.stars)}</h3><p>${fmt1(avg)} correct per minute against a target of ${l.target}.${nx&&nx!==l?' The next drill is open.':''}</p></div>`;
+    else{const why=[];if(!r.full)why.push('you stopped before the time ran out');if(r.pk)why.push(`you peeked ${r.pk} time${r.pk>1?'s':''}`);if(acc<need)why.push(`${acc}% right, you need ${need}%`);if(avg<l.target)why.push(`${fmt1(avg)} per minute, you need ${l.target}`);verdict=`<div class="fb no"><h3>Not passed yet</h3><p>${cap(why.join('; '))}. Keep going: speed comes with repetition.</p></div>`}}
+  let h=`<div class="stack"><span class="eyebrow">Timed board drill · ${r.min} minute${r.min>1?'s':''}${r.full?'':' (stopped early)'}</span><h1>${esc(l?l.title:t.t)}</h1>
+  <div class="row" style="align-items:baseline"><span class="big">${r.c}</span><span class="muted">correct · ${r.w} wrong · ${acc}% right</span></div>${verdict}
+  <p>${avg>T.prevBest&&T.prevBest?`New best: <b>${fmt1(avg)}</b> correct per minute, up from ${fmt1(T.prevBest)}.`:!T.prevBest?`Your first record: <b>${fmt1(avg)}</b> correct per minute.`:`<b>${fmt1(avg)}</b> correct per minute. Your best is ${fmt1(T.prevBest)}.`}</p>
+  <div class="card stack"><h3>Minute by minute</h3><div class="mbars">${r.pm.map((n,i)=>`<div class="mb"><span class="mono">${n}</span><i style="height:${n/mx*90}px"></i>${r.wm[i]?`<small class="warn">✗${r.wm[i]}</small>`:'<small>&nbsp;</small>'}<small>min ${i+1}</small></div>`).join('')}</div></div>`;
+  const ms=Object.entries(T.missSq||{});if(ms.length){const heat={};const mx2=Math.max(...ms.map(x=>x[1]));for(const sq of ALL.map(sn))heat[sq]=T.missSq[sq]?`color-mix(in srgb, var(--bad) ${40+Math.round(T.missSq[sq]/mx2*60)}%, var(--surface2))`:'var(--surface2)';
+    h+=`<div class="card stack"><h3>Squares you missed</h3><p class="muted" style="font-size:14px">The redder the square, the more often you missed it. These come back more often next time.</p><div class="heat">${boardHTML({persp:T.mode2==='b'?'b':'w',heat,heatLab:true,id:'miss'})}</div><p class="mono" style="font-size:14px">${ms.sort((a,b)=>b[1]-a[1]).map(([q,n])=>q+(n>1?' ×'+n:'')).join(' · ')}</p></div>`}
+  const nx=l&&T.stars?nextLesson():null;
+  h+=`<div class="row"><button class="btn" data-act="tr-back">Done</button>${nx&&nx!==l?`<button class="btn" data-act="tr-again">Again</button><button class="btn primary" style="flex:1" data-act="lesson" data-id="${nx.id}">Next drill</button>`:`<button class="btn primary" style="flex:1" data-act="tr-again">Go again</button>`}</div>
+  <div class="card stack"><h3>Recent drills</h3>${trTable(L)}</div></div>`;
+  main.innerHTML=h}
+function trainStatsCard(){const L=P.train||[];if(!L.length)return`<div class="card"><h3>Timed board drills</h3><p class="muted">No drills yet.</p></div>`;const ms=Object.keys(TRAIN).filter(m=>L.some(x=>x.m===m));
+  return`<div class="card stack"><h3>Timed board drills</h3>${ms.map(m=>{const l=L.filter(x=>x.m===m),last=l[l.length-1];return`<div class="gstat"><span>${esc(TRAIN[m].t)}<br><small class="muted" style="font-weight:400">${l.length} drills · ${l.reduce((a,x)=>a+x.min,0)} min · last ${fmt1(last.c/last.min)}/min</small></span><span class="mono">best ${fmt1(trBest(m))}</span></div>`}).join('')}</div>`}
+
+/* ---------- practice ---------- */
+const SPEED={colour:{t:'Square colours',d:'colorOf',p:{}},namesW:{t:'Find squares as White',d:'nameTap',p:{persp:'w',coords:false}},namesB:{t:'Find squares as Black',d:'nameTap',p:{persp:'b',coords:false}},knight:{t:'Knight: one jump?',d:'knightCan',p:{}}};
+const SKILLS={stories:'Square stories',journeys:'Piece journeys',openings:'Openings',famous:'Famous games',landmarks:'Landmarks',files:'Files & ranks',start:'Starting squares',names:'Square names',colours:'Square colours',geometry:'Lines & diagonals',king:'King',knight:'Knight',bishop:'Bishop',attack:'Pieces together',memory:'Position memory',sequence:'Moves in your head'};
+function vPractice(){
+  let h=`<div class="stack"><span class="eyebrow">Free training</span><h1>Practice</h1><p class="muted">Every timed drill, open any time with your own settings. Choose the minutes, the side and the labels; every minute is recorded.</p>
+  <div class="grid2">${Object.entries(TRAIN).map(([k,v])=>`<button class="drill" data-act="tr" data-m="${k}" data-from="practice"><b>${esc(v.t)}</b><small>Best: ${fmt1(trBest(k))} per minute</small></button>`).join('')}</div>
+  <button class="btn block" data-act="explore">Open the board explorer</button></div>`;
+  main.innerHTML=h}
+function startReview(){let items=dueItems();if(!items.length)items=Object.entries(P.srs).sort((a,b)=>a[1].b-b[1].b||a[1].d-b[1].d).map(e=>e[0]);items=items.slice(0,LPQ);if(!items.length)return;startSession({mode:'review',items:shuffle(items),count:items.length,tier:1,title:'Weak squares',from:'practice'})}
+function vExplore(){const o=V.o||(V.o={persp:'w',coords:true,piece:'N',sel:'e4'});const x=si(o.sel);const att=o.piece?emptyAtt(x,o.piece).map(sn):[];
+  let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="practice">← Practice</button><h1>Board explorer</h1><p class="muted">Tap any square to see its name, colour and where a piece on it could move.</p>
+  <div class="row"><div class="seg">${['w','b'].map(p=>`<button class="${o.persp===p?'on':''}" data-act="ex" data-k="persp" data-v="${p}">${p==='w'?'White':'Black'} side</button>`).join('')}</div>
+  <div class="seg"><button class="${o.coords?'on':''}" data-act="ex" data-k="coords" data-v="1">Coords</button><button class="${!o.coords?'on':''}" data-act="ex" data-k="coords" data-v="">None</button></div></div>
+  <div class="seg">${['N','B','R','Q','K',''].map(p=>`<button class="${o.piece===p?'on':''}" data-act="ex" data-k="piece" data-v="${p}">${p?PNAME[p]:'no piece'}</button>`).join('')}</div>
+  ${boardHTML({persp:o.persp,coords:o.coords,pieces:o.piece?{[o.sel]:o.piece}:{},hl:o.piece?[]:[o.sel],dots:att})}
+  <div class="card"><div class="gstat"><span class="mono" style="font-size:28px">${o.sel}</span><span>${light(x)?'Light':'Dark'} square</span></div><p style="margin-top:6px"><b>Story:</b> ${esc(STORY[o.sel])}</p>${o.piece?`<p class="muted" style="margin-top:6px">A ${PNAME[o.piece]} here reaches ${att.length} squares: <span class="mono">${att.sort().join(' ')}</span></p>`:''}</div></div>`;
+  main.innerHTML=h;onSq=n=>{o.sel=n;vExplore();speak(n.split('').join(' '))}}
+
+/* ---------- blindfold play ---------- */
+function vPlay(){if(!G||V.setup){const o=V.po||(V.po={color:'w',level:1,vis:'ghost'});
+  main.innerHTML=`<div class="stack"><span class="eyebrow">Final stage</span><h1>Blindfold play</h1><p class="muted">Play the computer without seeing the pieces. Record: ${P.games.w} won, ${P.games.d} drawn, ${P.games.l} lost.</p>
+  <div class="card stack"><div><span class="eyebrow">You play</span><div class="seg">${[['w','White'],['b','Black'],['r','Random']].map(([k,t])=>`<button class="${o.color===k?'on':''}" data-act="po" data-k="color" data-v="${k}">${t}</button>`).join('')}</div></div>
+  <div><span class="eyebrow">What you see</span><div class="seg">${[['full','Full board'],['ghost','Empty board'],['blind','No board']].map(([k,t])=>`<button class="${o.vis===k?'on':''}" data-act="po" data-k="vis" data-v="${k}">${t}</button>`).join('')}</div>
+  <p class="muted" style="font-size:14px;margin-top:6px">${{full:'Warm-up: pieces visible, moves by keypad or tapping.',ghost:'Coordinates only. You must remember where every piece is.',blind:'Just the move list. True blindfold chess.'}[o.vis]}</p></div>
+  <div><span class="eyebrow">Computer</span><div class="seg">${[[1,'Beginner'],[2,'Club'],[3,'Strong']].map(([k,t])=>`<button class="${o.level===k?'on':''}" data-act="po" data-k="level" data-v="${k}">${t}</button>`).join('')}</div></div>
+  <button class="btn primary block" data-act="newgame">Start game</button>${G&&!G.over?`<button class="btn block" data-act="resume">Back to current game</button>`:''}</div>
+  ${TUT.play?`<button class="btn block" data-act="tut" data-stage="play">How blindfold play works</button>`:''}</div>`;return}
+  const g=G,myTurn=g.st.w===(g.human==='w')&&!g.over;const last=g.sans[g.sans.length-1];
+  let h=`<div class="stack"><div class="gstat"><span>You: ${g.human==='w'?'White':'Black'} · ${['Beginner','Club','Strong'][g.level-1]}</span><span class="muted">Peeks ${g.peeks}</span></div>`;
+  h+=`<div class="lastmove">${last?`<span class="muted" style="font-size:16px">${g.sans.length%2?'White':'Black'} played</span><br>${esc(last)}`:'<span class="muted" style="font-size:18px">Game starts</span>'}</div>`;
+  if(g.over)h+=`<div class="fb ${g.over.r==='w'?'ok':'no'}"><h3>${g.over.msg}</h3><p>${g.sans.length} half-moves, ${g.peeks} peeks.</p></div>`;
+  else h+=`<p class="${g.msgBad?'warn':'muted'}" style="text-align:center;min-height:22px">${g.thinking?'Computer is thinking…':g.msg||(myTurn?'Your move':'')}</p>`;
+  const showPieces=g.vis==='full'||g.peek||g.over;
+  if(g.vis!=='blind'||g.peek||g.over)h+=boardHTML({cls:'playb',persp:g.human,coords:true,pieces:showPieces?toMap(g.st.b):{},from:g.sel,marks:g.lastMv?{[sn(g.lastMv.f)]:'sel',[sn(g.lastMv.t)]:'sel'}:null});
+  if(!g.over){h+=`<div class="slot">${esc(g.input)||'<span class="muted">type a move</span>'}</div><div class="pad ipad">
+   <div class="npad">${['K','Q','R','B','N'].map(p=>`<button class="key" data-act="gk" data-v="${p}">${p}</button>`).join('')}</div>
+   <div class="keys">${[...FILES].map(x=>`<button class="key" data-act="gk" data-v="${x}">${x}</button>`).join('')}</div>
+   <div class="keys">${[1,2,3,4,5,6,7,8].map(x=>`<button class="key" data-act="gk" data-v="${x}">${x}</button>`).join('')}</div>
+   <div class="npad"><button class="key" data-act="gk" data-v="x">x</button><button class="key" data-act="gk" data-v="=">=</button><button class="key" data-act="gk" data-v="O-O">O-O</button><button class="key" data-act="gk" data-v="O-O-O" style="font-size:13px">O-O-O</button><button class="key" data-act="gdel">⌫</button></div>
+   <div class="row"><button class="btn" data-act="peek" ${g.peek?'disabled':''}>Peek 3s</button><button class="btn primary" style="flex:1" data-act="gmove" ${myTurn?'':'disabled'}>Play move</button></div></div>`}
+  h+=`<div class="gamemoves">${g.sans.length?movesHTML(g.sans):'<span class="muted">No moves yet</span>'}</div>
+  <div class="row">${g.over?`<button class="btn primary" style="flex:1" data-act="setup">New game</button>`:`<button class="btn" data-act="setup">New game</button><button class="btn" data-act="resign">${g.confirmResign?'Tap again to resign':'Resign'}</button>`}</div></div>`;
+  main.innerHTML=h;
+  if(myTurn&&g.vis!=='blind')onSq=n=>{if(!g.sel){g.sel=n;g.msg=`From ${n}…`;g.msgBad=false;vPlay();return}if(g.sel===n){g.sel=null;g.msg='';vPlay();return}tryMove(g.sel+n);}}
+function newGame(){const o=V.po;const human=o.color==='r'?pick(['w','b']):o.color;G={st:startState(),human,level:o.level,vis:o.vis,sans:[],input:'',sel:null,peek:false,peeks:0,over:null,msg:'',lastMv:null};V={name:'play'};render();if(human==='b')engineTurn()}
+function tryMove(inp){const g=G;const m=findMove(g.st,inp);g.sel=null;
+  if(!m){g.msg=`${inp} isn't a legal move here. Picture the board again.`;g.msgBad=true;g.input='';vPlay();return}
+  playMove(m);if(!g.over)engineTurn()}
+function playMove(m){const g=G;const s=san(g.st,m,legal(g.st));g.sans.push(s);g.st=make(g.st,m);g.lastMv=g.vis==='full'?m:null;g.input='';g.msg='';g.msgBad=false;checkEnd();return s}
+function checkEnd(){const g=G,ms=legal(g.st);let over=null;const humanW=g.human==='w';
+  if(!ms.length){if(inCheck(g.st)){const winW=!g.st.w;over={r:winW===humanW?'w':'l',msg:winW===humanW?'Checkmate. You win!':'Checkmate. The computer wins.'}}else over={r:'d',msg:'Stalemate. Draw.'}}
+  else if(g.st.hm>=100)over={r:'d',msg:'Draw by the 50-move rule.'};
+  else{const rest=g.st.b.filter(p=>p&&p.toUpperCase()!=='K');if(!rest.length||(rest.length===1&&'NB'.includes(rest[0].toUpperCase())))over={r:'d',msg:'Draw: not enough material to mate.'}}
+  if(over){g.over=over;P.games[over.r]++;save()}}
+function engineTurn(){const g=G;g.thinking=true;vPlay();setTimeout(()=>{if(G!==g)return;const m=engineMove(g.st,g.level);g.thinking=false;if(m){const s=playMove(m);speak(sanWords(s))}if(V.name==='play')vPlay()},60)}
+function sanWords(s){if(s.startsWith('O-O-O'))return'castles queenside'+(s.includes('+')?', check':'');if(s.startsWith('O-O'))return'castles kingside'+(s.includes('+')?', check':'');
+  let w=s.replace(/([KQRBN])/,m=>PNAME[m]+' ').replace('x',' takes ').replace(/=([QRBN])/,(a,p)=>' promotes to '+PNAME[p]).replace('+',', check').replace('#',', checkmate');w=w.replace(/([a-h])([1-8])/g,'$1 $2');return w}
+function speakQ(q){const plain=h=>h.replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/\s+/g,' ').trim();let t='';
+  if(q.text&&q.text.includes('class="moves"')){const ms=(q.text.match(/[KQRBNO][^&<\s]*|[a-h][x1-8][^&<\s]*/g)||[]).filter(x=>!/^\d/.test(x));t+=ms.map(sanWords).join(', ')+'. '}
+  else if(q.text)t+=plain(q.text).replace(/([KQRBNP])([a-h])([1-8])/g,(a,p,f,r)=>PNAME[p]+' '+f+' '+r)+'. ';
+  t+=plain(q.prompt).replace(/\b([a-h])([1-8])\b/g,'$1 $2');if(q.kind==='choice'&&q.options.length<=4&&q.options.every(o=>o.length<30))t+='. '+q.options.join(', or ');sayAny(t)}
+function sayAny(t){try{const u=new SpeechSynthesisUtterance(t);u.rate=.95;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+let voices=null;function speak(t){if(!P.set.speak)return;try{const u=new SpeechSynthesisUtterance(t);u.rate=.95;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+
+/* ---------- stats ---------- */
+function historyCard(){const hd=P.hist||{};const days=[];const d=new Date();d.setDate(d.getDate()-13);
+  for(let i=0;i<14;i++){const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');days.push([k,hd[k]||{n:0,c:0,ms:0},d.getDate(),d.toLocaleDateString(undefined,{weekday:'narrow'})]);d.setDate(d.getDate()+1)}
+  const max=Math.max(10,...days.map(x=>x[1].n));const W=320,H=120,pad=22,bw=(W-pad)/14;
+  let bars='',line='',dots='';days.forEach(([k,h,dn,wd],i)=>{const x=pad+i*bw;const bh=h.n/max*(H-30);bars+=`<rect x="${x+3}" y="${H-18-bh}" width="${bw-6}" height="${bh}" rx="2" class="cbar"><title>${k}: ${h.n} exercises</title></rect><text x="${x+bw/2}" y="${H-5}" class="clab" text-anchor="middle">${dn}</text>`;
+    if(h.n){const acc=h.c/h.n,y=8+(1-acc)*(H-40);dots+=`<circle cx="${x+bw/2}" cy="${y}" r="3.5" class="cdot"><title>${k}: ${Math.round(acc*100)}% correct</title></circle>`;line+=(line?' L':'M')+`${x+bw/2} ${y}`}});
+  const recent=days.slice(-7).reduce((a,x)=>({n:a.n+x[1].n,c:a.c+x[1].c,ms:a.ms+x[1].ms}),{n:0,c:0,ms:0}),prev=days.slice(0,7).reduce((a,x)=>({n:a.n+x[1].n,c:a.c+x[1].c,ms:a.ms+x[1].ms}),{n:0,c:0,ms:0});
+  const pct=x=>x.n?Math.round(x.c/x.n*100)+'%':'–',sec=x=>x.n?(x.ms/x.n/1000).toFixed(1)+'s':'–';
+  return`<div class="card stack"><h3>Last 14 days</h3><p class="muted" style="font-size:14px">Bars: exercises per day. Dots: share answered correctly (top = 100%).</p>
+  <div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:520px;display:block" role="img" aria-label="Exercises and accuracy over the last 14 days"><line x1="${pad}" x2="${W}" y1="8" y2="8" class="cgrid"/><line x1="${pad}" x2="${W}" y1="${8+(H-40)/2}" y2="${8+(H-40)/2}" class="cgrid"/><text x="0" y="11" class="clab">100%</text><text x="0" y="${11+(H-40)/2}" class="clab">50%</text>${bars}<path d="${line}" class="cline"/>${dots}</svg></div>
+  <div class="tiles"><div class="tile"><b>${recent.n}</b><small>this week (last: ${prev.n})</small></div><div class="tile"><b>${pct(recent)}</b><small>correct (last: ${pct(prev)})</small></div><div class="tile"><b>${sec(recent)}</b><small>per answer (last: ${sec(prev)})</small></div></div></div>`}
+function vStats(){const stars=ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0),passed=ALL_LESSONS.filter(l=>starsOf(l.id)).length;
+  let h=`<div class="stack"><span class="eyebrow">Your training</span><h1>Progress</h1>
+  <div class="tiles"><div class="tile"><b>${P.answered.toLocaleString()}</b><small>exercises done</small></div><div class="tile"><b>${streak()}</b><small>day streak</small></div><div class="tile"><b>${passed}/${ALL_LESSONS.length}</b><small>drills passed</small></div></div>
+  ${historyCard()}
+  ${trainStatsCard()}
+  <div class="card stack"><h3>Square map</h3><p class="muted" style="font-size:14px">Accuracy on each square across the file, rank, name, colour and starting-square drills. Red squares need work; grey ones you haven't met yet.</p>`;
+  const heat={};for(const s of ALL.map(sn)){const x=P.sq[s];heat[s]=x&&x.n?`color-mix(in srgb, var(--good) ${Math.round(x.c/x.n*100)}%, var(--bad))`:'var(--surface2)'}
+  h+=`<div class="heat">${boardHTML({persp:V.hp||'w',heat,heatLab:true,id:'heat'})}</div><div class="row" style="justify-content:space-between"><div class="seg">${['w','b'].map(p=>`<button class="${(V.hp||'w')===p?'on':''}" data-act="hp" data-v="${p}">${p==='w'?'White':'Black'} side</button>`).join('')}</div><span class="muted" style="font-size:13px">${Object.keys(P.srs).length} items in review</span></div></div>
+  <div class="card stack"><h3>Blindfold play</h3><div class="gstat"><span>Blindfold games</span><span class="mono">${P.games.w}W ${P.games.d}D ${P.games.l}L</span></div></div>
+  <div class="card"><h3>Settings</h3>
+   <label class="toggle"><span>Unlock all stages<br><small class="muted">Skip ahead without passing earlier lessons</small></span><input type="checkbox" class="sw" id="set-unlock" ${P.set.unlockAll?'checked':''}></label>
+   <label class="toggle"><span>Read questions aloud<br><small class="muted">Each question and its moves are spoken, so you can train with eyes closed</small></span><input type="checkbox" class="sw" id="set-speakq" ${P.set.speakQ?'checked':''}></label>
+   <label class="toggle"><span>Read moves aloud<br><small class="muted">Hear the computer's moves and square names</small></span><input type="checkbox" class="sw" id="set-speak" ${P.set.speak?'checked':''}></label>
+   <div class="toggle" style="border:0"><span class="muted" style="font-size:14px">${cloud?'Progress is saved to your account and follows you between devices.':'Progress is saved in this browser.'}</span></div>
+   <button class="btn block" data-act="reset">${V.confirmReset?'Tap again to erase all progress':'Reset progress'}</button></div></div>`;
+  main.innerHTML=h;
+  document.getElementById('set-unlock').onchange=e=>{P.set.unlockAll=e.target.checked;save()};
+  document.getElementById('set-speakq').onchange=e=>{P.set.speakQ=e.target.checked;save();if(e.target.checked)sayAny('Questions will be read aloud.')};
+  document.getElementById('set-speak').onchange=e=>{P.set.speak=e.target.checked;save();if(e.target.checked)speak('e 4')}}
+
+/* ================= events ================= */
+document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-sq]');if(sqEl&&onSq){onSq(sqEl.dataset.sq);return}
+  const b=e.target.closest('[data-act],[data-tab]');if(!b||b.disabled)return;const a=b.dataset.act,d=b.dataset;
+  if(!a&&d.tab){if(d.tab==='play')V.setup=false;S=null;go({name:d.tab});return}
+  switch(a){
+   case'tab':go({name:d.tab});break;
+   case'stage':go({name:'stage',stage:d.stage});break;
+   case'tut':go({name:'tut',stage:d.stage,step:0});break;
+   case'tutstep':V.step=+d.step;render();window.scrollTo(0,0);break;
+   case'tutdone':P.tuts[V.stage]=1;save();if(V.stage==='play')go({name:'play'});else{const l=lessonsOf(STAGES.find(s=>s.id===V.stage)).find(l=>lessonUnlocked(l)&&!starsOf(l.id));l?trLesson(l.id):go({name:'stage',stage:V.stage})}break;
+   case'lesson':clearTimers();trLesson(d.id);break;
+   case'review':startReview();break;
+   case'endless':{const st=STAGES.find(s=>s.id===d.st),dr=st.drills[+d.i];startSession({mode:'practice',drill:dr[0],params:dr[1],tier:1,count:Infinity,title:dr[2],from:'practice'});break}
+   case'speed':{const sp=SPEED[d.k];startSession({mode:'speed',speedKey:d.k,drill:sp.d,params:sp.p,tier:1,count:Infinity,title:sp.t,from:'practice',endAt:Date.now()+60000});break}
+   case'quit':if(S&&S.mode==='practice'&&S.results.length){clearTimers();V={name:'result'};render()}else{const f=S&&S.mode==='lesson'?{name:'stage',stage:S.lesson.stage.id}:{name:S&&S.from||'path'};S=null;go(f)}break;
+   case'memodone':endMemo();break;
+   case'ans':submit(d.v);break;
+   case'num':if(S.input.length<2){S.input+=d.v;main.querySelector('.slot').textContent=S.input}break;
+   case'numdel':S.input=S.input.slice(0,-1);main.querySelector('.slot').innerHTML=S.input||'<span class="muted">?</span>';break;
+   case'numok':if(S.input)submit(S.input);break;
+   case'sqf':S.input=d.v;if(S.q.kind==='sq'||S.q.kind==='tap'){main.querySelector('.pad').outerHTML=sqPad(S.input)}break;
+   case'sqr':if(S.input.length>=1){submit(S.input[0]+d.v)}break;
+   case'ord':if(!S.input.includes(d.v)){S.input+=d.v;if(S.input.length>=8)submit(S.input);else document.getElementById('opad').outerHTML=orderPad()}break;
+   case'orddel':S.input=S.input.slice(0,-1);document.getElementById('opad').outerHTML=orderPad();break;
+   case'multiok':submit(new Set(S.sel));break;
+   case'next':nextQ();break;
+   case'explore':go({name:'explore'});break;
+   case'ex':V.o[d.k]=d.k==='coords'?!!d.v:d.v;vExplore();break;
+   case'po':V.po[d.k]=d.k==='level'?+d.v:d.v;vPlay();break;
+   case'newgame':V.setup=false;newGame();break;
+   case'resume':V.setup=false;vPlay();break;
+   case'setup':V.setup=true;if(G&&!G.over){G.confirmResign=false}vPlay();window.scrollTo(0,0);break;
+   case'gk':{const g=G;if(d.v.startsWith('O'))g.input=d.v;else g.input+=d.v;g.sel=null;const sl=main.querySelector('.slot');if(sl)sl.textContent=g.input;break}
+   case'gdel':G.input=G.input.slice(0,-1);{const sl=main.querySelector('.slot');if(sl)sl.innerHTML=esc(G.input)||'<span class="muted">type a move</span>'}break;
+   case'gmove':if(G.input)tryMove(G.input);break;
+   case'peek':G.peek=true;G.peeks++;vPlay();setTimeout(()=>{if(G){G.peek=false;if(V.name==='play'&&!V.setup)vPlay()}},3000);break;
+   case'resign':if(!G.confirmResign){G.confirmResign=true;vPlay();setTimeout(()=>{if(G){G.confirmResign=false;if(V.name==='play'&&!V.setup&&!G.over)vPlay()}},3000)}else{G.over={r:'l',msg:'You resigned.'};P.games.l++;save();vPlay()}break;
+   case'hp':V.hp=d.v;vStats();break;
+   case'tr':trSetup(d.m,d.from);break;
+   case'tr-ready':if(TR){TR.phase='ask';trNext()}break;
+   case'tr-opt':{const o=P.trset,v=d.v;o[d.k]=d.k==='min'?+v:d.k==='speed'?(v==='auto'?'auto':+v):v==='true'?true:v==='false'?false:v;save();vTrainSet();break}
+   case'tr-go':clearTimers();trStart();break;
+   case'tr-k':trAnswer(d.v);break;
+   case'tr-peek':trPeek();break;
+   case'tr-say':trVoiceAsk();break;
+   case'tr-quit':trFinish();break;
+   case'tr-again':clearTimers();V={name:'trainset',m:TR.m,from:TR.back,lesson:TR.lesson};trStart();break;
+   case'tr-back':{const f=(V.name==='trainset'?V.from:TR&&TR.back)||'practice';go(f==='practice'?{name:'practice'}:{name:'stage',stage:f});break}
+   case'reset':if(!V.confirmReset){V.confirmReset=true;vStats();setTimeout(()=>{V.confirmReset=false;if(V.name==='stats')vStats()},4000)}else{const keep=P.set;P=DEF();P.set=keep;V.confirmReset=false;save();go({name:'stats'})}break;
+  }});
+document.addEventListener('keydown',e=>{if(V.name==='train'&&TR){const m=TR.m;if((m==='file'&&/^[a-h]$/.test(e.key))||(m==='rank'&&/^[1-8]$/.test(e.key))||(['name','startsq','mirror','namevoice','mirname'].includes(m)&&/^[a-h1-8]$/.test(e.key)))trAnswer(e.key);else if(m==='colour'&&(e.key==='l'||e.key==='d'))trAnswer(e.key==='l'?'Light':'Dark');return}
+  if(V.name==='play'&&G&&!G.over&&!V.setup){if(e.key==='Enter'&&G.input){tryMove(G.input);return}if(e.key==='Backspace'){G.input=G.input.slice(0,-1);vPlay();return}if(/^[a-hKQRBNOx1-8=\-]$/.test(e.key)){G.input+=e.key;vPlay()}}
+  else if(V.name==='q'&&S&&!S.answered&&S.phase==='ask'){const q=S.q;
+    if(q.kind==='sq'||(q.kind==='tap'&&!q.board)){if(/^[a-h]$/.test(e.key)){S.input=e.key;main.querySelector('.pad').outerHTML=sqPad(S.input)}else if(/^[1-8]$/.test(e.key)&&S.input)submit(S.input[0]+e.key)}
+    else if(q.kind==='num'){if(/^\d$/.test(e.key)&&S.input.length<2){S.input+=e.key;main.querySelector('.slot').textContent=S.input}else if(e.key==='Enter'&&S.input)submit(S.input)}
+    else if(q.kind==='file'){if(/^[a-h]$/.test(e.key))submit(e.key)}
+    else if(q.kind==='order'){if(q.alpha.includes(e.key)&&!S.input.includes(e.key)){S.input+=e.key;if(S.input.length>=8)submit(S.input);else document.getElementById('opad').outerHTML=orderPad()}}
+    else if(q.kind==='choice'){const i=+e.key-1;if(q.options[i])submit(q.options[i])}}
+  else if(V.name==='q'&&S&&S.answered&&(e.key==='Enter'||e.key===' ')){e.preventDefault();nextQ()}});
+
+render();
+
+</script>
+
+</body>
+</html>
