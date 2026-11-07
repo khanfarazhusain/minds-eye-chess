@@ -244,7 +244,16 @@ main .qbox.tr.kt .moves{max-height:18vh;max-height:18svh}
 .csec h4{margin:4px 0 2px;font-size:15px}.cview .cline li .btn.small{padding:2px 8px;font-size:12px;margin-left:4px}
 .aitop{border:2px solid var(--accent)}.airate{font-weight:700;font-size:13px;padding:2px 10px;border-radius:999px;white-space:nowrap}
 .airate.hi{background:var(--good-soft);color:var(--good)}.airate.mid{background:color-mix(in srgb,var(--brass) 22%,transparent);color:var(--brass)}.airate.lo{background:var(--bad-soft);color:var(--bad)}
-.board{position:relative}svg.arrows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.board{position:relative}svg.arrows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}svg.arrows .abadge{pointer-events:auto;cursor:pointer}
+.ebtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ebtns .btn{min-height:52px;font-size:17px;font-weight:700;border-radius:12px}.ebtns .btn.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.esmall{display:flex;gap:6px;justify-content:center}.esmall .btn{flex:1}
+.epanel{font-size:16px;line-height:1.45}.epanel h4{margin:0 0 6px;font-size:17px}
+.eopt{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:10px;margin-bottom:8px;color:var(--fg);font:inherit}
+.eopt.on{border-color:var(--accent);background:var(--surface2)}.eopt .en{flex:0 0 30px;height:30px;border-radius:50%;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:16px}
+.eopt b.sn{font-size:19px}.eopt .ex{font-size:15px}.eopt .ol{font-size:14px;color:var(--muted);margin-top:3px}
+.jobnow{background:var(--surface);border:2px solid #1E9E55;border-radius:12px;padding:10px 12px;font-size:16px;line-height:1.4;display:flex;flex-direction:column;gap:4px}
+.osteps{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:4px;margin-top:2px}.osteps span{flex:0 0 auto}.osteps span{font-size:12.5px;border:1px solid var(--line);border-radius:999px;padding:2px 8px;background:var(--surface2)}.osteps span.ok{color:#1E9E55;border-color:#1E9E55}.osteps span.cur{background:#1E9E55;color:#fff;border-color:#1E9E55;font-weight:700}
+.bignext{min-height:56px;font-size:19px;font-weight:800}
 .sq.m-weak::after{content:"";position:absolute;inset:0;background:#E0A100;opacity:.32}
 .legend{display:block;text-align:center;font-size:12px}.lg{display:inline-block;width:14px;height:4px;border-radius:2px;vertical-align:middle;margin:0 3px}.lg.r{background:#D23C2A}.lg.g{background:#1E9E55}.lg.y{background:#E0A100}
 .spark{display:flex;align-items:flex-end;gap:3px;height:50px}.spark i{flex:1;background:var(--accent);border-radius:2px 2px 0 0;min-height:3px}
@@ -253,6 +262,16 @@ main .qbox.tr.kt .moves{max-height:18vh;max-height:18svh}
 .opgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}.opgrid button{border:1px solid var(--line);background:var(--surface2);border-radius:8px;padding:7px 6px;display:flex;flex-direction:column;align-items:center;color:var(--fg);font-size:13px;font-weight:600}
 .opgrid button small{color:var(--muted);font-size:11px;font-weight:500}.opgrid button.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}.opgrid button.on small{color:var(--accent-fg)}
 .pend{border:2px solid var(--bad)}.pend p{margin:0}.banner{background:var(--surface2);border-radius:8px;padding:8px 12px;font-size:14px}.hintl{border-left:4px solid var(--good)}
+.arrrow{gap:6px;flex-wrap:wrap}.arrrow .btn.small{flex:1;font-size:13px;padding:6px 4px}.arrrow .btn.on{background:var(--accent);color:var(--accent-fg)}
+.vstrip{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:3px}.vstrip .vr{font-size:14px;line-height:1.35}
+.ctabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-bottom:-6px}.ctabs::-webkit-scrollbar{display:none}
+.ctabs button{flex:0 0 auto;border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:6px 11px;font-size:13px;font-weight:600;color:var(--fg);position:relative}
+.ctabs button.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}.ctabs .dot{position:absolute;top:2px;right:3px;width:7px;height:7px;border-radius:50%}
+.dot.bad{background:var(--bad)}.dot.new{background:var(--good)}.dot.busy{background:var(--brass)}
+.ctab{max-height:min(62vh,520px);overflow-y:auto}
+.costick{position:sticky;top:var(--hdr,56px);z-index:4;background:var(--bg);padding:4px 0 2px;margin:0 -2px}
+.costick~*,.costick~* *{scroll-margin-top:calc(var(--hdr,56px) + var(--bh,320px))}
+.costick .board.coachb{max-width:min(440px,max(230px,calc(100svh - 430px)))}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i>♞&#xFE0E;</i>Mind's Eye Chess</div><div class="chips" id="chips"></div></div></header>
@@ -1227,7 +1246,12 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'co-resume':coResume();break;
    case'co-back':go({name:'coach'});break;
    case'co-setup':go({name:'coachset'});break;
-   case'co-hint':if(CG){CG.hint=Math.min(3,(CG.hint||0)+1);vCoach();if(CG.hint===3){const m=coHintMove(CG);if(m)sayC((P.set.cvoice==='hi'?'Hint: ':'Hint: ')+sanWords(san(CG.st,m,legal(CG.st))))}}break;
+   case'co-hint':if(CG){CG.hint=Math.min(3,(CG.hint||0)+1);vCoach();if(CG.hint===3){const m=coHintMove(CG);if(m)sayC((P.set.cvoice==='hi'?'Hint: ':'Hint: ')+san(CG.st,m,legal(CG.st))+'.')}}break;
+   case'co-tab':if(CG){CG.tab=d.v;P.set.ctab=d.v;save();vCoach()}break;
+   case'co-psel':if(CG){CG.psel=CG.psel===d.v?null:d.v;CG.ep='think';vCoach();if(CG.psel){const x=coPlanItems(CG).find(y=>y.k===CG.psel);if(x)sayC(x.x,true)}}break;
+   case'co-ep':if(CG){CG.ep=CG.ep===d.v?null:d.v;if(CG.ep!=='opts')CG.opt=null;vCoach()}break;
+   case'co-arr':if(CG){CG[d.v]=!CG[d.v];vCoach()}break;
+   case'co-next':if(CG&&CG.waitNext){CG.waitNext=false;coEngine()}break;
    case'co-retry':coRetry();break;
    case'co-keep':coKeep();break;
    case'co-chk':if(CG){CG.chk=CG.chk||{};CG.chk[d.v]=!CG.chk[d.v];aiRe()}break;
@@ -1243,7 +1267,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'co-ri':V.ri=+d.v;vCoachRev();break;
    case'co-better':CG.show.better=!CG.show.better;vCoach();break;
    case'co-ai':P.set.ai=d.v;save();{const y=window.scrollY;render();window.scrollTo(0,y)}break;
-   case'co-opt':if(CG){CG.opt=CG.opt===+d.v?null:+d.v;vCoach();const bd=main.querySelector('.board');if(bd&&CG.opt!=null)bd.scrollIntoView({behavior:'smooth',block:'center'})}break;
+   case'co-opt':if(CG){CG.opt=CG.opt===+d.v?null:+d.v;if(P.set.ceasy!==false){CG.ep='opts';vCoach();if(CG.opt!=null&&CG.pre&&CG.pre.lines[CG.opt]){const m=fromUci(CG.st,CG.pre.lines[CG.opt].pv[0]);if(m)sayC((P.set.cvoice==='hi'?'Option ':'Option ')+(CG.opt+1)+'. '+san(CG.st,m,legal(CG.st))+'. '+moveNote(CG.st,m)+'.',true)}break}vCoach();const bd=main.querySelector('.board');if(bd&&CG.opt!=null)bd.scrollIntoView({behavior:'smooth',block:'center'})}break;
    case'ai-auto':P.set.autoai=d.v==='1';save();if(P.set.autoai&&CG&&CG.fb&&!CG.fb.lite&&CG.pre&&!AIR[aiKey('turn')])aiGo('turn',null,true);else aiRe();break;
    case'ai-go':aiGo(d.k,d.ply!=null?+d.ply:null);break;
    case'gk-save':{const inp=b.closest('.gkey').querySelector('input'),k=(inp.value||'').trim().replace(/\s/g,'');
@@ -1476,14 +1500,14 @@ function coNew(o){let human=o.color==='r'?pick(['w','b']):o.color;let st0=startS
   if(o.start==='end'||o.start==='attack'){const t=pick(THEMES[o.start]);st0=fromFEN(t[1]);start={fen:t[1],name:t[0]};human=st0.w?'w':'b'}
   else if(o.start==='fen'&&o.fen){const x=fromFEN(o.fen);if(x){st0=x;start={fen:o.fen.trim(),name:'Your position'}}}
   if(!start&&o.open){const b=OPENT.find(x=>x[0]===o.open);if(b){book={name:b[1],key:b[0],moves:b[3].split(' ')};human=b[2]}}
-  CG={st:st0,states:[st0],moves:[],human,lvl:o.lvl,sel:null,busy:'',fb:null,tok:0,over:null,hint:0,show:{},id:Date.now(),start,book,bookOk:!!book,chk:{}};
+  CG={tab:P.set.ctab||(gKey()?'ai':'move'),st:st0,states:[st0],moves:[],human,lvl:o.lvl,sel:null,busy:'',fb:null,tok:0,over:null,hint:0,show:{},id:Date.now(),start,book,bookOk:!!book,chk:{}};
   sfStart();coSaveCur();go({name:'coach'});if(st0.w!==(human==='w'))coEngine();else coPre()}
 function coSaveCur(){if(!CG||CG.over){delete P.cgame}else P.cgame={human:CG.human,lvl:CG.lvl,start:CG.start,book:CG.book,bookOk:CG.bookOk,sans:CG.moves.map(x=>x.san),fbs:CG.moves.map(x=>x.fb?{cls:x.fb.cls,loss:x.fb.loss}:null)};save()}
 function coResume(){const g=P.cgame;if(!g)return;const s0=g.start&&fromFEN(g.start.fen)||startState();CG={st:s0,states:[s0],moves:[],human:g.human,lvl:g.lvl,sel:null,busy:'',fb:null,tok:0,over:null,hint:0,show:{},id:Date.now(),start:g.start||null,book:g.book||null,bookOk:!!g.bookOk,chk:{}};
   for(let i=0;i<g.sans.length;i++){const m=findMove(CG.st,g.sans[i]);if(!m)break;const by=(CG.st.w===(g.human==='w'))?'h':'e';CG.moves.push({m,san:g.sans[i],by,fb:g.fbs&&g.fbs[i]&&{...g.fbs[i],lite:1}});CG.st=make(CG.st,m);CG.states.push(CG.st)}
   sfStart();go({name:'coach'});coCheckEnd();if(CG.over)return;if(CG.st.w===(CG.human==='w'))coPre();else coEngine()}
 const coMyTurn=()=>CG&&!CG.over&&CG.st.w===(CG.human==='w');
-function coPre(){const g=CG,t=g.tok,st=g.st;g.pre=null;g.threat=threatOf(st);g.hint=0;g.opt=null;g.chk={};g.pend=null;if(g.moves.length&&g.moves[g.moves.length-1].by==='e'){const e=g.moves[g.moves.length-1],th=g.threat;sayC((P.set.cvoice==='hi'?'Coach ne ':'Coach played ')+sanWords(e.san)+(P.set.cvoice==='hi'?' khela. ':'. ')+(th&&th.san?(P.set.cvoice==='hi'?'Dhyan do, threat hai ':'Watch out, it threatens ')+sanWords(th.san):''),true)}g.preP=sfGo(st,{multipv:3,movetime:900,depth:18}).then(r=>{if(CG===g&&g.tok===t&&g.st===st){g.pre=r;if(aiAuto()&&g.fb&&!g.fb.lite&&!AIR[aiKey('turn')])aiGo('turn',null,true);else if(V.name==='coach'&&!g.busy)vCoach()}return r});if(V.name==='coach')vCoach()}
+function coPre(){const g=CG,t=g.tok,st=g.st;g.pre=null;g.threat=threatOf(st);g.hint=0;g.opt=null;g.psel=null;g.chk={};g.pend=null;g.waitNext=false;g.arrBest=false;if(g.moves.length&&g.moves[g.moves.length-1].by==='e'){const e=g.moves[g.moves.length-1],th=g.threat;sayC((P.set.cvoice==='hi'?'Coach ki chaal: ':'Coach plays ')+e.san+'. '+(th&&th.san?(P.set.cvoice==='hi'?'Dhyan do, khatra hai: ':'Careful, it threatens ')+th.san+'.':''),true)}g.preP=sfGo(st,{multipv:3,movetime:900,depth:18}).then(r=>{if(CG===g&&g.tok===t&&g.st===st){g.pre=r;if(aiAuto()&&g.fb&&!g.fb.lite&&!AIR[aiKey('turn')])aiGo('turn',null,true);else if(V.name==='coach'&&!g.busy)vCoach()}return r});if(V.name==='coach')vCoach()}
 async function coHuman(m){const g=CG,t=g.tok,st0=g.st,list=legal(st0),s=san(st0,m,list);g.sel=null;g.busy='Coach is checking your move…';
   const st1=make(st0,m);g.st=st1;g.states.push(st1);const rec={m,san:s,by:'h',fb:null};g.moves.push(rec);vCoach();
   const pre=await g.preP;if(CG!==g||g.tok!==t)return;
@@ -1491,7 +1515,7 @@ async function coHuman(m){const g=CG,t=g.tok,st0=g.st,list=legal(st0),s=san(st0,
   rec.fb=coJudge(st0,m,s,st1,pre,post);g.fb=rec.fb;g.busy='';coRecordMistake(rec.fb);sayJudge(rec.fb);
   const bs=g.book&&g.bookOk&&rec.fb.ply<g.book.moves.length?g.book.moves[rec.fb.ply]:null;
   if(legal(st1).length){if(bs&&normSan(bs)!==normSan(s))g.pend={type:'book',exp:bs};else if(P.set.cretry!==false&&['mistake','blunder'].includes(rec.fb.cls))g.pend={type:'mistake'}}
-  coSaveCur();if(g.pend){vCoach();return}coCheckEnd();if(g.over){coFinish();return}coEngine()}
+  coSaveCur();if(g.pend){g.tab='move';vCoach();return}coCheckEnd();if(g.over){coFinish();return}if(P.set.cpause){g.waitNext=true;g.tab='move';vCoach();return}coEngine()}
 function coRetry(){const g=CG;if(!g||!g.pend)return;const fb=g.fb;g.pend=null;g.moves.pop();g.states.pop();g.st=g.states[g.states.length-1];g.retries=(g.retries||0)+1;
   g.hint=0;g.chk={};g.opt=null;g.sel=null;g.pre=fb.pre;g.preP=Promise.resolve(fb.pre);g.threat=threatOf(g.st);g.tried=fb.san;coSaveCur();vCoach();window.scrollTo(0,0)}
 function coKeep(){const g=CG;if(!g||!g.pend)return;if(g.pend.type==='book')g.bookOk=false;g.pend=null;g.tried=null;coCheckEnd();if(g.over){coFinish();return}coEngine()}
@@ -1581,20 +1605,20 @@ function oppIdeas(st){if(inCheck(st))return[];const f={...st,w:!st.w,ep:-1};cons
 function outcomeWord(l){if(!l)return'';if(l.mate!=null)return l.mate>0?`you mate in ${l.mate}`:`you get mated in ${-l.mate}`;const c=l.cp;
   return c>=300?'winning for you':c>=100?'you are better':c>=-60?'about equal':c>=-200?'a little worse for you':'bad for you'}
 const coachVoice=t=>t.replace(/\bYou are\b/g,'It is').replace(/\bYour\b/g,'Its').replace(/\byour\b/g,'its').replace(/\byou\b/g,'it');
-function coViewHTML(){const g=CG,w=g.human==='w',st=g.st,my=coMyTurn();const sans=g.moves.map(x=>x.san);let h=`<div class="card stack cview"><h3>Coach's view</h3>`;
+function coViewHTML(part){const pp=x=>!part||part===x;const g=CG,w=g.human==='w',st=g.st,my=coMyTurn();const sans=g.moves.map(x=>x.san);let h=part?'<div class="stack cview">':`<div class="card stack cview"><h3>Coach's view</h3>`;
   const last=g.moves[g.moves.length-1],fb=g.fb;
   // 1. coach's hidden thinking
-  if(last&&last.by==='e'){h+=`<div class="csec"><h4>🧠 Coach's thinking: why ${esc(last.san)}</h4><ul class="cline"><li>${esc(last.san)} ${esc(last.note||'')}.</li>`;
+  if(pp('think')&&last&&last.by==='e'){h+=`<div class="csec"><h4>🧠 Coach's thinking: why ${esc(last.san)}</h4><ul class="cline"><li>${esc(last.san)} ${esc(last.note||'')}.</li>`;
     const pv=last.an&&last.an.lines&&last.an.lines[0]&&last.an.lines[0].pv;if(pv&&pv.length>1&&pv[0]===uciOf(last.m)){const L=lineInfo(last.st0,pv,6);h+=`<li>The line it had in mind: <b>${esc(L.san)}</b></li>`}
     if(fb&&!fb.lite&&fb.post&&fb.post.lines[0]){const bm=fromUci(fb.st1,fb.post.lines[0].pv[0]);if(bm&&uciOf(bm)!==uciOf(last.m))h+=`<li>Full-strength Stockfish would play <b>${esc(san(fb.st1,bm,legal(fb.st1)))}</b>. At ${CLV[g.lvl].n} level the coach plays a bit weaker on purpose.</li>`}
     h+='</ul></div>'}
   // 2. after your move
-  if(fb&&!fb.lite){const y=coWhy(fb);if(y.reply&&y.reply.steps.length){h+=`<div class="csec"><h4>🔍 After your move ${esc(fb.san)}: what can happen</h4><ul class="cline">`;
+  if(pp('think')&&fb&&!fb.lite){const y=coWhy(fb);if(y.reply&&y.reply.steps.length){h+=`<div class="csec"><h4>🔍 After your move ${esc(fb.san)}: what can happen</h4><ul class="cline">`;
     h+=`<li>${sideW(!w)}'s strongest answer: <b>${esc(y.reply.steps[0].san)}</b>, ${esc(moveNote(y.reply.steps[0].st,y.reply.steps[0].m,fb.m))}.</li>`;
     if(y.reply.steps.length>1)h+=`<li>Main line: ${esc(y.reply.san)}${Math.abs(y.reply.gain)>=80?` (you ${y.reply.gain>0?'lose':'win'} ${matWord(y.reply.gain)})`:''}.</li>`;
     if(y.hang.length)h+=`<li class="warn">Your ${esc(sqList(fb.st1.b,y.hang))} became loose.</li>`;h+='</ul></div>'}}
   // 3. after coach's move: threats and possibilities
-  if(my){h+=`<div class="csec"><h4>⚔️ After the coach's move: threats</h4><ul class="cline">`;const th=g.threat;
+  if(pp('threat')&&my){h+=`<div class="csec"><h4>⚔️ After the coach's move: threats</h4><ul class="cline">`;const th=g.threat;
     if(th&&th.check)h+='<li class="warn">You are in check: block it, move the king or take the checking piece.</li>';
     else if(th&&th.mate)h+=`<li class="warn">It threatens mate with ${esc(th.san)}. Stop this first.</li>`;
     else if(th)h+=`<li class="warn">Main threat: ${esc(th.san)}, ${esc(moveNote(th.st,th.m))}, winning ${matWord(th.gain)||'material'}.</li>`;
@@ -1602,13 +1626,13 @@ function coViewHTML(){const g=CG,w=g.human==='w',st=g.st,my=coMyTurn();const san
     const hg=hanging(st.b,w);if(hg.length)h+=`<li class="warn">Loose pieces: your ${esc(sqList(st.b,hg))}.</li>`;
     if(!th&&!ideas.length&&!hg.length)h+='<li>No direct threat. Use the time to improve your position.</li>';h+='</ul></div>'}
   // 4. your options and outcomes
-  if(my){h+=`<div class="csec"><h4>🎯 Your options now and where they lead</h4>`;
+  if(pp('opts')&&my){h+=`<div class="csec"><h4>🎯 Your options now and where they lead</h4>`;
     if(!g.pre)h+='<p class="muted">Engine is checking your options…</p>';
     else{h+='<ol class="cline">';g.pre.lines.forEach((l,i)=>{const m=fromUci(st,l.pv[0]);if(!m)return;const L=lineInfo(st,l.pv,6);
       h+=`<li><b>${esc(san(st,m,legal(st)))}</b> <span class="muted">(${evTxt(l,st.w)})</span>: ${esc(moveNote(st,m))}. Outcome: <b>${outcomeWord(l)}</b>${Math.abs(L.gain)>=80?`, ${L.gain>0?'you win':'you lose'} ${matWord(L.gain)}`:''}.<br><small class="muted">Line: ${esc(L.san)}</small> <button class="btn small" data-act="co-opt" data-v="${i}">${g.opt===i?'Hide':'Show'}</button></li>`});
       h+='</ol><small class="muted">Option 1 is the engine\'s best move.</small>'}h+='</div>'}
   // 5. plans
-  if(!g.over){const mine=positionNotes(st,w,sans),his=positionNotes(st,!w,sans);
+  if(pp('plan')&&!g.over){const mine=positionNotes(st,w,sans),his=positionNotes(st,!w,sans);
     h+=`<div class="csec"><h4>📋 Coach's plan (${sideW(!w)})</h4><ul class="cline">${his.plan.slice(0,4).map(x=>`<li>${esc(coachVoice(x))}</li>`).join('')}</ul></div>`;
     h+=`<div class="csec"><h4>✅ Your plan, step by step</h4><ol class="cline">${mine.plan.slice(0,5).map(x=>`<li>${esc(x)}</li>`).join('')}</ol></div>`}
   return h+'</div>'}
@@ -1784,17 +1808,33 @@ function hintIdea(g,m){const st=g.st,n=make(st,m);if(inCheck(n)&&!legal(n).lengt
   const U=m.p.toUpperCase();if(isHome(m.f,m.p))return'Bring a new piece into the game.';if(U==='P')return'A pawn move is strong here: think about space or a pawn break.';
   const tg=pieceAttacks(n.b,m.t,n.b[m.t]).filter(t=>n.b[t]&&isW(n.b[t])!==st.w);if(tg.length)return'Create a threat: attack something.';return'Improve your worst-placed piece.'}
 // arrows on the board
+const ACOL={red:'#D23C2A',green:'#1E9E55',blue:'#2F6FD6',grey:'#7A8A80',orange:'#E8871E'};
 function arrowsSVG(persp,arr){if(!arr.length)return'';const xy=s=>{const f=s&7,r=s>>3;return persp==='w'?[f+.5,7-r+.5]:[7-f+.5,r+.5]};
-  let h='<svg class="arrows" viewBox="0 0 8 8" aria-hidden="true"><defs>'+['red','green'].map(c=>`<marker id="ah-${c}" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="2.6" markerHeight="2.6" orient="auto"><path d="M0,0L10,5L0,10z" fill="${c==='red'?'#D23C2A':'#1E9E55'}"/></marker>`).join('')+'</defs>';
+  let h='<svg class="arrows" viewBox="0 0 8 8" aria-hidden="true"><defs>'+Object.entries(ACOL).map(([c,v])=>`<marker id="ah-${c}" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="2.6" markerHeight="2.6" orient="auto"><path d="M0,0L10,5L0,10z" fill="${v}"/></marker>`).join('')+'</defs>';
   for(const a of arr){const[x1,y1]=xy(a.f),[x2,y2]=xy(a.t),dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1,ex=x2-dx/L*.35,ey=y2-dy/L*.35;
-    h+=`<line x1="${x1}" y1="${y1}" x2="${ex}" y2="${ey}" stroke="${a.c==='red'?'#D23C2A':'#1E9E55'}" stroke-width=".16" stroke-linecap="round" opacity=".85" marker-end="url(#ah-${a.c})"/>`}
+    h+=`<line x1="${x1}" y1="${y1}" x2="${ex}" y2="${ey}" stroke="${ACOL[a.c]}" stroke-width="${a.w||.16}" stroke-linecap="round" ${a.dash?'stroke-dasharray=".25 .15"':''} opacity="${a.dim?.35:.85}" marker-end="url(#ah-${a.c})"/>`}
+  for(const a of arr)if(a.n){const[x1,y1]=xy(a.f),[x2,y2]=xy(a.t),bx=Math.min(7.7,Math.max(.3,x2+.3)),by=Math.min(7.7,Math.max(.3,y2-.3));
+    h+=`<g class="abadge" data-act="${a.act||'co-opt'}" data-v="${a.act?a.v:a.n-1}"><circle cx="${bx}" cy="${by}" r=".3" fill="${ACOL[a.c]}" stroke="#fff" stroke-width=".05"/><text x="${bx}" y="${by+.11}" text-anchor="middle" font-size=".32" font-weight="700" fill="#fff" font-family="system-ui,sans-serif">${a.lab||a.n}</text></g>`}
   return h+'</svg>'}
 // voice coach
-function sayC(t,queue){const v=P.set.cvoice;if(!v||v==="off"||!window.speechSynthesis)return;try{if(!queue)speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(String(t).replace(/[^\w\s.,!?'’:+\-\/]/g,' ').replace(/\s+/g,' '));
-  u.lang=v==='hi'?'hi-IN':'en-IN';u.rate=1;const vs=speechSynthesis.getVoices();const vo=vs.find(x=>x.lang.replace('_','-')===u.lang)||vs.find(x=>x.lang.startsWith(v==='hi'?'hi':'en'));if(vo)u.voice=vo;speechSynthesis.speak(u)}catch(e){}}
+function pickVoice(v){const vs=window.speechSynthesis?speechSynthesis.getVoices():[];const want=v==='hi'?['hi-IN','hi']:['en-IN','en-GB','en-US','en'];
+  const good=x=>/natural|neural|enhanced|premium|google|siri|samantha|daniel|rishi|veena|lekha|neerja|prabhat|swara|madhur/i.test(x.name)?1:0;
+  for(const w of want){const c=vs.filter(x=>x.lang.replace('_','-').toLowerCase().startsWith(w.toLowerCase()));if(c.length)return c.sort((a,b)=>good(b)-good(a)||(b.localService?1:0)-(a.localService?1:0))[0]}return null}
+function sayC(t,queue){const v=P.set.cvoice;if(!v||v==='off'||!window.speechSynthesis)return;try{if(!queue)speechSynthesis.cancel();
+  const txt=sayText(t).replace(/[^\w\s.,!?'’:\-]/g,' ').replace(/\s+/g,' ').trim();const parts=txt.split(/(?<=[.!?])\s+/).filter(Boolean);
+  const vo=pickVoice(v);for(const part of parts){const u=new SpeechSynthesisUtterance(part);u.lang=v==='hi'?'hi-IN':'en-IN';if(vo){u.voice=vo;u.lang=vo.lang}u.rate=v==='hi'?.88:.92;u.pitch=1;speechSynthesis.speak(u)}}catch(e){}}
+try{if(window.speechSynthesis)speechSynthesis.onvoiceschanged=()=>{}}catch(e){}
+const SPK={en:{K:'King',Q:'Queen',R:'Rook',B:'Bishop',N:'Knight',P:'Pawn'},hi:{K:'Raja',Q:'Wazir',R:'Haathi',B:'Oont',N:'Ghoda',P:'Pyada'}};
+const sqSay=(q,hi)=>q[0].toUpperCase()+' '+q[1];
+function sanSay(sn_,lang){const hi=(lang||P.set.cvoice)==='hi',L=SPK[hi?'hi':'en'];let s=String(sn_).replace(/[!?]+$/,'');const ck=s.endsWith('#')?2:s.endsWith('+')?1:0;s=s.replace(/[+#]/g,'');
+  let t;if(s.startsWith('O-O-O'))t=hi?'Lambi taraf castling':'Castles queenside';else if(s.startsWith('O-O'))t=hi?'Chhoti taraf castling':'Castles kingside';
+  else{const m=s.match(/^([KQRBN])?([a-h]?[1-8]?)(x)?([a-h][1-8])(?:=([QRBN]))?$/);if(!m)return s;const pc=L[m[1]||'P'],to=sqSay(m[4],hi);
+    t=hi?(m[3]?`${pc} ${to} par maarta hai`:`${pc} ${to} par`):(m[3]?`${pc} takes on ${to}`:`${pc} to ${to}`);if(m[5])t+=hi?`, ${L[m[5]]} banta hai`:`, promotes to ${L[m[5]]}`}
+  if(ck)t+=hi?(ck===2?', checkmate!':', shah!'):(ck===2?', checkmate!':', check.');return t}
+const sayText=t=>String(t).replace(/\b(\d+\.(?:\.\.|…)?\s?)?((?:[KQRBN][a-h]?[1-8]?x?[a-h][1-8]|[a-h]x[a-h][1-8]|[a-h][1-8](?:=[QRBN])?|O-O(?:-O)?)[+#]?)/g,(a,n,m)=>sanSay(m));
 const SAYCLS={best:['Best move!','Bahut badiya, best move!'],good:['Good move.','Achhi move.'],book:['Book move.','Book move, theek hai.'],inacc:['Inaccuracy.','Thodi kamzor move.'],mistake:['That is a mistake.','Ye galti hai.'],blunder:['That is a blunder!','Ye bada blunder hai!']};
 function sayJudge(fb){if(!fb||fb.lite)return;const hi=P.set.cvoice==='hi',y=coWhy(fb);let t=SAYCLS[fb.cls][hi?1:0];
-  if(!['best','good','book'].includes(fb.cls)&&y.bestSan)t+=hi?` Behtar tha ${sanWords(y.bestSan)}. `:` Better was ${sanWords(y.bestSan)}. `+y.reason;sayC(t)}
+  if(!['best','good','book'].includes(fb.cls)&&y.bestSan)t+=hi?` Behtar tha: ${y.bestSan}.`:` Better was ${y.bestSan}.`;sayC(t)}
 // mistake tags, diary and progress
 const WTAG={hanging:'Loose pieces',threats:'Missed their threat',tactics:'Missed a win',king:'King safety',opening:'Opening',endgame:'Endgame',positional:'Plans and position'};
 function tagOf(fb){const y=coWhy(fb),best=fb.pre&&fb.pre.lines[0];if(y.hang.length)return'hanging';if(best&&best.mate>0||y.bestLine&&y.bestLine.gain>=80)return'tactics';if(y.reply&&y.reply.gain>=80||fb.post&&fb.post.lines[0]&&fb.post.lines[0].mate>0)return'threats';
@@ -1838,7 +1878,7 @@ function vCoDiary(){const D=P.diary||[];const z=V.dz||(V.dz={i:0,res:null,sel:nu
   if(!z.res)h+=`<p style="text-align:center">${st.w?'White':'Black'} to move. In your game you played <b>${esc(e.san)}</b> (${CLS[e.cls][0].toLowerCase()}). Find the better move.</p>`;
   else h+=`<div class="fb ${z.res==='ok'?'ok':'no'}"><h3>${z.res==='ok'?'Correct!':z.res==='no'?'Not quite.':'Answer'}</h3><p>The better move is <b>${esc(e.bestSan)}</b>. ${esc(e.why)}</p>${e.line?`<p class="muted">Line: ${esc(e.line)}</p>`:''}</div>`;
   h+=`<div class="row corow"><button class="btn" data-act="dz-show">Show answer</button><button class="btn primary" data-act="dz-next">Next</button><button class="btn" data-act="dz-del">${z.del?'Tap again':'Remove'}</button></div></div>`;
-  main.innerHTML=h;onSq=n=>{if(z.res)return;const s=si(n),p=st.b[s];if(z.sel!=null&&z.sel!==s){const m=legal(st).find(x=>x.f===z.sel&&x.t===s&&(!x.promo||x.promo==='Q'));if(m){const ok=e.best.includes(uciOf(m));z.res=ok?'ok':'no';e.n++;if(ok)e.ok++;save();sayC(ok?(P.set.cvoice==='hi'?'Shabaash, sahi jawab!':'Correct!'):(P.set.cvoice==='hi'?'Nahi, behtar tha ':'No, better was ')+sanWords(e.bestSan));vCoDiary();return}}
+  main.innerHTML=h;onSq=n=>{if(z.res)return;const s=si(n),p=st.b[s];if(z.sel!=null&&z.sel!==s){const m=legal(st).find(x=>x.f===z.sel&&x.t===s&&(!x.promo||x.promo==='Q'));if(m){const ok=e.best.includes(uciOf(m));z.res=ok?'ok':'no';e.n++;if(ok)e.ok++;save();sayC(ok?(P.set.cvoice==='hi'?'Shabaash, sahi jawab!':'Correct!'):(P.set.cvoice==='hi'?'Nahi, behtar tha: ':'No, better was ')+e.bestSan+'.');vCoDiary();return}}
     z.sel=p&&isW(p)===st.w?s:null;vCoDiary()}}
 
 /* ================= coach: views ================= */
@@ -1851,7 +1891,7 @@ function vCoachSet(){const o=V.co||(V.co={color:'w',lvl:P.set.colvl!=null?P.set.
   <div><span class="eyebrow">Start from</span><div class="seg">${[['normal','Normal start'],['end','Endgame'],['attack','Attack'],['fen','My position']].map(([k,t])=>`<button class="${(o.start||'normal')===k?'on':''}" data-act="co-o" data-k="start" data-v="${k}">${t}</button>`).join('')}</div>
    ${o.start==='fen'?`<input class="gin" id="co-fen" placeholder="Paste a FEN position" value="${esc(o.fen||'')}" autocapitalize="off" spellcheck="false" style="margin-top:6px">${o.err?`<p class="warn">${esc(o.err)}</p>`:''}`:o.start==='end'||o.start==='attack'?'<small class="muted">A random training position. You play the side to move.</small>':''}</div>
   <div class="stack" style="gap:6px"><span class="eyebrow">Coach helpers</span>
-   ${[['cretry','Stop me on mistakes and let me retry'],['cchk','Thinking checklist before each move'],['carrow','Arrows and colours on the board']].map(([k,t])=>`<div class="gstat" style="font-weight:500"><span style="font-size:14px">${t}</span><div class="seg sm"><button class="${P.set[k]!==false?'on':''}" data-act="co-set" data-k="${k}" data-v="1">On</button><button class="${P.set[k]===false?'on':''}" data-act="co-set" data-k="${k}" data-v="0">Off</button></div></div>`).join('')}
+   ${[['ceasy','Easy mode: simple screen with big buttons'],['cjob','Beginner guide: "Your job now" with a suggested move'],['cpause','Wait for my "Next" tap before the computer moves'],['cretry','Stop me on mistakes and let me retry'],['cchk','Thinking checklist before each move'],['carrow','Arrows and colours on the board']].map(([k,t])=>`<div class="gstat" style="font-weight:500"><span style="font-size:14px">${t}</span><div class="seg sm"><button class="${(k==='cpause'?P.set[k]===true:P.set[k]!==false)?'on':''}" data-act="co-set" data-k="${k}" data-v="1">On</button><button class="${(k==='cpause'?P.set[k]!==true:P.set[k]===false)?'on':''}" data-act="co-set" data-k="${k}" data-v="0">Off</button></div></div>`).join('')}
    <div class="gstat" style="font-weight:500"><span style="font-size:14px">Voice coach</span><div class="seg sm">${[['off','Off'],['en','English'],['hi','Hindi']].map(([k,t])=>`<button class="${(P.set.cvoice||'off')===k?'on':''}" data-act="co-set" data-k="cvoice" data-v="${k}">${t}</button>`).join('')}</div></div></div>
   <button class="btn primary block" data-act="co-new">Start game</button>${P.cgame?`<button class="btn block" data-act="co-resume">Continue last game (${P.cgame.sans.length} moves)</button>`:''}${CG&&!CG.over?`<button class="btn block" data-act="co-back">Back to current game</button>`:''}</div>`;
   h+=`<div class="card stack"><h3>Mistake diary</h3><p class="muted" style="font-size:14px">Every mistake and blunder from your coach games becomes a puzzle here. ${(P.diary||[]).length} saved.</p>${(P.diary||[]).length?'<button class="btn block" data-act="co-diary">Solve my mistake puzzles</button>':''}</div>`+progressHTML();
@@ -1873,10 +1913,14 @@ function coSideHTML(){const g=CG;if(!g.hint||!coMyTurn())return'';const m=coHint
 function vCoach(){const g=CG;if(!g){go({name:'coachset'});return}const my=coMyTurn(),w=g.human==='w';const L=CLV[g.lvl];
   let marks={};const last=g.moves[g.moves.length-1];if(last){marks[sn(last.m.f)]='sel';marks[sn(last.m.t)]='sel'}
   if(g.show.better&&g.fb&&g.fb.pre&&g.fb.pre.lines[0]){const bm=fromUci(g.fb.st0,g.fb.pre.lines[0].pv[0]);if(bm){marks={[sn(bm.f)]:'good',[sn(bm.t)]:'good'}}}
-  if(g.opt!=null&&g.pre&&g.pre.lines[g.opt]&&my){const om=fromUci(g.st,g.pre.lines[g.opt].pv[0]);if(om){marks={[sn(om.f)]:'good',[sn(om.t)]:'good'}}}
+  if(g.opt!=null&&g.pre&&g.pre.lines[g.opt]&&my&&!(P.set.ceasy!==false&&g.ep==='opts')){const om=fromUci(g.st,g.pre.lines[g.opt].pv[0]);if(om){marks={[sn(om.f)]:'good',[sn(om.t)]:'good'}}}
   const arr=[],hm=g.hint&&my?coHintMove(g):null;if(hm){marks[sn(hm.f)]='good';if(g.hint>=3){marks[sn(hm.t)]='good';arr.push({f:hm.f,t:hm.t,c:'green'})}}
   if(P.set.carrow!==false){if(my&&g.threat&&g.threat.m)arr.push({f:g.threat.m.f,t:g.threat.m.t,c:'red'});
-    if(g.opt!=null&&g.pre&&g.pre.lines[g.opt]&&my){const om=fromUci(g.st,g.pre.lines[g.opt].pv[0]);if(om)arr.push({f:om.f,t:om.t,c:'green'})}
+    const EZ=P.set.ceasy!==false;g.job=EZ&&P.set.cjob!==false?coJob(g):null;if(g.job&&g.job.m&&!g.ep&&!g.hint)arr.push({f:g.job.m.f,t:g.job.m.t,c:'green',w:.15});if(EZ&&g.ep==='opts'&&my&&g.pre){const OC=['green','blue','grey'];g.pre.lines.forEach((l,i)=>{const m=fromUci(g.st,l.pv[0]);if(m)arr.push({f:m.f,t:m.t,c:OC[i]||'grey',w:g.opt===i?.2:i?.12:.16,n:i+1,dim:g.opt!=null&&g.opt!==i})})}
+    if(g.arrBest&&my&&g.pre&&!(EZ&&g.ep==='opts'))g.pre.lines.forEach((l,i)=>{const m=fromUci(g.st,l.pv[0]);if(m)arr.push({f:m.f,t:m.t,c:i?'blue':'green',w:i?.11:.17})});
+    if(EZ&&g.ep==='think'){for(const x of coPlanItems(g)){const dim=g.psel&&g.psel!==x.k;arr.push({f:x.f,t:x.t,c:x.c,w:g.psel===x.k?.18:x.dash?.09:.13,lab:x.k,act:'co-psel',v:x.k,n:1,dim,dash:x.dash});(x.ex||[]).forEach(y=>arr.push({...y,dim}))}}
+    if(g.arrThink&&!(EZ&&g.ep==='think')&&g.moves.length){const e=[...g.moves].reverse().find(x=>x.by==='e');if(e&&e.an&&e.an.lines&&e.an.lines[0]&&e.an.lines[0].pv[0]===uciOf(e.m)){const L=pvWalk(e.st0,e.an.lines[0].pv,4).steps;L.forEach((x,i)=>{if(i)arr.push({f:x.m.f,t:x.m.t,c:x.st.w===(g.human==='w')?'grey':'red',w:.1})})}}
+    if(!(EZ&&g.ep==='opts')&&g.opt!=null&&g.pre&&g.pre.lines[g.opt]&&my){const om=fromUci(g.st,g.pre.lines[g.opt].pv[0]);if(om)arr.push({f:om.f,t:om.t,c:'green'})}
     if(g.show.better&&g.fb&&g.fb.pre&&g.fb.pre.lines[0]){const bm=fromUci(g.fb.st0,g.fb.pre.lines[0].pv[0]);if(bm)arr.push({f:bm.f,t:bm.t,c:'green'})}
     if(my){for(const s of hanging(g.st.b,w))if(!marks[sn(s)])marks[sn(s)]='bad';for(const s of outposts(g.st.b,!w).filter(s=>!g.st.b[s]).slice(0,3))if(!marks[sn(s)])marks[sn(s)]='weak'}}
   const dots=g.sel!=null?legal(g.st).filter(x=>x.f===g.sel).map(x=>sn(x.t)):[];
@@ -1884,20 +1928,99 @@ function vCoach(){const g=CG;if(!g){go({name:'coachset'});return}const my=coMyTu
   if(g.book&&g.bookOk&&g.moves.length<g.book.moves.length)h+=`<div class="banner">📖 Opening trainer: <b>${esc(g.book.name)}</b>, move ${Math.floor(g.moves.length/2)+1} of ${Math.ceil(g.book.moves.length/2)}. ${my?'Find the book move.':''}</div>`;
   else if(g.book&&g.moves.length>=g.book.moves.length&&g.bookOk)h+=`<div class="banner">📖 You finished the ${esc(g.book.name)} line. Now play on with the plan.</div>`;
   if(g.start)h+=`<div class="banner">🎯 Theme: <b>${esc(g.start.name)}</b></div>`;
-  {const bh=boardHTML({cls:'coachb',persp:g.human,coords:true,pieces:toMap(g.st.b),from:g.sel!=null?sn(g.sel):null,marks,dots,id:'coach'});h+=bh.slice(0,-6)+arrowsSVG(g.human,arr)+'</div>'}
-  if(P.set.carrow!==false&&my)h+='<small class="muted legend"><span class="lg r"></span>threat · <span class="lg g"></span>hint / better move · <span class="lg y"></span>weak square · red square: loose piece</small>';
+  h+='<div class="costick">';{const bh=boardHTML({cls:'coachb',persp:g.human,coords:true,pieces:toMap(g.st.b),from:g.sel!=null?sn(g.sel):null,marks,dots,id:'coach'});h+=bh.slice(0,-6)+arrowsSVG(g.human,arr)+'</div>'}
+  if(P.set.carrow!==false&&my&&P.set.ceasy===false)h+='<small class="muted legend"><span class="lg r"></span>threat · <span class="lg g"></span>hint / better move · <span class="lg y"></span>weak square · red square: loose piece</small>';h+='</div>';
   if(g.over)h+=`<div class="fb ${g.over.r==='w'?'ok':'no'}"><h3>${g.over.msg}</h3></div>`;
   else if(g.pend)h+=g.pend.type==='book'?`<div class="card stack pend"><b>📖 Not the book move.</b><p>In the ${esc(g.book.name)} the move here is <b>${esc(g.pend.exp)}</b>. You played ${esc(g.fb.san)}.</p><div class="row"><button class="btn primary" style="flex:1" data-act="co-retry">Try again</button><button class="btn" style="flex:1" data-act="co-keep">Leave the book</button></div></div>`
     :`<div class="card stack pend"><b>✋ Coach stopped the game: ${esc(g.fb.san)} is a ${CLS[g.fb.cls][0].toLowerCase()}.</b><p>${esc(coWhy(g.fb).reason)}</p><p class="muted">Take it back and find a better move. Use Hint if you need help.</p><div class="row"><button class="btn primary" style="flex:1" data-act="co-retry">Try again</button><button class="btn" style="flex:1" data-act="co-keep">Keep my move</button></div></div>`;
   else h+=`<p class="${g.busy?'muted':''}" style="text-align:center;min-height:22px;margin:0">${g.busy?esc(g.busy):my?(g.tried?`Try again: ${esc(g.tried)} was not good. Find a better move.`:'Your move: tap a piece, then its square'):''}</p>`;
+  if(P.set.ceasy!==false){h+=coEasyHTML();main.innerHTML=h;onSq=coTap;return}
   h+=`<div class="row corow">${g.over?`<button class="btn primary" style="flex:1" data-act="co-review">Game review</button><button class="btn" data-act="co-setup">New game</button>`:`<button class="btn" data-act="co-hint" ${my&&!g.busy&&(g.hint||0)<3?'':'disabled'}>Hint${g.hint?` ${g.hint}/3`:''}</button><button class="btn" data-act="co-undo" ${g.moves.some(x=>x.by==='h')&&!String(g.busy).startsWith('Coach')?'':'disabled'}>Take back</button><button class="btn" data-act="co-resign">${g.confirmResign?'Tap again':'Resign'}</button><button class="btn" data-act="co-setup">Menu</button>`}</div>`;
-  h+=`<div id="coside">${coSideHTML()}</div>`+checklistHTML();const aiCard=`<div class="card aitop">${aiButtons(g.fb&&!g.fb.lite?['turn','pos']:['pos'])}</div>`;
-  if(gKey())h+=aiCard;h+=coEngHTML();
-  if(g.fb){h+=coFbHTML(g.fb);if(g.fb.cls!=='best'&&!g.fb.lite)h+=`<button class="btn small" data-act="co-better">${g.show.better?'Show the game position':'Show the better move on the board'}</button>`}
-  h+=coViewHTML();if(!gKey())h+=aiCard;
-  if(!g.over)h+=coPosHTML();
+  if(!g.over)h+=`<div class="row arrrow"><button class="btn small ${g.arrBest?'on':''}" data-act="co-arr" data-v="arrBest" ${my?'':'disabled'}>➜ Best moves</button><button class="btn small ${g.arrThink?'on':''}" data-act="co-arr" data-v="arrThink">🧠 Coach's thinking</button>${g.fb&&!g.fb.lite&&g.fb.cls!=='best'?`<button class="btn small ${g.show.better?'on':''}" data-act="co-better">✓ Better move</button>`:''}</div>`;
+  h+=`<div id="coside">${coSideHTML()}</div>`+coStripHTML();
+  const tabs=coTabs(),tab=tabs.find(x=>x[0]===g.tab)?g.tab:tabs[0][0];g.tab=tab;
+  h+=`<div class="ctabs">${tabs.map(([k,t,dot])=>`<button class="${k===tab?'on':''}" data-act="co-tab" data-v="${k}">${t}${dot?`<i class="dot ${dot}"></i>`:''}</button>`).join('')}</div><div class="card ctab">${coTabHTML(tab)}</div>`;
+  if(P.set.cpause&&g.waitNext)h+=`<button class="btn primary block" data-act="co-next">Next ▶ (computer moves)</button>`;
   h+=`<div class="gamemoves">${g.moves.length?coMovesHTML(g.moves):'<span class="muted">No moves yet</span>'}</div></div>`;
   main.innerHTML=h;onSq=coTap}
+// beginner guide: opening steps + "your job now"
+const OSTEPS=[['centre','Put a pawn in the centre'],['knights','Bring out your knights'],['bishops','Bring out your bishops'],['castle','Castle: make your king safe'],['rooks','Connect your rooks']];
+function openSteps(st,w){const b=st.b,P_=w?'P':'p',N_=w?'N':'n',B_=w?'B':'b',K_=w?'K':'k',r0=w?0:56;const at=n=>b[si(n)];
+  const done={centre:[2,3,4].some(f=>b[(w?8:48)+f]!==P_),knights:at(w?'b1':'b8')!==N_&&at(w?'g1':'g8')!==N_,bishops:at(w?'c1':'c8')!==B_&&at(w?'f1':'f8')!==B_,castle:[r0+6,r0+2,r0+1,r0+7].some(x=>b[x]===K_)};
+  done.rooks=done.castle&&[1,2,3,5,6].every(f=>{const p=b[r0+f];return!p||isW(p)!==w||'KR'.includes(p.toUpperCase())});return done}
+function stepMoves(st,step){const w=st.w,ms=legal(st),r0=w?0:56;
+  return ms.filter(m=>{const U=m.p.toUpperCase();if(step==='centre')return U==='P'&&[2,3,4].includes(m.f&7)&&(m.f>>3)===(w?1:6);if(step==='knights')return U==='N'&&isHome(m.f,m.p);if(step==='bishops')return U==='B'&&isHome(m.f,m.p);if(step==='castle')return!!m.castle;if(step==='rooks')return'QBN'.includes(U)&&(m.f>>3)===(r0>>3);return false})}
+function safeMove(st,m){const n=make(st,m);return!hanging(n.b,st.w).includes(m.t)}
+function coJob(g){if(!coMyTurn()||g.pend||g.over)return null;const st=g.st,w=st.w,ms=legal(st);const pre=g.pre&&g.pre.lines||[];
+  const best=pre[0]?fromUci(st,pre[0].pv[0]):null,rank=m=>{const i=pre.findIndex(l=>l.pv[0]===uciOf(m));return i<0?9:i};
+  if(inCheck(st))return{t:'You are in check! Move your king, block the check, or take the checking piece.',m:best};
+  const th=g.threat,hg=hanging(st.b,w);
+  if(th&&th.mate)return{t:`Danger: the coach threatens checkmate with ${th.san}. Stop it first.`,m:best};
+  if(best&&best.cap&&pre[0]){const L=lineInfo(st,pre[0].pv,6);const lm=g.moves[g.moves.length-1];if(lm&&lm.m.cap&&lm.m.t===best.t)return{t:`Take back on ${sn(best.t)}, so you don't lose material.`,m:best};if(L.gain>=80)return{t:`You can win ${matWord(L.gain)}! Take on ${sn(best.t)}.`,m:best}}
+  const vsq=th&&th.m&&th.gain>=80?th.m.t:hg.length?hg[0]:-1;
+  if(vsq>=0&&best){const p=st.b[vsq],nm=`Your ${p?PN(p):'piece'} on ${sn(vsq)}`,bs=san(st,best,legal(st)),n=make(st,best);
+    if(best.f===vsq)return{t:`${nm} is attacked. Move it to a safe square, like ${bs}.`,m:best};
+    if(!hanging(n.b,w).includes(vsq))return{t:`${nm} is attacked. Protect it with ${bs}.`,m:best};
+    return{t:`${nm} is in danger, but ${bs} is even stronger: it ${moveNote(st,best)}.`,m:best}}
+  const plies=g.moves.length;if(plies<24&&!g.start){const d=openSteps(st,w);const k=OSTEPS.findIndex(x=>!d[x[0]]);
+    if(k>=0){const c=stepMoves(st,OSTEPS[k][0]).filter(m=>safeMove(st,m)).sort((a,b)=>rank(a)-rank(b)||(Math.abs(3.5-(a.t&7))-Math.abs(3.5-(b.t&7))));
+      if(c.length&&(!best||rank(c[0])<9||!pre[0]||Math.abs(scCp(pre[0]))<150))return{t:`Step ${k+1} of 5: ${OSTEPS[k][1]}.`,m:c[0],step:k,done:d}}}
+  if(best)return{t:'Your job: '+hintIdea(g,best),m:best};return null}
+function coJobHTML(g){const j=g.job;if(!j)return'';let h='<div class="jobnow"><div><b>👉 Your job now:</b> '+esc(j.t)+'</div>';
+  if(j.m)h+=`<div class="muted" style="font-size:14px">Suggested move: <b class="mono">${esc(san(g.st,j.m,legal(g.st)))}</b> (green arrow)</div>`;
+  if(j.done)h+='<div class="osteps">'+OSTEPS.map(([k,t],i)=>`<span class="${j.done[k]?'ok':i===j.step?'cur':''}">${j.done[k]?'✓':i+1} ${['Centre','Knights','Bishops','Castle','Rooks'][i]}</span>`).join('')+'</div>';return h+'</div>'}
+function coEasyHTML(){const g=CG,my=coMyTurn();let h=(P.set.cjob!==false&&!g.ep?coJobHTML(g):'')+(g.ep&&g.ep!=='more'?'':coStripHTML());
+  if(P.set.cpause&&g.waitNext)h+=`<button class="btn primary block bignext" data-act="co-next">Next ▶ (coach moves)</button>`;
+  if(g.over)return h+`<div class="ebtns"><button class="btn primary" data-act="co-review">Game review</button><button class="btn" data-act="co-setup">New game</button></div></div>`;
+  const ep=g.ep;
+  h+=`<div class="ebtns"><button class="btn ${g.hint?'on':''}" data-act="co-hint" ${my&&!g.busy&&(g.hint||0)<3?'':'disabled'}>💡 Hint${g.hint?` ${g.hint}/3`:''}</button><button class="btn ${ep==='opts'?'on':''}" data-act="co-ep" data-v="opts">🎯 Options</button><button class="btn ${ep==='think'?'on':''}" data-act="co-ep" data-v="think">🧠 Plans</button><button class="btn ${ep==='more'?'on':''}" data-act="co-ep" data-v="more">☰ More</button></div>`;
+  h+=`<div id="coside">${coSideHTML()}</div>`;
+  if(ep==='opts')h+=`<div class="card epanel">${coEasyOpts()}</div>`;
+  else if(ep==='think')h+=`<div class="card epanel">${coEasyThink()}</div>`;
+  else if(ep==='more'){const tabs=coTabs(),tab=tabs.find(x=>x[0]===g.tab)?g.tab:tabs[0][0];g.tab=tab;
+    h+=`<div class="ctabs">${tabs.map(([k,t,dot])=>`<button class="${k===tab?'on':''}" data-act="co-tab" data-v="${k}">${t}${dot?`<i class="dot ${dot}"></i>`:''}</button>`).join('')}</div><div class="card ctab">${coTabHTML(tab)}</div>`}
+  h+=`<div class="esmall"><button class="btn small" data-act="co-undo" ${g.moves.some(x=>x.by==='h')&&!String(g.busy).startsWith('Coach')?'':'disabled'}>↶ Take back</button><button class="btn small" data-act="co-resign">${g.confirmResign?'Tap again':'Resign'}</button><button class="btn small" data-act="co-setup">Menu</button></div>`;
+  return h+`<div class="gamemoves">${g.moves.length?coMovesHTML(g.moves):'<span class="muted">No moves yet</span>'}</div></div>`}
+function coEasyOpts(){const g=CG,st=g.st;if(!coMyTurn())return'<p class="muted">Options show when it is your turn.</p>';if(!g.pre)return'<p class="muted">Coach is checking your options…</p>';
+  const OC=['green','blue','grey'],NM=['Best','Good too','Also possible'];let h='<h4>🎯 Your best options (see the arrows)</h4>';
+  g.pre.lines.forEach((l,i)=>{const m=fromUci(st,l.pv[0]);if(!m)return;const L=lineInfo(st,l.pv,5),on=g.opt===i;
+    h+=`<button class="eopt ${on?'on':''}" data-act="co-opt" data-v="${i}"><span class="en" style="background:${ACOL[OC[i]||'grey']}">${i+1}</span><span style="flex:1"><b class="sn mono">${esc(san(st,m,legal(st)))}</b> <small class="muted">${NM[i]||''}</small><div class="ex">${esc(moveNote(st,m))}.</div>${on?`<div class="ex">Result: <b>${outcomeWord(l)}</b>${Math.abs(L.gain)>=80?`, ${L.gain>0?'you win':'you lose'} ${matWord(L.gain)}`:''}.</div><div class="ol">What may follow: ${esc(L.san)}</div>`:'<div class="ol">Tap for result</div>'}</span></button>`});
+  return h+'<small class="muted">Tap a number on the board or a card. Then play the move yourself.</small>'}
+function coPlanItems(g){const it=[],my=coMyTurn(),st=g.st,hw=g.human==='w';const e=[...g.moves].reverse().find(x=>x.by==='e');
+  if(e){let t=`Coach played ${e.san}: ${e.note||'a useful move'}.`;const ex=[];const tg=my&&st.b[e.m.t]?pieceAttacks(st.b,e.m.t,st.b[e.m.t]).filter(q=>st.b[q]&&isW(st.b[q])===hw&&st.b[q].toUpperCase()!=='K'):[];
+    if(tg.length){t+=` Now it eyes your ${PN(st.b[tg[0]])} on ${sn(tg[0])}.`;ex.push({f:e.m.t,t:tg[0],c:'orange',w:.08})}
+    it.push({k:'A',c:'orange',f:e.m.f,t:e.m.t,h:'Coach\'s idea',x:t,ex})}
+  if(my){const th=g.threat,ids=oppIdeas(st);const nx=th&&th.m?{m:th.m,san:th.san,note:moveNote(th.st,th.m),thr:1}:ids[0];
+    if(nx)it.push({k:'B',c:'red',f:nx.m.f,t:nx.m.t,h:nx.thr?'Coach threatens':'Coach wants next',x:`${nx.thr?'It threatens':'Next it would like'} ${nx.san}: ${nx.note}.`});
+    const l=g.pre&&g.pre.lines[g.opt!=null&&g.ep==='opts'?g.opt:0];if(l){const S=pvWalk(st,l.pv,3).steps;
+      if(S[0])it.push({k:'C',c:'green',f:S[0].m.f,t:S[0].m.t,h:'Your best move',x:`Play ${S[0].san}: ${moveNote(S[0].st,S[0].m)}.`});
+      if(S[1])it.push({k:'D',c:'red',f:S[1].m.f,t:S[1].m.t,h:'Coach\'s counter',x:`Then the coach would answer ${S[1].san}: ${moveNote(S[1].st,S[1].m,S[0].m)}.`,dash:1});
+      if(S[2])it.push({k:'E',c:'blue',f:S[2].m.f,t:S[2].m.t,h:'Your reply to that',x:`And you continue with ${S[2].san}: ${moveNote(S[2].st,S[2].m,S[1].m)}. Result: ${outcomeWord(l)}.`,dash:1})}}
+  return it}
+function coEasyThink(){const g=CG,it=coPlanItems(g);if(!it.length)return'<p class="muted">Plans show after the first moves.</p>';
+  let h='<h4>🧠 Plans on the board (tap a letter)</h4>';
+  for(const x of it){const on=g.psel===x.k;h+=`<button class="eopt ${on?'on':''}" data-act="co-psel" data-v="${x.k}"><span class="en" style="background:${ACOL[x.c]}">${x.k}</span><span style="flex:1"><b>${x.h}</b><div class="ex">${esc(x.x)}</div></span></button>`}
+  return h+'<small class="muted">A = coach\'s last idea · B = its next threat · C = your best move · D = coach\'s counter · E = your answer.</small>'}
+function coEasyThinkOld(){const g=CG,last=[...g.moves].reverse().find(x=>x.by==='e');if(!last)return'<p class="muted">The coach has not moved yet.</p>';
+  let h=`<h4>🧠 Why the coach played ${esc(last.san)}</h4><ul class="cline"><li>${esc(last.note||'a useful move')}.</li>`;
+  const pv=last.an&&last.an.lines&&last.an.lines[0]&&last.an.lines[0].pv;if(pv&&pv.length>1&&pv[0]===uciOf(last.m)){const L=pvWalk(last.st0,pv,4).steps;h+=`<li>Its plan: <b>${esc(L.map(x=>x.san).join(' '))}</b> (arrows on the board: red = coach, grey = your expected reply).</li>`}
+  const th=coMyTurn()&&g.threat;if(th&&th.san)h+=`<li class="warn">Watch out: it threatens ${esc(th.san)} (thick red arrow).</li>`;else if(coMyTurn())h+='<li>No direct threat right now.</li>';
+  if(coMyTurn()){const ids=oppIdeas(g.st).filter(x=>!th||!th.m||uciOf(x.m)!==uciOf(th.m)).slice(0,2);if(ids.length)h+=`<li>Its next ideas (thin red arrows): ${ids.map(x=>`<b>${esc(x.san)}</b>, ${esc(x.note)}`).join('; ')}.</li>`}
+  return h+'</ul>'}
+function coTabs(){const g=CG,my=coMyTurn(),t=[];const r=g.fb&&AIR[aiKey('turn')];
+  if(gKey())t.push(['ai','✦ AI',r&&r.state==='load'?'busy':r&&r.state==='ok'?'new':'']);
+  if(g.fb)t.push(['move','Your move',g.fb.lite?'':['mistake','blunder'].includes(g.fb.cls)?'bad':'']);
+  t.push(['think','🧠 Coach',''],['threat','⚔️ Threats',my&&(g.threat||hanging(g.st.b,g.human==='w').length)?'bad':''],['opts','🎯 Options',''],['plan','📋 Plan','']);if(!gKey())t.push(['ai','✦ AI','']);return t}
+function coTabHTML(k){const g=CG;
+  if(k==='ai')return aiButtons(g.fb&&!g.fb.lite?['turn','pos']:['pos']);
+  if(k==='move')return g.fb?coFbHTML(g.fb).replace(/^<div class="card stack cfb">/,'<div class="stack cfb">'):'<p class="muted">Make a move and the coach will judge it here.</p>';
+  if(k==='think')return(coEngHTML()+coViewHTML('think'))||'<p class="muted">The coach has not moved yet.</p>';
+  if(k==='threat')return checklistHTML().replace(/^<div class="card stack checklist">/,'<div class="stack checklist">')+coViewHTML('threat');
+  if(k==='opts')return coViewHTML('opts')||'<p class="muted">Options appear when it is your move.</p>';
+  if(k==='plan')return coViewHTML('plan')+(g.over?'':coPosHTML().replace(/^<div class="card stack">/,'<div class="stack">'));return''}
+function coStripHTML(){const g=CG;if(!g.fb||g.pend)return'';const fb=g.fb,r=AIR[aiKey('turn')];let rt='';if(r&&r.state==='ok'){const m=r.text.match(/Rating:?\**\s*(\d+(?:\.\d)?)\s*\/\s*10/i);if(m)rt=`<span class="airate ${+m[1]>=8?'hi':+m[1]>=5?'mid':'lo'}">AI ${m[1]}/10</span>`}
+  if(fb.lite)return'';const y=coWhy(fb),last=g.moves[g.moves.length-1];
+  return`<div class="vstrip"><div class="row" style="gap:6px;align-items:center;flex-wrap:wrap"><b class="mono">${fb.st0.fm}${fb.w?'.':'…'} ${esc(fb.san)}</b><span class="cls ${CLS[fb.cls][1]}">${CLS[fb.cls][0]}</span>${rt}</div><div class="vr">${esc(y.reason)}</div>${last&&last.by==='e'?`<div class="vr muted">Coach: <b>${esc(last.san)}</b>, ${esc(last.note||'')}.</div>`:''}</div>`}
 function coMovesHTML(moves){let h='';moves.forEach((x,i)=>{if(i%2===0)h+=`<span class="mn">${i/2+1}.</span>&nbsp;`;const c=x.fb&&CMARK[x.fb.cls];h+=`<span class="${c?'cm-'+x.fb.cls:''}">${esc(x.san)}${c||''}</span>`+(i%2?' &nbsp; ':'&nbsp; ')});return h}
 function vCoachRev(){const g=CG;if(!g){go({name:'coachset'});return}const s=coStats(g);const i=V.ri;
   let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="co-back">← Game</button><span class="eyebrow">Game review</span><h1>${g.over?esc(g.over.msg):'Game so far'}</h1>
@@ -1924,6 +2047,7 @@ function coLessons(g){const out=[],f=g.moves.filter(x=>x.by==='h'&&x.fb&&!x.fb.l
   const s=coStats(g);if(!out.length)out.push(s.acc>=85?'Clean game. Try a stronger level next time.':'Keep checking captures and threats before every move.');
   return out}
 
+try{const hd=document.querySelector('header.top');const setH=()=>{document.documentElement.style.setProperty('--hdr',(hd?hd.getBoundingClientRect().height:56)+'px');const cs=document.querySelector('.costick');if(cs)document.documentElement.style.setProperty('--bh',cs.getBoundingClientRect().height+'px')};new MutationObserver(()=>{const cs=document.querySelector('.costick');if(cs)document.documentElement.style.setProperty('--bh',cs.getBoundingClientRect().height+'px')}).observe(document.body,{childList:true,subtree:false});setH();addEventListener('resize',setH)}catch(e){}
 render();
 
 </script>
