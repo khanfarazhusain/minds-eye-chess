@@ -27,7 +27,14 @@ header.top .wrap{display:flex;align-items:center;justify-content:space-between;p
 .hl-links a{font-weight:600;font-size:14px;text-decoration:none;background:var(--surface2);color:var(--fg);padding:5px 12px;border-radius:999px}
 main{padding-block:18px 80px}
 h1,h2,h3,h4{font-family:var(--f-display);font-weight:700;line-height:1.12;margin:0;text-wrap:balance;letter-spacing:.01em}
-h1{font-size:34px}h2{font-size:28px}h3{font-size:23px}h4{font-size:19px;margin-bottom:6px}
+h1{font-size:34px}h2{font-size:28px}h3{font-size:23px}h4{font-size:20px;margin-bottom:8px;color:var(--accent);border-left:4px solid var(--accent);padding-left:9px}
+.tno{font-family:var(--f-mono);font-size:.72em;font-weight:700;color:var(--muted);margin-right:2px}
+.kind{color:var(--brass)}
+.lesson h3{font-size:26px}
+.ltoc{background:var(--surface2);border-radius:8px;padding:10px 12px 6px;margin-bottom:6px}
+.ltoc ol{list-style:none;padding:0;margin:4px 0 0}
+.ltoc li{margin:0 0 4px;font-size:15px;line-height:1.35}
+.ltoc a{text-decoration:none;color:var(--fg)}
 p{margin:0 0 8px}
 ul,ol{margin:0 0 8px;padding-left:22px}
 li{margin:3px 0}
@@ -64,7 +71,7 @@ li{margin:3px 0}
 .yaad{background:var(--yaad);border-left:4px solid var(--brass);border-radius:8px;padding:10px 12px 4px;margin-bottom:14px}
 .yaad .eyebrow{color:var(--brass);display:block;margin-bottom:2px}
 .blk{border-top:1px dashed var(--line);padding-top:12px;margin-top:12px}
-.blk:first-of-type{border-top:0}
+.ltoc+.blk{border-top:0}
 .txt p:last-child,.txt ul:last-child{margin-bottom:6px}
 .tag{display:inline-block;font-family:var(--f-display);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:var(--accent-fg);border-radius:5px;padding:1px 7px;vertical-align:2px;margin-right:4px}
 .tag.q{background:var(--brass);color:#fff}
@@ -113,3 +120,6 @@ details[open]:not(.tocl){padding-bottom:10px}
 .sidetag.w{background:#F4F0E2;color:#2C3A23;box-shadow:inset 0 0 0 1px var(--line)}.sidetag.b{background:#222;color:#F4F0E2}
 .totop{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--accent-fg);display:flex;align-items:center;justify-content:center;font-size:22px;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.25);z-index:6}
 @media print{header.top,.totop,.lfoot{display:none}details{background:none!important}details>*{display:block}.lesson{break-inside:avoid-page}body{font-size:13px}}
+
+.pts{padding-left:20px;margin:0 0 8px}.pts li{margin:4px 0}.pts ul{padding-left:18px;margin:3px 0}.pts ul li{list-style:circle}
+.intro .pts{margin:0}
