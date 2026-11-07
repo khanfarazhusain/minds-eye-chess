@@ -241,6 +241,9 @@ main .qbox.tr.kt .moves{max-height:18vh;max-height:18svh}
 .gkey a{color:var(--accent)}
 .coursecta{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--fg);border-left:4px solid var(--brass)}
 .coursecta b{font-size:17px}
+.csec h4{margin:4px 0 2px;font-size:15px}.cview .cline li .btn.small{padding:2px 8px;font-size:12px;margin-left:4px}
+.aitop{border:2px solid var(--accent)}.airate{font-weight:700;font-size:13px;padding:2px 10px;border-radius:999px;white-space:nowrap}
+.airate.hi{background:var(--good-soft);color:var(--good)}.airate.mid{background:color-mix(in srgb,var(--brass) 22%,transparent);color:var(--brass)}.airate.lo{background:var(--bad-soft);color:var(--bad)}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i>♞&#xFE0E;</i>Mind's Eye Chess</div><div class="chips" id="chips"></div></div></header>
@@ -1221,7 +1224,8 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'co-ri':V.ri=+d.v;vCoachRev();break;
    case'co-better':CG.show.better=!CG.show.better;vCoach();break;
    case'co-ai':P.set.ai=d.v;save();{const y=window.scrollY;render();window.scrollTo(0,y)}break;
-   case'ai-auto':P.set.autoai=d.v==='1';save();if(P.set.autoai&&CG&&CG.fb&&!CG.fb.lite&&!AIR[aiKey('move')])aiGo('move',CG.fb.ply,true);else aiRe();break;
+   case'co-opt':if(CG){CG.opt=CG.opt===+d.v?null:+d.v;vCoach();const bd=main.querySelector('.board');if(bd&&CG.opt!=null)bd.scrollIntoView({behavior:'smooth',block:'center'})}break;
+   case'ai-auto':P.set.autoai=d.v==='1';save();if(P.set.autoai&&CG&&CG.fb&&!CG.fb.lite&&CG.pre&&!AIR[aiKey('turn')])aiGo('turn',null,true);else aiRe();break;
    case'ai-go':aiGo(d.k,d.ply!=null?+d.ply:null);break;
    case'gk-save':{const inp=b.closest('.gkey').querySelector('input'),k=(inp.value||'').trim().replace(/\s/g,'');
      if(!k){GMSG='Paste the key first.';aiRe();break}
@@ -1456,12 +1460,12 @@ function coResume(){const g=P.cgame;if(!g)return;CG={st:startState(),states:[sta
   for(let i=0;i<g.sans.length;i++){const m=findMove(CG.st,g.sans[i]);if(!m)break;const by=(CG.st.w===(g.human==='w'))?'h':'e';CG.moves.push({m,san:g.sans[i],by,fb:g.fbs&&g.fbs[i]&&{...g.fbs[i],lite:1}});CG.st=make(CG.st,m);CG.states.push(CG.st)}
   sfStart();go({name:'coach'});coCheckEnd();if(CG.over)return;if(CG.st.w===(CG.human==='w'))coPre();else coEngine()}
 const coMyTurn=()=>CG&&!CG.over&&CG.st.w===(CG.human==='w');
-function coPre(){const g=CG,t=g.tok,st=g.st;g.pre=null;g.threat=threatOf(st);g.hint=false;g.preP=sfGo(st,{multipv:3,movetime:900,depth:18}).then(r=>{if(CG===g&&g.tok===t&&g.st===st){g.pre=r;if(V.name==='coach'&&!g.busy)coDrawSide()}return r});if(V.name==='coach')vCoach()}
+function coPre(){const g=CG,t=g.tok,st=g.st;g.pre=null;g.threat=threatOf(st);g.hint=false;g.opt=null;g.preP=sfGo(st,{multipv:3,movetime:900,depth:18}).then(r=>{if(CG===g&&g.tok===t&&g.st===st){g.pre=r;if(aiAuto()&&g.fb&&!g.fb.lite&&!AIR[aiKey('turn')])aiGo('turn',null,true);else if(V.name==='coach'&&!g.busy)vCoach()}return r});if(V.name==='coach')vCoach()}
 async function coHuman(m){const g=CG,t=g.tok,st0=g.st,list=legal(st0),s=san(st0,m,list);g.sel=null;g.busy='Coach is checking your move…';
   const st1=make(st0,m);g.st=st1;g.states.push(st1);const rec={m,san:s,by:'h',fb:null};g.moves.push(rec);vCoach();
   const pre=await g.preP;if(CG!==g||g.tok!==t)return;
   let post=legal(st1).length?await sfGo(st1,{multipv:1,movetime:700,depth:16}):{lines:[]};if(CG!==g||g.tok!==t)return;
-  rec.fb=coJudge(st0,m,s,st1,pre,post);g.fb=rec.fb;g.busy='';if(aiAuto())aiGo('move',rec.fb.ply,true);coSaveCur();coCheckEnd();if(g.over){coFinish();return}coEngine()}
+  rec.fb=coJudge(st0,m,s,st1,pre,post);g.fb=rec.fb;g.busy='';coSaveCur();coCheckEnd();if(g.over){coFinish();return}coEngine()}
 function coJudge(st0,m,s,st1,pre,post){const w=st0.w,best=pre&&pre.lines[0],u=uciOf(m);const fb={st0,m,san:s,st1,pre,post,w,ply:CG.moves.length-1};
   const before=best?wpOf(scCp(best)):.5;let after;
   if(!legal(st1).length)after=inCheck(st1)?1:.5;else after=post.lines[0]?1-wpOf(scCp(post.lines[0])):before;
@@ -1472,7 +1476,7 @@ function coJudge(st0,m,s,st1,pre,post){const w=st0.w,best=pre&&pre.lines[0],u=uc
   fb.inPre=!!inPre;return fb}
 function coEngine(){const g=CG,t=g.tok,L=CLV[g.lvl];g.busy='Computer is thinking…';if(V.name==='coach')vCoach();
   const st=g.st,t0=Date.now();sfGo(st,{skill:L.skill,movetime:L.mt,depth:L.d||null,js:L.js,multipv:1}).then(r=>{if(CG!==g||g.tok!==t)return;
-    const go2=()=>{if(CG!==g||g.tok!==t)return;let m=fromUci(st,r.best)||engineMove(st,L.js);const s=san(st,m,legal(st));g.st=make(st,m);g.states.push(g.st);g.moves.push({m,san:s,by:'e',note:moveNote(st,m,g.moves.length?g.moves[g.moves.length-1].m:null)});g.busy='';speak(sanWords(s));
+    const go2=()=>{if(CG!==g||g.tok!==t)return;let m=fromUci(st,r.best)||engineMove(st,L.js);const s=san(st,m,legal(st));g.st=make(st,m);g.states.push(g.st);g.moves.push({m,san:s,by:'e',st0:st,an:r,note:moveNote(st,m,g.moves.length?g.moves[g.moves.length-1].m:null)});g.busy='';speak(sanWords(s));
       coSaveCur();coCheckEnd();if(g.over){coFinish();return}coPre()};const wait=Math.max(0,450-(Date.now()-t0));wait?setTimeout(go2,wait):go2()})}
 function coCheckEnd(){const g=CG,ms=legal(g.st);let over=null;const hw=g.human==='w';
   if(!ms.length){if(inCheck(g.st)){const winW=!g.st.w;over={r:winW===hw?'w':'l',msg:winW===hw?'Checkmate. You win!':'Checkmate. The computer wins.'}}else over={r:'d',msg:'Stalemate. Draw.'}}
@@ -1530,28 +1534,87 @@ function coFbHTML(fb,full){if(!fb)return'';if(fb.lite)return`<div class="card"><
   let h=`<div class="card stack cfb"><div class="row" style="justify-content:space-between;align-items:center"><b class="mono">${mvno} ${esc(fb.san)}</b><span class="cls ${CLS[fb.cls][1]}">${CLS[fb.cls][0]}</span></div>
   <p>${esc(y.reason)}</p><p class="muted" style="font-size:14px">Eval ${evB?evTxt(evB,w):'?'} → ${evAw?evTxt(evAw,w):'?'} · win chance ${Math.round(fb.before*100)}% → ${Math.round(fb.after*100)}%</p>`;
   h+=`<details${full?' open':''}><summary>Your move</summary><p>${esc(fb.san)} ${esc(y.yours)}.${y.cmp&&y.cmp.length?` Compared with ${esc(y.bestSan)}, it ${esc(pl(y.cmp,x=>x))}.`:''}${y.hang.length?` Careful: your ${esc(sqList(fb.st1.b,y.hang))} can now be taken.`:''}</p>
-   ${y.reply&&y.reply.steps.length&&fb.cls!=='best'?`<p><b>${sideW(!w)}'s best answer</b> and what follows:</p>${y.reply.html}${Math.abs(y.reply.gain)>=80?`<p class="muted">After this line you ${y.reply.gain>0?'win':'lose'} ${matWord(y.reply.gain)}.</p>`:''}`:''}</details>`;
+   ${y.reply&&y.reply.steps.length&&fb.cls!=='best'?`<p><b>${sideW(!w)}'s best answer</b> and what follows:</p>${y.reply.html}${Math.abs(y.reply.gain)>=80?`<p class="muted">After this line you ${y.reply.gain>0?'lose':'win'} ${matWord(y.reply.gain)}.</p>`:''}`:''}</details>`;
   if(y.bestLine&&fb.cls!=='best')h+=`<details${full?' open':''}><summary>Better was ${esc(y.bestSan)}: the plan, move by move</summary>${y.bestLine.html}${Math.abs(y.bestLine.gain)>=80?`<p class="muted">At the end of this line you are ${matWord(y.bestLine.gain)} ${y.bestLine.gain>0?'up':'down'} compared with now.</p>`:''}</details>`;
   else if(y.bestLine)h+=`<details><summary>The engine's plan from here</summary>${y.bestLine.html}</details>`;
   if(fb.pre&&fb.pre.lines.length>1)h+=`<details><summary>Other good moves</summary><ul class="cline">${fb.pre.lines.map(l=>{const m=fromUci(fb.st0,l.pv[0]);return m?`<li><b>${esc(san(fb.st0,m,legal(fb.st0)))}</b> <span class="muted">${evTxt(l,w)} · ${esc(moveNote(fb.st0,m))}</span></li>`:''}).join('')}</ul></details>`;
   return h+(full?aiButtons(['move'],fb.ply):'')+'</div>'}
 function coPosHTML(){const g=CG,w=g.human==='w',st=g.st,sans=g.moves.map(x=>x.san);const pn=positionNotes(st,w,sans);
-  let h=`<div class="card stack"><h3>Position and plan</h3>`;
+  let h=`<div class="card stack"><h3>Position</h3>`;
   if(pn.opening)h+=`<p><b>${esc(pn.opening[1])}.</b> <span class="muted">${esc(pn.opening[2])}</span></p>`;
-  const th=coMyTurn()?g.threat:null;if(th){if(th.check)h+='<p class="warn"><b>You are in check.</b> Block it, move the king or take the checking piece.</p>';
-    else if(th.mate)h+=`<p class="warn"><b>Threat:</b> ${sideW(!w)} threatens mate with ${esc(th.san)}. Stop it now.</p>`;
-    else h+=`<p class="warn"><b>Threat:</b> ${sideW(!w)} wants to play ${esc(th.san)}, ${esc(moveNote(th.st,th.m))}, winning ${matWord(th.gain)||'material'}.</p>`}
-  else if(coMyTurn())h+=`<p class="muted"><b>Threats:</b> nothing immediate. Still check every capture and check ${sideW(!w)} could play.</p>`;
-  const hg=hanging(st.b,w);if(hg.length&&coMyTurn())h+=`<p class="warn">Loose pieces: your ${esc(sqList(st.b,hg))}.</p>`;
-  h+=`<details><summary>Plans for you</summary><ul class="cline">${pn.plan.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></details>`;
   h+=`<details><summary>Pawns, king safety, activity, weak squares</summary><ul class="cline">${pn.facts.map(([k,v])=>`<li><b>${k}.</b> ${esc(v)}</li>`).join('')}</ul></details>`;
+  return h+'</div>'}
+
+function oppIdeas(st){if(inCheck(st))return[];const f={...st,w:!st.w,ep:-1};const ms=legal(f),out=[];
+  for(const m of ms){const n=make(f,m),ck=inCheck(n);if(!ck&&!m.cap)continue;const safe=!attackersOf(n.b,m.t,st.w).length||(m.cap&&pval(m.cap)>=pval(m.p));
+    out.push({m,san:san(f,m,ms),sc:(ck&&!legal(n).length?5000:0)+(m.cap?pval(m.cap):0)+(ck?150:0)+(safe?100:-pval(m.p)),note:moveNote(f,m),f})}
+  return out.sort((a,b)=>b.sc-a.sc).filter(x=>x.sc>0).slice(0,3)}
+function outcomeWord(l){if(!l)return'';if(l.mate!=null)return l.mate>0?`you mate in ${l.mate}`:`you get mated in ${-l.mate}`;const c=l.cp;
+  return c>=300?'winning for you':c>=100?'you are better':c>=-60?'about equal':c>=-200?'a little worse for you':'bad for you'}
+const coachVoice=t=>t.replace(/\bYou are\b/g,'It is').replace(/\bYour\b/g,'Its').replace(/\byour\b/g,'its').replace(/\byou\b/g,'it');
+function coViewHTML(){const g=CG,w=g.human==='w',st=g.st,my=coMyTurn();const sans=g.moves.map(x=>x.san);let h=`<div class="card stack cview"><h3>Coach's view</h3>`;
+  const last=g.moves[g.moves.length-1],fb=g.fb;
+  // 1. coach's hidden thinking
+  if(last&&last.by==='e'){h+=`<div class="csec"><h4>🧠 Coach's thinking: why ${esc(last.san)}</h4><ul class="cline"><li>${esc(last.san)} ${esc(last.note||'')}.</li>`;
+    const pv=last.an&&last.an.lines&&last.an.lines[0]&&last.an.lines[0].pv;if(pv&&pv.length>1&&pv[0]===uciOf(last.m)){const L=lineInfo(last.st0,pv,6);h+=`<li>The line it had in mind: <b>${esc(L.san)}</b></li>`}
+    if(fb&&!fb.lite&&fb.post&&fb.post.lines[0]){const bm=fromUci(fb.st1,fb.post.lines[0].pv[0]);if(bm&&uciOf(bm)!==uciOf(last.m))h+=`<li>Full-strength Stockfish would play <b>${esc(san(fb.st1,bm,legal(fb.st1)))}</b>. At ${CLV[g.lvl].n} level the coach plays a bit weaker on purpose.</li>`}
+    h+='</ul></div>'}
+  // 2. after your move
+  if(fb&&!fb.lite){const y=coWhy(fb);if(y.reply&&y.reply.steps.length){h+=`<div class="csec"><h4>🔍 After your move ${esc(fb.san)}: what can happen</h4><ul class="cline">`;
+    h+=`<li>${sideW(!w)}'s strongest answer: <b>${esc(y.reply.steps[0].san)}</b>, ${esc(moveNote(y.reply.steps[0].st,y.reply.steps[0].m,fb.m))}.</li>`;
+    if(y.reply.steps.length>1)h+=`<li>Main line: ${esc(y.reply.san)}${Math.abs(y.reply.gain)>=80?` (you ${y.reply.gain>0?'lose':'win'} ${matWord(y.reply.gain)})`:''}.</li>`;
+    if(y.hang.length)h+=`<li class="warn">Your ${esc(sqList(fb.st1.b,y.hang))} became loose.</li>`;h+='</ul></div>'}}
+  // 3. after coach's move: threats and possibilities
+  if(my){h+=`<div class="csec"><h4>⚔️ After the coach's move: threats</h4><ul class="cline">`;const th=g.threat;
+    if(th&&th.check)h+='<li class="warn">You are in check: block it, move the king or take the checking piece.</li>';
+    else if(th&&th.mate)h+=`<li class="warn">It threatens mate with ${esc(th.san)}. Stop this first.</li>`;
+    else if(th)h+=`<li class="warn">Main threat: ${esc(th.san)}, ${esc(moveNote(th.st,th.m))}, winning ${matWord(th.gain)||'material'}.</li>`;
+    const ideas=oppIdeas(st).filter(x=>!th||!th.m||uciOf(x.m)!==uciOf(th.m));ideas.forEach(x=>h+=`<li>It could ${th?'also ':''}play ${esc(x.san)}: ${esc(x.note)}.</li>`);
+    const hg=hanging(st.b,w);if(hg.length)h+=`<li class="warn">Loose pieces: your ${esc(sqList(st.b,hg))}.</li>`;
+    if(!th&&!ideas.length&&!hg.length)h+='<li>No direct threat. Use the time to improve your position.</li>';h+='</ul></div>'}
+  // 4. your options and outcomes
+  if(my){h+=`<div class="csec"><h4>🎯 Your options now and where they lead</h4>`;
+    if(!g.pre)h+='<p class="muted">Engine is checking your options…</p>';
+    else{h+='<ol class="cline">';g.pre.lines.forEach((l,i)=>{const m=fromUci(st,l.pv[0]);if(!m)return;const L=lineInfo(st,l.pv,6);
+      h+=`<li><b>${esc(san(st,m,legal(st)))}</b> <span class="muted">(${evTxt(l,st.w)})</span>: ${esc(moveNote(st,m))}. Outcome: <b>${outcomeWord(l)}</b>${Math.abs(L.gain)>=80?`, ${L.gain>0?'you win':'you lose'} ${matWord(L.gain)}`:''}.<br><small class="muted">Line: ${esc(L.san)}</small> <button class="btn small" data-act="co-opt" data-v="${i}">${g.opt===i?'Hide':'Show'}</button></li>`});
+      h+='</ol><small class="muted">Option 1 is the engine\'s best move.</small>'}h+='</div>'}
+  // 5. plans
+  if(!g.over){const mine=positionNotes(st,w,sans),his=positionNotes(st,!w,sans);
+    h+=`<div class="csec"><h4>📋 Coach's plan (${sideW(!w)})</h4><ul class="cline">${his.plan.slice(0,4).map(x=>`<li>${esc(coachVoice(x))}</li>`).join('')}</ul></div>`;
+    h+=`<div class="csec"><h4>✅ Your plan, step by step</h4><ol class="cline">${mine.plan.slice(0,5).map(x=>`<li>${esc(x)}</li>`).join('')}</ol></div>`}
   return h+'</div>'}
 function coEngHTML(){const g=CG,last=g.moves[g.moves.length-1];if(!last||last.by!=='e')return'';return`<p class="muted" style="font-size:15px">Computer played <b>${esc(last.san)}</b>: ${esc(last.note||'')}.</p>`}
 
 /* ================= coach: ask a free AI ================= */
 const AIS={claude:['Claude','https://claude.ai/new?q='],chatgpt:['ChatGPT','https://chatgpt.com/?q='],gemini:['Gemini','https://gemini.google.com/app']};
 function pgnOf(moves){return moves.map((x,i)=>(i%2===0?(i/2+1)+'. ':'')+x.san).join(' ')}
-function coPrompt(kind,ply){const g=CG;if(!g)return'';const w=g.human==='w',me=w?'White':'Black';let fb=ply!=null&&g.moves[ply]?g.moves[ply].fb:g.fb;
+function coTurnPrompt(){const g=CG,w=g.human==='w',me=w?'White':'Black',op=w?'Black':'White',st=g.st,fb=g.fb,last=g.moves[g.moves.length-1];
+  let t=`You are a chess grandmaster coaching a club player who wants to raise their Elo. Answer in simple Hinglish (Hindi/Urdu in Roman letters mixed with English chess words).\n\nI play ${me} against the computer ("coach").\nGame: ${pgnOf(g.moves)}\nCurrent position (FEN): ${toFEN(st)} (${st.w===w?'my move':'coach to move'})\n`;
+  if(fb&&!fb.lite){const y=coWhy(fb);t+=`\nMy last move: ${fb.st0.fm}${w?'.':'...'} ${fb.san}. Stockfish verdict: ${CLS[fb.cls][0]}, my win chance ${Math.round(fb.before*100)}% -> ${Math.round(fb.after*100)}%.\n`;
+    if(y.bestLine&&fb.cls!=='best')t+=`Stockfish's better move was ${y.bestSan}. Best line: ${y.bestLine.san}\n`;if(y.reply&&y.reply.steps.length)t+=`Strongest reply to my move: ${y.reply.san}\n`}
+  if(last&&last.by==='e'){t+=`Coach's reply: ${last.san}.`;const pv=last.an&&last.an.lines&&last.an.lines[0]&&last.an.lines[0].pv;if(pv&&pv.length>1&&pv[0]===uciOf(last.m))t+=` Line the coach had in mind: ${lineInfo(last.st0,pv,6).san}`;t+='\n'}
+  if(g.pre&&g.pre.lines.length)t+=`My candidate moves now (Stockfish): ${g.pre.lines.map(l=>{const L=lineInfo(st,l.pv,6);return`${L.san} [eval ${evTxt(l,st.w)}]`}).join(' | ')}\n`;
+  if(g.threat&&g.threat.san)t+=`Coach's immediate threat: ${g.threat.san}\n`;
+  t+=`\nReply in EXACTLY this format, short bullet points, crisp but detailed, no long paragraphs:
+⭐ Rating: <0-10>/10 – <Brilliant / Best / Good / Inaccuracy / Mistake / Blunder> – <one line on my move ${fb?fb.san:''}>
+🧠 Coach ki hidden thinking (${last&&last.by==='e'?last.san:'its move'} kyun khela):
+- 2-3 points
+🔍 Mere move ke baad possibilities:
+- 2-3 points
+⚔️ Coach ke move ke baad threats/possibilities:
+- 2-3 points
+🎯 Mere next move ke options aur outcome:
+- <move>: <what happens next, who is better>
+- (2-3 options)
+✅ Best next move: <move> – <why, one line>
+📋 Coach ka plan (${op}):
+- 2-3 points
+📋 Mera plan, step by step (${me}):
+1. ...
+2. ...
+3. ...
+Use the FEN for the exact position. Never invent illegal moves; prefer the Stockfish moves given above.`;return t}
+function coPrompt(kind,ply){const g=CG;if(!g)return'';if(kind==='turn')return coTurnPrompt();const w=g.human==='w',me=w?'White':'Black';let fb=ply!=null&&g.moves[ply]?g.moves[ply].fb:g.fb;
   let t=`You are a chess grandmaster and a patient coach. Explain in simple Hinglish (Hindi/Urdu in Roman letters mixed with English chess words), like a GM coach talking to a club player who wants to improve their Elo.\n\nI am playing ${me} against a computer.\nGame so far: ${pgnOf(g.moves)||'(no moves yet)'}\n`;
   if(kind==='move'&&fb&&!fb.lite){const y=coWhy(fb),evB=fb.pre&&fb.pre.lines[0];
     t+=`\nPosition BEFORE my move (FEN): ${toFEN(fb.st0)}\nMy move: ${fb.st0.fm}${w?'.':'...'} ${fb.san}\nStockfish verdict: ${CLS[fb.cls][0]}. My win chance went from ${Math.round(fb.before*100)}% to ${Math.round(fb.after*100)}%. Eval before: ${evB?evTxt(evB,w):'?'} (from White's side).\n`;
@@ -1565,7 +1628,7 @@ function coPrompt(kind,ply){const g=CG;if(!g)return'';const w=g.human==='w',me=w
     if(th&&th.san)t+=`My opponent threatens: ${th.san}\n`;
     t+=`\nPlease explain this position like a GM coach: who stands better and why, the pawn structure, weak squares and outposts, piece activity, king safety, what each side threatens, the right plan for me for the next few moves, and the typical ideas of this opening or middlegame.`}
   return t+'\n\nUse the FEN for the exact position. Keep it practical and easy to remember.'}
-const AIK={move:'Explain my last move',pos:'Explain this position',game:'Review my whole game'};
+const AIK={turn:'Full coach report',move:'Explain my last move',pos:'Explain this position',game:'Review my whole game'};
 /* in-app AI coach: Google Gemini free tier, key kept only in this browser */
 const GKEY='mindseye.gemini.key';
 let GK_MEM='';
@@ -1616,7 +1679,7 @@ function gErr(e){const m={nokey:'Add your free Gemini key first (steps below).',
 function mdLite(t){const lines=esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<i>$2</i>').split('\n');let h='',ul=false;
   for(let l of lines){l=l.trimEnd();const li=l.match(/^\s*(?:[-*•]|\d+[.)])\s+(.*)$/),hd=l.match(/^#{1,6}\s+(.*)$/);
     if(li){if(!ul){h+='<ul>';ul=true}h+=`<li>${li[1]}</li>`;continue}if(ul){h+='</ul>';ul=false}
-    if(hd)h+=`<h4>${hd[1]}</h4>`;else if(l.trim())h+=`<p>${l}</p>`}return h+(ul?'</ul>':'')}
+    if(hd)h+=`<h4>${hd[1]}</h4>`;else if(/^\s*(?:<b>)?[^\w\s<&*]/.test(l)&&l.length<120||/:\s*(<\/b>)?$/.test(l)&&l.length<90)h+=`<h4>${l.replace(/<\/?b>/g,'')}</h4>`;else if(l.trim())h+=`<p>${l}</p>`}return h+(ul?'</ul>':'')}
 const aiKey=(k,ply)=>CG.id+':'+k+':'+(k==='move'?(ply!=null?ply:CG.fb?CG.fb.ply:-1):CG.moves.length);
 function gKeyHTML(){const k=gKey();
   if(k)return`<div class="gkey stack"><div class="gstat"><span>Gemini key saved</span><span class="mono">${esc(k.slice(0,4))}…${esc(k.slice(-4))}</span></div>
@@ -1630,13 +1693,15 @@ function gKeyHTML(){const k=gKey();
    <input class="gin" type="password" placeholder="Paste your key here" autocomplete="off" autocapitalize="off" spellcheck="false">
    <button class="btn primary block" data-act="gk-save">Save key</button>${GMSG?`<p class="warn" style="font-size:14px">${esc(GMSG)}</p>`:''}
    <small class="muted">No card or payment needed. The key stays only on this device. Google may use free-tier questions to improve its products, so the app sends only chess moves, never your name.</small></div>`}
+const g_lastSan=(k,ply)=>{if(!CG)return'';const fb=ply!=null&&CG.moves[ply]?CG.moves[ply].fb:CG.fb;return(k==='turn'||k==='move')&&fb&&!fb.lite?': '+esc(fb.san):''};
 function aiButtons(kinds,ply){const has=!!gKey();let h=`<div class="aibox"><span class="eyebrow">AI coach (Gemini, free)</span>`;
-  if(has&&kinds.includes('move')&&ply==null)h+=`<div class="gstat" style="font-weight:500"><span style="font-size:14px">Explain every move automatically</span><div class="seg sm"><button class="${aiAuto()?'on':''}" data-act="ai-auto" data-v="1">On</button><button class="${aiAuto()?'':'on'}" data-act="ai-auto" data-v="0">Off</button></div></div>`;
+  if(has&&kinds.includes('turn')&&ply==null)h+=`<div class="gstat" style="font-weight:500"><span style="font-size:14px">Explain every move automatically</span><div class="seg sm"><button class="${aiAuto()?'on':''}" data-act="ai-auto" data-v="1">On</button><button class="${aiAuto()?'':'on'}" data-act="ai-auto" data-v="0">Off</button></div></div>`;
   if(has){for(const k of kinds){const r=AIR[aiKey(k,ply)];
     if(!r)h+=`<button class="btn primary block" data-act="ai-go" data-k="${k}"${ply!=null?` data-ply="${ply}"`:''}>✦ ${AIK[k]} with AI</button>`;
     else if(r.state==='load')h+=`<div class="aians muted">AI coach is thinking… (${AIK[k].toLowerCase()})</div>`;
     else if(r.state==='err')h+=`<div class="aians"><p class="warn">${esc(gErr(r.e))}</p>${r.auto?'<p class="muted">The built-in coach explanation above still applies. Auto AI will try again on your next move.</p>':''}<button class="btn block" data-act="ai-go" data-k="${k}"${ply!=null?` data-ply="${ply}"`:''}>Try again</button></div>`;
-    else h+=`<div class="aians"><div class="row" style="justify-content:space-between"><b>${AIK[k]}</b><small class="muted">Gemini</small></div>${mdLite(r.text)}${r.cut?'<p class="muted">(answer was cut short)</p>':''}<button class="btn small" data-act="ai-go" data-k="${k}"${ply!=null?` data-ply="${ply}"`:''}>Ask again</button></div>`}}
+    else{const rt=r.text.match(/Rating:?\**\s*(\d+(?:\.\d)?)\s*\/\s*10\s*[–-]?\s*([A-Za-z]+)?/i);const rv=rt?+rt[1]:null;
+      h+=`<div class="aians"><div class="row" style="justify-content:space-between;align-items:center"><b>${AIK[k]}${g_lastSan(k,ply)}</b>${rv!=null?`<span class="airate ${rv>=8?'hi':rv>=5?'mid':'lo'}">AI ${rv}/10${rt[2]?' · '+esc(rt[2]):''}</span>`:'<small class="muted">Gemini</small>'}</div>${mdLite(r.text.replace(/^.*Rating:.*\n?/i,rv!=null?'':'$&'))}`}if(r&&r.state==='ok')h+=`${r.cut?'<p class="muted">(answer was cut short)</p>':''}<button class="btn small" data-act="ai-go" data-k="${k}"${ply!=null?` data-ply="${ply}"`:''}>Ask again</button></div>`}}
   else h+=`<p class="muted" style="font-size:14px">Get a GM-style explanation in Hinglish right here in the app. It is free: you only need a free Google Gemini key, once.</p><details><summary>Set up the free AI coach</summary>${gKeyHTML()}</details>`;
   const pick=P.set.ai||'claude';
   h+=`<details><summary>Backup: ask in another app</summary><div class="stack" style="margin-top:6px"><div class="seg sm">${Object.entries(AIS).map(([k,v])=>`<button class="${pick===k?'on':''}" data-act="co-ai" data-v="${k}">${v[0]}</button>`).join('')}</div>
@@ -1648,7 +1713,7 @@ function aiGo(k,ply,auto){if(!CG)return;const key=aiKey(k,ply);if(AIR[key]&&AIR[
   if(auto&&Date.now()<AI_PAUSE){AIR[key]={state:'err',e:{code:'limit',msg:''},auto:1};aiRe();return}
   AIR[key]={state:'load'};aiRe();const g=CG;
   AIQ=AIQ.then(async()=>{if(CG!==g)return;const gap=4500-(Date.now()-AI_LAST);if(gap>0)await new Promise(r=>setTimeout(r,gap));AI_LAST=Date.now();
-    const prompt=coPrompt(k,ply)+'\n\nAnswer in about 200-300 words. Use short headings and bullet points. Write in Hinglish.';
+    const prompt=coPrompt(k,ply)+(k==='turn'?'':'\n\nAnswer in about 200-300 words. Use short headings and bullet points. Write in Hinglish.');
     try{const r=await gAsk(prompt);AIR[key]={state:'ok',text:r.text,cut:r.cut}}catch(e){AIR[key]={state:'err',e,auto};if(e&&e.code==='limit')AI_PAUSE=Date.now()+60000}aiRe()})}
 function aiRe(){if(['coach','coachrev','coachset','stats'].includes(V.name)){const y=window.scrollY;render();window.scrollTo(0,y)}}
 function copyText(t){const fb=()=>{const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()};
@@ -1677,6 +1742,7 @@ function coSideHTML(){const g=CG;let h='';if(g.hint&&g.pre&&g.pre.lines[0]){cons
 function vCoach(){const g=CG;if(!g){go({name:'coachset'});return}const my=coMyTurn(),w=g.human==='w';const L=CLV[g.lvl];
   let marks={};const last=g.moves[g.moves.length-1];if(last){marks[sn(last.m.f)]='sel';marks[sn(last.m.t)]='sel'}
   if(g.show.better&&g.fb&&g.fb.pre&&g.fb.pre.lines[0]){const bm=fromUci(g.fb.st0,g.fb.pre.lines[0].pv[0]);if(bm){marks={[sn(bm.f)]:'good',[sn(bm.t)]:'good'}}}
+  if(g.opt!=null&&g.pre&&g.pre.lines[g.opt]&&my){const om=fromUci(g.st,g.pre.lines[g.opt].pv[0]);if(om){marks={[sn(om.f)]:'good',[sn(om.t)]:'good'}}}
   if(g.hint&&g.pre&&g.pre.lines[0]&&my){const bm=fromUci(g.st,g.pre.lines[0].pv[0]);if(bm){marks[sn(bm.f)]='good';marks[sn(bm.t)]='good'}}
   const dots=g.sel!=null?legal(g.st).filter(x=>x.f===g.sel).map(x=>sn(x.t)):[];
   let h=`<div class="stack"><div class="gstat"><span>You: ${w?'White':'Black'} · ${L.n} ${L.elo}</span><span class="muted">${SF.ready?'Stockfish':SF.failed?'Built-in engine':'Engine loading…'}</span></div>${coEvalHTML()}`;
@@ -1684,9 +1750,10 @@ function vCoach(){const g=CG;if(!g){go({name:'coachset'});return}const my=coMyTu
   if(g.over)h+=`<div class="fb ${g.over.r==='w'?'ok':'no'}"><h3>${g.over.msg}</h3></div>`;
   else h+=`<p class="${g.busy?'muted':''}" style="text-align:center;min-height:22px;margin:0">${g.busy?esc(g.busy):my?'Your move: tap a piece, then its square':''}</p>`;
   h+=`<div class="row corow">${g.over?`<button class="btn primary" style="flex:1" data-act="co-review">Game review</button><button class="btn" data-act="co-setup">New game</button>`:`<button class="btn" data-act="co-hint" ${my&&!g.busy?'':'disabled'}>Hint</button><button class="btn" data-act="co-undo" ${g.moves.some(x=>x.by==='h')&&!String(g.busy).startsWith('Coach')?'':'disabled'}>Take back</button><button class="btn" data-act="co-resign">${g.confirmResign?'Tap again':'Resign'}</button><button class="btn" data-act="co-setup">Menu</button>`}</div>`;
-  h+=`<div id="coside">${coSideHTML()}</div>`+coEngHTML();
+  h+=`<div id="coside">${coSideHTML()}</div>`;const aiCard=`<div class="card aitop">${aiButtons(g.fb&&!g.fb.lite?['turn','pos']:['pos'])}</div>`;
+  if(gKey())h+=aiCard;h+=coEngHTML();
   if(g.fb){h+=coFbHTML(g.fb);if(g.fb.cls!=='best'&&!g.fb.lite)h+=`<button class="btn small" data-act="co-better">${g.show.better?'Show the game position':'Show the better move on the board'}</button>`}
-  h+=`<div class="card">${aiButtons(g.fb&&!g.fb.lite?['move','pos']:['pos'])}</div>`;
+  h+=coViewHTML();if(!gKey())h+=aiCard;
   if(!g.over)h+=coPosHTML();
   h+=`<div class="gamemoves">${g.moves.length?coMovesHTML(g.moves):'<span class="muted">No moves yet</span>'}</div></div>`;
   main.innerHTML=h;onSq=coTap}
