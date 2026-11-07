@@ -244,6 +244,15 @@ main .qbox.tr.kt .moves{max-height:18vh;max-height:18svh}
 .csec h4{margin:4px 0 2px;font-size:15px}.cview .cline li .btn.small{padding:2px 8px;font-size:12px;margin-left:4px}
 .aitop{border:2px solid var(--accent)}.airate{font-weight:700;font-size:13px;padding:2px 10px;border-radius:999px;white-space:nowrap}
 .airate.hi{background:var(--good-soft);color:var(--good)}.airate.mid{background:color-mix(in srgb,var(--brass) 22%,transparent);color:var(--brass)}.airate.lo{background:var(--bad-soft);color:var(--bad)}
+.board{position:relative}svg.arrows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.sq.m-weak::after{content:"";position:absolute;inset:0;background:#E0A100;opacity:.32}
+.legend{display:block;text-align:center;font-size:12px}.lg{display:inline-block;width:14px;height:4px;border-radius:2px;vertical-align:middle;margin:0 3px}.lg.r{background:#D23C2A}.lg.g{background:#1E9E55}.lg.y{background:#E0A100}
+.spark{display:flex;align-items:flex-end;gap:3px;height:50px}.spark i{flex:1;background:var(--accent);border-radius:2px 2px 0 0;min-height:3px}
+.wbars{display:flex;flex-direction:column;gap:6px}.wbar{display:grid;grid-template-columns:130px 1fr 40px;gap:8px;align-items:center;font-size:14px}.wbar div{background:var(--surface2);height:10px;border-radius:5px;overflow:hidden}.wbar i{display:block;height:100%;background:var(--bad)}
+.chk .chkb{background:none;border:0;font-weight:600;font-size:15px;color:var(--fg);padding:4px 0;text-align:left;width:100%}.chkbody{font-size:14px;padding:0 0 6px 24px}.chk.on .chkb{color:var(--good)}
+.opgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}.opgrid button{border:1px solid var(--line);background:var(--surface2);border-radius:8px;padding:7px 6px;display:flex;flex-direction:column;align-items:center;color:var(--fg);font-size:13px;font-weight:600}
+.opgrid button small{color:var(--muted);font-size:11px;font-weight:500}.opgrid button.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}.opgrid button.on small{color:var(--accent-fg)}
+.pend{border:2px solid var(--bad)}.pend p{margin:0}.banner{background:var(--surface2);border-radius:8px;padding:8px 12px;font-size:14px}.hintl{border-left:4px solid var(--good)}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i>♞&#xFE0E;</i>Mind's Eye Chess</div><div class="chips" id="chips"></div></div></header>
@@ -728,9 +737,9 @@ const main=document.getElementById('main');
 function go(v){clearTimers();if(v.name!=='q'&&v.name!=='result')S=null;V=v;render();window.scrollTo(0,0)}
 function clearTimers(){clearInterval(timerInt);timerInt=null;clearTimeout(autoNext);autoNext=null}
 function renderChips(){const d=dueItems().length;document.getElementById('chips').innerHTML=`<span class="chip" title="Day streak">${streak()}d streak</span><span class="chip" title="Stars">★ ${ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0)}</span>`}
-function render(){document.body.classList.toggle('inq',V.name==='q'||V.name==='train');renderChips();onSq=null;const tab={path:'path',stage:'path',tut:'path',q:S&&S.from||'path',result:S&&S.from||'path',practice:'practice',explore:'practice',play:'play',coach:'play',coachset:'play',coachrev:'play',stats:'stats',trainset:V.from==='practice'?'practice':'path',train:TR&&TR.back==='practice'?'practice':'path',trainres:TR&&TR.back==='practice'?'practice':'path'}[V.name];
+function render(){document.body.classList.toggle('inq',V.name==='q'||V.name==='train');renderChips();onSq=null;const tab={path:'path',stage:'path',tut:'path',q:S&&S.from||'path',result:S&&S.from||'path',practice:'practice',explore:'practice',play:'play',coach:'play',coachset:'play',coachrev:'play',codiary:'play',stats:'stats',trainset:V.from==='practice'?'practice':'path',train:TR&&TR.back==='practice'?'practice':'path',trainres:TR&&TR.back==='practice'?'practice':'path'}[V.name];
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
-  ({path:vPath,stage:vStage,tut:vTut,q:vQ,result:vResult,practice:vPractice,explore:vExplore,play:vPlay,coach:vCoach,coachset:vCoachSet,coachrev:vCoachRev,stats:vStats,trainset:vTrainSet,train:trRender,trainres:vTrainRes})[V.name]()}
+  ({path:vPath,stage:vStage,tut:vTut,q:vQ,result:vResult,practice:vPractice,explore:vExplore,play:vPlay,coach:vCoach,coachset:vCoachSet,coachrev:vCoachRev,codiary:vCoDiary,stats:vStats,trainset:vTrainSet,train:trRender,trainres:vTrainRes})[V.name]()}
 
 const COURSE_URL=(()=>{try{return/github\.io$/.test(location.hostname)?'course.html':'https://khanfarazhusain.github.io/minds-eye-chess/course.html'}catch(e){return'https://khanfarazhusain.github.io/minds-eye-chess/course.html'}})();
 const NOTES_URL=COURSE_URL.replace(/course\.html$/,'notes.html');
@@ -1157,6 +1166,7 @@ function vStats(){const stars=ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0),passe
   <div class="tiles"><div class="tile"><b>${P.answered.toLocaleString()}</b><small>exercises done</small></div><div class="tile"><b>${streak()}</b><small>day streak</small></div><div class="tile"><b>${passed}/${ALL_LESSONS.length}</b><small>drills passed</small></div></div>
   ${historyCard()}
   ${trainStatsCard()}
+  ${progressHTML()}
   <div class="card stack"><h3>Square map</h3><p class="muted" style="font-size:14px">Accuracy on each square across the file, rank, name, colour and starting-square drills. Red squares need work; grey ones you haven't met yet.</p>`;
   const heat={};for(const s of ALL.map(sn)){const x=P.sq[s];heat[s]=x&&x.n?`color-mix(in srgb, var(--good) ${Math.round(x.c/x.n*100)}%, var(--bad))`:'var(--surface2)'}
   h+=`<div class="heat">${boardHTML({persp:V.hp||'w',heat,heatLab:true,id:'heat'})}</div><div class="row" style="justify-content:space-between"><div class="seg">${['w','b'].map(p=>`<button class="${(V.hp||'w')===p?'on':''}" data-act="hp" data-v="${p}">${p==='w'?'White':'Black'} side</button>`).join('')}</div><span class="muted" style="font-size:13px">${Object.keys(P.srs).length} items in review</span></div></div>
@@ -1212,12 +1222,21 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'resign':if(!G.confirmResign){G.confirmResign=true;vPlay();setTimeout(()=>{if(G){G.confirmResign=false;if(V.name==='play'&&!V.setup&&!G.over)vPlay()}},3000)}else{G.over={r:'l',msg:'You resigned.'};P.games.l++;save();vPlay()}break;
    case'hp':V.hp=d.v;vStats();break;
    case'co-open':go({name:'coachset'});break;
-   case'co-o':V.co[d.k]=d.k==='lvl'?+d.v:d.v;if(d.k==='lvl'){P.set.colvl=+d.v;save()}vCoachSet();break;
-   case'co-new':coNew(V.co);break;
+   case'co-o':if(d.k==='open'&&d.v)V.co.start='normal';if(d.k==='start'&&d.v!=='normal')V.co.open='';if(V.co.start==='fen'&&document.getElementById('co-fen'))V.co.fen=document.getElementById('co-fen').value;V.co[d.k]=d.k==='lvl'?+d.v:d.v;if(d.k==='lvl'){P.set.colvl=+d.v;save()}vCoachSet();break;
+   case'co-new':{const o=V.co;o.err='';if(o.start==='fen'){o.fen=(document.getElementById('co-fen')||{}).value||'';if(!fromFEN(o.fen)){o.err='That FEN is not a legal position. Copy it again.';vCoachSet();break}}coNew(o);break}
    case'co-resume':coResume();break;
    case'co-back':go({name:'coach'});break;
    case'co-setup':go({name:'coachset'});break;
-   case'co-hint':if(CG){CG.hint=true;vCoach()}break;
+   case'co-hint':if(CG){CG.hint=Math.min(3,(CG.hint||0)+1);vCoach();if(CG.hint===3){const m=coHintMove(CG);if(m)sayC((P.set.cvoice==='hi'?'Hint: ':'Hint: ')+sanWords(san(CG.st,m,legal(CG.st))))}}break;
+   case'co-retry':coRetry();break;
+   case'co-keep':coKeep();break;
+   case'co-chk':if(CG){CG.chk=CG.chk||{};CG.chk[d.v]=!CG.chk[d.v];aiRe()}break;
+   case'co-set':P.set[d.k]=d.v==='1'?true:d.v==='0'?false:d.v;save();if(d.k==='cvoice'&&d.v!=='off')sayC(d.v==='hi'?'Namaste, main aapka coach hoon.':'Hello, I am your coach.');aiRe();break;
+   case'co-theme':{V.co=V.co||{color:'w',lvl:P.set.colvl!=null?P.set.colvl:2};V.co.start=d.v;V.co.open='';coNew(V.co);break}
+   case'co-diary':V={name:'codiary',dz:{i:0,res:null,sel:null}};render();window.scrollTo(0,0);break;
+   case'dz-show':if(V.dz){V.dz.res=V.dz.res||'show';vCoDiary()}break;
+   case'dz-next':V.dz={i:(V.dz?V.dz.i:0)+1,res:null,sel:null};vCoDiary();window.scrollTo(0,0);break;
+   case'dz-del':if(!V.dz.del){V.dz.del=true;vCoDiary()}else{P.diary.splice(V.dz.i,1);save();V.dz={i:V.dz.i,res:null,sel:null};vCoDiary()}break;
    case'co-undo':coTakeback();break;
    case'co-resign':if(!CG.confirmResign){CG.confirmResign=true;vCoach();setTimeout(()=>{if(CG){CG.confirmResign=false;if(V.name==='coach'&&!CG.over)vCoach()}},3000)}else{CG.tok++;CG.over={r:'l',msg:'You resigned.'};coFinish()}break;
    case'co-review':V={name:'coachrev',ri:null};render();window.scrollTo(0,0);break;
@@ -1453,19 +1472,29 @@ const CLV=[{n:'Beginner',elo:'~900',skill:0,mt:50,d:1,js:1},{n:'Casual',elo:'~12
 const CLS={best:['Best','best'],good:['Good','good'],inacc:['Inaccuracy','inacc'],mistake:['Mistake','mistake'],blunder:['Blunder','blunder'],book:['Book','good']};
 const CMARK={inacc:'?!',mistake:'?',blunder:'??'};
 let CG=null;
-function coNew(o){const human=o.color==='r'?pick(['w','b']):o.color;CG={st:startState(),states:[startState()],moves:[],human,lvl:o.lvl,sel:null,busy:'',fb:null,tok:0,over:null,hint:false,show:{},id:Date.now()};
-  sfStart();coSaveCur();go({name:'coach'});if(human==='b')coEngine();else coPre()}
-function coSaveCur(){if(!CG||CG.over){delete P.cgame}else P.cgame={human:CG.human,lvl:CG.lvl,sans:CG.moves.map(x=>x.san),fbs:CG.moves.map(x=>x.fb?{cls:x.fb.cls,loss:x.fb.loss}:null)};save()}
-function coResume(){const g=P.cgame;if(!g)return;CG={st:startState(),states:[startState()],moves:[],human:g.human,lvl:g.lvl,sel:null,busy:'',fb:null,tok:0,over:null,hint:false,show:{},id:Date.now()};
+function coNew(o){let human=o.color==='r'?pick(['w','b']):o.color;let st0=startState(),start=null,book=null;
+  if(o.start==='end'||o.start==='attack'){const t=pick(THEMES[o.start]);st0=fromFEN(t[1]);start={fen:t[1],name:t[0]};human=st0.w?'w':'b'}
+  else if(o.start==='fen'&&o.fen){const x=fromFEN(o.fen);if(x){st0=x;start={fen:o.fen.trim(),name:'Your position'}}}
+  if(!start&&o.open){const b=OPENT.find(x=>x[0]===o.open);if(b){book={name:b[1],key:b[0],moves:b[3].split(' ')};human=b[2]}}
+  CG={st:st0,states:[st0],moves:[],human,lvl:o.lvl,sel:null,busy:'',fb:null,tok:0,over:null,hint:0,show:{},id:Date.now(),start,book,bookOk:!!book,chk:{}};
+  sfStart();coSaveCur();go({name:'coach'});if(st0.w!==(human==='w'))coEngine();else coPre()}
+function coSaveCur(){if(!CG||CG.over){delete P.cgame}else P.cgame={human:CG.human,lvl:CG.lvl,start:CG.start,book:CG.book,bookOk:CG.bookOk,sans:CG.moves.map(x=>x.san),fbs:CG.moves.map(x=>x.fb?{cls:x.fb.cls,loss:x.fb.loss}:null)};save()}
+function coResume(){const g=P.cgame;if(!g)return;const s0=g.start&&fromFEN(g.start.fen)||startState();CG={st:s0,states:[s0],moves:[],human:g.human,lvl:g.lvl,sel:null,busy:'',fb:null,tok:0,over:null,hint:0,show:{},id:Date.now(),start:g.start||null,book:g.book||null,bookOk:!!g.bookOk,chk:{}};
   for(let i=0;i<g.sans.length;i++){const m=findMove(CG.st,g.sans[i]);if(!m)break;const by=(CG.st.w===(g.human==='w'))?'h':'e';CG.moves.push({m,san:g.sans[i],by,fb:g.fbs&&g.fbs[i]&&{...g.fbs[i],lite:1}});CG.st=make(CG.st,m);CG.states.push(CG.st)}
   sfStart();go({name:'coach'});coCheckEnd();if(CG.over)return;if(CG.st.w===(CG.human==='w'))coPre();else coEngine()}
 const coMyTurn=()=>CG&&!CG.over&&CG.st.w===(CG.human==='w');
-function coPre(){const g=CG,t=g.tok,st=g.st;g.pre=null;g.threat=threatOf(st);g.hint=false;g.opt=null;g.preP=sfGo(st,{multipv:3,movetime:900,depth:18}).then(r=>{if(CG===g&&g.tok===t&&g.st===st){g.pre=r;if(aiAuto()&&g.fb&&!g.fb.lite&&!AIR[aiKey('turn')])aiGo('turn',null,true);else if(V.name==='coach'&&!g.busy)vCoach()}return r});if(V.name==='coach')vCoach()}
+function coPre(){const g=CG,t=g.tok,st=g.st;g.pre=null;g.threat=threatOf(st);g.hint=0;g.opt=null;g.chk={};g.pend=null;if(g.moves.length&&g.moves[g.moves.length-1].by==='e'){const e=g.moves[g.moves.length-1],th=g.threat;sayC((P.set.cvoice==='hi'?'Coach ne ':'Coach played ')+sanWords(e.san)+(P.set.cvoice==='hi'?' khela. ':'. ')+(th&&th.san?(P.set.cvoice==='hi'?'Dhyan do, threat hai ':'Watch out, it threatens ')+sanWords(th.san):''),true)}g.preP=sfGo(st,{multipv:3,movetime:900,depth:18}).then(r=>{if(CG===g&&g.tok===t&&g.st===st){g.pre=r;if(aiAuto()&&g.fb&&!g.fb.lite&&!AIR[aiKey('turn')])aiGo('turn',null,true);else if(V.name==='coach'&&!g.busy)vCoach()}return r});if(V.name==='coach')vCoach()}
 async function coHuman(m){const g=CG,t=g.tok,st0=g.st,list=legal(st0),s=san(st0,m,list);g.sel=null;g.busy='Coach is checking your move…';
   const st1=make(st0,m);g.st=st1;g.states.push(st1);const rec={m,san:s,by:'h',fb:null};g.moves.push(rec);vCoach();
   const pre=await g.preP;if(CG!==g||g.tok!==t)return;
   let post=legal(st1).length?await sfGo(st1,{multipv:1,movetime:700,depth:16}):{lines:[]};if(CG!==g||g.tok!==t)return;
-  rec.fb=coJudge(st0,m,s,st1,pre,post);g.fb=rec.fb;g.busy='';coSaveCur();coCheckEnd();if(g.over){coFinish();return}coEngine()}
+  rec.fb=coJudge(st0,m,s,st1,pre,post);g.fb=rec.fb;g.busy='';coRecordMistake(rec.fb);sayJudge(rec.fb);
+  const bs=g.book&&g.bookOk&&rec.fb.ply<g.book.moves.length?g.book.moves[rec.fb.ply]:null;
+  if(legal(st1).length){if(bs&&normSan(bs)!==normSan(s))g.pend={type:'book',exp:bs};else if(P.set.cretry!==false&&['mistake','blunder'].includes(rec.fb.cls))g.pend={type:'mistake'}}
+  coSaveCur();if(g.pend){vCoach();return}coCheckEnd();if(g.over){coFinish();return}coEngine()}
+function coRetry(){const g=CG;if(!g||!g.pend)return;const fb=g.fb;g.pend=null;g.moves.pop();g.states.pop();g.st=g.states[g.states.length-1];g.retries=(g.retries||0)+1;
+  g.hint=0;g.chk={};g.opt=null;g.sel=null;g.pre=fb.pre;g.preP=Promise.resolve(fb.pre);g.threat=threatOf(g.st);g.tried=fb.san;coSaveCur();vCoach();window.scrollTo(0,0)}
+function coKeep(){const g=CG;if(!g||!g.pend)return;if(g.pend.type==='book')g.bookOk=false;g.pend=null;g.tried=null;coCheckEnd();if(g.over){coFinish();return}coEngine()}
 function coJudge(st0,m,s,st1,pre,post){const w=st0.w,best=pre&&pre.lines[0],u=uciOf(m);const fb={st0,m,san:s,st1,pre,post,w,ply:CG.moves.length-1};
   const before=best?wpOf(scCp(best)):.5;let after;
   if(!legal(st1).length)after=inCheck(st1)?1:.5;else after=post.lines[0]?1-wpOf(scCp(post.lines[0])):before;
@@ -1475,7 +1504,7 @@ function coJudge(st0,m,s,st1,pre,post){const w=st0.w,best=pre&&pre.lines[0],u=uc
   fb.cls=loss<.02?'best':loss<.05?'good':loss<.10?'inacc':loss<.20?'mistake':'blunder';if(fb.cls!=='best'&&loss<.05&&bk&&bk[0].split(' ').length===sans.length)fb.cls='book';
   fb.inPre=!!inPre;return fb}
 function coEngine(){const g=CG,t=g.tok,L=CLV[g.lvl];g.busy='Computer is thinking…';if(V.name==='coach')vCoach();
-  const st=g.st,t0=Date.now();sfGo(st,{skill:L.skill,movetime:L.mt,depth:L.d||null,js:L.js,multipv:1}).then(r=>{if(CG!==g||g.tok!==t)return;
+  const st=g.st,t0=Date.now(),bkm=coBookMove(g);(bkm?Promise.resolve({best:uciOf(bkm),lines:[]}):sfGo(st,{skill:L.skill,movetime:L.mt,depth:L.d||null,js:L.js,multipv:1})).then(r=>{g.tried=null;if(CG!==g||g.tok!==t)return;
     const go2=()=>{if(CG!==g||g.tok!==t)return;let m=fromUci(st,r.best)||engineMove(st,L.js);const s=san(st,m,legal(st));g.st=make(st,m);g.states.push(g.st);g.moves.push({m,san:s,by:'e',st0:st,an:r,note:moveNote(st,m,g.moves.length?g.moves[g.moves.length-1].m:null)});g.busy='';speak(sanWords(s));
       coSaveCur();coCheckEnd();if(g.over){coFinish();return}coPre()};const wait=Math.max(0,450-(Date.now()-t0));wait?setTimeout(go2,wait):go2()})}
 function coCheckEnd(){const g=CG,ms=legal(g.st);let over=null;const hw=g.human==='w';
@@ -1490,7 +1519,7 @@ function coFinish(){const g=CG;g.busy='';const s=coStats(g);P.coach=P.coach||[];
   P.games=P.games||{w:0,l:0,d:0};coSaveCur();save();if(V.name==='coach')vCoach()}
 function coTakeback(){const g=CG;if(!g||g.busy&&g.busy.startsWith('Coach'))return;g.tok++;g.busy='';
   let n=0;while(g.moves.length&&(n===0||g.st.w!==(g.human==='w'))){g.moves.pop();g.states.pop();g.st=g.states[g.states.length-1];n++}
-  g.over=null;g.fb=null;g.show={};g.sel=null;coSaveCur();if(g.st.w!==(g.human==='w')){coEngine();return}coPre()}
+  g.over=null;g.fb=null;g.show={};g.sel=null;g.pend=null;g.tried=null;if(g.book){const ok=g.moves.every((x,i)=>i>=g.book.moves.length||normSan(x.san)===normSan(g.book.moves[i]));g.bookOk=ok}coSaveCur();if(g.st.w!==(g.human==='w')){coEngine();return}coPre()}
 function coTap(n){const g=CG;if(!coMyTurn()||g.busy)return;const s=si(n),p=g.st.b[s];
   if(g.sel!=null){if(g.sel===s){g.sel=null;vCoach();return}const m=legal(g.st).find(x=>x.f===g.sel&&x.t===s&&(!x.promo||x.promo==='Q'));
     if(m){coHuman(m);return}}
@@ -1589,7 +1618,7 @@ function coEngHTML(){const g=CG,last=g.moves[g.moves.length-1];if(!last||last.by
 const AIS={claude:['Claude','https://claude.ai/new?q='],chatgpt:['ChatGPT','https://chatgpt.com/?q='],gemini:['Gemini','https://gemini.google.com/app']};
 function pgnOf(moves){return moves.map((x,i)=>(i%2===0?(i/2+1)+'. ':'')+x.san).join(' ')}
 function coTurnPrompt(){const g=CG,w=g.human==='w',me=w?'White':'Black',op=w?'Black':'White',st=g.st,fb=g.fb,last=g.moves[g.moves.length-1];
-  let t=`You are a chess grandmaster coaching a club player who wants to raise their Elo. Answer in simple Hinglish (Hindi/Urdu in Roman letters mixed with English chess words).\n\nI play ${me} against the computer ("coach").\nGame: ${pgnOf(g.moves)}\nCurrent position (FEN): ${toFEN(st)} (${st.w===w?'my move':'coach to move'})\n`;
+  let t=`You are a chess grandmaster coaching a club player who wants to raise their Elo. Answer in simple Hinglish (Hindi/Urdu in Roman letters mixed with English chess words).\n\nI play ${me} against the computer ("coach").\nGame: ${pgnOf(g.moves)}\n${g.start?`(Game started from this position, FEN: ${g.start.fen})\n`:''}Current position (FEN): ${toFEN(st)} (${st.w===w?'my move':'coach to move'})\n`;
   if(fb&&!fb.lite){const y=coWhy(fb);t+=`\nMy last move: ${fb.st0.fm}${w?'.':'...'} ${fb.san}. Stockfish verdict: ${CLS[fb.cls][0]}, my win chance ${Math.round(fb.before*100)}% -> ${Math.round(fb.after*100)}%.\n`;
     if(y.bestLine&&fb.cls!=='best')t+=`Stockfish's better move was ${y.bestSan}. Best line: ${y.bestLine.san}\n`;if(y.reply&&y.reply.steps.length)t+=`Strongest reply to my move: ${y.reply.san}\n`}
   if(last&&last.by==='e'){t+=`Coach's reply: ${last.san}.`;const pv=last.an&&last.an.lines&&last.an.lines[0]&&last.an.lines[0].pv;if(pv&&pv.length>1&&pv[0]===uciOf(last.m))t+=` Line the coach had in mind: ${lineInfo(last.st0,pv,6).san}`;t+='\n'}
@@ -1680,7 +1709,7 @@ function mdLite(t){const lines=esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').repl
   for(let l of lines){l=l.trimEnd();const li=l.match(/^\s*(?:[-*•]|\d+[.)])\s+(.*)$/),hd=l.match(/^#{1,6}\s+(.*)$/);
     if(li){if(!ul){h+='<ul>';ul=true}h+=`<li>${li[1]}</li>`;continue}if(ul){h+='</ul>';ul=false}
     if(hd)h+=`<h4>${hd[1]}</h4>`;else if(/^\s*(?:<b>)?[^\w\s<&*]/.test(l)&&l.length<120||/:\s*(<\/b>)?$/.test(l)&&l.length<90)h+=`<h4>${l.replace(/<\/?b>/g,'')}</h4>`;else if(l.trim())h+=`<p>${l}</p>`}return h+(ul?'</ul>':'')}
-const aiKey=(k,ply)=>CG.id+':'+k+':'+(k==='move'?(ply!=null?ply:CG.fb?CG.fb.ply:-1):CG.moves.length);
+const aiKey=(k,ply)=>{const n=k==='move'?(ply!=null?ply:CG.fb?CG.fb.ply:-1)+1:CG.moves.length;return CG.id+':'+k+':'+CG.moves.slice(0,n).map(x=>x.san).join(' ')+(k==='move'?'':'|'+CG.moves.length)};
 function gKeyHTML(){const k=gKey();
   if(k)return`<div class="gkey stack"><div class="gstat"><span>Gemini key saved</span><span class="mono">${esc(k.slice(0,4))}…${esc(k.slice(-4))}</span></div>
    <div class="row"><button class="btn" style="flex:1" data-act="gk-test">Test key</button><button class="btn" style="flex:1" data-act="gk-del">${V.gdel?'Tap again':'Remove key'}</button></div>${GMSG?`<p class="muted" style="font-size:14px">${esc(GMSG)}</p>`:''}
@@ -1719,13 +1748,113 @@ function aiRe(){if(['coach','coachrev','coachset','stats'].includes(V.name)){con
 function copyText(t){const fb=()=>{const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()};
   try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).catch(fb);else fb()}catch(e){fb()}}
 
+
+/* ================= coach: training tools ================= */
+const OPENT=[
+ ['italian','Italian Game','w','e4 e5 Nf3 Nc6 Bc4 Bc5 c3 Nf6 d3 d6 O-O O-O'],
+ ['ruy','Ruy Lopez','w','e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O Be7 Re1 b5 Bb3 d6 c3 O-O'],
+ ['scotch','Scotch Game','w','e4 e5 Nf3 Nc6 d4 exd4 Nxd4 Nf6 Nxc6 bxc6 e5 Qe7'],
+ ['london','London System','w','d4 d5 Bf4 Nf6 e3 e6 Nf3 c5 c3 Nc6 Nbd2 Bd6 Bg3 O-O'],
+ ['qgd','Queen\'s Gambit Declined','w','d4 d5 c4 e6 Nc3 Nf6 Bg5 Be7 e3 O-O Nf3 h6 Bh4 b6'],
+ ['english','English Opening','w','c4 e5 Nc3 Nf6 g3 d5 cxd5 Nxd5 Bg2 Nb6 Nf3 Nc6'],
+ ['najdorf','Sicilian Najdorf','b','e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 a6 Be3 e5 Nb3 Be6'],
+ ['french','French Defence','b','e4 e6 d4 d5 Nc3 Nf6 Bg5 Be7 e5 Nfd7 Bxe7 Qxe7'],
+ ['caro','Caro-Kann Defence','b','e4 c6 d4 d5 Nc3 dxe4 Nxe4 Bf5 Ng3 Bg6 h4 h6 Nf3 Nd7'],
+ ['scandi','Scandinavian Defence','b','e4 d5 exd5 Qxd5 Nc3 Qa5 d4 Nf6 Nf3 c6 Bc4 Bf5'],
+ ['slav','Slav Defence','b','d4 d5 c4 c6 Nf3 Nf6 Nc3 dxc4 a4 Bf5 e3 e6 Bxc4 Bb4'],
+ ['kid','King\'s Indian Defence','b','d4 Nf6 c4 g6 Nc3 Bg7 e4 d6 Nf3 O-O Be2 e5 O-O Nc6'],
+ ['nimzo','Nimzo-Indian Defence','b','d4 Nf6 c4 e6 Nc3 Bb4 e3 O-O Bd3 d5 Nf3 c5 O-O Nc6']];
+const THEMES={
+ end:[['King and pawn: win it','8/8/8/4k3/8/8/4P3/4K3 w - - 0 1'],['Lucena: build the bridge','1K1k4/1P6/8/8/8/8/r7/2R5 w - - 0 1'],['Rook endgame, 4 v 3','8/5pk1/6p1/p6p/P4P2/6PP/1R3K2/1r6 w - - 0 1'],['Pawn endgame: outflank','8/5k2/8/2p1p3/2P1P3/4K3/8/8 w - - 0 1'],['Bishop endgame','8/8/4k3/3p4/3P4/2B1K3/8/2b5 w - - 0 1']],
+ attack:[['Greek gift on h7','r1bq1rk1/pppn1ppp/4p3/3pP3/1b1P4/2NB1N2/PPP2PPP/R2QK2R w KQ - 0 1'],['Opposite castling race','r4rk1/pp2ppbp/2np1np1/q7/3NP1P1/2N1BP2/PPPQ4/2KR1B1R w - - 0 1'],['Kingside pressure','rnbq1rk1/ppp1bppp/4pn2/3p2B1/2PP4/2N1PN2/PP3PPP/R2QKB1R w KQ - 0 1']]};
+function fromFEN(f){try{const p=String(f).trim().split(/\s+/);const rows=p[0].split('/');if(rows.length!==8)return null;const b=EMPTY();
+  for(let i=0;i<8;i++){let c=0;for(const ch of rows[i]){if(/[1-8]/.test(ch))c+=+ch;else{if(!/[prnbqkPRNBQK]/.test(ch)||c>7)return null;b[(7-i)*8+c]=ch;c++}}if(c!==8)return null}
+  if(b.filter(x=>x==='K').length!==1||b.filter(x=>x==='k').length!==1)return null;for(let i=0;i<8;i++)if('Pp'.includes(b[i]||'-')||'Pp'.includes(b[56+i]||'-'))return null;
+  const w=(p[1]||'w')!=='b',cs=p[2]||'-';const c={K:+(cs.includes('K')&&b[4]==='K'&&b[7]==='R'),Q:+(cs.includes('Q')&&b[4]==='K'&&b[0]==='R'),k:+(cs.includes('k')&&b[60]==='k'&&b[63]==='r'),q:+(cs.includes('q')&&b[60]==='k'&&b[56]==='r')};
+  const st={b,w,c,ep:p[3]&&/^[a-h][36]$/.test(p[3])?si(p[3]):-1,hm:+p[4]||0,fm:+p[5]||1};if(attacked(b,kingSq(b,!w),w))return null;if(!legal(st).length)return null;return st}catch(e){return null}}
+// book (opening trainer)
+function coBookSan(g){if(!g.book||!g.bookOk)return null;const i=g.moves.length;return i<g.book.moves.length?g.book.moves[i]:null}
+function coBookMove(g){const s=coBookSan(g);return s?findMove(g.st,s):null}
+// hint ladder
+function coHintMove(g){const bm=coBookMove(g);if(bm)return bm;return g.pre&&g.pre.lines[0]?fromUci(g.st,g.pre.lines[0].pv[0]):null}
+function hintIdea(g,m){const st=g.st,n=make(st,m);if(inCheck(n)&&!legal(n).length)return'There is a checkmate! Look at every check.';
+  if(g.book&&coBookSan(g))return`Opening idea: ${(OPEN.find(o=>o[1]===g.book.name)||openingOf(g.moves.map(x=>x.san))||['','',''])[2]||'develop and fight for the centre.'}`;
+  const th=g.threat;if(th&&th.m&&(m.f===th.m.t||attackersOf(n.b,th.m.t,st.w).length>attackersOf(st.b,th.m.t,st.w).length||hanging(n.b,st.w).length<hanging(st.b,st.w).length))return`First deal with the threat ${th.san}: something of yours is in danger.`;
+  if(m.cap)return'Look for a capture: something can be won.';if(inCheck(n))return'A check helps here.';if(m.castle)return'Think about king safety.';
+  const U=m.p.toUpperCase();if(isHome(m.f,m.p))return'Bring a new piece into the game.';if(U==='P')return'A pawn move is strong here: think about space or a pawn break.';
+  const tg=pieceAttacks(n.b,m.t,n.b[m.t]).filter(t=>n.b[t]&&isW(n.b[t])!==st.w);if(tg.length)return'Create a threat: attack something.';return'Improve your worst-placed piece.'}
+// arrows on the board
+function arrowsSVG(persp,arr){if(!arr.length)return'';const xy=s=>{const f=s&7,r=s>>3;return persp==='w'?[f+.5,7-r+.5]:[7-f+.5,r+.5]};
+  let h='<svg class="arrows" viewBox="0 0 8 8" aria-hidden="true"><defs>'+['red','green'].map(c=>`<marker id="ah-${c}" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="2.6" markerHeight="2.6" orient="auto"><path d="M0,0L10,5L0,10z" fill="${c==='red'?'#D23C2A':'#1E9E55'}"/></marker>`).join('')+'</defs>';
+  for(const a of arr){const[x1,y1]=xy(a.f),[x2,y2]=xy(a.t),dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1,ex=x2-dx/L*.35,ey=y2-dy/L*.35;
+    h+=`<line x1="${x1}" y1="${y1}" x2="${ex}" y2="${ey}" stroke="${a.c==='red'?'#D23C2A':'#1E9E55'}" stroke-width=".16" stroke-linecap="round" opacity=".85" marker-end="url(#ah-${a.c})"/>`}
+  return h+'</svg>'}
+// voice coach
+function sayC(t,queue){const v=P.set.cvoice;if(!v||v==="off"||!window.speechSynthesis)return;try{if(!queue)speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(String(t).replace(/[^\w\s.,!?'’:+\-\/]/g,' ').replace(/\s+/g,' '));
+  u.lang=v==='hi'?'hi-IN':'en-IN';u.rate=1;const vs=speechSynthesis.getVoices();const vo=vs.find(x=>x.lang.replace('_','-')===u.lang)||vs.find(x=>x.lang.startsWith(v==='hi'?'hi':'en'));if(vo)u.voice=vo;speechSynthesis.speak(u)}catch(e){}}
+const SAYCLS={best:['Best move!','Bahut badiya, best move!'],good:['Good move.','Achhi move.'],book:['Book move.','Book move, theek hai.'],inacc:['Inaccuracy.','Thodi kamzor move.'],mistake:['That is a mistake.','Ye galti hai.'],blunder:['That is a blunder!','Ye bada blunder hai!']};
+function sayJudge(fb){if(!fb||fb.lite)return;const hi=P.set.cvoice==='hi',y=coWhy(fb);let t=SAYCLS[fb.cls][hi?1:0];
+  if(!['best','good','book'].includes(fb.cls)&&y.bestSan)t+=hi?` Behtar tha ${sanWords(y.bestSan)}. `:` Better was ${sanWords(y.bestSan)}. `+y.reason;sayC(t)}
+// mistake tags, diary and progress
+const WTAG={hanging:'Loose pieces',threats:'Missed their threat',tactics:'Missed a win',king:'King safety',opening:'Opening',endgame:'Endgame',positional:'Plans and position'};
+function tagOf(fb){const y=coWhy(fb),best=fb.pre&&fb.pre.lines[0];if(y.hang.length)return'hanging';if(best&&best.mate>0||y.bestLine&&y.bestLine.gain>=80)return'tactics';if(y.reply&&y.reply.gain>=80||fb.post&&fb.post.lines[0]&&fb.post.lines[0].mate>0)return'threats';
+  const ph=phaseOf(fb.st0);if(ph==='end')return'endgame';if(y.cmp&&y.cmp.some(c=>c.includes('king')))return'king';if(ph==='open')return'opening';return'positional'}
+function coRecordMistake(fb){if(!fb||fb.lite||!['inacc','mistake','blunder'].includes(fb.cls))return;const tag=tagOf(fb);P.wstat=P.wstat||{};P.wstat[tag]=(P.wstat[tag]||0)+(fb.cls==='inacc'?1:2);
+  if(fb.cls==='inacc'||!fb.pre||!fb.pre.lines[0])return;const top=wpOf(scCp(fb.pre.lines[0]));const best=fb.pre.lines.filter(l=>top-wpOf(scCp(l))<.03).map(l=>l.pv[0]);
+  const y=coWhy(fb);P.diary=P.diary||[];P.diary.unshift({fen:toFEN(fb.st0),best,bestSan:y.bestSan,san:fb.san,cls:fb.cls,tag,why:y.reason,line:y.bestLine?y.bestLine.san:'',d:Date.now(),ok:0,n:0});P.diary=P.diary.slice(0,200);save()}
+const ELO=[900,1200,1500,1800,2100,2400];
+function estElo(){const h=(P.coach||[]).slice(0,10);if(h.length<1)return null;const v=h.map(x=>ELO[x.lvl]+({w:200,d:0,l:-200}[x.r]||0)+(x.acc-75)*6);return{elo:Math.max(400,Math.min(2800,Math.round(v.reduce((a,b)=>a+b,0)/v.length/10)*10)),n:h.length,trend:v.slice().reverse()}}
+function weakest(){const w=P.wstat||{};const k=Object.keys(w).sort((a,b)=>w[b]-w[a]);return k[0]||null}
+function progressHTML(){const e=estElo(),w=P.wstat||{},tot=Object.values(w).reduce((a,b)=>a+b,0);let h=`<div class="card stack"><h3>Your progress</h3>`;
+  if(e){h+=`<div class="gstat"><span>Estimated Elo</span><b class="mono" style="font-size:22px">~${e.elo}</b></div><small class="muted">Rough guess from your last ${e.n} coach game${e.n>1?'s':''}: the level you played, the result and your accuracy.</small>`;
+    if(e.trend.length>1){const mx=Math.max(...e.trend),mn=Math.min(...e.trend);h+=`<div class="spark">${e.trend.map(v=>`<i style="height:${15+Math.round((v-mn)/((mx-mn)||1)*85)}%" title="${Math.round(v)}"></i>`).join('')}</div><small class="muted">Oldest → newest game</small>`}}
+  else h+='<p class="muted">Play a coach game to get your estimated Elo.</p>';
+  if(tot){const mx=Math.max(...Object.values(w));h+=`<b style="margin-top:6px">Where your mistakes come from</b><div class="wbars">${Object.keys(WTAG).filter(k=>w[k]).sort((a,b)=>w[b]-w[a]).map(k=>`<div class="wbar"><span>${WTAG[k]}</span><div><i style="width:${Math.round(w[k]/mx*100)}%"></i></div><b class="mono">${Math.round(w[k]/tot*100)}%</b></div>`).join('')}</div>`;
+    const wk=weakest();h+=`<p><b>Coach says:</b> ${esc(TRAINTIP[wk])}</p>${coTrainBtn(wk)}`}
+  return h+'</div>'}
+const TRAINTIP={hanging:'You leave pieces loose. Before every move ask: "after this, what can they take?" Keep the thinking checklist on.',threats:'You miss what the opponent wants. After each of their moves, ask "why did they play that?" and open the Threats step of the checklist.',
+  tactics:'You miss winning moves. Look at checks, captures and threats first. Solve your mistake diary puzzles every day.',king:'Your king gets weak. Castle early and do not push the pawns in front of your king without a reason.',
+  opening:'Your openings cost you. Use the opening trainer to learn one opening for White and one for Black.',endgame:'Endgames are your weak spot. Play endgame theme games: activate the king and push passed pawns.',positional:'Your plans drift. Read the "Your plan" steps every move and improve your worst piece.'};
+function coTrainBtn(k){if(k==='endgame')return'<button class="btn block" data-act="co-theme" data-v="end">Play an endgame theme game</button>';if(k==='opening')return'<button class="btn block" data-act="tab-coachset">Choose an opening to train above</button>'.replace('tab-coachset','co-setup');
+  if(k==='king'||k==='positional')return'<button class="btn block" data-act="co-theme" data-v="attack">Play an attack theme game</button>';return(P.diary&&P.diary.length)?'<button class="btn block" data-act="co-diary">Solve my mistake puzzles</button>':''}
+// thinking checklist
+function myChecksCaps(st){const ms=legal(st),ck=[],cp=[];for(const m of ms){const n=make(st,m),s=san(st,m,ms);if(inCheck(n))ck.push(s);if(m.cap){const safe=!attackersOf(n.b,m.t,!st.w).length||pval(m.cap)>=pval(m.p);cp.push(s+(safe?'':' (risky)'))}}return{ck,cp}}
+function checklistHTML(){const g=CG;if(P.set.cchk===false||!coMyTurn()||g.busy)return'';const st=g.st,me=myChecksCaps(st),op=oppIdeas(st),c=g.chk||(g.chk={});
+  const item=(k,title,body)=>`<div class="chk ${c[k]?'on':''}"><button class="chkb" data-act="co-chk" data-v="${k}">${c[k]?'☑':'☐'} ${title}</button>${c[k]?`<div class="chkbody">${body}</div>`:''}</div>`;
+  const L=a=>a.length?esc(a.slice(0,6).join(', ')):'none';
+  let h=`<div class="card stack checklist"><b>Before you move: think like a coach</b>`;
+  h+=item('ck','Checks',`Your checks: ${L(me.ck)}.<br>Their checks next move: ${L(op.filter(x=>/\+|#/.test(x.san)).map(x=>x.san))}.`);
+  h+=item('cp','Captures',`Your captures: ${L(me.cp)}.<br>Their captures next move: ${L(op.filter(x=>x.m.cap).map(x=>x.san))}.`);
+  const th=g.threat;h+=item('th','Threats',th?(th.check?'You are in check.':th.mate?`They threaten mate with ${esc(th.san)}!`:`Their threat: ${esc(th.san)}, ${esc(moveNote(th.st,th.m))}.`):'No direct threat. Ask: what does their last move want? Then make your own plan.');
+  if(c.ck&&c.cp&&c.th)h+='<small class="muted">✓ Checklist done. Now choose your move.</small>';return h+'</div>'}
+// diary puzzles
+function vCoDiary(){const D=P.diary||[];const z=V.dz||(V.dz={i:0,res:null,sel:null});let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="co-setup">← Coach</button><span class="eyebrow">Mistake diary</span><h1>Fix your own mistakes</h1>`;
+  if(!D.length){main.innerHTML=h+'<p class="muted">No mistakes saved yet. Every mistake or blunder in a coach game lands here as a puzzle.</p></div>';return}
+  if(z.i>=D.length)z.i=0;const e=D[z.i],st=fromFEN(e.fen);if(!st){D.splice(z.i,1);save();vCoDiary();return}
+  const persp=st.w?'w':'b';let marks={};if(z.res){const bm=fromUci(st,e.best[0]);if(bm){marks[sn(bm.f)]='good';marks[sn(bm.t)]='good'}}
+  const dots=z.sel!=null?legal(st).filter(x=>x.f===z.sel).map(x=>sn(x.t)):[];
+  h+=`<div class="gstat"><span>Puzzle ${z.i+1} of ${D.length} · ${WTAG[e.tag]||''}</span><span class="mono">solved ${e.ok}×</span></div>`;
+  h+=boardHTML({cls:'coachb',persp,coords:true,pieces:toMap(st.b),from:z.sel!=null?sn(z.sel):null,marks,dots,id:'diary'});
+  if(!z.res)h+=`<p style="text-align:center">${st.w?'White':'Black'} to move. In your game you played <b>${esc(e.san)}</b> (${CLS[e.cls][0].toLowerCase()}). Find the better move.</p>`;
+  else h+=`<div class="fb ${z.res==='ok'?'ok':'no'}"><h3>${z.res==='ok'?'Correct!':z.res==='no'?'Not quite.':'Answer'}</h3><p>The better move is <b>${esc(e.bestSan)}</b>. ${esc(e.why)}</p>${e.line?`<p class="muted">Line: ${esc(e.line)}</p>`:''}</div>`;
+  h+=`<div class="row corow"><button class="btn" data-act="dz-show">Show answer</button><button class="btn primary" data-act="dz-next">Next</button><button class="btn" data-act="dz-del">${z.del?'Tap again':'Remove'}</button></div></div>`;
+  main.innerHTML=h;onSq=n=>{if(z.res)return;const s=si(n),p=st.b[s];if(z.sel!=null&&z.sel!==s){const m=legal(st).find(x=>x.f===z.sel&&x.t===s&&(!x.promo||x.promo==='Q'));if(m){const ok=e.best.includes(uciOf(m));z.res=ok?'ok':'no';e.n++;if(ok)e.ok++;save();sayC(ok?(P.set.cvoice==='hi'?'Shabaash, sahi jawab!':'Correct!'):(P.set.cvoice==='hi'?'Nahi, behtar tha ':'No, better was ')+sanWords(e.bestSan));vCoDiary();return}}
+    z.sel=p&&isW(p)===st.w?s:null;vCoDiary()}}
+
 /* ================= coach: views ================= */
 function vCoachSet(){const o=V.co||(V.co={color:'w',lvl:P.set.colvl!=null?P.set.colvl:2});sfStart();const hist=P.coach||[];
   let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="play">← Play</button><span class="eyebrow">Board visible · learn while you play</span><h1>Play with coach</h1>
   <p class="muted">After every move the coach tells you if it was best, good, an inaccuracy, a mistake or a blunder, shows the better move with the reason, explains the best line move by move, and points out threats and plans.</p>
   <div class="card stack"><div><span class="eyebrow">You play</span><div class="seg">${[['w','White'],['b','Black'],['r','Random']].map(([k,t])=>`<button class="${o.color===k?'on':''}" data-act="co-o" data-k="color" data-v="${k}">${t}</button>`).join('')}</div></div>
   <div><span class="eyebrow">Computer strength</span><div class="lvlgrid">${CLV.map((L,i)=>`<button class="${o.lvl===i?'on':''}" data-act="co-o" data-k="lvl" data-v="${i}"><b>${L.n}</b><small>${L.elo}</small></button>`).join('')}</div><small class="muted">Ratings are rough guides.</small></div>
+  <div><span class="eyebrow">Opening trainer</span><div class="opgrid"><button class="${!o.open?'on':''}" data-act="co-o" data-k="open" data-v="">Off: free play</button>${OPENT.map(x=>`<button class="${o.open===x[0]?'on':''}" data-act="co-o" data-k="open" data-v="${x[0]}">${esc(x[1])}<small>you play ${x[2]==='w'?'White':'Black'}</small></button>`).join('')}</div><small class="muted">The coach plays the book line with you and stops you if you leave it.</small></div>
+  <div><span class="eyebrow">Start from</span><div class="seg">${[['normal','Normal start'],['end','Endgame'],['attack','Attack'],['fen','My position']].map(([k,t])=>`<button class="${(o.start||'normal')===k?'on':''}" data-act="co-o" data-k="start" data-v="${k}">${t}</button>`).join('')}</div>
+   ${o.start==='fen'?`<input class="gin" id="co-fen" placeholder="Paste a FEN position" value="${esc(o.fen||'')}" autocapitalize="off" spellcheck="false" style="margin-top:6px">${o.err?`<p class="warn">${esc(o.err)}</p>`:''}`:o.start==='end'||o.start==='attack'?'<small class="muted">A random training position. You play the side to move.</small>':''}</div>
+  <div class="stack" style="gap:6px"><span class="eyebrow">Coach helpers</span>
+   ${[['cretry','Stop me on mistakes and let me retry'],['cchk','Thinking checklist before each move'],['carrow','Arrows and colours on the board']].map(([k,t])=>`<div class="gstat" style="font-weight:500"><span style="font-size:14px">${t}</span><div class="seg sm"><button class="${P.set[k]!==false?'on':''}" data-act="co-set" data-k="${k}" data-v="1">On</button><button class="${P.set[k]===false?'on':''}" data-act="co-set" data-k="${k}" data-v="0">Off</button></div></div>`).join('')}
+   <div class="gstat" style="font-weight:500"><span style="font-size:14px">Voice coach</span><div class="seg sm">${[['off','Off'],['en','English'],['hi','Hindi']].map(([k,t])=>`<button class="${(P.set.cvoice||'off')===k?'on':''}" data-act="co-set" data-k="cvoice" data-v="${k}">${t}</button>`).join('')}</div></div></div>
   <button class="btn primary block" data-act="co-new">Start game</button>${P.cgame?`<button class="btn block" data-act="co-resume">Continue last game (${P.cgame.sans.length} moves)</button>`:''}${CG&&!CG.over?`<button class="btn block" data-act="co-back">Back to current game</button>`:''}</div>`;
+  h+=`<div class="card stack"><h3>Mistake diary</h3><p class="muted" style="font-size:14px">Every mistake and blunder from your coach games becomes a puzzle here. ${(P.diary||[]).length} saved.</p>${(P.diary||[]).length?'<button class="btn block" data-act="co-diary">Solve my mistake puzzles</button>':''}</div>`+progressHTML();
   if(hist.length){const last=hist.slice(0,10);h+=`<div class="card stack"><h3>Coach games</h3><div class="gstat"><span>Average accuracy (last ${last.length})</span><b class="mono">${Math.round(last.reduce((a,x)=>a+x.acc,0)/last.length)}%</b></div>
     ${last.map(x=>`<div class="gstat"><span>${new Date(x.d).toLocaleDateString()} · ${CLV[x.lvl].n} · ${{w:'Won',l:'Lost',d:'Draw'}[x.r]}</span><span class="mono">${x.acc}% · ${x.c.blunder}?? ${x.c.mistake}? ${x.c.inacc}?!</span></div>`).join('')}</div>`}
   h+=courseCard();
@@ -1736,21 +1865,33 @@ function vCoachSet(){const o=V.co||(V.co={color:'w',lvl:P.set.colvl!=null?P.set.
 function coDrawSide(){const el=document.getElementById('coside');if(el)el.innerHTML=coSideHTML();const ev=document.getElementById('coev');if(ev)ev.outerHTML=coEvalHTML()}
 function coEvalHTML(){const g=CG;let l=null,stw=true;if(g.pre&&g.pre.lines[0]&&!g.busy){l=g.pre.lines[0];stw=g.st.w}else if(g.fb&&g.fb.post&&g.fb.post.lines[0]){l=g.fb.post.lines[0];stw=g.fb.st1.w}
   const pw=l?wpOf(scCp(l)*(stw?1:-1)):.5;return`<div id="coev" class="evrow"><div class="evbar"><i style="width:${Math.round(pw*100)}%"></i></div><span class="mono">${l?evTxt(l,stw):'…'}</span></div>`}
-function coSideHTML(){const g=CG;let h='';if(g.hint&&g.pre&&g.pre.lines[0]){const m=fromUci(g.st,g.pre.lines[0].pv[0]);if(m)h+=`<div class="card"><b>Hint:</b> ${esc(san(g.st,m,legal(g.st)))} <span class="muted">${esc(moveNote(g.st,m))}.</span></div>`}
-  else if(g.hint)h+='<div class="card muted">Hint is loading…</div>';
-  return h}
+function coSideHTML(){const g=CG;if(!g.hint||!coMyTurn())return'';const m=coHintMove(g);if(!m)return'<div class="card muted">Hint is loading…</div>';
+  let h=`<div class="card stack hintl"><div><b>Hint 1, the idea:</b> ${esc(hintIdea(g,m))}</div>`;
+  if(g.hint>=2)h+=`<div><b>Hint 2, the piece:</b> use your ${PN(m.p)} on ${sn(m.f)}.</div>`;
+  if(g.hint>=3)h+=`<div><b>Hint 3, the move:</b> ${esc(san(g.st,m,legal(g.st)))}: ${esc(moveNote(g.st,m))}.</div>`;
+  return h+(g.hint<3?'<small class="muted">Still stuck? Tap Hint again for more.</small>':'')+'</div>'}
 function vCoach(){const g=CG;if(!g){go({name:'coachset'});return}const my=coMyTurn(),w=g.human==='w';const L=CLV[g.lvl];
   let marks={};const last=g.moves[g.moves.length-1];if(last){marks[sn(last.m.f)]='sel';marks[sn(last.m.t)]='sel'}
   if(g.show.better&&g.fb&&g.fb.pre&&g.fb.pre.lines[0]){const bm=fromUci(g.fb.st0,g.fb.pre.lines[0].pv[0]);if(bm){marks={[sn(bm.f)]:'good',[sn(bm.t)]:'good'}}}
   if(g.opt!=null&&g.pre&&g.pre.lines[g.opt]&&my){const om=fromUci(g.st,g.pre.lines[g.opt].pv[0]);if(om){marks={[sn(om.f)]:'good',[sn(om.t)]:'good'}}}
-  if(g.hint&&g.pre&&g.pre.lines[0]&&my){const bm=fromUci(g.st,g.pre.lines[0].pv[0]);if(bm){marks[sn(bm.f)]='good';marks[sn(bm.t)]='good'}}
+  const arr=[],hm=g.hint&&my?coHintMove(g):null;if(hm){marks[sn(hm.f)]='good';if(g.hint>=3){marks[sn(hm.t)]='good';arr.push({f:hm.f,t:hm.t,c:'green'})}}
+  if(P.set.carrow!==false){if(my&&g.threat&&g.threat.m)arr.push({f:g.threat.m.f,t:g.threat.m.t,c:'red'});
+    if(g.opt!=null&&g.pre&&g.pre.lines[g.opt]&&my){const om=fromUci(g.st,g.pre.lines[g.opt].pv[0]);if(om)arr.push({f:om.f,t:om.t,c:'green'})}
+    if(g.show.better&&g.fb&&g.fb.pre&&g.fb.pre.lines[0]){const bm=fromUci(g.fb.st0,g.fb.pre.lines[0].pv[0]);if(bm)arr.push({f:bm.f,t:bm.t,c:'green'})}
+    if(my){for(const s of hanging(g.st.b,w))if(!marks[sn(s)])marks[sn(s)]='bad';for(const s of outposts(g.st.b,!w).filter(s=>!g.st.b[s]).slice(0,3))if(!marks[sn(s)])marks[sn(s)]='weak'}}
   const dots=g.sel!=null?legal(g.st).filter(x=>x.f===g.sel).map(x=>sn(x.t)):[];
   let h=`<div class="stack"><div class="gstat"><span>You: ${w?'White':'Black'} · ${L.n} ${L.elo}</span><span class="muted">${SF.ready?'Stockfish':SF.failed?'Built-in engine':'Engine loading…'}</span></div>${coEvalHTML()}`;
-  h+=boardHTML({cls:'coachb',persp:g.human,coords:true,pieces:toMap(g.st.b),from:g.sel!=null?sn(g.sel):null,marks,dots,id:'coach'});
+  if(g.book&&g.bookOk&&g.moves.length<g.book.moves.length)h+=`<div class="banner">📖 Opening trainer: <b>${esc(g.book.name)}</b>, move ${Math.floor(g.moves.length/2)+1} of ${Math.ceil(g.book.moves.length/2)}. ${my?'Find the book move.':''}</div>`;
+  else if(g.book&&g.moves.length>=g.book.moves.length&&g.bookOk)h+=`<div class="banner">📖 You finished the ${esc(g.book.name)} line. Now play on with the plan.</div>`;
+  if(g.start)h+=`<div class="banner">🎯 Theme: <b>${esc(g.start.name)}</b></div>`;
+  {const bh=boardHTML({cls:'coachb',persp:g.human,coords:true,pieces:toMap(g.st.b),from:g.sel!=null?sn(g.sel):null,marks,dots,id:'coach'});h+=bh.slice(0,-6)+arrowsSVG(g.human,arr)+'</div>'}
+  if(P.set.carrow!==false&&my)h+='<small class="muted legend"><span class="lg r"></span>threat · <span class="lg g"></span>hint / better move · <span class="lg y"></span>weak square · red square: loose piece</small>';
   if(g.over)h+=`<div class="fb ${g.over.r==='w'?'ok':'no'}"><h3>${g.over.msg}</h3></div>`;
-  else h+=`<p class="${g.busy?'muted':''}" style="text-align:center;min-height:22px;margin:0">${g.busy?esc(g.busy):my?'Your move: tap a piece, then its square':''}</p>`;
-  h+=`<div class="row corow">${g.over?`<button class="btn primary" style="flex:1" data-act="co-review">Game review</button><button class="btn" data-act="co-setup">New game</button>`:`<button class="btn" data-act="co-hint" ${my&&!g.busy?'':'disabled'}>Hint</button><button class="btn" data-act="co-undo" ${g.moves.some(x=>x.by==='h')&&!String(g.busy).startsWith('Coach')?'':'disabled'}>Take back</button><button class="btn" data-act="co-resign">${g.confirmResign?'Tap again':'Resign'}</button><button class="btn" data-act="co-setup">Menu</button>`}</div>`;
-  h+=`<div id="coside">${coSideHTML()}</div>`;const aiCard=`<div class="card aitop">${aiButtons(g.fb&&!g.fb.lite?['turn','pos']:['pos'])}</div>`;
+  else if(g.pend)h+=g.pend.type==='book'?`<div class="card stack pend"><b>📖 Not the book move.</b><p>In the ${esc(g.book.name)} the move here is <b>${esc(g.pend.exp)}</b>. You played ${esc(g.fb.san)}.</p><div class="row"><button class="btn primary" style="flex:1" data-act="co-retry">Try again</button><button class="btn" style="flex:1" data-act="co-keep">Leave the book</button></div></div>`
+    :`<div class="card stack pend"><b>✋ Coach stopped the game: ${esc(g.fb.san)} is a ${CLS[g.fb.cls][0].toLowerCase()}.</b><p>${esc(coWhy(g.fb).reason)}</p><p class="muted">Take it back and find a better move. Use Hint if you need help.</p><div class="row"><button class="btn primary" style="flex:1" data-act="co-retry">Try again</button><button class="btn" style="flex:1" data-act="co-keep">Keep my move</button></div></div>`;
+  else h+=`<p class="${g.busy?'muted':''}" style="text-align:center;min-height:22px;margin:0">${g.busy?esc(g.busy):my?(g.tried?`Try again: ${esc(g.tried)} was not good. Find a better move.`:'Your move: tap a piece, then its square'):''}</p>`;
+  h+=`<div class="row corow">${g.over?`<button class="btn primary" style="flex:1" data-act="co-review">Game review</button><button class="btn" data-act="co-setup">New game</button>`:`<button class="btn" data-act="co-hint" ${my&&!g.busy&&(g.hint||0)<3?'':'disabled'}>Hint${g.hint?` ${g.hint}/3`:''}</button><button class="btn" data-act="co-undo" ${g.moves.some(x=>x.by==='h')&&!String(g.busy).startsWith('Coach')?'':'disabled'}>Take back</button><button class="btn" data-act="co-resign">${g.confirmResign?'Tap again':'Resign'}</button><button class="btn" data-act="co-setup">Menu</button>`}</div>`;
+  h+=`<div id="coside">${coSideHTML()}</div>`+checklistHTML();const aiCard=`<div class="card aitop">${aiButtons(g.fb&&!g.fb.lite?['turn','pos']:['pos'])}</div>`;
   if(gKey())h+=aiCard;h+=coEngHTML();
   if(g.fb){h+=coFbHTML(g.fb);if(g.fb.cls!=='best'&&!g.fb.lite)h+=`<button class="btn small" data-act="co-better">${g.show.better?'Show the game position':'Show the better move on the board'}</button>`}
   h+=coViewHTML();if(!gKey())h+=aiCard;
@@ -1779,6 +1920,7 @@ function coLessons(g){const out=[],f=g.moves.filter(x=>x.by==='h'&&x.fb&&!x.fb.l
   if(tags.mateMiss)out.push('You missed a forced mate. When the enemy king is weak, calculate checks first.');
   if(tags.king)out.push('Pawn moves in front of your king made it weaker. Move those pawns only with a clear reason.');
   if(tags.dev)out.push('In the opening: develop knights and bishops first, castle, and move each piece once.');
+  const wk=weakest();if(wk)out.push('Train next ('+WTAG[wk]+'): '+TRAINTIP[wk]);
   const s=coStats(g);if(!out.length)out.push(s.acc>=85?'Clean game. Try a stronger level next time.':'Keep checking captures and threats before every move.');
   return out}
 
