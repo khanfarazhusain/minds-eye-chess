@@ -269,6 +269,18 @@ main .qbox.tr.kt .moves{max-height:18vh;max-height:18svh}
 .ctabs button.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}.ctabs .dot{position:absolute;top:2px;right:3px;width:7px;height:7px;border-radius:50%}
 .dot.bad{background:var(--bad)}.dot.new{background:var(--good)}.dot.busy{background:var(--brass)}
 .ctab{max-height:min(62vh,520px);overflow-y:auto}
+.fixtop,.fixscroll{display:contents}
+body.fixb main{height:calc(100dvh - var(--hdr,56px) - var(--navh,64px));padding-block:8px 0;display:flex;flex-direction:column;overflow:hidden}
+body.fixb main>.stack{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}
+body.fixb .fixtop{display:flex;flex-direction:column;gap:6px;flex:none}
+body.fixb .fixscroll{display:flex;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding-bottom:14px}
+body.fixb .fixscroll>*{flex:none}
+body.fixb .costick{position:static!important;padding:0}
+body.fixb .fixtop .board{width:100%;max-width:min(440px,max(240px,calc(100dvh - var(--hdr,56px) - var(--navh,64px) - 250px)));margin:0 auto}
+body.fixb header.top .wrap{padding-block:5px}body.fixb .brand{font-size:17px}body.fixb .brand i{font-size:16px}body.fixb .chips{display:none}
+body.fixb nav.tabs .wrap{padding-block:2px}body.fixb nav.tabs button{padding:3px 0;font-size:11px}body.fixb nav.tabs button span{font-size:16px}
+body.fixb .fixtop .gstat{font-size:13px}body.fixb .fixtop .evrow{margin:0}body.fixb .fixtop .banner{font-size:13px;padding:4px 8px}
+body.fixb .ctab{max-height:none;overflow:visible}
 .costick{position:sticky;top:var(--hdr,56px);z-index:4;background:var(--bg);padding:4px 0 2px;margin:0 -2px}
 .costick~*,.costick~* *{scroll-margin-top:calc(var(--hdr,56px) + var(--bh,320px))}
 .costick .board.coachb{max-width:min(440px,max(230px,calc(100svh - 430px)))}
@@ -751,12 +763,14 @@ const TUT={
 };
 
 /* ================= app state & render ================= */
+const FIXV=['coach','puz','calc','gm','pgn'];
+function setMain(h){const f=main.querySelector('.fixscroll'),y=f?f.scrollTop:0,same=main.dataset.v===V.name;main.innerHTML=h;main.dataset.v=V.name;const g=main.querySelector('.fixscroll');if(g&&same&&y)g.scrollTop=y}
 let V={name:'path'},S=null,G=null,timerInt=null,autoNext=null,onSq=null;
 const main=document.getElementById('main');
 function go(v){clearTimers();if(v.name!=='q'&&v.name!=='result')S=null;V=v;render();window.scrollTo(0,0)}
 function clearTimers(){clearInterval(timerInt);timerInt=null;clearTimeout(autoNext);autoNext=null}
 function renderChips(){const d=dueItems().length;document.getElementById('chips').innerHTML=`<span class="chip" title="Day streak">${streak()}d streak</span><span class="chip" title="Stars">★ ${ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0)}</span>`}
-function render(){document.body.classList.toggle('inq',V.name==='q'||V.name==='train');renderChips();onSq=null;const tab={path:'path',stage:'path',tut:'path',q:S&&S.from||'path',result:S&&S.from||'path',practice:'practice',explore:'practice',play:'play',coach:'play',coachset:'play',coachrev:'play',codiary:'play',stats:'stats',trainset:V.from==='practice'?'practice':'path',train:TR&&TR.back==='practice'?'practice':'path',trainres:TR&&TR.back==='practice'?'practice':'path'}[V.name];
+function render(){const fx=FIXV.includes(V.name);if(document.body.classList.contains('fixb')!==fx){document.body.classList.toggle('fixb',fx);try{window.__setH&&window.__setH()}catch(e){}}document.body.classList.toggle('inq',V.name==='q'||V.name==='train');renderChips();onSq=null;const tab={path:'path',stage:'path',tut:'path',q:S&&S.from||'path',result:S&&S.from||'path',practice:'practice',explore:'practice',play:'play',coach:'play',coachset:'play',coachrev:'play',codiary:'play',stats:'stats',trainset:V.from==='practice'?'practice':'path',train:TR&&TR.back==='practice'?'practice':'path',trainres:TR&&TR.back==='practice'?'practice':'path'}[V.name];
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
   ({path:vPath,stage:vStage,tut:vTut,q:vQ,result:vResult,practice:vPractice,explore:vExplore,play:vPlay,coach:vCoach,coachset:vCoachSet,coachrev:vCoachRev,codiary:vCoDiary,stats:vStats,trainset:vTrainSet,train:trRender,trainres:vTrainRes})[V.name]()}
 
@@ -1924,17 +1938,17 @@ function vCoach(){const g=CG;if(!g){go({name:'coachset'});return}const my=coMyTu
     if(g.show.better&&g.fb&&g.fb.pre&&g.fb.pre.lines[0]){const bm=fromUci(g.fb.st0,g.fb.pre.lines[0].pv[0]);if(bm)arr.push({f:bm.f,t:bm.t,c:'green'})}
     if(my){for(const s of hanging(g.st.b,w))if(!marks[sn(s)])marks[sn(s)]='bad';for(const s of outposts(g.st.b,!w).filter(s=>!g.st.b[s]).slice(0,3))if(!marks[sn(s)])marks[sn(s)]='weak'}}
   const dots=g.sel!=null?legal(g.st).filter(x=>x.f===g.sel).map(x=>sn(x.t)):[];
-  let h=`<div class="stack"><div class="gstat"><span>You: ${w?'White':'Black'} · ${L.n} ${L.elo}</span><span class="muted">${SF.ready?'Stockfish':SF.failed?'Built-in engine':'Engine loading…'}</span></div>${coEvalHTML()}`;
+  let h=`<div class="stack"><div class="fixtop"><div class="gstat"><span>You: ${w?'White':'Black'} · ${L.n} ${L.elo}</span><span class="muted">${SF.ready?'Stockfish':SF.failed?'Built-in engine':'Engine loading…'}</span></div>${coEvalHTML()}`;
   if(g.book&&g.bookOk&&g.moves.length<g.book.moves.length)h+=`<div class="banner">📖 Opening trainer: <b>${esc(g.book.name)}</b>, move ${Math.floor(g.moves.length/2)+1} of ${Math.ceil(g.book.moves.length/2)}. ${my?'Find the book move.':''}</div>`;
   else if(g.book&&g.moves.length>=g.book.moves.length&&g.bookOk)h+=`<div class="banner">📖 You finished the ${esc(g.book.name)} line. Now play on with the plan.</div>`;
   if(g.start)h+=`<div class="banner">🎯 Theme: <b>${esc(g.start.name)}</b></div>`;
   h+='<div class="costick">';{const bh=boardHTML({cls:'coachb',persp:g.human,coords:true,pieces:toMap(g.st.b),from:g.sel!=null?sn(g.sel):null,marks,dots,id:'coach'});h+=bh.slice(0,-6)+arrowsSVG(g.human,arr)+'</div>'}
-  if(P.set.carrow!==false&&my&&P.set.ceasy===false)h+='<small class="muted legend"><span class="lg r"></span>threat · <span class="lg g"></span>hint / better move · <span class="lg y"></span>weak square · red square: loose piece</small>';h+='</div>';
+  if(P.set.carrow!==false&&my&&P.set.ceasy===false)h+='<small class="muted legend"><span class="lg r"></span>threat · <span class="lg g"></span>hint / better move · <span class="lg y"></span>weak square · red square: loose piece</small>';h+='</div></div><div class="fixscroll stack">';
   if(g.over)h+=`<div class="fb ${g.over.r==='w'?'ok':'no'}"><h3>${g.over.msg}</h3></div>`;
   else if(g.pend)h+=g.pend.type==='book'?`<div class="card stack pend"><b>📖 Not the book move.</b><p>In the ${esc(g.book.name)} the move here is <b>${esc(g.pend.exp)}</b>. You played ${esc(g.fb.san)}.</p><div class="row"><button class="btn primary" style="flex:1" data-act="co-retry">Try again</button><button class="btn" style="flex:1" data-act="co-keep">Leave the book</button></div></div>`
     :`<div class="card stack pend"><b>✋ Coach stopped the game: ${esc(g.fb.san)} is a ${CLS[g.fb.cls][0].toLowerCase()}.</b><p>${esc(coWhy(g.fb).reason)}</p><p class="muted">Take it back and find a better move. Use Hint if you need help.</p><div class="row"><button class="btn primary" style="flex:1" data-act="co-retry">Try again</button><button class="btn" style="flex:1" data-act="co-keep">Keep my move</button></div></div>`;
   else h+=`<p class="${g.busy?'muted':''}" style="text-align:center;min-height:22px;margin:0">${g.busy?esc(g.busy):my?(g.tried?`Try again: ${esc(g.tried)} was not good. Find a better move.`:'Your move: tap a piece, then its square'):''}</p>`;
-  if(P.set.ceasy!==false){h+=coEasyHTML();main.innerHTML=h;onSq=coTap;return}
+  if(P.set.ceasy!==false){h+=coEasyHTML();setMain(h);onSq=coTap;return}
   h+=`<div class="row corow">${g.over?`<button class="btn primary" style="flex:1" data-act="co-review">Game review</button><button class="btn" data-act="co-setup">New game</button>`:`<button class="btn" data-act="co-hint" ${my&&!g.busy&&(g.hint||0)<3?'':'disabled'}>Hint${g.hint?` ${g.hint}/3`:''}</button><button class="btn" data-act="co-undo" ${g.moves.some(x=>x.by==='h')&&!String(g.busy).startsWith('Coach')?'':'disabled'}>Take back</button><button class="btn" data-act="co-resign">${g.confirmResign?'Tap again':'Resign'}</button><button class="btn" data-act="co-setup">Menu</button>`}</div>`;
   if(!g.over)h+=`<div class="row arrrow"><button class="btn small ${g.arrBest?'on':''}" data-act="co-arr" data-v="arrBest" ${my?'':'disabled'}>➜ Best moves</button><button class="btn small ${g.arrThink?'on':''}" data-act="co-arr" data-v="arrThink">🧠 Coach's thinking</button>${g.fb&&!g.fb.lite&&g.fb.cls!=='best'?`<button class="btn small ${g.show.better?'on':''}" data-act="co-better">✓ Better move</button>`:''}</div>`;
   h+=`<div id="coside">${coSideHTML()}</div>`+coStripHTML();
@@ -1942,7 +1956,7 @@ function vCoach(){const g=CG;if(!g){go({name:'coachset'});return}const my=coMyTu
   h+=`<div class="ctabs">${tabs.map(([k,t,dot])=>`<button class="${k===tab?'on':''}" data-act="co-tab" data-v="${k}">${t}${dot?`<i class="dot ${dot}"></i>`:''}</button>`).join('')}</div><div class="card ctab">${coTabHTML(tab)}</div>`;
   if(P.set.cpause&&g.waitNext)h+=`<button class="btn primary block" data-act="co-next">Next ▶ (computer moves)</button>`;
   h+=`<div class="gamemoves">${g.moves.length?coMovesHTML(g.moves):'<span class="muted">No moves yet</span>'}</div></div>`;
-  main.innerHTML=h;onSq=coTap}
+  setMain(h);onSq=coTap}
 // beginner guide: opening steps + "your job now"
 const OSTEPS=[['centre','Put a pawn in the centre'],['knights','Bring out your knights'],['bishops','Bring out your bishops'],['castle','Castle: make your king safe'],['rooks','Connect your rooks']];
 function openSteps(st,w){const b=st.b,P_=w?'P':'p',N_=w?'N':'n',B_=w?'B':'b',K_=w?'K':'k',r0=w?0:56;const at=n=>b[si(n)];
@@ -2047,7 +2061,7 @@ function coLessons(g){const out=[],f=g.moves.filter(x=>x.by==='h'&&x.fb&&!x.fb.l
   const s=coStats(g);if(!out.length)out.push(s.acc>=85?'Clean game. Try a stronger level next time.':'Keep checking captures and threats before every move.');
   return out}
 
-try{const hd=document.querySelector('header.top');const setH=()=>{document.documentElement.style.setProperty('--hdr',(hd?hd.getBoundingClientRect().height:56)+'px');const cs=document.querySelector('.costick');if(cs)document.documentElement.style.setProperty('--bh',cs.getBoundingClientRect().height+'px')};new MutationObserver(()=>{const cs=document.querySelector('.costick');if(cs)document.documentElement.style.setProperty('--bh',cs.getBoundingClientRect().height+'px')}).observe(document.body,{childList:true,subtree:false});setH();addEventListener('resize',setH)}catch(e){}
+try{const hd=document.querySelector('header.top');const setH=()=>{document.documentElement.style.setProperty('--hdr',(hd?hd.getBoundingClientRect().height:56)+'px');const cs=document.querySelector('.costick');if(cs)document.documentElement.style.setProperty('--bh',cs.getBoundingClientRect().height+'px');const nv=document.querySelector('nav.tabs');if(nv)document.documentElement.style.setProperty('--navh',nv.getBoundingClientRect().height+'px')};new MutationObserver(()=>{const cs=document.querySelector('.costick');if(cs)document.documentElement.style.setProperty('--bh',cs.getBoundingClientRect().height+'px')}).observe(document.body,{childList:true,subtree:false});setH();window.__setH=setH;addEventListener('resize',setH)}catch(e){}
 render();
 
 </script>
