@@ -26,4 +26,6 @@ pandoc docx.html -f html -t docx -o "$ROOT/downloads/Chess-Course-Notes.docx" --
   --metadata title="Chess Course Notes"
 pandoc txt.html -f html -t plain --wrap=auto --columns=78 -o body.txt
 { printf 'CHESS COURSE NOTES (basics se pro tak) - 7 levels, 47 lessons\nOnline (diagrams ke saath): https://khanfarazhusain.github.io/minds-eye-chess/notes.html\n\nDiagram kaise padhein:\n  Bade letters = White, chhote letters = Black\n  K king, Q queen, R rook, B bishop, N knight, P pawn\n  * = piece yahan ja sakta hai,  # = important (highlighted) square,  . = khaali\n  Arrows sirf Word/online version mein dikhte hain.\n\nHeadings: ### = Level, === = Lesson (jaise 1.2), --- = Topic (jaise 1.2.3)\n\n'; cat body.txt; } > "$ROOT/downloads/Chess-Course-Notes.txt"
+# PDF copy (opens straight in iPhone Safari)
+soffice --headless --convert-to pdf --outdir "$ROOT/downloads" "$ROOT/downloads/Chess-Course-Notes.docx" >/dev/null
 echo done
