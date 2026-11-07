@@ -4539,13 +4539,16 @@ Jawab:
 Chaal ke baad
 
     ######################################################################
-    ##  LEVEL 3: TACTICS: CHHOTE HATHIYAAR
+    ##  LEVEL 3: MIDDLEGAME 1: TACTICS
     ######################################################################
 
 Sochne ki process, fork, pin, skewer, discovered attack, defender hatao,
 deflection, decoy, interference, clearance, x-ray, calculation
 
--   Tactics = chhoti forcing chaalon se material ya mate jeetna.
+-   Middlegame section (Level 3-5) yahan se shuru.
+-   Middlegame woh hissa hai jab pieces bahar aa chuke hain aur asli ladaai
+    hoti hai: tactics, mate attacks aur plans.
+-   Pehla hissa tactics: chhoti forcing chaalon se material ya mate jeetna.
 -   Pehle sochne ki process, phir har hathiyaar alag se, aur bahut saare
     puzzles.
 
@@ -8048,7 +8051,7 @@ Jawab:
 -   c1-d2-e3-f4-g5-h6 ek hi diagonal: 1 chaal.
 
     ######################################################################
-    ##  LEVEL 4: CHECKMATE PATTERNS
+    ##  LEVEL 4: MIDDLEGAME 2: CHECKMATE PATTERNS
     ######################################################################
 
 Mate ki kala, back-rank, smothered, aur 25+ famous mate patterns
@@ -9832,7 +9835,728 @@ Jawab:
 Chaal ke baad
 
     ######################################################################
-    ##  LEVEL 5: OPENINGS: SHURUAAT MAZBOOT
+    ##  LEVEL 5: MIDDLEGAME 3: STRATEGY AUR PLAN
+    ######################################################################
+
+Position ke elements, exchanges, pawn structure, weak squares, open files,
+plans, prophylaxis, sacrifices
+
+-   Jab koi tactic na ho, tab kya karein?
+-   Strategy: position ke elements samjho aur plan banao.
+
+    5.1 Position ke elements aur exchanges
+    ======================================
+
+Material, time, space, king safety, pawn structure; kab trade karein
+
+Yaad rakho
+
+-   Material sab kuch nahi: time (development), space, king safety, pawn
+    structure bhi ginti mein.
+-   Jeet rahe ho (material aage): pieces trade karo, pawns nahi.
+-   Haar rahe ho: pawns trade karo, pieces nahi (draw ke chances).
+-   King par heavy attack: attacking pieces trade karo.
+-   Tang (cramped) position: pieces trade karke saans lo, bure piece ko trade
+    karo.
+
+Is lesson ke topics
+
+-   5.1.1 Position ke 5 elements
+-   5.1.2 Material sab kuch nahi: Ed. Lasker vs Thomas (1912)
+-   5.1.3 Exchanges kab karein
+-   5.1.4 Sawal 1: Tum ek rook aage ho
+-   5.1.5 Sawal 2: Tum ek pawn peeche ho, endgame aa raha hai
+-   5.1.6 Sawal 3: Opponent ki queen, rook aur knight tumhare king par attack
+    kar…
+-   5.1.7 Sawal 4: Tumhari position tang hai aur ek bishop apne pawns ke
+    peeche band…
+
+    5.1.1 Position ke 5 elements
+    ----------------------------
+
+-   Sirf "accountant" ki tarah material mat gino.
+-   Dekho:
+-   1.
+-   Material (points)
+-   2.
+-   Time (development, tempo)
+-   3.
+-   Space (kitni jagah tumhare pieces ke paas)
+-   4.
+-   King safety
+-   5.
+-   Pawn structure
+-   Ek element mein aage hokar doosre mein peeche ho sakte ho.
+-   Jaise gambit: material kam, time zyada.
+
+    5.1.2 Material sab kuch nahi: Ed. Lasker vs Thomas (1912)
+    ---------------------------------------------------------
+
+-   Queen sacrifice aur phir Black king ka poore board par shikaar!
+
+1. d4 e6 2. Nf3 f5 3. Nc3 Nf6 4. Bg5 Be7 5. Bxf6 Bxf6 6. e4 fxe4 7. Nxe4 b6
+8. Ne5 O-O 9. Bd3 Bb7 10. Qh5 Qe7 11. Qxh7+ Kxh7 12. Nxf6+ Kh6 13. Neg4+ Kg5
+14. h4+ Kf4 15. g3+ Kf3 16. Be2+ Kg2 17. Rh2+ Kg1 18. Kd2#
+
+-   5.Bxf6 bishop dekar light squares par kabza.
+-   10.Qh5 attack.
+-   11.Qxh7+!! queen sacrifice.
+-   12.Nxf6+ double check!
+-   14.h4+ king ko aage kheencho.
+-   18.Kd2# king ki chaal se mate (O-O-O# bhi tha)!
+
+    8 | r n . q . r k .
+    7 | p b p p . . p p
+    6 | . p . . p b . .
+    5 | . . . . N . . Q
+    4 | . . . P N . . .
+    3 | . . . B . . . .
+    2 | P P P . . P P P
+    1 | R . . . K . . R
+       ----------------
+        a b c d e f g h
+
+Position after 10.Qh5
+
+    8 | r n . . . r . .
+    7 | p b p p q . p .
+    6 | . p . . p N . .
+    5 | . . . . . . . .
+    4 | . . . P . . N P
+    3 | . . . . . . P .
+    2 | P P P K B P . R
+    1 | R . . . . . k .
+       ----------------
+        a b c d e f g h
+
+Final position (18.Kd2#)
+
+    5.1.3 Exchanges kab karein
+    --------------------------
+
+-   Material aage: pieces trade karo, pawns nahi. Kam pieces = tumhara extra
+    material zyada bhaari. (Benko vs Fischer)
+-   Material peeche: pawns trade karo, pieces nahi. Kam pawns = draw ke
+    chances (jaise sirf bishop bacha to mate nahi).
+-   King par heavy attack: attacking pieces trade karo, attack khatam.
+-   Tang (cramped) position: trade karke jagah banao, khaas kar apna bura
+    piece trade karo.
+
+    5.1.4 Sawal 1: Tum ek rook aage ho
+    ----------------------------------
+
+Tum ek rook aage ho. Opponent queen trade offer karta hai. Kya karoge?
+
+Jawab:
+
+✓ Trade karo: pieces kam = jeet aasaan
+
+-   Aage ho to pieces trade.
+
+    5.1.5 Sawal 2: Tum ek pawn peeche ho, endgame aa raha hai
+    ---------------------------------------------------------
+
+Tum ek pawn peeche ho, endgame aa raha hai. Kya trade karna achha?
+
+Jawab:
+
+✓ Pawns
+
+-   Pawns kam honge to draw ke chances badhenge.
+
+    5.1.6 Sawal 3: Opponent ki queen, rook aur knight tumhare king par attack kar…
+    ----------------------------------------------------------------------
+
+Opponent ki queen, rook aur knight tumhare king par attack kar rahe hain.
+Achha idea?
+
+Jawab:
+
+✓ Attacking pieces ko trade karo
+
+-   Attackers trade = attack khatam.
+
+    5.1.7 Sawal 4: Tumhari position tang hai aur ek bishop apne pawns ke peeche band…
+    ----------------------------------------------------------------------
+
+Tumhari position tang hai aur ek bishop apne pawns ke peeche band (bura).
+Plan?
+
+Jawab:
+
+✓ Bure bishop ko trade karne ki koshish
+
+-   Cramped position mein trades se raahat.
+
+    5.2 Pawn structure
+    ==================
+
+Isolated, doubled, backward, passed, chains
+
+Yaad rakho
+
+-   Pawn moves permanent hain: structure decide karta hai pieces kahan achhe.
+-   IQP: kamzor pawn, par active pieces. IQP wala attack kare, doosra trade
+    kare.
+-   Backward pawn ke aage ka square ek hole banta hai.
+-   Pawn chain: base par attack karo (Nimzowitsch).
+-   "Pawns chess ki aatma hain" (Philidor).
+-   Pawns peeche nahi jaate: har pawn chaal ek pakka faisla. Socho kaunse
+    squares hamesha ke liye kamzor honge.
+-   Center ko pawns se bharna zaroori nahi: pieces se control bhi chalega
+    (hypermodern, Reti vs Capablanca).
+-   Pawn kamzor tab hota hai jab use pawn se bachaya na ja sake (dependency
+    pieces par).
+-   Pieces aur pawns ka harmony: bishop apne pawns ke opposite colour par.
+
+Is lesson ke topics
+
+-   5.2.1 Pawns: chess ki aatma
+-   5.2.2 Pawns = position ki haddi
+-   5.2.3 Isolated pawn (IQP)
+-   5.2.4 Doubled aur backward pawns
+-   5.2.5 Pawn chain
+-   5.2.6 Sawal 1: Isolated pawn ke saamne wala square kis kaam ka hai?
+-   5.2.7 Sawal 2: Pawn chain par attack kahan karna chahiye?
+-   5.2.8 Sawal 3: Tumhare center pawns light squares par hain
+-   5.2.9 Sawal 4: Pawn chaal ko "irreversible" kyun kehte hain?
+
+    5.2.1 Pawns: chess ki aatma
+    ---------------------------
+
+-   "Pawns are the soul of chess" (Philidor).
+-   Pawn structure (formation) batata hai ki pieces kahan jaayenge aur plan
+    kya hoga.
+-   Pawns peeche nahi jaate: har pawn chaal ek pakka faisla hai. Plaskett vs
+    Adams aur Fischer vs Addison (probing strategy) mein galat pawn chaalon se
+    hamesha ki kamzori bani.
+-   Center bharna zaroori nahi: Reti vs Capablanca: pieces se door se center
+    control (hypermodern).
+-   Kamzor pawn = jise pawn se bachaya na ja sake, pieces par nirbhar.
+-   Harmony: pieces aur pawns saath kaam karein. Bishop apne pawns ke opposite
+    colour par. (Karjakin-Adams, Kasparov-Adams, Nimzowitsch-Capablanca)
+-   Har structure ke upside aur downside hote hain: dono khelkar dekho.
+
+    5.2.2 Pawns = position ki haddi
+    -------------------------------
+
+-   "Pawns are the soul of chess" (Philidor).
+-   Pawns peeche nahi jaate, isliye har pawn move permanent hai.
+-   Pawn structure decide karta hai pieces kahan achhe honge.
+
+    5.2.3 Isolated pawn (IQP)
+    -------------------------
+
+-   d4 pawn ke bagal (c, e files) mein koi apna pawn nahi: isolated.
+-   Kamzori: pawn se protect nahi hota, aur uske aage d5 square blockade ke
+    liye perfect (Black knight d5 par).
+-   Taakat: active pieces, d5 break aur kingside attack.
+-   IQP wala attack kare, doosra pieces trade karke endgame mein jaaye.
+
+    8 | r . b q . r k .
+    7 | p p . . b p p p
+    6 | . . n . p n . .
+    5 | . . . . . . . .
+    4 | . . . P . . . .
+    3 | . . N B . N . .
+    2 | P P . . . P P P
+    1 | R . B Q . R K .
+       ----------------
+        a b c d e f g h
+
+    5.2.4 Doubled aur backward pawns
+    --------------------------------
+
+-   Backward pawn: bagal ke pawns aage nikal gaye, aur yeh aage nahi badh
+    sakta kyunki aage ka square dushman control karta hai.
+-   Yahan Black ka d6 backward hai aur d5 ek hole hai: White ke knight ke liye
+    perfect ghar.
+-   Doubled pawns (ek file par do): aksar kamzor, par open file deta hai.
+
+    8 | r . b q k b . r
+    7 | . p . . . p p p
+    6 | p . n p . n . .
+    5 | . . . . p . . .
+    4 | . . . . P . . .
+    3 | . N N . . . . .
+    2 | P P P . B P P P
+    1 | R . B Q K . . R
+       ----------------
+        a b c d e f g h
+
+    5.2.5 Pawn chain
+    ----------------
+
+-   Pawn chain d4-e5 (White) aur e6-d5 (Black).
+-   Rule (Nimzowitsch): chain ki base par attack karo.
+-   Black ...c5 se d4 (base) par vaar karta hai.
+-   White kingside par (f4-f5) attack karta hai, kyunki chain ka sira us taraf
+    ishaara karta hai.
+
+    8 | r n b q k b n r
+    7 | p p . . . p p p
+    6 | . . . . p . . .
+    5 | . . p p P . . .
+    4 | . . . P . . . .
+    3 | . . . . . . . .
+    2 | P P P . . P P P
+    1 | R N B Q K B N R
+       ----------------
+        a b c d e f g h
+
+    5.2.6 Sawal 1: Isolated pawn ke saamne wala square kis kaam ka hai?
+    -------------------------------------------------------------------
+
+Isolated pawn ke saamne wala square kis kaam ka hai?
+
+Jawab:
+
+✓ Dushman ke knight ke liye blockade ghar
+
+    5.2.7 Sawal 2: Pawn chain par attack kahan karna chahiye?
+    ---------------------------------------------------------
+
+Pawn chain par attack kahan karna chahiye?
+
+Jawab:
+
+✓ Chain ki base par
+
+    5.2.8 Sawal 3: Tumhare center pawns light squares par hain
+    ----------------------------------------------------------
+
+Tumhare center pawns light squares par hain. Kaunsa bishop "good" hai?
+
+Jawab:
+
+✓ Dark-square bishop
+
+-   Apne pawns ke opposite colour wala bishop free hota hai.
+
+    5.2.9 Sawal 4: Pawn chaal ko "irreversible" kyun kehte hain?
+    ------------------------------------------------------------
+
+Pawn chaal ko "irreversible" kyun kehte hain?
+
+Jawab:
+
+✓ Pawn peeche nahi jaata, jo square chhoda woh hamesha ke liye
+
+-   Isliye pawn chaal soch-samajh kar.
+
+    5.3 Pawn structure: gehraai se
+    ==============================
+
+Pawn breaks, holes, minority attack, thorn pawn, passed, doubled, IQP,
+backward, hanging: upside aur downside
+
+Yaad rakho
+
+-   Pawn break (lever): pawn se dushman ki chain par chot karke lines kholna.
+-   Hole: aisa square jise pawn kabhi control nahi kar sakta. Uske guard
+    bishop ko trade karo.
+-   Minority attack: kam pawns (jaise a+b) se zyada pawns (a+b+c) par hamla
+    karke kamzori banana.
+-   Thorn pawn: dushman king ke paas gehra ghusa pawn (f6/h6): mate ke mauke.
+-   Har structure ke dono pehlu: doubled, IQP, backward, hanging pawns kamzor
+    bhi, strong bhi.
+
+Is lesson ke topics
+
+-   5.3.1 Pawn break aur hole
+-   5.3.2 Minority attack
+-   5.3.3 Sawal 1: Minority attack ka maksad?
+-   5.3.4 Thorn pawn
+-   5.3.5 Structures: upside aur downside
+-   5.3.6 Sawal 2: Doubled pawns ka ek upside?
+
+    5.3.1 Pawn break aur hole
+    -------------------------
+
+-   Pawn break (lever): apne pawn se dushman ke pawn par chot karke lines
+    kholna. Jaise French mein ...c5, King's Indian mein ...f5.
+-   Structural hole: aisa square jise koi pawn kabhi control nahi kar sakta
+    (jaise d5 jab c aur e pawns aage chale gaye). Agar us square ka guard ek
+    bishop hai, use trade karo: hole tumhara.
+
+    5.3.2 Minority attack
+    ---------------------
+
+-   Queen's Gambit Exchange structure: White ke 2 pawns (a, b) Black ke 3
+    pawns (a, b, c) par chadhte hain: b4-b5.
+-   Trade ke baad Black ke paas kamzor c-pawn (backward/isolated) bachta hai.
+
+    8 | r . b q . r k .
+    7 | p p . . b p p p
+    6 | . . n . p n . .
+    5 | . . . p . . . .
+    4 | . P . P . . . .
+    3 | . . N . P N . .
+    2 | P . . . B P P P
+    1 | R . . Q . R K .
+       ----------------
+        a b c d e f g h
+
+    5.3.3 Sawal 1: Minority attack ka maksad?
+    -----------------------------------------
+
+Minority attack ka maksad?
+
+Jawab:
+
+✓ Dushman ke structure mein kamzor pawn banana
+
+-   Kamzor pawn = lambe samay ka target.
+
+    5.3.4 Thorn pawn
+    ----------------
+
+-   Dushman king ke paas gehra ghusa pawn, jaise f6 ya h6 (Black castled king
+    ke against).
+-   Yeh g7 jaise squares ko control karta hai aur mate ke patterns (Lolli)
+    aasaan banata hai.
+-   Jeet ke chances bahut badh jaate hain.
+-   Examples: Lorenz-Orlov, Kramnik-Anand, Morales-Sanchez, Ivanovic-Popovic.
+
+    8 | . . . . . . k .
+    7 | . . . . . p . p
+    6 | . . . . . P p .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+    5.3.5 Structures: upside aur downside
+    -------------------------------------
+
+-   Passed pawn: jeet ke chances, "pushed" hone chahiye. (Torre vs NN)
+-   Doubled pawns: kamzor (ek doosre ko bacha nahi sakte), par open file aur
+    center control de sakte hain. (Botvinnik vs Levenfish)
+-   IQP (isolated queen's pawn): kamzor endgame mein, par middlegame mein
+    activity aur attack.
+-   Backward pawn: aage ka square hole ban jaata hai, par kabhi woh square aur
+    pawn solid defense bhi.
+-   Hanging pawns (c + d saath, bagal mein koi nahi): aage badhkar dabaav, par
+    target bhi.
+
+    5.3.6 Sawal 2: Doubled pawns ka ek upside?
+    ------------------------------------------
+
+Doubled pawns ka ek upside?
+
+Jawab:
+
+✓ Saath mein ek open/semi-open file milti hai
+
+-   Capture se file khulti hai: rook ke liye.
+
+    5.4 Weak squares aur outposts
+    =============================
+
+Pieces ke liye ghar
+
+Yaad rakho
+
+-   Outpost = jahan dushman pawn tumhare piece ko bhaga na sake.
+-   Outpost par knight rook jitna strong ho sakta hai.
+-   Bad bishop: apne hi pawns usi color par. Pawns bishop ke ulte color par
+    rakho.
+
+Is lesson ke topics
+
+-   5.4.1 Outpost
+-   5.4.2 Good bishop vs bad bishop
+-   5.4.3 Sawal 1: Knight ke liye sabse achha square?
+
+    5.4.1 Outpost
+    -------------
+
+-   Outpost: aisa square jahan tumhara piece baith sake aur koi dushman pawn
+    use bhaga na sake, aur aksar apne pawn se protected ho.
+-   d5 par knight: Black ke c aur e pawns use kabhi attack nahi kar sakte.
+-   Aisa knight ek rook jitna strong ho sakta hai!
+-   Weak square = jo pawns se protect na ho sake.
+-   Pawn move karte waqt socho: kaunse squares kamzor ho rahe hain?
+
+    8 | r . . . . r k .
+    7 | . p . . . p p p
+    6 | p . . p . . . .
+    5 | . . . N p . . .
+    4 | . . . . P . . .
+    3 | . . . . . . . .
+    2 | P P P . . P P P
+    1 | R . . . . R K .
+       ----------------
+        a b c d e f g h
+
+    5.4.2 Good bishop vs bad bishop
+    -------------------------------
+
+-   White ke pawns light squares par hain (c4, d5, e4), aur bishop bhi
+    light-square ka hai: woh apne hi pawns se ruka hai = bad bishop.
+-   Rule: pawns ko apne bishop ke ulte color par rakho.
+-   Bad bishop ko trade karo ya pawns ke bahar laao.
+
+    8 | . . . . k . . .
+    7 | . . . . . . . .
+    6 | . . . p . . . .
+    5 | . . p P p . . .
+    4 | . . P . P . . .
+    3 | . . . . . . . .
+    2 | . . . . B . . .
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+    5.4.3 Sawal 1: Knight ke liye sabse achha square?
+    -------------------------------------------------
+
+Knight ke liye sabse achha square?
+
+Jawab:
+
+✓ Center mein outpost jahan pawn bhaga na sake
+
+    5.5 Open files, 7th rank, piece activity
+    ========================================
+
+Rooks aur pieces ko zinda karo
+
+Yaad rakho
+
+-   Rooks ko open / half-open files par lao, phir 7th rank par ghuso.
+-   Do rooks 7th par ("pigs on the 7th") aksar jeet.
+-   Golden rule: sabse kharab piece ko behtar karo.
+
+Is lesson ke topics
+
+-   5.5.1 Rooks ko kaam do
+-   5.5.2 Sawal 1: Koi tactic nahi, koi threat nahi
+-   5.5.3 Diagram: Rook open file se 7th rank par ("pig on the 7th")
+
+    5.5.1 Rooks ko kaam do
+    ----------------------
+
+-   Rooks ko open file (jisme koi pawn nahi) par lao, ya half-open file par.
+-   File kabze ke baad 7th rank par ghuso: wahan pawns aur king dono atakte
+    hain. Do rooks 7th par = "pigs on the 7th", aksar jeet.
+-   Doubling: do rooks ek file par.
+-   General rule: sabse kharab piece ko behtar karo.
+-   Har position mein socho: mera kaunsa piece kuch nahi kar raha?
+
+    8 | . . . . . . k .
+    7 | # R # # # p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . P P P
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+    5.5.2 Sawal 1: Koi tactic nahi, koi threat nahi
+    -----------------------------------------------
+
+Koi tactic nahi, koi threat nahi. Achha general plan?
+
+Jawab:
+
+✓ Sabse kharab piece ko behtar square par lao
+
+    5.5.3 Diagram: Rook open file se 7th rank par ("pig on the 7th")
+    ----------------------------------------------------------------
+
+    8 | . . . . . . k .
+    7 | . R . . . p p p
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . P P P
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+Rook open file se 7th rank par ("pig on the 7th")
+
+    5.6 Plan kaise banayein
+    =======================
+
+Imbalances aur attack
+
+Yaad rakho
+
+-   Plan imbalances se banta hai: material, minor pieces, pawn structure,
+    space, files, king safety.
+-   Jahan strong ho wahan khelo.
+-   Opposite side castling = pawn storm race; same side castling mein
+    center/queenside khelo.
+-   Minority attack (b4-b5): Carlsbad structure mein c6 par kamzor pawn
+    banana.
+-   Piece activity: har piece ko kaam do; bure piece ko behtar square par lao.
+
+Is lesson ke topics
+
+-   5.6.1 Imbalances dekho
+-   5.6.2 Opposite side castling = pawn storm
+-   5.6.3 Minority attack
+-   5.6.4 Sawal 1: Tumhare paas kingside mein zyada space hai aur kings alag
+    taraf…
+
+    5.6.1 Imbalances dekho
+    ----------------------
+
+-   Plan banane ke liye farq (imbalances) dekho:
+    -   Material: kaun aage?
+    -   Minor pieces: bishop vs knight, bishop pair?
+    -   Pawn structure: kamzor pawns, passed pawns, majorities
+    -   Space: kiske paas zyada jagah?
+    -   Open files / weak squares
+    -   Development aur king safety
+-   Phir: jahan tum strong ho wahan khelo.
+-   Space zyada hai to us taraf attack karo.
+-   Kamzori hai to use theek karo ya trades se bacho.
+
+    5.6.2 Opposite side castling = pawn storm
+    -----------------------------------------
+
+-   Jab kings alag-alag taraf castle karein, to dono apne pawns dushman king
+    ki taraf daudaate hain (pawn storm).
+-   Yahan speed sab kuch hai: jo pehle file kholega woh jeetega.
+-   Same side castle ho to pawns aage badhana apne king ko kamzor karta hai:
+    wahan center ya queenside mein khelo.
+
+    8 | . . k r . . . r
+    7 | p p p . . p p p
+    6 | . . n . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . N . .
+    2 | P P P . . P P P
+    1 | . . K R . . . R
+       ----------------
+        a b c d e f g h
+
+    5.6.3 Minority attack
+    ---------------------
+
+-   Queen's Gambit structure (Carlsbad): White kam pawns wali side (queenside:
+    a, b vs a, b, c) se attack karta hai: b4-b5.
+-   Maksad: c6 par ek kamzor pawn banana.
+-   Yeh dikhata hai: plan pawn structure se aata hai.
+
+    8 | . . . . k . . .
+    7 | p p . . . p p p
+    6 | . . p . . . . .
+    5 | . . . p . . . .
+    4 | . . . P . . . .
+    3 | . . . . P . . .
+    2 | P P . . . P P P
+    1 | . . . . K . . .
+       ----------------
+        a b c d e f g h
+
+    5.6.4 Sawal 1: Tumhare paas kingside mein zyada space hai aur kings alag taraf…
+    ----------------------------------------------------------------------
+
+Tumhare paas kingside mein zyada space hai aur kings alag taraf castled hain.
+Plan?
+
+Jawab:
+
+✓ Kingside pawn storm aur attack
+
+    5.7 Prophylaxis aur restriction
+    ===============================
+
+Opponent ka plan pehle roko
+
+Yaad rakho
+
+-   Har chaal se pehle: "Opponent kya chahta hai?" Use pehle roko.
+-   Misaal: h3 (...Bg4 roko), Kh1 (checks se pehle hi bacho).
+-   Restriction: dushman pieces ke achhe squares cheen lo.
+
+Is lesson ke topics
+
+-   5.7.1 Prophylaxis
+-   5.7.2 Sawal 1: Ruy Lopez mein White h3 kyun khelta hai?
+
+    5.7.1 Prophylaxis
+    -----------------
+
+-   Prophylaxis (Nimzowitsch, Karpov, Petrosian): apni chaal se pehle poocho
+    "Opponent kya karna chahta hai?" aur use pehle hi rok do.
+-   h3 khelna taaki ...Bg4 pin na ho
+-   Rook ko us file par rakhna jo khulne wali hai
+-   King ko pehle hi safe square (Kh1) par le jaana taaki baad mein checks na
+    aayein
+-   Restriction: dushman pieces ke achhe squares cheen lo.
+-   Jo piece hil nahi sakta, woh piece nahi.
+
+    5.7.2 Sawal 1: Ruy Lopez mein White h3 kyun khelta hai?
+    -------------------------------------------------------
+
+Ruy Lopez mein White h3 kyun khelta hai?
+
+Jawab:
+
+✓ Black bishop ko g4 aane se rokne ke liye (prophylaxis)
+
+    5.8 Positional sacrifices
+    =========================
+
+Material dekar position lena
+
+Yaad rakho
+
+-   Exchange sac (rook dekar minor piece) position ke liye: Dragon ka
+    ...Rxc3!.
+-   Kab: dushman king khule, dominant piece mile, ya dushman rook bekaar ho.
+-   Gambit = pawn dekar development / initiative.
+
+Is lesson ke topics
+
+-   5.8.1 Exchange sacrifice
+-   5.8.2 Sawal 1: Positional sacrifice ka maksad?
+
+    5.8.1 Exchange sacrifice
+    ------------------------
+
+-   Exchange sacrifice: rook (5) dekar minor piece (3) lena, position ke liye.
+-   Sicilian Dragon mein ...Rxc3! famous hai: White ke king ke saamne pawns
+    toot jaate hain, aur e4 kamzor hota hai.
+-   Kab karein: jab sacrifice se dushman king khul jaaye, ya tumhe dominant
+    piece aur pawns milein, ya dushman ka rook kaam ka na ho.
+-   Pawn sacrifice (gambit) se bhi development, open lines ya initiative milta
+    hai.
+
+    8 | . . r . . r k .
+    7 | p p . b p p b p
+    6 | . . . p . n p .
+    5 | q . . . . . . .
+    4 | . . . N P . . .
+    3 | . B N . B P . .
+    2 | P P P Q . . P P
+    1 | . . K R . . . R
+       ----------------
+        a b c d e f g h
+
+    5.8.2 Sawal 1: Positional sacrifice ka maksad?
+    ----------------------------------------------
+
+Positional sacrifice ka maksad?
+
+Jawab:
+
+✓ Lambe samay ka fayda: king safety tootna, strong pieces, initiative
+
+    ######################################################################
+    ##  LEVEL 6: OPENINGS: SHURUAAT MAZBOOT
     ######################################################################
 
 Opening ke ideas, systems, e4 aur d4 openings, gambits, advanced traps, apna
@@ -9842,7 +10566,7 @@ repertoire
     pehli 6-10 chaalein.
 -   Har line ko board par khud khel kar yaad karo.
 
-    5.1 Opening ke ideas
+    6.1 Opening ke ideas
     ====================
 
 Center, development, king safety
@@ -9864,13 +10588,13 @@ Yaad rakho
 
 Is lesson ke topics
 
--   5.1.1 Teen kaam
--   5.1.2 Sawal 1: 1.e4 e5 2.Nf3 ke baad Black ki sabse natural chaal?
--   5.1.3 Imbalances, main lines, variations
--   5.1.4 Sawal 2: Sicilian 1.e4 c5 "imbalanced" kyun kehlaati hai?
--   5.1.5 Sawal 3: Nayi opening seekhne se pehle stats kahan dekho?
+-   6.1.1 Teen kaam
+-   6.1.2 Sawal 1: 1.e4 e5 2.Nf3 ke baad Black ki sabse natural chaal?
+-   6.1.3 Imbalances, main lines, variations
+-   6.1.4 Sawal 2: Sicilian 1.e4 c5 "imbalanced" kyun kehlaati hai?
+-   6.1.5 Sawal 3: Nayi opening seekhne se pehle stats kahan dekho?
 
-    5.1.1 Teen kaam
+    6.1.1 Teen kaam
     ---------------
 
 -   Har opening teen kaam karti hai:
@@ -9894,7 +10618,7 @@ Is lesson ke topics
        ----------------
         a b c d e f g h
 
-    5.1.2 Sawal 1: 1.e4 e5 2.Nf3 ke baad Black ki sabse natural chaal?
+    6.1.2 Sawal 1: 1.e4 e5 2.Nf3 ke baad Black ki sabse natural chaal?
     ------------------------------------------------------------------
 
 1.e4 e5 2.Nf3 ke baad Black ki sabse natural chaal?
@@ -9916,7 +10640,7 @@ Jawab:
 
 -   Nc6 develop karta hai aur e5 ko protect.
 
-    5.1.3 Imbalances, main lines, variations
+    6.1.3 Imbalances, main lines, variations
     ----------------------------------------
 
 -   Imbalance: dono side alag cheezein lein (ek ke paas center, doosre ke paas
@@ -9926,7 +10650,7 @@ Jawab:
 -   Opening databases (Lichess Opening Explorer, Chess.com): masters aur aam
     players ki asli stats. Apni "pasand" se zyada data par bharosa karo.
 
-    5.1.4 Sawal 2: Sicilian 1.e4 c5 "imbalanced" kyun kehlaati hai?
+    6.1.4 Sawal 2: Sicilian 1.e4 c5 "imbalanced" kyun kehlaati hai?
     ---------------------------------------------------------------
 
 Sicilian 1.e4 c5 "imbalanced" kyun kehlaati hai?
@@ -9937,7 +10661,7 @@ Jawab:
 
 -   Alag structures = dono ke liye jeetne ke mauke.
 
-    5.1.5 Sawal 3: Nayi opening seekhne se pehle stats kahan dekho?
+    6.1.5 Sawal 3: Nayi opening seekhne se pehle stats kahan dekho?
     ---------------------------------------------------------------
 
 Nayi opening seekhne se pehle stats kahan dekho?
@@ -9948,7 +10672,7 @@ Jawab:
 
 -   Database masters ke hazaaron games dikhata hai.
 
-    5.2 Opening systems
+    6.2 Opening systems
     ===================
 
 London, Colle, Torre, KIA, English Botvinnik, Benko, Nimzo-Larsen, Van Geet
@@ -9966,17 +10690,17 @@ Yaad rakho
 
 Is lesson ke topics
 
--   5.2.1 System kya hai?
--   5.2.2 London System
--   5.2.3 Colle System
--   5.2.4 Torre Attack
--   5.2.5 King's Indian Attack (KIA)
--   5.2.6 English: Botvinnik system
--   5.2.7 Benko's Opening, Nimzo-Larsen, Van Geet
--   5.2.8 Sawal 1: Opening system ka sabse bada fayda?
--   5.2.9 Sawal 2: 1.b3 kis naam se jaana jaata hai?
+-   6.2.1 System kya hai?
+-   6.2.2 London System
+-   6.2.3 Colle System
+-   6.2.4 Torre Attack
+-   6.2.5 King's Indian Attack (KIA)
+-   6.2.6 English: Botvinnik system
+-   6.2.7 Benko's Opening, Nimzo-Larsen, Van Geet
+-   6.2.8 Sawal 1: Opening system ka sabse bada fayda?
+-   6.2.9 Sawal 2: 1.b3 kis naam se jaana jaata hai?
 
-    5.2.1 System kya hai?
+    6.2.1 System kya hai?
     ---------------------
 
 -   System = ek setup jo tum lagbhag har jawab ke against khelte ho.
@@ -9985,7 +10709,7 @@ Is lesson ke topics
 -   Nuksaan: predictable, opponent ko aasaani se barabari mil sakti hai, aur
     kabhi exact jawab zaroori hota hai.
 
-    5.2.2 London System
+    6.2.2 London System
     -------------------
 
 -   Ek "system": lagbhag har jawab ke against same setup.
@@ -10026,7 +10750,7 @@ Position after 5.c3
 
 Final position (8.Bd3)
 
-    5.2.3 Colle System
+    6.2.3 Colle System
     ------------------
 
 -   Bishop c1 andar, plan: e3-e4 break.
@@ -10064,7 +10788,7 @@ Position after 4.Bd3
 
 Final position (7…O-O)
 
-    5.2.4 Torre Attack
+    6.2.4 Torre Attack
     ------------------
 
 -   3.Bg5 knight f6 ko pin karta hai.
@@ -10101,7 +10825,7 @@ Position after 4.e3
 
 Final position (7.Bd3)
 
-    5.2.5 King's Indian Attack (KIA)
+    6.2.5 King's Indian Attack (KIA)
     --------------------------------
 
 -   King's Indian ka ulta setup White se.
@@ -10140,7 +10864,7 @@ Position after 4.O-O
 
 Final position (7.e4)
 
-    5.2.6 English: Botvinnik system
+    6.2.6 English: Botvinnik system
     -------------------------------
 
 -   Pawns c4 aur e4 se d5 square par kabza.
@@ -10165,7 +10889,7 @@ Final position (7.e4)
 
 Final position (6.Nge2)
 
-    5.2.7 Benko's Opening, Nimzo-Larsen, Van Geet
+    6.2.7 Benko's Opening, Nimzo-Larsen, Van Geet
     ---------------------------------------------
 
 -   Kam khele jaane wale "surprise" systems:
@@ -10192,7 +10916,7 @@ Final position (6.Nge2)
 
 Final position (2…e5)
 
-    5.2.8 Sawal 1: Opening system ka sabse bada fayda?
+    6.2.8 Sawal 1: Opening system ka sabse bada fayda?
     --------------------------------------------------
 
 Opening system ka sabse bada fayda?
@@ -10203,7 +10927,7 @@ Jawab:
 
 -   System = kam yaad karna, plans pe dhyan.
 
-    5.2.9 Sawal 2: 1.b3 kis naam se jaana jaata hai?
+    6.2.9 Sawal 2: 1.b3 kis naam se jaana jaata hai?
     ------------------------------------------------
 
 1.b3 kis naam se jaana jaata hai?
@@ -10214,7 +10938,7 @@ Jawab:
 
 -   Larsen ka favourite.
 
-    5.3 Italian Game
+    6.3 Italian Game
     ================
 
 1.e4 e5 2.Nf3 Nc6 3.Bc4
@@ -10232,14 +10956,14 @@ Yaad rakho
 
 Is lesson ke topics
 
--   5.3.1 Italian Game (Giuoco Piano)
--   5.3.2 Two Knights: Fried Liver ka khatra
--   5.3.3 Sawal 1: Italian Game mein White ka bishop c4 kis kamzor square ko
+-   6.3.1 Italian Game (Giuoco Piano)
+-   6.3.2 Two Knights: Fried Liver ka khatra
+-   6.3.3 Sawal 1: Italian Game mein White ka bishop c4 kis kamzor square ko
     target…
--   5.3.4 Fried Liver Attack
--   5.3.5 Abhyaas: Two Knights
+-   6.3.4 Fried Liver Attack
+-   6.3.5 Abhyaas: Two Knights
 
-    5.3.1 Italian Game (Giuoco Piano)
+    6.3.1 Italian Game (Giuoco Piano)
     ---------------------------------
 
 -   Beginners ke liye sabse achhi opening: simple development aur saaf plans.
@@ -10285,7 +11009,7 @@ Position after 4.c3
 
 Final position (8…Ba7)
 
-    5.3.2 Two Knights: Fried Liver ka khatra
+    6.3.2 Two Knights: Fried Liver ka khatra
     ----------------------------------------
 
 -   3...Nf6 ke baad White 4.Ng5 se f7 par attack karta hai.
@@ -10311,7 +11035,7 @@ Final position (8…Ba7)
 
 Final position (5…Na5)
 
-    5.3.3 Sawal 1: Italian Game mein White ka bishop c4 kis kamzor square ko target…
+    6.3.3 Sawal 1: Italian Game mein White ka bishop c4 kis kamzor square ko target…
     ----------------------------------------------------------------------
 
 Italian Game mein White ka bishop c4 kis kamzor square ko target karta hai?
@@ -10322,7 +11046,7 @@ Jawab:
 
 -   f7 shuru mein sirf king protect karta hai.
 
-    5.3.4 Fried Liver Attack
+    6.3.4 Fried Liver Attack
     ------------------------
 
 -   Agar Black 5...Nxd5? khele to White knight sacrifice karta hai.
@@ -10363,7 +11087,7 @@ Position after 5…Nxd5
 
 Final position (8.Nc3)
 
-    5.3.5 Abhyaas: Two Knights
+    6.3.5 Abhyaas: Two Knights
     --------------------------
 
 Two Knights: White ne 4.Ng5 khela, phir 5.exd5. Black ki sabse sahi chaal?
@@ -10402,7 +11126,7 @@ Ye bhi sahi: b5 Nd4
 
 Chaal ke baad
 
-    5.4 Ruy Lopez (Spanish)
+    6.4 Ruy Lopez (Spanish)
     =======================
 
 1.e4 e5 2.Nf3 Nc6 3.Bb5
@@ -10419,13 +11143,13 @@ Yaad rakho
 
 Is lesson ke topics
 
--   5.4.1 Ruy Lopez: main line
--   5.4.2 Sawal 1: Ruy Lopez mein 3.Bb5 ka main idea?
--   5.4.3 Ruy Lopez: Black ke 3rd move options
--   5.4.4 Sawal 2: Ruy Lopez mein 3...Nf6 ka naam?
--   5.4.5 Exchange Variation
+-   6.4.1 Ruy Lopez: main line
+-   6.4.2 Sawal 1: Ruy Lopez mein 3.Bb5 ka main idea?
+-   6.4.3 Ruy Lopez: Black ke 3rd move options
+-   6.4.4 Sawal 2: Ruy Lopez mein 3...Nf6 ka naam?
+-   6.4.5 Exchange Variation
 
-    5.4.1 Ruy Lopez: main line
+    6.4.1 Ruy Lopez: main line
     --------------------------
 
 -   World Championship level ki opening. 500 saal purani, aaj bhi sabse
@@ -10469,7 +11193,7 @@ Position after 5.O-O
 
 Final position (9.h3)
 
-    5.4.2 Sawal 1: Ruy Lopez mein 3.Bb5 ka main idea?
+    6.4.2 Sawal 1: Ruy Lopez mein 3.Bb5 ka main idea?
     -------------------------------------------------
 
 Ruy Lopez mein 3.Bb5 ka main idea?
@@ -10478,7 +11202,7 @@ Jawab:
 
 ✓ e5 ke defender (Nc6) par pressure
 
-    5.4.3 Ruy Lopez: Black ke 3rd move options
+    6.4.3 Ruy Lopez: Black ke 3rd move options
     ------------------------------------------
 
 -   1.e4 e5 2.Nf3 Nc6 3.Bb5 ke baad:
@@ -10489,7 +11213,7 @@ Jawab:
         3...Nd4 Bird.
     -   4.Bxc6 Exchange variation: Black ke doubled pawns, par bishop pair.
 
-    5.4.4 Sawal 2: Ruy Lopez mein 3...Nf6 ka naam?
+    6.4.4 Sawal 2: Ruy Lopez mein 3...Nf6 ka naam?
     ----------------------------------------------
 
 Ruy Lopez mein 3...Nf6 ka naam?
@@ -10500,7 +11224,7 @@ Jawab:
 
 -   Berlin: "Berlin Wall".
 
-    5.4.5 Exchange Variation
+    6.4.5 Exchange Variation
     ------------------------
 
 -   White bishop de kar Black ke pawns double karta hai.
@@ -10524,7 +11248,7 @@ Jawab:
 
 Final position (6.d4)
 
-    5.5 Sicilian Defense
+    6.5 Sicilian Defense
     ====================
 
 1.e4 c5: sabse fighting jawab
@@ -10543,13 +11267,13 @@ Yaad rakho
 
 Is lesson ke topics
 
--   5.5.1 Open Sicilian: Najdorf
--   5.5.2 Sawal 1: Sicilian (1...c5) kyun popular hai?
--   5.5.3 Sicilian ke parivar
--   5.5.4 Alapin Sicilian (2.c3)
--   5.5.5 Sawal 2: 1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 g6 ka naam?
+-   6.5.1 Open Sicilian: Najdorf
+-   6.5.2 Sawal 1: Sicilian (1...c5) kyun popular hai?
+-   6.5.3 Sicilian ke parivar
+-   6.5.4 Alapin Sicilian (2.c3)
+-   6.5.5 Sawal 2: 1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 g6 ka naam?
 
-    5.5.1 Open Sicilian: Najdorf
+    6.5.1 Open Sicilian: Najdorf
     ----------------------------
 
 -   Sicilian 1.e4 ke against sabse popular aur jeetne wala jawab.
@@ -10593,7 +11317,7 @@ Position after 4…Nf6
 
 Final position (8.f3)
 
-    5.5.2 Sawal 1: Sicilian (1...c5) kyun popular hai?
+    6.5.2 Sawal 1: Sicilian (1...c5) kyun popular hai?
     --------------------------------------------------
 
 Sicilian (1...c5) kyun popular hai?
@@ -10602,7 +11326,7 @@ Jawab:
 
 ✓ Position asymmetric hoti hai: Black jeet ke liye khel sakta hai
 
-    5.5.3 Sicilian ke parivar
+    6.5.3 Sicilian ke parivar
     -------------------------
 
 -   1.e4 c5 2.Nf3 ke baad:
@@ -10612,7 +11336,7 @@ Jawab:
 -   White bina Nf3/d4: Alapin 2.c3, Closed 2.Nc3, Grand Prix (f4), Smith-Morra
     gambit.
 
-    5.5.4 Alapin Sicilian (2.c3)
+    6.5.4 Alapin Sicilian (2.c3)
     ----------------------------
 
 -   White c3 se d4 ki taiyaari: Open Sicilian ki theory se bachao.
@@ -10650,7 +11374,7 @@ Position after 3.e5
 
 Final position (6…d6)
 
-    5.5.5 Sawal 2: 1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 g6 ka naam?
+    6.5.5 Sawal 2: 1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 g6 ka naam?
     ----------------------------------------------------------------------
 
 1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 g6 ka naam?
@@ -10661,7 +11385,7 @@ Jawab:
 
 -   ...g6 + bishop g7 = Dragon (shape dragon jaisi).
 
-    5.6 French aur Caro-Kann
+    6.6 French aur Caro-Kann
     ========================
 
 1.e4 e6 aur 1.e4 c6: solid defenses
@@ -10681,15 +11405,15 @@ Yaad rakho
 
 Is lesson ke topics
 
--   5.6.1 French Defense
--   5.6.2 Caro-Kann Defense
--   5.6.3 Sawal 1: French Defense mein Black ka sabse common pawn break?
--   5.6.4 French Winawer
--   5.6.5 French Advance: famous trap (discovered attack)
--   5.6.6 Caro-Kann ke variations
--   5.6.7 Sawal 2: French mein Black ka main plan?
+-   6.6.1 French Defense
+-   6.6.2 Caro-Kann Defense
+-   6.6.3 Sawal 1: French Defense mein Black ka sabse common pawn break?
+-   6.6.4 French Winawer
+-   6.6.5 French Advance: famous trap (discovered attack)
+-   6.6.6 Caro-Kann ke variations
+-   6.6.7 Sawal 2: French mein Black ka main plan?
 
-    5.6.1 French Defense
+    6.6.1 French Defense
     --------------------
 
 -   Solid aur counter-attacking.
@@ -10731,7 +11455,7 @@ Position after 4.e5
 
 Final position (7.Be3)
 
-    5.6.2 Caro-Kann Defense
+    6.6.2 Caro-Kann Defense
     -----------------------
 
 -   Bahut solid.
@@ -10774,7 +11498,7 @@ Position after 4…Bf5
 
 Final position (8…Bh7)
 
-    5.6.3 Sawal 1: French Defense mein Black ka sabse common pawn break?
+    6.6.3 Sawal 1: French Defense mein Black ka sabse common pawn break?
     --------------------------------------------------------------------
 
 French Defense mein Black ka sabse common pawn break?
@@ -10783,7 +11507,7 @@ Jawab:
 
 ✓ ...c5 (chain ki base par attack)
 
-    5.6.4 French Winawer
+    6.6.4 French Winawer
     --------------------
 
 -   Black bishop b4 se knight pin karta hai: sharp aur imbalanced.
@@ -10821,7 +11545,7 @@ Position after 3…Bb4
 
 Final position (6…Ne7)
 
-    5.6.5 French Advance: famous trap (discovered attack)
+    6.6.5 French Advance: famous trap (discovered attack)
     -----------------------------------------------------
 
 -   White d4 pawn "chhod" deta hai.
@@ -10862,7 +11586,7 @@ Position after 6.Bd3
 
 Final position (9.Bb5+)
 
-    5.6.6 Caro-Kann ke variations
+    6.6.6 Caro-Kann ke variations
     -----------------------------
 
 -   Classical: 3.Nc3 dxe4 4.Nxe4 Bf5 (yeh line course mein hai).
@@ -10871,7 +11595,7 @@ Final position (9.Bb5+)
 -   Panov-Botvinnik: 3.exd5 cxd5 4.c4 (IQP positions).
 -   Two Knights: 2.Nc3 d5 3.Nf3.
 
-    5.6.7 Sawal 2: French mein Black ka main plan?
+    6.6.7 Sawal 2: French mein Black ka main plan?
     ----------------------------------------------
 
 French mein Black ka main plan?
@@ -10882,7 +11606,7 @@ Jawab:
 
 -   Chain ki base par attack: French ka dil.
 
-    5.7 Queen's Gambit aur Slav
+    6.7 Queen's Gambit aur Slav
     ===========================
 
 QGD, QGA, Slav
@@ -10899,13 +11623,13 @@ Yaad rakho
 
 Is lesson ke topics
 
--   5.7.1 Queen's Gambit Declined
--   5.7.2 Slav Defense
--   5.7.3 Sawal 1: London System ki khaasiyat?
--   5.7.4 Queen's Gambit Accepted (QGA)
--   5.7.5 Sawal 2: 1.d4 d5 2.c4 dxc4
+-   6.7.1 Queen's Gambit Declined
+-   6.7.2 Slav Defense
+-   6.7.3 Sawal 1: London System ki khaasiyat?
+-   6.7.4 Queen's Gambit Accepted (QGA)
+-   6.7.5 Sawal 2: 1.d4 d5 2.c4 dxc4
 
-    5.7.1 Queen's Gambit Declined
+    6.7.1 Queen's Gambit Declined
     -----------------------------
 
 -   Classical aur strategic.
@@ -10948,7 +11672,7 @@ Position after 4.Bg5
 
 Final position (7…c6)
 
-    5.7.2 Slav Defense
+    6.7.2 Slav Defense
     ------------------
 
 -   2...c6 se d5 support, aur light bishop band nahi hota.
@@ -10987,7 +11711,7 @@ Position after 4…dxc4
 
 Final position (7.Bxc4)
 
-    5.7.3 Sawal 1: London System ki khaasiyat?
+    6.7.3 Sawal 1: London System ki khaasiyat?
     ------------------------------------------
 
 London System ki khaasiyat?
@@ -10996,7 +11720,7 @@ Jawab:
 
 ✓ Har jawab ke against same simple setup
 
-    5.7.4 Queen's Gambit Accepted (QGA)
+    6.7.4 Queen's Gambit Accepted (QGA)
     -----------------------------------
 
 -   Black pawn le leta hai par use bachata nahi: development karta hai.
@@ -11034,7 +11758,7 @@ Position after 4.e3
 
 Final position (6…a6)
 
-    5.7.5 Sawal 2: 1.d4 d5 2.c4 dxc4
+    6.7.5 Sawal 2: 1.d4 d5 2.c4 dxc4
     --------------------------------
 
 1.d4 d5 2.c4 dxc4: Black ko pawn bachane ke liye ...b5 khelna chahiye?
@@ -11045,7 +11769,7 @@ Jawab:
 
 -   Dekho traps lesson: 3.e3 b5? 4.a4 c6 5.axb5 cxb5 6.Qf3 rook gaya.
 
-    5.8 Indian defenses aur English
+    6.8 Indian defenses aur English
     ===============================
 
 King's Indian, Nimzo-Indian, Grunfeld, English
@@ -11061,15 +11785,15 @@ Yaad rakho
 
 Is lesson ke topics
 
--   5.8.1 King's Indian Defense
--   5.8.2 Nimzo-Indian Defense
--   5.8.3 English Opening
--   5.8.4 Sawal 1: King's Indian mein center band hone ke baad Black kahan
+-   6.8.1 King's Indian Defense
+-   6.8.2 Nimzo-Indian Defense
+-   6.8.3 English Opening
+-   6.8.4 Sawal 1: King's Indian mein center band hone ke baad Black kahan
     attack…
--   5.8.5 Grunfeld Defense
--   5.8.6 Sawal 2: Grunfeld mein Black ka idea?
+-   6.8.5 Grunfeld Defense
+-   6.8.6 Sawal 2: Grunfeld mein Black ka idea?
 
-    5.8.1 King's Indian Defense
+    6.8.1 King's Indian Defense
     ---------------------------
 
 -   Black White ko center lene deta hai, phir ...e5/...f5 se attack.
@@ -11112,7 +11836,7 @@ Position after 4.e4
 
 Final position (8…Ne7)
 
-    5.8.2 Nimzo-Indian Defense
+    6.8.2 Nimzo-Indian Defense
     --------------------------
 
 -   3...Bb4 knight ko pin karta hai aur e4 ko rokta hai.
@@ -11150,7 +11874,7 @@ Position after 3…Bb4
 
 Final position (6…b6)
 
-    5.8.3 English Opening
+    6.8.3 English Opening
     ---------------------
 
 -   1.c4: ulta Sicilian.
@@ -11188,7 +11912,7 @@ Position after 3.g3
 
 Final position (6…Nc6)
 
-    5.8.4 Sawal 1: King's Indian mein center band hone ke baad Black kahan attack…
+    6.8.4 Sawal 1: King's Indian mein center band hone ke baad Black kahan attack…
     ----------------------------------------------------------------------
 
 King's Indian mein center band hone ke baad Black kahan attack karta hai?
@@ -11197,7 +11921,7 @@ Jawab:
 
 ✓ Kingside (...f5, ...g5)
 
-    5.8.5 Grunfeld Defense
+    6.8.5 Grunfeld Defense
     ----------------------
 
 -   Hypermodern: center doosre ko do, phir use tod do.
@@ -11235,7 +11959,7 @@ Position after 3…d5
 
 Final position (6…Bg7)
 
-    5.8.6 Sawal 2: Grunfeld mein Black ka idea?
+    6.8.6 Sawal 2: Grunfeld mein Black ka idea?
     -------------------------------------------
 
 Grunfeld mein Black ka idea?
@@ -11246,7 +11970,7 @@ Jawab:
 
 -   Hypermodern soch.
 
-    5.9 Gambits
+    6.9 Gambits
     ===========
 
 Kyun gambit, semi-open files, King's, Danish, Evans, Albin, Benko,
@@ -11264,20 +11988,20 @@ Yaad rakho
 
 Is lesson ke topics
 
--   5.9.1 Gambit kyun?
--   5.9.2 King's Gambit
--   5.9.3 Danish Gambit
--   5.9.4 Evans Gambit
--   5.9.5 Smith-Morra Gambit (vs Sicilian)
--   5.9.6 Blackmar-Diemer Gambit
--   5.9.7 Staunton Gambit (vs Dutch)
--   5.9.8 Reti Gambit (vs French)
--   5.9.9 Albin Counter-Gambit (Black)
--   5.9.10 Benko Gambit (Black)
--   5.9.11 Sawal 1: Gambit dene wale ko badle mein kya chahiye?
--   5.9.12 Sawal 2: Semi-open file kya hai?
+-   6.9.1 Gambit kyun?
+-   6.9.2 King's Gambit
+-   6.9.3 Danish Gambit
+-   6.9.4 Evans Gambit
+-   6.9.5 Smith-Morra Gambit (vs Sicilian)
+-   6.9.6 Blackmar-Diemer Gambit
+-   6.9.7 Staunton Gambit (vs Dutch)
+-   6.9.8 Reti Gambit (vs French)
+-   6.9.9 Albin Counter-Gambit (Black)
+-   6.9.10 Benko Gambit (Black)
+-   6.9.11 Sawal 1: Gambit dene wale ko badle mein kya chahiye?
+-   6.9.12 Sawal 2: Semi-open file kya hai?
 
-    5.9.1 Gambit kyun?
+    6.9.1 Gambit kyun?
     ------------------
 
 -   Gambit = shuru mein pawn (kabhi piece) dekar badle mein development
@@ -11288,7 +12012,7 @@ Is lesson ke topics
 -   Gambit khelo to tez development aur attack zaroori.
 -   Jawab dena ho to: development karo, aur sahi waqt par pawn wapas de do.
 
-    5.9.2 King's Gambit
+    6.9.2 King's Gambit
     -------------------
 
 -   19vi sadi ka sabse romantic gambit.
@@ -11314,7 +12038,7 @@ Is lesson ke topics
 
 Final position (5.O-O)
 
-    5.9.3 Danish Gambit
+    6.9.3 Danish Gambit
     -------------------
 
 -   Do pawns de kar do bishops seedhe Black ke king ki taraf.
@@ -11338,7 +12062,7 @@ Final position (5.O-O)
 
 Final position (5.Bxb2)
 
-    5.9.4 Evans Gambit
+    6.9.4 Evans Gambit
     ------------------
 
 -   Italian mein pawn dekar c3-d4 se tez center.
@@ -11377,7 +12101,7 @@ Position after 4.b4
 
 Final position (7.O-O)
 
-    5.9.5 Smith-Morra Gambit (vs Sicilian)
+    6.9.5 Smith-Morra Gambit (vs Sicilian)
     --------------------------------------
 
 -   Pawn ke badle open c- aur d-files aur tez development.
@@ -11414,7 +12138,7 @@ Position after 4.Nxc3
 
 Final position (7.O-O)
 
-    5.9.6 Blackmar-Diemer Gambit
+    6.9.6 Blackmar-Diemer Gambit
     ----------------------------
 
 -   1.d4 players ka sharp hathiyaar.
@@ -11439,7 +12163,7 @@ Final position (7.O-O)
 
 Final position (5.Nxf3)
 
-    5.9.7 Staunton Gambit (vs Dutch)
+    6.9.7 Staunton Gambit (vs Dutch)
     --------------------------------
 
 -   Dutch 1...f5 ke against pawn dekar king ki kamzor diagonal par attack.
@@ -11462,7 +12186,7 @@ Final position (5.Nxf3)
 
 Final position (4.Bg5)
 
-    5.9.8 Reti Gambit (vs French)
+    6.9.8 Reti Gambit (vs French)
     -----------------------------
 
 -   e4 pawn chhod kar bishop b2 long diagonal, queen e2, aur long castle ke
@@ -11487,7 +12211,7 @@ Final position (4.Bg5)
 
 Final position (5.Qe2)
 
-    5.9.9 Albin Counter-Gambit (Black)
+    6.9.9 Albin Counter-Gambit (Black)
     ----------------------------------
 
 -   Black Queen's Gambit ke against khud pawn deta hai.
@@ -11512,7 +12236,7 @@ Final position (5.Qe2)
 
 Final position (4…Nc6)
 
-    5.9.10 Benko Gambit (Black)
+    6.9.10 Benko Gambit (Black)
     ---------------------------
 
 -   Pawn ke badle a- aur b-files par lamba pressure.
@@ -11550,7 +12274,7 @@ Position after 3…b5
 
 Final position (6…d6)
 
-    5.9.11 Sawal 1: Gambit dene wale ko badle mein kya chahiye?
+    6.9.11 Sawal 1: Gambit dene wale ko badle mein kya chahiye?
     -----------------------------------------------------------
 
 Gambit dene wale ko badle mein kya chahiye?
@@ -11561,7 +12285,7 @@ Jawab:
 
 -   Material ke badle time aur activity.
 
-    5.9.12 Sawal 2: Semi-open file kya hai?
+    6.9.12 Sawal 2: Semi-open file kya hai?
     ---------------------------------------
 
 Semi-open file kya hai?
@@ -11572,7 +12296,7 @@ Jawab:
 
 -   Rook ke liye attack ka raasta (dushman pawn par).
 
-    5.10 Advanced opening traps
+    6.10 Advanced opening traps
     ===========================
 
 Lasker, Caro-Kann, Three Knights, Petrov copycat, QGA, Cambridge Springs,
@@ -11591,23 +12315,23 @@ Yaad rakho
 
 Is lesson ke topics
 
--   5.10.1 Sawal 1: Jab opponent koi pawn "free" chhod de, sabse pehle kya
+-   6.10.1 Sawal 1: Jab opponent koi pawn "free" chhod de, sabse pehle kya
     socho?
--   5.10.2 Advanced traps: ingredients seekho
--   5.10.3 Albin: Lasker trap (underpromotion!)
--   5.10.4 Caro-Kann trap
--   5.10.5 Three Knights: `Nxe5` trick
--   5.10.6 Petrov: copycat ki saza
--   5.10.7 Queen's Gambit Accepted trap
--   5.10.8 Cambridge Springs trap
--   5.10.9 Ruy Lopez: Mortimer trap
--   5.10.10 Ruy Lopez: Noah's Ark trap
--   5.10.11 Sicilian: Fischer trap (Fischer vs Reshevsky 1958)
--   5.10.12 Smith-Morra: Siberian trap
--   5.10.13 Stafford Gambit trap
--   5.10.14 Vienna Game trap
+-   6.10.2 Advanced traps: ingredients seekho
+-   6.10.3 Albin: Lasker trap (underpromotion!)
+-   6.10.4 Caro-Kann trap
+-   6.10.5 Three Knights: `Nxe5` trick
+-   6.10.6 Petrov: copycat ki saza
+-   6.10.7 Queen's Gambit Accepted trap
+-   6.10.8 Cambridge Springs trap
+-   6.10.9 Ruy Lopez: Mortimer trap
+-   6.10.10 Ruy Lopez: Noah's Ark trap
+-   6.10.11 Sicilian: Fischer trap (Fischer vs Reshevsky 1958)
+-   6.10.12 Smith-Morra: Siberian trap
+-   6.10.13 Stafford Gambit trap
+-   6.10.14 Vienna Game trap
 
-    5.10.1 Sawal 1: Jab opponent koi pawn "free" chhod de, sabse pehle kya socho?
+    6.10.1 Sawal 1: Jab opponent koi pawn "free" chhod de, sabse pehle kya socho?
     ----------------------------------------------------------------------
 
 Jab opponent koi pawn "free" chhod de, sabse pehle kya socho?
@@ -11616,7 +12340,7 @@ Jawab:
 
 ✓ Yeh trap to nahi? Lene ke baad unki CCT kya hai?
 
-    5.10.2 Advanced traps: ingredients seekho
+    6.10.2 Advanced traps: ingredients seekho
     -----------------------------------------
 
 -   Yeh traps alphabetical order mein, har opening se ek.
@@ -11624,7 +12348,7 @@ Jawab:
     discovered attack, underpromotion, trapped piece.
 -   Yahi patterns middlegame mein bhi aate hain.
 
-    5.10.3 Albin: Lasker trap (underpromotion!)
+    6.10.3 Albin: Lasker trap (underpromotion!)
     -------------------------------------------
 
 -   Black ka pawn aakhir mein knight banta hai!
@@ -11666,7 +12390,7 @@ Position after 4.e3
 
 Final position (7…fxg1=N+)
 
-    5.10.4 Caro-Kann trap
+    6.10.4 Caro-Kann trap
     ---------------------
 
 -   Natural lagne wali chaal se smothered mate!
@@ -11690,7 +12414,7 @@ Final position (7…fxg1=N+)
 
 Final position (6.Nd6#)
 
-    5.10.5 Three Knights: `Nxe5` trick
+    6.10.5 Three Knights: `Nxe5` trick
     ----------------------------------
 
 -   3...Bc5? natural lagta hai par 4.Nxe5! (fork trick) se White center jeetta
@@ -11728,7 +12452,7 @@ Position after 3…Bc5
 
 Final position (6…Bxe5)
 
-    5.10.6 Petrov: copycat ki saza
+    6.10.6 Petrov: copycat ki saza
     ------------------------------
 
 -   Black ne White ki nakal ki (3...Nxe4?).
@@ -11753,7 +12477,7 @@ Final position (6…Bxe5)
 
 Final position (5.Nc6+)
 
-    5.10.7 Queen's Gambit Accepted trap
+    6.10.7 Queen's Gambit Accepted trap
     -----------------------------------
 
 -   Pawn bachane ka lalach: a8 rook gaya.
@@ -11778,7 +12502,7 @@ Final position (5.Nc6+)
 
 Final position (6.Qf3)
 
-    5.10.8 Cambridge Springs trap
+    6.10.8 Cambridge Springs trap
     -----------------------------
 
 -   Elephant trap se shuru, phir queen a5 se pin.
@@ -11818,7 +12542,7 @@ Position after 4…Nbd7
 
 Final position (8…Ne4)
 
-    5.10.9 Ruy Lopez: Mortimer trap
+    6.10.9 Ruy Lopez: Mortimer trap
     -------------------------------
 
 -   4...Ne7 galti lagti hai, par trap hai.
@@ -11856,7 +12580,7 @@ Position after 4…Ne7
 
 Final position (6…Qa5+)
 
-    5.10.10 Ruy Lopez: Noah's Ark trap
+    6.10.10 Ruy Lopez: Noah's Ark trap
     ----------------------------------
 
 -   White ka bishop b3 pawns mein qaid!
@@ -11894,7 +12618,7 @@ Position after 8.Qxd4
 
 Final position (11…c4)
 
-    5.10.11 Sicilian: Fischer trap (Fischer vs Reshevsky 1958)
+    6.10.11 Sicilian: Fischer trap (Fischer vs Reshevsky 1958)
     ----------------------------------------------------------
 
 -   Accelerated Dragon mein 8...Na5? ki saza.
@@ -11933,7 +12657,7 @@ Position after 8…Na5
 
 Final position (11.Ne6)
 
-    5.10.12 Smith-Morra: Siberian trap
+    6.10.12 Smith-Morra: Siberian trap
     ----------------------------------
 
 -   Black ki taraf se trap: Qh2# ki threat.
@@ -11971,7 +12695,7 @@ Position after 8…Ng4
 
 Final position (9…Nd4)
 
-    5.10.13 Stafford Gambit trap
+    6.10.13 Stafford Gambit trap
     ----------------------------
 
 -   Online popular gambit: White lalach mein queen le, Black mate karta hai.
@@ -12011,7 +12735,7 @@ Position after 6.Bg5
 
 Final position (8…Bg4#)
 
-    5.10.14 Vienna Game trap
+    6.10.14 Vienna Game trap
     ------------------------
 
 -   "Frankenstein-Dracula" variation: dono taraf jungli chaalein.
@@ -12052,7 +12776,7 @@ Position after 4.Qh5
 
 Final position (10.Nxa8)
 
-    5.11 Apna repertoire banao
+    6.11 Apna repertoire banao
     ==========================
 
 Kya khelna hai, kaise yaad karna hai
@@ -12065,10 +12789,10 @@ Yaad rakho
 
 Is lesson ke topics
 
--   5.11.1 Simple repertoire (beginner se club level)
--   5.11.2 Sawal 1: 1200 rating par opening kaise padhni chahiye?
+-   6.11.1 Simple repertoire (beginner se club level)
+-   6.11.2 Sawal 1: 1200 rating par opening kaise padhni chahiye?
 
-    5.11.1 Simple repertoire (beginner se club level)
+    6.11.1 Simple repertoire (beginner se club level)
     -------------------------------------------------
 
 -   White: 1.e4 aur Italian Game. (Ya 1.d4 + London System agar positional
@@ -12082,7 +12806,7 @@ Is lesson ke topics
 -   1600+ ke baad dheere-dheere gehri lines aur sideline traps.
 -   Master games dekho apni openings ke: plans wahi se aate hain.
 
-    5.11.2 Sawal 1: 1200 rating par opening kaise padhni chahiye?
+    6.11.2 Sawal 1: 1200 rating par opening kaise padhni chahiye?
     -------------------------------------------------------------
 
 1200 rating par opening kaise padhni chahiye?
@@ -12092,7 +12816,7 @@ Jawab:
 ✓ Ideas aur principles, 6-8 chaal
 
     ######################################################################
-    ##  LEVEL 6: ENDGAMES: JEET PAKKI KARO
+    ##  LEVEL 7: ENDGAMES: JEET PAKKI KARO
     ######################################################################
 
 Endgame ke themes, do bishops se mate, opposition, square rule, triangulation,
@@ -12101,7 +12825,7 @@ pawn endings, rook endings, theory
 -   Endgame mein king ladta hai aur pawns queen bante hain.
 -   Yahan woh positions seekhoge jo har player ko pata honi chahiye.
 
-    6.1 Endgame ke bade themes
+    7.1 Endgame ke bade themes
     ==========================
 
 Active king, passed pawn ka safar, rook 7th rank par
@@ -12118,12 +12842,12 @@ Yaad rakho
 
 Is lesson ke topics
 
--   6.1.1 Endgame ke 3 bade themes
--   6.1.2 Khud khelo: Pawn ko queen banao
--   6.1.3 Abhyaas: Rook ko 7th rank par lao
--   6.1.4 Sawal 1: Endgame mein king kahan hona chahiye?
+-   7.1.1 Endgame ke 3 bade themes
+-   7.1.2 Khud khelo: Pawn ko queen banao
+-   7.1.3 Abhyaas: Rook ko 7th rank par lao
+-   7.1.4 Sawal 1: Endgame mein king kahan hona chahiye?
 
-    6.1.1 Endgame ke 3 bade themes
+    7.1.1 Endgame ke 3 bade themes
     ------------------------------
 
 -   Aggressive king: endgame mein king center aur aage jaata hai, pawns khaata
@@ -12133,7 +12857,7 @@ Is lesson ke topics
 -   Rook on the 7th: rook dushman ki 7th rank par: pawns par attack aur king
     band. (Capablanca vs Tartakower, 1924)
 
-    6.1.2 Khud khelo: Pawn ko queen banao
+    7.1.2 Khud khelo: Pawn ko queen banao
     -------------------------------------
 
 King ko active karo: pawn ko escort karke queen banao (20 chaal).
@@ -12153,7 +12877,7 @@ Hint: Pehle king aage (pawn se aage), opposition lo, phir pawn.
 
 (White ki chaal)
 
-    6.1.3 Abhyaas: Rook ko 7th rank par lao
+    7.1.3 Abhyaas: Rook ko 7th rank par lao
     ---------------------------------------
 
 Rook ko 7th rank par lao: pawns aur king dono par dabaav.
@@ -12191,7 +12915,7 @@ Jawab:
 
 Chaal ke baad
 
-    6.1.4 Sawal 1: Endgame mein king kahan hona chahiye?
+    7.1.4 Sawal 1: Endgame mein king kahan hona chahiye?
     ----------------------------------------------------
 
 Endgame mein king kahan hona chahiye?
@@ -12202,7 +12926,7 @@ Jawab:
 
 -   Endgame = king attack karta hai.
 
-    6.2 Do bishops se mate
+    7.2 Do bishops se mate
     ======================
 
 K+B+B vs K, endgame mates ka revision
@@ -12217,11 +12941,11 @@ Yaad rakho
 
 Is lesson ke topics
 
--   6.2.1 Do bishops se mate
--   6.2.2 Abhyaas: Do bishops
--   6.2.3 Khud khelo: Checkmate karo
+-   7.2.1 Do bishops se mate
+-   7.2.2 Abhyaas: Do bishops
+-   7.2.3 Khud khelo: Checkmate karo
 
-    6.2.1 Do bishops se mate
+    7.2.1 Do bishops se mate
     ------------------------
 
 -   Do bishops paas-paas diagonals par milkar ek deewar banate hain jo king ko
@@ -12236,7 +12960,7 @@ Is lesson ke topics
 -   Stalemate ka dhyan: har chaal par dekho ki king ke paas chaal bachi hai.
 -   Yaad: queen, rook, do rooks, queen+rook ke mates Level 2 mein seekhe.
 
-    6.2.2 Abhyaas: Do bishops
+    7.2.2 Abhyaas: Do bishops
     -------------------------
 
 Do bishops: mate in 1.
@@ -12274,7 +12998,7 @@ Jawab:
 
 Chaal ke baad
 
-    6.2.3 Khud khelo: Checkmate karo
+    7.2.3 Khud khelo: Checkmate karo
     --------------------------------
 
 Do bishops se 35 chaal mein mate karo.
@@ -12294,7 +13018,7 @@ Hint: Bishops ko saath rakho (jaise e4 aur e5 par), king ko kone ki taraf.
 
 (White ki chaal)
 
-    6.3 King aur pawn: opposition
+    7.3 King aur pawn: opposition
     =============================
 
 K+P vs K, key squares
@@ -12313,14 +13037,14 @@ Yaad rakho
 
 Is lesson ke topics
 
--   6.3.1 Endgame mein king ladta hai
--   6.3.2 Sawal 1: Black ki chaal hai
--   6.3.3 Khud khelo: Pawn ko queen banao
--   6.3.4 Sawal 2: White king e5 (pawn ke aage), pawn e4, Black king e7
--   6.3.5 Sawal 3: Same position, ab Black ki chaal
--   6.3.6 Khud khelo: Pawn ko queen banao
+-   7.3.1 Endgame mein king ladta hai
+-   7.3.2 Sawal 1: Black ki chaal hai
+-   7.3.3 Khud khelo: Pawn ko queen banao
+-   7.3.4 Sawal 2: White king e5 (pawn ke aage), pawn e4, Black king e7
+-   7.3.5 Sawal 3: Same position, ab Black ki chaal
+-   7.3.6 Khud khelo: Pawn ko queen banao
 
-    6.3.1 Endgame mein king ladta hai
+    7.3.1 Endgame mein king ladta hai
     ---------------------------------
 
 -   Endgame mein king ko center mein lao: woh ek strong piece hai (lagbhag 4
@@ -12342,7 +13066,7 @@ Is lesson ke topics
        ----------------
         a b c d e f g h
 
-    6.3.2 Sawal 1: Black ki chaal hai
+    7.3.2 Sawal 1: Black ki chaal hai
     ---------------------------------
 
 Black ki chaal hai. Opposition kiske paas hai?
@@ -12365,7 +13089,7 @@ Jawab:
 -   Kings aamne-saamne, beech mein ek square, aur Black ko chalna padega:
     White ke paas opposition.
 
-    6.3.3 Khud khelo: Pawn ko queen banao
+    7.3.3 Khud khelo: Pawn ko queen banao
     -------------------------------------
 
 King ko aage lao, opposition lo, aur pawn ko queen banao (25 chaal).
@@ -12385,7 +13109,7 @@ Hint: Pehle king aage, pawn baad mein. Pawn ko king ke peeche rakho.
 
 (White ki chaal)
 
-    6.3.4 Sawal 2: White king e5 (pawn ke aage), pawn e4, Black king e7
+    7.3.4 Sawal 2: White king e5 (pawn ke aage), pawn e4, Black king e7
     -------------------------------------------------------------------
 
 White king e5 (pawn ke aage), pawn e4, Black king e7. White ki chaal. Result?
@@ -12408,7 +13132,7 @@ Jawab:
 -   Kings aamne-saamne, aur chaal White ki: opposition Black ke paas.
 -   White aage nahi badh sakta: draw.
 
-    6.3.5 Sawal 3: Same position, ab Black ki chaal
+    7.3.5 Sawal 3: Same position, ab Black ki chaal
     -----------------------------------------------
 
 Same position, ab Black ki chaal. Result?
@@ -12431,7 +13155,7 @@ Jawab:
 -   Ab opposition White ke paas.
 -   Black ko hatna padega, White king aage (Kd6/Kf6) aur pawn queen banega.
 
-    6.3.6 Khud khelo: Pawn ko queen banao
+    7.3.6 Khud khelo: Pawn ko queen banao
     -------------------------------------
 
 Rule: king pawn ke aage 6th rank par ho to hamesha jeet. Karke dikhao (queen
@@ -12452,7 +13176,7 @@ Hint: King se key squares (d7/f7) lo, pawn baad mein.
 
 (White ki chaal)
 
-    6.4 Square rule aur triangulation
+    7.4 Square rule aur triangulation
     =================================
 
 King pawn ko pakad sakta hai? Reti ka study, tempo ka khel
@@ -12468,16 +13192,16 @@ Yaad rakho
 
 Is lesson ke topics
 
--   6.4.1 Square ka rule
--   6.4.2 Sawal 1: White ki chaal
--   6.4.3 Sawal 2: Black ki chaal
--   6.4.4 Reti ka jaadu (1921)
--   6.4.5 Reti study: chaal-dar-chaal
--   6.4.6 Khud khelo: Draw bachao
--   6.4.7 Triangulation
--   6.4.8 Sawal 3: Triangulation ka maksad?
+-   7.4.1 Square ka rule
+-   7.4.2 Sawal 1: White ki chaal
+-   7.4.3 Sawal 2: Black ki chaal
+-   7.4.4 Reti ka jaadu (1921)
+-   7.4.5 Reti study: chaal-dar-chaal
+-   7.4.6 Khud khelo: Draw bachao
+-   7.4.7 Triangulation
+-   7.4.8 Sawal 3: Triangulation ka maksad?
 
-    6.4.1 Square ka rule
+    7.4.1 Square ka rule
     --------------------
 
 -   Pawn se promotion square tak ek square (box) banao.
@@ -12497,7 +13221,7 @@ Is lesson ke topics
        ----------------
         a b c d e f g h
 
-    6.4.2 Sawal 1: White ki chaal
+    7.4.2 Sawal 1: White ki chaal
     -----------------------------
 
 White ki chaal. Kya Black king f5 pawn ko pakad sakta hai?
@@ -12520,7 +13244,7 @@ Jawab:
 -   a5 ke baad box a5-d5-d8-a8 hai.
 -   f5 king bahar hai: pakad nahi payega.
 
-    6.4.3 Sawal 2: Black ki chaal
+    7.4.3 Sawal 2: Black ki chaal
     -----------------------------
 
 Black ki chaal. Kya Black king a5 pawn ko pakad lega?
@@ -12543,7 +13267,7 @@ Jawab:
 -   Box a5-a8-d8-d5.
 -   King f6 box se bahar, apni chaal ke saath bhi e6 tak hi: nahi pakad sakta.
 
-    6.4.4 Reti ka jaadu (1921)
+    7.4.4 Reti ka jaadu (1921)
     --------------------------
 
 -   White: king h8, pawn c6.
@@ -12566,7 +13290,7 @@ Jawab:
        ----------------
         a b c d e f g h
 
-    6.4.5 Reti study: chaal-dar-chaal
+    7.4.5 Reti study: chaal-dar-chaal
     ---------------------------------
 
 -   Diagonal king ka kamaal.
@@ -12606,7 +13330,7 @@ Jawab:
 
 Final position (4.Kf4)
 
-    6.4.6 Khud khelo: Draw bachao
+    7.4.6 Khud khelo: Draw bachao
     -----------------------------
 
 Ab tum karo: Reti study mein draw bachao (10 chaal).
@@ -12626,7 +13350,7 @@ Hint: King ko diagonal par chalao: Kg7, Kf6, Ke5.
 
 (White ki chaal)
 
-    6.4.7 Triangulation
+    7.4.7 Triangulation
     -------------------
 
 -   Kabhi position aisi hoti hai ki jiski chaal ho woh haare (zugzwang).
@@ -12636,7 +13360,7 @@ Hint: King ko diagonal par chalao: Kg7, Kf6, Ke5.
 -   Ek tempo kho kar ab opponent ki chaal wali wahi position!
 -   Famous: Alburt vs Kasparov.
 
-    6.4.8 Sawal 3: Triangulation ka maksad?
+    7.4.8 Sawal 3: Triangulation ka maksad?
     ---------------------------------------
 
 Triangulation ka maksad?
@@ -12647,7 +13371,7 @@ Jawab:
 
 -   Zugzwang ka fayda uthane ke liye.
 
-    6.5 Pawn endgame tricks
+    7.5 Pawn endgame tricks
     =======================
 
 Breakthrough, outside passer, triangulation
@@ -12661,11 +13385,11 @@ Yaad rakho
 
 Is lesson ke topics
 
--   6.5.1 Passed pawn
--   6.5.2 Abhyaas: Breakthrough!
--   6.5.3 Sawal 1: Pawn endgame mein "outside passed pawn" kyun strong hai?
+-   7.5.1 Passed pawn
+-   7.5.2 Abhyaas: Breakthrough!
+-   7.5.3 Sawal 1: Pawn endgame mein "outside passed pawn" kyun strong hai?
 
-    6.5.1 Passed pawn
+    7.5.1 Passed pawn
     -----------------
 
 -   Passed pawn: jiske raste mein ya bagal ki files mein koi dushman pawn na
@@ -12677,7 +13401,7 @@ Is lesson ke topics
 -   Triangulation: king teen squares ka triangle bana kar ek tempo waste karta
     hai taaki opposition mile.
 
-    6.5.2 Abhyaas: Breakthrough!
+    7.5.2 Abhyaas: Breakthrough!
     ----------------------------
 
 Breakthrough! Teen pawns vs teen pawns.
@@ -12715,7 +13439,7 @@ Jawab:
 
 Line ke baad position
 
-    6.5.3 Sawal 1: Pawn endgame mein "outside passed pawn" kyun strong hai?
+    7.5.3 Sawal 1: Pawn endgame mein "outside passed pawn" kyun strong hai?
     ----------------------------------------------------------------------
 
 Pawn endgame mein "outside passed pawn" kyun strong hai?
@@ -12725,7 +13449,7 @@ Jawab:
 ✓ Dushman king ko ek kinare kheench leta hai, apna king doosri taraf jeet
 jaata hai
 
-    6.6 Rook endgames: Lucena aur Philidor
+    7.6 Rook endgames: Lucena aur Philidor
     ======================================
 
 Sabse common endgame
@@ -12744,18 +13468,18 @@ Yaad rakho
 
 Is lesson ke topics
 
--   6.6.1 Rook endgames sabse zyada aate hain
--   6.6.2 Lucena: bridge banana
--   6.6.3 Khud khelo: Pawn ko queen banao
--   6.6.4 Philidor: draw kaise bachayein
--   6.6.5 Khud khelo: Draw bachao
--   6.6.6 Sawal 1: Passed pawn ke saath rook kahan rakhna chahiye?
--   6.6.7 Vancura defense
--   6.6.8 Khud khelo: Draw bachao
--   6.6.9 Sawal 2: Philidor position mein Black rook kahan rehta hai jab tak
+-   7.6.1 Rook endgames sabse zyada aate hain
+-   7.6.2 Lucena: bridge banana
+-   7.6.3 Khud khelo: Pawn ko queen banao
+-   7.6.4 Philidor: draw kaise bachayein
+-   7.6.5 Khud khelo: Draw bachao
+-   7.6.6 Sawal 1: Passed pawn ke saath rook kahan rakhna chahiye?
+-   7.6.7 Vancura defense
+-   7.6.8 Khud khelo: Draw bachao
+-   7.6.9 Sawal 2: Philidor position mein Black rook kahan rehta hai jab tak
     pawn 6th…
 
-    6.6.1 Rook endgames sabse zyada aate hain
+    7.6.1 Rook endgames sabse zyada aate hain
     -----------------------------------------
 
 -   Lagbhag aadhe endgames mein rooks hote hain. 2 positions zaroor yaad karo:
@@ -12767,7 +13491,7 @@ Is lesson ke topics
 -   Aur rule: rook passed pawn ke peeche rakho (Tarrasch rule), aage nahi.
 -   Active rook passive rook se behtar.
 
-    6.6.2 Lucena: bridge banana
+    7.6.2 Lucena: bridge banana
     ---------------------------
 
 -   White ka king b8 pawn ke aage atka hai.
@@ -12821,7 +13545,7 @@ Position after 3…Rc1+
 
 Final position (7.Rb4)
 
-    6.6.3 Khud khelo: Pawn ko queen banao
+    7.6.3 Khud khelo: Pawn ko queen banao
     -------------------------------------
 
 Ab tum Lucena jeeto: pawn ko queen banao (20 chaal).
@@ -12841,7 +13565,7 @@ Hint: Rd1+, phir rook 4th rank par (Rd4), phir king bahar.
 
 (White ki chaal)
 
-    6.6.4 Philidor: draw kaise bachayein
+    7.6.4 Philidor: draw kaise bachayein
     ------------------------------------
 
 -   Black ka rook 6th rank par white king ko aage aane se rokta hai.
@@ -12862,7 +13586,7 @@ Hint: Rd1+, phir rook 4th rank par (Rd4), phir king bahar.
        ----------------
         a b c d e f g h
 
-    6.6.5 Khud khelo: Draw bachao
+    7.6.5 Khud khelo: Draw bachao
     -----------------------------
 
 Tum Black ho. 15 chaal tak draw bachao. Rook 6th rank par rakho jab tak pawn
@@ -12881,7 +13605,7 @@ e6 na aaye.
 
 (Black ki chaal)
 
-    6.6.6 Sawal 1: Passed pawn ke saath rook kahan rakhna chahiye?
+    7.6.6 Sawal 1: Passed pawn ke saath rook kahan rakhna chahiye?
     --------------------------------------------------------------
 
 Passed pawn ke saath rook kahan rakhna chahiye?
@@ -12893,7 +13617,7 @@ Jawab:
 -   Tarrasch rule: rook pawn ke peeche se uske saath aage badhta hai, aur
     zyada active hota hai.
 
-    6.6.7 Vancura defense
+    7.6.7 Vancura defense
     ---------------------
 
 -   Rook + a-pawn vs rook, jab White rook pawn ke aage (a8) ho aur pawn a6
@@ -12914,7 +13638,7 @@ Jawab:
        ----------------
         a b c d e f g h
 
-    6.6.8 Khud khelo: Draw bachao
+    7.6.8 Khud khelo: Draw bachao
     -----------------------------
 
 Vancura: tum Black ho. 15 chaal draw bachao. Rook se a6 pawn par nazar aur
@@ -12935,7 +13659,7 @@ Hint: Rook ko 6th rank par rakho, pawn ko attack karte raho.
 
 (Black ki chaal)
 
-    6.6.9 Sawal 2: Philidor position mein Black rook kahan rehta hai jab tak pawn 6th…
+    7.6.9 Sawal 2: Philidor position mein Black rook kahan rehta hai jab tak pawn 6th…
     ----------------------------------------------------------------------
 
 Philidor position mein Black rook kahan rehta hai jab tak pawn 6th rank par
@@ -12948,7 +13672,7 @@ Jawab:
 -   Rook 6th rank par White king ko aane se rokta hai.
 -   Pawn 6th par aaye to rook peeche jaakar checks.
 
-    6.7 Minor pieces aur theory
+    7.7 Minor pieces aur theory
     ===========================
 
 Good/bad bishop, wrong corner, kaun jeetta hai
@@ -12964,13 +13688,13 @@ Yaad rakho
 
 Is lesson ke topics
 
--   6.7.1 Kaunse endgames jeet, kaunse draw
--   6.7.2 Sawal 1: Wrong bishop
--   6.7.3 Sawal 2: K + do knights vs akela K?
--   6.7.4 Sawal 3: Bishop vs knight endgame
--   6.7.5 Diagram: Wrong bishop
+-   7.7.1 Kaunse endgames jeet, kaunse draw
+-   7.7.2 Sawal 1: Wrong bishop
+-   7.7.3 Sawal 2: K + do knights vs akela K?
+-   7.7.4 Sawal 3: Bishop vs knight endgame
+-   7.7.5 Diagram: Wrong bishop
 
-    6.7.1 Kaunse endgames jeet, kaunse draw
+    7.7.1 Kaunse endgames jeet, kaunse draw
     ---------------------------------------
 
 -   K+Q vs K, K+R vs K: jeet
@@ -12983,7 +13707,7 @@ Is lesson ke topics
 -   K+R+P vs K+R: depends: Lucena jeet, Philidor draw
 -   Opposite color bishops + pawns: aksar draw chahe ek-do pawn zyada ho
 
-    6.7.2 Sawal 1: Wrong bishop
+    7.7.2 Sawal 1: Wrong bishop
     ---------------------------
 
 Wrong bishop: White ke paas h-pawn aur light-square bishop hai. Black king h8
@@ -13007,7 +13731,7 @@ Jawab:
 -   Corner square ka color bishop se alag hai, king nikala nahi ja sakta.
 -   Famous draw!
 
-    6.7.3 Sawal 2: K + do knights vs akela K?
+    7.7.3 Sawal 2: K + do knights vs akela K?
     -----------------------------------------
 
 K + do knights vs akela K?
@@ -13016,7 +13740,7 @@ Jawab:
 
 ✓ Draw (force nahi hota)
 
-    6.7.4 Sawal 3: Bishop vs knight endgame
+    7.7.4 Sawal 3: Bishop vs knight endgame
     ---------------------------------------
 
 Bishop vs knight endgame: pawns dono kinaron par hain, board open hai. Kaun
@@ -13029,7 +13753,7 @@ Jawab:
 -   Bishop lambi doori se dono taraf kaam karta hai.
 -   Knight band positions mein behtar.
 
-    6.7.5 Diagram: Wrong bishop
+    7.7.5 Diagram: Wrong bishop
     ---------------------------
 
     8 | . . . . . . . k
@@ -13044,727 +13768,6 @@ Jawab:
         a b c d e f g h
 
 Wrong bishop: light bishop h8 (dark) control nahi karta = draw
-
-    ######################################################################
-    ##  LEVEL 7: STRATEGY: PLAN BANANA
-    ######################################################################
-
-Position ke elements, exchanges, pawn structure, weak squares, open files,
-plans, prophylaxis, sacrifices
-
--   Jab koi tactic na ho, tab kya karein?
--   Strategy: position ke elements samjho aur plan banao.
-
-    7.1 Position ke elements aur exchanges
-    ======================================
-
-Material, time, space, king safety, pawn structure; kab trade karein
-
-Yaad rakho
-
--   Material sab kuch nahi: time (development), space, king safety, pawn
-    structure bhi ginti mein.
--   Jeet rahe ho (material aage): pieces trade karo, pawns nahi.
--   Haar rahe ho: pawns trade karo, pieces nahi (draw ke chances).
--   King par heavy attack: attacking pieces trade karo.
--   Tang (cramped) position: pieces trade karke saans lo, bure piece ko trade
-    karo.
-
-Is lesson ke topics
-
--   7.1.1 Position ke 5 elements
--   7.1.2 Material sab kuch nahi: Ed. Lasker vs Thomas (1912)
--   7.1.3 Exchanges kab karein
--   7.1.4 Sawal 1: Tum ek rook aage ho
--   7.1.5 Sawal 2: Tum ek pawn peeche ho, endgame aa raha hai
--   7.1.6 Sawal 3: Opponent ki queen, rook aur knight tumhare king par attack
-    kar…
--   7.1.7 Sawal 4: Tumhari position tang hai aur ek bishop apne pawns ke
-    peeche band…
-
-    7.1.1 Position ke 5 elements
-    ----------------------------
-
--   Sirf "accountant" ki tarah material mat gino.
--   Dekho:
--   1.
--   Material (points)
--   2.
--   Time (development, tempo)
--   3.
--   Space (kitni jagah tumhare pieces ke paas)
--   4.
--   King safety
--   5.
--   Pawn structure
--   Ek element mein aage hokar doosre mein peeche ho sakte ho.
--   Jaise gambit: material kam, time zyada.
-
-    7.1.2 Material sab kuch nahi: Ed. Lasker vs Thomas (1912)
-    ---------------------------------------------------------
-
--   Queen sacrifice aur phir Black king ka poore board par shikaar!
-
-1. d4 e6 2. Nf3 f5 3. Nc3 Nf6 4. Bg5 Be7 5. Bxf6 Bxf6 6. e4 fxe4 7. Nxe4 b6
-8. Ne5 O-O 9. Bd3 Bb7 10. Qh5 Qe7 11. Qxh7+ Kxh7 12. Nxf6+ Kh6 13. Neg4+ Kg5
-14. h4+ Kf4 15. g3+ Kf3 16. Be2+ Kg2 17. Rh2+ Kg1 18. Kd2#
-
--   5.Bxf6 bishop dekar light squares par kabza.
--   10.Qh5 attack.
--   11.Qxh7+!! queen sacrifice.
--   12.Nxf6+ double check!
--   14.h4+ king ko aage kheencho.
--   18.Kd2# king ki chaal se mate (O-O-O# bhi tha)!
-
-    8 | r n . q . r k .
-    7 | p b p p . . p p
-    6 | . p . . p b . .
-    5 | . . . . N . . Q
-    4 | . . . P N . . .
-    3 | . . . B . . . .
-    2 | P P P . . P P P
-    1 | R . . . K . . R
-       ----------------
-        a b c d e f g h
-
-Position after 10.Qh5
-
-    8 | r n . . . r . .
-    7 | p b p p q . p .
-    6 | . p . . p N . .
-    5 | . . . . . . . .
-    4 | . . . P . . N P
-    3 | . . . . . . P .
-    2 | P P P K B P . R
-    1 | R . . . . . k .
-       ----------------
-        a b c d e f g h
-
-Final position (18.Kd2#)
-
-    7.1.3 Exchanges kab karein
-    --------------------------
-
--   Material aage: pieces trade karo, pawns nahi. Kam pieces = tumhara extra
-    material zyada bhaari. (Benko vs Fischer)
--   Material peeche: pawns trade karo, pieces nahi. Kam pawns = draw ke
-    chances (jaise sirf bishop bacha to mate nahi).
--   King par heavy attack: attacking pieces trade karo, attack khatam.
--   Tang (cramped) position: trade karke jagah banao, khaas kar apna bura
-    piece trade karo.
-
-    7.1.4 Sawal 1: Tum ek rook aage ho
-    ----------------------------------
-
-Tum ek rook aage ho. Opponent queen trade offer karta hai. Kya karoge?
-
-Jawab:
-
-✓ Trade karo: pieces kam = jeet aasaan
-
--   Aage ho to pieces trade.
-
-    7.1.5 Sawal 2: Tum ek pawn peeche ho, endgame aa raha hai
-    ---------------------------------------------------------
-
-Tum ek pawn peeche ho, endgame aa raha hai. Kya trade karna achha?
-
-Jawab:
-
-✓ Pawns
-
--   Pawns kam honge to draw ke chances badhenge.
-
-    7.1.6 Sawal 3: Opponent ki queen, rook aur knight tumhare king par attack kar…
-    ----------------------------------------------------------------------
-
-Opponent ki queen, rook aur knight tumhare king par attack kar rahe hain.
-Achha idea?
-
-Jawab:
-
-✓ Attacking pieces ko trade karo
-
--   Attackers trade = attack khatam.
-
-    7.1.7 Sawal 4: Tumhari position tang hai aur ek bishop apne pawns ke peeche band…
-    ----------------------------------------------------------------------
-
-Tumhari position tang hai aur ek bishop apne pawns ke peeche band (bura).
-Plan?
-
-Jawab:
-
-✓ Bure bishop ko trade karne ki koshish
-
--   Cramped position mein trades se raahat.
-
-    7.2 Pawn structure
-    ==================
-
-Isolated, doubled, backward, passed, chains
-
-Yaad rakho
-
--   Pawn moves permanent hain: structure decide karta hai pieces kahan achhe.
--   IQP: kamzor pawn, par active pieces. IQP wala attack kare, doosra trade
-    kare.
--   Backward pawn ke aage ka square ek hole banta hai.
--   Pawn chain: base par attack karo (Nimzowitsch).
--   "Pawns chess ki aatma hain" (Philidor).
--   Pawns peeche nahi jaate: har pawn chaal ek pakka faisla. Socho kaunse
-    squares hamesha ke liye kamzor honge.
--   Center ko pawns se bharna zaroori nahi: pieces se control bhi chalega
-    (hypermodern, Reti vs Capablanca).
--   Pawn kamzor tab hota hai jab use pawn se bachaya na ja sake (dependency
-    pieces par).
--   Pieces aur pawns ka harmony: bishop apne pawns ke opposite colour par.
-
-Is lesson ke topics
-
--   7.2.1 Pawns: chess ki aatma
--   7.2.2 Pawns = position ki haddi
--   7.2.3 Isolated pawn (IQP)
--   7.2.4 Doubled aur backward pawns
--   7.2.5 Pawn chain
--   7.2.6 Sawal 1: Isolated pawn ke saamne wala square kis kaam ka hai?
--   7.2.7 Sawal 2: Pawn chain par attack kahan karna chahiye?
--   7.2.8 Sawal 3: Tumhare center pawns light squares par hain
--   7.2.9 Sawal 4: Pawn chaal ko "irreversible" kyun kehte hain?
-
-    7.2.1 Pawns: chess ki aatma
-    ---------------------------
-
--   "Pawns are the soul of chess" (Philidor).
--   Pawn structure (formation) batata hai ki pieces kahan jaayenge aur plan
-    kya hoga.
--   Pawns peeche nahi jaate: har pawn chaal ek pakka faisla hai. Plaskett vs
-    Adams aur Fischer vs Addison (probing strategy) mein galat pawn chaalon se
-    hamesha ki kamzori bani.
--   Center bharna zaroori nahi: Reti vs Capablanca: pieces se door se center
-    control (hypermodern).
--   Kamzor pawn = jise pawn se bachaya na ja sake, pieces par nirbhar.
--   Harmony: pieces aur pawns saath kaam karein. Bishop apne pawns ke opposite
-    colour par. (Karjakin-Adams, Kasparov-Adams, Nimzowitsch-Capablanca)
--   Har structure ke upside aur downside hote hain: dono khelkar dekho.
-
-    7.2.2 Pawns = position ki haddi
-    -------------------------------
-
--   "Pawns are the soul of chess" (Philidor).
--   Pawns peeche nahi jaate, isliye har pawn move permanent hai.
--   Pawn structure decide karta hai pieces kahan achhe honge.
-
-    7.2.3 Isolated pawn (IQP)
-    -------------------------
-
--   d4 pawn ke bagal (c, e files) mein koi apna pawn nahi: isolated.
--   Kamzori: pawn se protect nahi hota, aur uske aage d5 square blockade ke
-    liye perfect (Black knight d5 par).
--   Taakat: active pieces, d5 break aur kingside attack.
--   IQP wala attack kare, doosra pieces trade karke endgame mein jaaye.
-
-    8 | r . b q . r k .
-    7 | p p . . b p p p
-    6 | . . n . p n . .
-    5 | . . . . . . . .
-    4 | . . . P . . . .
-    3 | . . N B . N . .
-    2 | P P . . . P P P
-    1 | R . B Q . R K .
-       ----------------
-        a b c d e f g h
-
-    7.2.4 Doubled aur backward pawns
-    --------------------------------
-
--   Backward pawn: bagal ke pawns aage nikal gaye, aur yeh aage nahi badh
-    sakta kyunki aage ka square dushman control karta hai.
--   Yahan Black ka d6 backward hai aur d5 ek hole hai: White ke knight ke liye
-    perfect ghar.
--   Doubled pawns (ek file par do): aksar kamzor, par open file deta hai.
-
-    8 | r . b q k b . r
-    7 | . p . . . p p p
-    6 | p . n p . n . .
-    5 | . . . . p . . .
-    4 | . . . . P . . .
-    3 | . N N . . . . .
-    2 | P P P . B P P P
-    1 | R . B Q K . . R
-       ----------------
-        a b c d e f g h
-
-    7.2.5 Pawn chain
-    ----------------
-
--   Pawn chain d4-e5 (White) aur e6-d5 (Black).
--   Rule (Nimzowitsch): chain ki base par attack karo.
--   Black ...c5 se d4 (base) par vaar karta hai.
--   White kingside par (f4-f5) attack karta hai, kyunki chain ka sira us taraf
-    ishaara karta hai.
-
-    8 | r n b q k b n r
-    7 | p p . . . p p p
-    6 | . . . . p . . .
-    5 | . . p p P . . .
-    4 | . . . P . . . .
-    3 | . . . . . . . .
-    2 | P P P . . P P P
-    1 | R N B Q K B N R
-       ----------------
-        a b c d e f g h
-
-    7.2.6 Sawal 1: Isolated pawn ke saamne wala square kis kaam ka hai?
-    -------------------------------------------------------------------
-
-Isolated pawn ke saamne wala square kis kaam ka hai?
-
-Jawab:
-
-✓ Dushman ke knight ke liye blockade ghar
-
-    7.2.7 Sawal 2: Pawn chain par attack kahan karna chahiye?
-    ---------------------------------------------------------
-
-Pawn chain par attack kahan karna chahiye?
-
-Jawab:
-
-✓ Chain ki base par
-
-    7.2.8 Sawal 3: Tumhare center pawns light squares par hain
-    ----------------------------------------------------------
-
-Tumhare center pawns light squares par hain. Kaunsa bishop "good" hai?
-
-Jawab:
-
-✓ Dark-square bishop
-
--   Apne pawns ke opposite colour wala bishop free hota hai.
-
-    7.2.9 Sawal 4: Pawn chaal ko "irreversible" kyun kehte hain?
-    ------------------------------------------------------------
-
-Pawn chaal ko "irreversible" kyun kehte hain?
-
-Jawab:
-
-✓ Pawn peeche nahi jaata, jo square chhoda woh hamesha ke liye
-
--   Isliye pawn chaal soch-samajh kar.
-
-    7.3 Pawn structure: gehraai se
-    ==============================
-
-Pawn breaks, holes, minority attack, thorn pawn, passed, doubled, IQP,
-backward, hanging: upside aur downside
-
-Yaad rakho
-
--   Pawn break (lever): pawn se dushman ki chain par chot karke lines kholna.
--   Hole: aisa square jise pawn kabhi control nahi kar sakta. Uske guard
-    bishop ko trade karo.
--   Minority attack: kam pawns (jaise a+b) se zyada pawns (a+b+c) par hamla
-    karke kamzori banana.
--   Thorn pawn: dushman king ke paas gehra ghusa pawn (f6/h6): mate ke mauke.
--   Har structure ke dono pehlu: doubled, IQP, backward, hanging pawns kamzor
-    bhi, strong bhi.
-
-Is lesson ke topics
-
--   7.3.1 Pawn break aur hole
--   7.3.2 Minority attack
--   7.3.3 Sawal 1: Minority attack ka maksad?
--   7.3.4 Thorn pawn
--   7.3.5 Structures: upside aur downside
--   7.3.6 Sawal 2: Doubled pawns ka ek upside?
-
-    7.3.1 Pawn break aur hole
-    -------------------------
-
--   Pawn break (lever): apne pawn se dushman ke pawn par chot karke lines
-    kholna. Jaise French mein ...c5, King's Indian mein ...f5.
--   Structural hole: aisa square jise koi pawn kabhi control nahi kar sakta
-    (jaise d5 jab c aur e pawns aage chale gaye). Agar us square ka guard ek
-    bishop hai, use trade karo: hole tumhara.
-
-    7.3.2 Minority attack
-    ---------------------
-
--   Queen's Gambit Exchange structure: White ke 2 pawns (a, b) Black ke 3
-    pawns (a, b, c) par chadhte hain: b4-b5.
--   Trade ke baad Black ke paas kamzor c-pawn (backward/isolated) bachta hai.
-
-    8 | r . b q . r k .
-    7 | p p . . b p p p
-    6 | . . n . p n . .
-    5 | . . . p . . . .
-    4 | . P . P . . . .
-    3 | . . N . P N . .
-    2 | P . . . B P P P
-    1 | R . . Q . R K .
-       ----------------
-        a b c d e f g h
-
-    7.3.3 Sawal 1: Minority attack ka maksad?
-    -----------------------------------------
-
-Minority attack ka maksad?
-
-Jawab:
-
-✓ Dushman ke structure mein kamzor pawn banana
-
--   Kamzor pawn = lambe samay ka target.
-
-    7.3.4 Thorn pawn
-    ----------------
-
--   Dushman king ke paas gehra ghusa pawn, jaise f6 ya h6 (Black castled king
-    ke against).
--   Yeh g7 jaise squares ko control karta hai aur mate ke patterns (Lolli)
-    aasaan banata hai.
--   Jeet ke chances bahut badh jaate hain.
--   Examples: Lorenz-Orlov, Kramnik-Anand, Morales-Sanchez, Ivanovic-Popovic.
-
-    8 | . . . . . . k .
-    7 | . . . . . p . p
-    6 | . . . . . P p .
-    5 | . . . . . . . .
-    4 | . . . . . . . .
-    3 | . . . . . . . .
-    2 | . . . . . . . .
-    1 | . . . . . . K .
-       ----------------
-        a b c d e f g h
-
-    7.3.5 Structures: upside aur downside
-    -------------------------------------
-
--   Passed pawn: jeet ke chances, "pushed" hone chahiye. (Torre vs NN)
--   Doubled pawns: kamzor (ek doosre ko bacha nahi sakte), par open file aur
-    center control de sakte hain. (Botvinnik vs Levenfish)
--   IQP (isolated queen's pawn): kamzor endgame mein, par middlegame mein
-    activity aur attack.
--   Backward pawn: aage ka square hole ban jaata hai, par kabhi woh square aur
-    pawn solid defense bhi.
--   Hanging pawns (c + d saath, bagal mein koi nahi): aage badhkar dabaav, par
-    target bhi.
-
-    7.3.6 Sawal 2: Doubled pawns ka ek upside?
-    ------------------------------------------
-
-Doubled pawns ka ek upside?
-
-Jawab:
-
-✓ Saath mein ek open/semi-open file milti hai
-
--   Capture se file khulti hai: rook ke liye.
-
-    7.4 Weak squares aur outposts
-    =============================
-
-Pieces ke liye ghar
-
-Yaad rakho
-
--   Outpost = jahan dushman pawn tumhare piece ko bhaga na sake.
--   Outpost par knight rook jitna strong ho sakta hai.
--   Bad bishop: apne hi pawns usi color par. Pawns bishop ke ulte color par
-    rakho.
-
-Is lesson ke topics
-
--   7.4.1 Outpost
--   7.4.2 Good bishop vs bad bishop
--   7.4.3 Sawal 1: Knight ke liye sabse achha square?
-
-    7.4.1 Outpost
-    -------------
-
--   Outpost: aisa square jahan tumhara piece baith sake aur koi dushman pawn
-    use bhaga na sake, aur aksar apne pawn se protected ho.
--   d5 par knight: Black ke c aur e pawns use kabhi attack nahi kar sakte.
--   Aisa knight ek rook jitna strong ho sakta hai!
--   Weak square = jo pawns se protect na ho sake.
--   Pawn move karte waqt socho: kaunse squares kamzor ho rahe hain?
-
-    8 | r . . . . r k .
-    7 | . p . . . p p p
-    6 | p . . p . . . .
-    5 | . . . N p . . .
-    4 | . . . . P . . .
-    3 | . . . . . . . .
-    2 | P P P . . P P P
-    1 | R . . . . R K .
-       ----------------
-        a b c d e f g h
-
-    7.4.2 Good bishop vs bad bishop
-    -------------------------------
-
--   White ke pawns light squares par hain (c4, d5, e4), aur bishop bhi
-    light-square ka hai: woh apne hi pawns se ruka hai = bad bishop.
--   Rule: pawns ko apne bishop ke ulte color par rakho.
--   Bad bishop ko trade karo ya pawns ke bahar laao.
-
-    8 | . . . . k . . .
-    7 | . . . . . . . .
-    6 | . . . p . . . .
-    5 | . . p P p . . .
-    4 | . . P . P . . .
-    3 | . . . . . . . .
-    2 | . . . . B . . .
-    1 | . . . . K . . .
-       ----------------
-        a b c d e f g h
-
-    7.4.3 Sawal 1: Knight ke liye sabse achha square?
-    -------------------------------------------------
-
-Knight ke liye sabse achha square?
-
-Jawab:
-
-✓ Center mein outpost jahan pawn bhaga na sake
-
-    7.5 Open files, 7th rank, piece activity
-    ========================================
-
-Rooks aur pieces ko zinda karo
-
-Yaad rakho
-
--   Rooks ko open / half-open files par lao, phir 7th rank par ghuso.
--   Do rooks 7th par ("pigs on the 7th") aksar jeet.
--   Golden rule: sabse kharab piece ko behtar karo.
-
-Is lesson ke topics
-
--   7.5.1 Rooks ko kaam do
--   7.5.2 Sawal 1: Koi tactic nahi, koi threat nahi
--   7.5.3 Diagram: Rook open file se 7th rank par ("pig on the 7th")
-
-    7.5.1 Rooks ko kaam do
-    ----------------------
-
--   Rooks ko open file (jisme koi pawn nahi) par lao, ya half-open file par.
--   File kabze ke baad 7th rank par ghuso: wahan pawns aur king dono atakte
-    hain. Do rooks 7th par = "pigs on the 7th", aksar jeet.
--   Doubling: do rooks ek file par.
--   General rule: sabse kharab piece ko behtar karo.
--   Har position mein socho: mera kaunsa piece kuch nahi kar raha?
-
-    8 | . . . . . . k .
-    7 | # R # # # p p p
-    6 | . . . . . . . .
-    5 | . . . . . . . .
-    4 | . . . . . . . .
-    3 | . . . . . . . .
-    2 | . . . . . P P P
-    1 | . . . . . . K .
-       ----------------
-        a b c d e f g h
-
-    7.5.2 Sawal 1: Koi tactic nahi, koi threat nahi
-    -----------------------------------------------
-
-Koi tactic nahi, koi threat nahi. Achha general plan?
-
-Jawab:
-
-✓ Sabse kharab piece ko behtar square par lao
-
-    7.5.3 Diagram: Rook open file se 7th rank par ("pig on the 7th")
-    ----------------------------------------------------------------
-
-    8 | . . . . . . k .
-    7 | . R . . . p p p
-    6 | . . . . . . . .
-    5 | . . . . . . . .
-    4 | . . . . . . . .
-    3 | . . . . . . . .
-    2 | . . . . . P P P
-    1 | . . . . . . K .
-       ----------------
-        a b c d e f g h
-
-Rook open file se 7th rank par ("pig on the 7th")
-
-    7.6 Plan kaise banayein
-    =======================
-
-Imbalances aur attack
-
-Yaad rakho
-
--   Plan imbalances se banta hai: material, minor pieces, pawn structure,
-    space, files, king safety.
--   Jahan strong ho wahan khelo.
--   Opposite side castling = pawn storm race; same side castling mein
-    center/queenside khelo.
--   Minority attack (b4-b5): Carlsbad structure mein c6 par kamzor pawn
-    banana.
--   Piece activity: har piece ko kaam do; bure piece ko behtar square par lao.
-
-Is lesson ke topics
-
--   7.6.1 Imbalances dekho
--   7.6.2 Opposite side castling = pawn storm
--   7.6.3 Minority attack
--   7.6.4 Sawal 1: Tumhare paas kingside mein zyada space hai aur kings alag
-    taraf…
-
-    7.6.1 Imbalances dekho
-    ----------------------
-
--   Plan banane ke liye farq (imbalances) dekho:
-    -   Material: kaun aage?
-    -   Minor pieces: bishop vs knight, bishop pair?
-    -   Pawn structure: kamzor pawns, passed pawns, majorities
-    -   Space: kiske paas zyada jagah?
-    -   Open files / weak squares
-    -   Development aur king safety
--   Phir: jahan tum strong ho wahan khelo.
--   Space zyada hai to us taraf attack karo.
--   Kamzori hai to use theek karo ya trades se bacho.
-
-    7.6.2 Opposite side castling = pawn storm
-    -----------------------------------------
-
--   Jab kings alag-alag taraf castle karein, to dono apne pawns dushman king
-    ki taraf daudaate hain (pawn storm).
--   Yahan speed sab kuch hai: jo pehle file kholega woh jeetega.
--   Same side castle ho to pawns aage badhana apne king ko kamzor karta hai:
-    wahan center ya queenside mein khelo.
-
-    8 | . . k r . . . r
-    7 | p p p . . p p p
-    6 | . . n . . . . .
-    5 | . . . . . . . .
-    4 | . . . . . . . .
-    3 | . . . . . N . .
-    2 | P P P . . P P P
-    1 | . . K R . . . R
-       ----------------
-        a b c d e f g h
-
-    7.6.3 Minority attack
-    ---------------------
-
--   Queen's Gambit structure (Carlsbad): White kam pawns wali side (queenside:
-    a, b vs a, b, c) se attack karta hai: b4-b5.
--   Maksad: c6 par ek kamzor pawn banana.
--   Yeh dikhata hai: plan pawn structure se aata hai.
-
-    8 | . . . . k . . .
-    7 | p p . . . p p p
-    6 | . . p . . . . .
-    5 | . . . p . . . .
-    4 | . . . P . . . .
-    3 | . . . . P . . .
-    2 | P P . . . P P P
-    1 | . . . . K . . .
-       ----------------
-        a b c d e f g h
-
-    7.6.4 Sawal 1: Tumhare paas kingside mein zyada space hai aur kings alag taraf…
-    ----------------------------------------------------------------------
-
-Tumhare paas kingside mein zyada space hai aur kings alag taraf castled hain.
-Plan?
-
-Jawab:
-
-✓ Kingside pawn storm aur attack
-
-    7.7 Prophylaxis aur restriction
-    ===============================
-
-Opponent ka plan pehle roko
-
-Yaad rakho
-
--   Har chaal se pehle: "Opponent kya chahta hai?" Use pehle roko.
--   Misaal: h3 (...Bg4 roko), Kh1 (checks se pehle hi bacho).
--   Restriction: dushman pieces ke achhe squares cheen lo.
-
-Is lesson ke topics
-
--   7.7.1 Prophylaxis
--   7.7.2 Sawal 1: Ruy Lopez mein White h3 kyun khelta hai?
-
-    7.7.1 Prophylaxis
-    -----------------
-
--   Prophylaxis (Nimzowitsch, Karpov, Petrosian): apni chaal se pehle poocho
-    "Opponent kya karna chahta hai?" aur use pehle hi rok do.
--   h3 khelna taaki ...Bg4 pin na ho
--   Rook ko us file par rakhna jo khulne wali hai
--   King ko pehle hi safe square (Kh1) par le jaana taaki baad mein checks na
-    aayein
--   Restriction: dushman pieces ke achhe squares cheen lo.
--   Jo piece hil nahi sakta, woh piece nahi.
-
-    7.7.2 Sawal 1: Ruy Lopez mein White h3 kyun khelta hai?
-    -------------------------------------------------------
-
-Ruy Lopez mein White h3 kyun khelta hai?
-
-Jawab:
-
-✓ Black bishop ko g4 aane se rokne ke liye (prophylaxis)
-
-    7.8 Positional sacrifices
-    =========================
-
-Material dekar position lena
-
-Yaad rakho
-
--   Exchange sac (rook dekar minor piece) position ke liye: Dragon ka
-    ...Rxc3!.
--   Kab: dushman king khule, dominant piece mile, ya dushman rook bekaar ho.
--   Gambit = pawn dekar development / initiative.
-
-Is lesson ke topics
-
--   7.8.1 Exchange sacrifice
--   7.8.2 Sawal 1: Positional sacrifice ka maksad?
-
-    7.8.1 Exchange sacrifice
-    ------------------------
-
--   Exchange sacrifice: rook (5) dekar minor piece (3) lena, position ke liye.
--   Sicilian Dragon mein ...Rxc3! famous hai: White ke king ke saamne pawns
-    toot jaate hain, aur e4 kamzor hota hai.
--   Kab karein: jab sacrifice se dushman king khul jaaye, ya tumhe dominant
-    piece aur pawns milein, ya dushman ka rook kaam ka na ho.
--   Pawn sacrifice (gambit) se bhi development, open lines ya initiative milta
-    hai.
-
-    8 | . . r . . r k .
-    7 | p p . b p p b p
-    6 | . . . p . n p .
-    5 | q . . . . . . .
-    4 | . . . N P . . .
-    3 | . B N . B P . .
-    2 | P P P Q . . P P
-    1 | . . K R . . . R
-       ----------------
-        a b c d e f g h
-
-    7.8.2 Sawal 1: Positional sacrifice ka maksad?
-    ----------------------------------------------
-
-Positional sacrifice ka maksad?
-
-Jawab:
-
-✓ Lambe samay ka fayda: king safety tootna, strong pieces, initiative
 
     ######################################################################
     ##  LEVEL 8: PRO LEVEL: PRACTICAL CHESS
@@ -14541,7 +14544,7 @@ Is lesson ke topics
 -   Game 1: Beth ka pehla sabak: opening ka pitfall (Shaibel ne jaldi aayi
     queen ko saza di). Level 2 ke traps yaad karo.
 -   Game 2: ek aur opening pitfall: lalach.
--   Game 3: passed pawn breakthrough (Level 5 ka pawn trick).
+-   Game 3: passed pawn breakthrough (Endgames level ka pawn trick).
 -   Game 4: ek sundar checkmate.
 -   Ep 2: Beth vs Cooke: exchanges sahi waqt par. Townes vs Beth: endgame mein
     bhi tactics. Beth vs Beltik: Nezhmetdinov vs Kasparian (1955) ke famous
@@ -14578,7 +14581,7 @@ Jawab:
 
 ✓ Pieces trade karo, pawns nahi
 
--   Level 6: exchanges.
+-   Middlegame 3 (Strategy): exchanges.
 
     8.10 The Queen's Gambit series se sabak (2)
     ===========================================
@@ -14892,11 +14895,11 @@ Is lesson ke topics
 
 -   0-1000: rules pakke, hanging pieces na dena, basic mates (Level 1-2). Roz
     20 easy puzzles.
--   1000-1400: tactics, tactics, tactics (Level 3). Opening principles. 15+10
-    rapid games.
--   1400-1800: calculation, basic endgames (Level 5), ek repertoire, apne
+-   1000-1400: tactics, tactics, tactics aur mate patterns (Level 3-4).
+    Opening principles. 15+10 rapid games.
+-   1400-1800: calculation, basic endgames (Level 7), ek repertoire, apne
     games analyse.
--   1800-2200: strategy (Level 6), master games, gehri endgame theory,
+-   1800-2200: strategy (Level 5), master games, gehri endgame theory,
     classical games.
 -   2200+: coach, deep opening prep, tournaments, physical aur mental
     training.
