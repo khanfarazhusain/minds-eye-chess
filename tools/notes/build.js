@@ -42,7 +42,7 @@ function numbered(sans,whiteFirst,start){start=start||1;let o=[],n=start,w=white
 const lastArr=m=>m?[[sn(m.f),sn(m.t),'y']]:[];
 const lastMarks=m=>m?{[sn(m.f)]:'last',[sn(m.t)]:'last'}:{};
 
-function lessonHTML(Lv,li,les,lj){const key=Lv.id+'.'+les.id,anchor=Lv.id+'-'+les.id;
+function lessonHTML(Lv,li,les,lj){const key=les.key||Lv.id+'.'+les.id,anchor=Lv.id+'-'+les.id;
   let head=`<section class="lesson" id="${anchor}"><div class="lhead"><span class="lno">${li+1}.${lj+1}</span><div><h3>${esc(les.title)}</h3><p class="muted">${esc(les.sub||'')}</p></div></div>`;
   if(KP[key])head+=`<div class="yaad"><b class="eyebrow">Yaad rakho</b><ul>${KP[key].map(t=>'<li>'+inl(t)+'</li>').join('')}</ul></div>`;
   else warnings.push('no KP '+key);
@@ -127,7 +127,7 @@ const html=`<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#23664A">
 <title>Chess Course Notes</title>
-<meta name="description" content="Chess course ke poore notes: 7 levels, ${nLes} lessons, board diagrams ke saath.">
+<meta name="description" content="Chess course ke poore notes: ${COURSE.length} levels, ${nLes} lessons, board diagrams ke saath.">
 <style>
 ${css}
 </style>
@@ -135,7 +135,7 @@ ${css}
 <body>
 <header class="top" id="top"><div class="wrap"><a class="brand" href="#top"><i>♞</i> Course Notes</a><nav class="hl-links"><a href="course.html">Course</a><a href="index.html">Trainer</a></nav></div></header>
 <main><div class="wrap">
-<div class="hero"><span class="eyebrow">Basics se pro tak · 7 levels · ${nLes} lessons</span><h1>Chess course ke notes</h1>
+<div class="hero"><span class="eyebrow">Basics se pro tak · ${COURSE.length} levels · ${nLes} lessons</span><h1>Chess course ke notes</h1>
 <p class="muted">Har lesson ka saar, board diagrams, abhyaas positions aur sawal-jawab. Jawab chhupe hain: pehle khud socho, phir "Jawab dekho" dabao.</p>
 <div class="dl"><a class="btn" href="downloads/Chess-Course-Notes.pdf">⬇ PDF (iPhone ke liye best)</a><a class="btn" href="https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/main/downloads/Chess-Course-Notes.docx">⬇ Word file (.docx)</a><a class="btn" href="https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/main/downloads/Chess-Course-Notes.txt">⬇ Text file (.txt)</a></div>
 <div class="legend"><span><i class="lg arrow"></i> Arrow = chaal / attack</span><span><i class="lg hlb"></i> Peela = important square</span><span><i class="lg dotb"></i> Dot = piece yahan ja sakta hai</span></div></div>
