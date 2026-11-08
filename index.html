@@ -811,6 +811,18 @@ body.fixb .fixscroll{padding-bottom:12px}
 .cfw i{position:absolute;top:42%;border-radius:2px;animation:cf 2.2s cubic-bezier(.15,.6,.35,1) forwards}
 @keyframes cf{0%{transform:translate(0,0) rotate(0);opacity:1}55%{transform:translate(calc(var(--dx)*.8),var(--dy)) rotate(calc(var(--r)*.6));opacity:1}100%{transform:translate(var(--dx),calc(var(--dy) + 700px)) rotate(var(--r));opacity:0}}
 @media (prefers-reduced-motion:reduce){.rwrays,.rwd,.rwic,.rwst i.on{animation:none}}
+
+/* v59: calm game feel */
+.fxpill{position:fixed;transform:translateX(-50%);z-index:60;pointer-events:none;font-weight:800;font-size:14px;padding:6px 14px;border-radius:999px;white-space:nowrap;box-shadow:0 6px 16px rgba(0,0,0,.25);animation:fpin .22s cubic-bezier(.2,1.5,.4,1)}
+.fp-kill{background:#2E1F0B;color:#FFD66B}.fp-chk{background:#C8302B;color:#fff}
+.fxpill.out{opacity:0;transform:translate(-50%,-6px);transition:.3s}
+@keyframes fpin{from{opacity:0;transform:translate(-50%,-8px) scale(.9)}}
+.lmline{height:26px;line-height:26px;margin-top:6px;padding:0 12px;border-radius:999px;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--surface2);color:var(--fg);text-align:center}
+.lmline.cpu{background:color-mix(in srgb,#5B66B8 18%,var(--surface))}.lmline.me{background:color-mix(in srgb,var(--accent) 16%,var(--surface))}
+.lmline.chk{box-shadow:inset 0 0 0 1.5px #C8302B}.lmline .mono{opacity:.65;font-size:12px}
+.lmline.think{background:color-mix(in srgb,#F0A93A 20%,var(--surface))}
+.lmline .dots b{display:inline-block;animation:ldot 1s infinite}.lmline .dots b:nth-child(2){animation-delay:.15s}.lmline .dots b:nth-child(3){animation-delay:.3s}
+@keyframes ldot{0%,60%,100%{transform:none;opacity:.4}30%{transform:translateY(-3px);opacity:1}}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -1732,7 +1744,7 @@ function checkEnd(){const g=G,ms=legal(g.st);let over=null;const humanW=g.human=
   else{const rest=g.st.b.filter(p=>p&&p.toUpperCase()!=='K');if(!rest.length||(rest.length===1&&'NB'.includes(rest[0].toUpperCase())))over={r:'d',msg:'Draw: not enough material to mate.'}}
   if(over&&g.two&&over.r!=='d')over.msg=L2(`Checkmate. ${g.st.w?'Black':'White'} wins!`,`Checkmate. ${g.st.w?'Black':'White'} jeet gaya!`);
   if(over){g.over=over;if(!g.two){P.games[over.r]++;save()}}}
-function engineTurn(){const g=G;g.thinking=true;vPlay();setTimeout(()=>{if(G!==g)return;const m=engineMove(g.st,g.level);g.thinking=false;if(m){const s=playMove(m);speak(sanWords(s))}if(V.name==='play')vPlay()},60)}
+function engineTurn(){const g=G;g.thinking=true;vPlay();setTimeout(()=>{if(G!==g)return;const m=engineMove(g.st,g.level);g.thinking=false;if(m){const s=playMove(m);speak(sanWords(s))}if(V.name==='play')vPlay()},700+Math.random()*500)}
 function sanWords(s){if(s.startsWith('O-O-O'))return'castles queenside'+(s.includes('+')?', check':'');if(s.startsWith('O-O'))return'castles kingside'+(s.includes('+')?', check':'');
   let w=s.replace(/([KQRBN])/,m=>PNAME[m]+' ').replace('x',' takes ').replace(/=([QRBN])/,(a,p)=>' promotes to '+PNAME[p]).replace('+',', check').replace('#',', checkmate');w=w.replace(/([a-h])([1-8])/g,'$1 $2');return w}
 function speakQ(q){const plain=h=>h.replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/\s+/g,' ').trim();let t='';
@@ -2191,7 +2203,7 @@ function coJudge(st0,m,s,st1,pre,post){const w=st0.w,best=pre&&pre.lines[0],u=uc
 function coEngine(){const g=CG,t=g.tok,L=CLV[g.lvl];clkSwitch(g,'e');g.busy='Computer is thinking…';if(V.name==='coach')vCoach();
   const st=g.st,t0=Date.now(),bkm=coBookMove(g);(bkm?Promise.resolve({best:uciOf(bkm),lines:[]}):sfGo(st,{skill:L.skill,movetime:L.mt,depth:L.d||null,js:L.js,multipv:1})).then(r=>{g.tried=null;if(CG!==g||g.tok!==t)return;
     const go2=()=>{if(CG!==g||g.tok!==t)return;let m=fromUci(st,r.best)||engineMove(st,L.js);const s=san(st,m,legal(st));g.st=make(st,m);g.states.push(g.st);g.moves.push({m,san:s,by:'e',st0:st,an:r,note:moveNote(st,m,g.moves.length?g.moves[g.moves.length-1].m:null)});g.busy='';speak(sanWords(s));
-      coSaveCur();coCheckEnd();if(g.over){coFinish();return}coPre()};const wait=Math.max(0,450-(Date.now()-t0));wait?setTimeout(go2,wait):go2()})}
+      coSaveCur();coCheckEnd();if(g.over){coFinish();return}coPre()};const wait=Math.max(0,(650+Math.random()*650)-(Date.now()-t0));wait?setTimeout(go2,wait):go2()})}
 function coCheckEnd(){const g=CG,ms=legal(g.st);let over=null;const hw=g.human==='w';
   if(!ms.length){if(inCheck(g.st)){const winW=!g.st.w;over={r:winW===hw?'w':'l',msg:winW===hw?'Checkmate. You win!':'Checkmate. The computer wins.'}}else over={r:'d',msg:'Stalemate. Draw.'}}
   else if(g.st.hm>=100)over={r:'d',msg:'Draw by the 50-move rule.'};
@@ -2611,6 +2623,14 @@ function coSideHTML(){const g=CG;if(!g.hint||!coMyTurn())return'';const m=coHint
   if(g.hint>=2)h+=`<div><b>Hint 2, the piece:</b> use your ${PN(m.p)} on ${sn(m.f)}.</div>`;
   if(g.hint>=3)h+=`<div><b>Hint 3, the move:</b> ${esc(san(g.st,m,legal(g.st)))}: ${esc(moveNote(g.st,m))}.</div>`;
   return h+(g.hint<3?'<small class="muted">Still stuck? Tap Hint again for more.</small>':'')+'</div>'}
+function moveSentence(mv){try{const PN={P:['Pawn','Pawn'],N:['Knight','Ghoda'],B:['Bishop','Oont'],R:['Rook','Haathi'],Q:['Queen','Wazir'],K:['King','Raja']},hi=HI(),nm=x=>PN[x.toUpperCase()][hi?1:0];
+  const st=mv.st0,m=mv.m,p=st.b[m.f],v=st.b[m.t]||(m.ep?(p==='P'?'p':'P'):null),s=mv.san||'',to=sn(m.t);let t;
+  if(s.startsWith('O-O'))t=L2(s.startsWith('O-O-O')?'castles queenside':'castles kingside',s.startsWith('O-O-O')?'queenside castle kiya':'kingside castle kiya');
+  else t=v?L2(`${nm(p)} takes ${nm(v)} on ${to}`,`${nm(p)} ne ${to} par ${nm(v)} ko maara`):L2(`${nm(p)} to ${to}`,`${nm(p)} ${to} par`);
+  if(m.promo)t+=L2(', becomes a Queen',', Wazir ban gaya');if(s.includes('#'))t+=' · '+L2('CHECKMATE','CHECKMATE');else if(s.includes('+'))t+=' · '+L2('CHECK!','CHECK!');return t}catch(e){return mv.san||''}}
+function lastMoveLine(g){const last=g.moves[g.moves.length-1];if(g.busy&&!g.over)return`<div class="lmline think">🤖 ${L2('Computer is thinking','Computer soch raha hai')}<i class="dots"><b>.</b><b>.</b><b>.</b></i></div>`;
+  if(!last)return`<div class="lmline muted">${L2('Your move: tap a piece, then its square','Aapki chaal: piece tap karo, phir square')}</div>`;
+  const me=last.by!=='e';return`<div class="lmline ${me?'me':'cpu'}${last.san.includes('+')||last.san.includes('#')?' chk':''}"><b>${me?'👤 '+L2('You','Aap'):'🤖 '+L2('Computer','Computer')}:</b> ${esc(moveSentence(last))} <span class="mono">(${esc(last.san)})</span></div>`}
 function vCoach(){const g=CG;if(!g){go({name:'coachset'});return}const my=coMyTurn(),w=g.human==='w';const L=CLV[g.lvl];
   let marks={};const last=g.moves[g.moves.length-1];if(last){marks[sn(last.m.f)]='sel';marks[sn(last.m.t)]='sel'}
   if(g.show.better&&g.fb&&g.fb.pre&&g.fb.pre.lines[0]){const bm=fromUci(g.fb.st0,g.fb.pre.lines[0].pv[0]);if(bm){marks={[sn(bm.f)]:'good',[sn(bm.t)]:'good'}}}
@@ -2629,7 +2649,7 @@ function vCoach(){const g=CG;if(!g){go({name:'coachset'});return}const my=coMyTu
   if(g.book&&g.bookOk&&g.moves.length<g.book.moves.length)h+=`<div class="banner">📖 Opening trainer: <b>${esc(g.book.name)}</b>, move ${Math.floor(g.moves.length/2)+1} of ${Math.ceil(g.book.moves.length/2)}. ${my?'Find the book move.':''}</div>`;
   else if(g.book&&g.moves.length>=g.book.moves.length&&g.bookOk)h+=`<div class="banner">📖 You finished the ${esc(g.book.name)} line. Now play on with the plan.</div>`;
   if(g.start)h+=`<div class="banner">${g.start.eg?'👑 Endgame drill':'🎯 Theme'}: <b>${esc(g.start.name)}</b>${g.start.eg?` · goal: <b>${g.start.goal==='win'?'win':'hold the draw'}</b>`:''}</div>`;
-  h+='<div class="costick">';{const bh=boardHTML({cls:'coachb'+(g.blind&&!BPEEK&&!g.over?' hidepc':''),persp:g.human,coords:true,pieces:toMap(g.st.b),from:g.sel!=null?sn(g.sel):null,marks,dots,id:'coach'});h+=bh.slice(0,-6)+arrowsSVG(g.human,arr)+'</div>'+(g.blind&&!g.over?`<button class="bpeek" data-act="bpeek" ${BPEEK?'disabled':''}>👁 ${BPEEK?L2('Showing…','Dikh raha hai…'):L2('Peek 3s','Peek 3s')}</button>`:'')}
+  h+='<div class="costick">';{const bh=boardHTML({cls:'coachb'+(g.blind&&!BPEEK&&!g.over?' hidepc':''),persp:g.human,coords:true,pieces:toMap(g.st.b),from:g.sel!=null?sn(g.sel):null,marks,dots,id:'coach'});h+=bh.slice(0,-6)+arrowsSVG(g.human,arr)+'</div>'+lastMoveLine(g)+(g.blind&&!g.over?`<button class="bpeek" data-act="bpeek" ${BPEEK?'disabled':''}>👁 ${BPEEK?L2('Showing…','Dikh raha hai…'):L2('Peek 3s','Peek 3s')}</button>`:'')}
   if(P.set.carrow!==false&&my&&P.set.ceasy===false)h+='<small class="muted legend"><span class="lg r"></span>threat · <span class="lg g"></span>hint / better move · <span class="lg y"></span>weak square · red square: loose piece</small>';h+='</div></div><div class="fixscroll stack">';
   if(g.over)h+=`<div class="fb ${g.over.r==='w'||g.egok?'ok':'no'}"><h3>${g.over.msg}</h3>${g.start&&g.start.eg?`<p><b>${g.egok?'✓ Drill passed!':'Not yet. Try again: '+esc(g.start.tip||'')}</b></p><div class="row"><button class="btn primary" style="flex:1" data-act="eg-go" data-v="${ENDG.findIndex(x=>x[0]===g.start.eg)}">Again</button><button class="btn" data-act="go" data-v="endg">All drills</button></div>`:''}</div>`;
   else if(g.pend)h+=g.pend.type==='book'?`<div class="card stack pend"><b>📖 Not the book move.</b><p>In the ${esc(g.book.name)} the move here is <b>${esc(g.pend.exp)}</b>. You played ${esc(g.fb.san)}.</p><div class="row"><button class="btn primary" style="flex:1" data-act="co-retry">Try again</button><button class="btn" style="flex:1" data-act="co-keep">Leave the book</button></div></div>`
@@ -2861,6 +2881,9 @@ function sfx(k){if(!fxOn())return;if(SND[k]){playHtml(k);return}if(!fxCtx())retu
 function fxHuman(){try{if(V.name==='coach'&&CG)return CG.human;if(V.name==='play'&&G)return G.human;if(V.name==='ogame'&&OG)return olMyColor();if(V.name==='puz'&&PZ)return PZ.side?'w':'b'}catch(e){}return null}
 /* fight-game style callouts: big text slams onto the middle of the board, flashes, shakes, then vanishes */
 let FXBUSY=0;
+function fxPill(b0,txt,cls){const b=fxLiveBoard(b0);if(!b)return;const r=b.getBoundingClientRect();if(!r.width)return;let el=document.getElementById('fxpill');if(el)el.remove();
+  el=document.createElement('div');el.id='fxpill';el.className='fxpill fp-'+cls;el.textContent=txt;el.style.left=(r.left+r.width/2)+'px';el.style.top=(r.top+8)+'px';document.body.appendChild(el);
+  try{if(cls==='chk')navigator.vibrate&&navigator.vibrate(40)}catch(e){}setTimeout(()=>{if(el.isConnected){el.classList.add('out');setTimeout(()=>el.remove(),300)}},1500)}
 function fxLiveBoard(b){return (b&&b.isConnected&&b.offsetParent)?b:(gameBoard()||mainBoard())}
 function fxBanner(b,txt,cls,sub){const now=performance.now(),start=Math.max(now,FXBUSY-250);FXBUSY=start+950;const go=()=>fxSlam(txt,cls,sub,b);if(start-now<20)go();else setTimeout(go,start-now)}
 function fxSlam(txt,cls,sub,b0){const b=fxLiveBoard(b0);if(!b)return;const r=b.getBoundingClientRect();if(!r.width)return;
@@ -2871,13 +2894,13 @@ function fxSlam(txt,cls,sub,b0){const b=fxLiveBoard(b0);if(!b)return;const r=b.g
   /* shrink the text until it fits inside the screen, with room for the slam-in bounce */
   try{const tx=st.querySelector('.fxst-in'),vw=Math.min(innerWidth,document.documentElement.clientWidth||innerWidth),cx=r.left+r.width/2,room=2*Math.min(cx,vw-cx)-24;let fs=parseFloat(st.style.getPropertyValue('--fs'));
     for(let i=0;i<12;i++){const w=tx.scrollWidth*1.12;if(w<=room)break;fs*=Math.max(.6,room/w);st.style.setProperty('--fs',fs.toFixed(1)+'px')}}catch(e){}
-  const w=b.parentElement;if(w&&cls!=='kill'){w.classList.remove('fxshake');void w.offsetWidth;w.classList.add('fxshake');setTimeout(()=>w.classList.remove('fxshake'),420)}
+  
   try{if(cls==='chk'||cls==='lose'||cls==='blunder')navigator.vibrate&&navigator.vibrate(60)}catch(e){}
   setTimeout(()=>st.remove(),1150)}
 function fxSlash(b,sq,victim,moverW){const q=b.querySelector(`[data-sq="${sq}"]`);if(!q)return;const s=document.createElement('i');s.className='fxslash';q.appendChild(s);
   if(victim){const g=GLYPH[victim.toUpperCase()],c=victim===victim.toUpperCase()?'w':'b';['t','b'].forEach(h=>{const e=document.createElement('span');e.className=`pc ${c} fxhalf fx${h}`;e.textContent=g+'︎';q.appendChild(e)});
     const nm={P:'Pawn',N:'Knight',B:'Bishop',R:'Rook',Q:'Queen',K:'King'}[victim.toUpperCase()],v={P:1,N:3,B:3,R:5,Q:9,K:0}[victim.toUpperCase()];
-    fxBanner(b,'KILL!','kill',`${nm} +${v}`)}
+    fxPill(b,L2(`✕ ${nm} captured  +${v}`,`✕ ${nm} mara gaya  +${v}`),'kill')}
   setTimeout(()=>q.querySelectorAll('.fxslash,.fxhalf,.fxkill').forEach(e=>e.remove()),1100)}
 function fxDetect(b,old,now,gone,came){if(!fxOn())return;const id=b.dataset.board;if(['deco','heat','explore'].includes(id))return;
   const moved=[];const used=new Set();came.forEach(t=>{const f=gone.find(g=>!used.has(g)&&old[g]===now[t]&&g!==t&&!now[g]);if(f){used.add(f);moved.push({f,t,p:fxPc(now[t])})}});
@@ -2896,7 +2919,7 @@ function fxDetect(b,old,now,gone,came){if(!fxOn())return;const id=b.dataset.boar
   try{fxTalk(b,mv,{victim,castle,promo,chk,mate,bd,moverW})}catch(e){}
   if(mate){const hu=fxHuman();const won=hu?(hu==='w')===moverW:true;setTimeout(()=>sfx(won?'win':'lose'),350);fxBanner(b,'CHECKMATE!',won?'win':'lose',won?L2('YOU WIN','AAP JEETE'):L2('YOU LOSE','AAP HAARE'));fxMateCine(b,bd,moverW,won);try{if(P.set.sfxVoice!==false&&window.speechSynthesis){narSpeak(HI()?'चेकमेट!':'Checkmate!',{hi:HI(),queue:true})}}catch(e){}}
   else if(stale){setTimeout(()=>sfx('stale'),300);fxBanner(b,'STALEMATE','draw','DRAW')}
-  else if(chk){setTimeout(()=>sfx('check'),250);const k=bd.indexOf(moverW?'k':'K');const q=b.querySelector(`[data-sq="${sn(k)}"]`);if(q){q.classList.add('fxcheck');setTimeout(()=>q.classList.remove('fxcheck'),1600)}fxBanner(b,'CHECK!','chk');
+  else if(chk){setTimeout(()=>sfx('check'),250);const k=bd.indexOf(moverW?'k':'K');const q=b.querySelector(`[data-sq="${sn(k)}"]`);if(q){q.classList.add('fxcheck');setTimeout(()=>q.classList.remove('fxcheck'),1600)}fxPill(b,L2('♚ CHECK!','♚ CHECK!'),'chk');
     try{if(P.set.sfxVoice!==false&&window.speechSynthesis){setTimeout(()=>narSpeak(HI()?pick(['चेक! अपने किंग को बचाइए।','चेक! किंग ख़तरे में है।']):pick(['Check!','Check. Watch your King.']),{hi:HI(),queue:true}),450)}}catch(e){}}}
 function sfxSegHTML(){const on=fxOn();return`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🔊 ${L2('Sounds and effects','Sound aur effects')}</span><div class="seg sm">${[['1',L2('On','On')],['0',L2('Off','Off')]].map(([k,t])=>`<button class="${(on?'1':'0')===k?'on':''}" data-act="sfx-set" data-k="sfx" data-v="${k}">${t}</button>`).join('')}</div></div>${on?`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:14px" class="muted">${L2('Volume','Awaaz')}</span><div class="seg sm">${[[0,L2('Low','Kam')],[1,L2('Medium','Medium')],[2,L2('High','Tez')]].map(([k,t])=>`<button class="${(P.set.sfxVol!=null?P.set.sfxVol:1)===k?'on':''}" data-act="sfx-set" data-k="sfxVol" data-v="${k}">${t}</button>`).join('')}</div></div><button class="btn" style="width:100%;font-size:17px;padding:14px" data-act="sfx-test">🔊 ${L2('Test sound','Sound test karo')}</button><small class="muted" id="sfxst"></small><div class="stack" style="gap:4px;margin-top:6px"><small class="muted">${L2('Still silent? Press ▶ on this player. If this is also silent, the problem is the phone sound settings, not the app.','Phir bhi awaaz nahi? Is player ka ▶ dabao. Agar ye bhi chup hai, to phone ki sound setting ka masla hai, app ka nahi.')}</small><audio controls playsinline preload="auto" style="width:100%" data-sndtest></audio></div>${voicePickHTML()}<small class="muted" style="font-size:11px">${L2('Sounds: footstep, horse, elephant, sword, armour, gate and fanfare recordings from 0 A.D. by Wildfire Games (CC BY-SA 3.0, wildfiregames.com); other effects from sfx-kit (CC0).','Sounds: jaanwar, talwar, darwaza aur fanfare ki recordings 0 A.D. (Wildfire Games, CC BY-SA 3.0, wildfiregames.com) se; baaki effects sfx-kit (CC0) se.')}</small>`:''}`}
 
@@ -2907,7 +2930,7 @@ SFX.oops=()=>{tone({f:520,f2:300,dur:.35,v:.2,type:'sawtooth',lp:1200});tone({f:
 SFX.boss=()=>{[0,.3,.6].forEach((at,i)=>{tone({f:55+i*5,dur:.35,v:.45,at});noise({f:200,q:1,dur:.2,v:.25,at,type:'lowpass'})});tone({f:110,f2:220,dur:1,v:.12,type:'sawtooth',lp:600,at:.9})};
 function mainBoard(){return document.querySelector('#main .board[data-board="coach"]')||document.querySelector('#main .board')}
 function fxJudge(fb,g){if(!fb||!FUN())return;const good=['best','good','book'].includes(fb.cls);g.combo=good?(g.combo||0)+1:0;const b=mainBoard();
-  if(good&&g.combo>=3){setTimeout(()=>{sfx('combo');if(b){fxBanner(b,`x${g.combo} COMBO!`,'combo',L2('On fire!','Aag laga di!'));fxFire(b)}},450)}
+  if(good&&g.combo>=3){setTimeout(()=>{sfx('combo');if(b){fxPill(b,`🔥 x${g.combo} COMBO!`,'kill')}},450)}
   if(fb.cls==='mistake'||fb.cls==='blunder'){g.mood='laugh';g.moodT=Date.now();setTimeout(()=>{sfx('oops');const f=document.createElement('div');f.className='fxflash';document.body.appendChild(f);setTimeout(()=>f.remove(),700);if(b)fxBanner(b,fb.cls==='blunder'?'BLUNDER!':'OOPS!','blunder');try{navigator.vibrate&&navigator.vibrate([90,50,90])}catch(e){}},450)}}
 function fxFire(b){const el=document.createElement('div');el.className='fxfire';const r=b.getBoundingClientRect();el.style.left=r.left+'px';el.style.width=r.width+'px';el.style.top=(r.bottom-r.height*.35)+'px';el.style.height=(r.height*.35)+'px';
   for(let i=0;i<14;i++){const f=document.createElement('i');f.style.left=(i/14*100+Math.random()*5)+'%';f.style.animationDelay=(Math.random()*.4)+'s';f.style.height=(40+Math.random()*60)+'%';el.appendChild(f)}document.body.appendChild(el);setTimeout(()=>el.remove(),1600)}
@@ -2978,7 +3001,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v58';
+const APPV='2026.11.08 · v59';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
