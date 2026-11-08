@@ -838,8 +838,8 @@ body.lowfx .rwrays{display:none}
 /* v64: clean game screens */
 body.fixb header.top{display:none!important}
 body.fixb main{padding-top:calc(6px + env(safe-area-inset-top,0px))!important}
-body.fixb .fixtop{--bw:min(100vw,560px,calc(100dvh - var(--navh,64px) - 250px))!important}
-body.fixb.b3d .fixtop{--bw:min(calc(100vw - 20px),560px,calc((100dvh - var(--navh,64px) - 250px) * 1.08))!important}
+body.fixb .fixtop{--bw:min(100vw,560px,max(calc(100vw - 48px),calc(100dvh - var(--navh,64px) - 200px)))!important}
+body.fixb.b3d .fixtop{--bw:min(100vw,560px,max(calc(100vw - 48px),calc((100dvh - var(--navh,64px) - 200px) * 1.08)))!important}
 body.fixb .fixtop .gstat{flex-wrap:nowrap!important;align-items:center;gap:8px;min-height:36px;font-size:13.5px}
 body.fixb .fixtop .gstat>*{min-width:0;flex:none}
 body.fixb .fixtop .gstat>span:not(.clk){flex:0 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -3063,7 +3063,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v66';
+const APPV='2026.11.08 · v67';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -3651,7 +3651,8 @@ function vSkDo(){const z=SK;if(!z){go({name:'school'});return}const it=z.item,st
   if(z.mv){arr.push({f:z.mv.f,t:z.mv.t,c:z.res==='ok'?'green':'red',w:.12})}
   if(z.hint&&it.kind==='move'&&!z.res){const good=(it.hintMoves&&it.hintMoves[0])||(it.solLine&&fromUci(st,it.solLine[0]))||legal(st).find(m=>it.accept(m));if(good)marks[sn(good.f)]='good'}
   const dots=z.sel!=null&&!z.res?legal(st).concat(it.pseudoOK?pseudo(st):[]).filter(x=>x.f===z.sel).map(x=>sn(x.t)):[];
-  const bh=boardHTML({cls:'coachb',persp,coords:true,pieces:toMap(st.b),from:z.sel!=null?sn(z.sel):null,marks,dots,id:'sk'});h+=bh.slice(0,-6)+arrowsSVG(persp,arr)+'</div></div><div class="fixscroll stack">';
+  let shown=st;if(z.res==='ok'&&z.mv&&it.kind==='move'){try{shown=make(st,z.mv);marks[sn(z.mv.f)]='sel';marks[sn(z.mv.t)]='sel';arr.length=0}catch(e){shown=st}}
+  const bh=boardHTML({cls:'coachb',persp,coords:true,pieces:toMap(shown.b),from:z.sel!=null?sn(z.sel):null,marks,dots,id:'sk'});h+=bh.slice(0,-6)+arrowsSVG(persp,arr)+'</div></div><div class="fixscroll stack">';
   h+=`<p style="margin:0;font-size:17px"><b>${esc(it.prompt)}</b>${it.note&&!z.res?` <span class="muted" style="font-size:14px">${esc(it.note)}</span>`:''}</p>`;
   if(it.kind==='choice')h+=`<div class="ebtns">${it.options.map((o,i)=>`<button class="btn ${z.res&&i===it.correct?'on':''}" data-act="sk-ch" data-v="${i}" ${z.res?'disabled':''}>${esc(o)}</button>`).join('')}</div>`;
   if(it.kind==='squares'&&!z.res)h+=`<div class="row"><button class="btn primary" style="flex:1" data-act="sk-check">Check (${z.picked.size} tapped)</button><button class="btn" data-act="sk-clear">Clear</button></div>`;
