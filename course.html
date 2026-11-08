@@ -579,10 +579,11 @@ function stInfo(s,el,ctx){if(s.fen||s.pieces){const bh=h('div');el.appendChild(b
 function stQuiz(s,el,ctx,base){if(s.fen){const bh=h('div');el.appendChild(bh);Board(bh,{st:parseFEN(s.fen),hl:s.hl,arr:s.arr,persp:s.flip?'b':'w'})}
   if(s.pos)el.appendChild(h('div','pos',s.pos.map(l=>`<div>${inl(l)}</div>`).join('')));
   el.appendChild(h('p','prompt',inl(s.q)));const ch=h('div','choices'+(s.opts.some(o=>o.length>18)?' one':''));el.appendChild(ch);let first=true,fin=false;
-  s.opts.forEach((o,i)=>{const b=h('button','choice',inl(o));ch.appendChild(b);b.onclick=()=>{if(fin)return;
+  const ord=s.opts.map((_,i)=>i);for(let k=ord.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[ord[k],ord[j]]=[ord[j],ord[k]]}
+  const btnOf=[];ord.forEach(i=>{const o=s.opts[i];const b=h('button','choice',inl(o));ch.appendChild(b);btnOf[i]=b;b.onclick=()=>{if(fin)return;
     if(i===s.a){b.classList.add('good');fin=true;fb(el,true,first?'Sahi! ✓':'Ab sahi ✓',s.why);if(first)addXP(10);grade(s,first);ctx.done(first)}
     else{b.classList.add('bad');setCtx(Object.assign({},base,{tried:o,answer:s.opts[s.a]}));
-      if(ctx.test){fin=true;ch.children[s.a].classList.add('good');fb(el,false,'Galat',`Sahi jawab: **${s.opts[s.a]}**\n\n${s.why||''}`);grade(s,false);ctx.done(false)}
+      if(ctx.test){fin=true;btnOf[s.a].classList.add('good');fb(el,false,'Galat',`Sahi jawab: **${s.opts[s.a]}**\n\n${s.why||''}`);grade(s,false);ctx.done(false)}
       else{first=false;fb(el,false,'Nahi, dobara socho',s.hint||'')}}}})}
 /* puzzle: find the move(s) */
 function stMove(s,el,ctx,base){const st0=parseFEN(s.fen);let st=st0;const side=st0.w?'w':'b';
