@@ -1181,7 +1181,7 @@ function parseSpoken(t){t=' '+t.toLowerCase()+' ';if(/empty|nothing|none|no piec
   if(!c||!p)return null;return c==='w'?p:p.toLowerCase()}
 function trStopVoice(){const T=TR;if(T&&T.recog){try{T.recog.abort()}catch(e){}T.recog=null}T&&(T.listening=false)}
 function trVoiceAsk(){const T=TR;if(!T||(T.m!=='startvoice'&&T.m!=='namevoice'))return;trStopVoice();const q=T.q;const go=()=>{if(TR===T&&T.q===q&&!T.flash&&V.name==='train')trListen()};if(T.m==='namevoice'){setTimeout(go,150);return}
-  try{const u=new SpeechSynthesisUtterance(q[0]+' '+q[1]);u.rate=1;u.onend=go;u.onerror=go;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){go()}}
+  narSpeak(q[0]+' '+q[1],{hi:false,onend:go})}
 function trListen(){const T=TR;const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R){T.voiceMsg='This browser cannot listen. Tap your answer instead.';trRender();return}
   try{const r=new R();r.lang='en-US';r.interimResults=false;r.maxAlternatives=4;T.recog=r;T.listening=true;const q=T.q;
     r.onresult=e=>{if(TR!==T||T.q!==q||T.flash)return;const alts=[...e.results[0]].map(a=>a.transcript);let v=null;const prs=T.m==='namevoice'?parseSquare:parseSpoken;for(const a of alts){v=prs(a);if(v)break}T.listening=false;
@@ -1322,8 +1322,8 @@ function speakQ(q){const plain=h=>h.replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' 
   if(q.text&&q.text.includes('class="moves"')){const ms=(q.text.match(/[KQRBNO][^&<\s]*|[a-h][x1-8][^&<\s]*/g)||[]).filter(x=>!/^\d/.test(x));t+=ms.map(sanWords).join(', ')+'. '}
   else if(q.text)t+=plain(q.text).replace(/([KQRBNP])([a-h])([1-8])/g,(a,p,f,r)=>PNAME[p]+' '+f+' '+r)+'. ';
   t+=plain(q.prompt).replace(/\b([a-h])([1-8])\b/g,'$1 $2');if(q.kind==='choice'&&q.options.length<=4&&q.options.every(o=>o.length<30))t+='. '+q.options.join(', or ');sayAny(t)}
-function sayAny(t){try{const u=new SpeechSynthesisUtterance(t);u.rate=.95;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
-let voices=null;function speak(t){if(!P.set.speak)return;try{const u=new SpeechSynthesisUtterance(t);u.rate=.95;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+function sayAny(t){narSpeak(narClean(t),{hi:false})}
+let voices=null;function speak(t){if(!P.set.speak)return;narSpeak(narClean(t),{hi:false})}
 
 /* ---------- stats ---------- */
 function historyCard(){const hd=P.hist||{};const days=[];const d=new Date();d.setDate(d.getDate()-13);
@@ -1398,6 +1398,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
   if(a==='hl-share'){hlShare();return}
   if(a==='hl-again'){if(HL){HL.i=0;HL.ph=0;hlStep()}return}
   if(a==='sfx-set'){P.set[d.k]=d.k==='sfx'?d.v==='1':+d.v;save();render();if(fxOn()){fxCtx();sfx('P')}return}
+  if(a==='voice-test'){voiceTest();return}
   if(a==='sfx-test'){fxUnlock();const st=()=>{const el=document.getElementById('sfxst');if(el)el.innerHTML=`${L2('Phone audio','Phone audio')}: <b>${AUNL?'OK ✓':'locked ✗'}</b> · ${L2('Played','Baja')}: <b>${SNDOK?'✓':'✗'}</b> · Web audio: <b>${AC?AC.state:'none'}</b>${SNDERR?`<br><span style="color:#c0392b">${L2('Error','Error')}: ${SNDERR.replace(/</g,'&lt;')}</span>`:''}<br>${L2('If you hear nothing: turn the side switch off silent, raise the volume buttons, and close other music apps.','Kuch na sunai de to: side switch silent se hatao, volume button se awaaz badhao, aur music apps band karo.')}`};setTimeout(st,500);setTimeout(st,3000);['P','N','B','R','Q','K','cap1','Nc','cap3','Rc','castle','check'].forEach((k,i)=>setTimeout(()=>sfx(k),i*1300));return}
   if(a==='b3d-set'){P.set.board3d=d.v;save();render();setTimeout(()=>{try{window.__setH&&window.__setH()}catch(e){}},50);return}
   if(a==='lang-set'){P.set.lang=d.v;if(P.set.cvoice&&P.set.cvoice!=='off')P.set.cvoice=d.v==='hi'?'hi':'en';save();try{aiRe()}catch(e){}render();return}
@@ -1454,7 +1455,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'co-retry':coRetry();break;
    case'co-keep':coKeep();break;
    case'co-chk':if(CG){CG.chk=CG.chk||{};CG.chk[d.v]=!CG.chk[d.v];aiRe()}break;
-   case'co-set':P.set[d.k]=d.v==='1'?true:d.v==='0'?false:d.v;save();if(d.k==='cvoice'&&d.v!=='off')sayC(d.v==='hi'?'Namaste, main aapka coach hoon.':'Hello, I am your coach.');aiRe();break;
+   case'co-set':P.set[d.k]=d.v==='1'?true:d.v==='0'?false:d.v;save();if(d.k==='cvoice'&&d.v!=='off')sayC(d.v==='hi'?'नमस्ते! मैं आपका कोच हूँ।':'Hello, I am your coach.');aiRe();break;
    case'co-theme':{V.co=V.co||{color:'w',lvl:P.set.colvl!=null?P.set.colvl:2};V.co.start=d.v;V.co.open='';coNew(V.co);break}
    case'co-diary':{const dd=dzDueList();V={name:'codiary',dz:{i:dd.length?dd[0][1]:0,res:null,sel:null}}};render();window.scrollTo(0,0);break;
    case'dz-show':if(V.dz){V.dz.res=V.dz.res||'show';vCoDiary()}break;
@@ -1712,7 +1713,7 @@ function coResume(){const g=P.cgame;if(!g)return;const s0=g.start&&fromFEN(g.sta
   for(let i=0;i<g.sans.length;i++){const m=findMove(CG.st,g.sans[i]);if(!m)break;const by=(CG.st.w===(g.human==='w'))?'h':'e';CG.moves.push({m,san:g.sans[i],by,fb:g.fbs&&g.fbs[i]&&{...g.fbs[i],lite:1}});CG.st=make(CG.st,m);CG.states.push(CG.st)}
   sfStart();go({name:'coach'});coCheckEnd();if(CG.over)return;if(CG.st.w===(CG.human==='w'))coPre();else coEngine()}
 const coMyTurn=()=>CG&&!CG.over&&CG.st.w===(CG.human==='w');
-function coPre(){const g=CG,t=g.tok,st=g.st;clkSwitch(g,'h');g.pre=null;g.threat=threatOf(st);g.hint=0;g.opt=null;g.psel=null;g.chk={};g.pend=null;g.waitNext=false;g.arrBest=false;if(g.moves.length&&g.moves[g.moves.length-1].by==='e'){const e=g.moves[g.moves.length-1],th=g.threat;sayC((P.set.cvoice==='hi'?'Coach ki chaal: ':'Coach plays ')+e.san+'. '+(th&&th.san?(P.set.cvoice==='hi'?'Dhyan do, khatra hai: ':'Careful, it threatens ')+th.san+'.':''),true)}g.preP=sfGo(st,{multipv:3,movetime:900,depth:18}).then(r=>{if(CG===g&&g.tok===t&&g.st===st){g.pre=r;if(aiAuto()&&g.fb&&!g.fb.lite&&!AIR[aiKey('turn')])aiGo('turn',null,true);else if(V.name==='coach'&&!g.busy)vCoach()}return r});if(V.name==='coach')vCoach()}
+function coPre(){const g=CG,t=g.tok,st=g.st;clkSwitch(g,'h');g.pre=null;g.threat=threatOf(st);g.hint=0;g.opt=null;g.psel=null;g.chk={};g.pend=null;g.waitNext=false;g.arrBest=false;if(g.moves.length&&g.moves[g.moves.length-1].by==='e'){const e=g.moves[g.moves.length-1],th=g.threat;sayC((P.set.cvoice==='hi'?'कोच की चाल: ':pick(['Coach plays ','The coach plays ']))+e.san+'. '+(th&&th.san?(P.set.cvoice==='hi'?'ध्यान दीजिए, ख़तरा है: ':'Careful, it threatens ')+th.san+'.':''),true)}g.preP=sfGo(st,{multipv:3,movetime:900,depth:18}).then(r=>{if(CG===g&&g.tok===t&&g.st===st){g.pre=r;if(aiAuto()&&g.fb&&!g.fb.lite&&!AIR[aiKey('turn')])aiGo('turn',null,true);else if(V.name==='coach'&&!g.busy)vCoach()}return r});if(V.name==='coach')vCoach()}
 async function coHuman(m){const g=CG,t=g.tok,st0=g.st,list=legal(st0),s=san(st0,m,list);g.sel=null;g.busy='Coach is checking your move…';
   const st1=make(st0,m);g.st=st1;g.states.push(st1);const rec={m,san:s,by:'h',fb:null};g.moves.push(rec);vCoach();
   const pre=await g.preP;if(CG!==g||g.tok!==t)return;
@@ -2024,24 +2025,62 @@ function arrowsSVG(persp,arr){if(!arr.length)return'';const xy=s=>{const f=s&7,r
     h+=`<g class="abadge" data-act="${a.act||'co-opt'}" data-v="${a.act?a.v:a.n-1}"><circle cx="${bx}" cy="${by}" r=".3" fill="${ACOL[a.c]}" stroke="#fff" stroke-width=".05"/><text x="${bx}" y="${by+.11}" text-anchor="middle" font-size=".32" font-weight="700" fill="#fff" font-family="system-ui,sans-serif">${a.lab||a.n}</text></g>`}
   return h+'</svg>'}
 // voice coach
-function pickVoice(v){const vs=window.speechSynthesis?speechSynthesis.getVoices():[];const want=v==='hi'?['hi-IN','hi']:['en-IN','en-GB','en-US','en'];
-  const good=x=>/natural|neural|enhanced|premium|google|siri|samantha|daniel|rishi|veena|lekha|neerja|prabhat|swara|madhur/i.test(x.name)?1:0;
-  for(const w of want){const c=vs.filter(x=>x.lang.replace('_','-').toLowerCase().startsWith(w.toLowerCase()));if(c.length)return c.sort((a,b)=>good(b)-good(a)||(b.localService?1:0)-(a.localService?1:0))[0]}return null}
-function sayC(t,queue){const v=P.set.cvoice;if(!v||v==='off'||!window.speechSynthesis)return;try{if(!queue)speechSynthesis.cancel();
-  const txt=sayText(t).replace(/[^\w\s.,!?'’:\-]/g,' ').replace(/\s+/g,' ').trim();const parts=txt.split(/(?<=[.!?])\s+/).filter(Boolean);
-  const vo=pickVoice(v);for(const part of parts){const u=new SpeechSynthesisUtterance(part);u.lang=v==='hi'?'hi-IN':'en-IN';if(vo){u.voice=vo;u.lang=vo.lang}u.rate=v==='hi'?.88:.92;u.pitch=1;speechSynthesis.speak(u)}}catch(e){}}
-try{if(window.speechSynthesis)speechSynthesis.onvoiceschanged=()=>{}}catch(e){}
-const SPK={en:{K:'King',Q:'Queen',R:'Rook',B:'Bishop',N:'Knight',P:'Pawn'},hi:{K:'Raja',Q:'Wazir',R:'Haathi',B:'Oont',N:'Ghoda',P:'Pyada'}};
-const sqSay=(q,hi)=>q[0].toUpperCase()+' '+q[1];
+/* ---- natural narration: best voice on the phone, Hindi spoken in Devanagari, English piece names, varied lines ---- */
+const VBAD=/compact|eloquence|fred|albert|bad news|bells|boing|bubbles|cellos|deranged|good news|hysterical|jester|organ|superstar|trinoids|whisper|wobble|zarvox|junior|ralph|kathy|grandma|grandpa|rocko|shelley|flo\b|eddy|reed|sandy|bahh|princess/i;
+function narVoices(hi){try{return speechSynthesis.getVoices().filter(v=>(hi?/^hi/i:/^en/i).test(v.lang))}catch(e){return[]}}
+function narScore(v,hi){let s=0;const n=v.name,l=v.lang.replace('_','-');if(/premium/i.test(n))s+=9;if(/enhanced/i.test(n))s+=7;if(/neural|natural/i.test(n))s+=6;if(/siri/i.test(n))s+=5;
+  if(hi){if(/lekha|swara|madhur|kiyara|hemant|neerja|google/i.test(n))s+=2}else{if(/en-IN/i.test(l))s+=3;else if(/en-GB/i.test(l))s+=2;else if(/en-US/i.test(l))s+=1;if(/rishi|veena|isha|daniel|serena|samantha|karen|moira|google/i.test(n))s+=2}
+  if(VBAD.test(n))s-=20;if(v.localService)s+=1;return s}
+function narVoice(hi){const vs=narVoices(hi);const pref=P.set[hi?'voiceHi':'voiceEn'];if(pref){const v=vs.find(x=>x.name===pref);if(v)return v}return vs.slice().sort((a,b)=>narScore(b,hi)-narScore(a,hi))[0]||null}
+function pickVoice(v){return narVoice(v==='hi')}
+function narSpeak(t,o){o=o||{};if(!window.speechSynthesis||!t){o.onend&&o.onend();return}const hi=!!o.hi;
+  try{if(!o.queue)speechSynthesis.cancel();const parts=String(t).replace(/\s+/g,' ').split(/(?<=[.!?।])\s+/).map(x=>x.trim()).filter(Boolean);const vo=narVoice(hi);
+    parts.forEach((p,i)=>{const u=new SpeechSynthesisUtterance(p);u.lang=vo?vo.lang:(hi?'hi-IN':'en-IN');if(vo)u.voice=vo;u.rate=o.rate||(hi?.96:1);u.pitch=1;u.volume=1;
+      if(i===parts.length-1&&o.onend){u.onend=o.onend;u.onerror=o.onend}speechSynthesis.speak(u)});if(!parts.length&&o.onend)o.onend()}catch(e){o.onend&&o.onend()}}
+const SPK={en:{K:'King',Q:'Queen',R:'Rook',B:'Bishop',N:'Knight',P:'Pawn'},hi:{K:'किंग',Q:'क्वीन',R:'रूक',B:'बिशप',N:'नाइट',P:'पॉन'}};
+const HI_FILE={a:'ए',b:'बी',c:'सी',d:'डी',e:'ई',f:'एफ़',g:'जी',h:'एच'},HI_RANK=['','वन','टू','थ्री','फ़ोर','फ़ाइव','सिक्स','सेवन','एट'];
+const sqSay=(q,hi)=>hi?HI_FILE[q[0]]+' '+HI_RANK[+q[1]]:q[0]+q[1];
 function sanSay(sn_,lang){const hi=(lang||P.set.cvoice)==='hi',L=SPK[hi?'hi':'en'];let s=String(sn_).replace(/[!?]+$/,'');const ck=s.endsWith('#')?2:s.endsWith('+')?1:0;s=s.replace(/[+#]/g,'');
-  let t;if(s.startsWith('O-O-O'))t=hi?'Lambi taraf castling':'Castles queenside';else if(s.startsWith('O-O'))t=hi?'Chhoti taraf castling':'Castles kingside';
+  let t;if(s.startsWith('O-O-O'))t=hi?'क्वीन साइड कैसलिंग':pick(['castles queenside','long castles']);else if(s.startsWith('O-O'))t=hi?'किंग साइड कैसलिंग':pick(['castles kingside','short castles']);
   else{const m=s.match(/^([KQRBN])?([a-h]?[1-8]?)(x)?([a-h][1-8])(?:=([QRBN]))?$/);if(!m)return s;const pc=L[m[1]||'P'],to=sqSay(m[4],hi);
-    t=hi?(m[3]?`${pc} ${to} par maarta hai`:`${pc} ${to} par`):(m[3]?`${pc} takes on ${to}`:`${pc} to ${to}`);if(m[5])t+=hi?`, ${L[m[5]]} banta hai`:`, promotes to ${L[m[5]]}`}
-  if(ck)t+=hi?(ck===2?', checkmate!':', shah!'):(ck===2?', checkmate!':', check.');return t}
-const sayText=t=>String(t).replace(/\b(\d+\.(?:\.\.|…)?\s?)?((?:[KQRBN][a-h]?[1-8]?x?[a-h][1-8]|[a-h]x[a-h][1-8]|[a-h][1-8](?:=[QRBN])?|O-O(?:-O)?)[+#]?)/g,(a,n,m)=>sanSay(m));
-const SAYCLS={best:['Best move!','Bahut badiya, best move!'],good:['Good move.','Achhi move.'],book:['Book move.','Book move, theek hai.'],inacc:['Inaccuracy.','Thodi kamzor move.'],mistake:['That is a mistake.','Ye galti hai.'],blunder:['That is a blunder!','Ye bada blunder hai!']};
-function sayJudge(fb){if(!fb||fb.lite)return;const hi=P.set.cvoice==='hi',y=coWhy(fb);let t=SAYCLS[fb.cls][hi?1:0];
-  if(!['best','good','book'].includes(fb.cls)&&y.bestSan)t+=hi?` Behtar tha: ${y.bestSan}.`:` Better was ${y.bestSan}.`;sayC(t)}
+    if(!m[1]&&!m[3])t=to;
+    else if(hi)t=m[3]?pick([`${pc} ने ${to} पर कैप्चर किया`,`${pc} ने ${to} पर मारा`]):`${pc} ${to} पर`;
+    else t=m[3]?`${pc} takes ${to}`:`${pc} to ${to}`;
+    if(m[5])t+=hi?`, और ${L[m[5]]} बन गया`:`, and it becomes a ${L[m[5]]}`}
+  if(ck)t+=hi?(ck===2?', चेकमेट!':', चेक!'):(ck===2?', and that is checkmate!':', check.');return t}
+const sayText=(t,lang)=>String(t).replace(/\b(\d+\.(?:\.\.|…)?\s?)?((?:[KQRBN][a-h]?[1-8]?x?[a-h][1-8]|[a-h]x[a-h][1-8]|[a-h][1-8](?:=[QRBN])?|O-O(?:-O)?)[+#]?)/g,(a,n,m)=>sanSay(m,lang));
+/* Hinglish (Roman) to Devanagari, only for what the Hindi voice speaks; the screen keeps Roman text */
+const HIDIC={hai:'है',hain:'हैं',ka:'का',ki:'की',ke:'के',ko:'को',se:'से',mein:'में',me:'में',par:'पर',pe:'पे',aur:'और',ya:'या',nahi:'नहीं',nahin:'नहीं',na:'ना',ye:'ये',yeh:'ये',wo:'वो',woh:'वो',is:'इस',us:'उस',isko:'इसको',usko:'उसको',iske:'इसके',uske:'उसके',
+  kar:'कर',karo:'करो',karta:'करता',karti:'करती',karte:'करते',karna:'करना',kiya:'किया',ho:'हो',hota:'होता',hoti:'होती',hote:'होते',hoga:'होगा',hogi:'होगी',raha:'रहा',rahi:'रही',rahe:'रहे',tha:'था',thi:'थी',the:'थे',
+  apna:'अपना',apni:'अपनी',apne:'अपने',aapka:'आपका',aapki:'आपकी',aapke:'आपके',aap:'आप',tum:'तुम',tumhara:'तुम्हारा',main:'मैं',mera:'मेरा',meri:'मेरी',mere:'मेरे',hum:'हम',hamara:'हमारा',
+  chaal:'चाल',chaalein:'चालें',chalo:'चलो',chalna:'चलना',khatra:'ख़तरा',khatre:'ख़तरे',dhyan:'ध्यान',do:'दो',dijiye:'दीजिए',bachao:'बचाओ',bachaao:'बचाओ',bachaav:'बचाव',achhi:'अच्छी',achha:'अच्छा',accha:'अच्छा',acchi:'अच्छी',
+  bahut:'बहुत',badiya:'बढ़िया',badhiya:'बढ़िया',shaandaar:'शानदार',shandaar:'शानदार',galti:'ग़लती',galat:'ग़लत',sahi:'सही',behtar:'बेहतर',kamzor:'कमज़ोर',dekho:'देखो',dekhiye:'देखिए',dekh:'देख',abhi:'अभी',ab:'अब',phir:'फिर',pehle:'पहले',baad:'बाद',
+  jaldi:'जल्दी',dheere:'धीरे',jeet:'जीत',haar:'हार',jeete:'जीते',haare:'हारे',shabaash:'शाबाश',khel:'खेल',khelo:'खेलो',khatam:'ख़त्म',ek:'एक',teen:'तीन',chaar:'चार',saath:'साथ',bina:'बिना',sakta:'सकता',sakti:'सकती',sakte:'सकते',
+  chahiye:'चाहिए',kyunki:'क्योंकि',lekin:'लेकिन',agar:'अगर',to:'तो',toh:'तो',bhi:'भी',sirf:'सिर्फ़',kuch:'कुछ',sab:'सब',koi:'कोई',kya:'क्या',kyun:'क्यों',kaise:'कैसे',kahan:'कहाँ',jahan:'जहाँ',yahan:'यहाँ',wahan:'वहाँ',
+  upar:'ऊपर',neeche:'नीचे',ghar:'घर',khuli:'खुली',band:'बंद',rasta:'रास्ता',hamla:'हमला',maarta:'मारता',maar:'मार',maara:'मारा',le:'ले',liya:'लिया',lo:'लो',lena:'लेना',de:'दे',diya:'दिया',gaya:'गया',gayi:'गई',aaya:'आया',aayi:'आई',
+  jao:'जाओ',jaata:'जाता',jaati:'जाती',jaa:'जा',tez:'तेज़',bada:'बड़ा',badi:'बड़ी',bade:'बड़े',chhota:'छोटा',chhoti:'छोटी',zyada:'ज़्यादा',kam:'कम',naya:'नया',nayi:'नई',jagah:'जगह',taraf:'तरफ़',beech:'बीच',sawaal:'सवाल',jawab:'जवाब',
+  namaste:'नमस्ते',hoon:'हूँ',hun:'हूँ',lagao:'लगाओ',laao:'लाओ',lao:'लाओ',banao:'बनाओ',banta:'बनता',bana:'बना',socho:'सोचो',samjho:'समझो',yaad:'याद',rakho:'रखो',chhodo:'छोड़ो',pakdo:'पकड़ो',seedha:'सीधा',tirchha:'तिरछा',
+  King:'किंग',Queen:'क्वीन',Rook:'रूक',Bishop:'बिशप',Knight:'नाइट',Pawn:'पॉन',king:'किंग',queen:'क्वीन',rook:'रूक',bishop:'बिशप',knight:'नाइट',pawn:'पॉन',Check:'चेक',check:'चेक',Checkmate:'चेकमेट',checkmate:'चेकमेट',Coach:'कोच',coach:'कोच'};
+function hiSpeak(t){return sayText(t,'hi').replace(/[A-Za-z']+/g,w=>HIDIC[w]||HIDIC[w.toLowerCase()]||w).replace(/\.(\s|$)/g,'।$1')}
+function enSpeak(t){return sayText(t,'en')}
+const narClean=t=>String(t).replace(/<[^>]+>/g,' ').replace(/[^\p{L}\p{N}\p{M}\s.,!?'’:;\-।]/gu,' ').replace(/\s+/g,' ').trim();
+function sayC(t,queue){const v=P.set.cvoice;if(!v||v==='off'||!window.speechSynthesis)return;const hi=v==='hi';narSpeak(narClean(hi?hiSpeak(t):enSpeak(t)),{hi,queue})}
+try{if(window.speechSynthesis){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>{}}}catch(e){}
+const SAYCLS={best:[['Best move!','Excellent, that is the best move.','Perfect. Exactly right.'],['शानदार, यही सबसे अच्छी चाल थी!','बिल्कुल सही चाल!','वाह, बेस्ट मूव!']],
+  good:[['Good move.','Nice, that works.','Solid move.'],['अच्छी चाल।','बढ़िया, ये चाल ठीक है।','अच्छा खेला।']],
+  book:[['Book move.','A known opening move.'],['ये ओपनिंग की जानी-मानी चाल है।','बुक मूव, बढ़िया।']],
+  inacc:[['Slightly inaccurate.','Not the best, but okay.'],['ये चाल थोड़ी कमज़ोर है।','ठीक है, पर इससे बेहतर था।']],
+  mistake:[['That is a mistake.','Careful, that was a mistake.'],['ये ग़लती है।','अरे, ये चाल ग़लत थी।']],
+  blunder:[['Oh no, that is a blunder!','That was a big blunder.'],['अरे नहीं, ये बड़ा ब्लंडर है!','ये बहुत बड़ी ग़लती थी!']]};
+function sayJudge(fb){if(!fb||fb.lite)return;const v=P.set.cvoice;if(!v||v==='off')return;const hi=v==='hi',y=coWhy(fb);let t=pick(SAYCLS[fb.cls][hi?1:0]);
+  if(!['best','good','book'].includes(fb.cls)&&y.bestSan)t+=hi?` बेहतर चाल थी ${sanSay(y.bestSan,'hi')}।`:` ${pick(['Better was','A stronger move was'])} ${sanSay(y.bestSan,'en')}.`;
+  narSpeak(narClean(t),{hi})}
+function voicePickHTML(){if(!window.speechSynthesis)return'';const hi=HI(),vs=narVoices(hi).sort((a,b)=>narScore(b,hi)-narScore(a,hi)).filter(v=>!VBAD.test(v.name));const cur=narVoice(hi);
+  return`<div class="stack" style="gap:6px"><div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🗣 ${L2('Voice','Aawaz')}</span>
+  <select id="vpick" aria-label="Voice" style="max-width:60%;font:inherit;padding:6px;border-radius:10px;border:1px solid var(--line);background:var(--surface,#fff);color:var(--fg)">${vs.length?vs.map(v=>`<option value="${esc(v.name)}" ${cur&&cur.name===v.name?'selected':''}>${esc(v.name)}</option>`).join(''):`<option>${L2('Default','Default')}</option>`}</select>
+  <button class="btn small" data-act="voice-test" aria-label="Test voice">▶</button></div><small class="muted">${L2('Best quality: on iPhone open Settings → Accessibility → Spoken Content → Voices and download an "Enhanced" voice (Rishi for English, Lekha for Hindi).','Sabse achhi aawaz ke liye: iPhone Settings → Accessibility → Spoken Content → Voices mein jaakar "Enhanced" voice download karo (English ke liye Rishi, Hindi ke liye Lekha).')}</small></div>`}
+document.addEventListener('change',e=>{if(e.target&&e.target.id==='vpick'){P.set[HI()?'voiceHi':'voiceEn']=e.target.value;save();voiceTest()}});
+function voiceTest(){const hi=HI();narSpeak(hi?'नमस्ते! मैं आपका कोच हूँ। नाइट एफ़ थ्री पर। चेक! अपने किंग को बचाइए।':'Hello, I am your coach. Knight to f3. Check! Watch your King.',{hi})}
 // mistake tags, diary and progress
 const WTAG={hanging:'Loose pieces',threats:'Missed their threat',tactics:'Missed a win',king:'King safety',opening:'Opening',endgame:'Endgame',positional:'Plans and position'};
 function tagOf(fb){const y=coWhy(fb),best=fb.pre&&fb.pre.lines[0];if(y.hang.length)return'hanging';if(best&&best.mate>0||y.bestLine&&y.bestLine.gain>=80)return'tactics';if(y.reply&&y.reply.gain>=80||fb.post&&fb.post.lines[0]&&fb.post.lines[0].mate>0)return'threats';
@@ -2085,7 +2124,7 @@ function vCoDiary(){const D=P.diary||[];const z=V.dz||(V.dz={i:0,res:null,sel:nu
   if(!z.res)h+=`<p style="text-align:center">${st.w?'White':'Black'} to move. In your game you played <b>${esc(e.san)}</b> (${CLS[e.cls][0].toLowerCase()}). Find the better move.</p>`;
   else h+=`<div class="fb ${z.res==='ok'?'ok':'no'}"><h3>${z.res==='ok'?'Correct!':z.res==='no'?'Not quite.':'Answer'}</h3><p>The better move is <b>${esc(e.bestSan)}</b>. ${esc(e.why)}</p>${e.line?`<p class="muted">Line: ${esc(e.line)}</p>`:''}</div>`;
   h+=`<div class="row corow"><button class="btn" data-act="dz-show">Show answer</button><button class="btn primary" data-act="dz-next">Next</button><button class="btn" data-act="dz-del">${z.del?'Tap again':'Remove'}</button></div></div>`;
-  main.innerHTML=h;onSq=n=>{if(z.res)return;const s=si(n),p=st.b[s];if(z.sel!=null&&z.sel!==s){const m=legal(st).find(x=>x.f===z.sel&&x.t===s&&(!x.promo||x.promo==='Q'));if(m){const ok=e.best.includes(uciOf(m));z.res=ok?'ok':'no';e.n++;if(ok)e.ok++;dzSR(e,ok);xpAdd(ok?3:0);save();sayC(ok?(P.set.cvoice==='hi'?'Shabaash, sahi jawab!':'Correct!'):(P.set.cvoice==='hi'?'Nahi, behtar tha: ':'No, better was ')+e.bestSan+'.');vCoDiary();return}}
+  main.innerHTML=h;onSq=n=>{if(z.res)return;const s=si(n),p=st.b[s];if(z.sel!=null&&z.sel!==s){const m=legal(st).find(x=>x.f===z.sel&&x.t===s&&(!x.promo||x.promo==='Q'));if(m){const ok=e.best.includes(uciOf(m));z.res=ok?'ok':'no';e.n++;if(ok)e.ok++;dzSR(e,ok);xpAdd(ok?3:0);save();sayC(ok?(P.set.cvoice==='hi'?'शाबाश, सही जवाब!':'Correct!'):(P.set.cvoice==='hi'?'नहीं, बेहतर चाल थी: ':'No, better was ')+e.bestSan+'.');vCoDiary();return}}
     z.sel=p&&isW(p)===st.w?s:null;vCoDiary()}}
 
 /* ================= coach: views ================= */
@@ -2382,7 +2421,7 @@ function fxSlam(txt,cls,sub,b0){const b=fxLiveBoard(b0);if(!b)return;const r=b.g
   setTimeout(()=>st.remove(),1150)}
 function fxSlash(b,sq,victim,moverW){const q=b.querySelector(`[data-sq="${sq}"]`);if(!q)return;const s=document.createElement('i');s.className='fxslash';q.appendChild(s);
   if(victim){const g=GLYPH[victim.toUpperCase()],c=victim===victim.toUpperCase()?'w':'b';['t','b'].forEach(h=>{const e=document.createElement('span');e.className=`pc ${c} fxhalf fx${h}`;e.textContent=g+'︎';q.appendChild(e)});
-    const nm={P:L2('Pawn','Pawn'),N:L2('Knight','Ghoda'),B:L2('Bishop','Oont'),R:L2('Rook','Haathi'),Q:L2('Queen','Wazir'),K:'King'}[victim.toUpperCase()],v={P:1,N:3,B:3,R:5,Q:9,K:0}[victim.toUpperCase()];
+    const nm={P:'Pawn',N:'Knight',B:'Bishop',R:'Rook',Q:'Queen',K:'King'}[victim.toUpperCase()],v={P:1,N:3,B:3,R:5,Q:9,K:0}[victim.toUpperCase()];
     fxBanner(b,'KILL!','kill',`${nm} +${v}`)}
   setTimeout(()=>q.querySelectorAll('.fxslash,.fxhalf,.fxkill').forEach(e=>e.remove()),1100)}
 function fxDetect(b,old,now,gone,came){if(!fxOn())return;const id=b.dataset.board;if(['deco','heat','explore'].includes(id))return;
@@ -2400,11 +2439,11 @@ function fxDetect(b,old,now,gone,came){if(!fxOn())return;const id=b.dataset.boar
   if(victim)fxSlash(b,vsq,victim,moverW);try{markDay()}catch(e){}
   if(promo)fxPromo(b,promo.t);
   try{fxTalk(b,mv,{victim,castle,promo,chk,mate,bd,moverW})}catch(e){}
-  if(mate){const hu=fxHuman();const won=hu?(hu==='w')===moverW:true;setTimeout(()=>sfx(won?'win':'lose'),350);fxBanner(b,'CHECKMATE!',won?'win':'lose',won?L2('YOU WIN','AAP JEETE'):L2('YOU LOSE','AAP HAARE'));fxMateCine(b,bd,moverW,won);try{if(P.set.sfxVoice!==false&&window.speechSynthesis){const u=new SpeechSynthesisUtterance('Checkmate!');u.lang='en-US';speechSynthesis.speak(u)}}catch(e){}}
+  if(mate){const hu=fxHuman();const won=hu?(hu==='w')===moverW:true;setTimeout(()=>sfx(won?'win':'lose'),350);fxBanner(b,'CHECKMATE!',won?'win':'lose',won?L2('YOU WIN','AAP JEETE'):L2('YOU LOSE','AAP HAARE'));fxMateCine(b,bd,moverW,won);try{if(P.set.sfxVoice!==false&&window.speechSynthesis){narSpeak(HI()?'चेकमेट!':'Checkmate!',{hi:HI(),queue:true})}}catch(e){}}
   else if(stale){setTimeout(()=>sfx('stale'),300);fxBanner(b,'STALEMATE','draw','DRAW')}
   else if(chk){setTimeout(()=>sfx('check'),250);const k=bd.indexOf(moverW?'k':'K');const q=b.querySelector(`[data-sq="${sn(k)}"]`);if(q){q.classList.add('fxcheck');setTimeout(()=>q.classList.remove('fxcheck'),1600)}fxBanner(b,'CHECK!','chk');
-    try{if(P.set.sfxVoice!==false&&window.speechSynthesis){const u=new SpeechSynthesisUtterance(HI()?'Check! Raja khatre mein hai':'Check!');u.lang=HI()?'hi-IN':'en-US';u.rate=1.05;u.pitch=.8;setTimeout(()=>speechSynthesis.speak(u),450)}}catch(e){}}}
-function sfxSegHTML(){const on=fxOn();return`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🔊 ${L2('Sounds and effects','Sound aur effects')}</span><div class="seg sm">${[['1',L2('On','On')],['0',L2('Off','Off')]].map(([k,t])=>`<button class="${(on?'1':'0')===k?'on':''}" data-act="sfx-set" data-k="sfx" data-v="${k}">${t}</button>`).join('')}</div></div>${on?`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:14px" class="muted">${L2('Volume','Awaaz')}</span><div class="seg sm">${[[0,L2('Low','Kam')],[1,L2('Medium','Medium')],[2,L2('High','Tez')]].map(([k,t])=>`<button class="${(P.set.sfxVol!=null?P.set.sfxVol:1)===k?'on':''}" data-act="sfx-set" data-k="sfxVol" data-v="${k}">${t}</button>`).join('')}</div></div><button class="btn" style="width:100%;font-size:17px;padding:14px" data-act="sfx-test">🔊 ${L2('Test sound','Sound test karo')}</button><small class="muted" id="sfxst"></small><div class="stack" style="gap:4px;margin-top:6px"><small class="muted">${L2('Still silent? Press ▶ on this player. If this is also silent, the problem is the phone sound settings, not the app.','Phir bhi awaaz nahi? Is player ka ▶ dabao. Agar ye bhi chup hai, to phone ki sound setting ka masla hai, app ka nahi.')}</small><audio controls playsinline preload="auto" style="width:100%" data-sndtest></audio></div><small class="muted" style="font-size:11px">${L2('Sounds: footstep, horse, elephant, sword, armour, gate and fanfare recordings from 0 A.D. by Wildfire Games (CC BY-SA 3.0, wildfiregames.com); other effects from sfx-kit (CC0).','Sounds: jaanwar, talwar, darwaza aur fanfare ki recordings 0 A.D. (Wildfire Games, CC BY-SA 3.0, wildfiregames.com) se; baaki effects sfx-kit (CC0) se.')}</small>`:''}`}
+    try{if(P.set.sfxVoice!==false&&window.speechSynthesis){setTimeout(()=>narSpeak(HI()?pick(['चेक! अपने किंग को बचाइए।','चेक! किंग ख़तरे में है।']):pick(['Check!','Check. Watch your King.']),{hi:HI(),queue:true}),450)}}catch(e){}}}
+function sfxSegHTML(){const on=fxOn();return`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🔊 ${L2('Sounds and effects','Sound aur effects')}</span><div class="seg sm">${[['1',L2('On','On')],['0',L2('Off','Off')]].map(([k,t])=>`<button class="${(on?'1':'0')===k?'on':''}" data-act="sfx-set" data-k="sfx" data-v="${k}">${t}</button>`).join('')}</div></div>${on?`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:14px" class="muted">${L2('Volume','Awaaz')}</span><div class="seg sm">${[[0,L2('Low','Kam')],[1,L2('Medium','Medium')],[2,L2('High','Tez')]].map(([k,t])=>`<button class="${(P.set.sfxVol!=null?P.set.sfxVol:1)===k?'on':''}" data-act="sfx-set" data-k="sfxVol" data-v="${k}">${t}</button>`).join('')}</div></div><button class="btn" style="width:100%;font-size:17px;padding:14px" data-act="sfx-test">🔊 ${L2('Test sound','Sound test karo')}</button><small class="muted" id="sfxst"></small><div class="stack" style="gap:4px;margin-top:6px"><small class="muted">${L2('Still silent? Press ▶ on this player. If this is also silent, the problem is the phone sound settings, not the app.','Phir bhi awaaz nahi? Is player ka ▶ dabao. Agar ye bhi chup hai, to phone ki sound setting ka masla hai, app ka nahi.')}</small><audio controls playsinline preload="auto" style="width:100%" data-sndtest></audio></div>${voicePickHTML()}<small class="muted" style="font-size:11px">${L2('Sounds: footstep, horse, elephant, sword, armour, gate and fanfare recordings from 0 A.D. by Wildfire Games (CC BY-SA 3.0, wildfiregames.com); other effects from sfx-kit (CC0).','Sounds: jaanwar, talwar, darwaza aur fanfare ki recordings 0 A.D. (Wildfire Games, CC BY-SA 3.0, wildfiregames.com) se; baaki effects sfx-kit (CC0) se.')}</small>`:''}`}
 
 /* ---- game feel: combo, blunder alarm, mood, talking pieces, themes, diya, bosses, highlights ---- */
 const FUN=()=>P.set.fun!==false,TALK=()=>P.set.talk!==false;
@@ -2423,8 +2462,8 @@ function coMoodHTML(g){if(!FUN()||!g)return'';let e='🤔',t=L2('Coach is thinki
   else{let l=null,stw=true;if(g.pre&&g.pre.lines[0]){l=g.pre.lines[0];stw=g.st.w}else if(g.fb&&g.fb.post&&g.fb.post.lines[0]){l=g.fb.post.lines[0];stw=g.fb.st1.w}
     if(l){const cp=scCp(l)*(stw===(g.human==='w')?1:-1);[e,t]=cp>300?['😰',L2('Coach is scared!','Coach ghabra gaya!')]:cp>100?['😟',L2('Coach is worried','Coach pareshan hai')]:cp>-100?['🤔',L2('Even game','Barabar ka game')]:cp>-300?['😏',L2('Coach feels good','Coach khush hai')]:['😎',L2('Coach is winning','Coach jeet raha hai')]}}
   return`<span class="comood" style="margin-right:8px" title="${esc(t)}">${e}</span>`}
-const TALKL={cap:[['Gotcha!','Pakad liya!'],['Mine now!','Ab ye mera hai!']],chk:[['Watch out, King!','Raja, bacho!']],fork:[['Fork! Two for one!','Main fork karunga!']],dbl:[['Double attack!','Do pe ek saath hamla!']],queenme:[['I want to be a Queen!','Mujhe queen banna hai!']],castle:[['Safe and sound!','Ab main safe hoon!']],promo:[['I am the Queen now!','Ab main Queen hoon!']],mate:[['Game over!','Khel khatam!']],
-  P:[['One step at a time.','Ek kadam aage!']],N:[['Hop hop!','Dhai ghar ki chaal!'],['Jump time!','Kood ke aaya!']],B:[['Diagonal power!','Tirchhi chaal meri pehchaan!']],R:[['Open file, here I come!','Khuli line, haathi aa gaya!']],Q:[['Make way for the Queen!','Wazir aa gayi, rasta do!']],K:[['Easy, easy.','Dheere, raja hoon main.']]};
+const TALKL={cap:[['Gotcha!','Pakad liya!'],['Mine now!','Ab ye mera hai!']],chk:[['Watch out, King!','King, bacho!']],fork:[['Fork! Two for one!','Main fork karunga!']],dbl:[['Double attack!','Do pe ek saath hamla!']],queenme:[['I want to be a Queen!','Mujhe queen banna hai!']],castle:[['Safe and sound!','Ab main safe hoon!']],promo:[['I am the Queen now!','Ab main Queen hoon!']],mate:[['Game over!','Khel khatam!']],
+  P:[['One step at a time.','Ek kadam aage!']],N:[['Hop hop!','Dhai ghar ki chaal!'],['Jump time!','Kood ke aaya!']],B:[['Diagonal power!','Tirchhi chaal meri pehchaan!']],R:[['Open file, here I come!','Khuli line, Rook aa gaya!']],Q:[['Make way for the Queen!','Queen aa gayi, rasta do!']],K:[['Easy, easy.','Dheere, raja hoon main.']]};
 let TALKT=0;
 function fxTalk(b,mv,o){if(!TALK()||!FUN())return;const now=Date.now();const P1=mv.p.toUpperCase(),t=mv.t,ti=si(t),r=ti>>3;let k=null;
   if(o.mate)k='mate';else if(o.promo)k='promo';else if(o.castle)k='castle';else if(o.chk)k='chk';
@@ -2446,7 +2485,7 @@ function themeHTML(){const best=bestStreak(),cur=P.set.theme||'classic';let h=`<
 function funSegHTML(){const seg=(k,lab,on)=>`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:14px">${lab}</span><div class="seg sm">${[['1','On'],['0','Off']].map(([v,t])=>`<button class="${(on?'1':'0')===v?'on':''}" data-act="fun-set" data-k="${k}" data-v="${v}">${t}</button>`).join('')}</div></div>`;
   return seg('fun',L2('🎮 Game effects (combo, oops, coach face)','🎮 Game effects (combo, oops, coach ka chehra)'),FUN())+seg('talk',L2('💬 Talking pieces','💬 Bolne wale pieces'),TALK())}
 /* bosses: one per course level */
-const BOSS=[["l1","🐣","Chhotu Pyada",0,"normal",["Let's see if you know how pieces move!","Dekhte hain pieces ki chaal aati hai ya nahi!"]],["l1b","📜","Niyam Baba",0,"normal",["Every rule matters, child.","Har niyam zaroori hai, bachche."]],["l2","🪤","Mate Master",1,"end",["Can you finish me off?","Mujhe mate kar ke dikhao!"]],["l2b","🛡️","Safe Singh",1,"normal",["Leave a piece hanging and I take it!","Piece latkaaya to main le jaunga!"]],["l3","⚔️","Kaanta Khan",2,"attack",["Forks and pins are my weapons!","Fork aur pin mere hathiyaar hain!"]],["l3b","🧮","Hisaabi Lal",2,"attack",["I calculate everything.","Main sab gin leta hoon."]],["lm","👑","Mate-o-Raja",2,"attack",["I know every mating pattern.","Mujhe har mate pattern aata hai."]],["l6","🧱","Deewar Das",3,"normal",["My pawns are a wall.","Mere pyade deewar hain."]],["l6b","🧭","Plan Pandit",3,"normal",["Without a plan, you lose.","Plan ke bina haar pakki."]],["l4","🐎","Opening Ustaad",3,"normal",["I know the openings by heart!","Mujhe openings zubaani yaad hain!"]],["l4b","🪓","Gambit Gabbar",3,"normal",["Want a free pawn? It's a trap!","Free pyada chahiye? Jaal hai!"]],["l5","🏔️","Endgame Ekka",4,"end",["Kings fight in the endgame.","Endgame me raja ladta hai."]],["l5b","🏰","Rook Rani",4,"end",["Rook endings are always drawn... or are they?","Rook endgame hamesha draw... ya nahi?"]],["l7","🎯","Practical Pathan",5,"normal",["Clock and nerves, that's real chess.","Ghadi aur himmat, yahi asli chess."]],["l7b","🏆","Grandmaster Shahenshah",5,"normal",["The final boss. Show me everything!","Aakhri boss. Sab kuch dikhao!"]]];
+const BOSS=[["l1","🐣","Chhotu Pyada",0,"normal",["Let's see if you know how pieces move!","Dekhte hain pieces ki chaal aati hai ya nahi!"]],["l1b","📜","Niyam Baba",0,"normal",["Every rule matters, child.","Har niyam zaroori hai, bachche."]],["l2","🪤","Mate Master",1,"end",["Can you finish me off?","Mujhe mate kar ke dikhao!"]],["l2b","🛡️","Safe Singh",1,"normal",["Leave a piece hanging and I take it!","Piece latkaaya to main le jaunga!"]],["l3","⚔️","Kaanta Khan",2,"attack",["Forks and pins are my weapons!","Fork aur pin mere hathiyaar hain!"]],["l3b","🧮","Hisaabi Lal",2,"attack",["I calculate everything.","Main sab gin leta hoon."]],["lm","👑","Mate-o-Raja",2,"attack",["I know every mating pattern.","Mujhe har mate pattern aata hai."]],["l6","🧱","Deewar Das",3,"normal",["My pawns are a wall.","Mere Pawns deewar hain."]],["l6b","🧭","Plan Pandit",3,"normal",["Without a plan, you lose.","Plan ke bina haar pakki."]],["l4","🐎","Opening Ustaad",3,"normal",["I know the openings by heart!","Mujhe openings zubaani yaad hain!"]],["l4b","🪓","Gambit Gabbar",3,"normal",["Want a free pawn? It's a trap!","Free Pawn chahiye? Jaal hai!"]],["l5","🏔️","Endgame Ekka",4,"end",["Kings fight in the endgame.","Endgame mein King ladta hai."]],["l5b","🏰","Rook Rani",4,"end",["Rook endings are always drawn... or are they?","Rook endgame hamesha draw... ya nahi?"]],["l7","🎯","Practical Pathan",5,"normal",["Clock and nerves, that's real chess.","Ghadi aur himmat, yahi asli chess."]],["l7b","🏆","Grandmaster Shahenshah",5,"normal",["The final boss. Show me everything!","Aakhri boss. Sab kuch dikhao!"]]];
 function bossStart(i){const B=BOSS[i];if(!B)return;V.co={color:'w',lvl:B[3],start:B[4],open:'',clock:'0'};coNew(V.co);if(CG){CG.boss=i;try{sfx('boss')}catch(e){}setTimeout(()=>{const b=mainBoard();if(b)fxBanner(b,`${B[1]} BOSS: ${B[2]}`,'boss');if(CG)CG.bossMsg=HI()?B[5][1]:B[5][0];try{vCoach()}catch(e){}},150)}}
 function bossFinish(g){if(g.boss==null||g.bossDone)return;g.bossDone=1;const B=BOSS[g.boss];if(!B)return;if(g.over&&g.over.r==='w'){P.boss=P.boss||{};const first=!P.boss[B[0]];P.boss[B[0]]=1;if(first)xpAdd(50);save();setTimeout(()=>{const b=mainBoard();if(b)fxBanner(b,L2('BOSS DEFEATED! 👑','BOSS HAAR GAYA! 👑'),'win');sfx('win')},900)}}
 /* replay highlights */
@@ -2484,7 +2523,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>${L2('App version','App version')}: ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v38';
+const APPV='2026.11.08 · v39';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -2621,7 +2660,7 @@ function pzDone(ok){const z=PZ;z.sel=null;if(ok)xpAdd(3);z.res=ok?'ok':'no';z.n+
   if(z.mode!=='rush'){pzLog(ok)}
   if(z.mode==='rated'&&!z.hint){const pr=z.p[2],ur=P.prate,K=P.pzn<20?48:P.pzn<60?32:20,E=1/(1+Math.pow(10,(pr-ur)/400));const d=Math.round(K*((ok?1:0)-E));z.delta=d;P.prate=Math.max(400,Math.min(3000,ur+d));P.pzn++}
   if(z.mode==='rated'&&z.hint)z.delta=0;
-  sayC(ok?(P.set.cvoice==='hi'?'Shabaash!':'Correct!'):(P.set.cvoice==='hi'?'Galat. Sahi chaal dekho.':'Not quite. Look at the right move.'),true);
+  sayC(ok?(P.set.cvoice==='hi'?'शाबाश!':'Correct!'):(P.set.cvoice==='hi'?'ग़लत। सही चाल देखिए।':'Not quite. Look at the right move.'),true);
   if(z.mode==='rush'&&!ok){z.lives--;if(z.lives<=0){save();pzRushEnd();return}}
   save();vPuz();if(z.mode==='rush'&&!z.done){setTimeout(()=>{if(PZ===z&&!z.done&&V.name==='puz')pzNext()},ok?500:1400)}}
 function vPuz(){const z=PZ;if(!z){go({name:'gym'});return}const persp=z.side?'w':'b';const title={rated:'Rated puzzles',rush:'Puzzle Rush',week:'Weekly test'}[z.mode];
@@ -2958,7 +2997,7 @@ let SK=null;
 function skStart(k){SK={k,q:[],n:0,ok:0,item:null};skNext();go({name:'skdo'})}
 function skNext(){const z=SK;z.res=null;z.sel=null;z.picked=new Set();z.hint=0;let it=null;const due=z.q.findIndex(x=>x.at<=z.n);if(due>=0){it=z.q.splice(due,1)[0].item}else{for(let i=0;i<5&&!it;i++){try{it=SCHMAP[z.k].gen()}catch(e){it=null}}}if(!it)it=genPieceMoves('N');z.item=it;z.n++;if(V.name==='skdo')vSkDo()}
 function skAnswer(ok,detail){const z=SK,s=skStat(z.k);z.res=ok?'ok':'no';z.detail=detail||'';s.n++;if(ok){s.ok++;s.streak++}else{s.streak=0;z.q.push({at:z.n+3,item:z.item})}s.rec.push(ok?1:0);if(s.rec.length>20)s.rec.shift();
-  const acc=s.rec.reduce((a,x)=>a+x,0)/s.rec.length;if(!s.m&&s.ok>=MASTER_N&&acc>=.85){s.m=true;z.newMaster=true}xpAdd(ok?2:0);save();sayC(ok?(P.set.cvoice==='hi'?'Sahi!':'Correct!'):(P.set.cvoice==='hi'?'Galat.':'Not quite.'),true);vSkDo()}
+  const acc=s.rec.reduce((a,x)=>a+x,0)/s.rec.length;if(!s.m&&s.ok>=MASTER_N&&acc>=.85){s.m=true;z.newMaster=true}xpAdd(ok?2:0);save();sayC(ok?(P.set.cvoice==='hi'?'सही!':'Correct!'):(P.set.cvoice==='hi'?'ग़लत।':'Not quite.'),true);vSkDo()}
 function vSkDo(){const z=SK;if(!z){go({name:'school'});return}const it=z.item,st=it.st,persp=it.persp||(st.w?'w':'b');const s=skStat(z.k);
   let h=`<div class="stack"><div class="fixtop"><div class="gstat"><button class="btn small" data-act="go" data-v="school">← Topics</button><span class="mono" style="font-size:13px">${esc(SCHMAP[z.k].t)} · ${s.ok}/${MASTER_N}${s.m?' ✓':''}</span></div>`;
   const marks={},arr=[];if(it.last){marks[sn(it.last[0])]='sel';marks[sn(it.last[1])]='sel'}if(it.arrow)arr.push({f:it.arrow[0],t:it.arrow[1],c:'blue'});
