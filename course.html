@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#23664A">
 <title>Chess Course</title>
 <meta name="description" content="Chess basics se pro tak: guided lessons, puzzles, drills aur AI coach.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap">
 <style>
 :root{
   --bg:#EDF1EC; --surface:#FFFFFF; --surface2:#E1E8E1; --fg:#17211B; --muted:#56655B; --line:#C9D4CB;
@@ -192,6 +194,58 @@ a{color:var(--accent)}
 .notescta{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--fg);border-left:4px solid var(--brass)}
 .notescta b{font-size:17px}
 .foot{position:static!important;background:none!important;padding:14px 0 8px}
+/* ===== Studio UI (v40): light premium look, board-first game screens ===== */
+:root{
+  --bg:#FBFBF8; --surface:#FFFFFF; --surface2:#F0F2EC; --fg:#16201B; --muted:#68736C; --line:#E4E8E1;
+  --accent:#2F7D55; --accent-fg:#FFFFFF; --brass:#B4841C; --good:#25804F; --bad:#C0432B; --good-soft:#DDF1E5; --bad-soft:#F8E1DA;
+  --f-display:"Bricolage Grotesque","Figtree",system-ui,-apple-system,sans-serif; --f-body:"Figtree",system-ui,-apple-system,sans-serif;
+  --r:18px; --sh:0 1px 2px rgba(22,32,27,.05),0 8px 24px rgba(30,50,40,.07); --sh2:0 1px 2px rgba(22,32,27,.06),0 14px 34px rgba(30,50,40,.12);
+  --stage:#E9EFE8; --sheet:#FFFFFF; --navbg:rgba(255,255,255,.86); --hdrbg:rgba(251,251,248,.86);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1310; --surface:#151D19; --surface2:#1E2823; --fg:#ECF1ED; --muted:#93A098; --line:#25302A;
+  --accent:#5CC08C; --accent-fg:#06180F; --brass:#E2B552; --good:#55C688; --bad:#EF7B64; --good-soft:#173826; --bad-soft:#41201A;
+  --sh:0 0 0 1px #212B26; --sh2:0 0 0 1px #2A3530,0 14px 34px rgba(0,0,0,.4); --stage:#09100D; --sheet:#151D19; --navbg:rgba(21,29,25,.88); --hdrbg:rgba(13,19,16,.86)}}
+:root[data-theme="dark"]{
+  --bg:#0D1310; --surface:#151D19; --surface2:#1E2823; --fg:#ECF1ED; --muted:#93A098; --line:#25302A;
+  --accent:#5CC08C; --accent-fg:#06180F; --brass:#E2B552; --good:#55C688; --bad:#EF7B64; --good-soft:#173826; --bad-soft:#41201A;
+  --sh:0 0 0 1px #212B26; --sh2:0 0 0 1px #2A3530,0 14px 34px rgba(0,0,0,.4); --stage:#09100D; --sheet:#151D19; --navbg:rgba(21,29,25,.88); --hdrbg:rgba(13,19,16,.86)}
+body{font-size:16px;letter-spacing:-.003em}
+body::before{background:var(--hdrbg)}
+header.top{background:var(--hdrbg);-webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid transparent;box-shadow:0 1px 0 var(--line)}
+.brand{font-weight:800;font-size:19px;letter-spacing:-.02em}
+.brand i{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:10px;background:var(--accent);color:var(--accent-fg);font-size:18px}
+.chips{font-family:var(--f-body);font-weight:700;font-size:13px;color:var(--fg)}
+.chip{background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);padding:4px 11px}
+nav.tabs{background:var(--navbg);-webkit-backdrop-filter:saturate(1.4) blur(16px);backdrop-filter:saturate(1.4) blur(16px);border-top:1px solid var(--line)}
+nav.tabs button{font-family:var(--f-body);font-weight:600;font-size:11.5px;gap:3px;color:var(--muted);background:none!important}
+nav.tabs button span{display:grid;place-items:center;width:52px;height:30px;border-radius:999px;font-size:19px;transition:background .2s,color .2s}
+nav.tabs button.on{color:var(--fg);font-weight:800}
+nav.tabs button.on span{background:var(--accent);color:var(--accent-fg)}
+h1,h2,h3{font-weight:800;letter-spacing:-.025em}
+h1{font-size:34px}h2{font-size:24px}h3{font-size:19px}
+.eyebrow{font-family:var(--f-body);font-weight:800;font-size:12px;letter-spacing:.1em;color:var(--accent)}
+.card,.tile,.lesson{border:0;box-shadow:var(--sh);border-radius:var(--r)}
+.card{padding:18px}
+.tile{border-radius:16px}
+.lesson{border-radius:14px}
+.lesson.next{box-shadow:var(--sh),inset 0 0 0 2px var(--accent)}
+.stagelist{border-top:0;gap:8px}
+.stagerow{background:var(--surface);border:0;border-radius:16px;box-shadow:var(--sh);padding:14px 12px}
+.btn{border-radius:14px;font-weight:700;background:var(--surface2);transition:transform .08s,filter .15s}
+.btn:active{transform:scale(.98)}
+.btn.primary{box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 30%,transparent)}
+.btn.small{border-radius:12px}
+.choice{border:0;box-shadow:var(--sh);border-radius:14px}
+.x{background:var(--surface);box-shadow:var(--sh)}
+.prog,.bar{background:var(--surface2)}
+.pos,.moves{border:0;box-shadow:var(--sh);border-radius:14px}
+.key{border-radius:10px}
+.board{border-radius:12px;box-shadow:0 0 0 1px rgba(0,0,0,.06),0 10px 28px rgba(20,40,30,.16)}
+.n{border-radius:6px}
+.drill{border:0;box-shadow:var(--sh);border-radius:16px}
+.seg{border-radius:12px}
+nav.tabs button{text-transform:none;letter-spacing:0}
 </style>
 </head>
 <body>
