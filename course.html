@@ -692,6 +692,7 @@ function go(hash){if(location.hash!==hash)location.hash=hash;else route()}
 window.addEventListener('hashchange',route);
 function route(){closeTutor();const p=(location.hash||'#/').slice(2).split('/');const app=$('#app');app.innerHTML='';window.scrollTo(0,0);
   tabs(p[0]==='puzzles'?'puz':p[0]==='play'?'play':'course');
+  if(p[0]==='next'){const nx=nextLesson();location.replace(nx?(nx.test?'#/test/'+nx.test.li:'#/lesson/'+nx.les.li+'/'+nx.les.lj):'#/');return}
   if(p[0]==='level')vLevel(+p[1]);else if(p[0]==='lesson')vLesson(+p[1],+p[2]);else if(p[0]==='test')vTest(+p[1]);
   else if(p[0]==='review')vReview();else if(p[0]==='puzzles')vPuzzles();else if(p[0]==='play')vPlay();else if(p[0]==='place')vPlace();else vHome();chips()}
 function tabs(on){document.querySelectorAll('nav.tabs [data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===on))}
