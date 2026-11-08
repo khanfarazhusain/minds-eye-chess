@@ -1,17 +1,31 @@
 {
  "id": "./",
- "name": "Mind's Eye Chess",
- "short_name": "Mind's Eye",
- "description": "Chess trainer: board vision, coach games and online play with friends.",
+ "name": "64 Squares: Learn & Play Chess",
+ "short_name": "64 Squares",
+ "description": "Learn and play chess: a full course, puzzles, a coach, blindfold training and online play with friends.",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
  "orientation": "portrait",
  "background_color": "#0F1712",
- "theme_color": "#1F5C3E",
+ "theme_color": "#1F3A2E",
  "icons": [
-  {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
-  {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
-  {"src": "icon-180.png", "sizes": "180x180", "type": "image/png"}
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-180.png",
+   "sizes": "180x180",
+   "type": "image/png"
+  }
  ]
 }

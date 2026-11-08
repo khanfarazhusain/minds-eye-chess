@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mind's Eye Chess</title>
+<title>64 Squares: Learn &amp; Play Chess</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Mind's Eye">
+<meta name="apple-mobile-web-app-title" content="64 Squares">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#1F5C3E">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap">
 </head>
 <body>
-<title>Mind's Eye Chess</title>
+<title>64 Squares: Learn &amp; Play Chess</title>
 <style>
 /* Layout: one phone-width column; sticky score header, the board as the hero of every screen, bottom tab bar. */
 :root{
@@ -552,9 +552,15 @@ body.fixb .fixscroll{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))
 body.fixb .costick{background:transparent!important}
 .backbtn{white-space:nowrap;flex:none}
 body.fixb .fixtop .gstat{gap:8px}
+
+/* v44: 64 Squares brand */
+.brand .b64{font-family:var(--f-display);font-weight:800;font-size:15px!important;letter-spacing:-.04em;font-style:normal}
+.brand .bname{display:flex;flex-direction:column;line-height:1.02}
+.brand .bname small{font-family:var(--f-body);font-weight:600;font-size:11px;letter-spacing:.02em;color:var(--muted)}
+body.fixb .brand .bname small{display:none}
 </style>
 
-<header class="top"><div class="wrap"><div class="brand"><i>♞&#xFE0E;</i>Mind's Eye Chess</div><div class="chips" id="chips"></div></div></header>
+<header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
 <main id="main" class="wrap"></main>
 <nav class="tabs"><div class="wrap" id="tabs">
   <button data-tab="home"><span>⌂&#xFE0E;</span>Aaj</button>
@@ -2655,8 +2661,8 @@ function vHl(){const z=HL;if(!z){go({name:'playhub'});return}const g=z.g,st=g.st
   h+=boardHTML({cls:'coachb',persp,coords:true,pieces:toMap(st.b),id:'hl',marks:x&&z.ph===0?{[sn(x.m.f)]:'sel',[sn(x.m.t)]:'sel'}:null})+'</div><div class="fixscroll stack">';
   if(x)h+=`<div class="card"><b class="mono" style="font-size:20px">${Math.floor(cur.i/2)+1}${cur.i%2?'…':'.'} ${esc(x.san)}</b> <span class="muted">${x.by==='h'?L2('you','aap'):L2('coach','coach')}</span><p style="margin:4px 0 0">${esc(cur.why||'')}</p></div>`;
   h+=`<div class="row"><button class="btn" style="flex:1" data-act="hl-again">↻ ${L2('Replay','Dobara')}</button><button class="btn primary" style="flex:1" data-act="hl-share">📤 ${L2('Share','Share karo')}</button></div>${z.msg?`<p class="good">${esc(z.msg)}</p>`:''}</div></div>`;setMain(h)}
-function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,i)=>(i%2?'':(i/2+1)+'. ')+x.san).join(' ');const txt=`♟ Mind's Eye Chess · ${g.over?g.over.msg:''}\n${L2('My highlights','Mere highlights')}:\n`+z.L.map(c=>`${Math.floor(c.i/2)+1}${c.i%2?'…':'.'} ${g.moves[c.i].san} · ${c.why}`).join('\n')+`\n\nPGN: ${pgn}`;
-  if(navigator.share)navigator.share({title:"Mind's Eye Chess",text:txt}).catch(()=>{});else{const ok=()=>{z.msg=L2('Copied! Paste it to your friend.','Copy ho gaya! Dost ko paste karo.');vHl()};try{navigator.clipboard.writeText(txt).then(ok,()=>{z.msg=txt;vHl()})}catch(e){z.msg=txt;vHl()}}}
+function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,i)=>(i%2?'':(i/2+1)+'. ')+x.san).join(' ');const txt=`♟ 64 Squares · ${g.over?g.over.msg:''}\n${L2('My highlights','Mere highlights')}:\n`+z.L.map(c=>`${Math.floor(c.i/2)+1}${c.i%2?'…':'.'} ${g.moves[c.i].san} · ${c.why}`).join('\n')+`\n\nPGN: ${pgn}`;
+  if(navigator.share)navigator.share({title:"64 Squares",text:txt}).catch(()=>{});else{const ok=()=>{z.msg=L2('Copied! Paste it to your friend.','Copy ho gaya! Dost ko paste karo.');vHl()};try{navigator.clipboard.writeText(txt).then(ok,()=>{z.msg=txt;vHl()})}catch(e){z.msg=txt;vHl()}}}
 /* ---- smooth piece movement (2D and 3D) ---- */
 (function(){const prev=new Map();
   function snap(b){const m={};b.querySelectorAll('.sq').forEach(q=>{const p=q.querySelector('.pc');if(p)m[q.dataset.sq]=p.className.replace(/\s*mv\b/,'')+'|'+p.textContent});return m}
@@ -2675,8 +2681,8 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   function start(){const m=document.getElementById('main');if(m){mo.observe(m,{childList:true,subtree:true});run()}else setTimeout(start,100)}start();
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
-function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>${L2('App version','App version')}: ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v43';
+function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
+const APPV='2026.11.08 · v44';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -3422,10 +3428,10 @@ function olMove(m){const g=OG,st=olState(g.moves);if(!st)return;const me=olMyCol
 function olBuzz(){try{navigator.vibrate&&navigator.vibrate([60,40,60])}catch(e){}if(document.hidden){document.title='♟ '+L2('Your move','Aapki chaal')+' · Mind\'s Eye'}if(V.name==='ogame'||V.name==='friend')olRe()}
 function olRe(){if(V.name==='ogame'){const y=window.scrollY;vOGame();window.scrollTo(0,y)}else if(V.name==='friend'){const ae=document.activeElement;if(ae&&ae.tagName==='INPUT')return;vFriend()}}
 async function olWake(on){try{if(on&&!OLN.wake&&navigator.wakeLock&&olLive()){OLN.wake=await navigator.wakeLock.request('screen');OLN.wake.addEventListener('release',()=>{OLN.wake=null})}else if(!on&&OLN.wake){OLN.wake.release();OLN.wake=null}}catch(e){}}
-async function olShare(){const c=OG&&OG.code;if(!c)return;const url=olLink(c),txt=`${olName()||'Your friend'} wants to play chess with you on Mind's Eye Chess. Tap to join (code ${c}):`;
+async function olShare(){const c=OG&&OG.code;if(!c)return;const url=olLink(c),txt=`${olName()||'Your friend'} wants to play chess with you on 64 Squares. Tap to join (code ${c}):`;
   try{if(navigator.share){await navigator.share({title:"Let's play chess",text:txt,url});return}}catch(e){if(e&&e.name==='AbortError')return}
   copyText(txt+' '+url);V.omsg=L2('Invite link copied. Paste it in WhatsApp.','Invite link copy ho gaya. WhatsApp me paste karo.');render()}
-document.addEventListener('visibilitychange',()=>{if(document.hidden||!OG)return;document.title="Mind's Eye Chess";
+document.addEventListener('visibilitychange',()=>{if(document.hidden||!OG)return;document.title="64 Squares";
   if(!OLN.peer||OLN.peer.destroyed){OLN.peer=null;olP2PStart()}else if(OLN.peer.disconnected){try{OLN.peer.reconnect()}catch(e){}}
   if(!OLN.es)olRelaySub();if(!OLN.tick)OLN.tick=setInterval(olTick,1000);olWake(true);setTimeout(()=>olHello(),800);olRe()});
 window.addEventListener('online',()=>{if(OG){if(!OLN.es)olRelaySub();setTimeout(()=>olHello(),800)}});
@@ -3580,7 +3586,7 @@ function fbAct(a,d){if(!a||a.slice(0,3)!=='fb-')return false;
      V.omsg=L2(`Invite sent to ${f.name}. Waiting for them to join…`,`${f.name} ko invite bhej diya. Unke join karne ka intezaar…`);vFriend();break}
    case'fb-join':{const x=FBS.invites.find(i=>i.id===d.v);if(!x)break;fbDb.collection('invites').doc(x.id).delete().catch(()=>{});if(!olName()&&FBS.prof)P.set.oname=FBS.prof.name;olJoin(x.code);break}
    case'fb-nojoin':fbDb.collection('invites').doc(d.v).delete().catch(()=>{});FBS.invites=FBS.invites.filter(i=>i.id!==d.v);fbRe();break;
-   case'fb-sharecode':{const c=FBS.prof&&FBS.prof.fcode;if(!c)break;const t=L2(`Add me as a friend on Mind's Eye Chess. My friend code: ${c}`,`Mind's Eye Chess par mujhe dost banao. Mera friend code: ${c}`)+' '+OL_SITE;
+   case'fb-sharecode':{const c=FBS.prof&&FBS.prof.fcode;if(!c)break;const t=L2(`Add me as a friend on 64 Squares. My friend code: ${c}`,`64 Squares par mujhe dost banao. Mera friend code: ${c}`)+' '+OL_SITE;
      (navigator.share?navigator.share({text:t}).catch(()=>{}):Promise.resolve(copyText(t)));break}
    case'fb-sync':fbDo(async()=>{await fbPull();await fbPush(true);FBS.msg=L2('Progress saved to your account.','Progress account me save ho gaya.')});break;
    case'fb-cfg':{const raw=(document.getElementById('fbcfgin')||{}).value||'';const m=raw.match(/\{[\s\S]*\}/);let cfg=null;try{cfg=m&&Function('"use strict";return ('+m[0]+')')()}catch(e){}
