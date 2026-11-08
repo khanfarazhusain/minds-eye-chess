@@ -12,7 +12,6 @@ Licence: https://creativecommons.org/licenses/by-sa/3.0/
 | Pawn step | `actor/singlesteps/fs_gravel1.ogg`, `attack/impact/shield_wood_12.ogg` |
 | Knight gallop | `actor/mounted/movement/mstep110.ogg` |
 | Knight capture whinny | `actor/fauna/animal/horse_11.ogg` |
-| Rook capture trumpet | `actor/fauna/animal/elephant_order1.ogg` |
 | Bishop sand steps | `actor/singlesteps/fs_sand1.ogg`, `actor/singlesteps/fs_sand2.ogg` |
 | King step and armour | `actor/singlesteps/fs_rock2.ogg`, `attack/impact/shield_metal_11.ogg` |
 | Capture sword hits | `attack/weapon/swordhit_10.ogg`, `swordhit_11.ogg`, `swordhit_12.ogg` |
@@ -24,3 +23,7 @@ Licence: https://creativecommons.org/licenses/by-sa/3.0/
 ## sfx-kit by Wyzowl, CC0 1.0
 
 https://github.com/wyzowl/sfx-kit: heavy impacts (rook steps, king step, big captures), whoosh and shimmer (queen), shop bell (bishop), swishes (captures), alert (check), shimmer (promotion), failure chimes (stalemate, mistake), party popper (combo), cinematic drum (boss).
+
+## Original synthesis
+
+Rook capture (stone thud with a low gate ring) is generated in code from sine tones and filtered noise, no recordings. Capture swishes are softened with a 6 kHz low-pass.
