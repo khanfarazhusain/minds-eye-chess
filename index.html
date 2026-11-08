@@ -362,6 +362,11 @@ body.b3d.th-neon .board .pc.w,body.b3d.th-space .board .pc.w{background-image:li
 #tiltdock .tdbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface,#fff);color:var(--fg);font-size:20px;box-shadow:0 3px 10px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center}
 #tiltdock .tdpan{display:none;align-items:center;gap:6px;background:var(--surface,#fff);border:1px solid var(--line);border-radius:999px;padding:6px 10px;box-shadow:0 3px 10px rgba(0,0,0,.2)}
 #tiltdock.open .tdpan{display:flex}#tiltdock.open .tdbtn{background:var(--accent);color:var(--accent-fg,#fff)}#tiltdock .tdr{width:150px;accent-color:var(--accent)}#tiltdock .tdv{font-size:13px;min-width:30px}
+
+/* edge-to-edge board in game screens */
+body.fixb .fixtop{--bw:min(100vw,560px,calc(100dvh - var(--hdr,56px) - var(--navh,64px) - 175px))}
+body.fixb .fixtop .board{width:var(--bw)!important;max-width:none!important;margin-left:calc((100% - var(--bw))/2)!important;margin-right:calc((100% - var(--bw))/2)!important;border-radius:0}
+body.fixb.b3d .fixtop{--bw:min(calc(100vw - 20px),560px,calc((100dvh - var(--hdr,56px) - var(--navh,64px) - 175px) * 1.08))}
 /* ---- 3D board style ---- */
 body.b3d .board{transform:perspective(1100px) rotateX(var(--tilt,30deg));transform-origin:50% 100%;overflow:visible;border-radius:3px;position:relative;
   box-shadow:0 0 0 7px #6b4226,0 0 0 9px #3e2414,0 14px 0 9px #2c180c,0 30px 34px 10px rgba(0,0,0,.5);margin-top:calc(-.4% * var(--tiltn,30))!important;margin-bottom:22px!important;grid-template-rows:repeat(8,minmax(0,1fr))}
@@ -2427,7 +2432,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>${L2('App version','App version')}: ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v31';
+const APPV='2026.11.08 · v32';
 function tiltDock(){let d=document.getElementById('tiltdock');const b=document.querySelector('#main .board[data-board]:not([data-board="tiltprev"]):not([data-board="deco"]):not([data-board="heat"])');
   const show=document.body.classList.contains('b3d')&&b&&b.offsetParent;
   if(!show){if(d)d.style.display='none';return}
