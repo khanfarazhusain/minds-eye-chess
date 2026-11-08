@@ -357,6 +357,11 @@ body.b3d.th-neon .board{box-shadow:0 0 0 6px #120d22,0 0 0 8px #ff3df2,0 14px 0 
 body.b3d.th-space .board{box-shadow:0 0 0 7px #0b0f24,0 0 0 9px #4b5fb8,0 14px 0 9px #050713,0 30px 40px 10px rgba(30,40,120,.6)}
 body.b3d.th-mughal .board{box-shadow:0 0 0 7px #7a1f1f,0 0 0 10px #d4a017,0 14px 0 10px #4a0f0f,0 30px 34px 10px rgba(0,0,0,.5)}
 body.b3d.th-neon .board .pc.w,body.b3d.th-space .board .pc.w{background-image:linear-gradient(165deg,#e8ffff 15%,#7ff9ff 60%,#21b5d6 95%)}body.b3d.th-neon .board .pc.b{background-image:linear-gradient(165deg,#ffd6fb 10%,#ff5af0 55%,#9b0d8f 95%)}body.b3d.th-space .board .pc.b{background-image:linear-gradient(165deg,#e2e7ff 10%,#8f9cf0 55%,#3a3f8a 95%)}
+
+#tiltdock{position:fixed;z-index:50;display:flex;flex-direction:row-reverse;align-items:center;gap:6px}
+#tiltdock .tdbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface,#fff);color:var(--fg);font-size:20px;box-shadow:0 3px 10px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center}
+#tiltdock .tdpan{display:none;align-items:center;gap:6px;background:var(--surface,#fff);border:1px solid var(--line);border-radius:999px;padding:6px 10px;box-shadow:0 3px 10px rgba(0,0,0,.2)}
+#tiltdock.open .tdpan{display:flex}#tiltdock.open .tdbtn{background:var(--accent);color:var(--accent-fg,#fff)}#tiltdock .tdr{width:150px;accent-color:var(--accent)}#tiltdock .tdv{font-size:13px;min-width:30px}
 /* ---- 3D board style ---- */
 body.b3d .board{transform:perspective(1100px) rotateX(var(--tilt,30deg));transform-origin:50% 100%;overflow:visible;border-radius:3px;position:relative;
   box-shadow:0 0 0 7px #6b4226,0 0 0 9px #3e2414,0 14px 0 9px #2c180c,0 30px 34px 10px rgba(0,0,0,.5);margin-top:calc(-.4% * var(--tiltn,30))!important;margin-bottom:22px!important;grid-template-rows:repeat(8,minmax(0,1fr))}
@@ -2417,16 +2422,31 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
         const pc=b.querySelector(`[data-sq="${t}"] .pc`);if(!pc)return;const base=getComputedStyle(pc).transform;const bt=base&&base!=='none'?base:'';
         pc.style.transition='none';pc.style.transform=`translate(${a[0]-c[0]}px,${a[1]-c[1]}px) ${bt}`;pc.style.zIndex=6;
         requestAnimationFrame(()=>requestAnimationFrame(()=>{pc.classList.add('mv');pc.style.transition='';pc.style.transform='';setTimeout(()=>{pc.classList.remove('mv');pc.style.zIndex=''},320)}))})})}
-  let q=0;const mo=new MutationObserver(()=>{if(q)return;q=1;requestAnimationFrame(()=>{q=0;run()})});
+  let q=0;const mo=new MutationObserver(()=>{if(q)return;q=1;requestAnimationFrame(()=>{q=0;run();try{tiltDock()}catch(e){}})});
   function start(){const m=document.getElementById('main');if(m){mo.observe(m,{childList:true,subtree:true});run()}else setTimeout(start,100)}start();
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>${L2('App version','App version')}: ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v30';
+const APPV='2026.11.08 · v31';
+function tiltDock(){let d=document.getElementById('tiltdock');const b=document.querySelector('#main .board[data-board]:not([data-board="tiltprev"]):not([data-board="deco"]):not([data-board="heat"])');
+  const show=document.body.classList.contains('b3d')&&b&&b.offsetParent;
+  if(!show){if(d)d.style.display='none';return}
+  if(!d){d=document.createElement('div');d.id='tiltdock';d.innerHTML=`<button type="button" class="tdbtn" aria-label="Tilt">↕</button><div class="tdpan"><input type="range" min="0" max="55" step="1" class="tdr" aria-label="Board tilt"><b class="mono tdv"></b></div>`;document.body.appendChild(d);
+    d.querySelector('.tdbtn').addEventListener('click',e=>{e.stopPropagation();d.classList.toggle('open')});
+    d.querySelector('.tdr').addEventListener('input',e=>{setTilt(+e.target.value)});
+    d.addEventListener('click',e=>e.stopPropagation())}
+  const r=b.getBoundingClientRect();d.style.display='';d.style.top=Math.max(8,r.top-6)+'px';d.style.right='10px';
+  const t=P.set.tilt!=null?P.set.tilt:30;d.querySelector('.tdr').value=t;d.querySelector('.tdv').textContent=t+'°'}
+function setTilt(t){P.set.tilt=Math.max(0,Math.min(55,Math.round(t)));applyTilt();const v1=document.getElementById('tiltv');if(v1)v1.textContent=P.set.tilt+'°';const d=document.getElementById('tiltdock');if(d){d.querySelector('.tdv').textContent=P.set.tilt+'°';d.querySelector('.tdr').value=P.set.tilt}const s1=document.getElementById('tilt');if(s1)s1.value=P.set.tilt;clearTimeout(window.__tiltT);window.__tiltT=setTimeout(()=>save(),400)}
+window.addEventListener('scroll',()=>{try{tiltDock()}catch(e){}},{passive:true,capture:true});window.addEventListener('resize',()=>{try{tiltDock()}catch(e){}});
+/* two-finger vertical drag on the board changes the tilt */
+(function(){let y0=null,t0=0;document.addEventListener('touchstart',e=>{if(e.touches.length===2&&document.body.classList.contains('b3d')&&e.target.closest&&e.target.closest('.board')){y0=(e.touches[0].clientY+e.touches[1].clientY)/2;t0=P.set.tilt!=null?P.set.tilt:30}},{passive:true});
+  document.addEventListener('touchmove',e=>{if(y0==null||e.touches.length!==2)return;const y=(e.touches[0].clientY+e.touches[1].clientY)/2;setTilt(t0+(y0-y)/4);e.preventDefault()},{passive:false});
+  document.addEventListener('touchend',e=>{if(e.touches.length<2)y0=null},{passive:true})})();
 function applyTilt(){const t=P.set.tilt!=null?P.set.tilt:30;const b=document.body.style;b.setProperty('--tilt',t+'deg');b.setProperty('--tiltn',t);b.setProperty('--tcos',Math.max(.5,Math.cos(t*Math.PI/180)).toFixed(3))}
 function tiltHTML(){if(P.set.board3d!=='3d')return'';const t=P.set.tilt!=null?P.set.tilt:30;const st=startState();
-  return`<div class="stack" style="gap:4px"><div class="gstat" style="font-weight:500"><span style="font-size:14px">↕ ${L2('Board tilt','Board ka jhukaav')}</span><b class="mono" id="tiltv">${t}°</b></div><input type="range" id="tilt" min="0" max="55" step="1" value="${t}" style="width:100%;accent-color:var(--accent)"><small class="muted">${L2('Drag to tilt the board. 0° = flat from the top.','Slider khiskao. 0° = upar se seedha.')}</small><div style="max-width:240px;margin:6px auto 0;width:100%">${boardHTML({persp:'w',pieces:toMap(st.b),id:'tiltprev'})}</div></div>`}
-document.addEventListener('input',e=>{if(e.target&&e.target.id==='tilt'){P.set.tilt=+e.target.value;applyTilt();const v=document.getElementById('tiltv');if(v)v.textContent=P.set.tilt+'°';clearTimeout(window.__tiltT);window.__tiltT=setTimeout(()=>save(),400)}});
+  return`<div class="stack" style="gap:4px"><div class="gstat" style="font-weight:500"><span style="font-size:14px">↕ ${L2('Board tilt','Board ka jhukaav')}</span><b class="mono" id="tiltv">${t}°</b></div><input type="range" id="tilt" min="0" max="55" step="1" value="${t}" style="width:100%;accent-color:var(--accent)"><small class="muted">${L2('Drag to tilt the board. 0° = flat from the top. During a game, use the ↕ button next to the board, or drag up/down with two fingers on the board.','Slider khiskao. 0° = upar se seedha. Game ke beech board ke paas ↕ button dabao, ya board par do ungliyon se upar-neeche khiskao.')}</small><div style="max-width:240px;margin:6px auto 0;width:100%">${boardHTML({persp:'w',pieces:toMap(st.b),id:'tiltprev'})}</div></div>`}
+document.addEventListener('input',e=>{if(e.target&&e.target.id==='tilt')setTilt(+e.target.value)});
 function boardSegHTML(){return`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">♟ ${L2('Board style','Board style')}</span><div class="seg sm">${[['2d','2D'],['3d','3D']].map(([k,t])=>`<button class="${(P.set.board3d||'2d')===k?'on':''}" data-act="b3d-set" data-v="${k}">${t}</button>`).join('')}</div></div>`}
 function navLabels(){const N={home:['Today','Aaj'],learn:['Learn','Seekho'],practice:['Practice','Practice'],playhub:['Play','Khelo'],me:['Me','Main']};document.querySelectorAll('#tabs button').forEach(b=>{const x=N[b.dataset.tab];if(!x)return;const t=HI()?x[1]:x[0];const n=[...b.childNodes].find(c=>c.nodeType===3&&c.textContent.trim());if(n&&n.textContent!==t)n.textContent=t})}
 function tabOf(n){const T={hl:'playhub',home:'home',gym:'home',learn:'learn',path:'learn',stage:'learn',tut:'learn',school:'learn',skdo:'learn',replist:'learn',rep:'learn',
