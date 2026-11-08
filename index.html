@@ -996,6 +996,35 @@ body.lowfx .dqc.done .dqic{animation:none}
 
 .h2lm small{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.35}
 .hero2{padding-bottom:20px}
+
+/* v78: collapsible Home cards */
+.xhd{width:100%;border:0;font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.xchev{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:15px;transition:transform .3s;position:relative;z-index:1}
+.xcard.open .xchev{transform:rotate(180deg)}
+.xbody{display:grid;grid-template-rows:0fr;transition:grid-template-rows .38s cubic-bezier(.2,.8,.2,1)}
+.xcard.open>.xbody{grid-template-rows:1fr}
+.xin{min-height:0;overflow:hidden}
+body.lowfx .xbody,body.lowfx .xchev{transition:none}
+.dqh.xhd{color:#fff}.dqh .xchev{background:rgba(255,255,255,.22);color:#fff}
+.dq:not(.open) .dqht small{display:none}
+.gstop.xhd{background:none;color:inherit;padding:0;margin-bottom:0;gap:10px;position:relative;z-index:1}
+.gstory.open .gstop{margin-bottom:10px}
+.gshl{flex:1;min-width:0;display:grid;gap:2px}.gsht{font-family:var(--f-display);font-size:19px;line-height:1.2;color:#2E1F0B}
+.gstory.open .gsht{display:none}
+.gstop .xchev{background:rgba(46,31,11,.1);color:#2E1F0B}
+
+.gstory:not(.open) .gsyr{display:none}.gstop.xhd .gsyr{position:static!important;flex:none}
+
+.prhero{grid-template-columns:minmax(0,1fr)}.prbtn{grid-template-columns:repeat(auto-fit,minmax(min(100%,120px),1fr))}.prbtn button{white-space:normal;min-width:0}.prhero h2{overflow-wrap:anywhere}
+.ltrk{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.ltrk button{white-space:normal;min-width:0;text-align:center}
+
+.pmode,.sprof{grid-template-columns:minmax(0,1fr)}.pmbtn{grid-template-columns:repeat(auto-fit,minmax(min(100%,118px),1fr))}.pmbtn button{white-space:normal;min-width:0}
+.sptop>*{min-width:0}.spname{flex:1}.spname input{width:100%;min-width:0}
+@media (max-width:360px){.pmtx{padding-right:64px}}
+
+.thgrid{grid-template-columns:repeat(3,minmax(0,1fr))}.thb{min-width:0;overflow-wrap:anywhere}.tile{min-width:0}
+
+.spst{grid-template-columns:repeat(4,minmax(0,1fr))}.spst span{min-width:0}.spst b{white-space:normal!important;overflow-wrap:anywhere}.spbtn{grid-template-columns:repeat(auto-fit,minmax(min(100%,110px),1fr))}.spbtn button{white-space:normal;min-width:0}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -2056,6 +2085,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
     if(m==='online'){P.set.olblind=bl;save();go({name:'friend'});return}}
   if(a==='bpeek'){bPeek();return}
   if(a==='olb'){P.set.olblind=d.v==='1';save();render();return}
+  if(a==='hx'){HX[d.k]=!HX[d.k];const sec=b.closest('section');if(sec)sec.classList.toggle('open',HX[d.k]);b.setAttribute('aria-expanded',HX[d.k]);return}
   if(a==='ltrk'){P.set.ltrk=d.v;save();render();return}
   if(a==='clev'){if(V.name==='clevel'){V={name:'clevel',i:+d.i,sec:V.sec};render();window.scrollTo(0,0)}else go({name:'clevel',i:+d.i});return}
   if(a==='course-more'){const [k,v]=String(d.v).split(':');if(k==='sch')go({name:'school',grp:v});else if(v==='pz')pzStart('rated');else go({name:v});return}
@@ -3017,12 +3047,12 @@ function dailyAuto(){const d=dailyPlan(),k=dayK();for(const x of d.items){if(x.d
 const PLAN_HI={course:['📘 Course lesson','Course ka agla lesson.'],puz:['🧩 Puzzles','10 minute rated puzzles (target: 10 puzzles).'],calc:['🧠 Calculation','5 minute: chaalein dimaag me dekho.'],gm:['📜 Master game','Kisi famous game ki chaalein guess karo.'],lesson:['📚 Ek lesson','Blindfold path ki agli drill.'],game:['♟️ Coach ke saath game','Ek game, lagbhag 10 minute.'],diary:['🔁 Galtiyon ki revision','Apni purani galtiyan dobara solve karo.'],rep:['📖 Opening lines','Baaki opening lines dohrao.'],endg:['👑 Endgame drill','Coach ke khilaaf ek endgame jeeto.'],week:['📝 Weekly test','Is hafte ko naapne ke liye 12 puzzles.']};
 function planHTML(){const d=dailyAuto(),N=d.items.length,n=d.items.filter(x=>x.done).length,mins=d.items.reduce((a,x)=>a+(x.min||0),0),left=d.items.filter(x=>!x.done).reduce((a,x)=>a+(x.min||0),0),pz=(P.pzlog[dayK()]||{}).n||0;
   const PC=['#2FA36B','#F08A2C','#6D6AF0','#E2574C','#1F8FD1','#B455D6','#D9A21B'],C=2*Math.PI*22,all=n===N;
-  let h=`<section class="dq${all?' alldone':''}"><div class="dqh"><div class="dqht"><span class="dqey">⚡ ${L2('Daily quests','Aaj ke tasks')}</span><b>${all?L2('Perfect day!','Aaj ka din poora!'):n?L2(`${N-n} left · ${left} min`,`${N-n} baaki · ${left} min`):L2(`${N} tasks · ${mins} min`,`${N} kaam · ${mins} min`)}</b><small>${all?L2('All done. Come back tomorrow for new quests.','Sab ho gaya. Kal naye tasks aayenge.'):L2('Picked by the coach from your weak areas','Coach ne aapki kamzor jagah dekh kar chune')}</small></div>
-   <div class="dqring" role="img" aria-label="${n} of ${N} done"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" class="dqr0"/><circle cx="26" cy="26" r="22" class="dqr1" style="stroke-dasharray:${C};stroke-dashoffset:${C*(1-n/N)}"/></svg><span>${all?'🏆':`${n}/${N}`}</span></div></div><div class="dqlist">`;
+  let h=`<section class="dq xcard${all?' alldone':''}${HX.dq?' open':''}"><button class="dqh xhd" data-act="hx" data-k="dq" aria-expanded="${!!HX.dq}"><span class="dqht"><span class="dqey">⚡ ${L2('Daily quests','Aaj ke tasks')}</span><b>${all?L2('Perfect day!','Aaj ka din poora!'):n?L2(`${N-n} left · ${left} min`,`${N-n} baaki · ${left} min`):L2(`${N} tasks · ${mins} min`,`${N} kaam · ${mins} min`)}</b><small>${all?L2('All done. Come back tomorrow for new quests.','Sab ho gaya. Kal naye tasks aayenge.'):L2('Picked by the coach from your weak areas','Coach ne aapki kamzor jagah dekh kar chune')}</small></span>
+   <div class="dqring" role="img" aria-label="${n} of ${N} done"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" class="dqr0"/><circle cx="26" cy="26" r="22" class="dqr1" style="stroke-dasharray:${C};stroke-dashoffset:${C*(1-n/N)}"/></svg><span>${all?'🏆':`${n}/${N}`}</span></div><span class="xchev" aria-hidden="true">▾</span></button><div class="xbody"><div class="xin"><div class="dqlist">`;
   d.items.forEach((x,i)=>{const T=HI()&&PLAN_HI[x.k]?PLAN_HI[x.k][0]:x.t,m=String(T).match(/^(\S+)\s+(.*)$/),ic=m&&!/[A-Za-z0-9]/.test(m[1])?m[1]:'★',tt=m&&ic===m[1]?m[2]:T,
      tot=x.k==='puz'?10:1,got=x.done?tot:x.k==='puz'?Math.min(pz,10):0;
     h+=`<button class="dqc ${x.done?'done':''}" style="--pc:${PC[i%PC.length]}" data-act="gy-do" data-v="${i}"><span class="dqic">${x.done?'✓':ic}</span><span class="dqtx"><b>${tt}</b><small>${esc(HI()&&PLAN_HI[x.k]?PLAN_HI[x.k][1]:x.d)}</small><span class="dqpr"><span class="dqbar"><i style="width:${got/tot*100}%"></i></span><em>${got}/${tot}</em></span></span><span class="dqgo">${x.done?'':'▶'}<small>${x.done?L2('Done','Ho gaya'):x.min+' min'}</small></span></button>`});
-  h+=`</div><div class="dqchest"><span class="dqdots">${d.items.map(x=>`<i class="${x.done?'on':''}"></i>`).join('')}</span><span>${all?'🏆 '+L2('Perfect day earned','Perfect day mil gaya'):'🎁 '+L2(`Finish all ${N} for a perfect day`,`Saare ${N} karo, perfect day pao`)}</span></div></section>`;
+  h+=`</div><div class="dqchest"><span class="dqdots">${d.items.map(x=>`<i class="${x.done?'on':''}"></i>`).join('')}</span><span>${all?'🏆 '+L2('Perfect day earned','Perfect day mil gaya'):'🎁 '+L2(`Finish all ${N} for a perfect day`,`Saare ${N} karo, perfect day pao`)}</span></div></div></div></section>`;
   return h}
 function gyDo(i){const d=dailyPlan(),x=d.items[i];if(!x)return;if(!['puz','game'].includes(x.k)){x.done=true;save()}
   ({course:()=>openCourse(),puz:()=>pzStart('rated'),calc:()=>go({name:'calc'}),gm:()=>go({name:'gmlist'}),lesson:()=>{const nx=nextLesson();if(nx){clearTimers();if(V&&!NOHIST.includes(V.name))HIST.push(V);trLesson(nx.id)}else go({name:'path'})},game:()=>{V.co={color:'w',lvl:Math.max(0,Math.min(5,Math.round((levelNow()-900)/300)))};go({name:'coachset'})},endg:()=>go({name:'endg'}),diary:()=>{const dd=dzDueList();V={name:'codiary',dz:{i:dd.length?dd[0][1]:0,res:null,sel:null}};render()},rep:()=>go({name:'replist'}),week:()=>pzStart('week')})[x.k]()}
@@ -3199,7 +3229,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v77';
+const APPV='2026.11.08 · v78';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -3282,12 +3312,13 @@ function homeHero(){const hr=new Date().getHours(),gr=hr<12?L2('Good morning','G
   <div class="h2ring"><i style="--p:${pct}"></i><span>${n}/${d.items.length}<small>${L2('plan','plan')}</small></span></div></section>`}
 function gmFinal(i){const x=GMG[i];gmFinal.c=gmFinal.c||{};if(gmFinal.c[i])return gmFinal.c[i];let st=startState(),last=null;for(const t of x[4].split(' ')){const m=findMove(st,t);if(!m)break;st=make(st,m);last=m}return gmFinal.c[i]={st,last}}
 function gmMeta(x){const m=x[1].match(/^(.*?),\s*(.*?)\s*(\d{4})$/);return m?{who:m[1],where:m[2],yr:m[3]}:{who:x[1],where:'',yr:''}}
+var HX=window.HX||{dq:false,gs:false};window.HX=HX;
 function storyCard(){const gi=Math.floor(Date.now()/(7*864e5))%GMG.length,x=GMG[gi],M=gmMeta(x),F=gmFinal(gi),r=P.gmg&&P.gmg[x[0]],mv=x[4].split(' ').length;let hl=[];try{if(F.last)hl=[sn(F.last.f),sn(F.last.t)]}catch(e){}
-  return`<section class="gstory"><div class="gsdeco" aria-hidden="true">♞</div><div class="gstop"><span class="gstag">📜 ${L2("This week's story","Is hafte ki kahani")}</span>${M.yr?`<span class="gsyr">${M.yr}</span>`:''}</div>
+  return`<section class="gstory xcard${HX.gs?' open':''}"><div class="gsdeco" aria-hidden="true">♞</div><button class="gstop xhd" data-act="hx" data-k="gs" aria-expanded="${!!HX.gs}"><span class="gshl"><span class="gstag">📜 ${L2("This week's story","Is hafte ki kahani")}</span><b class="gsht">${esc(M.who)}</b></span>${M.yr?`<span class="gsyr">${M.yr}</span>`:''}<span class="xchev" aria-hidden="true">▾</span></button><div class="xbody"><div class="xin">
   <div class="gsmain"><button class="gsb" data-act="gm-story" data-v="${gi}" aria-label="${L2('Read the story','Kahani padho')}">${boardHTML({pieces:toMap(F.st.b),plain:true,cls:'mini',id:'gs',hl,persp:x[3]==='b'?'b':'w'})}</button>
   <div class="gstxt"><h2>${esc(M.who)}</h2>${M.where?`<small>${esc(M.where)} · ${Math.ceil(mv/2)} ${L2('moves','chaalein')}</small>`:''}<p>${esc(GMSTORY[x[0]]||x[2])}</p></div></div>
   ${x[6]?`<div class="gsles">💡 ${esc(x[6].replace(/^Lesson:\s*/,'').replace(/^./,c=>c.toUpperCase()))}</div>`:''}
-  <div class="gsbtn"><button class="gsread" data-act="gm-story" data-v="${gi}">📖 ${L2('Read story','Kahani padho')}</button><button class="gsplay" data-act="gm-go" data-v="${gi}">▶ ${r?L2('Replay','Phir khelo')+' · '+r.best+'%':L2('Guess the moves','Chaal guess karo')}</button></div></section>`}
+  <div class="gsbtn"><button class="gsread" data-act="gm-story" data-v="${gi}">📖 ${L2('Read story','Kahani padho')}</button><button class="gsplay" data-act="gm-go" data-v="${gi}">▶ ${r?L2('Replay','Phir khelo')+' · '+r.best+'%':L2('Guess the moves','Chaal guess karo')}</button></div></div></div></section>`}
 function vHome(){gymInit();let h=`<div class="stack">`+homeHero();
   h+=continueHTML();h+=storyCard();h+=planHTML();
   if(backupDue())h+=`<button class="card rungcard" data-act="tab" data-tab="me" style="border:2px solid var(--brass)"><b>💾 ${L2('Save a backup of your progress','Apne progress ka backup lo')}</b><small class="muted">${L2('iPhone can clear app data after some days without use. Takes 10 seconds ›','iPhone kuch din use na karne par data mita sakta hai. 10 second lagte hain ›')}</small></button>`;
