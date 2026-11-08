@@ -786,6 +786,31 @@ body.fixb .fixscroll{padding-bottom:12px}
 .pct b{font-family:var(--f-display);font-size:17px;line-height:1.15;letter-spacing:-.01em;padding-right:36px}.pct small{font-size:12px;opacity:.85}
 .pcbar{display:block;height:6px;border-radius:9px;background:rgba(255,255,255,.25);overflow:hidden;margin-top:6px}.pcbar i{display:block;height:100%;background:#FFD66B;border-radius:9px}
 .pq1{background:linear-gradient(160deg,#4FBF83,#226B47)}.pq2{background:linear-gradient(160deg,#F2B04A,#B8661B)}.pq3{background:linear-gradient(160deg,#7A86E0,#3B47A3)}.pq4{background:linear-gradient(160deg,#F07A6A,#A8352B)}.pq5{background:linear-gradient(160deg,#4FB3E0,#1E6A93)}.pq6{background:linear-gradient(160deg,#9CCB5A,#4E7F1F)}.pq7{background:linear-gradient(160deg,#C17AE0,#6E2F93)}
+
+/* v58: reward screens */
+.rwd{position:relative;overflow:hidden;border-radius:28px;padding:18px 16px 20px;text-align:center;display:grid;justify-items:center;gap:4px;color:#fff;box-shadow:0 18px 36px rgba(0,0,0,.2);animation:rwin .45s cubic-bezier(.2,1.4,.4,1)}
+.rwd.ok{background:radial-gradient(110% 80% at 50% 0%,#FFD66B 0%,#F0A93A 30%,#B8661B 70%,#6E3A0E 100%)}
+.rwd.no{background:radial-gradient(110% 80% at 50% 0%,#7A86E0 0%,#3E4AA8 50%,#222A66 100%)}
+.rwrays{position:absolute;left:50%;top:70px;width:520px;height:520px;margin:-260px 0 0 -260px;background:repeating-conic-gradient(rgba(255,255,255,.16) 0 10deg,transparent 10deg 20deg);border-radius:50%;animation:rwspin 14s linear infinite;pointer-events:none;-webkit-mask:radial-gradient(circle,#000 20%,transparent 65%);mask:radial-gradient(circle,#000 20%,transparent 65%)}
+.rwd.no .rwrays{opacity:.4}
+.rwey{position:relative;font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;opacity:.9}
+.rwic{position:relative;font-size:64px;line-height:1.1;filter:drop-shadow(0 8px 12px rgba(0,0,0,.3));animation:rwbounce .7s .1s cubic-bezier(.2,1.6,.4,1) both}
+.rwst{position:relative;display:flex;gap:6px;font-size:38px;line-height:1;margin:2px 0}
+.rwst i{font-style:normal;color:rgba(0,0,0,.25);text-shadow:none}
+.rwst i.on{color:#FFF4C2;text-shadow:0 0 14px rgba(255,230,120,.9),0 3px 0 #C47F14;animation:rwstar .5s cubic-bezier(.2,1.8,.4,1) both}
+.rwst i:nth-child(2){font-size:48px;margin-top:-8px}
+.rwd h2{position:relative;font-family:var(--f-display);font-size:22px;line-height:1.15;margin:4px 0 0;color:#fff;letter-spacing:-.02em}
+.rwbig{position:relative;font-family:var(--f-display);font-weight:800;font-size:46px;line-height:1;text-shadow:0 4px 0 rgba(0,0,0,.2)}
+.rwd small{position:relative;font-size:13.5px;opacity:.9}
+.rwch{position:relative;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:6px}.rwch span{font-size:13px;font-weight:800;background:rgba(0,0,0,.24);border-radius:999px;padding:4px 12px}
+@keyframes rwin{from{transform:scale(.85);opacity:0}}
+@keyframes rwspin{to{transform:rotate(360deg)}}
+@keyframes rwbounce{from{transform:scale(0) rotate(-20deg)}}
+@keyframes rwstar{from{transform:scale(0) rotate(-90deg);opacity:0}}
+.cfw{position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden}
+.cfw i{position:absolute;top:42%;border-radius:2px;animation:cf 2.2s cubic-bezier(.15,.6,.35,1) forwards}
+@keyframes cf{0%{transform:translate(0,0) rotate(0);opacity:1}55%{transform:translate(calc(var(--dx)*.8),var(--dy)) rotate(calc(var(--r)*.6));opacity:1}100%{transform:translate(var(--dx),calc(var(--dy) + 700px)) rotate(var(--r));opacity:0}}
+@media (prefers-reduced-motion:reduce){.rwrays,.rwd,.rwic,.rwst i.on{animation:none}}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -1387,11 +1412,20 @@ function revealBoard(q){if(!q.reveal)return null;const o={...q.reveal,marks:{...
   if(q.kind==='multi'){for(const a of q.accept)o.marks[a]=S.resp&&S.resp.has(a)?'good':'miss';if(S.resp)for(const s of S.resp)if(!q.accept.includes(s))o.marks[s]='bad';o.dots=null}
   if((q.kind==='tap'||q.kind==='sq')&&S.resp&&!S.ok)o.marks[S.resp]='bad';
   return o}
+
+function confettiBurst(n){try{if(!fxOn()||matchMedia('(prefers-reduced-motion: reduce)').matches)return}catch(e){}const w=document.createElement('div');w.className='cfw';const C=['#FFD66B','#4FBF83','#F07A6A','#7A86E0','#F07AA6','#4FB3E0'];
+  for(let i=0;i<(n||60);i++){const p=document.createElement('i');p.style.cssText=`left:${50+(Math.random()-.5)*30}%;background:${C[i%C.length]};--dx:${(Math.random()-.5)*520}px;--dy:${-260-Math.random()*320}px;--r:${Math.random()*900-450}deg;animation-delay:${Math.random()*.15}s;width:${6+Math.random()*6}px;height:${8+Math.random()*8}px`;w.appendChild(p)}
+  document.body.appendChild(w);setTimeout(()=>w.remove(),2600)}
+function rewardHead(o){const st=o.stars||0,ok=o.ok,ic=o.ic||(ok?(st===3?'🏆':'🎉'):'💪');
+  if(ok)setTimeout(()=>confettiBurst(st===3?90:55),250);
+  return`<section class="rwd ${ok?'ok':'no'}"><div class="rwrays" aria-hidden="true"></div><span class="rwey">${o.eyebrow||''}</span><div class="rwic">${ic}</div>
+  ${o.stars!=null?`<div class="rwst" aria-label="${st} of 3 stars">${[1,2,3].map(j=>`<i class="${j<=st?'on':''}" style="animation-delay:${.25+j*.18}s">★</i>`).join('')}</div>`:''}
+  <h2>${o.title}</h2><div class="rwbig">${o.big}</div>${o.sub?`<small>${o.sub}</small>`:''}${o.chips?`<div class="rwch">${o.chips.map(c=>`<span>${c}</span>`).join('')}</div>`:''}</section>`}
 function vResult(){const s=S;let h=`<div class="stack">`;
-  if(s.mode==='speed'){h+=`<span class="eyebrow">Speed run · 60 seconds</span><h1>${esc(s.title)}</h1><div class="big">${s.score}</div><p class="muted">${s.score>s.prevBest?(s.prevBest?`New best, up from ${s.prevBest}.`:'Your first score on this run.'):`Best: ${s.prevBest}.`} ${s.results.length-s.score} wrong.</p>
+  if(s.mode==='speed'){const nb=s.score>s.prevBest;h+=rewardHead({ok:nb||s.score>0,ic:nb?'🚀':'⚡',eyebrow:'Speed run · 60 seconds',title:esc(s.title),big:s.score,sub:L2('correct answers','sahi jawab'),chips:nb?['🔥 '+L2('New best!','Naya record!')]:null})+`<p class="muted" style="text-align:center">${s.score>s.prevBest?(s.prevBest?`New best, up from ${s.prevBest}.`:'Your first score on this run.'):`Best: ${s.prevBest}.`} ${s.results.length-s.score} wrong.</p>
     <div class="row"><button class="btn" data-act="tab" data-tab="practice">Done</button><button class="btn primary" style="flex:1" data-act="speed" data-k="${s.speedKey}">Go again</button></div></div>`;main.innerHTML=h;return}
   const pct=s.results.length?Math.round(s.score/s.results.length*100):0;
-  h+=`<span class="eyebrow">${s.mode==='lesson'?esc(s.lesson.stage.title)+' · '+TIERS[s.tier-1].n:s.mode==='review'?'Review':'Practice'}</span><h1>${esc(s.title)}</h1><div class="row" style="align-items:baseline"><span class="big">${s.score}/${s.results.length}</span>${s.mode==='lesson'?starStr(s.stars):`<span class="muted">${pct}%</span>`}</div><div class="resgrid">${s.results.map(r=>`<i class="${r?'':'no'}"></i>`).join('')}</div>`;
+  {const ls=s.mode==='lesson',ok=ls?s.stars>0:pct>=70;h+=rewardHead({ok,eyebrow:ls?esc(s.lesson.stage.title)+' · '+TIERS[s.tier-1].n:s.mode==='review'?'Review':'Practice',title:ok?(ls&&s.stars===3?L2('Perfect!','Perfect!'):L2('Well done!','Shabaash!'))+' · '+esc(s.title):esc(s.title),big:`${s.score}/${s.results.length}`,sub:`${pct}% ${L2('right','sahi')}`,stars:ls?s.stars:null,chips:null})}h+=`<div class="resgrid">${s.results.map(r=>`<i class="${r?'':'no'}"></i>`).join('')}</div>`;
   if(s.mode==='lesson'){const passed=s.stars>0;const nx=nextLesson();
     h+=`<p>${passed?(s.stars===3?'Perfect.':'Passed.')+' The next lesson is open.':(s.lesson.stage.mastery?'This is a foundation stage, so you need 10 out of 10 to pass. Go again until it is automatic.':'You need 8 out of 10 to pass. The squares you missed have been added to your reviews.')}</p><div class="row"><button class="btn" data-act="lesson" data-id="${s.lesson.id}">Retry</button>${passed&&nx?`<button class="btn primary" style="flex:1" data-act="lesson" data-id="${nx.id}">Next: ${esc(nx.title)}</button>`:`<button class="btn primary" style="flex:1" data-act="stage" data-stage="${s.lesson.stage.id}">Back to stage</button>`}</div>`}
   else h+=`<div class="row"><button class="btn primary block" data-act="tab" data-tab="${s.from||'practice'}">Done</button></div>`;
@@ -1626,8 +1660,7 @@ function vTrainRes(){const T=TR,r=T.rec,t=TRAIN[T.m],l=T.lesson;const avg=r.c/r.
   let verdict='';if(l){const need=l.stage.mastery?95:90;const nx=nextLesson();
     if(T.stars)verdict=`<div class="fb ok"><h3>Passed ${starStr(T.stars)}</h3><p>${fmt1(avg)} correct per minute against a target of ${l.target}.${nx&&nx!==l?' The next drill is open.':''}</p></div>`;
     else{const why=[];if(!r.full)why.push('you stopped before the time ran out');if(r.pk)why.push(`you peeked ${r.pk} time${r.pk>1?'s':''}`);if(acc<need)why.push(`${acc}% right, you need ${need}%`);if(avg<l.target)why.push(`${fmt1(avg)} per minute, you need ${l.target}`);verdict=`<div class="fb no"><h3>Not passed yet</h3><p>${cap(why.join('; '))}. Keep going: speed comes with repetition.</p></div>`}}
-  let h=`<div class="stack"><span class="eyebrow">Timed board drill · ${r.min} minute${r.min>1?'s':''}${r.full?'':' (stopped early)'}</span><h1>${esc(l?l.title:t.t)}</h1>
-  <div class="row" style="align-items:baseline"><span class="big">${r.c}</span><span class="muted">correct · ${r.w} wrong · ${acc}% right</span></div>${verdict}
+  const nb=avg>T.prevBest;let h=`<div class="stack">${rewardHead({ok:l?!!T.stars:(nb||acc>=80),ic:l?null:nb?'🚀':acc>=80?'🎯':'💪',eyebrow:`Timed board drill · ${r.min} minute${r.min>1?'s':''}${r.full?'':' (stopped early)'}`,title:esc(l?l.title:t.t),big:r.c,sub:`${L2('correct','sahi')} · ${r.w} ${L2('wrong','galat')} · ${acc}% ${L2('right','sahi')}`,stars:l?(T.stars||0):null,chips:[`⏱ ${fmt1(avg)} / min`].concat(nb&&T.prevBest?['🔥 '+L2('New best!','Naya record!')]:[])})}${verdict}
   <p>${avg>T.prevBest&&T.prevBest?`New best: <b>${fmt1(avg)}</b> correct per minute, up from ${fmt1(T.prevBest)}.`:!T.prevBest?`Your first record: <b>${fmt1(avg)}</b> correct per minute.`:`<b>${fmt1(avg)}</b> correct per minute. Your best is ${fmt1(T.prevBest)}.`}</p>
   <div class="card stack"><h3>Minute by minute</h3><div class="mbars">${r.pm.map((n,i)=>`<div class="mb"><span class="mono">${n}</span><i style="height:${n/mx*90}px"></i>${r.wm[i]?`<small class="warn">✗${r.wm[i]}</small>`:'<small>&nbsp;</small>'}<small>min ${i+1}</small></div>`).join('')}</div></div>`;
   const ms=Object.entries(T.missSq||{});if(ms.length){const heat={};const mx2=Math.max(...ms.map(x=>x[1]));for(const sq of ALL.map(sn))heat[sq]=T.missSq[sq]?`color-mix(in srgb, var(--bad) ${40+Math.round(T.missSq[sq]/mx2*60)}%, var(--surface2))`:'var(--surface2)';
@@ -2945,7 +2978,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v57';
+const APPV='2026.11.08 · v58';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
