@@ -859,6 +859,15 @@ body.fixb .gamemoves{max-height:none}
 body.fixb .fixtop .gstat #tiltdock.inhdr{margin-left:0}
 body.fixb .fixtop .gstat #tiltdock.inhdr .tdbtn{width:32px;height:32px}
 @media (max-width:380px){body.fixb .fixtop .gstat .backbtn{font-size:0!important;padding:0!important;width:36px;height:36px;display:grid;place-items:center}body.fixb .fixtop .gstat .backbtn::before{content:'←';font-size:18px}}
+
+/* v66: foldable move list */
+.mvhead{display:flex;align-items:center;gap:8px;width:100%;border:0;background:var(--surface);border:1px solid var(--line);border-radius:12px 12px 0 0;padding:8px 12px;font-weight:800;font-size:14px;color:var(--fg);text-align:left;margin-bottom:-1px}
+.mvhead span:first-child{flex:none}.mvhead small{font-weight:600;color:var(--muted)}
+.mvhead .mvlast{flex:1;min-width:0;text-align:right;color:var(--muted);font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0}
+.mvhead i{font-style:normal;transition:transform .2s;color:var(--muted)}
+.mvhead+.gamemoves{border-radius:0 0 12px 12px}
+body.mvmin .mvhead{border-radius:12px;margin-bottom:0}body.mvmin .mvhead i{transform:rotate(-90deg)}body.mvmin .mvhead .mvlast{opacity:1}
+body.mvmin .mvhead+.gamemoves{display:none}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -1363,7 +1372,9 @@ function pageHead(){const x=PGH[V.name];if(!x)return;const st=main.firstElementC
   hd.querySelector('.pgey').textContent=ey?ey.textContent:'';hd.querySelector('h1').textContent=h1.textContent;const nx0=h1.nextElementSibling,desc=!x[2]&&nx0&&nx0.tagName==='P'&&!nx0.querySelector('button,input')?nx0:null;hd.querySelector('small').textContent=x[2]?L2(x[2],x[3]):desc?desc.textContent:'';if(!hd.querySelector('small').textContent)hd.querySelector('small').remove();
   if(V.name==='play'&&V.po&&V.po.two)hd.querySelector('.pgic').textContent='👥';
   h1.replaceWith(hd);if(ey)ey.remove();if(desc)desc.remove();else{const nx=hd.nextElementSibling;if(x[2]&&nx&&nx.tagName==='P'&&nx.classList.contains('muted'))nx.remove()}}
-try{new MutationObserver(()=>{try{fixBack();pageHead()}catch(e){}}).observe(document.getElementById('main'),{childList:true})}catch(e){}
+function mvFold(){document.body.classList.toggle('mvmin',!!P.set.mvmin);main.querySelectorAll('.gamemoves').forEach(g=>{if(g.previousElementSibling&&g.previousElementSibling.classList.contains('mvhead'))return;const t=(g.textContent||'').replace(/\s+/g,' ').trim(),n=(t.match(/\d+\./g)||[]).length,last=t.split(' ').filter(x=>x&&!/^\d+\.+$/.test(x)).slice(-1)[0]||'';
+  const b=document.createElement('button');b.type='button';b.className='mvhead';b.dataset.act='mvfold';b.innerHTML=`<span>📜 ${L2('Moves','Chaalein')}${n?` <small>· ${n}</small>`:''}</span><span class="mvlast mono"></span><i aria-hidden="true">▾</i>`;b.querySelector('.mvlast').textContent=n?last:'';g.before(b)})}
+try{new MutationObserver(()=>{try{fixBack();pageHead();mvFold()}catch(e){}}).observe(document.getElementById('main'),{childList:true})}catch(e){}
 function clearTimers(){clearInterval(timerInt);timerInt=null;clearTimeout(autoNext);autoNext=null}
 function renderChips(){const d=dueItems().length;document.getElementById('chips').innerHTML=`${diyaChip()}<span class="chip" title="Stars">★ ${ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0)}</span>`}
 function render(){try{applyAppTheme()}catch(e){}const fx=FIXV.includes(V.name);if(document.body.classList.contains('fixb')!==fx){document.body.classList.toggle('fixb',fx);try{window.__setH&&window.__setH()}catch(e){}}document.body.classList.toggle('inq',V.name==='q'||V.name==='train');document.body.classList.toggle('cfr',V.name==='cframe');renderChips();onSq=null;const tab=tabOf(V.name);try{navLabels()}catch(e){}document.body.classList.toggle('b3d',P.set.board3d==='3d');applyTheme();applyTilt();
@@ -1905,6 +1916,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
   if(a==='pcat'){go({name:'pcat',c:d.v});return}
   if(a==='lvsec'){V.sec=d.v;render();return}
   if(a==='ava-next'){const i=AVAS.indexOf(P.set.avatar||'♞');P.set.avatar=AVAS[(i+1)%AVAS.length];save();const el=main.querySelector('.spava');if(el){el.firstChild.textContent=P.set.avatar;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop')}return}
+  if(a==='mvfold'){P.set.mvmin=!P.set.mvmin;save();document.body.classList.toggle('mvmin',P.set.mvmin);return}
   if(a==='tsz'){P.set.tsz=d.v;save();applyAppTheme();render();return}
   if(a==='appth'){P.set.appth=d.v;save();applyAppTheme();render();return}
   if(a==='sjump'){const el=document.getElementById(d.v);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return}
@@ -3051,7 +3063,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v65';
+const APPV='2026.11.08 · v66';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
