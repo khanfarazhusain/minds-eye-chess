@@ -993,6 +993,9 @@ body.lowfx .dqc.done .dqic{animation:none}
 .dqtx b{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 @container (max-width:265px){.dqh{padding:14px}.dqht b{font-size:19px}.dqht small{display:none}.dqring{width:54px;height:54px}.dqlist{padding:10px;gap:8px}.dqc{gap:9px;padding:10px}.dqic{flex-basis:38px;height:38px;font-size:19px;border-radius:12px}.dqtx small{display:none}.dqc:not(.done) .dqgo{width:36px;height:36px}.dqc.done .dqgo small{padding:3px 7px;font-size:10.5px}.dqchest{margin:0 10px 10px;font-size:12px}}
 @container (max-width:235px){.dqc:not(.done) .dqgo{display:none}.dqc:not(.done){margin-bottom:0}.dqc.done .dqgo{display:none}}
+
+.h2lm small{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.35}
+.hero2{padding-bottom:20px}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -3196,7 +3199,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v76';
+const APPV='2026.11.08 · v77';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -3276,8 +3279,7 @@ function homeHero(){const hr=new Date().getHours(),gr=hr<12?L2('Good morning','G
   const nx=ni>=0?d.items[ni]:null,nt=nx?(HI()&&PLAN_HI[nx.k]?PLAN_HI[nx.k][0]:nx.t):'';
   return`<section class="hero2"><div class="h2deco" aria-hidden="true"></div><span class="h2day">${new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'short'})}</span><h1>${gr} 👋</h1><p>${L2("Let's sharpen your chess mind today.",'Chalo, aaj chess ka dimaag tez karein.')}</p>
   <div class="h2stats"><span><b>${streak()}</b><small>${L2('day streak','din streak')} 🪔</small></span><span><b>${st}</b><small>${L2('stars','stars')} ★</small></span><span><b>${P.prate||800}</b><small>${L2('puzzle rating','puzzle rating')}</small></span></div>${(()=>{const r=levelNow(),k=rungOf(r),xp=Math.max(0,Math.min(100,Math.round((X.x-(X.prev||0))/Math.max(1,X.next-(X.prev||0))*100)));return`<button class="h2lvl" data-act="go" data-v="road"><span class="h2lr"><small>${L2('Your level','Aapka level')}</small><b class="mono">~${r}</b></span><span class="h2lm"><span class="h2rung">${esc(ROAD[k][1])}</span><span class="h2xp"><i style="width:${xp}%"></i></span><small>Lv ${X.l} · ${X.x}/${X.next} XP · ${L2('Next','Agla')}: ${esc(ROAD[k][3])}</small></span><span class="h2arr">›</span></button>`})()}
-  <div class="h2ring"><i style="--p:${pct}"></i><span>${n}/${d.items.length}<small>${L2('plan','plan')}</small></span></div>
-  ${nx?`<button class="h2go" data-act="gy-do" data-v="${ni}">▶ ${L2('Start','Shuru karo')}: ${esc(nt)}</button>`:`<button class="h2go" data-act="course-more" data-v="x:coachset">♛ ${L2('Play a game','Ek game khelo')}</button>`}</section>`}
+  <div class="h2ring"><i style="--p:${pct}"></i><span>${n}/${d.items.length}<small>${L2('plan','plan')}</small></span></div></section>`}
 function gmFinal(i){const x=GMG[i];gmFinal.c=gmFinal.c||{};if(gmFinal.c[i])return gmFinal.c[i];let st=startState(),last=null;for(const t of x[4].split(' ')){const m=findMove(st,t);if(!m)break;st=make(st,m);last=m}return gmFinal.c[i]={st,last}}
 function gmMeta(x){const m=x[1].match(/^(.*?),\s*(.*?)\s*(\d{4})$/);return m?{who:m[1],where:m[2],yr:m[3]}:{who:x[1],where:'',yr:''}}
 function storyCard(){const gi=Math.floor(Date.now()/(7*864e5))%GMG.length,x=GMG[gi],M=gmMeta(x),F=gmFinal(gi),r=P.gmg&&P.gmg[x[0]],mv=x[4].split(' ').length;let hl=[];try{if(F.last)hl=[sn(F.last.f),sn(F.last.t)]}catch(e){}
