@@ -710,6 +710,35 @@ body.fixb .fixscroll{padding-bottom:12px}
 .ltrk button{border:0;border-radius:14px;padding:10px 6px;background:none;color:var(--muted);font-weight:800;font-size:15px;display:grid;gap:1px;justify-items:center;white-space:nowrap}
 .ltrk button small{font-size:11.5px;font-weight:700;opacity:.8}
 .ltrk button.on{background:var(--surface);color:var(--fg);box-shadow:var(--sh)}
+
+/* v55: settings */
+.sprof{position:relative;overflow:hidden;border-radius:26px;padding:18px;color:#F2EFE6;background:radial-gradient(120% 90% at 0% 0%,#5B66B8 0%,#2E3470 50%,#1A1D40 100%);box-shadow:0 18px 36px rgba(30,30,80,.28);display:grid;gap:12px}
+.spdeco{position:absolute;right:-10px;top:-24px;font-size:150px;line-height:1;color:rgba(255,255,255,.06);pointer-events:none}
+.sptop{display:flex;gap:14px;align-items:center;position:relative}
+.spava{position:relative;flex:none;width:72px;height:72px;border-radius:50%;border:3px solid #FFD66B;background:linear-gradient(160deg,#FFF6DA,#F3D98A);font-size:38px;line-height:1;color:#2E1F0B;display:grid;place-items:center;box-shadow:0 6px 0 #B8862A,0 10px 20px rgba(0,0,0,.3)}
+.spava i{position:absolute;right:-4px;bottom:-2px;width:24px;height:24px;border-radius:50%;background:#fff;color:#2E3470;font-style:normal;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.spava.pop{animation:spop .35s ease}@keyframes spop{50%{transform:scale(1.15) rotate(-8deg)}}
+.spname{min-width:0;display:grid;gap:4px}
+.spname input{font:inherit;font-family:var(--f-display);font-size:24px;font-weight:800;color:#fff;background:transparent;border:0;border-bottom:1.5px dashed rgba(255,255,255,.3);padding:0 0 2px;width:100%;min-width:0}
+.spname input::placeholder{color:rgba(255,255,255,.55)}.spname input:focus{outline:none;border-bottom-color:#FFD66B}
+.sprank{justify-self:start;font-size:12.5px;font-weight:800;color:#2E1F0B;background:#FFD66B;border-radius:999px;padding:3px 10px}
+.spxp{display:grid;gap:5px;position:relative}.spxp b{font-family:var(--f-display);font-size:16px}.spxp small{color:#C9CCF0;font-size:12px}
+.spst{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;position:relative}
+.spst span{background:rgba(255,255,255,.09);border-radius:14px;padding:8px 4px;text-align:center;display:grid}.spst b{font-family:var(--f-display);font-size:15px;color:#fff;white-space:nowrap}.spst small{font-size:10.5px;color:#C9CCF0}
+.spbtn{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:relative}.spbtn button{border:0;border-radius:14px;padding:11px 6px;font-weight:800;font-size:14px;background:#F2EFE6;color:#1A1D40;white-space:nowrap}
+.sjump{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px}.sjump::-webkit-scrollbar{display:none}
+.sjump button{flex:none;border:0;border-radius:999px;padding:8px 13px;font-weight:700;font-size:13.5px;background:var(--surface);color:var(--fg);box-shadow:var(--sh);white-space:nowrap}
+.sgrp{display:grid;gap:10px}
+.sgh{display:flex;gap:12px;align-items:center;scroll-margin-top:calc(var(--hdr,60px) + 12px)}.sanchor{scroll-margin-top:calc(var(--hdr,60px) + 12px);height:0;margin-bottom:-14px}
+.sgi{flex:none;width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-size:20px;color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+.sgh b{display:block;font-family:var(--f-display);font-size:18px;line-height:1.15}.sgh small{display:block;font-size:12.5px;color:var(--muted)}
+.sgrp .toggle,.sgrp .srow{border-top:1px solid var(--line);padding-top:10px}
+.sgrp > .gstat{border-top:1px solid var(--line);padding-top:10px}
+.sdet{border-top:1px solid var(--line);padding-top:8px}.sdet summary{font-weight:700;font-size:15px;padding:4px 0;cursor:pointer}.sdet .card{box-shadow:none;background:var(--surface2);margin-top:8px}
+.sgrp .gstat>span:first-child{flex:1;min-width:0}.sgrp .seg{flex:none}
+.sdanger{box-shadow:0 0 0 1.5px color-mix(in srgb,#C8553D 45%,transparent),var(--sh)}
+.sabout{display:grid;justify-items:center;gap:3px;text-align:center;padding:10px 0 6px;color:var(--muted)}.sabout b{color:var(--fg);font-family:var(--f-display)}.sabout small{font-size:12.5px}
+.sablogo{width:44px;height:44px;border-radius:13px;background:var(--accent);color:var(--accent-fg);font-family:var(--f-display);font-weight:800;font-size:20px;display:grid;place-items:center;margin-bottom:4px}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -1215,7 +1244,7 @@ function pageHead(){const x=PGH[V.name];if(!x)return;const st=main.firstElementC
   h1.replaceWith(hd);if(ey)ey.remove();const nx=hd.nextElementSibling;if(nx&&nx.tagName==='P'&&nx.classList.contains('muted'))nx.remove()}
 function clearTimers(){clearInterval(timerInt);timerInt=null;clearTimeout(autoNext);autoNext=null}
 function renderChips(){const d=dueItems().length;document.getElementById('chips').innerHTML=`${diyaChip()}<span class="chip" title="Stars">★ ${ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0)}</span>`}
-function render(){const fx=FIXV.includes(V.name);if(document.body.classList.contains('fixb')!==fx){document.body.classList.toggle('fixb',fx);try{window.__setH&&window.__setH()}catch(e){}}document.body.classList.toggle('inq',V.name==='q'||V.name==='train');document.body.classList.toggle('cfr',V.name==='cframe');renderChips();onSq=null;const tab=tabOf(V.name);try{navLabels()}catch(e){}document.body.classList.toggle('b3d',P.set.board3d==='3d');applyTheme();applyTilt();
+function render(){try{applyAppTheme()}catch(e){}const fx=FIXV.includes(V.name);if(document.body.classList.contains('fixb')!==fx){document.body.classList.toggle('fixb',fx);try{window.__setH&&window.__setH()}catch(e){}}document.body.classList.toggle('inq',V.name==='q'||V.name==='train');document.body.classList.toggle('cfr',V.name==='cframe');renderChips();onSq=null;const tab=tabOf(V.name);try{navLabels()}catch(e){}document.body.classList.toggle('b3d',P.set.board3d==='3d');applyTheme();applyTilt();
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
   ({pcat:vPCat,cframe:vCFrame,clevels:vCLevels,clevel:vCLevel,blind:vBlind,'x-learn':vLearn,'x-practice':vPractice,'x-playhub':vPlayHub,'x-me':vStats,'x-home':vHome,hl:vHl,home:vHome,learn:vLearn,playhub:vPlayHub,me:vStats,path:vLearn,stage:vStage,tut:vTut,q:vQ,result:vResult,practice:vPractice,explore:vExplore,play:vPlay,coach:vCoach,coachset:vCoachSet,coachrev:vCoachRev,codiary:vCoDiary,stats:vStats,gym:vHome,gmstory:vGmStory,replist:vRepList,rep:vRep,school:vSchool,skdo:vSkDo,road:vRoad,puz:vPuz,week:vWeek,endg:vEndg,calc:vCalc,gmlist:vGmList,gm:vGm,pgn:vPgn,trainset:vTrainSet,train:trRender,trainres:vTrainRes,friend:vFriend,ogame:vOGame})[V.name]();try{fbInvDraw()}catch(e){}try{fixBack();pageHead()}catch(e){}}
 
@@ -1643,30 +1672,51 @@ function historyCard(){const hd=P.hist||{};const days=[];const d=new Date();d.se
   return`<div class="card stack"><h3>Last 14 days</h3><p class="muted" style="font-size:14px">Bars: exercises per day. Dots: share answered correctly (top = 100%).</p>
   <div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:520px;display:block" role="img" aria-label="Exercises and accuracy over the last 14 days"><line x1="${pad}" x2="${W}" y1="8" y2="8" class="cgrid"/><line x1="${pad}" x2="${W}" y1="${8+(H-40)/2}" y2="${8+(H-40)/2}" class="cgrid"/><text x="0" y="11" class="clab">100%</text><text x="0" y="${11+(H-40)/2}" class="clab">50%</text>${bars}<path d="${line}" class="cline"/>${dots}</svg></div>
   <div class="tiles"><div class="tile"><b>${recent.n}</b><small>this week (last: ${prev.n})</small></div><div class="tile"><b>${pct(recent)}</b><small>correct (last: ${pct(prev)})</small></div><div class="tile"><b>${sec(recent)}</b><small>per answer (last: ${sec(prev)})</small></div></div></div>`}
+const AVAS=['♞','♛','♜','♝','🦁','🐯','🦊','🐼','🤖','🦉'];
+function applyAppTheme(){const t=P.set&&P.set.appth,r=document.documentElement;if(t==='light'||t==='dark')r.dataset.theme=t;else delete r.dataset.theme}
+function sgh(ic,t,sub,id,c){return`<div class="sgh" ${id?`id="${id}"`:''}><span class="sgi" style="background:${c}">${ic}</span><div><b>${t}</b>${sub?`<small>${sub}</small>`:''}</div></div>`}
+function stog(id,t,sub,on){return`<label class="toggle srow"><span>${t}${sub?`<br><small class="muted">${sub}</small>`:''}</span><input type="checkbox" class="sw" id="${id}" ${on?'checked':''}></label>`}
 function vStats(){const stars=ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0),passed=ALL_LESSONS.filter(l=>starsOf(l.id)).length;
-  let h=`<div class="stack"><span class="eyebrow">${L2('Settings · your profile','Settings · aapki profile')}</span><h1>${L2('Settings','Settings')}</h1>${langSegHTML(true)}${meTopHTML()}
-  <div class="tiles"><div class="tile"><b>${P.answered.toLocaleString()}</b><small>exercises done</small></div><div class="tile"><b>${streak()}</b><small>day streak</small></div><div class="tile"><b>${passed}/${ALL_LESSONS.length}</b><small>drills passed</small></div></div>
-  ${historyCard()}
-  ${trainStatsCard()}
-  ${progressHTML()}
-  <div class="card stack"><h3>Square map</h3><p class="muted" style="font-size:14px">Accuracy on each square across the file, rank, name, colour and starting-square drills. Red squares need work; grey ones you haven't met yet.</p>`;
-  const heat={};for(const s of ALL.map(sn)){const x=P.sq[s];heat[s]=x&&x.n?`color-mix(in srgb, var(--good) ${Math.round(x.c/x.n*100)}%, var(--bad))`:'var(--surface2)'}
-  h+=`<div class="heat">${boardHTML({persp:V.hp||'w',heat,heatLab:true,id:'heat'})}</div><div class="row" style="justify-content:space-between"><div class="seg">${['w','b'].map(p=>`<button class="${(V.hp||'w')===p?'on':''}" data-act="hp" data-v="${p}">${p==='w'?'White':'Black'} side</button>`).join('')}</div><span class="muted" style="font-size:13px">${Object.keys(P.srs).length} items in review</span></div></div>
-  <div class="card stack"><h3>Blindfold play</h3><div class="gstat"><span>Blindfold games</span><span class="mono">${P.games.w}W ${P.games.d}D ${P.games.l}L</span></div></div>
-  ${backupHTML()}
-  <div class="card stack" id="aikeycard"><h3>AI coach key (Gemini, free)</h3>${gKeyHTML()}</div>
-  ${(()=>{try{return fbCardHTML()+installCardHTML()}catch(e){return''}})()}
-  <div class="card"><h3>Settings</h3>
-   ${langSegHTML()}
-   <label class="toggle"><span>Unlock all stages<br><small class="muted">Skip ahead without passing earlier lessons</small></span><input type="checkbox" class="sw" id="set-unlock" ${P.set.unlockAll?'checked':''}></label>
-   <label class="toggle"><span>Read questions aloud<br><small class="muted">Each question and its moves are spoken, so you can train with eyes closed</small></span><input type="checkbox" class="sw" id="set-speakq" ${P.set.speakQ?'checked':''}></label>
-   <label class="toggle"><span>Read moves aloud<br><small class="muted">Hear the computer's moves and square names</small></span><input type="checkbox" class="sw" id="set-speak" ${P.set.speak?'checked':''}></label>
-   <div class="toggle" style="border:0"><span class="muted" style="font-size:14px">${cloud?'Progress is saved to your account and follows you between devices.':'Progress is saved in this browser.'}</span></div>
-   <button class="btn block" data-act="reset">${V.confirmReset?'Tap again to erase all progress':'Reset progress'}</button></div></div>`;
+  const r=levelNow(),k=rungOf(r),X=xpLevel(),xp=Math.max(0,Math.min(100,Math.round((X.x-(X.prev||0))/Math.max(1,X.next-(X.prev||0))*100))),av=P.set.avatar||'♞',nm=P.set.oname||'';
+  let bg=0,bt=0;try{bg=BADGES.filter(b=>{try{return b[3]()}catch(e){return false}}).length;bt=BADGES.length}catch(e){}
+  const G=P.games||{w:0,d:0,l:0},th=P.set.appth||'auto';
+  let h=`<div class="stack">
+  <section class="sprof"><div class="spdeco" aria-hidden="true">♚</div>
+    <div class="sptop"><button class="spava" data-act="ava-next" aria-label="${L2('Change avatar','Avatar badlo')}">${av}<i>✎</i></button>
+      <div class="spname"><input id="pname" maxlength="18" value="${esc(nm)}" placeholder="${L2('Your name','Aapka naam')}" aria-label="${L2('Your name','Aapka naam')}"><span class="sprank">🏅 ${esc(ROAD[k][1])} · ~${r}</span></div></div>
+    <div class="spxp"><div class="gstat"><b>Lv ${X.l}</b><small>${X.x} / ${X.next} XP</small></div><div class="h2xp"><i style="width:${xp}%"></i></div></div>
+    <div class="spst"><span><b>🪔 ${streak()}</b><small>${L2('streak','streak')}</small></span><span><b>★ ${stars}</b><small>${L2('stars','stars')}</small></span><span><b>🏆 ${bg}/${bt}</b><small>${L2('badges','badges')}</small></span><span><b>${G.w}-${G.d}-${G.l}</b><small>W-D-L</small></span></div>
+    <div class="spbtn"><button data-act="go" data-v="road">🗺 ${L2('Roadmap','Roadmap')}</button><button data-act="go" data-v="week">📝 ${L2('Weekly report','Weekly report')}</button></div></section>
+  <div class="sjump">${[['sg-look','🎨',L2('Look','Look')],['sg-sound','🔊',L2('Sound','Sound')],['sg-learn','🎓',L2('Learning','Seekhna')],['sg-ai','✦','AI'],['sg-acc','👤',L2('Account','Account')],['sg-data','💾',L2('Backup','Backup')],['sg-stats','📊',L2('Stats','Stats')]].map(([id,i,t])=>`<button data-act="sjump" data-v="${id}">${i} ${t}</button>`).join('')}</div>
+  <div class="card sgrp">${sgh('🌐',L2('Language','Bhasha'),L2('Menus, coach and voice','Menu, coach aur aawaaz'),'','#5B8DEF')}${langSegHTML()}</div>
+  <div class="card sgrp">${sgh('🎨',L2('Look and board','Look aur board'),L2('App colours, 2D/3D board, themes','App ke rang, 2D/3D board, themes'),'sg-look','#E07A5F')}
+    <div class="gstat srow" style="font-weight:500;gap:8px"><span style="font-size:15px">🌗 ${L2('App theme','App theme')}</span><div class="seg sm">${[['auto',L2('Auto','Auto')],['light',L2('Light','Light')],['dark',L2('Dark','Dark')]].map(([k2,t])=>`<button class="${th===k2?'on':''}" data-act="appth" data-v="${k2}">${t}</button>`).join('')}</div></div>
+    ${boardSegHTML()}${tiltHTML()}${themeHTML()}</div>
+  <div class="card sgrp">${sgh('🔊',L2('Sound and voice','Sound aur aawaaz'),L2('Effects, narration, read aloud','Effects, narration, padh kar sunao'),'sg-sound','#2FA36B')}
+    ${sfxSegHTML()}${funSegHTML()}
+    ${stog('set-speakq',L2('Read questions aloud','Sawaal bol kar sunao'),L2('Train with eyes closed','Aankh band karke practice'),P.set.speakQ)}
+    ${stog('set-speak',L2('Read moves aloud','Chaal bol kar sunao'),L2("Hear the computer's moves and square names","Computer ki chaal aur square ke naam suno"),P.set.speak)}</div>
+  <div class="card sgrp">${sgh('🎓',L2('Learning','Seekhna'),L2('How lessons unlock','Lessons kaise khulte hain'),'sg-learn','#8A63D2')}
+    ${stog('set-unlock',L2('Unlock all stages','Saare stages kholo'),L2('Skip ahead without passing earlier lessons','Pichhle lessons paas kiye bina aage jao'),P.set.unlockAll)}</div>
+  <div class="card sgrp" id="aikeycard">${sgh('✦',L2('AI coach (Gemini, free)','AI coach (Gemini, free)'),L2('Optional: explains every move','Optional: har chaal samjhata hai'),'sg-ai','#D9A21B')}${gKeyHTML()}</div>
+  <div id="sg-acc" class="sanchor"></div>${(()=>{try{return fbCardHTML()+installCardHTML()}catch(e){return''}})()}
+  <div id="sg-data" class="sanchor"></div>${backupHTML()}
+  <div class="card sgrp">${sgh('📊',L2('Your stats','Aapke stats'),`${P.answered.toLocaleString()} ${L2('exercises','exercises')} · ${passed}/${ALL_LESSONS.length} drills`,'sg-stats','#3F4A8A')}
+    <details class="sdet"><summary>🏅 ${L2('Badges and XP','Badges aur XP')}</summary>${(()=>{try{return badgesHTML()}catch(e){return''}})()}</details>
+    <details class="sdet"><summary>📅 ${L2('Activity and drills','Activity aur drills')}</summary>${historyCard()}${trainStatsCard()}</details>
+    <details class="sdet"><summary>📈 ${L2('Progress and weak areas','Progress aur kamzor areas')}</summary>${progressHTML()}</details>
+    <details class="sdet" ${V.hp?'open':''}><summary>🗺 ${L2('Square map','Square map')}</summary><div class="stack" style="margin-top:8px"><p class="muted" style="font-size:14px;margin:0">${L2("Accuracy on each square. Red squares need work; grey ones you haven't met yet.","Har square par sahi jawab. Laal = mehnat chahiye, grey = abhi nahi aaya.")}</p>`;
+  const heat={};for(const q of ALL.map(sn)){const x=P.sq[q];heat[q]=x&&x.n?`color-mix(in srgb, var(--good) ${Math.round(x.c/x.n*100)}%, var(--bad))`:'var(--surface2)'}
+  h+=`<div class="heat">${boardHTML({persp:V.hp||'w',heat,heatLab:true,id:'heat'})}</div><div class="row" style="justify-content:space-between"><div class="seg">${['w','b'].map(p=>`<button class="${(V.hp||'w')===p?'on':''}" data-act="hp" data-v="${p}">${p==='w'?'White':'Black'} side</button>`).join('')}</div><span class="muted" style="font-size:13px">${Object.keys(P.srs).length} ${L2('items in review','review mein')}</span></div></div></details></div>
+  <div class="card sgrp sdanger">${sgh('⚠️',L2('Danger zone','Dhyaan se'),L2('This cannot be undone. Save a backup first.','Ye wapas nahi hota. Pehle backup lo.'),'','#C8553D')}
+    <button class="btn block" data-act="reset">${V.confirmReset?L2('Tap again to erase all progress','Sab progress mitane ke liye phir dabao'):L2('Reset progress','Progress reset karo')}</button></div>
+  <div class="sabout"><div class="sablogo">64</div><b>64 Squares: Learn &amp; Play Chess</b><small>${APPV}</small><small>${cloud?L2('Progress is saved to your account and follows you between devices.','Progress aapke account mein save hai, har device par milega.'):L2('Progress is saved on this device.','Progress is device par save hai.')}</small><small>${L2('Made with ♥ for chess learners','Chess seekhne walon ke liye ♥ se bana')}</small></div>
+  </div>`;
   main.innerHTML=h;
   document.getElementById('set-unlock').onchange=e=>{P.set.unlockAll=e.target.checked;save()};
   document.getElementById('set-speakq').onchange=e=>{P.set.speakQ=e.target.checked;save();if(e.target.checked)sayAny('Questions will be read aloud.')};
-  document.getElementById('set-speak').onchange=e=>{P.set.speak=e.target.checked;save();if(e.target.checked)speak('e 4')}}
+  document.getElementById('set-speak').onchange=e=>{P.set.speak=e.target.checked;save();if(e.target.checked)speak('e 4')};
+  document.getElementById('pname').onchange=e=>{P.set.oname=e.target.value.trim().slice(0,18);save()}}
 
 /* ---------- backup / restore ---------- */
 function backupDue(){const t=P.lastBackup||0;const used=(P.answered||0)+(P.coach||[]).length+(P.pzn||0);return used>=20&&Date.now()-t>7*864e5}
@@ -1713,6 +1763,9 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
   if(a==='bl-go'){const l=ALL_LESSONS.find(x=>x.id===d.id);if(l){clearTimers();if(V&&!NOHIST.includes(V.name))HIST.push(V);trOpts();V={name:'trainset',m:l.m,from:l.stage.id,lesson:l};trStart()}return}
   if(a==='pcat'){go({name:'pcat',c:d.v});return}
   if(a==='lvsec'){V.sec=d.v;render();return}
+  if(a==='ava-next'){const i=AVAS.indexOf(P.set.avatar||'♞');P.set.avatar=AVAS[(i+1)%AVAS.length];save();const el=main.querySelector('.spava');if(el){el.firstChild.textContent=P.set.avatar;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop')}return}
+  if(a==='appth'){P.set.appth=d.v;save();applyAppTheme();render();return}
+  if(a==='sjump'){const el=document.getElementById(d.v);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return}
   if(a==='ltrk'){P.set.ltrk=d.v;save();render();return}
   if(a==='clev'){if(V.name==='clevel'){V={name:'clevel',i:+d.i,sec:V.sec};render();window.scrollTo(0,0)}else go({name:'clevel',i:+d.i});return}
   if(a==='course-more'){const [k,v]=String(d.v).split(':');if(k==='sch')go({name:'school',grp:v});else if(v==='pz')pzStart('rated');else go({name:v});return}
@@ -2838,7 +2891,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v54';
+const APPV='2026.11.08 · v55';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -2914,7 +2967,7 @@ function homeHero(){const hr=new Date().getHours(),gr=hr<12?L2('Good morning','G
   const d=dailyAuto(),n=d.items.filter(x=>x.done).length,ni=d.items.findIndex(x=>!x.done),X=xpLevel(),st=ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0),pct=Math.round(n/d.items.length*100);
   const nx=ni>=0?d.items[ni]:null,nt=nx?(HI()&&PLAN_HI[nx.k]?PLAN_HI[nx.k][0]:nx.t):'';
   return`<section class="hero2"><div class="h2deco" aria-hidden="true"></div><span class="h2day">${new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'short'})}</span><h1>${gr} 👋</h1><p>${L2("Let's sharpen your chess mind today.",'Chalo, aaj chess ka dimaag tez karein.')}</p>
-  <div class="h2stats"><span><b>${streak()}</b><small>${L2('day streak','din streak')} 🪔</small></span><span><b>${st}</b><small>${L2('stars','stars')} ★</small></span><span><b>${P.prate||800}</b><small>${L2('puzzle rating','puzzle rating')}</small></span></div>${(()=>{const r=levelNow(),k=rungOf(r),xp=Math.min(100,Math.round(X.x/Math.max(1,X.next)*100));return`<button class="h2lvl" data-act="go" data-v="road"><span class="h2lr"><small>${L2('Your level','Aapka level')}</small><b class="mono">~${r}</b></span><span class="h2lm"><span class="h2rung">${esc(ROAD[k][1])}</span><span class="h2xp"><i style="width:${xp}%"></i></span><small>Lv ${X.l} · ${X.x}/${X.next} XP · ${L2('Next','Agla')}: ${esc(ROAD[k][3])}</small></span><span class="h2arr">›</span></button>`})()}
+  <div class="h2stats"><span><b>${streak()}</b><small>${L2('day streak','din streak')} 🪔</small></span><span><b>${st}</b><small>${L2('stars','stars')} ★</small></span><span><b>${P.prate||800}</b><small>${L2('puzzle rating','puzzle rating')}</small></span></div>${(()=>{const r=levelNow(),k=rungOf(r),xp=Math.max(0,Math.min(100,Math.round((X.x-(X.prev||0))/Math.max(1,X.next-(X.prev||0))*100)));return`<button class="h2lvl" data-act="go" data-v="road"><span class="h2lr"><small>${L2('Your level','Aapka level')}</small><b class="mono">~${r}</b></span><span class="h2lm"><span class="h2rung">${esc(ROAD[k][1])}</span><span class="h2xp"><i style="width:${xp}%"></i></span><small>Lv ${X.l} · ${X.x}/${X.next} XP · ${L2('Next','Agla')}: ${esc(ROAD[k][3])}</small></span><span class="h2arr">›</span></button>`})()}
   <div class="h2ring"><i style="--p:${pct}"></i><span>${n}/${d.items.length}<small>${L2('plan','plan')}</small></span></div>
   ${nx?`<button class="h2go" data-act="gy-do" data-v="${ni}">▶ ${L2('Start','Shuru karo')}: ${esc(nt)}</button>`:`<button class="h2go" data-act="course-more" data-v="x:coachset">♛ ${L2('Play a game','Ek game khelo')}</button>`}</section>`}
 function gmFinal(i){const x=GMG[i];gmFinal.c=gmFinal.c||{};if(gmFinal.c[i])return gmFinal.c[i];let st=startState(),last=null;for(const t of x[4].split(' ')){const m=findMove(st,t);if(!m)break;st=make(st,m);last=m}return gmFinal.c[i]={st,last}}
