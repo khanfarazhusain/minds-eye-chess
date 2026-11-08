@@ -623,16 +623,35 @@ body.cfr .cfwrap{flex:1;min-height:0;gap:8px}
 .ptiles .qt{min-height:110px}.ptiles .qt:last-child:nth-child(odd){grid-column:span 2;min-height:88px}
 .pitem .pic{background:var(--surface2);font-size:16px}
 .lnow .pitem .lvs{color:var(--accent);font-size:14px}
+
+/* v51: tab bar redesign */
+nav.tabs{left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));border-radius:26px;background:rgba(18,32,25,.94);-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);box-shadow:0 14px 34px rgba(10,25,18,.32),inset 0 0 0 1px rgba(255,255,255,.06)}
+nav.tabs .wrap{grid-template-columns:repeat(5,1fr);gap:2px;padding:7px 6px!important}
+nav.tabs button{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0 5px!important;border-radius:18px;color:#8FA398;font-family:var(--f-body);font-size:11px!important;font-weight:600;letter-spacing:.01em;background:none!important;transition:color .2s}
+nav.tabs button .ti{display:grid;place-items:center;width:auto;height:auto;background:none!important;border-radius:0;font-size:0}
+nav.tabs button svg{display:block;transition:transform .2s}
+nav.tabs button em{font-style:normal;line-height:1;white-space:nowrap}
+nav.tabs button::before{content:"";position:absolute;inset:2px 6px;border-radius:16px;background:rgba(123,224,166,.16);opacity:0;transform:scale(.85);transition:opacity .2s,transform .2s}
+nav.tabs button.on{color:#7BE0A6;font-weight:800}
+nav.tabs button.on::before{opacity:1;transform:scale(1)}
+nav.tabs button.on svg{transform:translateY(-1px)}
+nav.tabs button.on::after{content:"";position:absolute;top:-1px;left:50%;width:18px;height:3px;margin-left:-9px;border-radius:0 0 3px 3px;background:#7BE0A6}
+@media (max-width:360px){nav.tabs button{font-size:10px!important}nav.tabs button svg{width:20px;height:20px}}
+/* practice tiles: icon in flow, no overlap */
+.qt{display:flex!important;flex-direction:column;justify-content:flex-start;align-content:normal;gap:4px;padding:14px!important}
+.qt span{position:static!important;font-size:24px;line-height:1;margin-bottom:6px}
+.qt b{line-height:1.15;overflow-wrap:anywhere}
+.qt small{line-height:1.25}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
 <main id="main" class="wrap"></main>
 <nav class="tabs"><div class="wrap" id="tabs">
-  <button data-tab="home"><span>⌂&#xFE0E;</span>Aaj</button>
-  <button data-tab="learn"><span>♜&#xFE0E;</span>Seekho</button>
-  <button data-tab="practice"><span>◎&#xFE0E;</span>Practice</button>
-  <button data-tab="playhub"><span>♚&#xFE0E;</span>Khelo</button>
-  <button data-tab="me"><span>▦&#xFE0E;</span>Main</button>
+  <button data-tab="home"><span class="ti"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 4l8.5 6.5V20a1 1 0 0 1-1 1h-5v-6h-5v6h-5a1 1 0 0 1-1-1z"/></svg></span><em>Home</em></button>
+  <button data-tab="learn"><span class="ti"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 12 4l9.5 4.5L12 13z"/><path d="M6.5 10.5V16c0 1.4 2.5 3 5.5 3s5.5-1.6 5.5-3v-5.5"/><path d="M21.5 8.5v5"/></svg></span><em>Seekho</em></button>
+  <button data-tab="practice"><span class="ti"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span><em>Practice</em></button>
+  <button data-tab="playhub"><span class="ti"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20h9"/><path d="M9 20c0-3 1.5-5 3-6.5-2.2.4-4 .1-5-1l3.5-6.5c3.5-.5 7 2 7 7.5V20"/><circle cx="12.6" cy="8.6" r=".7" fill="currentColor"/></svg></span><em>Khelo</em></button>
+  <button data-tab="me"><span class="ti"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M4.2 7.4l2 1.2M17.8 15.4l2 1.2M4.2 16.6l2-1.2M17.8 8.6l2-1.2"/><path d="M12 5.2a6.8 6.8 0 1 1 0 13.6 6.8 6.8 0 0 1 0-13.6z"/></svg></span><em>Settings</em></button>
 </div></nav>
 
 <script>
@@ -1108,7 +1127,7 @@ function setMain(h){const f=main.querySelector('.fixscroll'),y=f?f.scrollTop:0,s
 let V={name:'home'},S=null,G=null,timerInt=null,autoNext=null,onSq=null;
 const main=document.getElementById('main');
 const ROOTS=['home','learn','practice','playhub','me'],NOHIST=['q','result','train','trainres','cframe'],HIST=[];let TABCTX='home';
-const TABN={home:['Today','Aaj'],learn:['Learn','Seekho'],practice:['Practice','Practice'],playhub:['Play','Khelo'],me:['Me','Main']};
+const TABN={home:['Home','Home'],learn:['Learn','Seekho'],practice:['Practice','Practice'],playhub:['Play','Khelo'],me:['Settings','Settings']};
 function go(v){clearTimers();if(v.name!=='q'&&v.name!=='result')S=null;
   if(ROOTS.includes(v.name)){TABCTX=v.name;HIST.length=0}
   else if(V&&V.name!==v.name&&!NOHIST.includes(V.name)){HIST.push(V);if(HIST.length>30)HIST.shift()}
@@ -1120,7 +1139,7 @@ function fixBack(){if(ROOTS.includes(V.name))return;const lab='← '+backLabel()
   main.querySelectorAll('[data-act="tab"]').forEach(b=>{if(isBackBtn(b)){b.textContent=lab;b.classList.add('backbtn');any=true}});
   if(!any&&document.body.classList.contains('fixb')){const g=main.querySelector('.fixtop .gstat')||main.querySelector('.fixtop');if(g){const b=document.createElement('button');b.className='btn small backbtn';b.dataset.act='back';b.textContent=lab;g.prepend(b)}return}
   if(!any&&!document.body.classList.contains('fixb')&&!NOHIST.includes(V.name)){const st=main.firstElementChild;if(st){const b=document.createElement('button');b.className='btn small backbtn';b.dataset.act='back';b.style.alignSelf='flex-start';b.textContent=lab;st.prepend(b)}}}
-const PGH={learn:['pg-learn','♜','Course levels and blindfold training','Course levels aur blindfold training'],practice:['pg-prac','◎','Puzzles, drills and revision','Puzzles, drills aur revision'],playhub:['pg-play','♚','Coach, blindfold and friends','Coach, blindfold aur dost'],me:['pg-me','▦','Progress, settings and backup','Progress, settings aur backup']};
+const PGH={learn:['pg-learn','♜','Course levels and blindfold training','Course levels aur blindfold training'],practice:['pg-prac','◎','Puzzles, drills and revision','Puzzles, drills aur revision'],playhub:['pg-play','♚','Coach, blindfold and friends','Coach, blindfold aur dost'],me:['pg-me','⚙','Progress, settings and backup','Progress, settings aur backup']};
 function pageHead(){const x=PGH[V.name];if(!x)return;const st=main.firstElementChild;if(!st||st.querySelector(':scope>.pghead'))return;const h1=st.querySelector(':scope>h1');if(!h1)return;
   const ey=st.querySelector(':scope>.eyebrow');const hd=document.createElement('header');hd.className='pghead '+x[0];
   hd.innerHTML=`<span class="pgic" aria-hidden="true">${x[1]}&#xFE0E;</span><div><span class="pgey"></span><h1></h1><small></small></div>`;
@@ -1557,7 +1576,7 @@ function historyCard(){const hd=P.hist||{};const days=[];const d=new Date();d.se
   <div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:520px;display:block" role="img" aria-label="Exercises and accuracy over the last 14 days"><line x1="${pad}" x2="${W}" y1="8" y2="8" class="cgrid"/><line x1="${pad}" x2="${W}" y1="${8+(H-40)/2}" y2="${8+(H-40)/2}" class="cgrid"/><text x="0" y="11" class="clab">100%</text><text x="0" y="${11+(H-40)/2}" class="clab">50%</text>${bars}<path d="${line}" class="cline"/>${dots}</svg></div>
   <div class="tiles"><div class="tile"><b>${recent.n}</b><small>this week (last: ${prev.n})</small></div><div class="tile"><b>${pct(recent)}</b><small>correct (last: ${pct(prev)})</small></div><div class="tile"><b>${sec(recent)}</b><small>per answer (last: ${sec(prev)})</small></div></div></div>`}
 function vStats(){const stars=ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0),passed=ALL_LESSONS.filter(l=>starsOf(l.id)).length;
-  let h=`<div class="stack"><span class="eyebrow">${L2('Me · your profile','Main · aapki profile')}</span><h1>${L2('Progress','Progress')}</h1>${langSegHTML(true)}${meTopHTML()}
+  let h=`<div class="stack"><span class="eyebrow">${L2('Settings · your profile','Settings · aapki profile')}</span><h1>${L2('Settings','Settings')}</h1>${langSegHTML(true)}${meTopHTML()}
   <div class="tiles"><div class="tile"><b>${P.answered.toLocaleString()}</b><small>exercises done</small></div><div class="tile"><b>${streak()}</b><small>day streak</small></div><div class="tile"><b>${passed}/${ALL_LESSONS.length}</b><small>drills passed</small></div></div>
   ${historyCard()}
   ${trainStatsCard()}
@@ -2561,7 +2580,7 @@ const ROAD=[
  [2200,'Candidate / FIDE Master','Serious opening preparation, complex endgames, regular rated tournaments over the board.','A FIDE rating around 2300 in real events.'],
  [2400,'IM and GM','Years of tournaments, a trainer, deep preparation and norms. The app gives you the road and the training; real games against people are a must.','Norms in international tournaments.']];
 function rungOf(r){let k=0;ROAD.forEach((x,i)=>{if(r>=x[0]-100)k=i});return k}
-function vRoad(){const r=levelNow(),k=rungOf(r);let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="me">← Main</button><span class="eyebrow">Roadmap</span><h1>From 800 to GM</h1><p class="muted">Your level now: about <b>${r}</b> (from puzzles and coach games). Each step says what to learn and when to move up.</p><div class="road">`;
+function vRoad(){const r=levelNow(),k=rungOf(r);let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="me">← Settings</button><span class="eyebrow">Roadmap</span><h1>From 800 to GM</h1><p class="muted">Your level now: about <b>${r}</b> (from puzzles and coach games). Each step says what to learn and when to move up.</p><div class="road">`;
   ROAD.slice().reverse().forEach((x,j)=>{const i=ROAD.length-1-j,st=i<k?'done':i===k?'here':'';h+=`<div class="rung ${st}"><div class="rh"><b class="mono">${x[0]}${i===ROAD.length-1?'+':''}</b> <b>${x[1]}</b>${i===k?' <span class="cls good">You are here</span>':i<k?' <span class="muted">✓</span>':''}</div>${i===k||i===k+1?`<div class="rl"><b>Learn:</b> ${esc(x[2])}</div><div class="rl muted"><b>Move up when:</b> ${esc(x[3])}</div>`:''}</div>`});
   h+=`</div><p class="muted" style="font-size:14px">Honest note: becoming a GM takes many years of practice. Play real people often (Lichess or Chess.com) and review those games here.</p></div>`;main.innerHTML=h}
 
@@ -2750,7 +2769,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v50';
+const APPV='2026.11.08 · v51';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -2803,7 +2822,7 @@ function tiltHTML(){if(P.set.board3d!=='3d')return'';const t=P.set.tilt!=null?P.
   return`<div class="stack" style="gap:4px"><div class="gstat" style="font-weight:500"><span style="font-size:14px">${L2('Board tilt','Board ka jhukaav')}</span><b class="mono" id="tiltv">${t}°</b></div><input type="range" id="tilt" min="0" max="60" step="1" value="${t}" style="width:100%;accent-color:var(--accent)"><small class="muted">${L2('Drag to tilt the board. 0° = flat from the top. During a game, tap the 3D button at the corner of the board and drag the board to turn and tilt it.','Slider khiskao. 0° = upar se seedha. Game ke beech board ke kone par 3D button dabao, phir board ko ungli se ghumao aur jhukao.')}</small><div style="max-width:240px;margin:6px auto 0;width:100%">${boardHTML({persp:'w',pieces:toMap(st.b),id:'tiltprev'})}</div></div>`}
 document.addEventListener('input',e=>{if(e.target&&e.target.id==='tilt')setTilt(+e.target.value)});
 function boardSegHTML(){return`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">♟ ${L2('Board style','Board style')}</span><div class="seg sm">${[['2d','2D'],['3d','3D']].map(([k,t])=>`<button class="${(P.set.board3d||'2d')===k?'on':''}" data-act="b3d-set" data-v="${k}">${t}</button>`).join('')}</div></div>`}
-function navLabels(){const N={home:['Today','Aaj'],learn:['Learn','Seekho'],practice:['Practice','Practice'],playhub:['Play','Khelo'],me:['Me','Main']};document.querySelectorAll('#tabs button').forEach(b=>{const x=N[b.dataset.tab];if(!x)return;const t=HI()?x[1]:x[0];const n=[...b.childNodes].find(c=>c.nodeType===3&&c.textContent.trim());if(n&&n.textContent!==t)n.textContent=t})}
+function navLabels(){const N={home:['Home','Home'],learn:['Learn','Seekho'],practice:['Practice','Practice'],playhub:['Play','Khelo'],me:['Settings','Settings']};document.querySelectorAll('#tabs button').forEach(b=>{const x=N[b.dataset.tab];if(!x)return;const t=HI()?x[1]:x[0];const n=b.querySelector('em');if(n&&n.textContent!==t)n.textContent=t})}
 function tabOf(n){if(ROOTS.includes(n))return n;return TABCTX;const T={hl:'playhub',home:'home',gym:'home',learn:'learn',path:'learn',stage:'learn',tut:'learn',school:'learn',skdo:'learn',replist:'learn',rep:'learn',
   practice:'practice',explore:'practice',puz:'practice',week:'practice',endg:'practice',calc:'practice',gmlist:'practice',gm:'practice',gmstory:'practice',codiary:'practice',
   playhub:'playhub',play:'playhub',coach:'playhub',coachset:'playhub',coachrev:'playhub',friend:'playhub',ogame:'playhub',pgn:'playhub',
