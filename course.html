@@ -676,14 +676,35 @@ function player(app,steps,opt){// generic step-by-step player for lessons, tests
     stage.appendChild(renderStep(s,{test:opt.test,lessonTitle:opt.title(s),where:opt.where,done:ok=>{res[i]=ok;nb.disabled=false;if(ok!=null)setTimeout(()=>{const f=stage.querySelector('.fb');(f||foot).scrollIntoView({behavior:'smooth',block:'nearest'})},80)}}));
     if(s.t==='info')nb.disabled=false;window.scrollTo(0,0)}
   nb.onclick=()=>{if(i<steps.length-1){i++;show()}else opt.finish(res)};show()}
+
+/* hands-on quiz after every lesson, built only from that lesson */
+function lessonQuiz(les){const L0=COURSE[les.li]||COURSE.find(L=>L.lessons.includes(les));const S=(les.steps||[]).concat(((L0&&L0.test)||[]).filter(t=>t.les===les.key));const hands=[],mcq=[];
+  S.forEach(st=>{if(st.t==='move'&&st.fen&&st.line&&st.line.length)hands.push(Object.assign({},st,{q:st.q||'Sabse achhi chaal chalo.'}));
+    else if(st.t==='reach'&&st.fen)hands.push(Object.assign({},st));else if(st.t==='tap')hands.push(Object.assign({},st,{rand:Math.min(st.rand||5,5)}));
+    else if(st.t==='quiz')mcq.push(Object.assign({},st));
+    else if(st.t==='line'&&st.moves){try{const mv=st.moves.trim().split(/\s+/).map(x=>x.replace(/^\d+\.(\.\.)?/,'')).filter(Boolean);let p=parseFEN(st.fen||START_FEN);const fens=[];
+      for(let k=0;k<mv.length;k++){fens.push(fenOf(p));const m=findMove(p,mv[k]);if(!m)break;p=make(p,m)}
+      const idx=shuffle(fens.map((_,k)=>k).filter(k=>k>=2&&k<fens.length)).slice(0,2);
+      idx.forEach(k=>{const so=mv.slice(0,k).map((x,j)=>(j%2?'':(j/2+1)+'.')+x).join(' ');hands.push({t:'move',fen:fens[k],line:[mv[k]],q:`**${st.h||'Is line'}**: ${so} ke baad agli chaal chalo.`,why:`Sahi chaal: \`${mv[k]}\`. Ye isi lesson ki line ka hissa hai.`,hint:'Lesson mein jo line dekhi thi, use yaad karo.',les:st.les,id:st.id?st.id+'#'+k:undefined})})}catch(e){}}});
+  if(hands.length<2&&L0){const extra=shuffle([].concat(...L0.lessons.filter(x=>x!==les).map(x=>x.steps.filter(t=>(t.t==='move'&&t.fen&&t.line&&t.line.length)||(t.t==='reach'&&t.fen))))).slice(0,2-hands.length);extra.forEach(t=>hands.push(Object.assign({},t)))}
+  const hs=shuffle(hands).slice(0,6),need=Math.max(0,Math.min(8,Math.max(5,hs.length))-hs.length),ms=shuffle(mcq).slice(0,Math.max(need,hs.length<6?2:1));
+  return shuffle(hs.concat(ms)).slice(0,8)}
+function quizStars(p){return p>=95?3:p>=80?2:p>=50?1:0}
 function vLesson(li,lj){const L=COURSE[li],les=L&&L.lessons[lj];if(!les)return go('#/');const app=$('#app');
   if(!lessonUnlocked(les)){app.innerHTML=`<div class="card stack"><p>🔒 Pehle pichla lesson poora karo.</p><button class="btn" data-go="#/level/${li}">‹ Level</button></div>`;return}
-  player(app,les.steps,{back:'#/level/'+li,title:()=>les.title,where:'Lesson',finish:res=>{const first=!PR.done[les.key];PR.done[les.key]=1;touchDay();if(first)PR.day.lesson++;save();if(first)addXP(25);
+  player(app,les.steps,{back:'#/level/'+li,title:()=>les.title,where:'Lesson',finish:res=>{const qz=lessonQuiz(les);if(qz.length)return runLessonQuiz(li,lj,qz,res);lessonDone(li,lj,res,null)}})}
+function runLessonQuiz(li,lj,qz,lres){const L=COURSE[li],les=L.lessons[lj],app=$('#app');app.innerHTML=`<div class="stack center"><div class="big">🎯</div><h1>Lesson quiz</h1><p>${esc(les.title)}</p><div class="card tut">${md(`Ab is lesson ka chhota quiz: **${qz.length} sawaal**, zyadatar board par. **80%** sahi karo to lesson poora aur agla lesson khulega.`)}</div><button class="btn primary block" id="qgo">Quiz shuru karo ›</button></div>`;
+  $('#qgo').onclick=()=>{app.innerHTML='';window.scrollTo(0,0);player(app,qz,{test:true,back:'#/level/'+li,title:()=>les.title+' · quiz',head:()=>'Quiz · '+les.title,where:'Lesson quiz',finish:res=>{
+    const ok=res.filter(Boolean).length,pct=Math.round(ok/qz.length*100);PR.lq=PR.lq||{};const prev=PR.lq[les.key]||0;PR.lq[les.key]=Math.max(prev,pct);save();
+    if(pct>=80||PR.done[les.key])lessonDone(li,lj,lres,{pct,ok,n:qz.length,bonus:pct>prev&&pct>=80});
+    else app.innerHTML=`<div class="stack center"><div class="big">📘</div><h1>${pct}%</h1><p>${ok}/${qz.length} sahi. Lesson poora karne ke liye 80% chahiye.</p><div class="card tut">${md('Koi baat nahi. Galat sawaal review list mein chale gaye. Lesson ek baar dekh lo ya seedha quiz dobara do.')}</div>
+      <button class="btn primary block" id="qre">Quiz dobara do ›</button><button class="btn block" data-go="#/lesson/${li}/${lj}" data-re="1">Lesson dobara dekho</button><button class="btn block" data-go="#/level/${li}">Level par wapas</button></div>`,$('#qre').onclick=()=>runLessonQuiz(li,lj,lessonQuiz(les),lres)}})}}
+function lessonDone(li,lj,res,q){const L=COURSE[li],les=L.lessons[lj],app=$('#app');{const first=!PR.done[les.key];PR.done[les.key]=1;touchDay();if(first)PR.day.lesson++;save();if(first)addXP(25);if(q&&q.bonus)addXP(10+quizStars(q.pct)*5);
     const g=res.filter(x=>x!=null),ok=g.filter(Boolean).length;
-    const nxt=L.lessons[lj+1];app.innerHTML=`<div class="stack center"><div class="big">🎉</div><h1>Lesson poora!</h1><p>${esc(les.title)}</p>${g.length?`<p class="muted">Pehli koshish mein sahi: ${ok}/${g.length}</p>`:''}
+    const nxt=L.lessons[lj+1];app.innerHTML=`<div class="stack center"><div class="big">🎉</div><h1>Lesson poora!</h1><p>${esc(les.title)}</p>${q?`<p style="font-size:28px;margin:0">${'⭐'.repeat(quizStars(q.pct))}${'☆'.repeat(3-quizStars(q.pct))}</p><p class="muted">Quiz: ${q.ok}/${q.n} sahi (${q.pct}%)</p>`:g.length?`<p class="muted">Pehli koshish mein sahi: ${ok}/${g.length}</p>`:''}
      <div class="card tut">${md(ok<g.length*0.7&&g.length?'Kuch sawaal mushkil lage. Koi baat nahi: yeh review list mein chale gaye, kal dobara aayenge. Chaho to lesson abhi ek baar aur kar lo.':'Bahut badhiya! Coach khush hai. Chalo agla step.')}</div>
      ${nxt?`<button class="btn primary block" data-go="#/lesson/${li}/${lj+1}">Agla lesson: ${esc(nxt.title)} ›</button>`:L.test?`<button class="btn primary block" data-go="#/test/${li}">Level test do ›</button>`:''}
-     <a class="btn block" style="text-decoration:none" href="notes.html#${L.id}-${les.id}">📝 Is lesson ke notes</a><button class="btn block" data-go="#/lesson/${li}/${lj}" data-re="1">Dobara karo</button><button class="btn block" data-go="#/">Home</button></div>`}})}
+     <a class="btn block" style="text-decoration:none" href="notes.html#${L.id}-${les.id}">📝 Is lesson ke notes</a><button class="btn block" data-go="#/lesson/${li}/${lj}" data-re="1">Dobara karo</button><button class="btn block" data-go="#/">Home</button></div>`}}
 function vTest(li){const L=COURSE[li],app=$('#app');if(!L||!L.test)return go('#/');
   player(app,L.test,{test:true,back:'#/level/'+li,title:()=>L.title+' test',where:'Level test',head:s=>s.les&&lesByKey(s.les)?lesByKey(s.les).title:'Test',finish:res=>{
     const ok=res.filter(Boolean).length,pct=Math.round(ok/L.test.length*100);const prev=PR.tests[L.id];PR.tests[L.id]=Math.max(prev||0,pct);save();if(pct>=70&&!(prev>=70))addXP(50);
