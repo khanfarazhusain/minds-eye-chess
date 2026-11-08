@@ -951,6 +951,48 @@ body.fixb{margin:0!important}
 body.fixb .fixtop .gstat .mono:not(.clk){font-family:inherit;font-weight:800;letter-spacing:0}
 
 .gsbtn{grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr))}.gsbtn button{white-space:normal;min-width:0}
+
+/* v76: daily quests on Home */
+.dq{border-radius:26px;overflow:hidden;background:var(--surface);box-shadow:0 1px 0 var(--line),0 14px 30px -18px rgba(0,0,0,.35)}
+.dqh{display:flex;gap:12px;align-items:center;padding:18px 18px 16px;color:#fff;background:linear-gradient(135deg,#FF9F43 0%,#F25C54 55%,#B13FB8 100%);position:relative;overflow:hidden}
+.dqh::after{content:"";position:absolute;right:-40px;top:-50px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.12)}
+.dq.alldone .dqh{background:linear-gradient(135deg,#4FBF83,#1D7F55)}
+.dqht{flex:1;min-width:0;display:grid;gap:2px;position:relative;z-index:1}
+.dqey{font-size:11.5px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;opacity:.9}
+.dqht b{font-family:var(--f-display);font-size:22px;line-height:1.15}.dqht small{font-size:12.5px;opacity:.9;line-height:1.3}
+.dqring{flex:none;width:64px;height:64px;position:relative;z-index:1;display:grid;place-items:center}
+.dqring svg{position:absolute;inset:0;transform:rotate(-90deg)}.dqring circle{fill:none;stroke-width:6}.dqr0{stroke:rgba(255,255,255,.28)}.dqr1{stroke:#fff;stroke-linecap:round;transition:stroke-dashoffset .8s cubic-bezier(.2,.8,.2,1)}
+.dqring span{font-weight:900;font-size:16px}
+.dqlist{display:grid;gap:10px;padding:14px}
+.dqc{display:flex;gap:12px;align-items:center;width:100%;text-align:left;border:0;font:inherit;color:var(--fg);padding:12px;border-radius:20px;background:var(--surface2);box-shadow:inset 0 -3px 0 rgba(0,0,0,.06);transition:transform .12s}
+.dqc:active{transform:scale(.98)}
+.dqic{flex:0 0 48px;height:48px;border-radius:16px;display:grid;place-items:center;font-size:24px;background:linear-gradient(160deg,color-mix(in srgb,var(--pc) 22%,#fff),color-mix(in srgb,var(--pc) 38%,#fff));box-shadow:0 3px 0 color-mix(in srgb,var(--pc) 55%,#000 10%)}
+.dqtx{flex:1;min-width:0;display:grid;gap:3px}.dqtx b{font-size:15.5px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dqtx small{color:var(--muted);font-size:12.5px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dqpr{display:flex;align-items:center;gap:8px;margin-top:3px}.dqbar{flex:1;height:8px;border-radius:9px;background:color-mix(in srgb,var(--pc) 16%,var(--surface));overflow:hidden}
+.dqbar i{display:block;height:100%;border-radius:9px;background:var(--pc);transition:width .6s}
+.dqpr em{font-style:normal;font-size:11.5px;font-weight:800;color:var(--muted);min-width:28px;text-align:right}
+.dqgo{flex:none;display:grid;justify-items:center;gap:3px;font-size:13px;color:#fff}
+.dqgo:not(:empty){}
+.dqc:not(.done) .dqgo{width:44px;height:44px;border-radius:50%;place-content:center;background:var(--pc);box-shadow:0 3px 0 color-mix(in srgb,var(--pc) 60%,#000 25%);position:relative}
+.dqc:not(.done) .dqgo small{position:absolute;bottom:-17px;white-space:nowrap;font-size:10.5px;font-weight:800;color:var(--muted)}
+.dqc:not(.done){margin-bottom:6px}
+.dqc.done{background:color-mix(in srgb,#2FA36B 10%,var(--surface));box-shadow:inset 0 0 0 2px color-mix(in srgb,#2FA36B 45%,transparent)}
+.dqc.done .dqic{background:linear-gradient(160deg,#5BC48C,#2F8F5E)!important;color:#fff;font-weight:900;box-shadow:0 3px 0 #1F5C3E;animation:dqpop .5s cubic-bezier(.3,1.6,.5,1)}
+.dqc.done .dqtx b{opacity:.65;text-decoration:line-through;text-decoration-thickness:2px}
+.dqc.done .dqgo small{font-size:11.5px;font-weight:900;color:#16733E;background:#DDF3E5;padding:4px 9px;border-radius:999px}
+.dqc.done .dqbar i{background:#2FA36B}
+@keyframes dqpop{0%{transform:scale(.6)}100%{transform:scale(1)}}
+body.lowfx .dqc.done .dqic{animation:none}
+.dqchest{display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap;margin:0 14px 14px;padding:10px 14px;border-radius:16px;background:color-mix(in srgb,#F0B23A 16%,var(--surface));font-size:13px;font-weight:800}
+.dqdots{display:flex;gap:5px}.dqdots i{width:10px;height:10px;border-radius:50%;background:color-mix(in srgb,#F0B23A 35%,var(--surface2))}.dqdots i.on{background:#F0A93A;box-shadow:0 0 0 2px color-mix(in srgb,#F0B23A 35%,transparent)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .dqic{background:linear-gradient(160deg,color-mix(in srgb,var(--pc) 40%,#1a1a1a),color-mix(in srgb,var(--pc) 25%,#111))}:root:not([data-theme="light"]) .dqc.done .dqgo small{background:#1E3A2C;color:#7DDBA5}}
+:root[data-theme="dark"] .dqic{background:linear-gradient(160deg,color-mix(in srgb,var(--pc) 40%,#1a1a1a),color-mix(in srgb,var(--pc) 25%,#111))}:root[data-theme="dark"] .dqc.done .dqgo small{background:#1E3A2C;color:#7DDBA5}
+
+.dq{container-type:inline-size}
+.dqtx b{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+@container (max-width:265px){.dqh{padding:14px}.dqht b{font-size:19px}.dqht small{display:none}.dqring{width:54px;height:54px}.dqlist{padding:10px;gap:8px}.dqc{gap:9px;padding:10px}.dqic{flex-basis:38px;height:38px;font-size:19px;border-radius:12px}.dqtx small{display:none}.dqc:not(.done) .dqgo{width:36px;height:36px}.dqc.done .dqgo small{padding:3px 7px;font-size:10.5px}.dqchest{margin:0 10px 10px;font-size:12px}}
+@container (max-width:235px){.dqc:not(.done) .dqgo{display:none}.dqc:not(.done){margin-bottom:0}.dqc.done .dqgo{display:none}}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -2970,11 +3012,15 @@ function dailyPlan(){gymInit();const k=dayK();let d=P.daily[k];if(d)return d;con
   d=P.daily[k]={items:items.map(x=>({...x,done:false}))};const ks=Object.keys(P.daily).sort();while(ks.length>14)delete P.daily[ks.shift()];save();return d}
 function dailyAuto(){const d=dailyPlan(),k=dayK();for(const x of d.items){if(x.done)continue;if(x.k==='puz'&&(P.pzlog[k]||{}).n>=10)x.done=true;if(x.k==='game'&&(P.coach||[]).some(g=>dayK(g.d)===k))x.done=true}return d}
 const PLAN_HI={course:['📘 Course lesson','Course ka agla lesson.'],puz:['🧩 Puzzles','10 minute rated puzzles (target: 10 puzzles).'],calc:['🧠 Calculation','5 minute: chaalein dimaag me dekho.'],gm:['📜 Master game','Kisi famous game ki chaalein guess karo.'],lesson:['📚 Ek lesson','Blindfold path ki agli drill.'],game:['♟️ Coach ke saath game','Ek game, lagbhag 10 minute.'],diary:['🔁 Galtiyon ki revision','Apni purani galtiyan dobara solve karo.'],rep:['📖 Opening lines','Baaki opening lines dohrao.'],endg:['👑 Endgame drill','Coach ke khilaaf ek endgame jeeto.'],week:['📝 Weekly test','Is hafte ko naapne ke liye 12 puzzles.']};
-function planHTML(){const d=dailyAuto(),n=d.items.filter(x=>x.done).length;let h=`<div class="card stack"><div class="gstat"><h3 style="margin:0">${L2("Today's plan","Aaj ka plan")} · ${d.items.reduce((a,x)=>a+x.min,0)} min</h3><span class="mono">${n}/${d.items.length}</span></div><div class="bar"><i style="width:${n/d.items.length*100}%"></i></div>`;
-  const PC=['#2FA36B','#F08A2C','#6D6AF0','#E2574C','#1F8FD1','#B455D6','#D9A21B'];
-  d.items.forEach((x,i)=>{const T=HI()&&PLAN_HI[x.k]?PLAN_HI[x.k][0]:x.t,m=String(T).match(/^(\S+)\s+(.*)$/),ic=m&&!/[A-Za-z0-9]/.test(m[1])?m[1]:'★',tt=m&&ic===m[1]?m[2]:T;
-    h+=`<button class="planrow pl2 ${x.done?'done':''}" data-act="gy-do" data-v="${i}"><span class="plic" style="--pc:${PC[i%PC.length]}">${x.done?'✓':ic}</span><span class="pltx"><b>${tt}</b><small>${esc(HI()&&PLAN_HI[x.k]?PLAN_HI[x.k][1]:x.d)}</small></span><span class="plmin">${x.done?L2('Done','Ho gaya'):(x.min||'')+(x.min?' min':'')}</span></button>`});
-  return h+(n===d.items.length?`<p class="good" style="margin:0"><b>${L2('Plan complete. Well done! Come back tomorrow.','Plan poora! Shabaash, kal phir aana.')}</b></p>`:`<small class="muted">${L2('The coach picks the plan from your weak areas. It changes every day.','Coach aapki kamzor jagah dekh kar plan banata hai. Ye roz badalta hai.')}</small>`)+'</div>'}
+function planHTML(){const d=dailyAuto(),N=d.items.length,n=d.items.filter(x=>x.done).length,mins=d.items.reduce((a,x)=>a+(x.min||0),0),left=d.items.filter(x=>!x.done).reduce((a,x)=>a+(x.min||0),0),pz=(P.pzlog[dayK()]||{}).n||0;
+  const PC=['#2FA36B','#F08A2C','#6D6AF0','#E2574C','#1F8FD1','#B455D6','#D9A21B'],C=2*Math.PI*22,all=n===N;
+  let h=`<section class="dq${all?' alldone':''}"><div class="dqh"><div class="dqht"><span class="dqey">⚡ ${L2('Daily quests','Aaj ke tasks')}</span><b>${all?L2('Perfect day!','Aaj ka din poora!'):n?L2(`${N-n} left · ${left} min`,`${N-n} baaki · ${left} min`):L2(`${N} tasks · ${mins} min`,`${N} kaam · ${mins} min`)}</b><small>${all?L2('All done. Come back tomorrow for new quests.','Sab ho gaya. Kal naye tasks aayenge.'):L2('Picked by the coach from your weak areas','Coach ne aapki kamzor jagah dekh kar chune')}</small></div>
+   <div class="dqring" role="img" aria-label="${n} of ${N} done"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" class="dqr0"/><circle cx="26" cy="26" r="22" class="dqr1" style="stroke-dasharray:${C};stroke-dashoffset:${C*(1-n/N)}"/></svg><span>${all?'🏆':`${n}/${N}`}</span></div></div><div class="dqlist">`;
+  d.items.forEach((x,i)=>{const T=HI()&&PLAN_HI[x.k]?PLAN_HI[x.k][0]:x.t,m=String(T).match(/^(\S+)\s+(.*)$/),ic=m&&!/[A-Za-z0-9]/.test(m[1])?m[1]:'★',tt=m&&ic===m[1]?m[2]:T,
+     tot=x.k==='puz'?10:1,got=x.done?tot:x.k==='puz'?Math.min(pz,10):0;
+    h+=`<button class="dqc ${x.done?'done':''}" style="--pc:${PC[i%PC.length]}" data-act="gy-do" data-v="${i}"><span class="dqic">${x.done?'✓':ic}</span><span class="dqtx"><b>${tt}</b><small>${esc(HI()&&PLAN_HI[x.k]?PLAN_HI[x.k][1]:x.d)}</small><span class="dqpr"><span class="dqbar"><i style="width:${got/tot*100}%"></i></span><em>${got}/${tot}</em></span></span><span class="dqgo">${x.done?'':'▶'}<small>${x.done?L2('Done','Ho gaya'):x.min+' min'}</small></span></button>`});
+  h+=`</div><div class="dqchest"><span class="dqdots">${d.items.map(x=>`<i class="${x.done?'on':''}"></i>`).join('')}</span><span>${all?'🏆 '+L2('Perfect day earned','Perfect day mil gaya'):'🎁 '+L2(`Finish all ${N} for a perfect day`,`Saare ${N} karo, perfect day pao`)}</span></div></section>`;
+  return h}
 function gyDo(i){const d=dailyPlan(),x=d.items[i];if(!x)return;if(!['puz','game'].includes(x.k)){x.done=true;save()}
   ({course:()=>openCourse(),puz:()=>pzStart('rated'),calc:()=>go({name:'calc'}),gm:()=>go({name:'gmlist'}),lesson:()=>{const nx=nextLesson();if(nx){clearTimers();if(V&&!NOHIST.includes(V.name))HIST.push(V);trLesson(nx.id)}else go({name:'path'})},game:()=>{V.co={color:'w',lvl:Math.max(0,Math.min(5,Math.round((levelNow()-900)/300)))};go({name:'coachset'})},endg:()=>go({name:'endg'}),diary:()=>{const dd=dzDueList();V={name:'codiary',dz:{i:dd.length?dd[0][1]:0,res:null,sel:null}};render()},rep:()=>go({name:'replist'}),week:()=>pzStart('week')})[x.k]()}
 
@@ -3150,7 +3196,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v75';
+const APPV='2026.11.08 · v76';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
