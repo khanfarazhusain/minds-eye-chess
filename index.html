@@ -739,6 +739,28 @@ body.fixb .fixscroll{padding-bottom:12px}
 .sdanger{box-shadow:0 0 0 1.5px color-mix(in srgb,#C8553D 45%,transparent),var(--sh)}
 .sabout{display:grid;justify-items:center;gap:3px;text-align:center;padding:10px 0 6px;color:var(--muted)}.sabout b{color:var(--fg);font-family:var(--f-display)}.sabout small{font-size:12.5px}
 .sablogo{width:44px;height:44px;border-radius:13px;background:var(--accent);color:var(--accent-fg);font-family:var(--f-display);font-weight:800;font-size:20px;display:grid;place-items:center;margin-bottom:4px}
+
+/* v56: play hub */
+.pmodes{display:grid;gap:14px}
+.pmode{position:relative;overflow:hidden;border-radius:26px;padding:16px;color:#fff;display:grid;gap:12px;box-shadow:0 14px 30px rgba(0,0,0,.18)}
+.pm1{background:radial-gradient(120% 100% at 100% 0%,#4FBF83 0%,#2B7A52 50%,#18452F 100%)}
+.pm2{background:radial-gradient(120% 100% at 100% 0%,#7A86E0 0%,#3E4AA8 50%,#222A66 100%)}
+.pm3{background:radial-gradient(120% 100% at 100% 0%,#FFB067 0%,#E0702F 50%,#93401A 100%)}
+.pm4{background:radial-gradient(120% 100% at 100% 0%,#F07AA6 0%,#B83E72 50%,#6A1E43 100%)}
+.pmart{position:absolute;right:-6px;top:-8px;font-size:92px;line-height:1;opacity:.95;filter:drop-shadow(0 8px 12px rgba(0,0,0,.25));transform:rotate(8deg);pointer-events:none}
+.pmtx{display:grid;gap:3px;padding-right:96px;position:relative}
+.pmno{justify-self:start;font-family:var(--f-display);font-weight:800;font-size:12px;background:rgba(255,255,255,.2);border-radius:999px;padding:1px 9px}
+.pmtx b{font-family:var(--f-display);font-size:22px;line-height:1.1;letter-spacing:-.02em}
+.pmtx small{font-size:13.5px;opacity:.88;line-height:1.35}
+.pmst{justify-self:start;margin-top:4px;font-size:12px;font-weight:800;background:rgba(0,0,0,.22);border-radius:999px;padding:3px 10px}
+.pmbtn{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:relative}
+.pmbtn button{border:0;border-radius:15px;padding:13px 6px;font-weight:800;font-size:15px;white-space:nowrap;background:#fff;color:#16201B;box-shadow:0 5px 0 rgba(0,0,0,.22);transition:transform .1s}
+.pmbtn button:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.22)}
+.pmbtn .pmb{background:rgba(0,0,0,.28);color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.25),inset 0 0 0 1.5px rgba(255,255,255,.35)}
+.pmnote{font-size:13px;color:var(--muted);background:var(--surface2);border-radius:14px;padding:10px 12px;line-height:1.4}
+.board.hidepc .pc,.board.hidepc svg.arrows{opacity:0}
+.bpeek{display:block;margin:8px auto 0;border:0;border-radius:999px;padding:9px 18px;font-weight:800;font-size:14px;background:#FFD66B;color:#2E1F0B;box-shadow:0 4px 0 #C47F14}
+.bpeek:disabled{opacity:.6}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -1616,16 +1638,16 @@ function vExplore(){const o=V.o||(V.o={persp:'w',coords:true,piece:'N',sel:'e4'}
 
 /* ---------- blindfold play ---------- */
 function vPlay(){if(!G||V.setup){const o=V.po||(V.po={color:'w',level:1,vis:'ghost'});
-  main.innerHTML=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="playhub">← Khelo</button><span class="eyebrow">Final stage</span><h1>Blindfold play</h1><p class="muted">Play the computer without seeing the pieces. Record: ${P.games.w} won, ${P.games.d} drawn, ${P.games.l} lost.</p>
+  main.innerHTML=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="playhub">← Khelo</button><span class="eyebrow">${o.two?L2('Two players · one phone','Do players · ek phone'):L2('You vs computer','Aap vs computer')}</span><h1>${o.two?L2('Friend on this phone','Dost ke saath, ek phone'):o.vis==='full'?L2('Play the computer','Computer se khelo'):L2('Blindfold vs computer','Blindfold vs computer')}</h1><p class="muted">${o.two?L2('Pass the phone after each move. The board turns to face the player whose move it is.','Har chaal ke baad phone dost ko do. Board us player ki taraf ghoom jaata hai jiski baari hai.'):L2(`Record: ${P.games.w} won, ${P.games.d} drawn, ${P.games.l} lost.`,`Record: ${P.games.w} jeete, ${P.games.d} draw, ${P.games.l} haare.`)}</p>
   
-  <div class="card stack"><div><span class="eyebrow">You play</span><div class="seg">${[['w','White'],['b','Black'],['r','Random']].map(([k,t])=>`<button class="${o.color===k?'on':''}" data-act="po" data-k="color" data-v="${k}">${t}</button>`).join('')}</div></div>
+  <div class="card stack"><div ${o.two?'hidden':''}><span class="eyebrow">You play</span><div class="seg">${[['w','White'],['b','Black'],['r','Random']].map(([k,t])=>`<button class="${o.color===k?'on':''}" data-act="po" data-k="color" data-v="${k}">${t}</button>`).join('')}</div></div>
   <div><span class="eyebrow">What you see</span><div class="seg">${[['full','Full board'],['ghost','Empty board'],['blind','No board']].map(([k,t])=>`<button class="${o.vis===k?'on':''}" data-act="po" data-k="vis" data-v="${k}">${t}</button>`).join('')}</div>
   <p class="muted" style="font-size:14px;margin-top:6px">${{full:'Warm-up: pieces visible, moves by keypad or tapping.',ghost:'Coordinates only. You must remember where every piece is.',blind:'Just the move list. True blindfold chess.'}[o.vis]}</p></div>
-  <div><span class="eyebrow">Computer</span><div class="seg">${[[1,'Beginner'],[2,'Club'],[3,'Strong']].map(([k,t])=>`<button class="${o.level===k?'on':''}" data-act="po" data-k="level" data-v="${k}">${t}</button>`).join('')}</div></div>
+  <div ${o.two?'hidden':''}><span class="eyebrow">Computer</span><div class="seg">${[[1,'Beginner'],[2,'Club'],[3,'Strong']].map(([k,t])=>`<button class="${o.level===k?'on':''}" data-act="po" data-k="level" data-v="${k}">${t}</button>`).join('')}</div></div>
   <button class="btn primary block" data-act="newgame">Start game</button>${G&&!G.over?`<button class="btn block" data-act="resume">Back to current game</button>`:''}</div>
   ${TUT.play?`<button class="btn block" data-act="tut" data-stage="play">How blindfold play works</button>`:''}</div>`;return}
   const g=G,myTurn=g.st.w===(g.human==='w')&&!g.over;const last=g.sans[g.sans.length-1];
-  let h=`<div class="stack"><div class="gstat"><span>You: ${g.human==='w'?'White':'Black'} · ${['Beginner','Club','Strong'][g.level-1]}</span><span class="muted">Peeks ${g.peeks}</span></div>`;
+  let h=`<div class="stack"><div class="gstat"><span>${g.two?`👥 ${g.over?L2('Game over','Game khatam'):g.st.w?L2('White to move','White ki baari'):L2('Black to move','Black ki baari')}`:`You: ${g.human==='w'?'White':'Black'} · ${['Beginner','Club','Strong'][g.level-1]}`}</span><span class="muted">Peeks ${g.peeks}</span></div>`;
   h+=`<div class="lastmove">${last?`<span class="muted" style="font-size:16px">${g.sans.length%2?'White':'Black'} played</span><br>${esc(last)}`:'<span class="muted" style="font-size:18px">Game starts</span>'}</div>`;
   if(g.over)h+=`<div class="fb ${g.over.r==='w'?'ok':'no'}"><h3>${g.over.msg}</h3><p>${g.sans.length} half-moves, ${g.peeks} peeks.</p></div>`;
   else h+=`<p class="${g.msgBad?'warn':'muted'}" style="text-align:center;min-height:22px">${g.thinking?'Computer is thinking…':g.msg||(myTurn?'Your move':'')}</p>`;
@@ -1641,16 +1663,17 @@ function vPlay(){if(!G||V.setup){const o=V.po||(V.po={color:'w',level:1,vis:'gho
   <div class="row">${g.over?`<button class="btn primary" style="flex:1" data-act="setup">New game</button>`:`<button class="btn" data-act="setup">New game</button><button class="btn" data-act="resign">${g.confirmResign?'Tap again to resign':'Resign'}</button>`}</div></div>`;
   main.innerHTML=h;
   if(myTurn&&g.vis!=='blind')onSq=n=>{if(!g.sel){g.sel=n;g.msg=`From ${n}…`;g.msgBad=false;vPlay();return}if(g.sel===n){g.sel=null;g.msg='';vPlay();return}tryMove(g.sel+n);}}
-function newGame(){const o=V.po;const human=o.color==='r'?pick(['w','b']):o.color;G={st:startState(),human,level:o.level,vis:o.vis,sans:[],input:'',sel:null,peek:false,peeks:0,over:null,msg:'',lastMv:null};V={name:'play'};render();if(human==='b')engineTurn()}
+function newGame(){const o=V.po;const human=o.color==='r'?pick(['w','b']):o.color;const two=!!o.two;G={two,st:startState(),human:two?'w':human,level:o.level,vis:o.vis,sans:[],input:'',sel:null,peek:false,peeks:0,over:null,msg:'',lastMv:null};V={name:'play'};render();if(!two&&human==='b')engineTurn()}
 function tryMove(inp){const g=G;const m=findMove(g.st,inp);g.sel=null;
   if(!m){g.msg=`${inp} isn't a legal move here. Picture the board again.`;g.msgBad=true;g.input='';vPlay();return}
-  playMove(m);if(!g.over)engineTurn()}
+  playMove(m);if(g.two){if(!g.over)g.human=g.st.w?'w':'b';vPlay();return}if(!g.over)engineTurn()}
 function playMove(m){const g=G;const s=san(g.st,m,legal(g.st));g.sans.push(s);g.st=make(g.st,m);g.lastMv=g.vis==='full'?m:null;g.input='';g.msg='';g.msgBad=false;checkEnd();return s}
 function checkEnd(){const g=G,ms=legal(g.st);let over=null;const humanW=g.human==='w';
   if(!ms.length){if(inCheck(g.st)){const winW=!g.st.w;over={r:winW===humanW?'w':'l',msg:winW===humanW?'Checkmate. You win!':'Checkmate. The computer wins.'}}else over={r:'d',msg:'Stalemate. Draw.'}}
   else if(g.st.hm>=100)over={r:'d',msg:'Draw by the 50-move rule.'};
   else{const rest=g.st.b.filter(p=>p&&p.toUpperCase()!=='K');if(!rest.length||(rest.length===1&&'NB'.includes(rest[0].toUpperCase())))over={r:'d',msg:'Draw: not enough material to mate.'}}
-  if(over){g.over=over;P.games[over.r]++;save()}}
+  if(over&&g.two&&over.r!=='d')over.msg=L2(`Checkmate. ${g.st.w?'Black':'White'} wins!`,`Checkmate. ${g.st.w?'Black':'White'} jeet gaya!`);
+  if(over){g.over=over;if(!g.two){P.games[over.r]++;save()}}}
 function engineTurn(){const g=G;g.thinking=true;vPlay();setTimeout(()=>{if(G!==g)return;const m=engineMove(g.st,g.level);g.thinking=false;if(m){const s=playMove(m);speak(sanWords(s))}if(V.name==='play')vPlay()},60)}
 function sanWords(s){if(s.startsWith('O-O-O'))return'castles queenside'+(s.includes('+')?', check':'');if(s.startsWith('O-O'))return'castles kingside'+(s.includes('+')?', check':'');
   let w=s.replace(/([KQRBN])/,m=>PNAME[m]+' ').replace('x',' takes ').replace(/=([QRBN])/,(a,p)=>' promotes to '+PNAME[p]).replace('+',', check').replace('#',', checkmate');w=w.replace(/([a-h])([1-8])/g,'$1 $2');return w}
@@ -1766,6 +1789,12 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
   if(a==='ava-next'){const i=AVAS.indexOf(P.set.avatar||'♞');P.set.avatar=AVAS[(i+1)%AVAS.length];save();const el=main.querySelector('.spava');if(el){el.firstChild.textContent=P.set.avatar;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop')}return}
   if(a==='appth'){P.set.appth=d.v;save();applyAppTheme();render();return}
   if(a==='sjump'){const el=document.getElementById(d.v);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return}
+  if(a==='pm'){const bl=d.b==='1',m=d.m;
+    if(m==='coach'){const o={color:'w',lvl:P.set.colvl!=null?P.set.colvl:2,blind:bl?'1':''};go({name:'coachset',co:o});return}
+    if(m==='bot'||m==='friend'){V.setup=true;go({name:'play',setup:true,po:{color:'w',level:1,vis:bl?'ghost':'full',two:m==='friend'}});return}
+    if(m==='online'){P.set.olblind=bl;save();go({name:'friend'});return}}
+  if(a==='bpeek'){bPeek();return}
+  if(a==='olb'){P.set.olblind=d.v==='1';save();render();return}
   if(a==='ltrk'){P.set.ltrk=d.v;save();render();return}
   if(a==='clev'){if(V.name==='clevel'){V={name:'clevel',i:+d.i,sec:V.sec};render();window.scrollTo(0,0)}else go({name:'clevel',i:+d.i});return}
   if(a==='course-more'){const [k,v]=String(d.v).split(':');if(k==='sch')go({name:'school',grp:v});else if(v==='pz')pzStart('rated');else go({name:v});return}
@@ -1806,7 +1835,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'gdel':G.input=G.input.slice(0,-1);{const sl=main.querySelector('.slot');if(sl)sl.innerHTML=esc(G.input)||'<span class="muted">type a move</span>'}break;
    case'gmove':if(G.input)tryMove(G.input);break;
    case'peek':G.peek=true;G.peeks++;vPlay();setTimeout(()=>{if(G){G.peek=false;if(V.name==='play'&&!V.setup)vPlay()}},3000);break;
-   case'resign':if(!G.confirmResign){G.confirmResign=true;vPlay();setTimeout(()=>{if(G){G.confirmResign=false;if(V.name==='play'&&!V.setup&&!G.over)vPlay()}},3000)}else{G.over={r:'l',msg:'You resigned.'};P.games.l++;save();vPlay()}break;
+   case'resign':if(!G.confirmResign){G.confirmResign=true;vPlay();setTimeout(()=>{if(G){G.confirmResign=false;if(V.name==='play'&&!V.setup&&!G.over)vPlay()}},3000)}else{if(G.two)G.over={r:'d',msg:L2(`${G.st.w?'White':'Black'} resigned.`,`${G.st.w?'White':'Black'} ne haar maan li.`)};else{G.over={r:'l',msg:'You resigned.'};P.games.l++;save()}vPlay()}break;
    case'hp':V.hp=d.v;vStats();break;
    case'co-open':go({name:'coachset'});break;
    case'co-o':if(d.k==='open'&&d.v)V.co.start='normal';if(d.k==='start'&&d.v!=='normal')V.co.open='';if(V.co.start==='fen'&&document.getElementById('co-fen'))V.co.fen=document.getElementById('co-fen').value;V.co[d.k]=d.k==='lvl'?+d.v:d.v;if(d.k==='lvl'){P.set.colvl=+d.v;save()}vCoachSet();break;
@@ -2068,7 +2097,7 @@ function coNew(o){let human=o.color==='r'?pick(['w','b']):o.color;let st0=startS
   if(o.start==='end'||o.start==='attack'){const t=pick(THEMES[o.start]);st0=fromFEN(t[1]);start={fen:t[1],name:t[0]};human=st0.w?'w':'b'}
   else if(o.start==='fen'&&o.fen){const x=fromFEN(o.fen);if(x){st0=x;start={fen:o.fen.trim(),name:'Your position'}}}
   if(!start&&o.open){const b=OPENT.find(x=>x[0]===o.open);if(b){book={name:b[1],key:b[0],moves:b[3].split(' ')};human=b[2]}}
-  const ck=String(o.clock||'0').split('+');CG={clk:+ck[0]?{h:+ck[0]*60000,e:+ck[0]*60000,inc:(+ck[1]||0)*1000,side:null,t0:0}:null,tab:P.set.ctab||(gKey()?'ai':'move'),st:st0,states:[st0],moves:[],human,lvl:o.lvl,sel:null,busy:'',fb:null,tok:0,over:null,hint:0,show:{},id:Date.now(),start,book,bookOk:!!book,chk:{}};
+  const ck=String(o.clock||'0').split('+');CG={clk:+ck[0]?{h:+ck[0]*60000,e:+ck[0]*60000,inc:(+ck[1]||0)*1000,side:null,t0:0}:null,tab:P.set.ctab||(gKey()?'ai':'move'),st:st0,states:[st0],moves:[],human,lvl:o.lvl,sel:null,busy:'',fb:null,tok:0,over:null,hint:0,show:{},id:Date.now(),start,book,bookOk:!!book,chk:{},blind:!!o.blind};
   sfStart();coSaveCur();go({name:'coach'});if(st0.w!==(human==='w'))coEngine();else coPre()}
 function clkSwitch(g,side){const c=g&&g.clk;if(!c||g.over)return;const now=Date.now();if(c.side&&c.side!==side){c[c.side]-=now-c.t0;c[c.side]+=c.inc}else if(c.side===side)return;c.side=side;c.t0=now}
 function clkLeft(g,k){const c=g.clk;return c[k]-(c.side===k&&!g.over&&!g.pend?Date.now()-c.t0:0)}
@@ -2497,7 +2526,7 @@ function vCoDiary(){const D=P.diary||[];const z=V.dz||(V.dz={i:0,res:null,sel:nu
 
 /* ================= coach: views ================= */
 function vCoachSet(){const o=V.co||(V.co={color:'w',lvl:P.set.colvl!=null?P.set.colvl:2});sfStart();const hist=P.coach||[];
-  let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="playhub">← Khelo</button><span class="eyebrow">Board visible · learn while you play</span><h1>Play with coach</h1>
+  let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="playhub">← Khelo</button><span class="eyebrow">${o.blind?L2('Blind mode · board hidden','Blind mode · board chhupa'):L2('Board visible · learn while you play','Board dikhta hai · khelte hue seekho')}</span><h1>${L2('Play with coach','Coach ke saath khelo')}</h1><div class="card stack"><span class="eyebrow">${L2('Board','Board')}</span><div class="seg"><button class="${!o.blind?'on':''}" data-act="co-o" data-k="blind" data-v="">♟ ${L2('Pieces visible','Pieces dikhein')}</button><button class="${o.blind?'on':''}" data-act="co-o" data-k="blind" data-v="1">🙈 ${L2('Blind','Blind')}</button></div>${o.blind?`<small class="muted">${L2('Pieces are hidden. Tap squares from memory. Tap 👁 Peek to see the board for 3 seconds. Turn on the voice coach below to hear every move.','Pieces chhupe rahenge. Yaad se squares tap karo. 3 second dekhne ke liye 👁 Peek dabao. Har chaal sunne ke liye neeche voice coach on karo.')}</small>`:''}</div>
   <p class="muted">After every move the coach tells you if it was best, good, an inaccuracy, a mistake or a blunder, shows the better move with the reason, explains the best line move by move, and points out threats and plans.</p>
   <div class="card stack"><div><span class="eyebrow">You play</span><div class="seg">${[['w','White'],['b','Black'],['r','Random']].map(([k,t])=>`<button class="${o.color===k?'on':''}" data-act="co-o" data-k="color" data-v="${k}">${t}</button>`).join('')}</div></div>
   <div><span class="eyebrow">Computer strength</span><div class="lvlgrid">${CLV.map((L,i)=>`<button class="${o.lvl===i?'on':''}" data-act="co-o" data-k="lvl" data-v="${i}"><b>${L.n}</b><small>${L.elo}</small></button>`).join('')}</div><small class="muted">Ratings are rough guides.</small></div>
@@ -2542,7 +2571,7 @@ function vCoach(){const g=CG;if(!g){go({name:'coachset'});return}const my=coMyTu
   if(g.book&&g.bookOk&&g.moves.length<g.book.moves.length)h+=`<div class="banner">📖 Opening trainer: <b>${esc(g.book.name)}</b>, move ${Math.floor(g.moves.length/2)+1} of ${Math.ceil(g.book.moves.length/2)}. ${my?'Find the book move.':''}</div>`;
   else if(g.book&&g.moves.length>=g.book.moves.length&&g.bookOk)h+=`<div class="banner">📖 You finished the ${esc(g.book.name)} line. Now play on with the plan.</div>`;
   if(g.start)h+=`<div class="banner">${g.start.eg?'👑 Endgame drill':'🎯 Theme'}: <b>${esc(g.start.name)}</b>${g.start.eg?` · goal: <b>${g.start.goal==='win'?'win':'hold the draw'}</b>`:''}</div>`;
-  h+='<div class="costick">';{const bh=boardHTML({cls:'coachb',persp:g.human,coords:true,pieces:toMap(g.st.b),from:g.sel!=null?sn(g.sel):null,marks,dots,id:'coach'});h+=bh.slice(0,-6)+arrowsSVG(g.human,arr)+'</div>'}
+  h+='<div class="costick">';{const bh=boardHTML({cls:'coachb'+(g.blind&&!BPEEK&&!g.over?' hidepc':''),persp:g.human,coords:true,pieces:toMap(g.st.b),from:g.sel!=null?sn(g.sel):null,marks,dots,id:'coach'});h+=bh.slice(0,-6)+arrowsSVG(g.human,arr)+'</div>'+(g.blind&&!g.over?`<button class="bpeek" data-act="bpeek" ${BPEEK?'disabled':''}>👁 ${BPEEK?L2('Showing…','Dikh raha hai…'):L2('Peek 3s','Peek 3s')}</button>`:'')}
   if(P.set.carrow!==false&&my&&P.set.ceasy===false)h+='<small class="muted legend"><span class="lg r"></span>threat · <span class="lg g"></span>hint / better move · <span class="lg y"></span>weak square · red square: loose piece</small>';h+='</div></div><div class="fixscroll stack">';
   if(g.over)h+=`<div class="fb ${g.over.r==='w'||g.egok?'ok':'no'}"><h3>${g.over.msg}</h3>${g.start&&g.start.eg?`<p><b>${g.egok?'✓ Drill passed!':'Not yet. Try again: '+esc(g.start.tip||'')}</b></p><div class="row"><button class="btn primary" style="flex:1" data-act="eg-go" data-v="${ENDG.findIndex(x=>x[0]===g.start.eg)}">Again</button><button class="btn" data-act="go" data-v="endg">All drills</button></div>`:''}</div>`;
   else if(g.pend)h+=g.pend.type==='book'?`<div class="card stack pend"><b>📖 Not the book move.</b><p>In the ${esc(g.book.name)} the move here is <b>${esc(g.pend.exp)}</b>. You played ${esc(g.fb.san)}.</p><div class="row"><button class="btn primary" style="flex:1" data-act="co-retry">Try again</button><button class="btn" style="flex:1" data-act="co-keep">Leave the book</button></div></div>`
@@ -2891,7 +2920,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v55';
+const APPV='2026.11.08 · v56';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -3082,10 +3111,18 @@ function openCourseAt(hash){go({name:'cframe',h:String(hash||'')})}
 function vCFrame(){const u=COURSE_URL+(COURSE_URL.includes('?')?'&':'?')+'embed=1#/'+(V.h||'');main.innerHTML=`<div class="stack cfwrap"><div class="cfbar"><button class="btn small backbtn" data-act="back">← ${esc(backLabel())}</button><span class="muted" style="font-size:13px">📘 ${L2('Chess course','Chess course')}</span></div><iframe class="cframe" src="${u}" title="Chess course" allow="autoplay"></iframe></div>`}
 window.addEventListener('message',e=>{const d=e.data;if(!d||d.src!=='course64')return;if(V.name!=='cframe')return;
   if(d.t==='close')goBack();else if(d.t==='lvl'){V={name:'clevel',i:+d.i};render();window.scrollTo(0,0)}});
-function vPlayHub(){let h=`<div class="stack"><span class="eyebrow">${L2('Play a game','Game khelo')}</span><h1>${L2('Play','Khelo')}</h1>`+continueHTML();
-  const C=[['coachset','♛',L2('Play with coach','Coach ke saath khelo'),L2('Board visible. The coach shows your job, the best options and why. Best for learning.','Board dikhta hai. Coach batata hai kya karna hai, best options aur kyun. Seekhne ke liye best.'),true],['play','♚',L2('Blindfold vs computer','Blindfold vs computer'),L2('Play without seeing the pieces.','Pieces dekhe bina khelo.')+` ${P.games.w}W ${P.games.d}D ${P.games.l}L`],['friend','👥',L2('Play a friend online','Dost ke saath online'),L2('Two phones, free, no login. Send a code.','Do phone, free, bina login. Code bhejo.')],['pgn','🔍',L2('Review my game','Mera game check karo'),L2('Paste a game from Lichess or Chess.com and see the mistakes.','Lichess ya Chess.com ka game paste karo aur galtiyan dekho.')]];
-  C.forEach(([v,i,t,d,hi])=>h+=`<button class="card rungcard${hi?' coachcta':''}" data-act="go" data-v="${v}"><b style="font-size:18px">${i} ${t}</b><small class="muted">${d}</small></button>`);
+function vPlayHub(){const G0=P.games||{w:0,d:0,l:0},OGm=P.ogames||{w:0,d:0,l:0},nc=(P.coach||[]).length;
+  let h=`<div class="stack"><span class="eyebrow">${L2('Play a game','Game khelo')}</span><h1>${L2('Play','Khelo')}</h1>`+continueHTML();
+  const M=[['coach','pm1','🎓',L2('Play with coach','Coach ke saath'),L2('The coach explains every move. Best for learning.','Coach har chaal samjhata hai. Seekhne ke liye best.'),`${nc} ${L2('games','games')}`],
+   ['bot','pm2','🤖',L2('Play the computer','Computer se khelo'),L2('3 levels: Beginner, Club, Strong.','3 levels: Beginner, Club, Strong.'),`${G0.w}W ${G0.d}D ${G0.l}L`],
+   ['friend','pm3','👥',L2('Friend on this phone','Dost ke saath, ek phone'),L2('Pass and play. The board turns after every move.','Pass and play. Har chaal ke baad board ghoom jaata hai.'),L2('2 players','2 players')],
+   ['online','pm4','🌐',L2('Play online','Online khelo'),L2('Two phones. Send a code to your friend.','Do phone. Dost ko code bhejo.'),`${OGm.w}W ${OGm.d}D ${OGm.l}L`]];
+  h+=`<div class="pmodes">${M.map(([k,c,ic,t,d,stt],i)=>`<section class="pmode ${c}"><div class="pmart" aria-hidden="true">${ic}</div><div class="pmtx"><span class="pmno">${i+1}</span><b>${t}</b><small>${d}</small><span class="pmst">${stt}</span></div>
+   <div class="pmbtn"><button data-act="pm" data-m="${k}" data-b="0">♟ ${L2('Play chess','Chess khelo')}</button><button class="pmb" data-act="pm" data-m="${k}" data-b="1">🙈 ${L2('Blind chess','Blind chess')}</button></div></section>`).join('')}</div>`;
+  h+=`<div class="pmnote">🌍 ${L2('Random-opponent matchmaking is not available yet. Online play works with a friend by code.','Anjaan players se matchmaking abhi nahi hai. Online abhi code se dost ke saath chalta hai.')}</div>`;
+  h+=`<button class="card rungcard" data-act="go" data-v="pgn"><b style="font-size:17px">🔍 ${L2('Review my game','Mera game check karo')}</b><small class="muted">${L2('Paste a game from Lichess or Chess.com and see the mistakes.','Lichess ya Chess.com ka game paste karo aur galtiyan dekho.')}</small></button>`;
   main.innerHTML=h+'</div>'}
+let BPEEK=false;function bPeek(){BPEEK=true;render();setTimeout(()=>{BPEEK=false;render()},3000)}
 function meTopHTML(){let h=lvlStrip();try{h+=`<button class="card rungcard" data-act="go" data-v="week"><b>📝 Weekly report</b><small class="muted">Test + what to do next ›</small></button>`+badgesHTML()}catch(e){}return h}
 
 /* ---- old hub (unused) ---- */
@@ -3743,7 +3780,7 @@ function olOverText(){const o=OG.over,me=olMyColor(),opp=OG.opp||L2('Your friend
   if(o.why==='resign')return won?L2(`${opp} resigned. You win! 🎉`,`${opp} ne resign kiya. Aap jeet gaye! 🎉`):L2('You resigned.','Aapne resign kiya.');
   if(o.why==='time')return won?L2(`${opp} ran out of time. You win! 🎉`,`${opp} ka time khatam. Aap jeet gaye! 🎉`):L2('Your time ran out.','Aapka time khatam ho gaya.');return''}
 function vFriend(){const o=V.oo||(V.oo={color:'r',clock:'0'});const nm=olName();
-  let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="playhub">← Khelo</button><span class="eyebrow">${L2('Two phones · no login','Do phone · bina login')}</span><h1>${L2('Play a friend online','Dost ke saath online khelo')}</h1>`;
+  let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="playhub">← Khelo</button><span class="eyebrow">${L2('Two phones · no login','Do phone · bina login')}</span><h1>${L2('Play a friend online','Dost ke saath online khelo')}</h1><div class="card stack"><span class="eyebrow">${L2('Your board','Aapka board')}</span><div class="seg"><button class="${!P.set.olblind?'on':''}" data-act="olb" data-v="0">♟ ${L2('Pieces visible','Pieces dikhein')}</button><button class="${P.set.olblind?'on':''}" data-act="olb" data-v="1">🙈 ${L2('Blind','Blind')}</button></div><small class="muted">${L2('Only your screen changes. Your friend can choose for themselves.','Sirf aapki screen badlegi. Dost apne liye khud chun sakta hai.')}</small></div>`;
   if(V.omsg){h+=`<div class="banner">${esc(V.omsg)}</div>`;V.omsg=''}
   if(V.oerr)h+=`<p class="warn">${esc(V.oerr)}</p>`;
   h+=fbBannerHTML();
@@ -3776,7 +3813,7 @@ function vOGame(){const g=OG;if(!g||!g.started){go({name:'friend'});return}const
   const bar=(c,who)=>`<div class="olbar ${olLive()&&(st.w?'w':'b')===c?'turn':''}"><span><span class="pc-dot ${c}"></span><b>${esc(who)}</b></span>${g.clock?`<span id="oclk-${c}" class="mono clk">${clkFmt(olClk(c))}</span>`:''}</div>`;
   let h=`<div class="stack olgame"><div class="gstat"><button class="btn small" data-act="ol-menu">← ${L2('Menu','Menu')}</button>${olNetHTML()}</div>`;
   h+=bar(persp===me?opp:me,persp===me?(g.opp||L2('Friend','Dost')):L2('You','Aap')+(olName()?` (${olName()})`:''));
-  h+=boardHTML({cls:'coachb',persp,coords:true,pieces:toMap(st.b),from:g.sel!=null?sn(g.sel):null,marks,dots,id:'online'});
+  h+=boardHTML({cls:'coachb'+(P.set.olblind&&!BPEEK&&!g.over?' hidepc':''),persp,coords:true,pieces:toMap(st.b),from:g.sel!=null?sn(g.sel):null,marks,dots,id:'online'});if(P.set.olblind&&!g.over)h+=`<button class="bpeek" data-act="bpeek" ${BPEEK?'disabled':''}>👁 ${BPEEK?L2('Showing…','Dikh raha hai…'):L2('Peek 3s','Peek 3s')}</button>`;
   h+=bar(persp===me?me:opp,persp===me?L2('You','Aap')+(olName()?` (${olName()})`:''):(g.opp||L2('Friend','Dost')));
   if(g.promo)h+=`<div class="card stack"><b>${L2('Pawn reached the end. Choose a piece:','Pawn aakhri row tak pahunch gaya. Piece chuno:')}</b><div class="row">${'QRBN'.split('').map(k=>`<button class="btn" style="flex:1;font-size:26px" data-act="ol-promo" data-v="${k}">${GLYPH[k]}︎</button>`).join('')}</div><button class="btn small" data-act="ol-promox">${L2('Cancel','Cancel')}</button></div>`;
   if(g.over){h+=`<div class="fb ${g.over.r===me?'ok':g.over.r==='d'?'':'no'}"><h3>${esc(olOverText())}</h3></div>`;
