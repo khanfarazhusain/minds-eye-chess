@@ -839,7 +839,8 @@ body.lowfx .rwrays{display:none}
 body.fixb header.top{display:none!important}
 body.fixb main{padding-top:calc(6px + env(safe-area-inset-top,0px))!important}
 body.fixb .fixtop{--sw:calc(100vw - 12px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));--bw:min(var(--sw),560px,max(calc(var(--sw) - 44px),calc(100dvh - var(--navh,64px) - 200px)))!important}
-body.fixb .fixtop .board:not(.b3){border-radius:6px!important;overflow:hidden}
+body.fixb:not(.b3d) .fixtop .board{border-radius:6px!important;overflow:hidden}
+body.fixb.b3d .fixtop .board{overflow:visible!important}
 html,body{overflow-x:clip}
 body.fixb.b3d .fixtop{--bw:min(calc(100vw - 30px),560px,max(calc(100vw - 64px),calc((100dvh - var(--navh,64px) - 200px) * 1.08)))!important}
 body.fixb .fixtop .gstat{flex-wrap:nowrap!important;align-items:center;gap:8px;min-height:36px;font-size:13.5px}
@@ -948,6 +949,8 @@ body.fixb{margin:0!important}
 .lvlgrid button.on,.opgrid button.on{box-shadow:0 3px 0 #1F5C3E!important}
 
 body.fixb .fixtop .gstat .mono:not(.clk){font-family:inherit;font-weight:800;letter-spacing:0}
+
+.gsbtn{grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr))}.gsbtn button{white-space:normal;min-width:0}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -1444,7 +1447,7 @@ function isBackBtn(b){return b&&b.dataset.act==='tab'&&b.closest('#main')&&/^\s*
 function fixBack(){if(ROOTS.includes(V.name))return;const lab='← '+backLabel();let any=false;
   main.querySelectorAll('[data-act="tab"]').forEach(b=>{if(isBackBtn(b)){b.textContent=lab;b.classList.add('backbtn');any=true}});
   if(!any&&document.body.classList.contains('fixb')){const g=main.querySelector('.fixtop .gstat')||main.querySelector('.fixtop');if(g&&!g.querySelector('.backbtn')&&![...g.querySelectorAll('button')].some(x=>/^\s*←/.test(x.textContent))){const b=document.createElement('button');b.className='btn small backbtn';b.dataset.act='back';b.textContent=lab;g.prepend(b)}return}
-  if(!any&&!document.body.classList.contains('fixb')&&!NOHIST.includes(V.name)){const st=main.firstElementChild;if(st&&!st.querySelector(':scope>.backbtn')){const b=document.createElement('button');b.className='btn small backbtn';b.dataset.act='back';b.style.alignSelf='flex-start';b.textContent=lab;st.prepend(b)}}}
+  if(!any&&!document.body.classList.contains('fixb')&&!NOHIST.includes(V.name)){const st=main.firstElementChild;if(st&&!st.querySelector(':scope>.backbtn')&&![...st.querySelectorAll(':scope>button,:scope>.row>button')].some(x=>/^\s*←/.test(x.textContent))){const b=document.createElement('button');b.className='btn small backbtn';b.dataset.act='back';b.style.alignSelf='flex-start';b.textContent=lab;st.prepend(b)}}}
 const PGH={learn:['pg-learn','♜','Course levels and blindfold training','Course levels aur blindfold training'],practice:['pg-prac','◎','Puzzles, drills and revision','Puzzles, drills aur revision'],playhub:['pg-play','♚','Coach, blindfold and friends','Coach, blindfold aur dost'],me:['pg-me','⚙','Progress, settings and backup','Progress, settings aur backup'],coachset:['pg-play','🎓'],play:['pg-play','🤖'],friend:['pg-play','🌐'],road:['pg-learn','🗺'],week:['pg-me','📝'],gmlist:['pg-prac','📜'],endg:['pg-prac','👑'],replist:['pg-prac','📖'],pcat:['pg-prac','◎']};
 function pageHead(){const x=PGH[V.name];if(!x)return;const st=main.firstElementChild;if(!st||st.querySelector(':scope>.pghead'))return;const h1=st.querySelector(':scope>h1');if(!h1)return;
   const ey=st.querySelector(':scope>.eyebrow');const hd=document.createElement('header');hd.className='pghead '+x[0];
@@ -3147,7 +3150,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v74';
+const APPV='2026.11.08 · v75';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
