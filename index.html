@@ -839,7 +839,7 @@ body.lowfx .rwrays{display:none}
 body.fixb header.top{display:none!important}
 body.fixb main{padding-top:calc(6px + env(safe-area-inset-top,0px))!important}
 body.fixb .fixtop{--bw:min(100vw,560px,max(calc(100vw - 48px),calc(100dvh - var(--navh,64px) - 200px)))!important}
-body.fixb.b3d .fixtop{--bw:min(100vw,560px,max(calc(100vw - 48px),calc((100dvh - var(--navh,64px) - 200px) * 1.08)))!important}
+body.fixb.b3d .fixtop{--bw:min(calc(100vw - 30px),560px,max(calc(100vw - 64px),calc((100dvh - var(--navh,64px) - 200px) * 1.08)))!important}
 body.fixb .fixtop .gstat{flex-wrap:nowrap!important;align-items:center;gap:8px;min-height:36px;font-size:13.5px}
 body.fixb .fixtop .gstat>*{min-width:0;flex:none}
 body.fixb .fixtop .gstat>span:not(.clk){flex:0 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -868,6 +868,15 @@ body.fixb .fixtop .gstat #tiltdock.inhdr .tdbtn{width:32px;height:32px}
 .mvhead+.gamemoves{border-radius:0 0 12px 12px}
 body.mvmin .mvhead{border-radius:12px;margin-bottom:0}body.mvmin .mvhead i{transform:rotate(-90deg)}body.mvmin .mvhead .mvlast{opacity:1}
 body.mvmin .mvhead+.gamemoves{display:none}
+
+/* v68: clear white-vs-black eval bar */
+.evrow{gap:6px!important}
+.evrow .evk{flex:none;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 0 0 1.5px rgba(255,255,255,.5)}
+.evrow .evk.dk{background:#0B0B0B;box-shadow:0 0 0 1.5px rgba(255,255,255,.55)}
+.evbar{position:relative;height:14px!important;border-radius:7px!important;background:#0B0B0B!important;border:0!important;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.45)}
+.evbar i{background:linear-gradient(180deg,#FFFFFF,#E6E6E6)!important;border-radius:7px 0 0 7px}
+.evbar b{position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;margin-left:-1px;background:#F0A93A;border-radius:2px}
+.evrow .evtx{min-width:58px!important;font-weight:800}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -1768,6 +1777,8 @@ function vPlay(){{const fx=!!G&&!V.setup;if(document.body.classList.contains('fi
   const g=G,myTurn=g.st.w===(g.human==='w')&&!g.over;const last=g.sans[g.sans.length-1];
   const lastW=g.sans.length%2===1,kb=g.vis!=='full'||g.kb;
   let h=`<div class="stack"><div class="fixtop"><div class="gstat"><span>${g.two?`👥 ${g.over?L2('Game over','Game khatam'):g.st.w?L2('White to move','White ki baari'):L2('Black to move','Black ki baari')}`:`${g.human==='w'?'⚪':'⚫'} ${['Beginner','Club','Strong'][g.level-1]}${g.vis!=='full'?' · 🙈':''}`}</span>${g.vis!=='full'?`<span class="mono">👁 ${g.peeks}</span>`:''}</div>`;
+  if(g.vis==='full'){let cp=0;try{const mt=!legal(g.st).length;cp=mt?(inCheck(g.st)?(g.st.w?-9999:9999):0):(g.st.w?1:-1)*qs(g.st,-1e9,1e9,4)}catch(e){}const pc=Math.round(Math.max(.03,Math.min(.97,wpOf(cp)))*100);
+    h+=`<div class="evrow"><span class="evk"></span><div class="evbar"><i style="width:${pc}%"></i><b></b></div><span class="evk dk"></span><span class="mono evtx">${Math.abs(cp)>5000?'#':(cp>=0?'+':'')+(cp/100).toFixed(1)}</span></div>`}
   const showPieces=g.vis==='full'||g.peek||g.over;
   if(g.vis!=='blind'||g.peek||g.over)h+=boardHTML({cls:'playb',persp:g.human,coords:true,pieces:showPieces?toMap(g.st.b):{},from:g.sel,marks:g.lastMv?{[sn(g.lastMv.f)]:'sel',[sn(g.lastMv.t)]:'sel'}:null});
   else h+=`<div class="lastmove bigblind">${last?`<small class="muted">${lastW?'White':'Black'} ${L2('played','ne chala')}</small><b>${esc(last)}</b>`:`<small class="muted">${L2('Game starts','Game shuru')}</small>`}</div>`;
@@ -2679,7 +2690,7 @@ function vCoachSet(){const o=V.co||(V.co={color:'w',lvl:P.set.colvl!=null?P.set.
   main.innerHTML=h}
 function coDrawSide(){const el=document.getElementById('coside');if(el)el.innerHTML=coSideHTML();const ev=document.getElementById('coev');if(ev)ev.outerHTML=coEvalHTML()}
 function coEvalHTML(){const g=CG;let l=null,stw=true;if(g.pre&&g.pre.lines[0]&&!g.busy){l=g.pre.lines[0];stw=g.st.w}else if(g.fb&&g.fb.post&&g.fb.post.lines[0]){l=g.fb.post.lines[0];stw=g.fb.st1.w}
-  const pw=l?wpOf(scCp(l)*(stw?1:-1)):.5;return`<div id="coev" class="evrow"><div class="evbar"><i style="width:${Math.round(pw*100)}%"></i></div><span class="mono">${l?evTxt(l,stw):'…'}</span></div>`}
+  const pw=l?wpOf(scCp(l)*(stw?1:-1)):.5;const pc=Math.round(pw*100);return`<div id="coev" class="evrow" title="${L2('Who is winning','Kaun jeet raha hai')}"><span class="evk"></span><div class="evbar"><i style="width:${pc}%"></i><b></b></div><span class="evk dk"></span><span class="mono evtx ${pc>55?'w':pc<45?'b':''}">${l?evTxt(l,stw):'…'}</span></div>`}
 function coSideHTML(){const g=CG;if(!g.hint||!coMyTurn())return'';const m=coHintMove(g);if(!m)return'<div class="card muted">Hint is loading…</div>';
   let h=`<div class="card stack hintl"><div><b>Hint 1, the idea:</b> ${esc(hintIdea(g,m))}</div>`;
   if(g.hint>=2)h+=`<div><b>Hint 2, the piece:</b> use your ${PN(m.p)} on ${sn(m.f)}.</div>`;
@@ -3063,7 +3074,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v67';
+const APPV='2026.11.08 · v69';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
