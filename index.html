@@ -526,6 +526,31 @@ body.fixb .fixscroll{--sheet:#F6F3EA}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body.fixb .fixscroll{--sheet:#151D19}:root:not([data-theme="light"]) body.fixb{--stage:#0E1C16}}
 :root[data-theme="dark"] body.fixb .fixscroll{--sheet:#151D19}:root[data-theme="dark"] body.fixb{--stage:#0E1C16}
 body.fixb main{height:calc(100dvh - var(--hdr,56px) - var(--navh,64px) - 16px)}
+
+/* v42: tab page headers, back pills, tilt button in the header */
+.pghead{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;padding:18px;border-radius:24px;color:#16201B;box-shadow:var(--sh)}
+.pghead h1{font-size:30px;color:inherit}
+.pghead .pgey{display:block;font-weight:800;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.65}
+.pghead small{display:block;font-size:13.5px;opacity:.72;margin-top:2px}
+.pghead .pgic{display:grid;place-items:center;width:54px;height:54px;border-radius:18px;background:rgba(255,255,255,.62);font-size:28px}
+.pg-learn{background:linear-gradient(135deg,#DCEFE3,#C7E4D2)}.pg-prac{background:linear-gradient(135deg,#F8EBCD,#F1DCAE)}.pg-play{background:linear-gradient(135deg,#E5E6F8,#D2D4F1)}.pg-me{background:linear-gradient(135deg,#F7E0DA,#EFCBC2)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pghead{filter:brightness(.8) saturate(1.1)}}
+:root[data-theme="dark"] .pghead{filter:brightness(.8) saturate(1.1)}
+.backbtn{display:inline-flex;align-items:center;gap:4px;background:var(--surface)!important;box-shadow:var(--sh);border-radius:999px!important;padding:8px 14px 8px 12px!important;font-weight:700}
+body.fixb .backbtn{background:rgba(255,255,255,.13)!important;box-shadow:none;color:var(--fg)}
+header.top .wrap{justify-content:flex-start}
+header.top .chips{margin-left:auto}
+#tiltdock.inhdr{position:static;margin-left:8px;flex:none}
+#tiltdock.inhdr .tdbtn{width:36px;height:36px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+body.fixb header.top .wrap{min-height:46px}
+
+/* games are full screen: no tab bar, back pill on top */
+body.fixb nav.tabs{display:none}
+body.fixb main{height:calc(100dvh - var(--hdr,56px) - env(safe-area-inset-bottom,0px))!important}
+body.fixb .fixscroll{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+body.fixb .costick{background:transparent!important}
+.backbtn{white-space:nowrap;flex:none}
+body.fixb .fixtop .gstat{gap:8px}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i>♞&#xFE0E;</i>Mind's Eye Chess</div><div class="chips" id="chips"></div></div></header>
@@ -1007,15 +1032,33 @@ const TUT={
 
 /* ================= app state & render ================= */
 const FIXV=['coach','puz','calc','gm','skdo','rep'];
-function setMain(h){const f=main.querySelector('.fixscroll'),y=f?f.scrollTop:0,same=main.dataset.v===V.name;main.innerHTML=h;main.dataset.v=V.name;const g=main.querySelector('.fixscroll');if(g&&same&&y)g.scrollTop=y}
+function setMain(h){const f=main.querySelector('.fixscroll'),y=f?f.scrollTop:0,same=main.dataset.v===V.name;main.innerHTML=h;main.dataset.v=V.name;const g=main.querySelector('.fixscroll');if(g&&same&&y)g.scrollTop=y;try{fixBack()}catch(e){}}
 let V={name:'home'},S=null,G=null,timerInt=null,autoNext=null,onSq=null;
 const main=document.getElementById('main');
-function go(v){clearTimers();if(v.name!=='q'&&v.name!=='result')S=null;V=v;render();window.scrollTo(0,0)}
+const ROOTS=['home','learn','practice','playhub','me'],NOHIST=['q','result','train','trainres'],HIST=[];let TABCTX='home';
+const TABN={home:['Today','Aaj'],learn:['Learn','Seekho'],practice:['Practice','Practice'],playhub:['Play','Khelo'],me:['Me','Main']};
+function go(v){clearTimers();if(v.name!=='q'&&v.name!=='result')S=null;
+  if(ROOTS.includes(v.name)){TABCTX=v.name;HIST.length=0}
+  else if(V&&V.name!==v.name&&!NOHIST.includes(V.name)){HIST.push(V);if(HIST.length>30)HIST.shift()}
+  V=v;render();window.scrollTo(0,0)}
+function goBack(){let p=null;while(HIST.length){const x=HIST.pop();if(x.name!==V.name){p=x;break}}clearTimers();S=null;V=p||{name:TABCTX};render();window.scrollTo(0,0)}
+function backLabel(){const p=[...HIST].reverse().find(x=>x.name!==V.name);if(!p||ROOTS.includes(p.name)){const t=TABN[p?p.name:TABCTX]||TABN.home;return HI()?t[1]:t[0]}return L2('Back','Wapas')}
+function isBackBtn(b){return b&&b.dataset.act==='tab'&&b.closest('#main')&&/^\s*(←|‹)/.test(b.textContent)}
+function fixBack(){if(ROOTS.includes(V.name))return;const lab='← '+backLabel();let any=false;
+  main.querySelectorAll('[data-act="tab"]').forEach(b=>{if(isBackBtn(b)){b.textContent=lab;b.classList.add('backbtn');any=true}});
+  if(!any&&document.body.classList.contains('fixb')){const g=main.querySelector('.fixtop .gstat')||main.querySelector('.fixtop');if(g){const b=document.createElement('button');b.className='btn small backbtn';b.dataset.act='back';b.textContent=lab;g.prepend(b)}return}
+  if(!any&&!document.body.classList.contains('fixb')&&!NOHIST.includes(V.name)){const st=main.firstElementChild;if(st){const b=document.createElement('button');b.className='btn small backbtn';b.dataset.act='back';b.style.alignSelf='flex-start';b.textContent=lab;st.prepend(b)}}}
+const PGH={learn:['pg-learn','♜','Courses, notes and school','Course, notes aur school'],practice:['pg-prac','◎','Puzzles, drills and revision','Puzzles, drills aur revision'],playhub:['pg-play','♚','Coach, blindfold and friends','Coach, blindfold aur dost'],me:['pg-me','▦','Progress, settings and backup','Progress, settings aur backup']};
+function pageHead(){const x=PGH[V.name];if(!x)return;const st=main.firstElementChild;if(!st||st.querySelector(':scope>.pghead'))return;const h1=st.querySelector(':scope>h1');if(!h1)return;
+  const ey=st.querySelector(':scope>.eyebrow');const hd=document.createElement('header');hd.className='pghead '+x[0];
+  hd.innerHTML=`<span class="pgic" aria-hidden="true">${x[1]}&#xFE0E;</span><div><span class="pgey"></span><h1></h1><small></small></div>`;
+  hd.querySelector('.pgey').textContent=ey?ey.textContent:'';hd.querySelector('h1').textContent=h1.textContent;hd.querySelector('small').textContent=L2(x[2],x[3]);
+  h1.replaceWith(hd);if(ey)ey.remove();const nx=hd.nextElementSibling;if(nx&&nx.tagName==='P'&&nx.classList.contains('muted'))nx.remove()}
 function clearTimers(){clearInterval(timerInt);timerInt=null;clearTimeout(autoNext);autoNext=null}
 function renderChips(){const d=dueItems().length;document.getElementById('chips').innerHTML=`${diyaChip()}<span class="chip" title="Stars">★ ${ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0)}</span>`}
 function render(){const fx=FIXV.includes(V.name);if(document.body.classList.contains('fixb')!==fx){document.body.classList.toggle('fixb',fx);try{window.__setH&&window.__setH()}catch(e){}}document.body.classList.toggle('inq',V.name==='q'||V.name==='train');renderChips();onSq=null;const tab=tabOf(V.name);try{navLabels()}catch(e){}document.body.classList.toggle('b3d',P.set.board3d==='3d');applyTheme();applyTilt();
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
-  ({hl:vHl,home:vHome,learn:vLearn,playhub:vPlayHub,me:vStats,path:vLearn,stage:vStage,tut:vTut,q:vQ,result:vResult,practice:vPractice,explore:vExplore,play:vPlay,coach:vCoach,coachset:vCoachSet,coachrev:vCoachRev,codiary:vCoDiary,stats:vStats,gym:vHome,gmstory:vGmStory,replist:vRepList,rep:vRep,school:vSchool,skdo:vSkDo,road:vRoad,puz:vPuz,week:vWeek,endg:vEndg,calc:vCalc,gmlist:vGmList,gm:vGm,pgn:vPgn,trainset:vTrainSet,train:trRender,trainres:vTrainRes,friend:vFriend,ogame:vOGame})[V.name]();try{fbInvDraw()}catch(e){}}
+  ({'x-learn':vLearn,'x-practice':vPractice,'x-playhub':vPlayHub,'x-me':vStats,'x-home':vHome,hl:vHl,home:vHome,learn:vLearn,playhub:vPlayHub,me:vStats,path:vLearn,stage:vStage,tut:vTut,q:vQ,result:vResult,practice:vPractice,explore:vExplore,play:vPlay,coach:vCoach,coachset:vCoachSet,coachrev:vCoachRev,codiary:vCoDiary,stats:vStats,gym:vHome,gmstory:vGmStory,replist:vRepList,rep:vRep,school:vSchool,skdo:vSkDo,road:vRoad,puz:vPuz,week:vWeek,endg:vEndg,calc:vCalc,gmlist:vGmList,gm:vGm,pgn:vPgn,trainset:vTrainSet,train:trRender,trainres:vTrainRes,friend:vFriend,ogame:vOGame})[V.name]();try{fbInvDraw()}catch(e){}try{fixBack();pageHead()}catch(e){}}
 
 const COURSE_URL=(()=>{try{return/github\.io$/.test(location.hostname)?'course.html':'https://khanfarazhusain.github.io/minds-eye-chess/course.html'}catch(e){return'https://khanfarazhusain.github.io/minds-eye-chess/course.html'}})();
 const NOTES_URL=COURSE_URL.replace(/course\.html$/,'notes.html');
@@ -1172,7 +1215,7 @@ function trBest(m){const L=(P.train||[]).filter(x=>x.m===m);return L.length?Math
 const fmt1=n=>(Math.round(n*10)/10).toString();
 const trOpts=()=>P.trset||(P.trset={min:2,persp:'w',peek:true,coords:false});
 function trSetup(m,from){trOpts();V={name:'trainset',m,from:from||'practice'};render();window.scrollTo(0,0)}
-function trLesson(id){const l=ALL_LESSONS.find(x=>x.id===id);if(!l)return;trOpts();V={name:'trainset',m:l.m,from:l.stage.id,lesson:l};render();window.scrollTo(0,0)}
+function trLesson(id){const l=ALL_LESSONS.find(x=>x.id===id);if(!l)return;trOpts();if(V&&V.name!=='trainset'&&!NOHIST.includes(V.name)&&HIST[HIST.length-1]!==V)HIST.push(V);V={name:'trainset',m:l.m,from:l.stage.id,lesson:l};render();window.scrollTo(0,0)}
 function lessonGoal(l){const mast=l.stage.mastery;return`Pass: <b>${l.target}</b> correct per minute, ${mast?95:90}% right, no peeking.`}
 function vTrainSet(){const m=V.m,t=TRAIN[m],o=trOpts(),l=V.lesson,lp=l?l.params:{};
   const seg=(k,opts)=>`<div class="seg">${opts.map(([v,lb])=>`<button class="${o[k]===v?'on':''}" data-act="tr-opt" data-k="${k}" data-v="${v}">${lb}</button>`).join('')}</div>`;
@@ -1512,7 +1555,10 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
   if(a==='ai-later'){P.set.aiSeen=1;save();render();return}
   if(a==='ai-setup'){P.set.aiSeen=1;save();go({name:'stats'});setTimeout(()=>{const el=document.getElementById('aikeycard');if(el)el.scrollIntoView({block:'start'})},60);return}
   switch(a){
-   case'tab':go({name:d.tab});break;
+   case'back':goBack();break;
+   case'tab':if(isBackBtn(b)||(b.closest('#main')&&d.tab===TABCTX&&!ROOTS.includes(V.name))){goBack();break}
+     if(b.closest('#main')&&ROOTS.includes(d.tab)&&d.tab!==TABCTX){go({name:d.tab==='me'?'stats':'x-'+d.tab});break}
+     go({name:d.tab});break;
    case'stage':go({name:'stage',stage:d.stage});break;
    case'tut':go({name:'tut',stage:d.stage,step:0});break;
    case'tutstep':V.step=+d.step;render();window.scrollTo(0,0);break;
@@ -2457,7 +2503,7 @@ function planHTML(){const d=dailyAuto(),n=d.items.filter(x=>x.done).length;let h
   d.items.forEach((x,i)=>h+=`<button class="planrow ${x.done?'done':''}" data-act="gy-do" data-v="${i}"><span class="pnum">${x.done?'✓':i+1}</span><span style="flex:1;min-width:0"><b>${HI()&&PLAN_HI[x.k]?PLAN_HI[x.k][0]:x.t}</b><small class="muted" style="display:block">${esc(HI()&&PLAN_HI[x.k]?PLAN_HI[x.k][1]:x.d)}</small></span><span class="muted">›</span></button>`);
   return h+(n===d.items.length?`<p class="good" style="margin:0"><b>${L2('Plan complete. Well done! Come back tomorrow.','Plan poora! Shabaash, kal phir aana.')}</b></p>`:`<small class="muted">${L2('The coach picks the plan from your weak areas. It changes every day.','Coach aapki kamzor jagah dekh kar plan banata hai. Ye roz badalta hai.')}</small>`)+'</div>'}
 function gyDo(i){const d=dailyPlan(),x=d.items[i];if(!x)return;if(!['puz','game'].includes(x.k)){x.done=true;save()}
-  ({course:()=>openCourse(),puz:()=>pzStart('rated'),calc:()=>go({name:'calc'}),gm:()=>go({name:'gmlist'}),lesson:()=>{const nx=nextLesson();nx?startLesson(nx.id):go({name:'path'})},game:()=>{V.co={color:'w',lvl:Math.max(0,Math.min(5,Math.round((levelNow()-900)/300)))};go({name:'coachset'})},endg:()=>go({name:'endg'}),diary:()=>{const dd=dzDueList();V={name:'codiary',dz:{i:dd.length?dd[0][1]:0,res:null,sel:null}};render()},rep:()=>go({name:'replist'}),week:()=>pzStart('week')})[x.k]()}
+  ({course:()=>openCourse(),puz:()=>pzStart('rated'),calc:()=>go({name:'calc'}),gm:()=>go({name:'gmlist'}),lesson:()=>{const nx=nextLesson();if(nx){clearTimers();if(V&&!NOHIST.includes(V.name))HIST.push(V);trLesson(nx.id)}else go({name:'path'})},game:()=>{V.co={color:'w',lvl:Math.max(0,Math.min(5,Math.round((levelNow()-900)/300)))};go({name:'coachset'})},endg:()=>go({name:'endg'}),diary:()=>{const dd=dzDueList();V={name:'codiary',dz:{i:dd.length?dd[0][1]:0,res:null,sel:null}};render()},rep:()=>go({name:'replist'}),week:()=>pzStart('week')})[x.k]()}
 
 
 
@@ -2628,7 +2674,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>${L2('App version','App version')}: ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v41';
+const APPV='2026.11.08 · v42';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -2651,7 +2697,7 @@ function tiltDock(){applyView();try{document.querySelectorAll('audio[data-sndtes
   const vm=document.body.classList.contains('vmode');d.classList.toggle('open',vm);
   d.querySelector('.tdhint').textContent=L2('Drag the board to turn it','Board ko ungli se ghumao');d.querySelector('.tddone').textContent='✓ '+L2('Done','Ho gaya');
   const r=b.getBoundingClientRect(),m=b.closest('main')||document.body,mr=m.getBoundingClientRect();d.style.display='';
-  if(vm){d.style.top=Math.max(mr.top+6,8)+'px';d.style.right='';d.style.left='50%'}else{d.style.top=Math.max(mr.top+6,r.top-4)+'px';d.style.left='';d.style.right='8px'}}
+  if(vm){if(d.parentNode!==document.body)document.body.appendChild(d);d.classList.remove('inhdr');d.style.top=Math.max(mr.top+6,8)+'px';d.style.right='';d.style.left='50%'}else{const hw=document.querySelector('header.top .wrap');if(hw&&d.parentNode!==hw)hw.appendChild(d);d.classList.add('inhdr');d.style.top=d.style.left=d.style.right=''}}
 function viewMode(on){document.body.classList.toggle('vmode',!!on);tiltDock();if(on)try{sfx('Q')}catch(e){}}
 function setView(t,y,keep){P.set.tilt=Math.max(0,Math.min(60,t));let w=((y+180)%360+360)%360-180;P.set.yaw=Math.abs(w)<.01?0:w;applyView();
   const v1=document.getElementById('tiltv');if(v1)v1.textContent=Math.round(P.set.tilt)+'°';const s1=document.getElementById('tilt');if(s1&&!keep)s1.value=Math.round(P.set.tilt);
@@ -2682,7 +2728,7 @@ function tiltHTML(){if(P.set.board3d!=='3d')return'';const t=P.set.tilt!=null?P.
 document.addEventListener('input',e=>{if(e.target&&e.target.id==='tilt')setTilt(+e.target.value)});
 function boardSegHTML(){return`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">♟ ${L2('Board style','Board style')}</span><div class="seg sm">${[['2d','2D'],['3d','3D']].map(([k,t])=>`<button class="${(P.set.board3d||'2d')===k?'on':''}" data-act="b3d-set" data-v="${k}">${t}</button>`).join('')}</div></div>`}
 function navLabels(){const N={home:['Today','Aaj'],learn:['Learn','Seekho'],practice:['Practice','Practice'],playhub:['Play','Khelo'],me:['Me','Main']};document.querySelectorAll('#tabs button').forEach(b=>{const x=N[b.dataset.tab];if(!x)return;const t=HI()?x[1]:x[0];const n=[...b.childNodes].find(c=>c.nodeType===3&&c.textContent.trim());if(n&&n.textContent!==t)n.textContent=t})}
-function tabOf(n){const T={hl:'playhub',home:'home',gym:'home',learn:'learn',path:'learn',stage:'learn',tut:'learn',school:'learn',skdo:'learn',replist:'learn',rep:'learn',
+function tabOf(n){if(ROOTS.includes(n))return n;return TABCTX;const T={hl:'playhub',home:'home',gym:'home',learn:'learn',path:'learn',stage:'learn',tut:'learn',school:'learn',skdo:'learn',replist:'learn',rep:'learn',
   practice:'practice',explore:'practice',puz:'practice',week:'practice',endg:'practice',calc:'practice',gmlist:'practice',gm:'practice',gmstory:'practice',codiary:'practice',
   playhub:'playhub',play:'playhub',coach:'playhub',coachset:'playhub',coachrev:'playhub',friend:'playhub',ogame:'playhub',pgn:'playhub',
   me:'me',stats:'me',road:'me'};
