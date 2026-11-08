@@ -823,6 +823,12 @@ body.fixb .fixscroll{padding-bottom:12px}
 .lmline.think{background:color-mix(in srgb,#F0A93A 20%,var(--surface))}
 .lmline .dots b{display:inline-block;animation:ldot 1s infinite}.lmline .dots b:nth-child(2){animation-delay:.15s}.lmline .dots b:nth-child(3){animation-delay:.3s}
 @keyframes ldot{0%,60%,100%{transform:none;opacity:.4}30%{transform:translateY(-3px);opacity:1}}
+
+/* v60: text size + low effects */
+body:not(.fixb) #main{zoom:var(--tz,1)}
+body.lowfx *,body.lowfx *::before,body.lowfx *::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
+body.lowfx header.top,body.lowfx nav.tabs,body.lowfx #tiltdock .tdbtn,body.lowfx #tiltdock .tdpan{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+body.lowfx .rwrays{display:none}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -1425,7 +1431,7 @@ function revealBoard(q){if(!q.reveal)return null;const o={...q.reveal,marks:{...
   if((q.kind==='tap'||q.kind==='sq')&&S.resp&&!S.ok)o.marks[S.resp]='bad';
   return o}
 
-function confettiBurst(n){try{if(!fxOn()||matchMedia('(prefers-reduced-motion: reduce)').matches)return}catch(e){}const w=document.createElement('div');w.className='cfw';const C=['#FFD66B','#4FBF83','#F07A6A','#7A86E0','#F07AA6','#4FB3E0'];
+function confettiBurst(n){try{if(!fxOn()||(P.set&&P.set.lowfx)||matchMedia('(prefers-reduced-motion: reduce)').matches)return}catch(e){}const w=document.createElement('div');w.className='cfw';const C=['#FFD66B','#4FBF83','#F07A6A','#7A86E0','#F07AA6','#4FB3E0'];
   for(let i=0;i<(n||60);i++){const p=document.createElement('i');p.style.cssText=`left:${50+(Math.random()-.5)*30}%;background:${C[i%C.length]};--dx:${(Math.random()-.5)*520}px;--dy:${-260-Math.random()*320}px;--r:${Math.random()*900-450}deg;animation-delay:${Math.random()*.15}s;width:${6+Math.random()*6}px;height:${8+Math.random()*8}px`;w.appendChild(p)}
   document.body.appendChild(w);setTimeout(()=>w.remove(),2600)}
 function rewardHead(o){const st=o.stars||0,ok=o.ok,ic=o.ic||(ok?(st===3?'🏆':'🎉'):'💪');
@@ -1766,7 +1772,9 @@ function historyCard(){const hd=P.hist||{};const days=[];const d=new Date();d.se
   <div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:520px;display:block" role="img" aria-label="Exercises and accuracy over the last 14 days"><line x1="${pad}" x2="${W}" y1="8" y2="8" class="cgrid"/><line x1="${pad}" x2="${W}" y1="${8+(H-40)/2}" y2="${8+(H-40)/2}" class="cgrid"/><text x="0" y="11" class="clab">100%</text><text x="0" y="${11+(H-40)/2}" class="clab">50%</text>${bars}<path d="${line}" class="cline"/>${dots}</svg></div>
   <div class="tiles"><div class="tile"><b>${recent.n}</b><small>this week (last: ${prev.n})</small></div><div class="tile"><b>${pct(recent)}</b><small>correct (last: ${pct(prev)})</small></div><div class="tile"><b>${sec(recent)}</b><small>per answer (last: ${sec(prev)})</small></div></div></div>`}
 const AVAS=['♞','♛','♜','♝','🦁','🐯','🦊','🐼','🤖','🦉'];
-function applyAppTheme(){const t=P.set&&P.set.appth,r=document.documentElement;if(t==='light'||t==='dark')r.dataset.theme=t;else delete r.dataset.theme}
+const TSZ={s:1,m:1.1,l:1.2,xl:1.32};
+function applyAppTheme(){const t=P.set&&P.set.appth,r=document.documentElement;if(t==='light'||t==='dark')r.dataset.theme=t;else delete r.dataset.theme;
+  r.style.setProperty('--tz',TSZ[(P.set&&P.set.tsz)||'s']||1);document.body&&document.body.classList.toggle('lowfx',!!(P.set&&P.set.lowfx))}
 function sgh(ic,t,sub,id,c){return`<div class="sgh" ${id?`id="${id}"`:''}><span class="sgi" style="background:${c}">${ic}</span><div><b>${t}</b>${sub?`<small>${sub}</small>`:''}</div></div>`}
 function stog(id,t,sub,on){return`<label class="toggle srow"><span>${t}${sub?`<br><small class="muted">${sub}</small>`:''}</span><input type="checkbox" class="sw" id="${id}" ${on?'checked':''}></label>`}
 function vStats(){const stars=ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0),passed=ALL_LESSONS.filter(l=>starsOf(l.id)).length;
@@ -1784,6 +1792,8 @@ function vStats(){const stars=ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0),passe
   <div class="card sgrp">${sgh('🌐',L2('Language','Bhasha'),L2('Menus, coach and voice','Menu, coach aur aawaaz'),'','#5B8DEF')}${langSegHTML()}</div>
   <div class="card sgrp">${sgh('🎨',L2('Look and board','Look aur board'),L2('App colours, 2D/3D board, themes','App ke rang, 2D/3D board, themes'),'sg-look','#E07A5F')}
     <div class="gstat srow" style="font-weight:500;gap:8px"><span style="font-size:15px">🌗 ${L2('App theme','App theme')}</span><div class="seg sm">${[['auto',L2('Auto','Auto')],['light',L2('Light','Light')],['dark',L2('Dark','Dark')]].map(([k2,t])=>`<button class="${th===k2?'on':''}" data-act="appth" data-v="${k2}">${t}</button>`).join('')}</div></div>
+    <div class="gstat srow" style="font-weight:500;gap:8px"><span style="font-size:15px">🔠 ${L2('Text size','Text size')}</span><div class="seg sm">${[['s','A'],['m','A+'],['l','A++'],['xl','A+++']].map(([k2,t])=>`<button class="${(P.set.tsz||'s')===k2?'on':''}" data-act="tsz" data-v="${k2}" style="font-size:${12+Object.keys(TSZ).indexOf(k2)*1.5}px">${t}</button>`).join('')}</div></div>
+    ${stog('set-lowfx',L2('Fewer animations','Kam animation'),L2('Smoother on older phones and saves battery','Purane phone par smooth, battery bhi bachti hai'),P.set.lowfx)}
     ${boardSegHTML()}${tiltHTML()}${themeHTML()}</div>
   <div class="card sgrp">${sgh('🔊',L2('Sound and voice','Sound aur aawaaz'),L2('Effects, narration, read aloud','Effects, narration, padh kar sunao'),'sg-sound','#2FA36B')}
     ${sfxSegHTML()}${funSegHTML()}
@@ -1809,6 +1819,7 @@ function vStats(){const stars=ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0),passe
   document.getElementById('set-unlock').onchange=e=>{P.set.unlockAll=e.target.checked;save()};
   document.getElementById('set-speakq').onchange=e=>{P.set.speakQ=e.target.checked;save();if(e.target.checked)sayAny('Questions will be read aloud.')};
   document.getElementById('set-speak').onchange=e=>{P.set.speak=e.target.checked;save();if(e.target.checked)speak('e 4')};
+  document.getElementById('set-lowfx').onchange=e=>{P.set.lowfx=e.target.checked;save();applyAppTheme()};
   document.getElementById('pname').onchange=e=>{P.set.oname=e.target.value.trim().slice(0,18);save()}}
 
 /* ---------- backup / restore ---------- */
@@ -1857,6 +1868,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
   if(a==='pcat'){go({name:'pcat',c:d.v});return}
   if(a==='lvsec'){V.sec=d.v;render();return}
   if(a==='ava-next'){const i=AVAS.indexOf(P.set.avatar||'♞');P.set.avatar=AVAS[(i+1)%AVAS.length];save();const el=main.querySelector('.spava');if(el){el.firstChild.textContent=P.set.avatar;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop')}return}
+  if(a==='tsz'){P.set.tsz=d.v;save();applyAppTheme();render();return}
   if(a==='appth'){P.set.appth=d.v;save();applyAppTheme();render();return}
   if(a==='sjump'){const el=document.getElementById(d.v);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return}
   if(a==='pm'){const bl=d.b==='1',m=d.m;
@@ -3001,7 +3013,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v59';
+const APPV='2026.11.08 · v60';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
