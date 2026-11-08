@@ -558,6 +558,35 @@ body.fixb .fixtop .gstat{gap:8px}
 .brand .bname{display:flex;flex-direction:column;line-height:1.02}
 .brand .bname small{font-family:var(--f-body);font-weight:600;font-size:11px;letter-spacing:.02em;color:var(--muted)}
 body.fixb .brand .bname small{display:none}
+
+/* v45: organised Learn */
+.lnow{background:var(--surface);border-radius:22px;box-shadow:var(--sh);padding:16px;display:grid;gap:10px}
+.lnow-top{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center}
+.lnow-top b{display:block;font-family:var(--f-display);font-size:19px;line-height:1.15;letter-spacing:-.02em}
+.lnum{display:grid;place-items:center;width:48px;height:48px;border-radius:16px;background:var(--accent);color:var(--accent-fg);font-family:var(--f-display);font-weight:800;font-size:22px}
+.lnow .bar{margin:0}
+.lgroups{display:grid;gap:8px}
+.lgrp{background:var(--surface);border-radius:18px;box-shadow:var(--sh);border:0;padding:0;overflow:hidden}
+.lgrp summary{list-style:none;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:14px 16px;cursor:pointer}
+.lgrp summary::-webkit-details-marker{display:none}
+.lgrp .gic{font-size:22px}.lgrp .gt b{display:block;font-family:var(--f-display);font-size:17px}.lgrp .gt small{color:var(--muted);font-size:12.5px}
+.lgrp .gp{font-family:var(--f-mono);font-size:13px;font-weight:700;color:var(--muted);background:var(--surface2);border-radius:999px;padding:3px 10px}
+.lgrp .gp.ok{background:var(--good-soft);color:var(--good)}
+.lgrp[open] summary{border-bottom:1px solid var(--line)}
+.glist{display:grid;padding:6px}
+.lvrow{display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;border:0;background:none;text-align:left;padding:10px;border-radius:12px;color:var(--fg)}
+.lvrow:active{background:var(--surface2)}
+.lvrow .lvn{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--surface2);font-weight:800;font-size:13px}
+.lvrow.ok .lvn{background:var(--good-soft);color:var(--good)}
+.lvrow.cur{background:color-mix(in srgb,var(--accent) 10%,transparent)}.lvrow.cur .lvn{background:var(--accent);color:var(--accent-fg)}
+.lvrow .lvt{font-weight:600;font-size:15px;line-height:1.25}.lvrow .lvs{font-size:12.5px;color:var(--muted);font-weight:700}
+.lvhero{display:grid;gap:8px}.lvhero h1{font-size:28px}
+.nbtn{width:34px;height:34px;border-radius:50%;border:0;background:var(--surface);box-shadow:var(--sh);font-size:18px;font-weight:700}.nbtn:disabled{opacity:.35}
+.lvstats{display:flex;gap:8px}.lvstats span{flex:1;background:var(--surface);box-shadow:var(--sh);border-radius:14px;padding:8px 10px;display:grid}
+.lvstats b{font-family:var(--f-display);font-size:18px}.lvstats small{color:var(--muted);font-size:11.5px}
+.lvtabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--surface2);border-radius:14px;padding:4px}
+.lvtabs button{border:0;background:none;border-radius:11px;padding:9px 4px;font-weight:700;font-size:14px;color:var(--muted)}
+.lvtabs button.on{background:var(--surface);color:var(--fg);box-shadow:var(--sh)}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -1558,7 +1587,8 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
   if(a==='b3d-set'){P.set.board3d=d.v;save();render();setTimeout(()=>{try{window.__setH&&window.__setH()}catch(e){}},50);return}
   if(a==='lang-set'){P.set.lang=d.v;if(P.set.cvoice&&P.set.cvoice!=='off')P.set.cvoice=d.v==='hi'?'hi':'en';save();try{aiRe()}catch(e){}render();return}
   if(a==='course-go'){openCourseAt(d.v);return}
-  if(a==='clev'){if(V.name==='clevel'){V={name:'clevel',i:+d.i};render();window.scrollTo(0,0)}else go({name:'clevel',i:+d.i});return}
+  if(a==='lvsec'){V.sec=d.v;render();return}
+  if(a==='clev'){if(V.name==='clevel'){V={name:'clevel',i:+d.i,sec:V.sec};render();window.scrollTo(0,0)}else go({name:'clevel',i:+d.i});return}
   if(a==='course-more'){const [k,v]=String(d.v).split(':');if(k==='sch')go({name:'school',grp:v});else if(v==='pz')pzStart('rated');else go({name:v});return}
   if(a==='ai-later'){P.set.aiSeen=1;save();render();return}
   if(a==='ai-setup'){P.set.aiSeen=1;save();go({name:'stats'});setTimeout(()=>{const el=document.getElementById('aikeycard');if(el)el.scrollIntoView({block:'start'})},60);return}
@@ -2682,7 +2712,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v44';
+const APPV='2026.11.08 · v45';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -2772,29 +2802,46 @@ function vHome(){gymInit();let h=`<div class="stack">`+homeHero();
 const CSCH={l1:['r_n','r_b','r_r','r_q','r_k','r_p'],l1b:['r_check','r_escape','r_castle','r_ep','r_promo','r_stale','r_mate'],l2:['m_kq','m_kr','m_ladder','m_backrank','m_scholar','m_fool'],l2b:['s_threat','s_hang','s_mat','s_trade'],l3:['t_fork','t_pin','t_skewer','t_discovery','t_remove'],l3b:['t_mix'],lm:['m_smother','m_anastasia','m_arabian','m_boden','m_epaulette'],l6:['p_pawns','p_files','p_outpost'],l6b:['p_bishop','p_king']};
 const CTOOL={l3b:['calc','🧠','Calculation trainer','Calculation trainer'],l4:['replist','📖','Your opening lines','Apni opening lines'],l4b:['replist','📖','Your opening lines','Apni opening lines'],l5:['endg','👑','Endgame drills','Endgame drills'],l5b:['endg','👑','Endgame drills','Endgame drills'],l7:['pz','🧩','Rated puzzles','Rated puzzles'],l7b:['gmlist','📜','Master games','Master games']};
 function clevStat(i){const id=CLEV[i][0],T=(courseJ().tests||{}),ks=CSCH[id]||[];return{sc:T[id],m:ks.filter(k=>skStat(k).m).length,n:ks.length,boss:!!(P.boss||{})[id]}}
-function vLearn(){gymInit();const cp=courseProg(),J=courseJ(),T=J.tests||{};let cur=CLEV.findIndex(x=>!(T[x[0]]>=70));if(cur<0)cur=CLEV.length-1;
+const CGRP=[['🌱','Shuruaat','Beginner',0,4],['⚔️','Middlegame','Middlegame',4,9],['📖','Openings','Openings',9,11],['👑','Endgames','Endgames',11,13],['🏆','Pro','Pro',13,15]];
+function curLevel(){const T=courseJ().tests||{};let c=CLEV.findIndex(x=>!(T[x[0]]>=70));return c<0?CLEV.length-1:c}
+function vLearn(){gymInit();const cp=courseProg(),T=courseJ().tests||{},cur=curLevel(),nd=CLEV.filter(x=>T[x[0]]>=70).length;
   let h=`<div class="stack"><span class="eyebrow">${L2('Step by step','Step by step')}</span><h1>${L2('Learn','Seekho')}</h1>`;
-  h+=`<button class="card rungcard coachcta lhero" data-act="course-open"><span class="eyebrow">${L2('Chess course · 15 levels','Chess course · 15 levels')}</span><b style="font-size:20px">📘 ${cp&&cp.done?L2('Continue the course','Course continue karo'):L2('Start the course','Course shuru karo')}</b><small class="muted">${cp&&cp.done?L2(`${cp.done} lessons done · now on level ${cur+1}: ${CLEV[cur][1]}`,`${cp.done} lessons ho gaye · abhi level ${cur+1}: ${CLEV[cur][1]}`):L2('Basics to pro. Lessons, quizzes, AI tutor ›','Basics se pro tak. Lessons, quiz, AI tutor ›')}</small></button>`;
-  {const passed=ALL_LESSONS.filter(l=>starsOf(l.id)).length;h+=`<button class="card rungcard" data-act="go" data-v="blind"><span class="eyebrow">${L2('Mind’s eye training','Mind’s eye training')}</span><b style="font-size:18px">🙈 ${L2('Blindfold learning','Blindfold seekho')}</b><small class="muted">${STAGES.length} ${L2('steps','steps')} · ${passed}/${ALL_LESSONS.length} drills ${L2('passed','paas')} ›</small></button>`}
-  h+=`<h3 style="margin:6px 0 0">${L2('Levels','Levels')} <small class="muted" style="font-weight:400">· ${L2('lessons, notes, practice','lessons, notes, practice')}</small></h3><div class="stagelist">`;
-  CLEV.forEach(([id,t],i)=>{const x=clevStat(i),ok=x.sc>=70;h+=`<button class="stagerow${i===cur?' cur':''}" data-act="clev" data-i="${i}"><span class="num">${ok?'✓':i+1}</span><span style="min-width:0"><span class="t">${esc(t)}</span><span class="d">${x.sc!=null?L2('Test','Test')+' '+x.sc+'%':L2('Not started','Shuru nahi')}${x.n?` · ${L2('practice','practice')} ${x.m}/${x.n}`:''}${x.boss?' · 👑':''}</span></span><span class="muted">›</span></button>`});
-  h+=`</div>`;
+  h+=`<section class="lnow"><div class="lnow-top"><span class="lnum">${cur+1}</span><div style="min-width:0"><span class="eyebrow">${L2('You are on level','Aap is level par ho')} ${cur+1} / ${CLEV.length}</span><b>${esc(CLEV[cur][1])}</b></div></div>
+    <div class="bar"><i style="width:${nd/CLEV.length*100}%"></i></div><small class="muted">${nd}/${CLEV.length} ${L2('levels passed','levels paas')}${cp&&cp.done?` · ${cp.done} ${L2('lessons done','lessons ho gaye')}`:''}</small>
+    <div class="row"><button class="btn primary" style="flex:1" data-act="course-open">▶ ${cp&&cp.done?L2('Continue lesson','Lesson continue karo'):L2('Start first lesson','Pehla lesson shuru karo')}</button><button class="btn" data-act="clev" data-i="${cur}">${L2('Level page','Level page')} ›</button></div></section>`;
+  h+=`<h3 style="margin:8px 0 0">${L2('All levels','Saare levels')}</h3><div class="lgroups">`;
+  CGRP.forEach(([ic,hi,en,a,b])=>{const done=CLEV.slice(a,b).filter(x=>T[x[0]]>=70).length,open=cur>=a&&cur<b;
+    h+=`<details class="lgrp"${open?' open':''}><summary><span class="gic">${ic}</span><span class="gt"><b>${L2(en,hi)}</b><small>${L2('Levels','Levels')} ${a+1}–${b}</small></span><span class="gp${done===b-a?' ok':''}">${done}/${b-a}</span></summary><div class="glist">`;
+    for(let i=a;i<b;i++){const x=clevStat(i),ok=x.sc>=70;h+=`<button class="lvrow${i===cur?' cur':''}${ok?' ok':''}" data-act="clev" data-i="${i}"><span class="lvn">${ok?'✓':i+1}</span><span class="lvt">${esc(CLEV[i][1].replace(/^[^:]+:\s*/,'').replace(/^./,c=>c.toUpperCase()))}</span><span class="lvs">${x.sc!=null?x.sc+'%':i===cur?L2('Now','Abhi'):''}</span></button>`}
+    h+=`</div></details>`});
+  h+=`</div><h3 style="margin:8px 0 0">${L2('Extra training','Extra training')}</h3>`;
+  {const passed=ALL_LESSONS.filter(l=>starsOf(l.id)).length;h+=`<button class="card rungcard" data-act="go" data-v="blind"><b>🙈 ${L2('Blindfold learning','Blindfold seekho')}</b><small class="muted">${L2('See the board in your mind','Board ko dimaag mein dekho')} · ${passed}/${ALL_LESSONS.length} drills ›</small></button>`}
   main.innerHTML=h+'</div>'}
 function vBlind(){const passed=ALL_LESSONS.filter(l=>starsOf(l.id)).length,nx=nextLesson();let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="learn">← Seekho</button><span class="eyebrow">${STAGES.length} steps · ${passed}/${ALL_LESSONS.length} drills</span><h1>🙈 ${L2('Blindfold learning','Blindfold seekho')}</h1><p class="muted">${L2('Train your mind’s eye step by step until you can play a full game without seeing the board.','Step by step mind’s eye train karo, jab tak bina board dekhe poora game na khel sako.')}</p>`;
   if(nx)h+=`<div class="card stack"><span class="eyebrow">${L2('Up next','Agla')} · Step ${STAGES.indexOf(nx.stage)+1}</span><b>${esc(nx.title)}</b><small class="muted">${esc(nx.stage.title)} · target ${nx.target} per minute</small><button class="btn primary block" data-act="lesson" data-id="${nx.id}">${L2('Start drill','Drill shuru karo')}</button></div>`;
   h+=`<div class="stagelist">`;STAGES.forEach((st,i)=>{const un=stageUnlocked(i),ls=lessonsOf(st),got=ls.reduce((a,l)=>a+starsOf(l.id),0),max=ls.length*3,ps=ls.filter(l=>starsOf(l.id)).length;
     h+=`<button class="stagerow${un?'':' locked'}" data-act="stage" data-stage="${st.id}"><span class="num">${i+1}</span><span style="min-width:0"><span class="t">${esc(st.title)}</span>${st.play?'':`<span class="bar"><i style="width:${max?got/max*100:0}%"></i></span>`}</span><span class="muted mono" style="font-size:13px">${un?(st.play?'▶':ps+'/'+ls.length):'🔒&#xFE0E;'}</span></button>`});
   main.innerHTML=h+'</div></div>'}
-function vCLevel(){const i=Math.max(0,Math.min(CLEV.length-1,+V.i||0)),[id,t]=CLEV[i],x=clevStat(i),ks=CSCH[id]||[],tl=CTOOL[id];
-  let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="learn">← Seekho</button><span class="eyebrow">${L2('Level','Level')} ${i+1} / ${CLEV.length}${x.sc!=null?' · '+L2('best test','best test')+' '+x.sc+'%':''}</span><h1>${esc(t)}</h1>`;
-  h+=`<button class="card rungcard coachcta" data-act="course-go" data-v="level/${i}"><b style="font-size:18px">📘 ${L2('Lessons','Lessons')}</b><small class="muted">${L2('Step-by-step lessons with a quiz after each ›','Step-by-step lessons, har lesson ke baad quiz ›')}</small></button>`;
-  h+=linkCard(NOTES_URL+'#'+id,L2('Revision','Revision'),'📝 '+L2('Notes for this level','Is level ke notes'),L2('Summary, board diagrams and Q&A.','Saar, board diagrams aur sawal-jawab.'));
-  if(ks.length||tl){h+=`<h3 style="margin:6px 0 0">♾️ ${L2('Unlimited practice','Unlimited practice')} <small class="muted" style="font-weight:400">· ${L2('new positions every time','har baar nayi position')}</small></h3><div class="stack" style="gap:6px">`;
+function vCLevel(){const i=Math.max(0,Math.min(CLEV.length-1,+V.i||0)),[id,t]=CLEV[i],x=clevStat(i),ks=CSCH[id]||[],tl=CTOOL[id],sec=V.sec||'learn',g=CGRP.find(G=>i>=G[3]&&i<G[4]);
+  let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="learn">← Seekho</button>`;
+  h+=`<section class="lvhero"><div class="row" style="justify-content:space-between;flex-wrap:nowrap"><span class="eyebrow">${g?g[0]+' '+L2(g[2],g[1])+' · ':''}${L2('Level','Level')} ${i+1}/${CLEV.length}</span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="nbtn" data-act="clev" data-i="${i-1}" ${i>0?'':'disabled'} aria-label="Previous level">‹</button><button class="nbtn" data-act="clev" data-i="${i+1}" ${i<CLEV.length-1?'':'disabled'} aria-label="Next level">›</button></span></div><h1>${esc(t)}</h1>
+    <div class="lvstats"><span><b>${x.sc!=null?x.sc+'%':L2('Not yet','Abhi nahi')}</b><small>${L2('level test','level test')}</small></span>${x.n?`<span><b>${x.m}/${x.n}</b><small>${L2('topics mastered','topics master')}</small></span>`:''}<span><b>${x.boss?'👑':'👹'}</b><small>${x.boss?L2('boss beaten','boss jeeta'):L2('boss','boss')}</small></span></div></section>`;
+  const tabs=[['learn','📘',L2('Learn','Seekho')],['prac','♾️','Practice'],['test','🏁','Test']];
+  h+=`<div class="lvtabs" role="tablist">${tabs.map(([k,ic,l])=>`<button role="tab" aria-selected="${sec===k}" class="${sec===k?'on':''}" data-act="lvsec" data-v="${k}">${ic} ${l}</button>`).join('')}</div>`;
+  if(sec==='learn'){
+    h+=`<button class="card rungcard coachcta" data-act="course-go" data-v="level/${i}"><b style="font-size:18px">📘 ${L2('Open lessons','Lessons kholo')}</b><small class="muted">${L2('Step-by-step lessons with a hands-on quiz after each ›','Step-by-step lessons, har lesson ke baad hands-on quiz ›')}</small></button>`;
+    h+=linkCard(NOTES_URL+'#'+id,L2('Revision','Revision'),'📝 '+L2('Notes for this level','Is level ke notes'),L2('Summary, board diagrams and Q&A ›','Saar, board diagrams aur sawal-jawab ›'));
+    h+=`<small class="muted">${L2('Next step: practise the topics in the Practice tab.','Agla step: Practice tab mein topics practise karo.')}</small>`}
+  else if(sec==='prac'){
+    if(!ks.length&&!tl)h+=`<p class="muted">${L2('This level has no extra practice.','Is level ki extra practice nahi hai.')}</p>`;
+    if(ks.length)h+=`<small class="muted">${L2(`New positions every time. A topic is mastered after ${MASTER_N} right answers with 85% accuracy.`,`Har baar nayi position. ${MASTER_N} sahi jawab aur 85% accuracy par topic master hota hai.`)}</small>`;
+    h+=`<div class="stack" style="gap:6px">`;
     ks.forEach(k=>{const s=skStat(k),pc=Math.min(100,Math.round(s.ok/MASTER_N*100)),T=SCHMAP[k]?SCHMAP[k].t:k;h+=`<button class="planrow ${s.m?'done':''}" data-act="sk-go" data-v="${k}"><span class="pnum">${s.m?'✓':'›'}</span><span style="flex:1;min-width:0"><b>${esc(T)}</b><span class="bar" style="display:block;margin-top:4px"><i style="width:${s.m?100:pc}%"></i></span></span><span class="muted mono" style="font-size:12px">${s.n?Math.round(s.ok/s.n*100)+'%':''}</span></button>`});
     if(tl)h+=`<button class="planrow" data-act="course-more" data-v="x:${tl[0]}"><span class="pnum">${tl[1]}</span><span style="flex:1;min-width:0"><b>${L2(tl[2],tl[3])}</b></span><span class="muted">›</span></button>`;
-    h+=`</div>`;if(ks.length)h+=`<small class="muted">${L2(`A topic is mastered after ${MASTER_N} right answers with 85% accuracy.`,`${MASTER_N} sahi jawab aur 85% accuracy par topic master hota hai.`)}</small>`}
-  h+=`<h3 style="margin:6px 0 0">🏁 ${L2('Finish the level','Level poora karo')}</h3><div class="row"><button class="btn" style="flex:1" data-act="course-go" data-v="test/${i}">📝 ${L2('Level test','Level test')}${x.sc!=null?' · '+x.sc+'%':''}</button><button class="btn" style="flex:1" data-act="boss-go" data-v="${i}">${x.boss?'👑':'👹'} ${L2('Boss battle','Boss battle')}</button></div>`;
-  h+=`<div class="row">${i>0?`<button class="btn small" data-act="clev" data-i="${i-1}">‹ ${L2('Level','Level')} ${i}</button>`:''}<span style="flex:1"></span>${i<CLEV.length-1?`<button class="btn small" data-act="clev" data-i="${i+1}">${L2('Level','Level')} ${i+2} ›</button>`:''}</div>`;
+    h+=`</div>`}
+  else{
+    h+=`<button class="card rungcard" data-act="course-go" data-v="test/${i}"><b style="font-size:18px">📝 ${L2('Level test','Level test')}${x.sc!=null?` · ${L2('best','best')} ${x.sc}%`:''}</b><small class="muted">${L2('Score 70% to pass the level and open the next one ›','70% laao to level paas aur agla level khulega ›')}</small></button>`;
+    h+=`<button class="card rungcard" data-act="boss-go" data-v="${i}"><b style="font-size:18px">${x.boss?'👑':'👹'} ${L2('Boss battle','Boss battle')}</b><small class="muted">${x.boss?L2('Beaten! Play again any time ›','Jeet liya! Kabhi bhi dobara khelo ›'):L2('A tough final challenge for this level ›','Is level ki mushkil aakhri chunauti ›')}</small></button>`}
   main.innerHTML=h+'</div>'}
 const _vPracticeOld=vPractice;
 vPractice=function(){gymInit();_vPracticeOld();const T=[['pz','🧩','Rated puzzles',`Rating ${P.prate}`],['rush','⚡','Puzzle Rush',`Best ${P.rushBest||0}`],['codiary','🔁','Mistake revision',`${dzDueList().length} due · ${(P.diary||[]).length} saved`],['calc','🧠','Calculation',`Level ${P.calc.lvl}`],['endg','👑','Endgame drills',`${Object.values(P.endg).filter(x=>x.ok).length}/${ENDG.length} done`],['gmlist','📜','Master games',`${Object.keys(P.gmg).length}/${GMG.length} studied`],['week','📝','Weekly test','12 puzzles + report'],['explore','🔎','Board explorer','Tap squares'],['replist','📖','Opening lines',`${repDue('w').length+repDue('b').length} lines due`]];
