@@ -485,6 +485,47 @@ body.fixb .fixscroll{background:var(--sheet);border-radius:24px 24px 0 0;margin-
 body.fixb .fixscroll::before{content:"";position:sticky;top:-10px;align-self:center;flex:none;width:38px;height:4px;border-radius:4px;background:var(--line);margin:-8px auto 2px}
 body.fixb .fixtop .board{border-radius:0;box-shadow:none}
 body.fixb nav.tabs{background:var(--sheet)}
+
+/* v41: visible redesign: home hero, quick tiles, floating tab bar, dark board stage */
+.hero2{position:relative;overflow:hidden;border-radius:26px;padding:20px 18px 18px;color:#F2EFE6;background:radial-gradient(120% 90% at 100% 0%,#3C7A57 0%,#24493A 45%,#162C23 100%);box-shadow:0 18px 40px rgba(22,44,35,.28);display:grid;gap:6px}
+.hero2 h1{color:#fff;font-size:30px;margin-top:2px;padding-right:78px}
+.hero2 p{color:#CFE0D4;font-size:15px;max-width:64%}
+.h2day{font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#9FD5B5}
+.h2deco{position:absolute;right:-30px;top:-30px;width:150px;height:150px;transform:rotate(18deg);opacity:.16;background:conic-gradient(#fff 25%,transparent 0 50%,#fff 0 75%,transparent 0) 0 0/37.5px 37.5px;border-radius:18px;pointer-events:none}
+.h2stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.h2stats span{background:rgba(255,255,255,.09);border-radius:14px;padding:8px 6px;text-align:center;display:grid}
+.h2stats b{font-family:var(--f-display);font-size:19px;color:#fff;line-height:1.1}
+.h2stats small{font-size:10.5px;color:#B9CFC1;line-height:1.2}
+.h2ring{position:absolute;right:16px;top:44px;width:66px;height:66px}
+.h2ring i{position:absolute;inset:0;border-radius:50%;background:conic-gradient(#7BE0A6 calc(var(--p)*1%),rgba(255,255,255,.14) 0);-webkit-mask:radial-gradient(circle,transparent 25px,#000 26px);mask:radial-gradient(circle,transparent 25px,#000 26px)}
+.h2ring span{position:absolute;inset:0;display:grid;place-content:center;text-align:center;font-weight:800;font-size:15px;color:#fff;line-height:1}
+.h2ring small{display:block;font-size:9.5px;font-weight:600;color:#B9CFC1;margin-top:2px}
+.h2go{margin-top:12px;border:0;border-radius:16px;padding:14px 16px;background:#F2EFE6;color:#16291F;font-weight:800;font-size:16px;text-align:left;box-shadow:0 6px 18px rgba(0,0,0,.18);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qt{border:0;border-radius:20px;padding:14px;text-align:left;display:grid;gap:2px;min-height:104px;align-content:end;position:relative;color:#16201B;box-shadow:var(--sh)}
+.qt span{position:absolute;top:12px;left:14px;font-size:24px}
+.qt b{font-family:var(--f-display);font-size:18px;font-weight:800;letter-spacing:-.02em}
+.qt small{font-size:12.5px;opacity:.72}
+.qt.q1{background:#DCEFE3}.qt.q2{background:#F6E7C8}.qt.q3{background:#E3E4F6}.qt.q4{background:#F5DCD6}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .qt{filter:brightness(.82) saturate(1.1)}}
+:root[data-theme="dark"] .qt{filter:brightness(.82) saturate(1.1)}
+/* floating tab bar */
+nav.tabs{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));padding-bottom:0;border:0;border-radius:24px;background:#16241D;box-shadow:0 12px 30px rgba(10,25,18,.35);max-width:536px;margin:0 auto}
+nav.tabs .wrap{padding:6px 6px}
+nav.tabs button{color:#93A79B}
+nav.tabs button.on{color:#fff}
+nav.tabs button.on span{background:#5CC08C;color:#08170F}
+body.fixb nav.tabs{background:#16241D}
+main{padding-bottom:120px}
+/* game screens: dark green board stage (board first), cream sheet below */
+body.fixb{--stage:#1F3A2E}
+body.fixb header.top,body.fixb .fixtop{--fg:#F2EFE6;--muted:#B5C6BA;--surface:rgba(255,255,255,.08);--surface2:rgba(255,255,255,.13);--line:rgba(255,255,255,.16);--accent:#7BE0A6;--accent-fg:#0A1F14;color:var(--fg)}
+body.fixb .brand i{background:#7BE0A6;color:#0A1F14}
+body.fixb .fixtop .board{--line:transparent}
+body.fixb .fixscroll{--sheet:#F6F3EA}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body.fixb .fixscroll{--sheet:#151D19}:root:not([data-theme="light"]) body.fixb{--stage:#0E1C16}}
+:root[data-theme="dark"] body.fixb .fixscroll{--sheet:#151D19}:root[data-theme="dark"] body.fixb{--stage:#0E1C16}
+body.fixb main{height:calc(100dvh - var(--hdr,56px) - var(--navh,64px) - 16px)}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i>♞&#xFE0E;</i>Mind's Eye Chess</div><div class="chips" id="chips"></div></div></header>
@@ -2587,7 +2628,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>${L2('App version','App version')}: ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v40';
+const APPV='2026.11.08 · v41';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -2659,7 +2700,15 @@ function continueHTML(){let h='';
   if(typeof G!=='undefined'&&G&&!G.over)h+=`<button class="card rungcard" data-act="go" data-v="play"><span class="eyebrow">${L2('Continue','Continue karo')}</span><b>♚ ${L2('Blindfold game','Blindfold game')}</b></button>`;
   return h}
 function lvlStrip(){const r=levelNow(),k=rungOf(r),X=xpLevel();return`<button class="card rungcard" data-act="go" data-v="road"><div class="gstat"><span><span class="eyebrow">${L2('Your level','Aapka level')}</span><br><b style="font-size:22px" class="mono">~${r}</b> <span class="cls good">${ROAD[k][1]}</span></span><span style="text-align:right"><span class="eyebrow">XP</span><br><b class="mono">Lv ${X.l}</b> <small class="muted">${X.x}/${X.next}</small></span></div><small class="muted">${L2('Next goal','Agla goal')}: ${esc(ROAD[k][3])} ›</small></button>`}
-function vHome(){gymInit();let h=`<div class="stack"><span class="eyebrow">${new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'short'})}</span><h1>${L2('Today','Aaj')}</h1>`;
+function homeHero(){const hr=new Date().getHours(),gr=hr<12?L2('Good morning','Good morning'):hr<17?L2('Good afternoon','Good afternoon'):L2('Good evening','Good evening');
+  const d=dailyAuto(),n=d.items.filter(x=>x.done).length,ni=d.items.findIndex(x=>!x.done),X=xpLevel(),st=ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0),pct=Math.round(n/d.items.length*100);
+  const nx=ni>=0?d.items[ni]:null,nt=nx?(HI()&&PLAN_HI[nx.k]?PLAN_HI[nx.k][0]:nx.t):'';
+  return`<section class="hero2"><div class="h2deco" aria-hidden="true"></div><span class="h2day">${new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'short'})}</span><h1>${gr} 👋</h1><p>${L2("Let's sharpen your chess mind today.",'Chalo, aaj chess ka dimaag tez karein.')}</p>
+  <div class="h2stats"><span><b>${streak()}</b><small>${L2('day streak','din streak')} 🪔</small></span><span><b>Lv ${X.l}</b><small>${X.x} XP</small></span><span><b>${st}</b><small>${L2('stars','stars')} ★</small></span><span><b>${P.prate||800}</b><small>${L2('puzzle rating','puzzle rating')}</small></span></div>
+  <div class="h2ring"><i style="--p:${pct}"></i><span>${n}/${d.items.length}<small>${L2('plan','plan')}</small></span></div>
+  ${nx?`<button class="h2go" data-act="gy-do" data-v="${ni}">▶ ${L2('Start','Shuru karo')}: ${esc(nt)}</button>`:`<button class="h2go" data-act="course-more" data-v="x:coachset">♛ ${L2('Play a game','Ek game khelo')}</button>`}</section>
+  <div class="qgrid"><button class="qt q1" data-act="course-open"><span>📘</span><b>${L2('Lesson','Lesson')}</b><small>${L2('Guided course','Course')}</small></button><button class="qt q2" data-act="course-more" data-v="x:pz"><span>🧩</span><b>${L2('Puzzles','Puzzles')}</b><small>${L2('Rated','Rated')}</small></button><button class="qt q3" data-act="course-more" data-v="x:coachset"><span>♛</span><b>${L2('Coach game','Coach game')}</b><small>${L2('Learn while playing','Khelte hue seekho')}</small></button><button class="qt q4" data-act="course-more" data-v="x:calc"><span>🧠</span><b>${L2('Vision','Vision')}</b><small>${L2('See without board','Bina board dekho')}</small></button></div>`}
+function vHome(){gymInit();let h=`<div class="stack">`+homeHero();
   h+=continueHTML();h+=planHTML();
   if(backupDue())h+=`<button class="card rungcard" data-act="tab" data-tab="me" style="border:2px solid var(--brass)"><b>💾 ${L2('Save a backup of your progress','Apne progress ka backup lo')}</b><small class="muted">${L2('iPhone can clear app data after some days without use. Takes 10 seconds ›','iPhone kuch din use na karne par data mita sakta hai. 10 second lagte hain ›')}</small></button>`;
   if(!gKey()&&!P.set.aiSeen)h+=`<div class="card stack"><b>✦ ${L2('Free AI coach (optional)','Free AI coach (optional)')}</b><small class="muted">${L2('Add a free Google Gemini key once, and the coach explains every move in Hinglish.','Ek baar free Google Gemini key daalo, phir coach har chaal Hinglish me samjhayega.')}</small><div class="row"><button class="btn primary" style="flex:1" data-act="ai-setup">${L2('Set it up','Set karo')}</button><button class="btn" data-act="ai-later">${L2('Later','Baad me')}</button></div></div>`;

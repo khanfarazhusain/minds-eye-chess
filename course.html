@@ -246,6 +246,13 @@ h1{font-size:34px}h2{font-size:24px}h3{font-size:19px}
 .drill{border:0;box-shadow:var(--sh);border-radius:16px}
 .seg{border-radius:12px}
 nav.tabs button{text-transform:none;letter-spacing:0}
+/* floating tab bar (matches app v41) */
+nav.tabs{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));padding-bottom:0;border:0;border-radius:24px;background:#16241D;box-shadow:0 12px 30px rgba(10,25,18,.35);max-width:536px;margin:0 auto}
+nav.tabs .wrap{padding:6px 6px}
+nav.tabs button{color:#93A79B}
+nav.tabs button.on{color:#fff}
+nav.tabs button.on span{background:#5CC08C;color:#08170F}
+main{padding-bottom:120px}
 </style>
 </head>
 <body>
