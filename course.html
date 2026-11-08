@@ -720,7 +720,7 @@ function vHome(){const app=$('#app');touchDay();save();const nx=nextLesson(),due
   o+=`<p class="muted" style="font-size:13px">Progress sirf is phone/browser mein save hota hai. Internet ke bina bhi chalta hai (AI coach ko chhod ke).</p></div>`;app.innerHTML=o;
   setCtx({where:'Home screen (aaj ka plan)'})}
 function vLevel(li){const L=COURSE[li],app=$('#app');if(!L)return go('#/');const un=levelUnlocked(li);
-  let o=`<div class="stack"><button class="back" data-go="#/">‹ Course</button><span class="eyebrow">Level ${li+1}</span><h1>${esc(L.title)}</h1><div class="tut">${md(L.intro||L.sub)}</div><a class="btn small" style="align-self:flex-start;text-decoration:none" href="notes.html#${L.id}">📝 Is level ke notes</a>`;
+  let o=`<div class="stack"><button class="back" data-go="#/">‹ Course</button><span class="eyebrow">Level ${li+1}</span><h1>${esc(L.title)}</h1><div class="tut">${md(L.intro||L.sub)}</div><a class="btn small" style="align-self:flex-start;text-decoration:none" href="notes.html#${L.id}">📝 Is level ke notes</a><a class="btn small" style="align-self:flex-start;text-decoration:none" href="index.html#lvl=${li}">♾️ Unlimited practice (app mein)</a>`;
   if(!un)o+=`<div class="card"><p>🔒 Yeh level band hai. Pichle level ka test 70% se pass karo, ya <a href="#/place">placement test</a> do.</p></div>`;
   L.lessons.forEach((les,lj)=>{const d=PR.done[les.key],u=lessonUnlocked(les),s=PR.stat[les.key];
     o+=`<button class="les${u?'':' locked'}" ${u?`data-go="#/lesson/${li}/${lj}"`:'disabled'}><span class="lck">${d?'✓':u?lj+1:'🔒'}</span><span class="stack" style="gap:2px;text-align:left"><b>${esc(les.title)}</b><small>${esc(les.sub||'')}${s&&s.ok+s.bad?` · ${Math.round(s.ok/(s.ok+s.bad)*100)}% sahi`:''}</small></span></button>`});
