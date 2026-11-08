@@ -834,6 +834,23 @@ body.lowfx .rwrays{display:none}
 .lastmove{height:72px;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
 .fxpill button{border:0;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.2);color:inherit;font-size:12px;font-weight:800;display:grid;place-items:center;padding:0}
 .pghead small{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.pghead h1{line-height:1.08}
+
+/* v64: clean game screens */
+body.fixb header.top{display:none!important}
+body.fixb main{padding-top:calc(6px + env(safe-area-inset-top,0px))!important}
+body.fixb .fixtop{--bw:min(100vw,560px,calc(100dvh - var(--navh,64px) - 250px))!important}
+body.fixb.b3d .fixtop{--bw:min(calc(100vw - 20px),560px,calc((100dvh - var(--navh,64px) - 250px) * 1.08))!important}
+body.fixb .fixtop .gstat{flex-wrap:nowrap!important;align-items:center;gap:8px;min-height:36px;font-size:13.5px}
+body.fixb .fixtop .gstat>*{min-width:0;flex:none}
+body.fixb .fixtop .gstat>span:not(.clk){flex:0 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.fixb .fixtop .gstat>span:first-of-type{flex:1 1 auto}
+body.fixb .fixtop .gstat .btn,body.fixb .fixtop .gstat button{white-space:nowrap;flex:none}
+body.fixb .fixtop .banner{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12.5px!important;padding:4px 10px!important;border-radius:999px}
+body.fixb .fixtop .lmline{margin-top:0}
+body.fixb .fixscroll{gap:10px}
+.lastmove.bigblind{height:auto;min-height:120px;display:grid;place-items:center;gap:2px}.lastmove.bigblind b{font-family:var(--f-mono);font-size:44px;color:var(--fg)}
+body.fixb .fixtop .board.playb{max-width:none!important}
+body.fixb .gamemoves{max-height:none}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -1720,7 +1737,7 @@ function vExplore(){const o=V.o||(V.o={persp:'w',coords:true,piece:'N',sel:'e4'}
   main.innerHTML=h;onSq=n=>{o.sel=n;vExplore();speak(n.split('').join(' '))}}
 
 /* ---------- blindfold play ---------- */
-function vPlay(){if(!G||V.setup){const o=V.po||(V.po={color:'w',level:1,vis:'ghost'});
+function vPlay(){{const fx=!!G&&!V.setup;if(document.body.classList.contains('fixb')!==fx){document.body.classList.toggle('fixb',fx);try{window.__setH&&window.__setH()}catch(e){}}}if(!G||V.setup){const o=V.po||(V.po={color:'w',level:1,vis:'ghost'});
   main.innerHTML=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="playhub">← Khelo</button><span class="eyebrow">${o.two?L2('Two players · one phone','Do players · ek phone'):L2('You vs computer','Aap vs computer')}</span><h1>${o.two?L2('Friend on this phone','Dost ke saath, ek phone'):o.vis==='full'?L2('Play the computer','Computer se khelo'):L2('Blindfold vs computer','Blindfold vs computer')}</h1><p class="muted">${o.two?L2('Pass the phone after each move. The board turns to face the player whose move it is.','Har chaal ke baad phone dost ko do. Board us player ki taraf ghoom jaata hai jiski baari hai.'):L2(`Record: ${P.games.w} won, ${P.games.d} drawn, ${P.games.l} lost.`,`Record: ${P.games.w} jeete, ${P.games.d} draw, ${P.games.l} haare.`)}</p>
   
   <div class="card stack"><div ${o.two?'hidden':''}><span class="eyebrow">You play</span><div class="seg">${[['w','White'],['b','Black'],['r','Random']].map(([k,t])=>`<button class="${o.color===k?'on':''}" data-act="po" data-k="color" data-v="${k}">${t}</button>`).join('')}</div></div>
@@ -1730,20 +1747,25 @@ function vPlay(){if(!G||V.setup){const o=V.po||(V.po={color:'w',level:1,vis:'gho
   <button class="btn primary block" data-act="newgame">Start game</button>${G&&!G.over?`<button class="btn block" data-act="resume">Back to current game</button>`:''}</div>
   ${TUT.play?`<button class="btn block" data-act="tut" data-stage="play">How blindfold play works</button>`:''}</div>`;return}
   const g=G,myTurn=g.st.w===(g.human==='w')&&!g.over;const last=g.sans[g.sans.length-1];
-  let h=`<div class="stack"><div class="gstat"><span>${g.two?`👥 ${g.over?L2('Game over','Game khatam'):g.st.w?L2('White to move','White ki baari'):L2('Black to move','Black ki baari')}`:`You: ${g.human==='w'?'White':'Black'} · ${['Beginner','Club','Strong'][g.level-1]}`}</span><span class="muted">Peeks ${g.peeks}</span></div>`;
-  h+=`<div class="lastmove">${last?`<span class="muted" style="font-size:16px">${g.sans.length%2?'White':'Black'} played</span><br>${esc(last)}`:'<span class="muted" style="font-size:18px">Game starts</span>'}</div>`;
-  if(g.over)h+=`<div class="fb ${g.over.r==='w'?'ok':'no'}"><h3>${g.over.msg}</h3><p>${g.sans.length} half-moves, ${g.peeks} peeks.</p></div>`;
-  else h+=`<p class="pmsg ${g.msgBad?'warn':'muted'}">${g.thinking?'Computer is thinking…':g.msg||(myTurn?'Your move':'')}</p>`;
+  const lastW=g.sans.length%2===1,kb=g.vis!=='full'||g.kb;
+  let h=`<div class="stack"><div class="fixtop"><div class="gstat"><span>${g.two?`👥 ${g.over?L2('Game over','Game khatam'):g.st.w?L2('White to move','White ki baari'):L2('Black to move','Black ki baari')}`:`${g.human==='w'?'⚪':'⚫'} ${['Beginner','Club','Strong'][g.level-1]}${g.vis!=='full'?' · 🙈':''}`}</span>${g.vis!=='full'?`<span class="mono">👁 ${g.peeks}</span>`:''}</div>`;
   const showPieces=g.vis==='full'||g.peek||g.over;
   if(g.vis!=='blind'||g.peek||g.over)h+=boardHTML({cls:'playb',persp:g.human,coords:true,pieces:showPieces?toMap(g.st.b):{},from:g.sel,marks:g.lastMv?{[sn(g.lastMv.f)]:'sel',[sn(g.lastMv.t)]:'sel'}:null});
-  if(!g.over){h+=`<div class="slot">${esc(g.input)||'<span class="muted">type a move</span>'}</div><div class="pad ipad">
+  else h+=`<div class="lastmove bigblind">${last?`<small class="muted">${lastW?'White':'Black'} ${L2('played','ne chala')}</small><b>${esc(last)}</b>`:`<small class="muted">${L2('Game starts','Game shuru')}</small>`}</div>`;
+  h+=g.thinking?`<div class="lmline think">🤖 ${L2('Computer is thinking','Computer soch raha hai')}<i class="dots"><b>.</b><b>.</b><b>.</b></i></div>`
+    :g.msg?`<div class="lmline chk">${esc(g.msg)}</div>`
+    :last?`<div class="lmline ${g.two?'':(lastW===(g.human==='w')?'me':'cpu')}"><b>${g.two?(lastW?'⚪ White':'⚫ Black'):(lastW===(g.human==='w')?'👤 '+L2('You','Aap'):'🤖 Computer')}:</b> ${esc(sanWords(last))} <span class="mono">(${esc(last)})</span></div>`
+    :`<div class="lmline muted">${myTurn?L2('Your move: tap a piece, then its square','Aapki chaal: piece tap karo, phir square'):''}</div>`;
+  h+=`</div><div class="fixscroll stack">`;
+  if(g.over)h+=`<div class="fb ${g.over.r==='w'?'ok':'no'}"><h3>${g.over.msg}</h3><p>${g.sans.length} half-moves${g.vis!=='full'?`, ${g.peeks} peeks`:''}.</p></div>`;
+  if(!g.over&&kb){h+=`<div class="slot">${esc(g.input)||'<span class="muted">type a move</span>'}</div><div class="pad ipad">
    <div class="npad">${['K','Q','R','B','N'].map(p=>`<button class="key" data-act="gk" data-v="${p}">${p}</button>`).join('')}</div>
    <div class="keys">${[...FILES].map(x=>`<button class="key" data-act="gk" data-v="${x}">${x}</button>`).join('')}</div>
    <div class="keys">${[1,2,3,4,5,6,7,8].map(x=>`<button class="key" data-act="gk" data-v="${x}">${x}</button>`).join('')}</div>
    <div class="npad"><button class="key" data-act="gk" data-v="x">x</button><button class="key" data-act="gk" data-v="=">=</button><button class="key" data-act="gk" data-v="O-O">O-O</button><button class="key" data-act="gk" data-v="O-O-O" style="font-size:13px">O-O-O</button><button class="key" data-act="gdel">⌫</button></div>
-   <div class="row"><button class="btn" data-act="peek" ${g.peek?'disabled':''}>Peek 3s</button><button class="btn primary" style="flex:1" data-act="gmove" ${myTurn?'':'disabled'}>Play move</button></div></div>`}
+   <div class="row">${g.vis!=='full'?`<button class="btn" data-act="peek" ${g.peek?'disabled':''}>👁 Peek 3s</button>`:''}<button class="btn primary" style="flex:1" data-act="gmove" ${myTurn?'':'disabled'}>${L2('Play move','Chaal chalo')}</button></div></div>`}
   h+=`<div class="gamemoves">${g.sans.length?movesHTML(g.sans):'<span class="muted">No moves yet</span>'}</div>
-  <div class="row">${g.over?`<button class="btn primary" style="flex:1" data-act="setup">New game</button>`:`<button class="btn" data-act="setup">New game</button><button class="btn" data-act="resign">${g.confirmResign?'Tap again to resign':'Resign'}</button>`}</div></div>`;
+  <div class="row">${g.over?`<button class="btn primary" style="flex:1" data-act="setup">${L2('New game','Naya game')}</button>`:`${g.vis==='full'?`<button class="btn" data-act="gkb">⌨ ${g.kb?L2('Hide keypad','Keypad chhupao'):L2('Type move','Chaal likho')}</button>`:''}<button class="btn" data-act="setup">${L2('New','Naya')}</button><button class="btn" data-act="resign">${g.confirmResign?L2('Tap again','Phir dabao'):L2('Resign','Haar maano')}</button>`}</div></div></div>`;
   main.innerHTML=h;
   if(myTurn&&g.vis!=='blind')onSq=n=>{if(!g.sel){g.sel=n;g.msg='';g.msgBad=false;vPlay();return}if(g.sel===n){g.sel=null;g.msg='';vPlay();return}tryMove(g.sel+n);}}
 function newGame(){const o=V.po;const human=o.color==='r'?pick(['w','b']):o.color;const two=!!o.two;G={two,st:startState(),human:two?'w':human,level:o.level,vis:o.vis,sans:[],input:'',sel:null,peek:false,peeks:0,over:null,msg:'',lastMv:null};V={name:'play'};render();if(!two&&human==='b')engineTurn()}
@@ -1923,6 +1945,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'gk':{const g=G;if(d.v.startsWith('O'))g.input=d.v;else g.input+=d.v;g.sel=null;const sl=main.querySelector('.slot');if(sl)sl.textContent=g.input;break}
    case'gdel':G.input=G.input.slice(0,-1);{const sl=main.querySelector('.slot');if(sl)sl.innerHTML=esc(G.input)||'<span class="muted">type a move</span>'}break;
    case'gmove':if(G.input)tryMove(G.input);break;
+   case'gkb':G.kb=!G.kb;vPlay();break;
    case'peek':G.peek=true;G.peeks++;vPlay();setTimeout(()=>{if(G){G.peek=false;if(V.name==='play'&&!V.setup)vPlay()}},3000);break;
    case'resign':if(!G.confirmResign){G.confirmResign=true;vPlay();setTimeout(()=>{if(G){G.confirmResign=false;if(V.name==='play'&&!V.setup&&!G.over)vPlay()}},3000)}else{if(G.two)G.over={r:'d',msg:L2(`${G.st.w?'White':'Black'} resigned.`,`${G.st.w?'White':'Black'} ne haar maan li.`)};else{G.over={r:'l',msg:'You resigned.'};P.games.l++;save()}vPlay()}break;
    case'hp':V.hp=d.v;vStats();break;
@@ -2664,7 +2687,7 @@ function vCoach(){const g=CG;if(!g){go({name:'coachset'});return}const my=coMyTu
     if(g.show.better&&g.fb&&g.fb.pre&&g.fb.pre.lines[0]){const bm=fromUci(g.fb.st0,g.fb.pre.lines[0].pv[0]);if(bm)arr.push({f:bm.f,t:bm.t,c:'green'})}
     if(my){for(const s of hanging(g.st.b,w))if(!marks[sn(s)])marks[sn(s)]='bad';for(const s of outposts(g.st.b,!w).filter(s=>!g.st.b[s]).slice(0,3))if(!marks[sn(s)])marks[sn(s)]='weak'}}
   const dots=g.sel!=null?legal(g.st).filter(x=>x.f===g.sel).map(x=>sn(x.t)):[];
-  let h=`<div class="stack"><div class="fixtop"><div class="gstat"><span>${coMoodHTML(g)}${g.boss!=null&&BOSS[g.boss]?`<b>${BOSS[g.boss][1]} ${esc(BOSS[g.boss][2])}</b>`:`You: ${w?'White':'Black'} · ${L.n} ${L.elo}`}</span>${g.clk?`<span id="clk" class="mono clk">${clkTxt(g)}</span>`:`<span class="muted">${SF.ready?'Stockfish':SF.failed?'Built-in engine':'Engine loading…'}</span>`}</div>${coEvalHTML()}`;
+  let h=`<div class="stack"><div class="fixtop"><div class="gstat"><span>${coMoodHTML(g)}${g.boss!=null&&BOSS[g.boss]?`<b>${BOSS[g.boss][1]} ${esc(BOSS[g.boss][2])}</b>`:`${w?'⚪':'⚫'} ${L.n} <span class="muted">${L.elo}</span>`}${g.blind?' · 🙈':''}</span>${g.clk?`<span id="clk" class="mono clk">${clkTxt(g)}</span>`:SF.ready||SF.failed?'':`<span class="muted">${L2('Engine loading…','Engine load ho raha…')}</span>`}</div>${coEvalHTML()}`;
   if(g.book&&g.bookOk&&g.moves.length<g.book.moves.length)h+=`<div class="banner">📖 Opening trainer: <b>${esc(g.book.name)}</b>, move ${Math.floor(g.moves.length/2)+1} of ${Math.ceil(g.book.moves.length/2)}. ${my?'Find the book move.':''}</div>`;
   else if(g.book&&g.moves.length>=g.book.moves.length&&g.bookOk)h+=`<div class="banner">📖 You finished the ${esc(g.book.name)} line. Now play on with the plan.</div>`;
   if(g.start)h+=`<div class="banner">${g.start.eg?'👑 Endgame drill':'🎯 Theme'}: <b>${esc(g.start.name)}</b>${g.start.eg?` · goal: <b>${g.start.goal==='win'?'win':'hold the draw'}</b>`:''}</div>`;
@@ -2673,7 +2696,7 @@ function vCoach(){const g=CG;if(!g){go({name:'coachset'});return}const my=coMyTu
   if(g.over)h+=`<div class="fb ${g.over.r==='w'||g.egok?'ok':'no'}"><h3>${g.over.msg}</h3>${g.start&&g.start.eg?`<p><b>${g.egok?'✓ Drill passed!':'Not yet. Try again: '+esc(g.start.tip||'')}</b></p><div class="row"><button class="btn primary" style="flex:1" data-act="eg-go" data-v="${ENDG.findIndex(x=>x[0]===g.start.eg)}">Again</button><button class="btn" data-act="go" data-v="endg">All drills</button></div>`:''}</div>`;
   else if(g.pend)h+=g.pend.type==='book'?`<div class="card stack pend"><b>📖 Not the book move.</b><p>In the ${esc(g.book.name)} the move here is <b>${esc(g.pend.exp)}</b>. You played ${esc(g.fb.san)}.</p><div class="row"><button class="btn primary" style="flex:1" data-act="co-retry">Try again</button><button class="btn" style="flex:1" data-act="co-keep">Leave the book</button></div></div>`
     :`<div class="card stack pend"><b>✋ Coach stopped the game: ${esc(g.fb.san)} is a ${CLS[g.fb.cls][0].toLowerCase()}.</b><p>${esc(coWhy(g.fb).reason)}</p><p class="muted">Take it back and find a better move. Use Hint if you need help.</p><div class="row"><button class="btn primary" style="flex:1" data-act="co-retry">Try again</button><button class="btn" style="flex:1" data-act="co-keep">Keep my move</button></div></div>`;
-  else h+=`<p class="${g.busy?'muted':''}" style="text-align:center;min-height:22px;margin:0">${g.busy?esc(g.busy):my?(g.tried?L2(`Try again: ${esc(g.tried)} was not good. Find a better move.`,`Phir try karo: ${esc(g.tried)} achhi nahi thi. Behtar chaal dhundho.`):L2('Your move: tap a piece, then its square','Aapki chaal: piece tap karo, phir uska square')):''}</p>`;
+  else if(my&&g.tried&&!g.busy)h+=`<p class="warn" style="text-align:center;margin:0">${L2(`Try again: ${esc(g.tried)} was not good. Find a better move.`,`Phir try karo: ${esc(g.tried)} achhi nahi thi. Behtar chaal dhundho.`)}</p>`;
   if(P.set.ceasy!==false){h+=coEasyHTML();setMain(h);onSq=coTap;return}
   h+=`<div class="row corow">${g.over?`<button class="btn primary" style="flex:1" data-act="co-review">Game review</button><button class="btn" data-act="co-setup">New game</button>`:`<button class="btn" data-act="co-hint" ${my&&!g.busy&&(g.hint||0)<3?'':'disabled'}>Hint${g.hint?` ${g.hint}/3`:''}</button><button class="btn" data-act="co-undo" ${g.moves.some(x=>x.by==='h')&&!String(g.busy).startsWith('Coach')?'':'disabled'}>Take back</button><button class="btn" data-act="co-resign">${g.confirmResign?'Tap again':'Resign'}</button><button class="btn" data-act="co-setup">Menu</button>`}</div>`;
   if(!g.over)h+=`<div class="row arrrow"><button class="btn small ${g.arrBest?'on':''}" data-act="co-arr" data-v="arrBest" ${my?'':'disabled'}>➜ Best moves</button><button class="btn small ${g.arrThink?'on':''}" data-act="co-arr" data-v="arrThink">🧠 Coach's thinking</button>${g.fb&&!g.fb.lite&&g.fb.cls!=='best'?`<button class="btn small ${g.show.better?'on':''}" data-act="co-better">✓ Better move</button>`:''}</div>`;
@@ -2707,7 +2730,7 @@ function coJob(g){if(!coMyTurn()||g.pend||g.over)return null;const st=g.st,w=st.
     if(k>=0){const c=stepMoves(st,OSTEPS[k][0]).filter(m=>safeMove(st,m)).sort((a,b)=>rank(a)-rank(b)||(Math.abs(3.5-(a.t&7))-Math.abs(3.5-(b.t&7))));
       if(c.length&&(!best||rank(c[0])<9||!pre[0]||Math.abs(scCp(pre[0]))<150))return{t:L2(`Step ${k+1} of 5: ${OSTEPS[k][1]}.`,`Step ${k+1}/5: ${OSTEPS_HI[k]}.`),m:c[0],step:k,done:d}}}
   if(best)return{t:L2('Your job: ','Aapka kaam: ')+hintIdea(g,best),m:best};return null}
-function coJobHTML(g){const j=g.job;if(!j)return'';let h='<div class="jobnow"><div><b>👉 '+L2('Your job now:','Abhi aapka kaam:')+'</b> '+esc(j.t)+'</div>';
+function coJobHTML(g){const j=g.job;if(!j)return'';let h='<div class="jobnow"><div><b>👉 '+L2('Your job now:','Abhi aapka kaam:')+'</b> '+esc(String(j.t).replace(/^\s*(Your job|Aapka kaam)\s*:\s*/i,'').replace(/^./,c=>c.toUpperCase()))+'</div>';
   if(j.m)h+=`<div class="muted" style="font-size:14px">${L2('Suggested move','Suggested chaal')}: <b class="mono">${esc(san(g.st,j.m,legal(g.st)))}</b> (${L2('green arrow','hara arrow')})</div>`;
   if(j.done)h+='<div class="osteps">'+OSTEPS.map(([k,t],i)=>`<span class="${j.done[k]?'ok':i===j.step?'cur':''}">${j.done[k]?'✓':i+1} ${(HI()?['Centre','Knights','Bishops','Castle','Rooks']:['Centre','Knights','Bishops','Castle','Rooks'])[i]}</span>`).join('')+'</div>';return h+'</div>'}
 function coEasyHTML(){const g=CG,my=coMyTurn();let h=(g.boss!=null&&g.bossMsg&&g.moves.length<4&&BOSS[g.boss]?`<div class="card bosscard"><b>${BOSS[g.boss][1]} ${esc(BOSS[g.boss][2])}:</b> “${esc(g.bossMsg)}”</div>`:'')+(P.set.cjob!==false&&!g.ep?coJobHTML(g):'')+(g.ep&&g.ep!=='more'?'':coStripHTML());
@@ -3020,7 +3043,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v63';
+const APPV='2026.11.08 · v64';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
