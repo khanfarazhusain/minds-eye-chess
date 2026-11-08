@@ -813,7 +813,7 @@ body.fixb .fixscroll{padding-bottom:12px}
 @media (prefers-reduced-motion:reduce){.rwrays,.rwd,.rwic,.rwst i.on{animation:none}}
 
 /* v59: calm game feel */
-.fxpill{position:fixed;transform:translateX(-50%);z-index:60;pointer-events:none;font-weight:800;font-size:14px;padding:6px 14px;border-radius:999px;white-space:nowrap;box-shadow:0 6px 16px rgba(0,0,0,.25);animation:fpin .22s cubic-bezier(.2,1.5,.4,1)}
+.fxpill{position:fixed;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px;padding:5px 6px 5px 14px;border-radius:999px;white-space:nowrap;box-shadow:0 6px 16px rgba(0,0,0,.25);animation:fpin .22s cubic-bezier(.2,1.5,.4,1)}
 .fp-kill{background:#2E1F0B;color:#FFD66B}.fp-chk{background:#C8302B;color:#fff}
 .fxpill.out{opacity:0;transform:translate(-50%,-6px);transition:.3s}
 @keyframes fpin{from{opacity:0;transform:translate(-50%,-8px) scale(.9)}}
@@ -829,6 +829,10 @@ body:not(.fixb) #main{zoom:var(--tz,1)}
 body.lowfx *,body.lowfx *::before,body.lowfx *::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
 body.lowfx header.top,body.lowfx nav.tabs,body.lowfx #tiltdock .tdbtn,body.lowfx #tiltdock .tdpan{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 body.lowfx .rwrays{display:none}
+
+.pmsg{text-align:center;height:22px;line-height:22px;margin:0;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lastmove{height:72px;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.fxpill button{border:0;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.2);color:inherit;font-size:12px;font-weight:800;display:grid;place-items:center;padding:0}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -1324,14 +1328,15 @@ function backLabel(){const p=[...HIST].reverse().find(x=>x.name!==V.name);if(!p|
 function isBackBtn(b){return b&&b.dataset.act==='tab'&&b.closest('#main')&&/^\s*(←|‹)/.test(b.textContent)}
 function fixBack(){if(ROOTS.includes(V.name))return;const lab='← '+backLabel();let any=false;
   main.querySelectorAll('[data-act="tab"]').forEach(b=>{if(isBackBtn(b)){b.textContent=lab;b.classList.add('backbtn');any=true}});
-  if(!any&&document.body.classList.contains('fixb')){const g=main.querySelector('.fixtop .gstat')||main.querySelector('.fixtop');if(g){const b=document.createElement('button');b.className='btn small backbtn';b.dataset.act='back';b.textContent=lab;g.prepend(b)}return}
-  if(!any&&!document.body.classList.contains('fixb')&&!NOHIST.includes(V.name)){const st=main.firstElementChild;if(st){const b=document.createElement('button');b.className='btn small backbtn';b.dataset.act='back';b.style.alignSelf='flex-start';b.textContent=lab;st.prepend(b)}}}
+  if(!any&&document.body.classList.contains('fixb')){const g=main.querySelector('.fixtop .gstat')||main.querySelector('.fixtop');if(g&&!g.querySelector('.backbtn')&&![...g.querySelectorAll('button')].some(x=>/^\s*←/.test(x.textContent))){const b=document.createElement('button');b.className='btn small backbtn';b.dataset.act='back';b.textContent=lab;g.prepend(b)}return}
+  if(!any&&!document.body.classList.contains('fixb')&&!NOHIST.includes(V.name)){const st=main.firstElementChild;if(st&&!st.querySelector(':scope>.backbtn')){const b=document.createElement('button');b.className='btn small backbtn';b.dataset.act='back';b.style.alignSelf='flex-start';b.textContent=lab;st.prepend(b)}}}
 const PGH={learn:['pg-learn','♜','Course levels and blindfold training','Course levels aur blindfold training'],practice:['pg-prac','◎','Puzzles, drills and revision','Puzzles, drills aur revision'],playhub:['pg-play','♚','Coach, blindfold and friends','Coach, blindfold aur dost'],me:['pg-me','⚙','Progress, settings and backup','Progress, settings aur backup']};
 function pageHead(){const x=PGH[V.name];if(!x)return;const st=main.firstElementChild;if(!st||st.querySelector(':scope>.pghead'))return;const h1=st.querySelector(':scope>h1');if(!h1)return;
   const ey=st.querySelector(':scope>.eyebrow');const hd=document.createElement('header');hd.className='pghead '+x[0];
   hd.innerHTML=`<span class="pgic" aria-hidden="true">${x[1]}&#xFE0E;</span><div><span class="pgey"></span><h1></h1><small></small></div>`;
   hd.querySelector('.pgey').textContent=ey?ey.textContent:'';hd.querySelector('h1').textContent=h1.textContent;hd.querySelector('small').textContent=L2(x[2],x[3]);
   h1.replaceWith(hd);if(ey)ey.remove();const nx=hd.nextElementSibling;if(nx&&nx.tagName==='P'&&nx.classList.contains('muted'))nx.remove()}
+try{new MutationObserver(()=>{try{fixBack();pageHead()}catch(e){}}).observe(document.getElementById('main'),{childList:true})}catch(e){}
 function clearTimers(){clearInterval(timerInt);timerInt=null;clearTimeout(autoNext);autoNext=null}
 function renderChips(){const d=dueItems().length;document.getElementById('chips').innerHTML=`${diyaChip()}<span class="chip" title="Stars">★ ${ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0)}</span>`}
 function render(){try{applyAppTheme()}catch(e){}const fx=FIXV.includes(V.name);if(document.body.classList.contains('fixb')!==fx){document.body.classList.toggle('fixb',fx);try{window.__setH&&window.__setH()}catch(e){}}document.body.classList.toggle('inq',V.name==='q'||V.name==='train');document.body.classList.toggle('cfr',V.name==='cframe');renderChips();onSq=null;const tab=tabOf(V.name);try{navLabels()}catch(e){}document.body.classList.toggle('b3d',P.set.board3d==='3d');applyTheme();applyTilt();
@@ -1726,7 +1731,7 @@ function vPlay(){if(!G||V.setup){const o=V.po||(V.po={color:'w',level:1,vis:'gho
   let h=`<div class="stack"><div class="gstat"><span>${g.two?`👥 ${g.over?L2('Game over','Game khatam'):g.st.w?L2('White to move','White ki baari'):L2('Black to move','Black ki baari')}`:`You: ${g.human==='w'?'White':'Black'} · ${['Beginner','Club','Strong'][g.level-1]}`}</span><span class="muted">Peeks ${g.peeks}</span></div>`;
   h+=`<div class="lastmove">${last?`<span class="muted" style="font-size:16px">${g.sans.length%2?'White':'Black'} played</span><br>${esc(last)}`:'<span class="muted" style="font-size:18px">Game starts</span>'}</div>`;
   if(g.over)h+=`<div class="fb ${g.over.r==='w'?'ok':'no'}"><h3>${g.over.msg}</h3><p>${g.sans.length} half-moves, ${g.peeks} peeks.</p></div>`;
-  else h+=`<p class="${g.msgBad?'warn':'muted'}" style="text-align:center;min-height:22px">${g.thinking?'Computer is thinking…':g.msg||(myTurn?'Your move':'')}</p>`;
+  else h+=`<p class="pmsg ${g.msgBad?'warn':'muted'}">${g.thinking?'Computer is thinking…':g.msg||(myTurn?'Your move':'')}</p>`;
   const showPieces=g.vis==='full'||g.peek||g.over;
   if(g.vis!=='blind'||g.peek||g.over)h+=boardHTML({cls:'playb',persp:g.human,coords:true,pieces:showPieces?toMap(g.st.b):{},from:g.sel,marks:g.lastMv?{[sn(g.lastMv.f)]:'sel',[sn(g.lastMv.t)]:'sel'}:null});
   if(!g.over){h+=`<div class="slot">${esc(g.input)||'<span class="muted">type a move</span>'}</div><div class="pad ipad">
@@ -1738,10 +1743,10 @@ function vPlay(){if(!G||V.setup){const o=V.po||(V.po={color:'w',level:1,vis:'gho
   h+=`<div class="gamemoves">${g.sans.length?movesHTML(g.sans):'<span class="muted">No moves yet</span>'}</div>
   <div class="row">${g.over?`<button class="btn primary" style="flex:1" data-act="setup">New game</button>`:`<button class="btn" data-act="setup">New game</button><button class="btn" data-act="resign">${g.confirmResign?'Tap again to resign':'Resign'}</button>`}</div></div>`;
   main.innerHTML=h;
-  if(myTurn&&g.vis!=='blind')onSq=n=>{if(!g.sel){g.sel=n;g.msg=`From ${n}…`;g.msgBad=false;vPlay();return}if(g.sel===n){g.sel=null;g.msg='';vPlay();return}tryMove(g.sel+n);}}
+  if(myTurn&&g.vis!=='blind')onSq=n=>{if(!g.sel){g.sel=n;g.msg='';g.msgBad=false;vPlay();return}if(g.sel===n){g.sel=null;g.msg='';vPlay();return}tryMove(g.sel+n);}}
 function newGame(){const o=V.po;const human=o.color==='r'?pick(['w','b']):o.color;const two=!!o.two;G={two,st:startState(),human:two?'w':human,level:o.level,vis:o.vis,sans:[],input:'',sel:null,peek:false,peeks:0,over:null,msg:'',lastMv:null};V={name:'play'};render();if(!two&&human==='b')engineTurn()}
 function tryMove(inp){const g=G;const m=findMove(g.st,inp);g.sel=null;
-  if(!m){g.msg=`${inp} isn't a legal move here. Picture the board again.`;g.msgBad=true;g.input='';vPlay();return}
+  if(!m){g.msg=`${inp} isn't legal here. Try again.`;g.msgBad=true;g.input='';vPlay();return}
   playMove(m);if(g.two){if(!g.over)g.human=g.st.w?'w':'b';vPlay();return}if(!g.over)engineTurn()}
 function playMove(m){const g=G;const s=san(g.st,m,legal(g.st));g.sans.push(s);g.st=make(g.st,m);g.lastMv=g.vis==='full'?m:null;g.input='';g.msg='';g.msgBad=false;checkEnd();return s}
 function checkEnd(){const g=G,ms=legal(g.st);let over=null;const humanW=g.human==='w';
@@ -2894,8 +2899,8 @@ function fxHuman(){try{if(V.name==='coach'&&CG)return CG.human;if(V.name==='play
 /* fight-game style callouts: big text slams onto the middle of the board, flashes, shakes, then vanishes */
 let FXBUSY=0;
 function fxPill(b0,txt,cls){const b=fxLiveBoard(b0);if(!b)return;const r=b.getBoundingClientRect();if(!r.width)return;let el=document.getElementById('fxpill');if(el)el.remove();
-  el=document.createElement('div');el.id='fxpill';el.className='fxpill fp-'+cls;el.textContent=txt;el.style.left=(r.left+r.width/2)+'px';el.style.top=(r.top+8)+'px';document.body.appendChild(el);
-  try{if(cls==='chk')navigator.vibrate&&navigator.vibrate(40)}catch(e){}setTimeout(()=>{if(el.isConnected){el.classList.add('out');setTimeout(()=>el.remove(),300)}},1500)}
+  el=document.createElement('div');el.id='fxpill';el.className='fxpill fp-'+cls;el.innerHTML='<span></span><button aria-label="Close">✕</button>';el.firstChild.textContent=txt;el.lastChild.onclick=ev=>{ev.stopPropagation();el.remove()};el.style.left=(r.left+r.width/2)+'px';el.style.top=(r.top+8)+'px';document.body.appendChild(el);
+  try{if(cls==='chk')navigator.vibrate&&navigator.vibrate(40)}catch(e){}setTimeout(()=>{if(el.isConnected){el.classList.add('out');setTimeout(()=>el.remove(),300)}},2600)}
 function fxLiveBoard(b){return (b&&b.isConnected&&b.offsetParent)?b:(gameBoard()||mainBoard())}
 function fxBanner(b,txt,cls,sub){const now=performance.now(),start=Math.max(now,FXBUSY-250);FXBUSY=start+950;const go=()=>fxSlam(txt,cls,sub,b);if(start-now<20)go();else setTimeout(go,start-now)}
 function fxSlam(txt,cls,sub,b0){const b=fxLiveBoard(b0);if(!b)return;const r=b.getBoundingClientRect();if(!r.width)return;
@@ -2912,7 +2917,7 @@ function fxSlam(txt,cls,sub,b0){const b=fxLiveBoard(b0);if(!b)return;const r=b.g
 function fxSlash(b,sq,victim,moverW){const q=b.querySelector(`[data-sq="${sq}"]`);if(!q)return;const s=document.createElement('i');s.className='fxslash';q.appendChild(s);
   if(victim){const g=GLYPH[victim.toUpperCase()],c=victim===victim.toUpperCase()?'w':'b';['t','b'].forEach(h=>{const e=document.createElement('span');e.className=`pc ${c} fxhalf fx${h}`;e.textContent=g+'︎';q.appendChild(e)});
     const nm={P:'Pawn',N:'Knight',B:'Bishop',R:'Rook',Q:'Queen',K:'King'}[victim.toUpperCase()],v={P:1,N:3,B:3,R:5,Q:9,K:0}[victim.toUpperCase()];
-    fxPill(b,L2(`✕ ${nm} captured  +${v}`,`✕ ${nm} mara gaya  +${v}`),'kill')}
+    fxPill(b,L2(`⚔️ ${nm} captured  +${v}`,`⚔️ ${nm} mara gaya  +${v}`),'kill')}
   setTimeout(()=>q.querySelectorAll('.fxslash,.fxhalf,.fxkill').forEach(e=>e.remove()),1100)}
 function fxDetect(b,old,now,gone,came){if(!fxOn())return;const id=b.dataset.board;if(['deco','heat','explore'].includes(id))return;
   const moved=[];const used=new Set();came.forEach(t=>{const f=gone.find(g=>!used.has(g)&&old[g]===now[t]&&g!==t&&!now[g]);if(f){used.add(f);moved.push({f,t,p:fxPc(now[t])})}});
@@ -3013,7 +3018,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
   window.addEventListener('resize',()=>document.querySelectorAll('.board[data-board]').forEach(b=>{const w=b.clientWidth/8;if(w)b.style.setProperty('--b3sq',w+'px')}))})();
 /* ---- simple 5-tab layout: Aaj, Seekho, Practice, Khelo, Main ---- */
 function langSegHTML(card){const h=`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🌐 ${L2('Language','Bhasha')}</span><div class="seg sm">${[['en','English'],['hi','Hinglish']].map(([k,t])=>`<button class="${(P.set.lang||'en')===k?'on':''}" data-act="lang-set" data-v="${k}">${t}</button>`).join('')}</div></div>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.08 · v60';
+const APPV='2026.11.08 · v61';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
