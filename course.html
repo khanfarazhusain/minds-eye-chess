@@ -253,6 +253,11 @@ nav.tabs button{color:#93A79B}
 nav.tabs button.on{color:#fff}
 nav.tabs button.on span{background:#5CC08C;color:#08170F}
 main{padding-bottom:120px}
+
+/* embedded inside the 64 Squares app */
+body.emb header.top,body.emb nav.tabs{display:none!important}
+body.emb main{padding-block:6px 40px}
+body.emb::before{display:none}
 </style>
 </head>
 <body>
@@ -690,7 +695,8 @@ function stPlay(s,el,ctx){const st0=parseFEN(s.fen);const me=st0.w;let st=st0,n=
 let VIEW={};
 function go(hash){if(location.hash!==hash)location.hash=hash;else route()}
 window.addEventListener('hashchange',route);
-function route(){closeTutor();const p=(location.hash||'#/').slice(2).split('/');const app=$('#app');app.innerHTML='';window.scrollTo(0,0);
+const EMB=/[?&]embed=1/.test(location.search);if(EMB){document.body.classList.add('emb');document.addEventListener('click',e=>{const a=e.target.closest('a[href*="index.html#lvl="]');if(a){e.preventDefault();parent.postMessage({src:'course64',t:'lvl',i:+(a.getAttribute('href').split('lvl=')[1])},'*')}},true)}
+function route(){closeTutor();const p=(location.hash||'#/').slice(2).split('/');if(EMB&&(p[0]===''||p[0]==='puzzles'||p[0]==='play')&&window.__routed){parent.postMessage({src:'course64',t:'close'},'*');return}if(EMB&&p[0]==='level'&&window.__routed){parent.postMessage({src:'course64',t:'lvl',i:+p[1]},'*');return}window.__routed=1;const app=$('#app');app.innerHTML='';window.scrollTo(0,0);
   tabs(p[0]==='puzzles'?'puz':p[0]==='play'?'play':'course');
   if(p[0]==='next'){const nx=nextLesson();location.replace(nx?(nx.test?'#/test/'+nx.test.li:'#/lesson/'+nx.les.li+'/'+nx.les.lj):'#/');return}
   if(p[0]==='level')vLevel(+p[1]);else if(p[0]==='lesson')vLesson(+p[1],+p[2]);else if(p[0]==='test')vTest(+p[1]);
