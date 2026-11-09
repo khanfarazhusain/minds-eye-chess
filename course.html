@@ -287,6 +287,26 @@ const ord=n=>n+(['th','st','nd','rd'][(n%100-20)%10]||['th','st','nd','rd'][n%10
 const T=n=>`<b class="n">${n}</b>`;
 const side=p=>p==='w'?"White's":"Black's";
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* ---------- course language (pack from the app) ---------- */
+const CL={code:null,D:null,pats:[]};
+const CL_READY=(async()=>{try{let c=new URLSearchParams(location.search).get('lang');if(c)try{localStorage.setItem('sq64.course.lang',c)}catch(e){}else try{c=localStorage.getItem('sq64.course.lang')}catch(e){}
+  if(!c||c==='en'||c==='hi'||!/^[a-z]{2,4}$/.test(c))return;const u='packs/'+c+'.json';let pk=null;
+  try{const ca=await caches.open('squares64-lang');const r=await ca.match(u)||await ca.match(new URL(u,location.href).href);if(r)pk=await r.json()}catch(e){}
+  if(!pk){try{const r=await fetch(u);if(r.ok){pk=await r.clone().json();try{(await caches.open('squares64-lang')).put(u,r)}catch(e){}}}catch(e){}}
+  if(!pk||!pk.course||!Object.keys(pk.course).length)return;CL.code=c;CL.D=pk.course;
+  for(const k in CL.D)if(k.includes('{s}'))CL.pats.push([new RegExp('^'+k.replace(/[.*+?^$()|[\]\\]/g,'\\$&').replace(/\{n\}/g,'(\\d+)').replace(/\{s\}/g,'([\\s\\S]+?)')+'$'),k]);
+  document.documentElement.lang=c==='hin'?'hi':c}catch(e){}})();
+function CT(raw){const D=CL.D;if(!D||raw==null)return raw;const s0=String(raw);const lead=s0.match(/^\s*/)[0],tail=s0.match(/\s*$/)[0];const s=s0.trim();if(!s)return raw;
+  if(D[s]!=null)return lead+D[s]+tail;const nums=[];const k=s.replace(/\d+/g,m=>{nums.push(m);return'{n}'});let v=D[k];
+  if(v!=null){let i=0;return lead+v.replace(/\{n\}/g,()=>nums[i++]??'')+tail}
+  for(const [re,pk] of CL.pats){const m=s.match(re);if(m){const caps=m.slice(1),kinds=pk.match(/\{[ns]\}/g)||[];const N=[],S=[];kinds.forEach((t,j)=>(t==='{n}'?N:S).push(caps[j]));let ni=0,si=0;
+    return lead+D[pk].replace(/\{([ns])\}/g,(_,t)=>t==='n'?(N[ni++]??''):(()=>{const x=S[si++]??'';return CT(x)})())+tail}}
+  return raw}
+const CL_SKIP='script,style,textarea,input,.board,.mono,.chat,.aians,svg';
+function clNode(n){if(n.nodeType!==3)return;const v=n.nodeValue;if(!v||!/[A-Za-z]/.test(v))return;const p=n.parentElement;if(!p||p.closest(CL_SKIP))return;const t=CT(v);if(t!==v)n.nodeValue=t}
+function clTree(r){if(!CL.D||!r)return;if(r.nodeType===3)return clNode(r);if(r.nodeType!==1||r.closest&&r.closest(CL_SKIP))return;const w=document.createTreeWalker(r,NodeFilter.SHOW_TEXT);const a=[];while(w.nextNode())a.push(w.currentNode);a.forEach(clNode);
+  r.querySelectorAll&&r.querySelectorAll('[placeholder],[title],[aria-label]').forEach(e=>{for(const at of['placeholder','title','aria-label']){const x=e.getAttribute(at);if(x){const t=CT(x);if(t!==x)e.setAttribute(at,t)}}})}
+CL_READY.then(()=>{if(!CL.D)return;new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData')clNode(m.target);else m.addedNodes.forEach(clTree)}}).observe(document.body,{childList:true,subtree:true,characterData:true});clTree(document.body)});
 function sq(f,r){return(f<0||f>7||r<0||r>7)?-1:r*8+f}
 const N_OFF=[[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1],[-2,1],[-1,2]];
 const K_OFF=[[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];
@@ -399,10 +419,10 @@ const sanOf=(st,m)=>san(st,m,legal(st));
 const mates=st=>inCheck(st)&&!legal(st).length;
 const posKey=st=>st.b.map(p=>p||'.').join('')+(st.w?'w':'b')+st.ep;
 function sameSan(a,b){return normSan(a)===normSan(b)}
-function md(s){if(!s)return'';return s.split(/\n\n+/).map(par=>{const t=par.trim();
+function md(s){if(!s)return'';s=CT(s);return s.split(/\n\n+/).map(par=>{const t=par.trim();
   if(t.startsWith('- '))return'<ul>'+t.split(/\n/).map(l=>'<li>'+inl(l.replace(/^- /,''))+'</li>').join('')+'</ul>';
   return'<p>'+inl(t).replace(/\n/g,'<br>')+'</p>'}).join('')}
-function inl(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`(.+?)`/g,'<span class="n">$1</span>')}
+function inl(s){return esc(CT(s)).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`(.+?)`/g,'<span class="n">$1</span>')}
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const dayNum=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/864e5);
 
@@ -509,7 +529,7 @@ function gErr(e){return({nokey:'Pehle free Gemini key add karo (neeche steps hai
   denied:'Google ne yeh key mana kar di. AI Studio mein nayi key banao.',limit:'Free limit abhi bhar gayi. 1 minute baad dobara try karo. Agar phir bhi na chale to kal try karo.',
   busy:'Gemini abhi busy hai. 1 minute baad try karo.',net:'Gemini tak nahi pahunch paaye. Internet check karo. Claude ke preview mein yeh block ho sakta hai: GitHub wala link kholo.',
   empty:'Gemini ne khali jawab diya. Dobara try karo.',model:'Is key ke liye free model nahi mila. Baad mein try karo ya nayi key banao.'}[e&&e.code])||('Kuch gadbad hui. '+((e&&e.msg)||''))}
-function mdLite(t){const lines=esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<i>$2</i>').split('\n');let o='',ul=false;
+function mdLite(t){const lines=esc(CT(t)).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<i>$2</i>').split('\n');let o='',ul=false;
   for(let l of lines){l=l.trimEnd();const li=l.match(/^\s*(?:[-*•]|\d+[.)])\s+(.*)$/),hd=l.match(/^#{1,6}\s+(.*)$/);
     if(li){if(!ul){o+='<ul>';ul=true}o+=`<li>${li[1]}</li>`;continue}if(ul){o+='</ul>';ul=false}
     if(hd)o+=`<h4>${hd[1]}</h4>`;else if(l.trim())o+=`<p>${l}</p>`}return o+(ul?'</ul>':'')}
@@ -827,7 +847,7 @@ function vPlay(){const app=$('#app');if(!G)G={st:parseFEN(START_FEN),me:'w',lvl:
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();const t=g.dataset.go;if(location.hash===t)route();else go(t);return}
   const a=e.target.closest('[data-act]');if(a&&a.dataset.act==='tutor')openTutor()});
 $('#tutorbtn').onclick=openTutor;
-touchDay();save();route();
+touchDay();save();CL_READY.then(route);
 
 </script>
 </body>
