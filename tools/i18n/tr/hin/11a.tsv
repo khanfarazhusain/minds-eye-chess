@@ -70,3 +70,44 @@ black	काले
 (Black mates in {n})	(काला {n} में मात देता है)
 : {s}. Outcome:	: {s}। नतीजा:
 . Moves go straight from phone to phone. If the direct link can't connect, a free relay passes the moves instead. If a phone locks or the internet drops, just open the app again: the game picks up where it was.	। चालें सीधे फ़ोन से फ़ोन जाती हैं। अगर सीधा लिंक न जुड़े, तो एक मुफ़्त रिले चालें पहुँचाता है। अगर फ़ोन लॉक हो या इंटरनेट जाए, तो बस ऐप फिर खोलें: खेल वहीं से शुरू होगा।
+✅ Your move check	✅ मेरी चाल कैसी थी
+Your move check	मेरी चाल कैसी थी
+🤖 Computer's idea	🤖 कंप्यूटर की सोच
+Computer's idea	कंप्यूटर की सोच
+⚠️ Dangers	⚠️ ख़तरे
+Dangers	ख़तरे
+📋 Your plan	📋 आगे की योजना
+Your plan	आगे की योजना
+✦ Ask AI	✦ AI से पूछें
+Ask AI	AI से पूछें
+Hint	संकेत
+Show a clue	इशारा दें
+Best moves	सबसे अच्छी चालें
+Top {n} moves	टॉप {n} चालें
+Undo	वापस लें
+Take back	चाल वापस
+More	और
+Plans, resign…	योजनाएँ, हार मानें…
+❓ How to use these buttons	❓ ये बटन कैसे इस्तेमाल करें
+How to use these buttons	ये बटन कैसे इस्तेमाल करें
+: tap once for a clue, again to see the piece, a third time for the full move.	: एक बार टैप = इशारा, दोबारा = कौन सा मोहरा, तीसरी बार = पूरी चाल।
+: the coach shows its top {n} moves with numbered arrows and what each one does.	: कोच अपनी टॉप {n} चालें नंबर वाले तीरों के साथ दिखाता है, और हर एक क्या करती है।
+: take your last move back and try again.	: अपनी पिछली चाल वापस लें और फिर कोशिश करें।
+: plans, coach notes, resign and new game.	: योजनाएँ, कोच की बातें, हार मानना और नया खेल।
+Just play: tap a piece, then a square. Buttons are only for help.	बस खेलें: मोहरा टैप करें, फिर खाना। बटन सिर्फ़ मदद के लिए हैं।
+Got it ✓	समझ गया ✓
+🧠 Plans	🧠 योजनाएँ
+Plans	योजनाएँ
+❓ How to use	❓ कैसे इस्तेमाल करें
+How to use	कैसे इस्तेमाल करें
+New game / Menu	नया खेल / मेनू
+⚙ New game / Menu	⚙ नया खेल / मेनू
+🏳 Resign	🏳 हार मानें
+Resign	हार मानें
+🔎 Before you move: Check · Capture · Threat	🔎 चाल से पहले: शह · मारना · ख़तरा
+Before you move: Check · Capture · Threat	चाल से पहले: शह · मारना · ख़तरा
+Before you move: Check, Capture, Threat	चाल से पहले: शह, मारना, ख़तरा
+🎯 Best moves	🎯 सबसे अच्छी चालें
+↶ Undo	↶ वापस लें
+💡 Hint	💡 संकेत
+☰ More	☰ और
