@@ -3133,9 +3133,9 @@ function coEasyThinkOld(){const g=CG,last=[...g.moves].reverse().find(x=>x.by===
   if(coMyTurn()){const ids=oppIdeas(g.st).filter(x=>!th||!th.m||uciOf(x.m)!==uciOf(th.m)).slice(0,2);if(ids.length)h+=`<li>Its next ideas (thin red arrows): ${ids.map(x=>`<b>${esc(x.san)}</b>, ${esc(x.note)}`).join('; ')}.</li>`}
   return h+'</ul>'}
 function coTabs(){const g=CG,my=coMyTurn(),t=[];const r=g.fb&&AIR[aiKey('turn')];
-  if(gKey())t.push(['ai','✦ AI',r&&r.state==='load'?'busy':r&&r.state==='ok'?'new':'']);
-  if(g.fb)t.push(['move','Your move',g.fb.lite?'':['mistake','blunder'].includes(g.fb.cls)?'bad':'']);
-  t.push(['think','🧠 Coach',''],['threat','⚔️ Threats',my&&(g.threat||hanging(g.st.b,g.human==='w').length)?'bad':''],['opts','🎯 Options',''],['plan','📋 Plan','']);if(!gKey())t.push(['ai','✦ AI','']);return t}
+  if(gKey())t.push(['ai','✦ '+L2('Ask AI','AI se pucho'),r&&r.state==='load'?'busy':r&&r.state==='ok'?'new':'']);
+  if(g.fb)t.push(['move','✅ '+L2('Your move check','Meri chaal kaisi thi'),g.fb.lite?'':['mistake','blunder'].includes(g.fb.cls)?'bad':'']);
+  t.push(['think','🤖 '+L2("Computer's idea",'Computer ki soch'),''],['threat','⚠️ '+L2('Dangers','Khatre'),my&&(g.threat||hanging(g.st.b,g.human==='w').length)?'bad':''],['opts','🎯 Options',''],['plan','📋 '+L2('Your plan','Aage ka plan'),'']);if(!gKey())t.push(['ai','✦ '+L2('Ask AI','AI se pucho'),'']);return t}
 function coTabHTML(k){const g=CG;
   if(k==='ai')return aiButtons(g.fb&&!g.fb.lite?['turn','pos']:['pos']);
   if(k==='move')return g.fb?coFbHTML(g.fb).replace(/^<div class="card stack cfb">/,'<div class="stack cfb">'):'<p class="muted">Make a move and the coach will judge it here.</p>';
@@ -3487,7 +3487,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.09 · v86';
+const APPV='2026.11.09 · v87';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
