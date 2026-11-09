@@ -1,0 +1,115 @@
+`{n}...Qxe{n}+` fork: king aur rook `h{n}`.	`{n}...Qxe{n}+` फ़ोर्क: राजा और हाथी `h{n}`।
+`{n}...Rh{n}` rook bhi bahar, par king ka diagonal khula hai.	`{n}...Rh{n}` हाथी भी बाहर, पर राजा का विकर्ण खुला है।
+`{n}...a{n}` Najdorf! `b{n}` square control aur flexible.	`{n}...a{n}` नायडॉर्फ़! `b{n}` खाने पर नियंत्रण और लचीला।
+`{n}...a{n}` bishop se seedha sawaal (Morphy Defense).	`{n}...a{n}` ऊँट से सीधा सवाल (मॉर्फ़ी डिफ़ेंस)।
+`{n}...b{n}` Benko.	`{n}...b{n}` बेन्को।
+`{n}...b{n}` bishop ko door kiya.	`{n}...b{n}` ऊँट को दूर किया।
+`{n}...cxd{n}` Black ko extra center pawn mila (d-pawn).	`{n}...cxd{n}` काले को अतिरिक्त केंद्रीय प्यादा मिला (d-प्यादा)।
+`{n}...c{n}!` **chain ki base (`d{n}`) par attack**: French ka main idea.	`{n}...c{n}!` **चेन के आधार (`d{n}`) पर हमला**: फ़्रेंच का मुख्य विचार।
+`{n}...c{n}!` queen bhagao.	`{n}...c{n}!` रानी को भगाएँ।
+`{n}...c{n}` Slav.	`{n}...c{n}` स्लाव।
+`{n}...c{n}` bishop `b{n}` trap: "Noah's Ark".	`{n}...c{n}` ऊँट `b{n}` जाल: "नोआज़ आर्क"।
+`{n}...c{n}` bishop par attack.	`{n}...c{n}` ऊँट पर हमला।
+`{n}...c{n}` center par chot.	`{n}...c{n}` केंद्र पर चोट।
+`{n}...c{n}` se `d{n}` support, aur light bishop band nahi hota.	`{n}...c{n}` से `d{n}` को सहारा, और हल्के खाने वाला ऊँट बंद नहीं होता।
+`{n}...c{n}` taiyaari `d{n}` ki, bina bishop band kiye.	`{n}...c{n}` `d{n}` की तैयारी, बिना ऊँट बंद किए।
+`{n}...dxc{n}!` bishop ko hataya.	`{n}...dxc{n}!` ऊँट को हटाया।
+`{n}...dxc{n}` Black ke c-pawns doubled, par bishops dono.	`{n}...dxc{n}` काले के c-प्यादे दोहरे, पर दोनों ऊँट।
+`{n}...dxc{n}` accepted.	`{n}...dxc{n}` स्वीकार किया।
+`{n}...dxc{n}` pawn liya, `b{n}` se bachane ki koshish ho sakti hai.	`{n}...dxc{n}` प्यादा लिया, `b{n}` से बचाने की कोशिश हो सकती है।
+`{n}...dxe{n}` Classical.	`{n}...dxe{n}` क्लासिकल।
+`{n}...d{n}!` sahi jawab: bishop ka raasta band.	`{n}...d{n}!` सही जवाब: ऊँट का रास्ता बंद।
+`{n}...d{n}` Grunfeld.	`{n}...d{n}` ग्रुनफ़ेल्ड।
+`{n}...d{n}` center ko challenge.	`{n}...d{n}` केंद्र को चुनौती।
+`{n}...d{n}` space.	`{n}...d{n}` जगह।
+`{n}...exf{n}` accepted.	`{n}...exf{n}` स्वीकार किया।
+`{n}...e{n}!?` Albin.	`{n}...e{n}!?` अल्बिन।
+`{n}...e{n}` Black ne center liya aur queen ka raasta khola.	`{n}...e{n}` काले ने केंद्र लिया और रानी का रास्ता खोला।
+`{n}...e{n}` Declined: `d{n}` ko pawn se support.	`{n}...e{n}` अस्वीकार: `d{n}` को प्यादे से सहारा।
+`{n}...e{n}` center mein space, knight ko bhagaya.	`{n}...e{n}` केंद्र में जगह, घोड़े को भगाया।
+`{n}...e{n}` center par vaar.	`{n}...e{n}` केंद्र पर वार।
+`{n}...e{n}` taiyaari `d{n}` ki.	`{n}...e{n}` `d{n}` की तैयारी।
+`{n}...fxe{n}?` (`{n}...Qe{n}` behtar)	`{n}...fxe{n}?` (`{n}...Qe{n}` बेहतर)
+`{n}...f{n}?` behtar `{n}...Nc{n}`.	`{n}...f{n}?` बेहतर `{n}...Nc{n}`।
+`{n}...f{n}?` king ka diagonal khula.	`{n}...f{n}?` राजा का विकर्ण खुला।
+`{n}...f{n}?` king ka pawn shield kamzor karta hai.	`{n}...f{n}?` राजा की प्यादा ढाल कमज़ोर करता है।
+`{n}...f{n}?` pawns aur aage.	`{n}...f{n}?` प्यादे और आगे।
+`{n}...f{n}` Dutch: king ke paas ka pawn.	`{n}...f{n}` डच: राजा के पास का प्यादा।
+`{n}...g{n}!` queen ko bhagata hai. `{n}...Qe{n}` bhi theek hai. Phir `Nf{n}` aur development: White ki queen ka time waste hua.	`{n}...g{n}!` रानी को भगाता है। `{n}...Qe{n}` भी ठीक है। फिर `Nf{n}` और विकास: सफ़ेद की रानी का समय बर्बाद हुआ।
+`{n}...g{n}??` (sahi: `{n}...Qe{n}`)	`{n}...g{n}??` (सही: `{n}...Qe{n}`)
+`{n}...g{n}??` queen ko bhagaya par e{n} bhool gaye.	`{n}...g{n}??` रानी को भगाया पर e{n} भूल गए।
+`{n}...g{n}?` slow chaal.	`{n}...g{n}?` धीमी चाल।
+`{n}...g{n}` (`{n}...Ke{n} {n}.Qxe{n}+ Kf{n} {n}.Bc{n}+` aur bhayankar attack)	`{n}...g{n}` (`{n}...Ke{n} {n}.Qxe{n}+ Kf{n} {n}.Bc{n}+` और भयंकर हमला)
+`{n}...g{n}` fianchetto ki taiyaari.	`{n}...g{n}` फ़ियांकेटो की तैयारी।
+`{n}...g{n}` pawn bachane ki koshish.	`{n}...g{n}` प्यादा बचाने की कोशिश।
+`{n}...h{n}` bishop ke liye `h{n}` ka ghar.	`{n}...h{n}` ऊँट के लिए `h{n}` का घर।
+`{n}.Ba{n}` bishop pressure banaye rakhta hai.	`{n}.Ba{n}` ऊँट दबाव बनाए रखता है।
+`{n}.Bb{n}+!` bishop hata aur `d{n}` queen ka attack `d{n}` par khula: discovered attack. Black check ka jawab dega, queen gayi.	`{n}.Bb{n}+!` ऊँट हटा और `d{n}` रानी का हमला `d{n}` पर खुला: छिपा हमला। काला शह का जवाब देगा, रानी गई।
+`{n}.Bb{n}` `e{n}` ke defender (`c{n}` knight) par pressure.	`{n}.Bb{n}` `e{n}` के रक्षक (`c{n}` घोड़े) पर दबाव।
+`{n}.Bb{n}` pawn gaya.	`{n}.Bb{n}` प्यादा गया।
+`{n}.Bb{n}`: `e{n}` ke defender `c{n}` knight par pressure.	`{n}.Bb{n}`: `e{n}` के रक्षक `c{n}` घोड़े पर दबाव।
+`{n}.Bc{n}` bishop `f{n}` (kamzor square) ko dekhta hai.	`{n}.Bc{n}` ऊँट `f{n}` (कमज़ोर खाने) को देखता है।
+`{n}.Bc{n}` bishop `f{n}` ko dekh raha hai. `f{n}` sirf king protect karta hai: kamzor square.	`{n}.Bc{n}` ऊँट `f{n}` को देख रहा है। `f{n}` की सिर्फ़ राजा रक्षा करता है: कमज़ोर खाना।
+`{n}.Bc{n}` doosra pawn bhi.	`{n}.Bc{n}` दूसरा प्यादा भी।
+`{n}.Bc{n}`: bishop c{n} par.	`{n}.Bc{n}`: ऊँट c{n} पर।
+`{n}.Bd{n}!!` rook `g{n}` bhi de diya.	`{n}.Bd{n}!!` हाथी `g{n}` भी दे दिया।
+`{n}.Bd{n}?` common galti.	`{n}.Bd{n}?` आम ग़लती।
+`{n}.Bd{n}` bishop h{n} ki taraf.	`{n}.Bd{n}` ऊँट h{n} की तरफ़।
+`{n}.Bd{n}` d{n} ka defender (queen) ki line band, lagta hai pawn free.	`{n}.Bd{n}` d{n} के रक्षक (रानी) की लाइन बंद, लगता है प्यादा मुफ़्त।
+`{n}.Be{n}#` Teen minor pieces ka mate.	`{n}.Be{n}#` तीन छोटे मोहरों की मात।
+`{n}.Bf{n}` bishop pawn chain ke bahar, pehle.	`{n}.Bf{n}` ऊँट प्यादा चेन के बाहर, पहले।
+`{n}.Bg{n}#` Mate!	`{n}.Bg{n}#` मात!
+`{n}.Bg{n}#` e{n}-h{n} diagonal khula tha. Mate!	`{n}.Bg{n}#` e{n}-h{n} विकर्ण खुला था। मात!
+`{n}.Bg{n}` Torre!	`{n}.Bg{n}` टोर्रे!
+`{n}.Bg{n}` `f{n}` knight ka pin.	`{n}.Bg{n}` `f{n}` घोड़े का पिन।
+`{n}.Bg{n}` bishop bacha, h-file khul sakti hai.	`{n}.Bg{n}` ऊँट बचा, h-फ़ाइल खुल सकती है।
+`{n}.Bg{n}` bishop long diagonal par: `e{n}`, `d{n}`, `b{n}` par nazar.	`{n}.Bg{n}` ऊँट लंबे विकर्ण पर: `e{n}`, `d{n}`, `b{n}` पर नज़र।
+`{n}.Bg{n}` ek aur piece develop. Black ke pieces bandh rahe hain.	`{n}.Bg{n}` एक और मोहरे का विकास। काले के मोहरे बँध रहे हैं।
+`{n}.Bg{n}` knight `f{n}` ko pin karta hai.	`{n}.Bg{n}` घोड़े `f{n}` को पिन करता है।
+`{n}.Bg{n}` knight par pressure, `f{n}` se pawn wapas ya attack.	`{n}.Bg{n}` घोड़े पर दबाव, `f{n}` से प्यादा वापस या हमला।
+`{n}.Bxb{n}` bishops `c{n}` aur `b{n}`: `f{n}` aur `g{n}` par nishaana.	`{n}.Bxb{n}` ऊँट `c{n}` और `b{n}`: `f{n}` और `g{n}` पर निशाना।
+`{n}.Bxc{n}` exchange.	`{n}.Bxc{n}` अदला-बदली।
+`{n}.Bxc{n}` pawn wapas, barabar development.	`{n}.Bxc{n}` प्यादा वापस, बराबर विकास।
+`{n}.Bxf{n}+ Ke{n} {n}.Nd{n}#`. Teen minor pieces ne mate kiya, queen ki zaroorat hi nahi.	`{n}.Bxf{n}+ Ke{n} {n}.Nd{n}#`। तीन छोटे मोहरों ने मात दी, रानी की ज़रूरत ही नहीं।
+`{n}.Bxf{n}+` King ko bahar kheencha.	`{n}.Bxf{n}+` राजा को बाहर खींचा।
+`{n}.Bxf{n}` bishop dekar light squares par kabza.	`{n}.Bxf{n}` ऊँट देकर हल्के खानों पर क़ब्ज़ा।
+`{n}.Bxg{n}!!` doosra bishop.	`{n}.Bxg{n}!!` दूसरा ऊँट।
+`{n}.Bxh{n}+!` pehla bishop.	`{n}.Bxh{n}+!` पहला ऊँट।
+`{n}.Kc{n}` king bahar.	`{n}.Kc{n}` राजा बाहर।
+`{n}.Kd{n}#` king ki chaal se mate (O-O-O# bhi tha)!	`{n}.Kd{n}#` राजा की चाल से मात (O-O-O# भी थी)!
+`{n}.Ke{n}!` ab `c{n}` ko support bhi.	`{n}.Ke{n}!` अब `c{n}` को सहारा भी।
+`{n}.Kf{n}` box ke kareeb.	`{n}.Kf{n}` डिब्बे के क़रीब।
+`{n}.Kf{n}` pawn pakda. Draw!	`{n}.Kf{n}` प्यादा पकड़ा। ड्रॉ!
+`{n}.Kg{n}!` diagonal: dono taraf ke kareeb.	`{n}.Kg{n}!` विकर्ण: दोनों तरफ़ के क़रीब।
+`{n}.Nc{n}+` discovered check: queen `d{n}` gayi.	`{n}.Nc{n}+` छिपी शह: रानी `d{n}` गई।
+`{n}.Nc{n}` aur pin par aur attackers. White ka bada attack.	`{n}.Nc{n}` और पिन पर और हमलावर। सफ़ेद का बड़ा हमला।
+`{n}.Nd{n}!` material ki parwah nahi.	`{n}.Nd{n}!` सामग्री की परवाह नहीं।
+`{n}.Nd{n}#` Teen minor pieces ka mate!	`{n}.Nd{n}#` तीन छोटे मोहरों की मात!
+`{n}.Nd{n}#` e{n} pawn pinned hai, isliye capture nahi kar sakta. Smothered mate!	`{n}.Nd{n}#` e{n} प्यादा पिन है, इसलिए मार नहीं सकता। स्मोदर्ड मात!
+`{n}.Nf{n}`: knight f{n} par.	`{n}.Nf{n}`: घोड़ा f{n} पर।
+`{n}.Nge{n}` knight e{n} se, f-pawn free.	`{n}.Nge{n}` घोड़ा e{n} से, f-प्यादा आज़ाद।
+`{n}.Ng{n}` f{n} par do attackers.	`{n}.Ng{n}` f{n} पर दो हमलावर।
+`{n}.Nxa{n}` rook jeeta (par Black ke paas compensation hai).	`{n}.Nxa{n}` हाथी जीता (पर काले के पास बदले में फ़ायदा है)।
+`{n}.Nxb{n}!` sacrifice: lines kholo!	`{n}.Nxb{n}!` बलिदान: लाइनें खोलें!
+`{n}.Nxc{n}` knight bahar.	`{n}.Nxc{n}` घोड़ा बाहर।
+`{n}.Nxd{n}??` "knight pinned hai" soch kar pawn liya.	`{n}.Nxd{n}??` "घोड़ा पिन है" सोचकर प्यादा लिया।
+`{n}.Nxe{n}!` Pin tod diya! Queen de di.	`{n}.Nxe{n}!` पिन तोड़ दिया! रानी दे दी।
+`{n}.Nxe{n}!` knight sacrifice.	`{n}.Nxe{n}!` घोड़े का बलिदान।
+`{n}.Nxe{n}!` piece "sacrifice".	`{n}.Nxe{n}!` मोहरे का "बलिदान"।
+`{n}.Nxe{n}?` free pawn?	`{n}.Nxe{n}?` मुफ़्त प्यादा?
+`{n}.Nxe{n}?` lalach. Behtar: `{n}.Nxd{n}` ya `{n}.O-O`.	`{n}.Nxe{n}?` लालच। बेहतर: `{n}.Nxd{n}` या `{n}.O-O`।
+`{n}.Nxf{n}!` knight sacrifice: king aur queen par fork.	`{n}.Nxf{n}!` घोड़े का बलिदान: राजा और रानी पर फ़ोर्क।
+`{n}.Nxf{n}+` double check!	`{n}.Nxf{n}+` दोहरी शह!
+`{n}.Nxf{n}??` aur lalach.	`{n}.Nxf{n}??` और लालच।
+`{n}.Nxf{n}` tez development, `Bd{n}`, `O-O`, `Qe{n}-h{n}` plan.	`{n}.Nxf{n}` तेज़ विकास, `Bd{n}`, `O-O`, `Qe{n}-h{n}` योजना।
+`{n}.O-O-O` rook seedha d-file par.	`{n}.O-O-O` हाथी सीधा d-फ़ाइल पर।
+`{n}.O-O` aur f-file par rook: `f{n}` par pressure.	`{n}.O-O` और f-फ़ाइल पर हाथी: `f{n}` पर दबाव।
+`{n}.O-O` castle pehle. `e{n}` pawn ka khatra nahi kyunki baad mein `Re{n}`.	`{n}.O-O` पहले कैसल। `e{n}` प्यादे का ख़तरा नहीं क्योंकि बाद में `Re{n}`।
+`{n}.O-O`: kingside castling.	`{n}.O-O`: किंगसाइड कैसलिंग।
+`{n}.Qb{n}!` `f{n}` aur `b{n}` dono par attack.	`{n}.Qb{n}!` `f{n}` और `b{n}` दोनों पर हमला।
+`{n}.Qb{n}+!!` Queen sacrifice!	`{n}.Qb{n}+!!` रानी का बलिदान!
+`{n}.Qc{n}` (Classical) doubled pawns se bachne ke liye.	`{n}.Qc{n}` (क्लासिकल) दोहरे प्यादों से बचने के लिए।
+`{n}.Qd{n}` mate threat aur `c{n}`.	`{n}.Qd{n}` मात का ख़तरा और `c{n}`।
+`{n}.Qd{n}` sirf yahi.	`{n}.Qd{n}` सिर्फ़ यही।
+`{n}.Qe{n}` knight par pin wali threat.	`{n}.Qe{n}` घोड़े पर पिन वाला ख़तरा।
+`{n}.Qe{n}` pawn wapas ya `O-O-O` aur `g{n}` se attack.	`{n}.Qe{n}` प्यादा वापस या `O-O-O` और `g{n}` से हमला।

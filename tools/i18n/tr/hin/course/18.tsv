@@ -1,0 +1,127 @@
+`{n}.Qe{n}` trap set: `e{n}` pawn pinned.	`{n}.Qe{n}` जाल तैयार: `e{n}` प्यादा पिन।
+`{n}.Qf{n}!` fork: rook `a{n}` (long diagonal) par attack.	`{n}.Qf{n}!` फ़ोर्क: हाथी `a{n}` (लंबे विकर्ण) पर हमला।
+`{n}.Qf{n}+!!` queen bhi!	`{n}.Qf{n}+!!` रानी भी!
+`{n}.Qf{n}+` king aur `d{n}` knight par attack.	`{n}.Qf{n}+` राजा और `d{n}` घोड़े पर हमला।
+`{n}.Qf{n}` f{n} par phir.	`{n}.Qf{n}` f{n} पर फिर।
+`{n}.Qh{n}+` check!	`{n}.Qh{n}+` शह!
+`{n}.Qh{n}+` king khula hai.	`{n}.Qh{n}+` राजा खुला है।
+`{n}.Qh{n}` attack.	`{n}.Qh{n}` हमला।
+`{n}.Qh{n}` ek kamzor opening hai, par `{n}...g{n}??` aur bhi badi galti.	`{n}.Qh{n}` एक कमज़ोर ओपनिंग है, पर `{n}...g{n}??` और भी बड़ी ग़लती।
+`{n}.Qh{n}` e{n} aur f{n} par nazar.	`{n}.Qh{n}` e{n} और f{n} पर नज़र।
+`{n}.Qh{n}` f{n} aur e{n} dono par attack.	`{n}.Qh{n}` f{n} और e{n} दोनों पर हमला।
+`{n}.Qh{n}` mate threat `f{n}`.	`{n}.Qh{n}` मात का ख़तरा `f{n}`।
+`{n}.Qh{n}` queen + bishop dono `f{n}` par. Saath mein `e{n}` par bhi attack.	`{n}.Qh{n}` रानी + ऊँट दोनों `f{n}` पर। साथ में `e{n}` पर भी हमला।
+`{n}.Qxd{n}??` (sahi: `{n}.Bd{n}`)	`{n}.Qxd{n}??` (सही: `{n}.Bd{n}`)
+`{n}.Qxe{n}+! Qxe{n} {n}.Rxe{n}#`. Queen ({n} points) di, par game jeet liya. Black king apne hi pawns se band hai (back-rank mate).	`{n}.Qxe{n}+! Qxe{n} {n}.Rxe{n}#`। रानी ({n} अंक) दी, पर खेल जीत लिया। काला राजा अपने ही प्यादों से बंद है (पीछे की रैंक की मात)।
+`{n}.Qxe{n}+` **fork**: king aur `h{n}` rook!	`{n}.Qxe{n}+` **फ़ोर्क**: राजा और `h{n}` हाथी!
+`{n}.Qxe{n}+` fork!	`{n}.Qxe{n}+` फ़ोर्क!
+`{n}.Qxe{n}+` fork: king, rook `h{n}` (aur bishop `c{n}`).	`{n}.Qxe{n}+` फ़ोर्क: राजा, हाथी `h{n}` (और ऊँट `c{n}`)।
+`{n}.Qxf{n}#` Checkmate. **Seekh:** `f{n}`/`f{n}` square ko dhyan se protect karo.	`{n}.Qxf{n}#` शह-मात। **सीख:** `f{n}`/`f{n}` खाने की ध्यान से रक्षा करें।
+`{n}.Qxf{n}` White ki queen active, development aage.	`{n}.Qxf{n}` सफ़ेद की रानी सक्रिय, विकास में आगे।
+`{n}.Qxh{n}+!!` queen sacrifice.	`{n}.Qxh{n}+!!` रानी का बलिदान।
+`{n}.Qxh{n}` rook gaya.	`{n}.Qxh{n}` हाथी गया।
+`{n}.Rb{n}!` Bridge! Checks khatam, pawn queen banega.	`{n}.Rb{n}!` पुल! शह ख़त्म, प्यादा रानी बनेगा।
+`{n}.Rc{n}` c-file par pressure.	`{n}.Rc{n}` c-फ़ाइल पर दबाव।
+`{n}.Rd{n}!` rook {n}th rank par: yahi **bridge** banega.	`{n}.Rd{n}!` हाथी {n}वीं रैंक पर: यही **पुल** बनेगा।
+`{n}.Rd{n}+` black king ko ek file door dhakelo.	`{n}.Rd{n}+` काले राजा को एक फ़ाइल दूर धकेलें।
+`{n}.Re{n}` `e{n}` protect.	`{n}.Re{n}` `e{n}` की रक्षा।
+`{n}.Rf{n}` rook h-file par aayega: queen bachane ke liye Black ko queen deni padegi.	`{n}.Rf{n}` हाथी h-फ़ाइल पर आएगा: रानी बचाने के लिए काले को रानी देनी पड़ेगी।
+`{n}.Rxd{n}!` aur sacrifice.	`{n}.Rxd{n}!` और बलिदान।
+`{n}.a{n}` `...b{n}` roka.	`{n}.a{n}` `...b{n}` रोका।
+`{n}.a{n}` pawn chain todo.	`{n}.a{n}` प्यादा चेन तोड़ें।
+`{n}.bxc{n}` White ka bada center `c{n}-d{n}-e{n}`.	`{n}.bxc{n}` सफ़ेद का बड़ा केंद्र `c{n}-d{n}-e{n}`।
+`{n}.b{n}!` agar `cxb{n}` to `{n}.a{n}!` aur `bxa{n} {n}.c{n}` queen banega. Agar `axb{n}` to `{n}.c{n}!`.	`{n}.b{n}!` अगर `cxb{n}` तो `{n}.a{n}!` और `bxa{n} {n}.c{n}` रानी बनेगा। अगर `axb{n}` तो `{n}.c{n}!`।
+`{n}.b{n}` Evans.	`{n}.b{n}` इवान्स।
+`{n}.b{n}` kis naam se jaana jaata hai?	`{n}.b{n}` किस नाम से जाना जाता है?
+`{n}.c{n}` Alapin.	`{n}.c{n}` अलापिन।
+`{n}.c{n}` English.	`{n}.c{n}` इंग्लिश।
+`{n}.c{n}` Morra.	`{n}.c{n}` मोरा।
+`{n}.c{n}` "Colle triangle".	`{n}.c{n}` "कोले त्रिकोण"।
+`{n}.c{n}` idea: baad mein `d{n}` se center.	`{n}.c{n}` विचार: बाद में `d{n}` से केंद्र।
+`{n}.c{n}` side se `d{n}` control.	`{n}.c{n}` बग़ल से `d{n}` पर नियंत्रण।
+`{n}.c{n}` side se `d{n}` par attack. Agar `...dxc{n}`, White aksar pawn wapas le leta hai.	`{n}.c{n}` बग़ल से `d{n}` पर हमला। अगर `...dxc{n}`, सफ़ेद अक्सर प्यादा वापस ले लेता है।
+`{n}.c{n}` taaki `d{n}` khel sakein aur bishop ke liye `c{n}` ka ghar.	`{n}.c{n}` ताकि `d{n}` खेल सकें और ऊँट के लिए `c{n}` का घर।
+`{n}.c{n}` tempo ke saath bishop par attack.	`{n}.c{n}` टेम्पो के साथ ऊँट पर हमला।
+`{n}.c{n}` triangle: `c{n}-d{n}-e{n}` solid center.	`{n}.c{n}` त्रिकोण: `c{n}-d{n}-e{n}` मज़बूत केंद्र।
+`{n}.c{n}`: ulta Sicilian. Flexible aur positional.	`{n}.c{n}`: उलटा सिसिलियन। लचीला और पोज़ीशनल।
+`{n}.d{n} d{n} {n}.c{n} dxc{n}`: Black ko pawn bachane ke liye `...b{n}` khelna chahiye?	`{n}.d{n} d{n} {n}.c{n} dxc{n}`: काले को प्यादा बचाने के लिए `...b{n}` खेलना चाहिए?
+`{n}.d{n}` White center kholta hai.	`{n}.d{n}` सफ़ेद केंद्र खोलता है।
+`{n}.d{n}` center band. Ab White queenside (`c{n}`), Black kingside (`...f{n}`, `...g{n}`) par attack karega.	`{n}.d{n}` केंद्र बंद। अब सफ़ेद क्वीनसाइड (`c{n}`), काला किंगसाइड (`...f{n}`, `...g{n}`) पर हमला करेगा।
+`{n}.d{n}` center kholo. Endgame mein White ka {n} vs {n} kingside majority strong.	`{n}.d{n}` केंद्र खोलें। एंडगेम में सफ़ेद का {n} बनाम {n} किंगसाइड बहुमत मज़बूत।
+`{n}.d{n}` center khula.	`{n}.d{n}` केंद्र खुला।
+`{n}.d{n}` fork: bishop aur knight. Piece wapas aur bada center.	`{n}.d{n}` फ़ोर्क: ऊँट और घोड़ा। मोहरा वापस और बड़ा केंद्र।
+`{n}.d{n}` players ka sharp hathiyaar. (Scandinavian `{n}.e{n} d{n} {n}.d{n}` se bhi aa sakta hai.)	`{n}.d{n}` खिलाड़ियों का तेज़ हथियार। (स्कैंडिनेवियन `{n}.e{n} d{n} {n}.d{n}` से भी आ सकता है।)
+`{n}.d{n}` shaant aur solid (Giuoco Pianissimo).	`{n}.d{n}` शांत और मज़बूत (जियोको पियानिसिमो)।
+`{n}.e{n} c{n} {n}.Nf{n} d{n} {n}.d{n} cxd{n} {n}.Nxd{n} Nf{n} {n}.Nc{n} g{n}` ka naam?	`{n}.e{n} c{n} {n}.Nf{n} d{n} {n}.d{n} cxd{n} {n}.Nxd{n} Nf{n} {n}.Nc{n} g{n}` का नाम?
+`{n}.e{n} e{n} {n}.Nf{n} Nc{n} {n}.Bc{n}` kaunsi opening hai?	`{n}.e{n} e{n} {n}.Nf{n} Nc{n} {n}.Bc{n}` कौन सी ओपनिंग है?
+`{n}.e{n} e{n} {n}.Nf{n} Nc{n} {n}.Bc{n}`: bishop kamzor `f{n}` ko dekhta hai.	`{n}.e{n} e{n} {n}.Nf{n} Nc{n} {n}.Bc{n}`: ऊँट कमज़ोर `f{n}` को देखता है।
+`{n}.e{n} e{n} {n}.Nf{n}` ke baad Black ki sabse natural chaal?	`{n}.e{n} e{n} {n}.Nf{n}` के बाद काले की सबसे स्वाभाविक चाल?
+`{n}.e{n}!?` Staunton.	`{n}.e{n}!?` स्टॉन्टन।
+`{n}.e{n}!` Botvinnik setup: `d{n}` par pakad.	`{n}.e{n}!` बॉट्विनिक सेटअप: `d{n}` पर पकड़।
+`{n}.e{n}!` knight bhagao.	`{n}.e{n}!` घोड़े को भगाएँ।
+`{n}.e{n}!` queen ko `a{n}` tak jaane do.	`{n}.e{n}!` रानी को `a{n}` तक जाने दें।
+`{n}.e{n}?` galti.	`{n}.e{n}?` ग़लती।
+`{n}.e{n}` bishop c{n} ke peeche band (London se fark).	`{n}.e{n}` ऊँट c{n} के पीछे बंद (लंदन से फ़र्क़)।
+`{n}.e{n}` bishop ke saath pawn wapas.	`{n}.e{n}` ऊँट के साथ प्यादा वापस।
+`{n}.e{n}` center break. Baad mein `e{n}` aur kingside attack.	`{n}.e{n}` केंद्र ब्रेक। बाद में `e{n}` और किंगसाइड हमला।
+`{n}.e{n}` knight bhagao.	`{n}.e{n}` घोड़े को भगाएँ।
+`{n}.e{n}` solid.	`{n}.e{n}` मज़बूत।
+`{n}.e{n}` space! Ab pawn chain bani: `d{n}-e{n}`.	`{n}.e{n}` जगह! अब प्यादा चेन बनी: `d{n}-e{n}`।
+`{n}.e{n}` space.	`{n}.e{n}` जगह।
+`{n}.e{n}`: pawn e{n} se e{n} (pawn ka letter nahi).	`{n}.e{n}`: प्यादा e{n} से e{n} (प्यादे का अक्षर नहीं)।
+`{n}.fxe{n}??` lalach.	`{n}.fxe{n}??` लालच।
+`{n}.fxg{n}` ab `gxh{n}+` ki threat.	`{n}.fxg{n}` अब `gxh{n}+` का ख़तरा।
+`{n}.f{n}?` King ke saamne ka pawn kamzor kiya.	`{n}.f{n}?` राजा के सामने का प्यादा कमज़ोर किया।
+`{n}.f{n}` King's Gambit.	`{n}.f{n}` किंग्स गैम्बिट।
+`{n}.f{n}` chain ko mazboot.	`{n}.f{n}` चेन को मज़बूत।
+`{n}.f{n}` pawn de kar f-file.	`{n}.f{n}` प्यादा देकर f-फ़ाइल।
+`{n}.gxh{n}+!` discovered check: bishop d{n} ka check!	`{n}.gxh{n}+!` छिपी शह: ऊँट d{n} की शह!
+`{n}.g{n}??` Bahut badi galti! `e{n}-h{n}` diagonal poora khul gaya.	`{n}.g{n}??` बहुत बड़ी ग़लती! `e{n}-h{n}` विकर्ण पूरा खुल गया।
+`{n}.g{n}` ({n}.Ke{n} Qxe{n}+ {n}.Kf{n} Bc{n}+ aur bhi bura)	`{n}.g{n}` ({n}.Ke{n} Qxe{n}+ {n}.Kf{n} Bc{n}+ और भी बुरा)
+`{n}.g{n}` fianchetto.	`{n}.g{n}` फ़ियांकेटो।
+`{n}.g{n}` fianchetto: bishop `g{n}` se long diagonal.	`{n}.g{n}` फ़ियांकेटो: ऊँट `g{n}` से लंबा विकर्ण।
+`{n}.h{n}+` king ko aage kheencho.	`{n}.h{n}+` राजा को आगे खींचें।
+`{n}.h{n}` `...Bg{n}` pin rokta hai. Plan: `d{n}`, `Nbd{n}-f{n}-g{n}`.	`{n}.h{n}` `...Bg{n}` पिन रोकता है। योजना: `d{n}`, `Nbd{n}-f{n}-g{n}`।
+`{n}.h{n}` bishop ko pareshan.	`{n}.h{n}` ऊँट को परेशान।
+chaalein bach gaye. Yeh draw hai!	चालें बच गईं। यह ड्रॉ है!
+{n} chaalein bach gaye. Yeh draw hai!	{n} चालें बच गईं। यह ड्रॉ है!
+chaalein ho gayi. Thoda tez plan chahiye.	चालें हो गईं। थोड़ी तेज़ योजना चाहिए।
+{n} chaalein ho gayi. Thoda tez plan chahiye.	{n} चालें हो गईं। थोड़ी तेज़ योजना चाहिए।
+dabao.	दबाएँ।
+do.	दें।
+e-file ka pawn	e-फ़ाइल का प्यादा
+galat (laal).	ग़लत (लाल)।
+icon dabao. Key aksar	आइकन दबाएँ। की अक्सर
+jeeta (checkmate)	जीता (शह-मात)
+White jeeta (checkmate)	सफ़ेद जीता (शह-मात)
+Black jeeta (checkmate)	काला जीता (शह-मात)
+Draw (stalemate)	ड्रॉ (स्टेलमेट)
+ke liye sabse achhi chaal dhundo	के लिए सबसे अच्छी चाल ढूँढें
+kholo aur Google (Gmail) se sign in karo.	खोलें और Google (Gmail) से साइन इन करें।
+kholo.	खोलें।
+ruk kar behtar chaal dhundo	रुककर बेहतर चाल ढूँढें
+se shuru hoti hai.	से शुरू होती है।
+square chhoot gaye (hare ring wale).	खाने छूट गए (हरे घेरे वाले)।
+square chhoot gaye (hare ring), {s} galat (laal).	खाने छूट गए (हरा घेरा), {s} ग़लत (लाल)।
+{n} square chhoot gaye (hare ring), {n} galat (laal).	{n} खाने छूट गए (हरा घेरा), {n} ग़लत (लाल)।
+{n} square chhoot gaye (hare ring wale).	{n} खाने छूट गए (हरे घेरे वाले)।
+turant khel do	तुरंत खेल दें
+{n} (+ norms)	{n} (+ नॉर्म)
+{n} Squares · Course	{n} Squares · कोर्स
+{n} XP kamao ({s}/{n})	{n} XP कमाएँ ({s}/{n})
+{n} attacker, {n} defender	{n} हमलावर, {n} रक्षक
+{n} attackers, {n} defender	{n} हमलावर, {n} रक्षक
+{n} chaal (dono taraf) tak na koi pawn chala, na capture hua. Kya hota hai?	{n} चाल (दोनों तरफ़) तक न कोई प्यादा चला, न कुछ मारा गया। क्या होता है?
+{n} chaal tak theory ratna	{n} चाल तक थ्योरी रटना
+{n} chaal. Knight lambi doori par dheema hai.	{n} चाल। घोड़ा लंबी दूरी पर धीमा है।
+{n} ke badle {n}: barabar trade. Trade tab karo jab position ke liye achha ho (jaise aage ho, ya unka achha piece hatana ho).	{n} के बदले {n}: बराबर अदला-बदली। अदला-बदली तब करें जब पोज़ीशन के लिए अच्छा हो (जैसे आगे हों, या उनका अच्छा मोहरा हटाना हो)।
+{n} lesson poora karo	{n} पाठ पूरा करें
+{n} mein Spassky ko hara kar champion kaun bana?	{n} में स्पास्की को हराकर चैंपियन कौन बना?
+{n} mein Steinitz.	{n} में स्टाइनित्ज़।
+{n} minute extra shuru mein	{n} मिनट अतिरिक्त शुरू में
+{n} minute ya kam	{n} मिनट या कम
+{n} point material kam, par badle mein position (strong piece, kamzor king, pawn structure).	{n} अंक सामग्री कम, पर बदले में पोज़ीशन (मज़बूत मोहरा, कमज़ोर राजा, प्यादा ढाँचा)।
+{n} puzzles solve karo ({s}/{n})	{n} पहेलियाँ हल करें ({s}/{n})
+{n} rating aur {n} GM norms	{n} रेटिंग और {n} GM नॉर्म
+{n} rating par opening kaise padhni chahiye?	{n} रेटिंग पर ओपनिंग कैसे पढ़नी चाहिए?
+{n} rating par sabse zyada fayda kisse?	{n} रेटिंग पर सबसे ज़्यादा फ़ायदा किससे?

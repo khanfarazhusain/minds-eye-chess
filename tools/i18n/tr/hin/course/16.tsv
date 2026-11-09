@@ -1,0 +1,120 @@
+`Nf{n}` center (`e{n}`, `d{n}`) control karta hai aur castling ki taiyaari.	`Nf{n}` केंद्र (`e{n}`, `d{n}`) को नियंत्रित करता है और कैसलिंग की तैयारी।
+`Nf{n}` check block karta hai, aur king knight ko protect karta hai.	`Nf{n}` शह रोकता है, और राजा घोड़े की रक्षा करता है।
+`Nf{n}` hi `h{n}` ko bacha raha tha. `Bxf{n}` ke baad `Qxh{n}#` ki threat, isliye White piece jeet leta hai.	`Nf{n}` ही `h{n}` को बचा रहा था। `Bxf{n}` के बाद `Qxh{n}#` का ख़तरा, इसलिए सफ़ेद मोहरा जीत लेता है।
+`Nxd{n} Nxd{n} Bxd{n}`: do attackers, ek defender, isliye aakhri capture tumhara. Ek pawn aage.	`Nxd{n} Nxd{n} Bxd{n}`: दो हमलावर, एक रक्षक, इसलिए आख़िरी मारना आपका। एक प्यादा आगे।
+`Nxe{n} Nxe{n}` ke baad White ne knight ({n}) diya aur pawn ({n}) liya. Pehle **attackers aur defenders gino**.	`Nxe{n} Nxe{n}` के बाद सफ़ेद ने घोड़ा ({n}) दिया और प्यादा ({n}) लिया। पहले **हमलावर और रक्षक गिनें**।
+`Nxe{n}`: knight ({n}) ke badle sirf pawn ({n}) mila White ko. Attackers aur defenders ginna kabhi mat bhoolo.	`Nxe{n}`: घोड़े ({n}) के बदले सफ़ेद को सिर्फ़ प्यादा ({n}) मिला। हमलावर और रक्षक गिनना कभी न भूलें।
+`Nxg{n}`: free material. Har chaal par dekho: kaun sa piece **bina protection** ke hai?	`Nxg{n}`: मुफ़्त सामग्री। हर चाल पर देखें: कौन सा मोहरा **बिना रक्षा** के है?
+`Nxh{n}`: knight ne queen le li. {n} points free!	`Nxh{n}`: घोड़े ने रानी ले ली। {n} अंक मुफ़्त!
+`O-O-O` kya hai?	`O-O-O` क्या है?
+`Qd{n}+ Kh{n} Nf{n}+ Kg{n} Nh{n}+ Kh{n} Qg{n}+! Rxg{n} Nf{n}#`. Smothered mate: forcing moves ko end tak calculate karna seekho.	`Qd{n}+ Kh{n} Nf{n}+ Kg{n} Nh{n}+ Kh{n} Qg{n}+! Rxg{n} Nf{n}#`। स्मोदर्ड मात: मजबूर करने वाली चालों की अंत तक गणना करना सीखें।
+`Qd{n}+ Kh{n} Nf{n}+ Kg{n} Nh{n}+ Kh{n} Qg{n}+!! Rxg{n} Nf{n}#`. Smothered mate: king apne hi rook se band.	`Qd{n}+ Kh{n} Nf{n}+ Kg{n} Nh{n}+ Kh{n} Qg{n}+!! Rxg{n} Nf{n}#`। स्मोदर्ड मात: राजा अपने ही हाथी से बंद।
+`Qd{n}+` check deta hai aur `a{n}` rook par bhi attack. King hatega, phir `Qxa{n}+`. Checks pehle dekhne se yeh turant milta hai.	`Qd{n}+` शह देता है और `a{n}` हाथी पर भी हमला। राजा हटेगा, फिर `Qxa{n}+`। पहले शह देखने से यह तुरंत मिलता है।
+`Qd{n}+` king ko check aur `a{n}` rook ko attack. Phir `Qxa{n}`.	`Qd{n}+` राजा को शह और `a{n}` हाथी पर हमला। फिर `Qxa{n}`।
+`Qe{n}#` checkmate. Checks pehle dekhne se aisi chaalein nahi chhoot-ti.	`Qe{n}#` शह-मात। पहले शह देखने से ऐसी चालें नहीं छूटतीं।
+`Qe{n}+ Kf{n} Qxb{n}`: Forcing chaalon ki list banane se yeh mila.	`Qe{n}+ Kf{n} Qxb{n}`: मजबूर करने वाली चालों की सूची बनाने से यह मिला।
+`Qf{n}#` check deta hai. Agar `Qf{n}` khelte to Black ke paas koi chaal na hoti aur check bhi na hota: stalemate.	`Qf{n}#` शह देता है। अगर `Qf{n}` खेलते तो काले के पास कोई चाल न होती और शह भी न होती: स्टेलमेट।
+`Qf{n}` stalemate hoga. Check dena zaroori hai.	`Qf{n}` स्टेलमेट होगा। शह देना ज़रूरी है।
+`Qg{n}#` checkmate. Checks pehle dekhne se aisi chaalein nahi chhoot-ti.	`Qg{n}#` शह-मात। पहले शह देखने से ऐसी चालें नहीं छूटतीं।
+`Qh{n}#` checkmate. Checks pehle dekhne se aisi chaalein nahi chhoot-ti.	`Qh{n}#` शह-मात। पहले शह देखने से ऐसी चालें नहीं छूटतीं।
+`Qh{n}+` ka matlab?	`Qh{n}+` का मतलब?
+`Qxd{n} Rxd{n} Rxd{n}`. `d{n}` rook ne queen ke **aar-paar** `d{n}` ko support kiya. White ek rook aage.	`Qxd{n} Rxd{n} Rxd{n}`। `d{n}` हाथी ने रानी के **आर-पार** `d{n}` को सहारा दिया। सफ़ेद एक हाथी आगे।
+`Qxd{n}`: free material. Har chaal par dekho: kaun sa piece **bina protection** ke hai?	`Qxd{n}`: मुफ़्त सामग्री। हर चाल पर देखें: कौन सा मोहरा **बिना रक्षा** के है?
+`Qxe{n}!` Agar `...Rxe{n}` to `Rd{n}+ Re{n} Rxe{n}#`: rook ko back rank chhodni padi. Isliye Black wapas nahi le sakta aur queen gayi.	`Qxe{n}!` अगर `...Rxe{n}` तो `Rd{n}+ Re{n} Rxe{n}#`: हाथी को पीछे की रैंक छोड़नी पड़ी। इसलिए काला वापस नहीं ले सकता और रानी गई।
+`Qxf{n}+ Kh{n} Qf{n}+ Rxf{n} Rxf{n}#`: Saari chaalein forcing: checks se mate.	`Qxf{n}+ Kh{n} Qf{n}+ Rxf{n} Rxf{n}#`: सारी चालें मजबूर करने वाली: शह से मात।
+`Ra{n}#`: back-rank mate. King ke paas koi square nahi.	`Ra{n}#`: पीछे की रैंक की मात। राजा के पास कोई खाना नहीं।
+`Ra{n}+` king ko check, woh hatega, phir `Rxg{n}`.	`Ra{n}+` राजा को शह, वह हटेगा, फिर `Rxg{n}`।
+`Ra{n}` se {n}th rank band, phir `Rb{n}#`.	`Ra{n}` से {n}वीं रैंक बंद, फिर `Rb{n}#`।
+`Re{n}!` {n}th rank par rook `b{n}` aur `a{n}` ko dekhta hai aur king ko {n}th rank par band rakhta hai.	`Re{n}!` {n}वीं रैंक पर हाथी `b{n}` और `a{n}` को देखता है और राजा को {n}वीं रैंक पर बंद रखता है।
+`Re{n}` rook ko center file par.	`Re{n}` हाथी को केंद्रीय फ़ाइल पर।
+`Rxb{n}#` checkmate. Checks pehle dekhne se aisi chaalein nahi chhoot-ti.	`Rxb{n}#` शह-मात। पहले शह देखने से ऐसी चालें नहीं छूटतीं।
+`Rxd{n} Nxg{n} Rxe{n}+ Qxe{n} Qxh{n}`: Har forcing chaal ka jawab socha, phir chala.	`Rxd{n} Nxg{n} Rxe{n}+ Qxe{n} Qxh{n}`: हर मजबूर करने वाली चाल का जवाब सोचा, फिर चली।
+`Rxd{n}+ Rxd{n} Rxd{n}#`. Aakhri capture tumhara, aur woh back rank par mate hai.	`Rxd{n}+ Rxd{n} Rxd{n}#`। आख़िरी मारना आपका, और वह पीछे की रैंक पर मात है।
+`Rxf{n}+`: free material. Har chaal par dekho: kaun sa piece **bina protection** ke hai?	`Rxf{n}+`: मुफ़्त सामग्री। हर चाल पर देखें: कौन सा मोहरा **बिना रक्षा** के है?
+`axb{n}`: free material. Har chaal par dekho: kaun sa piece **bina protection** ke hai?	`axb{n}`: मुफ़्त सामग्री। हर चाल पर देखें: कौन सा मोहरा **बिना रक्षा** के है?
+`a{n}` (kinare par)	`a{n}` (किनारे पर)
+`a{n}` ke baad box `a{n}-d{n}-d{n}-a{n}` hai. `f{n}` king bahar hai: pakad nahi payega.	`a{n}` के बाद डिब्बा `a{n}-d{n}-d{n}-a{n}` है। `f{n}` राजा बाहर है: पकड़ नहीं पाएगा।
+`b{n}` (wapas ghar)	`b{n}` (वापस घर)
+`c`-file (apna pawn raasta rokta hai)	`c`-फ़ाइल (अपना प्यादा रास्ता रोकता है)
+`c{n}-d{n}-e{n}-f{n}-g{n}-h{n}` ek hi diagonal: {n} chaal.	`c{n}-d{n}-e{n}-f{n}-g{n}-h{n}` एक ही विकर्ण: {n} चाल।
+`c{n}` aur `d{n}` saath-saath, `b` aur `e` files par White pawn nahi: hanging pawns.	`c{n}` और `d{n}` साथ-साथ, `b` और `e` फ़ाइलों पर सफ़ेद प्यादा नहीं: हैंगिंग प्यादे।
+`c{n}`, `d{n}`, `e{n}` black king ke bagal mein hain. Do kings kabhi bagal mein nahi aa sakte.	`c{n}`, `d{n}`, `e{n}` काले राजा के बग़ल में हैं। दो राजा कभी बग़ल में नहीं आ सकते।
+`d{n}!` knight pinned hai (peeche king). Woh bhaag nahi sakta, agli chaal `dxc{n}` se piece jeet.	`d{n}!` घोड़ा पिन है (पीछे राजा)। वह भाग नहीं सकता, अगली चाल `dxc{n}` से मोहरे की जीत।
+`d{n}` (outpost, `e{n}` se protected)	`d{n}` (आउटपोस्ट, `e{n}` से सुरक्षित)
+`d{n}` bishop aur knight dono par attack. `c{n}` pawn `d{n}` ko protect karta hai. Ek piece jaayega.	`d{n}` ऊँट और घोड़ा दोनों पर हमला। `c{n}` प्यादा `d{n}` की रक्षा करता है। एक मोहरा जाएगा।
+`d{n}` ke bagal ke pawns aage nikal gaye, aur `d{n}` White control karta hai.	`d{n}` के बग़ल के प्यादे आगे निकल गए, और `d{n}` को सफ़ेद नियंत्रित करता है।
+`d{n}` ke bagal mein `c` aur `e` files par White ka koi pawn nahi.	`d{n}` के बग़ल में `c` और `e` फ़ाइलों पर सफ़ेद का कोई प्यादा नहीं।
+`d{n}` par koi black pawn attack nahi kar sakta (`c{n}`/`e{n}` pawn nahi) aur `e{n}` pawn support karta hai. "Knight on the rim is dim."	`d{n}` पर कोई काला प्यादा हमला नहीं कर सकता (`c{n}`/`e{n}` प्यादा नहीं) और `e{n}` प्यादा सहारा देता है। "किनारे का घोड़ा कमज़ोर होता है।"
+`d{n}` pawn: {n} attackers vs {n} defender. Pawn jeeto.	`d{n}` प्यादा: {n} हमलावर बनाम {n} रक्षक। प्यादा जीतें।
+`d{n}` square kis colour ka hai?	`d{n}` खाना किस रंग का है?
+`d{n}`, `e{n}`, `f{n}` par rook ka attack hai, isliye king wahan nahi ja sakta.	`d{n}`, `e{n}`, `f{n}` पर हाथी का हमला है, इसलिए राजा वहाँ नहीं जा सकता।
+`exd{n}` mein kaunsa piece chala?	`exd{n}` में कौन सा मोहरा चला?
+`e{n}` mein **e** kya batata hai?	`e{n}` में **e** क्या बताता है?
+`e{n}` pawn chhod kar bishop `b{n}` long diagonal, queen e{n}, aur long castle ke saath attack.	`e{n}` प्यादा छोड़कर ऊँट `b{n}` लंबा विकर्ण, रानी e{n}, और लंबी कैसलिंग के साथ हमला।
+`e{n}`, `e{n}` (pehli chaal) aur `d{n}` par knight ko capture.	`e{n}`, `e{n}` (पहली चाल) और `d{n}` पर घोड़े को मारना।
+`f{n}` ka knight kise attack kar raha hai?	`f{n}` का घोड़ा किस पर हमला कर रहा है?
+`f{n}` pawn Black king ke ghar mein ghusa hua hai.	`f{n}` प्यादा काले राजा के घर में घुसा हुआ है।
+`f{n}` shuru mein sirf king protect karta hai.	`f{n}` की शुरू में सिर्फ़ राजा रक्षा करता है।
+`f{n}`/`f{n}` sabse kamzor square: Scholar's mate se bacho (`...g{n}` ya `...Qe{n}`).	`f{n}`/`f{n}` सबसे कमज़ोर खाना: स्कॉलर्स मात से बचें (`...g{n}` या `...Qe{n}`)।
+`g{n}` kis colour ka hai?	`g{n}` किस रंग का है?
+`h`-file	`h`-फ़ाइल
+`hxg{n} Ng{n} Nxg{n}`: Forcing chaalon ki list banane se yeh mila.	`hxg{n} Ng{n} Nxg{n}`: मजबूर करने वाली चालों की सूची बनाने से यह मिला।
+`hxg{n}`: pawn ({n}) ne bishop ({n}) le liya. Black ne `h{n}` pawn ka attack nahi dekha.	`hxg{n}`: प्यादे ({n}) ने ऊँट ({n}) ले लिया। काले ने `h{n}` प्यादे का हमला नहीं देखा।
+`h{n}` ka pawn kise attack kar raha hai?	`h{n}` का प्यादा किस पर हमला कर रहा है?
+`h{n}` ko kaun protect kar raha hai?	`h{n}` की रक्षा कौन कर रहा है?
+`h{n}`: pawn ka square banao. King a{n} se us square mein nahi pahunch sakta.	`h{n}`: प्यादे का वर्ग बनाएँ। राजा a{n} से उस वर्ग में नहीं पहुँच सकता।
+`{n}...Bb{n}+!` check.	`{n}...Bb{n}+!` शह।
+`{n}...Bb{n}` Winawer.	`{n}...Bb{n}` विनावर।
+`{n}...Bb{n}` knight ko pin karta hai aur `e{n}` ko rokta hai.	`{n}...Bb{n}` घोड़े को पिन करता है और `e{n}` को रोकता है।
+`{n}...Bb{n}` pin!	`{n}...Bb{n}` पिन!
+`{n}...Bc{n}?` behtar `{n}...Nf{n}`.	`{n}...Bc{n}?` बेहतर `{n}...Nf{n}`।
+`{n}...Bc{n}?` natural lagta hai par `{n}.Nxe{n}!` (fork trick) se White center jeetta hai.	`{n}...Bc{n}?` स्वाभाविक लगता है पर `{n}.Nxe{n}!` (फ़ोर्क तरकीब) से सफ़ेद केंद्र जीतता है।
+`{n}...Bc{n}` nakal. Behtar: `{n}...Nf{n}!` (Tarrasch: "knights before bishops").	`{n}...Bc{n}` नक़ल। बेहतर: `{n}...Nf{n}!` (टैराश: "ऊँटों से पहले घोड़े")।
+`{n}...Be{n}` development.	`{n}...Be{n}` विकास।
+`{n}...Bf{n}` bishop bahar! French se fark.	`{n}...Bf{n}` ऊँट बाहर! फ़्रेंच से फ़र्क़।
+`{n}...Bf{n}` bishop bahar.	`{n}...Bf{n}` ऊँट बाहर।
+`{n}...Bg{n}#` Mate!	`{n}...Bg{n}#` मात!
+`{n}...Bg{n}?!` bishop jaldi trade hoga.	`{n}...Bg{n}?!` ऊँट जल्दी बदला जाएगा।
+`{n}...Bg{n}` bishop `d{n}` par. Aage `...c{n}`.	`{n}...Bg{n}` ऊँट `d{n}` पर। आगे `...c{n}`।
+`{n}...Bg{n}` bishop long diagonal par.	`{n}...Bg{n}` ऊँट लंबे विकर्ण पर।
+`{n}...Bg{n}` bishop peeche hata.	`{n}...Bg{n}` ऊँट पीछे हटा।
+`{n}...Bg{n}` knight ko pin kiya (relative pin, peeche queen).	`{n}...Bg{n}` घोड़े को पिन किया (सापेक्ष पिन, पीछे रानी)।
+`{n}...Bxa{n}` semi-open a- aur b-files.	`{n}...Bxa{n}` आधी खुली a- और b-फ़ाइलें।
+`{n}...Bxc{n}+` bishop dekar doubled pawns.	`{n}...Bxc{n}+` ऊँट देकर दोहरे प्यादे।
+`{n}...Bxd{n}??` Lalach. `{n}...dxe{n}` behtar tha.	`{n}...Bxd{n}??` लालच। `{n}...dxe{n}` बेहतर था।
+`{n}...Kb{n}` (agar `{n}...h{n} {n}.Ke{n} h{n} {n}.c{n}` dono queen banenge)	`{n}...Kb{n}` (अगर `{n}...h{n} {n}.Ke{n} h{n} {n}.c{n}` दोनों रानी बनेंगे)
+`{n}...Ke{n}` king center mein!	`{n}...Ke{n}` राजा केंद्र में!
+`{n}...Kxd{n}` Black ek piece aage.	`{n}...Kxd{n}` काला एक मोहरा आगे।
+`{n}...Na{n}!` Sahi! Agar `{n}...Nxd{n}?` to `{n}.Nxf{n}!` (Fried Liver): king bahar aata hai aur bada attack.	`{n}...Na{n}!` सही! अगर `{n}...Nxd{n}?` तो `{n}.Nxf{n}!` (फ़्राइड लिवर): राजा बाहर आता है और बड़ा हमला।
+`{n}...Na{n}!` `{n}...Nxd{n}?` ke baad `Nxf{n}` (Fried Liver) khatarnaak.	`{n}...Na{n}!` `{n}...Nxd{n}?` के बाद `Nxf{n}` (फ़्राइड लिवर) ख़तरनाक।
+`{n}...Na{n}!` bishop `c{n}` par attack, `Nxd{n}?` ke Fried Liver se bachao.	`{n}...Na{n}!` ऊँट `c{n}` पर हमला, `Nxd{n}?` के फ़्राइड लिवर से बचाव।
+`{n}...Nbd{n}` (elephant trap set).	`{n}...Nbd{n}` (एलिफ़ेंट जाल तैयार)।
+`{n}...Nbd{n}` trap set.	`{n}...Nbd{n}` जाल तैयार।
+`{n}...Nc{n}!` e{n} protect aur development. Phir `{n}.Bc{n} g{n}!` (ab safe) `{n}.Qf{n} Nf{n}` aur White ki queen ka time barbaad.	`{n}...Nc{n}!` e{n} की रक्षा और विकास। फिर `{n}.Bc{n} g{n}!` (अब सुरक्षित) `{n}.Qf{n} Nf{n}` और सफ़ेद की रानी का समय बर्बाद।
+`{n}...Nc{n}` pawn wapas lene ki taiyaari, tez development.	`{n}...Nc{n}` प्यादा वापस लेने की तैयारी, तेज़ विकास।
+`{n}...Nc{n}` simple development.	`{n}...Nc{n}` सरल विकास।
+`{n}...Nd{n}!` queen par attack. Agar `Nxd{n}` to `Qh{n}#`. Queen jaati hai.	`{n}...Nd{n}!` रानी पर हमला। अगर `Nxd{n}` तो `Qh{n}#`। रानी जाती है।
+`{n}...Nd{n}?!` pawn `e{n}` "free" lagta hai.	`{n}...Nd{n}?!` प्यादा `e{n}` "मुफ़्त" लगता है।
+`{n}...Nd{n}` ek trick hai. Agar White lalach kare to mate!	`{n}...Nd{n}` एक तरकीब है। अगर सफ़ेद लालच करे तो मात!
+`{n}...Ne{n}!` `c{n}` par double pressure aur `g{n}` bishop par attack.	`{n}...Ne{n}!` `c{n}` पर दोहरा दबाव और `g{n}` ऊँट पर हमला।
+`{n}...Ne{n}` galti lagti hai, par trap hai.	`{n}...Ne{n}` ग़लती लगती है, पर जाल है।
+`{n}...Ne{n}` trap.	`{n}...Ne{n}` जाल।
+`{n}...Nf{n}#` Smothered mate! **Seekh:** opponent ki trick chaal par pehle socho "kyun?".	`{n}...Nf{n}#` स्मोदर्ड मात! **सीख:** विरोधी की तरकीब वाली चाल पर पहले सोचें "क्यों?"।
+`{n}...Nf{n}??` Knight ne queen ko attack kiya, par `f{n}` bhool gaya.	`{n}...Nf{n}??` घोड़े ने रानी पर हमला किया, पर `f{n}` भूल गया।
+`{n}...Nf{n}` `e{n}` par attack.	`{n}...Nf{n}` `e{n}` पर हमला।
+`{n}...Nf{n}` ke baad White `{n}.Ng{n}` se `f{n}` par attack karta hai.	`{n}...Nf{n}` के बाद सफ़ेद `{n}.Ng{n}` से `f{n}` पर हमला करता है।
+`{n}...Nf{n}` queen par attack.	`{n}...Nf{n}` रानी पर हमला।
+`{n}...Nf{n}`: knight develop bhi hua, `e{n}` par attack bhi. Queen ko phir hilna padega. (`Nc{n}` bhi achha.)	`{n}...Nf{n}`: घोड़े का विकास भी हुआ, `e{n}` पर हमला भी। रानी को फिर हिलना पड़ेगा। (`Nc{n}` भी अच्छा।)
+`{n}...Ng{n}` `h{n}` par nishaana.	`{n}...Ng{n}` `h{n}` पर निशाना।
+`{n}...Nxc{n}` knight trade.	`{n}...Nxc{n}` घोड़े की अदला-बदली।
+`{n}...Nxd{n}!` relative pin todi! Queen de di.	`{n}...Nxd{n}!` सापेक्ष पिन तोड़ा! रानी दे दी।
+`{n}...Nxd{n}?` galti.	`{n}...Nxd{n}?` ग़लती।
+`{n}...Nxe{n}!` queen ki parwah nahi.	`{n}...Nxe{n}!` रानी की परवाह नहीं।
+`{n}...Nxe{n}?` nakal. Sahi: pehle `{n}...d{n}`.	`{n}...Nxe{n}?` नक़ल। सही: पहले `{n}...d{n}`।
+`{n}...Nxe{n}` fork trick.	`{n}...Nxe{n}` फ़ोर्क तरकीब।
+`{n}...O-O`: Black ne bhi castle kiya. Ab dono kings safe.	`{n}...O-O`: काले ने भी कैसल किया। अब दोनों राजा सुरक्षित।
+`{n}...Qa{n}+` check aur fork: `e{n}` knight gaya.	`{n}...Qa{n}+` शह और फ़ोर्क: `e{n}` घोड़ा गया।
+`{n}...Qa{n}` Cambridge Springs: `c{n}` knight pinned.	`{n}...Qa{n}` कैम्ब्रिज स्प्रिंग्स: `c{n}` घोड़ा पिन।
+`{n}...Qg{n}!` `g{n}` aur `e{n}` par attack.	`{n}...Qg{n}!` `g{n}` और `e{n}` पर हमला।
+`{n}...Qh{n}#` Checkmate! **Seekh:** opening mein f aur g pawns ko faltu mat chalao.	`{n}...Qh{n}#` शह-मात! **सीख:** ओपनिंग में f और g प्यादे बेवजह न चलाएँ।
+`{n}...Qh{n}+!` king ka diagonal khula hai.	`{n}...Qh{n}+!` राजा का विकर्ण खुला है।
