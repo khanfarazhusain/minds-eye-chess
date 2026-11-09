@@ -782,7 +782,7 @@ body.fixb .fixscroll{padding-bottom:12px}
 .board.hidepc .pc,.board.hidepc svg.arrows{opacity:0}
 .bpeek{display:block;margin:8px auto 0;border:0;border-radius:999px;padding:9px 18px;font-weight:800;font-size:14px;background:#FFD66B;color:#2E1F0B;box-shadow:0 4px 0 #C47F14}
 .bpeek:disabled{opacity:.6}
-.sqx{font:12px/1.2 ui-monospace,monospace;opacity:.3;text-align:right;margin:1px 8px 0;min-height:14px;cursor:default;user-select:none}
+.sqx{position:fixed;top:calc(env(safe-area-inset-top,0px) + 1px);left:3px;z-index:60;font:8px/1 ui-monospace,monospace;opacity:.28;color:var(--muted,#888);padding:2px;margin:0;cursor:default;user-select:none;-webkit-user-select:none;pointer-events:auto;background:none}
 
 
 /* v57: practice hub */
@@ -3496,7 +3496,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.09 · v93';
+const APPV='2026.11.09 · v94';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -4401,7 +4401,7 @@ function sqxHTML(g,st,my){if(!sqxOn()||g.over||!my)return'';return sqxCore('o:'+
 function sqxCore(key,st,re){if(SQX.hk===key)return'';
   if(SQX.hint&&SQX.hint.k===key)return SQX.hint.s?`<div class="sqx" data-act="sqxh" data-k="${esc(key)}">${esc(SQX.hint.s)}</div>`:'';
   if(SQX.busy!==key){SQX.busy=key;sfGo(st,{multipv:1,movetime:1500}).then(r=>{const m=r&&r.best?fromUci(st,r.best):null;SQX.hint={k:key,s:m?san(st,m,legal(st)):''};re(key)})}
-  return'<div class="sqx">·</div>'}
+  return''}
 function sqxPlayHTML(g){if(!sqxOn()||!g||g.two||g.over||g.thinking||(g.st.w?'w':'b')!==g.human)return'';if(!g.sqid)g.sqid=Date.now().toString(36);
   const n=g.hist?g.hist.length:(g.moves?g.moves.length:0);return sqxCore('p:'+g.sqid+':'+n+':'+toFEN(g.st),g.st,k=>{if(V.name==='play'&&G===g&&!g.over){const y=window.scrollY;render();window.scrollTo(0,y)}})}
 function vOGame(){const g=OG;if(!g||!g.started){go({name:'friend'});return}const st=olState(g.moves);if(!st){g.moves=[];olSave();go({name:'friend'});return}
