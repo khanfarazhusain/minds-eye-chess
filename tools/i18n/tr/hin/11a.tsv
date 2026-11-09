@@ -116,3 +116,7 @@ Before you move: Check, Capture, Threat	चाल से पहले: शह, �
 Arrows on	तीर चालू
 Arrows off	तीर बंद
 Arrows and colours on the board	बोर्ड पर तीर और रंग
+Coach is checking the best move…	कोच सबसे अच्छी चाल देख रहा है…
+🎯 Best moves #{n}	🎯 सबसे अच्छी चालें #{n}
+Stockfish did not load on this device, so a simple built-in engine is giving these moves. They can be weak.	इस डिवाइस पर Stockfish लोड नहीं हुआ, इसलिए एक साधारण अंदरूनी इंजन ये चालें दे रहा है। ये कमज़ोर हो सकती हैं।
+⚙️ Engine: Stockfish · depth {n}	⚙️ इंजन: Stockfish · गहराई {n}
