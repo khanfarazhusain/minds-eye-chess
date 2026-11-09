@@ -176,6 +176,7 @@ p{margin:0}
 .sw:checked{background:var(--accent)}.sw:checked::after{left:21px}
 .gstat{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:600}
 .big{font-family:var(--f-display);font-weight:700;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+.mvgrid{display:grid;grid-template-columns:repeat(auto-fill,3.5ch 8ch 8ch);row-gap:1px;white-space:nowrap}.mvgrid .mn{color:var(--muted);text-align:right;padding-right:.6ch}.mvgrid .mv{overflow:hidden}
 .gamemoves{font-family:var(--f-mono);font-size:10px;line-height:1.55;max-height:150px;overflow-y:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
 .lastmove{font-family:var(--f-mono);font-size:30px;font-weight:700;text-align:center}
 .npad{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
@@ -1299,6 +1300,7 @@ function makeSeq(plies,fixed){let st=startState();const sans=[],dests=[];const l
     if(!m&&fixed)break;if(!m){const ms=legal(st);if(!ms.length)break;let bs=-Infinity;for(const x of shuffle(ms)){const sc=-qs(make(st,x),-Infinity,Infinity,3)+Math.random()*90;if(sc>bs){bs=sc;m=x}}}
     const list=legal(st);sans.push(san(st,m,list));dests.push(m.t);if(m.castle)dests.push({K:5,Q:3,k:61,q:59}[m.castle]);st=make(st,m)}
   return{sans,st,dests}}
+function movesGridHTML(sans,startFm){let h='<div class="mvgrid">';sans.forEach((x,i)=>{if(i%2===0)h+=`<span class="mn">${(startFm||1)+i/2}.</span>`;h+=`<span class="mv">${esc(x)}</span>`});return h+'</div>'}
 function movesHTML(sans,startFm){let h='';sans.forEach((s,i)=>{if(i%2===0)h+=`<span class="mn">${(startFm||1)+i/2}.</span>&nbsp;`;h+=esc(s)+(i%2?' &nbsp; ':'&nbsp; ')});return h}
 
 /* ================= board view ================= */
@@ -2097,7 +2099,7 @@ function vPlay(){{const fx=!!G&&!V.setup;if(document.body.classList.contains('fi
    <div class="keys">${[1,2,3,4,5,6,7,8].map(x=>`<button class="key" data-act="gk" data-v="${x}">${x}</button>`).join('')}</div>
    <div class="npad"><button class="key" data-act="gk" data-v="x">x</button><button class="key" data-act="gk" data-v="=">=</button><button class="key" data-act="gk" data-v="O-O">O-O</button><button class="key" data-act="gk" data-v="O-O-O" style="font-size:13px">O-O-O</button><button class="key" data-act="gdel">⌫</button></div>
    <div class="row">${g.vis!=='full'?`<button class="btn" data-act="peek" ${g.peek?'disabled':''}>👁 Peek 3s</button>`:''}<button class="btn primary" style="flex:1" data-act="gmove" ${myTurn?'':'disabled'}>${L2('Play move','Chaal chalo')}</button></div></div>`}
-  h+=`<div class="gamemoves">${g.sans.length?movesHTML(sqxSans(g.sans)):'<span class="muted">No moves yet</span>'}</div>
+  h+=`<div class="gamemoves">${g.sans.length?movesGridHTML(sqxSans(g.sans)):'<span class="muted">No moves yet</span>'}</div>
   <div class="row">${g.over?`<button class="btn primary" style="flex:1" data-act="setup">${L2('New game','Naya game')}</button>`:`${g.vis==='full'?`<button class="btn" data-act="gkb">⌨ ${g.kb?L2('Hide keypad','Keypad chhupao'):L2('Type move','Chaal likho')}</button>`:''}<button class="btn" data-act="setup">${L2('New','Naya')}</button><button class="btn" data-act="resign">${g.confirmResign?L2('Tap again','Phir dabao'):L2('Resign','Haar maano')}</button>`}</div></div></div>`;
   main.innerHTML=h;
   if(myTurn&&g.vis!=='blind')onSq=n=>{if(!g.sel){g.sel=n;g.msg='';g.msgBad=false;vPlay();return}if(g.sel===n){g.sel=null;g.msg='';vPlay();return}tryMove(g.sel+n);}}
@@ -3496,7 +3498,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.09 · v96';
+const APPV='2026.11.09 · v97';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -4430,7 +4432,7 @@ function vOGame(){const g=OG;if(!g||!g.started){go({name:'friend'});return}const
     h+=`<p style="text-align:center;margin:0;min-height:22px">${g.msg?esc(g.msg)+' ':''}${my?(inCheck(st)?L2('<b>Check!</b> Your move: save your king.','<b>Check!</b> Aapki chaal: king bachao.'):L2('<b>Your move.</b> Tap a piece, then its square.','<b>Aapki chaal.</b> Piece tap karo, phir square.')):L2(`Waiting for ${esc(g.opp||'your friend')} to move…`,`${esc(g.opp||'Dost')} ki chaal ka intezaar…`)}</p>`;
     h+=`<div class="row corow"><button class="btn" data-act="ol-draw" ${g.draw==='me'?'disabled':''}>${g.draw==='me'?L2('Draw offered','Draw bheja'):L2('Offer draw','Draw offer')}</button><button class="btn" data-act="ol-resign">${g.cres?L2('Tap again','Dobara tap'):L2('Resign','Resign')}</button><button class="btn" data-act="ol-flip">⇅</button></div>
       <button class="btn block" id="oclaim" data-act="ol-claim" hidden>${L2('Friend\'s time is over: claim the win','Dost ka time khatam: jeet claim karo')}</button>`}
-  if(g.moves.length){let s=startState();const sans=[];for(const u of g.moves){const m=fromUci(s,u);sans.push(san(s,m,legal(s)));s=make(s,m)}h+=`<div class="gamemoves">${movesHTML(sqxSans(sans),1)}</div>`}
+  if(g.moves.length){let s=startState();const sans=[];for(const u of g.moves){const m=fromUci(s,u);sans.push(san(s,m,legal(s)));s=make(s,m)}h+=`<div class="gamemoves">${movesGridHTML(sqxSans(sans),1)}</div>`}
   h+=`<small class="muted" style="text-align:center">${L2('Room','Room')} ${esc(g.code)}${g.gid>1?` · ${L2('game','game')} ${g.gid}`:''}</small></div>`;
   main.innerHTML=h;onSq=olTap;olWake(olLive())}
 
