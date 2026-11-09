@@ -1,0 +1,150 @@
+Walk the knight to the gold square by the shortest route, one jump at a time. Answer as many as you can before the time runs out. Every minute is recorded.	घोड़े को सबसे छोटे रास्ते से सुनहरे खाने तक ले जाएँ, एक-एक छलांग। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+Want a free pawn? It's a trap!	मुफ़्त प्यादा चाहिए? यह जाल है!
+Warm-up: pieces visible, moves by keypad or tapping.	वार्म-अप: मोहरे दिखेंगे, चालें कीपैड या टैप से।
+Watch out, King!	सावधान, राजा!
+Wazir	वज़ीर
+Weak squares	कमज़ोर खाने
+Weak squares aur outposts	कमज़ोर खाने और आउटपोस्ट
+Weak squares in your camp: {s}. {s} would love a knight there.	आपके इलाक़े में कमज़ोर खाने: {s}। {s} वहाँ घोड़ा रखना पसंद करेगा।
+Weekly report	हफ़्ते की रिपोर्ट
+Weekly test	हफ़्ते का टेस्ट
+Well done!	शाबाश!
+What colour is {s}?	{s} किस रंग का है?
+What is the fewest number of moves a knight needs from {s} to {s}?	घोड़े को {s} से {s} तक सबसे कम कितनी चालें चाहिए?
+What is the opponent threatening?	विरोधी क्या धमकी दे रहा है?
+What is the story of {s}?	{s} की कहानी क्या है?
+What may follow:	आगे क्या हो सकता है:
+What may follow: {n}.Kd{n} Ke{n} {n}.Qc{n}+ Kf{n} {n}.Ke{n}	आगे क्या हो सकता है: {n}.Kd{n} Ke{n} {n}.Qc{n}+ Kf{n} {n}.Ke{n}
+What stands on	यहाँ क्या खड़ा है:
+What stands on {s} now?	अब {s} पर क्या खड़ा है?
+What stands there after the first moves	शुरुआती चालों के बाद वहाँ क्या खड़ा है
+What starts here, master speed	यहाँ क्या शुरू होता है, मास्टर रफ़्तार
+What starts here?	यहाँ क्या शुरू होता है?
+What starts here? · target {n} per minute	यहाँ क्या शुरू होता है? · लक्ष्य {n} प्रति मिनट
+What starts on	यहाँ क्या शुरू होता है:
+What starts on this square?	इस खाने पर क्या शुरू होता है?
+What stood on the gold square?	सुनहरे खाने पर क्या था?
+What stood on {s}?	{s} पर क्या था?
+What the coach can and can't do	कोच क्या कर सकता है और क्या नहीं
+What you see	आप क्या देखते हैं
+Where does it start, master speed	यह कहाँ से शुरू होता है, मास्टर रफ़्तार
+Where does it start?	यह कहाँ से शुरू होता है?
+Where does it start? · target {n} per minute	यह कहाँ से शुरू होता है? · लक्ष्य {n} प्रति मिनट
+Where does this piece start?	यह मोहरा कहाँ से शुरू होता है?
+Where every piece starts	हर मोहरा कहाँ से शुरू होता है
+Where is	कहाँ है
+Where is it now, after the opening	ओपनिंग के बाद अब यह कहाँ है
+Where is it now, in a famous game	एक मशहूर खेल में अब यह कहाँ है
+Where is it now?	अब यह कहाँ है?
+Where is it now? Black’s side	अब यह कहाँ है? काले की तरफ़ से
+Where is it now? Empty board	अब यह कहाँ है? ख़ाली बोर्ड
+Where is it now? · target {n} per minute	अब यह कहाँ है? · लक्ष्य {n} प्रति मिनट
+Where is the	कहाँ है
+Where is the white pawn that started on c{n} now? Tap its square.	c{n} से शुरू हुआ सफ़ेद प्यादा अब कहाँ है? उसका खाना टैप करें।
+Where is the {s} {s} that started on {s} now? Tap its square.	{s} से शुरू हुआ {s} {s} अब कहाँ है? उसका खाना टैप करें।
+Where your mistakes come from	आपकी ग़लतियाँ कहाँ से आती हैं
+Which file is OPEN (no pawns of either colour)? Rooks love open files.	कौन सी फ़ाइल खुली है (किसी रंग का प्यादा नहीं)? हाथियों को खुली फ़ाइलें पसंद हैं।
+Which file?	कौन सी फ़ाइल?
+Which quarter of the board is {s} in?	{s} बोर्ड के किस चौथाई में है?
+Which rank?	कौन सी रैंक?
+Which ring of the board is {s} on?	{s} बोर्ड के किस घेरे पर है?
+Which ring or quarter?	कौन सा घेरा या चौथाई?
+Which square has this story?	किस खाने की यह कहानी है?
+Which square is	कौन सा खाना है
+Which squares share a file, rank or diagonal.	कौन से खाने एक फ़ाइल, रैंक या विकर्ण पर हैं।
+Which zone?	कौन सा क्षेत्र?
+White	सफ़ेद
+White +	सफ़ेद +
+White bishop	सफ़ेद ऊँट
+White dark-squared bishop	सफ़ेद का काले-खाने वाला ऊँट
+White gives a pawn to gain time against the queen	सफ़ेद रानी के ख़िलाफ़ समय पाने के लिए प्यादा देता है
+White gives a pawn to open the f-file and attack f{n}. Black should develop fast and may give the pawn back with ...d{n}.	सफ़ेद f-फ़ाइल खोलने और f{n} पर हमले के लिए प्यादा देता है। काले को जल्दी विकास करना चाहिए और ...d{n} से प्यादा लौटा सकता है।
+White has {s}, Black has {s}. {s}.	सफ़ेद के पास {s}, काले के पास {s}। {s}।
+White keeps options open and controls e{n} and d{n}. Often follows with g{n}, Bg{n} and c{n}, hitting the centre from the side.	सफ़ेद विकल्प खुले रखता है और e{n} व d{n} को नियंत्रित करता है। अक्सर g{n}, Bg{n} और c{n} आते हैं, बगल से बीच पर वार।
+White king	सफ़ेद राजा
+White kingside	सफ़ेद की किंगसाइड
+White kingside knight	सफ़ेद का किंगसाइड घोड़ा
+White kingside rook	सफ़ेद का किंगसाइड हाथी
+White knight	सफ़ेद घोड़ा
+White lets the rook go: the attack matters more	सफ़ेद हाथी जाने देता है: हमला ज़्यादा ज़रूरी है
+White light-squared bishop	सफ़ेद का सफ़ेद-खाने वाला ऊँट
+White mates in {n}	सफ़ेद {n} में मात देता है
+White offers the c-pawn to pull Black's d-pawn out of the centre. Black can decline with ...e{n} or ...c{n}, or take and give it back later.	सफ़ेद काले के d-प्यादे को बीच से खींचने के लिए c-प्यादा पेश करता है। काला ...e{n} या ...c{n} से मना कर सकता है, या लेकर बाद में लौटा सकता है।
+White pawn	सफ़ेद प्यादा
+White prepares d{n} to build a full pawn centre. Black hits the centre at once with ...d{n} or ...Nf{n}.	सफ़ेद पूरा प्यादा बीच बनाने के लिए d{n} तैयार करता है। काला तुरंत ...d{n} या ...Nf{n} से बीच पर वार करता है।
+White prepares f{n} to attack the e{n} pawn while keeping the knight ready for d{n}.	सफ़ेद घोड़े को d{n} के लिए तैयार रखते हुए e{n} प्यादे पर हमले के लिए f{n} तैयार करता है।
+White pressures the knight that guards e{n}. The usual plan is c{n} and d{n} to build a big centre, with the bishop retreating to a{n} and b{n}. Black often plays ...a{n}, ...Nf{n}, ...Be{n}, ...b{n} and castles, then fights back with ...d{n} or ...d{n}.	सफ़ेद e{n} की रक्षा करने वाले घोड़े पर दबाव डालता है। आम योजना है c{n} और d{n} से बड़ा बीच बनाना, ऊँट a{n} और b{n} पर पीछे हटता है। काला अक्सर ...a{n}, ...Nf{n}, ...Be{n}, ...b{n} खेलकर कैसल करता है, फिर ...d{n} या ...d{n} से जवाब देता है।
+White queen	सफ़ेद रानी
+White queenside	सफ़ेद की क्वीनसाइड
+White queenside knight	सफ़ेद का क्वीनसाइड घोड़ा
+White queenside rook	सफ़ेद का क्वीनसाइड हाथी
+White rook	सफ़ेद हाथी
+White sacrifices a knight to drag the king out	सफ़ेद राजा को बाहर खींचने के लिए घोड़े की बलि देता है
+White side	सफ़ेद की तरफ़
+White to move	सफ़ेद की चाल
+White to move.	सफ़ेद की चाल।
+White {s} on	सफ़ेद {s} यहाँ:
+White's	सफ़ेद का
+White's bishop goes to {s}, in the	सफ़ेद का ऊँट {s} पर जाता है, इसमें:
+White's c{n} bishop runs on dark squares, the f{n} bishop on light ones. For Black, c{n} is light and f{n} is dark.	सफ़ेद का c{n} ऊँट काले खानों पर चलता है, f{n} ऊँट सफ़ेद खानों पर। काले के लिए c{n} सफ़ेद है और f{n} काला।
+White, forward is toward rank {n} and right is toward the h-file	सफ़ेद के लिए आगे का मतलब रैंक {n} की तरफ़ और दायाँ मतलब h-फ़ाइल की तरफ़
+White: {n}.e{n} with the Italian Game	सफ़ेद: इटालियन गेम के साथ {n}.e{n}
+White’s kingside fianchetto square	सफ़ेद का किंगसाइड फ़ियानकेटो खाना
+White’s kingside quarter (e{n}–h{n})	सफ़ेद का किंगसाइड चौथाई (e{n}–h{n})
+White’s queenside fianchetto square	सफ़ेद का क्वीनसाइड फ़ियानकेटो खाना
+White’s queenside quarter (a{n}–d{n})	सफ़ेद का क्वीनसाइड चौथाई (a{n}–d{n})
+White’s weakest square at the start	शुरुआत में सफ़ेद का सबसे कमज़ोर खाना
+Who is winning	कौन जीत रहा है
+Whole board	पूरा बोर्ड
+Whose king is safer?	किसका राजा ज़्यादा सुरक्षित है?
+Why it helps	यह क्यों मदद करता है
+Why not {n} (Ke{n})?	{n} (Ke{n}) क्यों नहीं?
+Why not {n} (Qc{n})?	{n} (Qc{n}) क्यों नहीं?
+Why not {s} ({s})?	{s} ({s}) क्यों नहीं?
+Why option {n} is best	विकल्प {n} सबसे अच्छा क्यों है
+Win	जीत
+Win (or hold) one endgame against the coach.	कोच के ख़िलाफ़ एक एंडगेम जीतें (या बचाएँ)।
+Win against the Beginner coach, puzzle rating {n}.	शुरुआती कोच को हराएँ, पहेली रेटिंग {n}।
+Wins material	मोहरा जीतता है
+With a clock you learn to think fast. "+{n}s" adds {n} seconds after each move.	घड़ी के साथ आप तेज़ सोचना सीखते हैं। "+{n}s" हर चाल के बाद {n} सेकंड जोड़ता है।
+With your isolated pawn on {s}, keep pieces on and active, use the squares next to it for knights, and look for an attack. Trading pieces helps the opponent.	{s} पर अकेले प्यादे के साथ मोहरे बोर्ड पर और सक्रिय रखें, उसके बगल के खाने घोड़ों के लिए इस्तेमाल करें, और हमला ढूँढें। मोहरों की अदला-बदली विरोधी की मदद करती है।
+Without a plan, you lose.	योजना के बिना आप हारते हैं।
+Won	जीते
+Won · Lost · Draw	जीते · हारे · ड्रॉ
+Wood	लकड़ी
+World champions: Anderssen se Euwe tak	विश्व चैंपियन: एंडरसन से एउवे तक
+World champions: Botvinnik se Kasparov tak	विश्व चैंपियन: बोटविनिक से कास्पारोव तक
+Wrong: {s}.	ग़लत: {s}।
+XP	XP
+XP to level {s}. Earn XP from puzzles, school topics, games and drills.	लेवल {s} तक XP। पहेलियों, स्कूल विषयों, खेलों और ड्रिलों से XP कमाएँ।
+YOU LOSE	आप हारे
+YOU WIN	आप जीते
+Yes	हाँ
+Yes, the path from {s} to {s} is clear.	हाँ, {s} से {s} तक रास्ता साफ़ है।
+Yes: the king and rook have not moved, nothing is in between, and the king is not in check and does not pass through an attacked square.	हाँ: राजा और हाथी नहीं चले, बीच में कुछ नहीं, और राजा पर शह नहीं है और वह किसी हमले वाले खाने से नहीं गुज़रता।
+Yes: the pawn just moved two squares and landed next to yours, so {s}x{s}{n} is possible, but only right now.	हाँ: प्यादा अभी दो खाने चलकर आपके बगल में आया, तो {s}x{s}{n} संभव है, पर सिर्फ़ अभी।
+Yes: two squares one way and one the other.	हाँ: एक तरफ़ दो खाने और दूसरी तरफ़ एक।
+Yes: {s} {s} check to the king on {s}.	हाँ: {s} {s} पर राजा को शह {s}।
+You	आप
+You are	आप हैं
+You are White	आप सफ़ेद हैं
+You are ahead: trade pieces (not pawns), stay safe and head for an endgame.	आप आगे हैं: मोहरे बदलें (प्यादे नहीं), सुरक्षित रहें और एंडगेम की ओर बढ़ें।
+You are behind: keep pieces on, create threats and complications, avoid trades.	आप पीछे हैं: मोहरे बोर्ड पर रखें, ख़तरे और उलझनें बनाएँ, अदला-बदली से बचें।
+You are here	आप यहाँ हैं
+You are in check! Move your king, block the check, or take the checking piece.	आप पर शह है! राजा हटाएँ, शह रोकें, या शह देने वाले मोहरे को मारें।
+You are in check.	आप पर शह है।
+You are in check: block it, move the king or take the checking piece.	आप पर शह है: रोकें, राजा हटाएँ या शह देने वाले मोहरे को मारें।
+You are still in another game. Leave it first, then tap Join.	आप अभी दूसरे खेल में हैं। पहले उसे छोड़ें, फिर जुड़ें टैप करें।
+You are the queen up.	आप एक रानी आगे हैं।
+You are {s} down.	आप {s} पीछे हैं।
+You are {s} up.	आप {s} आगे हैं।
+You can win {s}! Take on {s}.	आप {s} जीत सकते हैं! {s} पर मारें।
+You choose how many minutes. To pass, reach the target average per minute with {n}% right, no peeking, and let the clock run out. {n}.{n} times the target earns two stars, {n}.{n} times earns three.	आप तय करें कितने मिनट। पास होने के लिए {n}% सही के साथ प्रति मिनट लक्ष्य औसत तक पहुँचें, बिना झाँके, और घड़ी ख़त्म होने दें। लक्ष्य का {n}.{n} गुना दो सितारे देता है, {n}.{n} गुना तीन।
+You choose how many minutes. To pass, reach the target average per minute with {s}% right, no peeking, and let the clock run out. {n}.{n} times the target earns two stars, {n}.{n} times earns three.	आप तय करें कितने मिनट। पास होने के लिए {s}% सही के साथ प्रति मिनट लक्ष्य औसत तक पहुँचें, बिना झाँके, और घड़ी ख़त्म होने दें। लक्ष्य का {n}.{n} गुना दो सितारे देता है, {n}.{n} गुना तीन।
+You chose {s}{s}.	आपने {s}{s} चुना।
+You control the centre (d{n}, e{n}, d{n}, e{n}) better.	बीच (d{n}, e{n}, d{n}, e{n}) पर आपका नियंत्रण बेहतर है।
+You end on {s}. For {s}.	आप {s} पर ख़त्म करते हैं। {s} के लिए।
+You entered	आपने लिखा
+You have the bishop pair: open the position to make it stronger.	आपके पास ऊँटों की जोड़ी है: उसे मज़बूत बनाने के लिए पोज़ीशन खोलें।
+You leave pieces loose. Before every move ask: "after this, what can they take?" Keep the thinking checklist on.	आप मोहरे ढीले छोड़ते हैं। हर चाल से पहले पूछें: "इसके बाद वे क्या ले सकते हैं?" सोचने की चेकलिस्ट चालू रखें।
+You miss what the opponent wants. After each of their moves, ask "why did they play that?" and open the Threats step of the checklist.	आप विरोधी का इरादा नहीं देखते। उनकी हर चाल के बाद पूछें "उन्होंने यह क्यों खेला?" और चेकलिस्ट का ख़तरे वाला क़दम खोलें।

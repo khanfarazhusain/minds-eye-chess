@@ -1,0 +1,155 @@
+You miss winning moves. Look at checks, captures and threats first. Solve your mistake diary puzzles every day.	आपसे जीतने वाली चालें छूटती हैं। पहले शह, मारने वाली चालें और ख़तरे देखें। रोज़ अपनी ग़लतियों की डायरी की पहेलियाँ हल करें।
+You missed a forced mate in {s} starting with {s}.	आपसे {s} से शुरू होने वाली {s} में ज़बरदस्ती मात छूट गई।
+You missed a forced mate. When the enemy king is weak, calculate checks first.	आपसे ज़बरदस्ती मात छूट गई। जब दुश्मन राजा कमज़ोर हो, पहले शहें गिनें।
+You missed {s}, which wins {s}.	आपसे {s} छूट गया, जो {s} जीतता है।
+You need {n} out of {n} to pass. The squares you missed have been added to your reviews.	पास होने के लिए {n} में से {n} चाहिए। आपसे छूटे खाने दोहराई में जोड़ दिए गए हैं।
+You play	आप खेलते हैं
+You play against full-strength Stockfish. Win the "Win" drills; hold the draw in the "Draw" drills. Tips and the coach's help work as usual.	आप पूरी ताक़त वाले Stockfish से खेलते हैं। "जीत" ड्रिल जीतें; "ड्रॉ" ड्रिल में ड्रॉ बचाएँ। टिप्स और कोच की मदद हमेशा की तरह काम करते हैं।
+You ran out of time. The coach wins on time.	आपका समय ख़त्म। कोच समय से जीता।
+You resigned.	आपने हार मान ली।
+You sit on White’s or Black’s side. A square is described from where you sit, like your right-hand corner. Tap what starts there. Answer as many as you can before the time runs out. Every minute is recorded.	आप सफ़ेद या काले की तरफ़ बैठे हैं। खाना आपकी जगह से बताया जाता है, जैसे आपका दाहिना कोना। वहाँ क्या शुरू होता है, टैप करें। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+You sit on {s} side. Start on {s}, go {s}. Where are you?	आप {s} की तरफ़ बैठे हैं। {s} से शुरू करें, {s} जाएँ। आप कहाँ हैं?
+You vs computer	आप बनाम कंप्यूटर
+You {s} · Coach	आप {s} · कोच
+Your best move	आपकी सबसे अच्छी चाल
+Your best options (see the arrows)	आपके सबसे अच्छे विकल्प (तीर देखें)
+Your best: {s}. Try again to beat it!	आपका सबसे अच्छा: {s}। इसे तोड़ने के लिए फिर कोशिश करें!
+Your bishop on {s} is a "bad bishop": your own pawns block it on its colour.	{s} पर आपका ऊँट "बुरा ऊँट" है: आपके अपने प्यादे उसके रंग पर उसे रोकते हैं।
+Your board	आपका बोर्ड
+Your captures: {s}.	आपकी मारने वाली चालें: {s}।
+Your checks: {s}.	आपकी शहें: {s}।
+Your doubled pawns on the {s}-file.	{s}-फ़ाइल पर आपके दोहरे प्यादे।
+Your first record:	आपका पहला रिकॉर्ड:
+Your first score on this run.	इस दौर में आपका पहला स्कोर।
+Your friend	आपका दोस्त
+Your friend code	आपका दोस्त कोड
+Your friend said no to a draw.	आपके दोस्त ने ड्रॉ से मना किया।
+Your guess:	आपका अंदाज़ा:
+Your isolated pawn{s}: {s}.	आपके अकेले प्यादे{s}: {s}।
+Your job now:	अभी आपका काम:
+Your job:	आपका काम:
+Your king gets weak. Castle early and do not push the pawns in front of your king without a reason.	आपका राजा कमज़ोर होता है। जल्दी कैसल करें और बिना वजह राजा के आगे के प्यादे न बढ़ाएँ।
+Your king is airy. Do not push more pawns near it, keep a knight or bishop close, and watch checks on the open lines.	आपका राजा खुला है। उसके पास और प्यादे न बढ़ाएँ, एक घोड़ा या ऊँट पास रखें, और खुली लाइनों पर शह का ध्यान रखें।
+Your king is airy. Do not push more pawns near it, keep a knight or bishop close, and watch checks on the open lines. Then Put a rook on the open a-file, and double rooks there if you can.	आपका राजा खुला है। उसके पास और प्यादे न बढ़ाएँ, एक घोड़ा या ऊँट पास रखें, और खुली लाइनों पर शह का ध्यान रखें। फिर खुली a-फ़ाइल पर हाथी रखें, और हो सके तो वहाँ दोनों हाथी लगाएँ।
+Your king is in front of the pawn on the {n}th rank, so this wins. Use the opposition: the king leads, the pawn follows.	आपका राजा {n}वीं रैंक पर प्यादे के आगे है, तो यह जीत है। अपोज़िशन इस्तेमाल करें: राजा आगे, प्यादा पीछे।
+Your king is still in the centre. Black's king is out in the open.	आपका राजा अभी भी बीच में है। काले का राजा खुले में है।
+Your king is {s}{s}. {s}'s king is {s}{s}.	आपका राजा {s}{s} है। {s} का राजा {s}{s} है।
+Your knight on {s} sits on an outpost: no pawn can drive it away.	{s} पर आपका घोड़ा आउटपोस्ट पर है: कोई प्यादा उसे भगा नहीं सकता।
+Your level	आपका लेवल
+Your level now: about	अभी आपका लेवल: लगभग
+Your move	आपकी चाल
+Your move {s}.	आपकी चाल {s}।
+Your move.	आपकी चाल।
+Your move: play the repertoire move from memory.	आपकी चाल: याद से रिपर्टरी चाल खेलें।
+Your move: save your king.	आपकी चाल: अपना राजा बचाएँ।
+Your move: tap a piece, then its square	आपकी चाल: मोहरा टैप करें, फिर उसका खाना
+Your moves	आपकी चालें
+Your name	आपका नाम
+Your name (friends see this)	आपका नाम (दोस्त यह देखते हैं)
+Your next board drill on the Path.	रास्ते पर आपकी अगली बोर्ड ड्रिल।
+Your next lesson in the {n}-level course.	{n}-लेवल कोर्स में आपका अगला पाठ।
+Your online game is waiting.	आपका ऑनलाइन खेल इंतज़ार कर रहा है।
+Your opening lines	आपकी ओपनिंग लाइनें
+Your openings cost you. Use the opening trainer to learn one opening for White and one for Black.	आपकी ओपनिंग आपको नुक़सान देती हैं। सफ़ेद के लिए एक और काले के लिए एक ओपनिंग सीखने को ओपनिंग ट्रेनर इस्तेमाल करें।
+Your passed pawn{s}: {s}.	आपके पास्ड प्यादे{s}: {s}।
+Your pieces have {n} squares to go to, Black's have {n}.	आपके मोहरों के पास जाने को {n} खाने हैं, काले के पास {n}।
+Your pieces have {s} squares to go to, {s}'s have {s}.	आपके मोहरों के पास जाने को {s} खाने हैं, {s} के पास {s}।
+Your plans drift. Read the "Your plan" steps every move and improve your worst piece.	आपकी योजनाएँ भटकती हैं। हर चाल पर "आपकी योजना" के क़दम पढ़ें और अपना सबसे बुरा मोहरा सुधारें।
+Your position	आपकी पोज़ीशन
+Your progress	आपकी प्रगति
+Your queen is out early: watch that the opponent cannot gain time by attacking it.	आपकी रानी जल्दी बाहर है: ध्यान रखें कि विरोधी उस पर हमला करके समय न जीते।
+Your record	आपका रिकॉर्ड
+Your reply to that	उस पर आपका जवाब
+Your room code	आपका रूम कोड
+Your stats	आपके आँकड़े
+Your time ran out.	आपका समय ख़त्म हो गया।
+Your {s} became loose.	आपका {s} ढीला हो गया।
+Your {s} on	आपका {s} यहाँ:
+a big blunder	एक बड़ी भारी ग़लती
+a bit weaker	थोड़ी कमज़ोर
+a cheap trap that wins on move {n}	एक सस्ता जाल जो चाल {n} पर जीतता है
+a fork, hitting	एक फ़ोर्क, जो मारता है
+a knight mates on move {n}	चाल {n} पर घोड़ा मात देता है
+a little worse for you	आपके लिए थोड़ा बुरा
+a rook on the {n}th eats c{n}	{n}वीं पर हाथी c{n} खाता है
+a to h	a से h
+a to h from White’s side, h to a from Black’s. Must be perfect before you move on.	सफ़ेद की तरफ़ से a से h, काले की तरफ़ से h से a। आगे बढ़ने से पहले बिल्कुल पक्का होना चाहिए।
+a useful move	एक काम की चाल
+activates the king	राजा को सक्रिय करता है
+activates the king.	राजा को सक्रिय करता है।
+and	और
+and sends the code. The other phone types the code and taps	और कोड भेजता है। दूसरा फ़ोन कोड लिखकर टैप करता है
+and sign in with your Google (Gmail) account.	और अपने Google (Gmail) अकाउंट से साइन इन करें।
+and what follows:	और आगे क्या होता है:
+and {s} are guarded only by the king at the start. That's why early attacks such as the Fried Liver aim at {s}.	और {s} की रक्षा शुरुआत में सिर्फ़ राजा करता है। इसीलिए फ़्राइड लिवर जैसे जल्दी हमले {s} पर निशाना साधते हैं।
+any square shown	दिखाया गया कोई भी खाना
+are dark,	काले हैं,
+are light.	सफ़ेद हैं।
+attack me hai. Use safe square par le jao, jaise {s}.	हमले में है। उसे सुरक्षित खाने पर ले जाओ, जैसे {s}।
+attack me hai. {s} se use bachao.	हमले में है। {s} से उसे बचाओ।
+attacks the {s} on	इस पर {s} पर हमला करता है:
+a{n} is dark	a{n} काला है
+baaki · {s} min	बाक़ी · {s} मिनट
+bad for you	आपके लिए बुरा
+badges	बैज
+best correct per minute	प्रति मिनट सबसे ज़्यादा सही
+best move!	सबसे अच्छी चाल!
+brings the queen out early	रानी जल्दी बाहर लाता है
+brings the queen out early.	रानी जल्दी बाहर लाता है।
+brings the queen out too early	रानी बहुत जल्दी बाहर लाता है
+can play {s}. Count the captures on {s} for both sides. Is this capture good?	{s} खेल सकता है। दोनों तरफ़ {s} पर मारने वाली चालें गिनें। क्या यह मारना अच्छा है?
+castled and well covered	कैसल किया और अच्छी तरह ढका
+castles: the king goes to safety and the rook comes toward the centre	कैसल करता है: राजा सुरक्षा में जाता है और हाथी बीच की ओर आता है
+changes colour. A queen starts on her own colour: White's on light {s}, Black's on dark {s}.	रंग बदलता है। रानी अपने रंग पर शुरू होती है: सफ़ेद की सफ़ेद {s} पर, काले की काले {s} पर।
+check!	शह!
+coach to move	कोच की चाल
+colour, and the turned-around square has the	रंग, और घुमाए खाने का होता है
+colour. Use this as a check.	रंग। इसे जाँच की तरह इस्तेमाल करें।
+comes out about {s} ahead	लगभग {s} आगे निकलता है
+complete · {n}/{n} drills passed	पूरा · {n}/{n} ड्रिल पास
+complete · {n}/{n} lessons	पूरा · {n}/{n} पाठ
+controls the centre better.	बीच को बेहतर नियंत्रित करता है।
+copy	कॉपी
+corner on White's left and	कोना सफ़ेद के बाएँ और
+corner on White's left and {s} the	कोना सफ़ेद के बाएँ और {s}
+corner on the right: "light on the right". Opposite corners share a colour:	कोना दाएँ: "दाएँ सफ़ेद"। आमने-सामने के कोने एक रंग के होते हैं:
+corner on the right: "light on the right". Opposite corners share a colour: {s} and {s} are dark, {s} and {s} are light.	कोना दाएँ: "दाएँ सफ़ेद"। आमने-सामने के कोने एक रंग के होते हैं: {s} और {s} काले हैं, {s} और {s} सफ़ेद।
+correct (last: {s})	सही (पिछला: {s})
+correct (last: –)	सही (पिछला: –)
+correct per minute against a target of {s}.	प्रति मिनट सही, {s} के लक्ष्य के मुक़ाबले।
+correct per minute, up from {s}.	प्रति मिनट सही, {s} से ऊपर।
+correct per minute, {n}% right, no peeking.	प्रति मिनट सही, {n}% सही, बिना झाँके।
+correct per minute, {s}% right, no peeking.	प्रति मिनट सही, {s}% सही, बिना झाँके।
+correct per minute.	प्रति मिनट सही।
+correct per minute. Your best is {s}.	प्रति मिनट सही। आपका सबसे अच्छा {s} है।
+count it out: {n} to a neighbour, {n} to a diagonal neighbour.	गिनें: पड़ोसी तक {n}, तिरछे पड़ोसी तक {n}।
+creates an isolated pawn	अकेला प्यादा बनाता है
+creates doubled pawns	दोहरे प्यादे बनाता है
+dark	काला
+day streak 🪔	दिनों की लड़ी 🪔
+develop and fight for the centre.	विकास करें और बीच के लिए लड़ें।
+diagonally opposite (turn the board round {n}°)	तिरछे सामने (बोर्ड {n}° घुमाएँ)
+done in this session · {s} to repeat	इस सत्र में पूरे · {s} दोहराने हैं
+drills done	ड्रिल पूरी
+drills · {s} min · last {s}/min	ड्रिल · {s} मिनट · पिछला {s}/मिनट
+e.g. Faraz	जैसे फ़राज़
+empty board	ख़ाली बोर्ड
+empty. Ranks {n} to {n} start empty	ख़ाली। रैंक {n} से {n} ख़ाली शुरू होती हैं
+engine says it is just as good	इंजन कहता है यह भी उतनी ही अच्छी है
+even, so dark	सम, तो काला
+every {s} square on	इस पर हर {s} खाना:
+files	फ़ाइलें
+files and {s} rank{s} apart. Diagonal steps cover both at once, so the king needs the larger number: {s}.	फ़ाइल और {s} रैंक{s} दूर। तिरछे क़दम दोनों एक साथ तय करते हैं, तो राजा को बड़ी संख्या चाहिए: {s}।
+files from your	फ़ाइलें आपके
+files, odd ranks are dark. On the	फ़ाइलों पर विषम रैंक काली हैं। इस पर:
+files, odd ranks are light. So {s} is dark and {s} is light.	फ़ाइलों पर विषम रैंक सफ़ेद हैं। तो {s} काला है और {s} सफ़ेद।
+for Black.	काले के लिए।
+for White,	सफ़ेद के लिए,
+from White's left to right. Ranks are the rows, numbered	सफ़ेद के बाएँ से दाएँ। रैंक पंक्तियाँ हैं, नंबर वाली
+from your left to your right, and the ranks run	आपके बाएँ से दाएँ, और रैंक चलती हैं
+from your left to your right. The rows are	आपके बाएँ से दाएँ। पंक्तियाँ हैं
+from your left?	आपके बाएँ से?
+from your right?	आपके दाएँ से?
+from your side outward.	आपकी तरफ़ से बाहर की ओर।
+gains space on the	इस पर जगह बनाता है:
+game in progress	खेल चल रहा है

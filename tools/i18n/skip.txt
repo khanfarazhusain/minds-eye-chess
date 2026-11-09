@@ -1,0 +1,12 @@
+/progress
+Sunday, Nov {n}
+and ${n}
+card stack cfb
+card stack checklist
+const firebaseConfig = { apiKey: ... }
+data/users/
+{n}.e{n} e{n} {n}.Nf{n} Nc{n} {n}.Bb{n}
+{n}.e{n} e{n} {n}.Nf{n} Nc{n} {n}.Bc{n}
+· Mind's Eye
+· Web audio:
+🧠 Coach ki hidden thinking ({s} kyun khela): - {n}-{n} points 🔍 Mere move ke baad possibilities: - {n}-{n} points ⚔️ Coach ke move ke baad threats/possibilities: - {n}-{n} points 🎯 Mere next move ke options aur outcome: -

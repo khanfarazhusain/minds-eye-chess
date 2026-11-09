@@ -1,0 +1,72 @@
+Good morning 👋	सुप्रभात 👋
+Good afternoon 👋	नमस्कार 👋
+Good evening 👋	शुभ संध्या 👋
+Good morning,	सुप्रभात,
+Good afternoon,	नमस्कार,
+Good evening,	शुभ संध्या,
+today	आज
+day streak	दिनों की लड़ी
+Next: {s}	आगे: {s}
+Win against the Beginner coach, puzzle rating {n}.	शुरुआती कोच को हराएँ, पहेली रेटिंग {n}।
+{n} minutes of rated puzzles (aim: {n} puzzles).	{n} मिनट रेटेड पहेलियाँ (लक्ष्य: {n} पहेलियाँ)।
+⬇ Download	⬇ डाउनलोड
+✓ Installed	✓ इंस्टॉल है
+⬆ Update	⬆ अपडेट
+🗑 Delete	🗑 हटाएँ
+Language pack	भाषा पैक
+App {n}%	ऐप {n}%
+Course {n}%	कोर्स {n}%
+Notes {n}%	नोट्स {n}%
+Downloading {n}%	डाउनलोड हो रहा है {n}%
+Download failed. Check the internet and try again.	डाउनलोड नहीं हुआ। इंटरनेट जाँचें और फिर कोशिश करें।
+📒 Notes stay in English. Everything else changes.	📒 नोट्स अंग्रेज़ी में ही रहेंगे। बाक़ी सब बदल जाएगा।
+Changes menus, the coach and the voice.	मेन्यू, कोच और आवाज़ सब बदल जाते हैं।
+♞ Piece style	♞ मोहरों का स्टाइल
+🔎 Piece size	🔎 मोहरों का आकार
+Space	जगह
+Small	छोटा
+Medium	मध्यम
+Large	बड़ा
+Preview	झलक
+Best quality: on iPhone open Settings → Accessibility → Spoken Content → Voices and download an "Enhanced" voice (Rishi for English, Lekha for Hindi).	सबसे अच्छी क्वालिटी: iPhone पर Settings → Accessibility → Spoken Content → Voices खोलें और एक "Enhanced" आवाज़ डाउनलोड करें (अंग्रेज़ी के लिए Rishi, हिन्दी के लिए Lekha)।
+. Accept the terms if asked, and pick any project (or let it create one).	। पूछे जाने पर शर्तें मानें, और कोई भी प्रोजेक्ट चुनें (या उसे बनाने दें)।
+Optional. With an account you get a friends list, one-tap game invites, and your progress saved online so it is never lost. It needs a one-time free setup (Firebase). Until then, room codes above work without any login.	वैकल्पिक। अकाउंट से आपको दोस्तों की सूची, एक टैप में खेल का न्योता, और ऑनलाइन सेव प्रगति मिलती है जो कभी नहीं खोती। इसके लिए एक बार मुफ़्त सेटअप (Firebase) चाहिए। तब तक ऊपर के रूम कोड बिना लॉगिन के चलते हैं।
+(GitHub link works best).	(GitHub लिंक सबसे अच्छा चलता है)।
+button (square with arrow).	बटन (तीर वाला चौकोर)।
+Bars: exercises per day. Dots: share answered correctly (top = {n}%).	पट्टियाँ: रोज़ के अभ्यास। बिंदु: सही जवाबों का हिस्सा (ऊपर = {n}%)।
+Your level now: about {n} (from puzzles and coach games). Each step says what to learn and when to move up.	अभी आपका लेवल: लगभग {n} (पहेलियों और कोच गेम से)। हर क़दम बताता है क्या सीखना है और कब आगे बढ़ना है।
+Learn the rules and the value of each piece (pawn {n}, knight {n}, bishop {n}, rook {n}, queen {n}). Learn check and checkmate. Mate with king + queen and king + rook.	नियम और हर मोहरे की क़ीमत सीखें (प्यादा {n}, घोड़ा {n}, ऊँट {n}, हाथी {n}, रानी {n})। शह और शह-मात सीखें। राजा + रानी और राजा + हाथी से मात दें।
+. You play White.	। आप सफ़ेद से खेलते हैं।
+. You play Black.	। आप काले से खेलते हैं।
+English	अंग्रेज़ी
+Hindi	हिन्दी
+Hinglish	हिंग्लिश
+Stockfish is free software (GPL v{n}).	Stockfish मुफ़्त सॉफ़्टवेयर है (GPL v{n})।
+Cut the king off, bring your rook to the {n}th rank, then use it as a shield (the "bridge").	राजा को काट दें, अपना हाथी {n}वीं रैंक पर लाएँ, फिर उसे ढाल की तरह इस्तेमाल करें ("पुल")।
+: {s}.	: {s}।
+{s}: {s}. Forcing moves first: checks, captures and threats.	{s}: {s}। पहले मजबूर करने वाली चालें: शह, मारने वाली चालें और ख़तरे।
+takes the {s} on {s}	{s} को मारता है, {s} पर
+Theme: {s}	थीम: {s}
+Tactic	टैक्टिक
+Endgame	एंडगेम
+Mate	मात
+Opening	ओपनिंग
+puzzle rating {n}	पहेली रेटिंग {n}
+Hide final position	आख़िरी पोज़ीशन छिपाएँ
+Show final position	आख़िरी पोज़ीशन दिखाएँ
+(green arrow)	(हरा तीर)
+. Sitting as White, they run	। सफ़ेद की तरफ़ बैठकर, ये चलती हैं
+Tap every square the {s} on {s} can move to ({s} pieces block it, {s} pieces can be captured). Then press Check.	हर वह खाना टैप करें जहाँ {s} ({s} पर) जा सकता है ({s} मोहरे उसे रोकते हैं, {s} मोहरे मारे जा सकते हैं)। फिर जाँचें दबाएँ।
+knight	घोड़ा
+bishop	ऊँट
+rook	हाथी
+queen	रानी
+king	राजा
+pawn	प्यादा
+white	सफ़ेद
+black	काले
+{s}. The coach's best answer is {s} ({s}).	{s}। कोच का सबसे अच्छा जवाब {s} है ({s})।
+(White mates in {n})	(सफ़ेद {n} में मात देता है)
+(Black mates in {n})	(काला {n} में मात देता है)
+: {s}. Outcome:	: {s}। नतीजा:
+. Moves go straight from phone to phone. If the direct link can't connect, a free relay passes the moves instead. If a phone locks or the internet drops, just open the app again: the game picks up where it was.	। चालें सीधे फ़ोन से फ़ोन जाती हैं। अगर सीधा लिंक न जुड़े, तो एक मुफ़्त रिले चालें पहुँचाता है। अगर फ़ोन लॉक हो या इंटरनेट जाए, तो बस ऐप फिर खोलें: खेल वहीं से शुरू होगा।
