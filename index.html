@@ -783,7 +783,7 @@ body.fixb .fixscroll{padding-bottom:12px}
 .bpeek{display:block;margin:8px auto 0;border:0;border-radius:999px;padding:9px 18px;font-weight:800;font-size:14px;background:#FFD66B;color:#2E1F0B;box-shadow:0 4px 0 #C47F14}
 .bpeek:disabled{opacity:.6}
 .sqx{font:12px/1.2 ui-monospace,monospace;opacity:.3;text-align:right;margin:1px 8px 0;min-height:14px;cursor:default;user-select:none}
-.sqxend{gap:6px;display:flex;flex-direction:column;align-items:flex-start}
+
 
 /* v57: practice hub */
 .prhero{position:relative;overflow:hidden;border-radius:26px;padding:18px;color:#fff;background:radial-gradient(120% 100% at 100% 0%,#B36BE0 0%,#6A33A8 45%,#36165F 100%);box-shadow:0 16px 32px rgba(60,20,100,.3);display:grid;gap:8px}
@@ -2245,7 +2245,6 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
     if(m==='online'){P.set.olblind=bl;save();go({name:'friend'});return}}
   if(a==='bpeek'){bPeek();return}
   if(a==='sqx'){sqxTap();return}
-  if(a==='sqxtell'){const t=L2('Confession: I had secret chess help in our last game 😄 It was a joke!','Sach batau: pichle game mein mere paas secret chess help thi 😄 Mazaak tha!');if(navigator.share)navigator.share({text:t}).catch(()=>{});else{try{navigator.clipboard.writeText(t)}catch(e){}b.textContent='✓ '+L2('Copied','Copy ho gaya')}return}
   if(a==='sqxh'){SQX.hk=OG&&OG.gid+':'+OG.moves.length;olRe();return}
   if(a==='olb'){P.set.olblind=d.v==='1';save();render();return}
   if(a==='hx'){HX[d.k]=!HX[d.k];const sec=b.closest('section');if(sec)sec.classList.toggle('open',HX[d.k]);b.setAttribute('aria-expanded',HX[d.k]);return}
@@ -3497,7 +3496,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.09 · v91';
+const APPV='2026.11.09 · v92';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -4402,7 +4401,6 @@ function sqxHTML(g,st,my){if(!sqxOn()||g.over||!my)return'';const key=g.gid+':'+
   if(SQX.hint&&SQX.hint.k===key)return SQX.hint.s?`<div class="sqx" data-act="sqxh">${esc(SQX.hint.s)}</div>`:'';
   if(SQX.busy!==key){SQX.busy=key;sfGo(st,{multipv:1,movetime:1500}).then(r=>{const m=r&&r.best?fromUci(st,r.best):null;SQX.hint={k:key,s:m?san(st,m,legal(st)):''};if(V.name==='ogame'&&OG&&OG.gid+':'+OG.moves.length===key)olRe()})}
   return'<div class="sqx">·</div>'}
-function sqxEndHTML(g){if(!g.over||SQX.used!==g.gid)return'';return`<div class="card sqxend"><b>🤫 ${L2('Secret help was on in this game.','Is game mein secret help on thi.')}</b><small class="muted">${L2('Only you can see this.','Ye sirf aapko dikh raha hai.')}</small><button class="btn small" data-act="sqxtell">😄 ${L2('Tell my friend it was a joke','Dost ko batao: mazaak tha')}</button></div>`}
 function vOGame(){const g=OG;if(!g||!g.started){go({name:'friend'});return}const st=olState(g.moves);if(!st){g.moves=[];olSave();go({name:'friend'});return}
   const me=olMyColor(),persp=g.flip?(me==='w'?'b':'w'):me,my=olLive()&&(st.w?'w':'b')===me,opp=me==='w'?'b':'w';
   const marks={};if(g.moves.length){const u=g.moves[g.moves.length-1];marks[u.slice(0,2)]='sel';marks[u.slice(2,4)]='sel'}
@@ -4415,7 +4413,7 @@ function vOGame(){const g=OG;if(!g||!g.started){go({name:'friend'});return}const
   h+=sqxHTML(g,st,my);
   h+=bar(persp===me?me:opp,persp===me?L2('You','Aap')+(olName()?` (${olName()})`:''):(g.opp||L2('Friend','Dost')));
   if(g.promo)h+=`<div class="card stack"><b>${L2('Pawn reached the end. Choose a piece:','Pawn aakhri row tak pahunch gaya. Piece chuno:')}</b><div class="row">${'QRBN'.split('').map(k=>`<button class="btn" style="flex:1;font-size:26px" data-act="ol-promo" data-v="${k}">${GLYPH[k]}︎</button>`).join('')}</div><button class="btn small" data-act="ol-promox">${L2('Cancel','Cancel')}</button></div>`;
-  if(g.over){h+=`<div class="fb ${g.over.r===me?'ok':g.over.r==='d'?'':'no'}"><h3>${esc(olOverText())}</h3></div>`+sqxEndHTML(g);
+  if(g.over){h+=`<div class="fb ${g.over.r===me?'ok':g.over.r==='d'?'':'no'}"><h3>${esc(olOverText())}</h3></div>`;
     h+=g.rm==='opp'?`<div class="card stack pend"><b>${esc(g.opp||'Friend')} ${L2('wants a rematch!','dobara khelna chahte hain!')}</b><div class="row"><button class="btn primary" style="flex:1" data-act="ol-rematch">${L2('Play again','Dobara khelo')}</button><button class="btn" data-act="ol-rmno">${L2('No','Nahi')}</button></div></div>`
       :`<div class="row"><button class="btn primary" style="flex:1" data-act="ol-rematch" ${g.rm==='me'||g.left?'disabled':''}>${g.rm==='me'?L2('Rematch asked… waiting','Rematch bheja… intezaar'):L2('Rematch (colours swap)','Rematch (rang badlenge)')}</button><button class="btn" data-act="ol-leave">${L2('Leave','Chhodo')}</button></div>`}
   else{if(g.draw==='opp')h+=`<div class="card stack pend"><b>${esc(g.opp||'Friend')} ${L2('offers a draw.','draw offer kar rahe hain.')}</b><div class="row"><button class="btn primary" style="flex:1" data-act="ol-draw">${L2('Accept draw','Draw maan lo')}</button><button class="btn" style="flex:1" data-act="ol-drawno">${L2('No, keep playing','Nahi, khelte raho')}</button></div></div>`;
