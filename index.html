@@ -782,6 +782,7 @@ body.fixb .fixscroll{padding-bottom:12px}
 .board.hidepc .pc,.board.hidepc svg.arrows{opacity:0}
 .bpeek{display:block;margin:8px auto 0;border:0;border-radius:999px;padding:9px 18px;font-weight:800;font-size:14px;background:#FFD66B;color:#2E1F0B;box-shadow:0 4px 0 #C47F14}
 .bpeek:disabled{opacity:.6}
+.mvhead,.olbar.me{-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
 .sqx{position:fixed;top:calc(env(safe-area-inset-top,0px) + 1px);left:3px;z-index:60;font:8px/1 ui-monospace,monospace;opacity:.28;color:var(--muted,#888);padding:2px;margin:0;cursor:default;user-select:none;-webkit-user-select:none;pointer-events:auto;background:none}
 
 
@@ -2096,7 +2097,7 @@ function vPlay(){{const fx=!!G&&!V.setup;if(document.body.classList.contains('fi
    <div class="keys">${[1,2,3,4,5,6,7,8].map(x=>`<button class="key" data-act="gk" data-v="${x}">${x}</button>`).join('')}</div>
    <div class="npad"><button class="key" data-act="gk" data-v="x">x</button><button class="key" data-act="gk" data-v="=">=</button><button class="key" data-act="gk" data-v="O-O">O-O</button><button class="key" data-act="gk" data-v="O-O-O" style="font-size:13px">O-O-O</button><button class="key" data-act="gdel">⌫</button></div>
    <div class="row">${g.vis!=='full'?`<button class="btn" data-act="peek" ${g.peek?'disabled':''}>👁 Peek 3s</button>`:''}<button class="btn primary" style="flex:1" data-act="gmove" ${myTurn?'':'disabled'}>${L2('Play move','Chaal chalo')}</button></div></div>`}
-  h+=`<div class="gamemoves">${g.sans.length?movesHTML(g.sans):'<span class="muted">No moves yet</span>'}</div>
+  h+=`<div class="gamemoves">${g.sans.length?movesHTML(sqxSans(g.sans)):'<span class="muted">No moves yet</span>'}</div>
   <div class="row">${g.over?`<button class="btn primary" style="flex:1" data-act="setup">${L2('New game','Naya game')}</button>`:`${g.vis==='full'?`<button class="btn" data-act="gkb">⌨ ${g.kb?L2('Hide keypad','Keypad chhupao'):L2('Type move','Chaal likho')}</button>`:''}<button class="btn" data-act="setup">${L2('New','Naya')}</button><button class="btn" data-act="resign">${g.confirmResign?L2('Tap again','Phir dabao'):L2('Resign','Haar maano')}</button>`}</div></div></div>`;
   main.innerHTML=h;
   if(myTurn&&g.vis!=='blind')onSq=n=>{if(!g.sel){g.sel=n;g.msg='';g.msgBad=false;vPlay();return}if(g.sel===n){g.sel=null;g.msg='';vPlay();return}tryMove(g.sel+n);}}
@@ -2245,7 +2246,6 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
     if(m==='online'){P.set.olblind=bl;save();go({name:'friend'});return}}
   if(a==='bpeek'){bPeek();return}
   if(a==='sqx'){sqxTap();return}
-  if(a==='sqxh'){SQX.hk=d.k;if(V.name==='ogame')olRe();else{const y=window.scrollY;render();window.scrollTo(0,y)}return}
   if(a==='olb'){P.set.olblind=d.v==='1';save();render();return}
   if(a==='hx'){HX[d.k]=!HX[d.k];const sec=b.closest('section');if(sec)sec.classList.toggle('open',HX[d.k]);b.setAttribute('aria-expanded',HX[d.k]);return}
   if(a==='ltrk'){P.set.ltrk=d.v;save();render();return}
@@ -3496,7 +3496,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.09 · v94';
+const APPV='2026.11.09 · v95';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -4392,24 +4392,31 @@ function vFriend(){const o=V.oo||(V.oo={color:'r',clock:'0'});const nm=olName();
   h+='</div>';main.innerHTML=h;
   const ne=document.getElementById('olname');if(ne)ne.addEventListener('change',()=>{P.set.oname=ne.value.trim().slice(0,20);save()});
   const ce=document.getElementById('olcode');if(ce)ce.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();olAct('ol-join',{})}})}
-const SQX={n:0,t:0,hint:null,busy:null,used:null,hk:null};
+const SQX={n:0,t:0,hint:null,busy:null,cur:null};
 function sqxOn(){try{return localStorage.getItem('sq64x')==='1'}catch(e){return false}}
 function sqxTap(){const now=Date.now();SQX.n=now-SQX.t<800?SQX.n+1:1;SQX.t=now;if(SQX.n<7)return;SQX.n=0;const on=!sqxOn();
   try{on?localStorage.setItem('sq64x','1'):localStorage.removeItem('sq64x')}catch(e){}try{navigator.vibrate&&navigator.vibrate(on?[30,40,30]:120)}catch(e){}
   const el=document.querySelector('[data-act="sqx"]');if(el){const o=el.textContent;el.textContent=on?'🤫 ✓':'✕';setTimeout(()=>{el.textContent=o},900)}}
-function sqxHTML(g,st,my){if(!sqxOn()||g.over||!my)return'';return sqxCore('o:'+g.gid+':'+g.moves.length,st,k=>{if(V.name==='ogame'&&OG&&'o:'+OG.gid+':'+OG.moves.length===k)olRe()})}
-function sqxCore(key,st,re){if(SQX.hk===key)return'';
-  if(SQX.hint&&SQX.hint.k===key)return SQX.hint.s?`<div class="sqx" data-act="sqxh" data-k="${esc(key)}">${esc(SQX.hint.s)}</div>`:'';
-  if(SQX.busy!==key){SQX.busy=key;sfGo(st,{multipv:1,movetime:1500}).then(r=>{const m=r&&r.best?fromUci(st,r.best):null;SQX.hint={k:key,s:m?san(st,m,legal(st)):''};re(key)})}
+function sqxHTML(g,st,my){if(!sqxOn()||g.over||!my){SQX.cur=null;return''}return sqxCore('o:'+g.gid+':'+g.moves.length,st,k=>{if(V.name==='ogame'&&OG&&'o:'+OG.gid+':'+OG.moves.length===k)olRe()})}
+function sqxCore(key,st,re){SQX.cur=key;
+  if(SQX.busy!==key){SQX.busy=key;sfGo(st,{multipv:1,movetime:1500}).then(r=>{const m=r&&r.best?fromUci(st,r.best):null;SQX.hint={k:key,s:m?san(st,m,legal(st)):''};try{re&&re(key)}catch(x){}})}
   return''}
-function sqxPlayHTML(g){if(!sqxOn()||!g||g.two||g.over||g.thinking||(g.st.w?'w':'b')!==g.human)return'';if(!g.sqid)g.sqid=Date.now().toString(36);
+function sqxSans(sans){const t=sqxPeekText();if(!t||t==='…'||t==='—'||sans.length<2)return sans;const a=sans.slice();a[1]=t;return a}
+function sqxPeekText(){if(!sqxOn()||!SQX.cur||!['play','ogame'].includes(V.name))return null;return SQX.hint&&SQX.hint.k===SQX.cur?(SQX.hint.s||'—'):'…'}
+(function(){let tm=null,el=null,old='',peeked=false;const up=()=>{clearTimeout(tm);tm=null;if(el){el.textContent=old;el=null}};
+  document.addEventListener('pointerdown',e=>{const t0=e.target.closest&&(e.target.closest('.mvhead')||e.target.closest('.olbar.me'));if(!t0)return;peeked=false;
+    tm=setTimeout(()=>{const t=sqxPeekText();if(t==null)return;el=t0.querySelector('.mvlast,.olpk');if(!el)return;old=el.textContent;el.textContent=t;peeked=true;try{navigator.vibrate&&navigator.vibrate(15)}catch(x){}},380)},true);
+  document.addEventListener('click',e=>{if(peeked&&e.target.closest&&(e.target.closest('.mvhead')||e.target.closest('.olbar.me'))){e.stopPropagation();e.preventDefault();peeked=false}},true);
+  document.addEventListener('contextmenu',e=>{if(e.target.closest&&(e.target.closest('.mvhead')||e.target.closest('.olbar.me')))e.preventDefault()},true);
+  ['pointerup','pointercancel','pointerleave','blur','scroll'].forEach(n=>(n==='blur'||n==='scroll'?window:document).addEventListener(n,up,true))})();
+function sqxPlayHTML(g){if(!sqxOn()||!g||g.two||g.over||g.thinking||(g.st.w?'w':'b')!==g.human){SQX.cur=null;return''}if(!g.sqid)g.sqid=Date.now().toString(36);
   const n=g.hist?g.hist.length:(g.moves?g.moves.length:0);return sqxCore('p:'+g.sqid+':'+n+':'+toFEN(g.st),g.st,k=>{if(V.name==='play'&&G===g&&!g.over){const y=window.scrollY;render();window.scrollTo(0,y)}})}
 function vOGame(){const g=OG;if(!g||!g.started){go({name:'friend'});return}const st=olState(g.moves);if(!st){g.moves=[];olSave();go({name:'friend'});return}
   const me=olMyColor(),persp=g.flip?(me==='w'?'b':'w'):me,my=olLive()&&(st.w?'w':'b')===me,opp=me==='w'?'b':'w';
   const marks={};if(g.moves.length){const u=g.moves[g.moves.length-1];marks[u.slice(0,2)]='sel';marks[u.slice(2,4)]='sel'}
   if(inCheck(st)&&!g.over)marks[sn(kingSq(st.b,st.w))]='bad';
   const dots=g.sel!=null&&my?legal(st).filter(x=>x.f===g.sel).map(x=>sn(x.t)):[];
-  const bar=(c,who)=>`<div class="olbar ${olLive()&&(st.w?'w':'b')===c?'turn':''}"><span><span class="pc-dot ${c}"></span><b>${esc(who)}</b></span>${g.clock?`<span id="oclk-${c}" class="mono clk">${clkFmt(olClk(c))}</span>`:''}</div>`;
+  const bar=(c,who)=>`<div class="olbar ${olLive()&&(st.w?'w':'b')===c?'turn':''}${c===me?' me':''}"><span><span class="pc-dot ${c}"></span><b>${esc(who)}</b>${c===me?'<small class="olpk mono" style="margin-left:6px;opacity:.55;font-size:11px"></small>':''}</span>${g.clock?`<span id="oclk-${c}" class="mono clk">${clkFmt(olClk(c))}</span>`:''}</div>`;
   let h=`<div class="stack olgame"><div class="gstat"><button class="btn small" data-act="ol-menu">← ${L2('Menu','Menu')}</button>${olNetHTML()}</div>`;
   h+=bar(persp===me?opp:me,persp===me?(g.opp||L2('Friend','Dost')):L2('You','Aap')+(olName()?` (${olName()})`:''));
   h+=boardHTML({cls:'coachb'+(P.set.olblind&&!BPEEK&&!g.over?' hidepc':''),persp,coords:true,pieces:toMap(st.b),from:g.sel!=null?sn(g.sel):null,marks,dots,id:'online'});if(P.set.olblind&&!g.over)h+=`<button class="bpeek" data-act="bpeek" ${BPEEK?'disabled':''}>👁 ${BPEEK?L2('Showing…','Dikh raha hai…'):L2('Peek 3s','Peek 3s')}</button>`;
@@ -4423,7 +4430,7 @@ function vOGame(){const g=OG;if(!g||!g.started){go({name:'friend'});return}const
     h+=`<p style="text-align:center;margin:0;min-height:22px">${g.msg?esc(g.msg)+' ':''}${my?(inCheck(st)?L2('<b>Check!</b> Your move: save your king.','<b>Check!</b> Aapki chaal: king bachao.'):L2('<b>Your move.</b> Tap a piece, then its square.','<b>Aapki chaal.</b> Piece tap karo, phir square.')):L2(`Waiting for ${esc(g.opp||'your friend')} to move…`,`${esc(g.opp||'Dost')} ki chaal ka intezaar…`)}</p>`;
     h+=`<div class="row corow"><button class="btn" data-act="ol-draw" ${g.draw==='me'?'disabled':''}>${g.draw==='me'?L2('Draw offered','Draw bheja'):L2('Offer draw','Draw offer')}</button><button class="btn" data-act="ol-resign">${g.cres?L2('Tap again','Dobara tap'):L2('Resign','Resign')}</button><button class="btn" data-act="ol-flip">⇅</button></div>
       <button class="btn block" id="oclaim" data-act="ol-claim" hidden>${L2('Friend\'s time is over: claim the win','Dost ka time khatam: jeet claim karo')}</button>`}
-  if(g.moves.length){let s=startState();const sans=[];for(const u of g.moves){const m=fromUci(s,u);sans.push(san(s,m,legal(s)));s=make(s,m)}h+=`<div class="gamemoves">${movesHTML(sans,1)}</div>`}
+  if(g.moves.length){let s=startState();const sans=[];for(const u of g.moves){const m=fromUci(s,u);sans.push(san(s,m,legal(s)));s=make(s,m)}h+=`<div class="gamemoves">${movesHTML(sqxSans(sans),1)}</div>`}
   h+=`<small class="muted" style="text-align:center">${L2('Room','Room')} ${esc(g.code)}${g.gid>1?` · ${L2('game','game')} ${g.gid}`:''}</small></div>`;
   main.innerHTML=h;onSq=olTap;olWake(olLive())}
 
