@@ -3499,7 +3499,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.10 · v98';
+const APPV='2026.11.10 · v99';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -4351,9 +4351,11 @@ function olAct(a,d){if(!a||a.slice(0,3)!=='ol-')return false;
    case'ol-cancel':case'ol-leave':if(V.confirmLeave||OG&&!OG.started||OG&&OG.over){V.confirmLeave=false;olLeave()}else{V.confirmLeave=true;render();setTimeout(()=>{V.confirmLeave=false},4000)}break;
    case'ol-open':if(OG){olStart();go({name:OG.started?'ogame':'friend'})}break;
    case'ol-menu':go({name:'friend'});break;
-   case'ol-finv':{const f=lfList().find(x=>x.did===d.v);if(!f)break;if(!olName()){V.oerr=L2('Please type your name first.','Pehle apna naam likho.');render();break}olCreate();if(OG)lfSend(f.did,{t:'inv',code:OG.code});V.omsg=L2(`Invite sent to ${f.name}. Keep this screen open.`,`${f.name} ko invite bheja. Ye screen khuli rakho.`);render();break}
+   case'ol-finv':{const f=lfList().find(x=>x.did===d.v);if(!f)break;if(!olName()){V.oerr=L2('Please type your name first.','Pehle apna naam likho.');render();break}olCreate();if(OG){lfSend(f.did,{t:'inv',code:OG.code});lfNotify(f.did,L2(`${olName()} invites you to chess`,`${olName()} aapko chess khelne bula rahe hain`),L2('Tap to open 64 Squares and join the game.','Tap karke 64 Squares kholo aur game join karo.'),olLink(OG.code))}V.omsg=L2(`Invite sent to ${f.name}. Keep this screen open.`,`${f.name} ko invite bheja. Ye screen khuli rakho.`);render();break}
    case'ol-fdel':if(V.lfdel===d.v){lfDel(d.v);V.lfdel=null}else{V.lfdel=d.v;setTimeout(()=>{V.lfdel=null},4000)}render();break;
    case'ol-ijoin':{const x=LF.inv.shift();lfInvDraw();if(x)olJoin(x.code);break}
+   case'ol-ncopy':copyText(lfNTopic(lfDid()));V.omsg=L2('Topic copied.','Topic copy ho gaya.');render();break;
+   case'ol-ntest':lfNotify(lfDid(),L2('64 Squares test','64 Squares test'),L2('Notifications work! Friends\' invites will show up like this.','Notification chal raha hai! Doston ke invite aise hi aayenge.'),olLink('TEST00').replace('#join=TEST00',''));V.omsg=L2('Test sent. Check your ntfy app.','Test bheja. ntfy app check karo.');render();break;
    case'ol-ino':LF.inv.shift();lfInvDraw();break;
    case'ol-flip':if(OG){OG.flip=!OG.flip;olSave();vOGame()}break;
    case'ol-promo':if(OG&&OG.promo){const st=olState(OG.moves),m=legal(st).find(x=>x.f===OG.promo.f&&x.t===OG.promo.t&&x.promo===d.v);if(m)olMove(m)}break;
@@ -4384,6 +4386,17 @@ const lfList=()=>P.lf||(P.lf=[]);
 function lfSend(did,m){if(!did)return;fetch(olRelay()+lfTopic(did),{method:'POST',body:JSON.stringify({...m,from:lfDid(),name:olName()||'Friend',ts:Date.now()})}).catch(()=>{})}
 function lfAdd(did,name){if(!did||did===lfDid())return;const L=lfList();const f=L.find(x=>x.did===did);const nm=String(name||'').slice(0,20)||'Friend';
   if(f){if(f.name!==nm&&name){f.name=nm;save()}return}L.unshift({did,name:nm,since:Date.now()});save();LF.on[did]=Date.now();lfStart()}
+const lfNTopic=d=>OL_PFX+'n-'+d;
+function lfNotify(did,title,body,click){if(!did)return;const q='?title='+encodeURIComponent(title)+'&tags=chess_pawn&priority=high'+(click?'&click='+encodeURIComponent(click):'');
+  fetch(olRelay()+lfNTopic(did)+q,{method:'POST',body}).catch(()=>{})}
+function lfNotifyHTML(){const t=lfNTopic(lfDid()),host=(olRelay().replace(/^https?:\/\//,'').replace(/\/$/,''));
+  return`<details class="card stack lfnot"><summary><b>🔔 ${L2('Get invites even when the app is closed','App band ho tab bhi invite ki notification')}</b></summary>
+  <ol style="margin:6px 0 0;padding-left:20px;font-size:14px;line-height:1.5">
+   <li>${L2('Install the free <b>ntfy</b> app (Play Store / App Store).','Free <b>ntfy</b> app install karo (Play Store / App Store).')}</li>
+   <li>${L2('In ntfy tap <b>+</b> and subscribe to this topic:','ntfy mein <b>+</b> dabao aur ye topic subscribe karo:')}<div class="olcode mono" style="font-size:13px;letter-spacing:0;margin:6px 0;user-select:all;word-break:break-all">${esc(t)}</div><button class="btn small" data-act="ol-ncopy">${L2('Copy topic','Topic copy karo')}</button>${host!=='ntfy.sh'?`<br><small class="muted">${L2('Server','Server')}: ${esc(host)}</small>`:''}</li>
+   <li>${L2('Done. When a friend taps Invite, your phone shows a notification. Tap it to open the game.','Bas. Jab dost Invite dabayega, aapke phone par notification aayega. Use tap karke game khulega.')}</li></ol>
+  <div><button class="btn small" data-act="ol-ntest">🔔 ${L2('Send a test notification','Test notification bhejo')}</button></div>
+  <small class="muted" style="display:block">${L2('Keep this topic private: anyone who knows it can send you notifications.','Ye topic sirf apne paas rakho: jise ye pata hoga woh aapko notification bhej sakta hai.')}</small></details>`}
 function lfDel(did){P.lf=lfList().filter(x=>x.did!==did);save()}
 const lfOnline=did=>Date.now()-(LF.on[did]||0)<120000;
 function lfStart(){if(LF.es||!lfList().length)return;let es;try{es=new EventSource(olRelay()+lfTopic(lfDid())+'/sse?since=10m')}catch(e){return}LF.es=es;
@@ -4403,9 +4416,9 @@ function lfInvDraw(){let el=document.getElementById('lfinv');const x=LF.inv[0],s
   if(!show){if(el)el.remove();return}if(!el){el=document.createElement('div');el.id='lfinv';el.className='card stack pend lfinv';document.body.appendChild(el)}
   el.innerHTML=`<b>♟ ${esc(x.name)} ${L2('invites you to play!','aapko khelne bula rahe hain!')}</b><div class="row"><button class="btn primary" style="flex:1" data-act="ol-ijoin">${L2('Join game','Game join karo')}</button><button class="btn" data-act="ol-ino">${L2('Not now','Abhi nahi')}</button></div>`}
 function lfCardHTML(){const L=lfList();let h=`<div class="card stack"><h3>👥 ${L2('Friends','Dost')}</h3>`;
-  if(!L.length)return h+`<p class="muted" style="font-size:14px;margin:0">${L2('After you play someone with a room code, they are saved here. Then you can invite them with one tap and see when their app is open.','Room code se kisi ke saath khelne ke baad woh yahan save ho jayenge. Phir ek tap se invite kar sakte ho aur dekh sakte ho ki unka app khula hai ya nahi.')}</p></div>`;
+  if(!L.length)return h+`<p class="muted" style="font-size:14px;margin:0">${L2('After you play someone with a room code, they are saved here. Then you can invite them with one tap and see when their app is open.','Room code se kisi ke saath khelne ke baad woh yahan save ho jayenge. Phir ek tap se invite kar sakte ho aur dekh sakte ho ki unka app khula hai ya nahi.')}</p></div>`+lfNotifyHTML();
   h+=L.map(f=>{const on=lfOnline(f.did);return`<div class="gstat"><span><span class="odot ${on?'on':''}"></span>${esc(f.name)} <small class="muted">${on?L2('online','online'):L2('offline','offline')}</small></span><span class="row" style="gap:6px"><button class="btn small primary" data-act="ol-finv" data-v="${esc(f.did)}">${L2('Invite','Invite')}</button><button class="btn small" data-act="ol-fdel" data-v="${esc(f.did)}" aria-label="${L2('Remove','Hatao')}">${V.lfdel===f.did?L2('Sure?','Pakka?'):'✕'}</button></span></div>`}).join('');
-  return h+`<small class="muted">${L2('Green dot = their app is open right now.','Hara dot = unka app abhi khula hai.')}</small></div>`}
+  return h+`<small class="muted">${L2('Green dot = their app is open right now.','Hara dot = unka app abhi khula hai.')}</small></div>`+lfNotifyHTML()}
 
 /* ---- in-game chat and voice notes ---- */
 const OLC={el:null,code:null,aud:{},rec:null,recT:null,cancel:false,note:'',unread:0};
