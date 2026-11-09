@@ -1,0 +1,149 @@
+"Test" opens that level's exercises in the course. "More" gives unlimited examples here. 👹 is the level's Boss battle.	"टेस्ट" कोर्स में उस लेवल के अभ्यास खोलता है। "और" यहाँ अनगिनत उदाहरण देता है। 👹 उस लेवल की बॉस लड़ाई है।
+"The Game of the Century": {n}-year-old Fischer sacrifices his queen.	"सदी का खेल": {n} साल के फ़िशर ने अपनी रानी की बलि दी।
+% right lately	% सही (हाल में)
+% right, you need {s}%	% सही, आपको {s}% चाहिए
+'s best answer	 का सबसे अच्छा जवाब
+'s isolated pawn on {s} is a target: blockade the square in front of it, trade pieces and attack it in the endgame.	 का {s} पर अकेला प्यादा निशाना है: उसके आगे वाला खाना रोकें, मोहरे बदलें और एंडगेम में उस पर हमला करें।
+'s isolated pawn{s}: {s}.	 के अकेले प्यादे{s}: {s}।
+'s king cover is thin. Bring the queen and a rook toward it.	 के राजा की सुरक्षा कमज़ोर है। रानी और एक हाथी उसकी तरफ़ लाएँ।
+'s king is stuck in the centre. Open lines with a pawn break and bring rooks to the open files.	 का राजा बीच में फँसा है। प्यादे की चाल से लाइनें खोलें और हाथियों को खुली फ़ाइलों पर लाएँ।
+'s passed pawn{s}: {s}.	 के पास्ड प्यादे{s}: {s}।
+'s strongest answer:	 का सबसे मज़बूत जवाब:
+, a {s} square.	, एक {s} खाना।
+, and enemy pieces are aiming at it	, और दुश्मन के मोहरे उस पर निशाना साधे हैं
+, and it becomes a	, और वह बन जाता है
+, and ranks pair up	, और रैंक जोड़ी बनाती हैं
+, and that is checkmate!	, और यह शह-मात है!
+, and your pieces are aiming at it	, और आपके मोहरे उस पर निशाना साधे हैं
+, becomes a Queen	, रानी बन जाता है
+, check	, शह
+, check.	, शह।
+, checkmate	, शह-मात
+, e–h the	, e–h
+, move {s} of {s}.	, चाल {s} / {s}।
+, numbered	, नंबर वाली
+, or	, या
+, then	, फिर
+, winning	, जीतते हुए
+, you win	, आप जीतते हैं
+, {s} peeks	, {s} बार झाँका
+- ({n}-{n} options) ✅ Best next move:	- ({n}-{n} विकल्प) ✅ अगली सबसे अच्छी चाल:
+/ min	/ मिनट
+/ {s} XP	/ {s} XP
+/{s} badges	/{s} बैज
+/{s} done	/{s} पूरे
+/{s} lessons ·	/{s} पाठ ·
+/{s} mastered	/{s} पक्के
+/{s} studied	/{s} पढ़े
+A = coach's last idea · B = its next threat · C = your best move · D = coach's counter · E = your answer.	A = कोच का पिछला विचार · B = उसका अगला ख़तरा · C = आपकी सबसे अच्छी चाल · D = कोच का जवाब · E = आपका जवाब।
+A FIDE rating around {n} in real events.	असली टूर्नामेंट में लगभग {n} की FIDE रेटिंग।
+A bare name like {s} is hard to hold. A story is easy: {s} is	{s} जैसा सूखा नाम याद रखना मुश्किल है। कहानी आसान है: {s} है
+A bishop appears on an empty board. Tap every square it can reach.	ख़ाली बोर्ड पर एक ऊँट आता है। हर वह खाना टैप करें जहाँ वह पहुँच सकता है।
+A bishop appears on an empty board. Tap every square it can reach. Answer as many as you can before the time runs out. Every minute is recorded.	ख़ाली बोर्ड पर एक ऊँट आता है। हर वह खाना टैप करें जहाँ वह पहुँच सकता है। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A bishop goes from {s} to {s} in two moves on an empty board. Name the square in between.	ख़ाली बोर्ड पर ऊँट दो चालों में {s} से {s} जाता है। बीच वाले खाने का नाम बताएँ।
+A bishop is "bad" when its own centre pawns stand on its colour and block it. Put your pawns on the other colour, or trade the bad bishop.	ऊँट "बुरा" तब होता है जब उसके अपने बीच के प्यादे उसी रंग पर खड़े होकर उसे रोकते हैं। अपने प्यादे दूसरे रंग पर रखें, या बुरे ऊँट को बदल दें।
+A bishop lives on {n} squares of one colour. Any square of that colour can be reached in at most	ऊँट एक रंग के {n} खानों पर रहता है। उस रंग का कोई भी खाना ज़्यादा से ज़्यादा इतनी चालों में पहुँचा जा सकता है:
+A bishop moves diagonally, any distance, until a piece is in the way. It can take an enemy piece that blocks it.	ऊँट तिरछा चलता है, कितनी भी दूर, जब तक कोई मोहरा रास्ते में न आए। रास्ता रोकने वाले दुश्मन मोहरे को वह मार सकता है।
+A bishop on the long diagonal next to its corner is "fianchettoed": {s} {s} {s} {s}. These four squares are also on the long diagonals.	कोने के पास लंबे विकर्ण पर रखा ऊँट "फ़ियानकेटो" कहलाता है: {s} {s} {s} {s}। ये चारों खाने भी लंबे विकर्णों पर हैं।
+A bishop sees {n} squares on the edge, {n} one ring in, {n} two rings in and {n} in the centre.	ऊँट किनारे पर {n} खाने देखता है, एक घेरा अंदर {n}, दो घेरे अंदर {n} और बीच में {n}।
+A bishop “fianchettoed” sits one diagonal step in from the corner: b{n}, g{n}, b{n}, g{n}.	"फ़ियानकेटो" ऊँट कोने से एक तिरछा क़दम अंदर बैठता है: b{n}, g{n}, b{n}, g{n}।
+A check helps here.	यहाँ शह मदद करती है।
+A deeper repertoire. Prophylaxis: stop their plan first. Positional sacrifices. Endgame technique.	गहरा रिपर्टरी। बचाव पहले: उनकी योजना पहले रोकें। पोज़ीशनल बलिदान। एंडगेम तकनीक।
+A faster shortcut	एक तेज़ शॉर्टकट
+A few opening moves are played, in words only. Tap what stands on the named square now.	कुछ शुरुआती चालें सिर्फ़ शब्दों में चली जाती हैं। बताए गए खाने पर अब क्या खड़ा है, टैप करें।
+A few opening moves are played, in words only. Tap what stands on the named square now. Answer as many as you can before the time runs out. Every minute is recorded.	कुछ शुरुआती चालें सिर्फ़ शब्दों में चली जाती हैं। बताए गए खाने पर अब क्या खड़ा है, टैप करें। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A flank start that controls d{n}. Play is like a Sicilian with colours reversed: the fight is about the d{n} square and the long light diagonal.	किनारे से शुरुआत जो d{n} को नियंत्रित करती है। खेल उल्टे रंगों वाले सिसिलियन जैसा है: लड़ाई d{n} खाने और लंबे सफ़ेद विकर्ण की है।
+A forced mate: each check takes squares from the king.	ज़बरदस्ती मात: हर शह राजा के खाने छीनती है।
+A friend	एक दोस्त
+A friend code has {n} letters/numbers.	दोस्त कोड में {n} अक्षर/अंक होते हैं।
+A good move.	अच्छी चाल।
+A hanging piece can be taken for free, or it is attacked by something cheaper. Check this for both sides before every move!	लटका मोहरा मुफ़्त में मारा जा सकता है, या उस पर किसी सस्ते मोहरे का हमला है। हर चाल से पहले दोनों तरफ़ यह जाँचें!
+A king appears. Tap every square it can step to.	एक राजा आता है। हर वह खाना टैप करें जहाँ वह क़दम रख सकता है।
+A king appears. Tap every square it can step to. Answer as many as you can before the time runs out. Every minute is recorded.	एक राजा आता है। हर वह खाना टैप करें जहाँ वह क़दम रख सकता है। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A king sees {n} squares, {n} on an edge, {n} in a corner.	राजा {n} खाने देखता है, किनारे पर {n}, कोने में {n}।
+A knight appears. Tap every square it can jump to.	एक घोड़ा आता है। हर वह खाना टैप करें जहाँ वह कूद सकता है।
+A knight appears. Tap every square it can jump to. Answer as many as you can before the time runs out. Every minute is recorded.	एक घोड़ा आता है। हर वह खाना टैप करें जहाँ वह कूद सकता है। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A knight jumps in an L: two squares one way and one square to the side. It can jump over pieces.	घोड़ा L आकार में कूदता है: एक तरफ़ दो खाने और बगल में एक खाना। वह मोहरों के ऊपर से कूद सकता है।
+A knight mates a king that is boxed in by its own pieces.	घोड़ा उस राजा को मात देता है जो अपने ही मोहरों में घिरा है।
+A knight moves two squares in one direction and one to the side. From the centre it has	घोड़ा एक दिशा में दो खाने और बगल में एक खाना चलता है। बीच से उसके पास होते हैं
+A knight needs	घोड़े को चाहिए
+A knight needs {s}.	घोड़े को {s} चाहिए।
+A knight on e{n} and a rook (or queen) on the h-file trap the king on the edge.	e{n} पर घोड़ा और h-फ़ाइल पर हाथी (या रानी) राजा को किनारे पर फँसा देते हैं।
+A knight protects the rook, and the rook mates the king in the corner.	घोड़ा हाथी की रक्षा करता है, और हाथी कोने में राजा को मात देता है।
+A knight sacrifice opens lines to the king	घोड़े की बलि राजा तक लाइनें खोलती है
+A knight stands on {s}. Name a square it can jump to on rank {s}.	घोड़ा {s} पर खड़ा है। रैंक {s} पर वह खाना बताएँ जहाँ वह कूद सकता है।
+A known opening move.	जानी-मानी ओपनिंग चाल।
+A landmark is named, such as the four corners or the long diagonal. Tap all of its squares.	कोई निशान बताया जाता है, जैसे चारों कोने या लंबा विकर्ण। उसके सारे खाने टैप करें।
+A landmark is named, such as the four corners or the long diagonal. Tap all of its squares. Answer as many as you can before the time runs out. Every minute is recorded.	कोई निशान बताया जाता है, जैसे चारों कोने या लंबा विकर्ण। उसके सारे खाने टैप करें। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A memory hook for all {n} squares, taken from real openings and attacks.	सभी {n} खानों के लिए याद रखने का तरीका, असली ओपनिंग और हमलों से लिया गया।
+A move from a real game appears. Tap the piece, then the square it moves to.	असली खेल की एक चाल आती है। मोहरा टैप करें, फिर वह खाना जहाँ वह जाता है।
+A move from a real game appears. Tap the piece, then the square it moves to. Answer as many as you can before the time runs out. Every minute is recorded.	असली खेल की एक चाल आती है। मोहरा टैप करें, फिर वह खाना जहाँ वह जाता है। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A passed pawn has no enemy pawns in front of it on its file or the files next to it. Passed pawns must be pushed!	पास्ड प्यादे के आगे उसकी फ़ाइल या बगल की फ़ाइलों पर कोई दुश्मन प्यादा नहीं होता। पास्ड प्यादे आगे बढ़ाने चाहिए!
+A pawn move is strong here: think about space or a pawn break.	यहाँ प्यादे की चाल मज़बूत है: जगह या प्यादे के ब्रेक के बारे में सोचें।
+A pawn moves one square forward (two from its starting square) and captures one square diagonally forward. It cannot capture straight ahead.	प्यादा एक खाना आगे चलता है (शुरुआती खाने से दो) और एक खाना तिरछा आगे मारता है। वह सीधा आगे नहीं मार सकता।
+A pawn that reaches the last rank becomes a queen.	आख़िरी रैंक तक पहुँचा प्यादा रानी बन जाता है।
+A pawn that reaches the last rank must become a queen, rook, bishop or knight. Almost always pick the queen.	आख़िरी रैंक तक पहुँचे प्यादे को रानी, हाथी, ऊँट या घोड़ा बनना होता है। लगभग हमेशा रानी चुनें।
+A piece cannot move because a more valuable piece (or the king) stands behind it.	मोहरा चल नहीं सकता क्योंकि उसके पीछे ज़्यादा क़ीमती मोहरा (या राजा) खड़ा है।
+A piece is named, such as Black’s kingside knight. Tap its starting square: file letter, then rank number. Answer as many as you can before the time runs out. Every minute is recorded.	कोई मोहरा बताया जाता है, जैसे काले का किंगसाइड घोड़ा। उसका शुरुआती खाना टैप करें: पहले फ़ाइल का अक्षर, फिर रैंक का नंबर। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A piece stands between the king and the rook.	राजा और हाथी के बीच एक मोहरा खड़ा है।
+A piece was left without protection. Always ask: what is free to take?	एक मोहरा बिना रक्षा के छूट गया। हमेशा पूछें: क्या मुफ़्त में मारा जा सकता है?
+A queen always sees {n} along her file and rank, plus the bishop count: {n}, {n}, {n} or {n}.	रानी हमेशा अपनी फ़ाइल और रैंक पर {n} खाने देखती है, साथ में ऊँट वाली गिनती: {n}, {n}, {n} या {n}।
+A queen appears on an empty board. Tap every square it can reach.	ख़ाली बोर्ड पर एक रानी आती है। हर वह खाना टैप करें जहाँ वह पहुँच सकती है।
+A queen appears on an empty board. Tap every square it can reach. Answer as many as you can before the time runs out. Every minute is recorded.	ख़ाली बोर्ड पर एक रानी आती है। हर वह खाना टैप करें जहाँ वह पहुँच सकती है। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A queen needs {n} move along a line, otherwise {n}.	रानी को एक लाइन में {n} चाल चाहिए, नहीं तो {n}।
+A quick check: one jump always changes colour, and these squares are the same colour.	जल्दी जाँच: एक छलांग हमेशा रंग बदलती है, और ये खाने एक ही रंग के हैं।
+A random training position. You play the side to move.	अभ्यास की कोई भी पोज़ीशन। जिसकी चाल है, आप वही खेलें।
+A rank or a file is named. Tap what starts on each of its squares, in order.	कोई रैंक या फ़ाइल बताई जाती है। उसके हर खाने पर शुरू में क्या है, क्रम से टैप करें।
+A rank or a file is named. Tap what starts on each of its squares, in order. Answer as many as you can before the time runs out. Every minute is recorded.	कोई रैंक या फ़ाइल बताई जाती है। उसके हर खाने पर शुरू में क्या है, क्रम से टैप करें। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A real opening line	एक असली ओपनिंग लाइन
+A rook appears on an empty board. Tap every square it can reach.	ख़ाली बोर्ड पर एक हाथी आता है। हर वह खाना टैप करें जहाँ वह पहुँच सकता है।
+A rook appears on an empty board. Tap every square it can reach. Answer as many as you can before the time runs out. Every minute is recorded.	ख़ाली बोर्ड पर एक हाथी आता है। हर वह खाना टैप करें जहाँ वह पहुँच सकता है। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A rook moves straight along files and ranks, any distance, until a piece is in the way.	हाथी फ़ाइलों और रैंकों पर सीधा चलता है, कितनी भी दूर, जब तक कोई मोहरा रास्ते में न आए।
+A rook needs {n} move if the squares share a file or rank, otherwise {n}.	अगर खाने एक ही फ़ाइल या रैंक पर हैं तो हाथी को {n} चाल चाहिए, नहीं तो {n}।
+A rook sees its whole file and rank, always {n} squares on an empty board. A bishop sees {n} to {n} depending on how central it is. A queen adds them: {n} on the edge up to {n} in the centre.	हाथी अपनी पूरी फ़ाइल और रैंक देखता है, ख़ाली बोर्ड पर हमेशा {n} खाने। ऊँट {n} से {n} खाने देखता है, इस पर निर्भर कि वह कितना बीच में है। रानी दोनों को जोड़ती है: किनारे पर {n} से बीच में {n} तक।
+A short game with a stunning queen sacrifice and mate.	शानदार रानी बलिदान और मात वाला एक छोटा खेल।
+A small, solid repertoire. Play your side's moves from memory. Lines come back after {n}, {n}, {n}, {n} and {n} days until they stick.	एक छोटा, मज़बूत रिपर्टरी। अपनी तरफ़ की चालें याद से खेलें। लाइनें {n}, {n}, {n}, {n} और {n} दिन बाद दोबारा आती हैं, जब तक पक्की न हो जाएँ।
+A solid set-up: e{n}, c{n}, Bd{n}, Nbd{n}. White aims for a kingside attack or the e{n} break.	एक मज़बूत सेट-अप: e{n}, c{n}, Bd{n}, Nbd{n}। सफ़ेद किंगसाइड हमले या e{n} ब्रेक का लक्ष्य रखता है।
+A solid set-up: e{n}, c{n}, Bd{n}, Nf{n}, Nbd{n}. White aims for a kingside attack or the e{n} break.	एक मज़बूत सेट-अप: e{n}, c{n}, Bd{n}, Nf{n}, Nbd{n}। सफ़ेद किंगसाइड हमले या e{n} ब्रेक का लक्ष्य रखता है।
+A square lights up. Name it, then name the square in the same spot when the board is turned around.	एक खाना चमकता है। उसका नाम बताएँ, फिर बोर्ड घुमाने पर उसी जगह वाले खाने का नाम बताएँ।
+A square lights up. Name it, then name the square in the same spot when the board is turned around. Answer as many as you can before the time runs out. Every minute is recorded.	एक खाना चमकता है। उसका नाम बताएँ, फिर बोर्ड घुमाने पर उसी जगह वाले खाने का नाम बताएँ। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A square lights up. Tap its file letter, then its rank number.	एक खाना चमकता है। उसका फ़ाइल अक्षर टैप करें, फिर रैंक नंबर।
+A square lights up. Tap its file letter, then its rank number. Answer as many as you can before the time runs out. Every minute is recorded.	एक खाना चमकता है। उसका फ़ाइल अक्षर टैप करें, फिर रैंक नंबर। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A square lights up. Tap its file letter.	एक खाना चमकता है। उसका फ़ाइल अक्षर टैप करें।
+A square lights up. Tap its file letter. Answer as many as you can before the time runs out. Every minute is recorded.	एक खाना चमकता है। उसका फ़ाइल अक्षर टैप करें। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A square lights up. Tap its mirror square on the board.	एक खाना चमकता है। बोर्ड पर उसका दर्पण खाना टैप करें।
+A square lights up. Tap its mirror square on the board. Answer as many as you can before the time runs out. Every minute is recorded.	एक खाना चमकता है। बोर्ड पर उसका दर्पण खाना टैप करें। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A square lights up. Tap its rank number.	एक खाना चमकता है। उसका रैंक नंबर टैप करें।
+A square lights up. Tap its rank number. Answer as many as you can before the time runs out. Every minute is recorded.	एक खाना चमकता है। उसका रैंक नंबर टैप करें। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A square name appears with no board. Tap its colour.	बिना बोर्ड के एक खाने का नाम आता है। उसका रंग टैप करें।
+A square name appears with no board. Tap its colour. Answer as many as you can before the time runs out. Every minute is recorded.	बिना बोर्ड के एक खाने का नाम आता है। उसका रंग टैप करें। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A square name appears with no board. Tap the name of its mirror square.	बिना बोर्ड के एक खाने का नाम आता है। उसके दर्पण खाने का नाम टैप करें।
+A square name appears with no board. Tap the name of its mirror square. Answer as many as you can before the time runs out. Every minute is recorded.	बिना बोर्ड के एक खाने का नाम आता है। उसके दर्पण खाने का नाम टैप करें। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A square name appears, with no board to look at. Tap the piece that starts there, or Empty.	देखने को बोर्ड नहीं, सिर्फ़ खाने का नाम आता है। वहाँ से शुरू होने वाला मोहरा टैप करें, या ख़ाली।
+A square name appears, with no board to look at. Tap the piece that starts there, or Empty. Answer as many as you can before the time runs out. Every minute is recorded.	देखने को बोर्ड नहीं, सिर्फ़ खाने का नाम आता है। वहाँ से शुरू होने वाला मोहरा टैप करें, या ख़ाली। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A square name appears. Tap that square on the board.	एक खाने का नाम आता है। बोर्ड पर वह खाना टैप करें।
+A square name appears. Tap that square on the board. Answer as many as you can before the time runs out. Every minute is recorded.	एक खाने का नाम आता है। बोर्ड पर वह खाना टैप करें। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A square name appears. Tap the piece that starts there, then its colour, then the colour of the square itself.	एक खाने का नाम आता है। वहाँ से शुरू होने वाला मोहरा टैप करें, फिर उसका रंग, फिर ख़ुद खाने का रंग।
+A square name appears. Tap the piece that starts there, then its colour, then the colour of the square itself. Answer as many as you can before the time runs out. Every minute is recorded.	एक खाने का नाम आता है। वहाँ से शुरू होने वाला मोहरा टैप करें, फिर उसका रंग, फिर ख़ुद खाने का रंग। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A square story appears. Tap that square on the board.	एक खाने की कहानी आती है। बोर्ड पर वह खाना टैप करें।
+A square story appears. Tap that square on the board. Answer as many as you can before the time runs out. Every minute is recorded.	एक खाने की कहानी आती है। बोर्ड पर वह खाना टैप करें। समय ख़त्म होने से पहले जितने हो सकें उतने जवाब दें। हर मिनट रिकॉर्ड होता है।
+A stronger move was	ज़्यादा मज़बूत चाल थी
+A surprising knight move that starts the fireworks	घोड़े की एक चौंकाने वाली चाल जो धमाका शुरू करती है
+A {s} here reaches {s} squares:	यहाँ {s} {s} खानों तक पहुँचता है:
+AI	AI
+AI coach (Gemini, free)	AI कोच (Gemini, मुफ़्त)
+AI coach is thinking… ({s})	AI कोच सोच रहा है… ({s})
+AI {s}/{n}	AI {s}/{n}
+AI:	AI:
+Aakhri boss. Sab kuch dikhao!	आख़िरी बॉस। सब कुछ दिखाओ!
+Aap {s} jeet sakte ho! {s} par maaro.	आप {s} जीत सकते हो! {s} पर मारो।
+Ab main Queen hoon!	अब मैं रानी हूँ!
+Ab main safe hoon!	अब मैं सुरक्षित हूँ!
+Ab ye mera hai!	अब यह मेरा है!
+Accept	मंज़ूर
+Accept draw	ड्रॉ मंज़ूर
+Account	अकाउंट
+Account, friends list and cloud save	अकाउंट, दोस्तों की सूची और क्लाउड सेव
+Accuracy on each square. Red squares need work; grey ones you haven't met yet.	हर खाने पर सटीकता। लाल खानों पर मेहनत चाहिए; स्लेटी खाने अभी आए नहीं हैं।
+Active king, passed pawn ka safar, rook {n}th rank par	सक्रिय राजा, पास्ड प्यादे का सफ़र, हाथी {n}वीं रैंक पर
+Activity and drills	गतिविधि और ड्रिल
