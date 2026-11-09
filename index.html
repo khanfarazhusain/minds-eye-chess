@@ -3014,14 +3014,16 @@ function vCoach(){const g=CG;if(!g){go({name:'coachset'});return}const my=coMyTu
   if(g.show.better&&g.fb&&g.fb.pre&&g.fb.pre.lines[0]){const bm=fromUci(g.fb.st0,g.fb.pre.lines[0].pv[0]);if(bm){marks={[sn(bm.f)]:'good',[sn(bm.t)]:'good'}}}
   if(g.opt!=null&&g.pre&&g.pre.lines[g.opt]&&my&&!(P.set.ceasy!==false&&g.ep==='opts')){const om=fromUci(g.st,g.pre.lines[g.opt].pv[0]);if(om){marks={[sn(om.f)]:'good',[sn(om.t)]:'good'}}}
   const arr=[],hm=g.hint&&my?coHintMove(g):null;if(hm){marks[sn(hm.f)]='good';if(g.hint>=3){marks[sn(hm.t)]='good';arr.push({f:hm.f,t:hm.t,c:'green'})}}
+  const EZ=P.set.ceasy!==false;if(EZ&&g.ep==='opts'&&my&&g.pre&&gKey()&&!AIR[aiKey('opts')])setTimeout(()=>{if(CG===g&&g.ep==='opts'&&!AIR[aiKey('opts')])aiGo('opts',null,true)},0);g.job=EZ&&P.set.cjob!==false?coJob(g):null;
   if(P.set.carrow!==false){if(my&&g.threat&&g.threat.m)arr.push({f:g.threat.m.f,t:g.threat.m.t,c:'red'});
-    const EZ=P.set.ceasy!==false;if(EZ&&g.ep==='opts'&&my&&g.pre&&gKey()&&!AIR[aiKey('opts')])setTimeout(()=>{if(CG===g&&g.ep==='opts'&&!AIR[aiKey('opts')])aiGo('opts',null,true)},0);g.job=EZ&&P.set.cjob!==false?coJob(g):null;if(g.job&&g.job.m&&!g.ep&&!g.hint)arr.push({f:g.job.m.f,t:g.job.m.t,c:'green',w:.15});if(EZ&&g.ep==='opts'&&my&&g.pre){const OC=['green','blue','grey'];g.pre.lines.forEach((l,i)=>{const m=fromUci(g.st,l.pv[0]);if(m)arr.push({f:m.f,t:m.t,c:OC[i]||'grey',w:g.opt===i?.2:i?.12:.16,n:i+1,dim:g.opt!=null&&g.opt!==i})})}
+    if(g.job&&g.job.m&&!g.ep&&!g.hint)arr.push({f:g.job.m.f,t:g.job.m.t,c:'green',w:.15})}
+  {if(EZ&&g.ep==='opts'&&my&&g.pre){const OC=['green','blue','grey'];g.pre.lines.forEach((l,i)=>{const m=fromUci(g.st,l.pv[0]);if(m)arr.push({f:m.f,t:m.t,c:OC[i]||'grey',w:g.opt===i?.2:i?.12:.16,n:i+1,dim:g.opt!=null&&g.opt!==i})})}
     if(g.arrBest&&my&&g.pre&&!(EZ&&g.ep==='opts'))g.pre.lines.forEach((l,i)=>{const m=fromUci(g.st,l.pv[0]);if(m)arr.push({f:m.f,t:m.t,c:i?'blue':'green',w:i?.11:.17})});
     if(EZ&&g.ep==='think'){for(const x of coPlanItems(g)){const dim=g.psel&&g.psel!==x.k;arr.push({f:x.f,t:x.t,c:x.c,w:g.psel===x.k?.18:x.dash?.09:.13,lab:x.k,act:'co-psel',v:x.k,n:1,dim,dash:x.dash});(x.ex||[]).forEach(y=>arr.push({...y,dim}))}}
     if(g.arrThink&&!(EZ&&g.ep==='think')&&g.moves.length){const e=[...g.moves].reverse().find(x=>x.by==='e');if(e&&e.an&&e.an.lines&&e.an.lines[0]&&e.an.lines[0].pv[0]===uciOf(e.m)){const L=pvWalk(e.st0,e.an.lines[0].pv,4).steps;L.forEach((x,i)=>{if(i)arr.push({f:x.m.f,t:x.m.t,c:x.st.w===(g.human==='w')?'grey':'red',w:.1})})}}
     if(!(EZ&&g.ep==='opts')&&g.opt!=null&&g.pre&&g.pre.lines[g.opt]&&my){const om=fromUci(g.st,g.pre.lines[g.opt].pv[0]);if(om)arr.push({f:om.f,t:om.t,c:'green'})}
     if(g.show.better&&g.fb&&g.fb.pre&&g.fb.pre.lines[0]){const bm=fromUci(g.fb.st0,g.fb.pre.lines[0].pv[0]);if(bm)arr.push({f:bm.f,t:bm.t,c:'green'})}
-    if(my){for(const s of hanging(g.st.b,w))if(!marks[sn(s)])marks[sn(s)]='bad';for(const s of outposts(g.st.b,!w).filter(s=>!g.st.b[s]).slice(0,3))if(!marks[sn(s)])marks[sn(s)]='weak'}}
+  }if(P.set.carrow!==false&&my){for(const s of hanging(g.st.b,w))if(!marks[sn(s)])marks[sn(s)]='bad';for(const s of outposts(g.st.b,!w).filter(s=>!g.st.b[s]).slice(0,3))if(!marks[sn(s)])marks[sn(s)]='weak'}
   const dots=g.sel!=null?legal(g.st).filter(x=>x.f===g.sel).map(x=>sn(x.t)):[];
   let h=`<div class="stack"><div class="fixtop"><div class="gstat"><span>${coMoodHTML(g)}${g.boss!=null&&BOSS[g.boss]?`<b>${BOSS[g.boss][1]} ${esc(BOSS[g.boss][2])}</b>`:`${w?'⚪':'⚫'} ${L.n} <span class="muted">${L.elo}</span>`}${g.blind?' · 🙈':''}</span>${g.clk?`<span id="clk" class="mono clk">${clkTxt(g)}</span>`:SF.ready||SF.failed?'':`<span class="muted">${L2('Engine loading…','Engine load ho raha…')}</span>`}</div>${coEvalHTML()}`;
   if(g.book&&g.bookOk&&g.moves.length<g.book.moves.length)h+=`<div class="banner">📖 Opening trainer: <b>${esc(g.book.name)}</b>, move ${Math.floor(g.moves.length/2)+1} of ${Math.ceil(g.book.moves.length/2)}. ${my?'Find the book move.':''}</div>`;
@@ -3067,7 +3069,7 @@ function coJob(g){if(!coMyTurn()||g.pend||g.over)return null;const st=g.st,w=st.
       if(c.length&&(!best||rank(c[0])<9||!pre[0]||Math.abs(scCp(pre[0]))<150))return{t:L2(`Step ${k+1} of 5: ${OSTEPS[k][1]}.`,`Step ${k+1}/5: ${OSTEPS_HI[k]}.`),m:c[0],step:k,done:d}}}
   if(best)return{t:L2('Your job: ','Aapka kaam: ')+hintIdea(g,best),m:best};return null}
 function coJobHTML(g){const j=g.job;if(!j)return'';let h='<div class="jobnow"><div><b>👉 '+L2('Your job now:','Abhi aapka kaam:')+'</b> '+esc(String(j.t).replace(/^\s*(Your job|Aapka kaam)\s*:\s*/i,'').replace(/^./,c=>c.toUpperCase()))+'</div>';
-  if(j.m)h+=`<div class="muted" style="font-size:14px">${L2('Suggested move','Suggested chaal')}: <b class="mono">${esc(san(g.st,j.m,legal(g.st)))}</b> (${L2('green arrow','hara arrow')})</div>`;
+  if(j.m)h+=`<div class="muted" style="font-size:14px">${L2('Suggested move','Suggested chaal')}: <b class="mono">${esc(san(g.st,j.m,legal(g.st)))}</b>${P.set.carrow!==false?` (${L2('green arrow','hara arrow')})`:` (${sn(j.m.f)} → ${sn(j.m.t)})`}</div>`;
   if(j.done)h+='<div class="osteps">'+OSTEPS.map(([k,t],i)=>`<span class="${j.done[k]?'ok':i===j.step?'cur':''}">${j.done[k]?'✓':i+1} ${(HI()?['Centre','Knights','Bishops','Castle','Rooks']:['Centre','Knights','Bishops','Castle','Rooks'])[i]}</span>`).join('')+'</div>';return h+'</div>'}
 function coEasyHTML(){const g=CG,my=coMyTurn();let h=(g.boss!=null&&g.bossMsg&&g.moves.length<4&&BOSS[g.boss]?`<div class="card bosscard"><b>${BOSS[g.boss][1]} ${esc(BOSS[g.boss][2])}:</b> “${esc(g.bossMsg)}”</div>`:'')+(P.set.cjob!==false&&!g.ep?coJobHTML(g):'')+(g.ep&&g.ep!=='more'?'':coStripHTML());
   if(P.set.cpause&&g.waitNext)h+=`<button class="btn primary block bignext" data-act="co-next">${L2('Next ▶ (coach moves)','Aage ▶ (coach chalega)')}</button>`;
@@ -3119,7 +3121,7 @@ function coEasyThink(){const g=CG,it=coPlanItems(g);if(!it.length)return'<p clas
 function coEasyThinkOld(){const g=CG,last=[...g.moves].reverse().find(x=>x.by==='e');if(!last)return'<p class="muted">The coach has not moved yet.</p>';
   let h=`<h4>🧠 Why the coach played ${esc(last.san)}</h4><ul class="cline"><li>${esc(last.note||'a useful move')}.</li>`;
   const pv=last.an&&last.an.lines&&last.an.lines[0]&&last.an.lines[0].pv;if(pv&&pv.length>1&&pv[0]===uciOf(last.m)){const L=pvWalk(last.st0,pv,4).steps;h+=`<li>Its plan: <b>${esc(L.map(x=>x.san).join(' '))}</b> (arrows on the board: red = coach, grey = your expected reply).</li>`}
-  const th=coMyTurn()&&g.threat;if(th&&th.san)h+=`<li class="warn">Watch out: it threatens ${esc(th.san)} (thick red arrow).</li>`;else if(coMyTurn())h+='<li>No direct threat right now.</li>';
+  const th=coMyTurn()&&g.threat;if(th&&th.san)h+=`<li class="warn">Watch out: it threatens ${esc(th.san)}${P.set.carrow!==false?' (thick red arrow)':''}.</li>`;else if(coMyTurn())h+='<li>No direct threat right now.</li>';
   if(coMyTurn()){const ids=oppIdeas(g.st).filter(x=>!th||!th.m||uciOf(x.m)!==uciOf(th.m)).slice(0,2);if(ids.length)h+=`<li>Its next ideas (thin red arrows): ${ids.map(x=>`<b>${esc(x.san)}</b>, ${esc(x.note)}`).join('; ')}.</li>`}
   return h+'</ul>'}
 function coTabs(){const g=CG,my=coMyTurn(),t=[];const r=g.fb&&AIR[aiKey('turn')];
@@ -3477,7 +3479,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.09 · v84';
+const APPV='2026.11.09 · v85';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
