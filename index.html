@@ -215,6 +215,7 @@ p{margin:0}
 .pc-dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;border:1px solid var(--muted);vertical-align:-1px}.pc-dot.w{background:#fff}.pc-dot.b{background:#151515}
 .onet{font-size:13px;font-weight:600}.onet.ok{color:var(--good)}.onet.wait{color:var(--muted)}
 .odot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--line);margin-right:6px}.odot.on{background:var(--good)}
+.olchat{display:flex;flex-direction:column;gap:6px}.olch-h{display:flex;justify-content:space-between;align-items:center;gap:8px}.olch-note{font-size:12px}.olch-list{max-height:170px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}.olm{align-self:flex-start;max-width:80%;background:var(--surface2,#eee);border-radius:12px 12px 12px 4px;padding:5px 10px;font-size:14px;word-break:break-word}.olm.me{align-self:flex-end;background:var(--accent);color:var(--accent-fg);border-radius:12px 12px 4px 12px}.olch-in{display:flex;gap:6px}.olch-in input{flex:1;min-width:0;font-family:var(--f-body);font-size:15px}.olch-mic.rec{background:#E5484D;color:#fff}.lfinv{position:fixed;left:12px;right:12px;bottom:calc(var(--navh,64px) + 12px);z-index:70;max-width:520px;margin:0 auto;box-shadow:0 8px 30px rgba(0,0,0,.25)}
 #fbinv{position:fixed;left:12px;right:12px;bottom:calc(var(--navh,64px) + 10px);z-index:20;max-width:536px;margin:0 auto;background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:10px 12px;display:flex;gap:8px;align-items:center;box-shadow:0 6px 20px rgba(0,0,0,.25)}#fbinv b{flex:1;font-size:14px}
 details summary{cursor:pointer}
 @media (max-width:360px){nav.tabs button{font-size:10px}nav.tabs button span{font-size:18px}}
@@ -3498,7 +3499,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.09 · v97';
+const APPV='2026.11.10 · v98';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -4244,7 +4245,7 @@ function olRelaySub(){if(!OG||OLN.es)return;const topic=OL_PFX+OG.code,since=OG.
   es.onerror=()=>{try{es.close()}catch(e){}if(OLN.es===es){OLN.es=null;clearTimeout(OLN.esT);OLN.esT=setTimeout(()=>{if(OG)olRelaySub()},4000)}}}
 function olRelaySend(m){if(!OG)return;fetch(olRelay()+OL_PFX+OG.code,{method:'POST',body:JSON.stringify(m)}).catch(()=>{})}
 // important messages wait in the outbox until the other phone acks them
-function olSend(m,important){if(!OG)return;m={...m,from:OG.me,gid:OG.gid};if(important){m.id=olId();OLN.out.push({m,t:Date.now(),relay:false,n:0})}
+function olSend(m,important){if(!OG)return;m={...m,from:OG.me,gid:OG.gid,did:lfDid()};if(important){m.id=olId();OLN.out.push({m,t:Date.now(),relay:false,n:0})}
   if(olP2P()){try{OLN.conn.send(m)}catch(e){}}else if(m.t!=='ping'&&m.t!=='pong'){olRelaySend(m);const o=OLN.out.find(x=>x.m===m);if(o)o.relay=true}}
 function olFlush(p2pOnly){const now=Date.now();for(const o of OLN.out){if(p2pOnly){if(olP2P())try{OLN.conn.send(o.m)}catch(e){}continue}
   const age=now-o.t;if((!o.relay&&age>4000)||(o.relay&&age>12000)){o.t=now;o.n++;if(olP2P())try{OLN.conn.send(o.m)}catch(e){}olRelaySend(o.m);o.relay=true}}
@@ -4254,7 +4255,7 @@ function olTick(){if(!OG)return;if(olP2P())try{OLN.conn.send({t:'ping',from:OG.m
   if(olLive()&&OG.clock&&OG.moves.length){const me=olMyColor(),st=olState(OG.moves),side=st&&st.w?'w':'b';
     if(side===me&&olClk(side)<=0){olEnd({r:me==='w'?'b':'w',why:'time'});olSend({t:'flag',c:me},true)}}
   if(V.name==='ogame')olClkDraw();else if(V.name==='friend'&&!OG.started&&(OLN.tickN=(OLN.tickN||0)+1)%3===0)olRe()}
-function olHello(viaRelayToo){if(!OG)return;const m={t:'hello',name:olName(),n:OG.moves.length,started:!!OG.started,over:OG.over||null};
+function olHello(viaRelayToo){if(!OG)return;const m={t:'hello',did:lfDid(),name:olName(),n:OG.moves.length,started:!!OG.started,over:OG.over||null};
   if(olP2P())try{OLN.conn.send({...m,from:OG.me,gid:OG.gid})}catch(e){}
   if(!olP2P()||!OG.started)olRelaySend({...m,from:OG.me,gid:OG.gid})}
 function olSnap(){return{t:'state',hc:OG.hc,clock:OG.clock,hn:OG.role==='host'?olName():OG.opp,gn:OG.role==='guest'?olName():OG.opp,moves:OG.moves,clk:OG.clk,over:OG.over,draw:OG.draw==='me'?OG.role:OG.draw==='opp'?(OG.role==='host'?'guest':'host'):null}}
@@ -4266,7 +4267,8 @@ function olIn(d,via){if(!d||!OG||d.from===OG.me)return;OLN.lastIn=Date.now();
   if(d.t==='ack'){OLN.out=OLN.out.filter(o=>o.m.id!==d.ack);return}
   if(d.id){const ack={t:'ack',ack:d.id,from:OG.me};if(olP2P())try{OLN.conn.send(ack)}catch(e){}else olRelaySend(ack);
     if(OLN.seen.has(d.id))return;OLN.seen.add(d.id)}
-  if(!OG.opp&&d.name)OG.opp=d.name;if(d.from&&!OG.oppId)OG.oppId=d.from;
+  if(d.t==='voice'){olVoiceIn(d);return}
+  if(!OG.opp&&d.name)OG.opp=d.name;if(d.from&&!OG.oppId)OG.oppId=d.from;if(d.did&&d.did!==lfDid())OG.oppDid=d.did;
   if(d.gid!=null&&d.gid<OG.gid&&d.t!=='hello'&&d.t!=='join')return;
   if(d.gid!=null&&d.gid>OG.gid){if(d.t==='state'){olNewGame(d.gid,d.hc)}else{olHello();return}}
   switch(d.t){
@@ -4283,6 +4285,8 @@ function olIn(d,via){if(!d||!OG||d.from===OG.me)return;OLN.lastIn=Date.now();
    case'flag':if(!OG.over){olEnd({r:d.c==='w'?'b':'w',why:'time'})}break;
    case'draw':if(OG.over)break;if(d.k==='offer'){OG.draw='opp';olBuzz()}else if(d.k==='accept'&&OG.draw==='me'){olEnd({r:'d',why:'agreed'})}else if(d.k==='decline'){OG.draw=null;OG.msg=L2('Your friend said no to a draw.','Dost ne draw mana kar diya.')}olSave();break;
    case'rematch':if(d.k==='offer'){OG.rm='opp';olBuzz()}else if(d.k==='accept'&&OG.rm==='me'){olNewGame(OG.gid+1,OG.hc==='w'?'b':'w')}else if(d.k==='decline'){OG.rm=null}olSave();break;
+   case'chat':olChatAdd({id:d.id,me:false,k:'t',txt:String(d.txt||'').slice(0,200)});olBuzz();break;
+   case'voice':olVoiceIn(d);break;
    case'bye':OG.msg=L2(`${OG.opp||'Your friend'} left the room.`,`${OG.opp||'Dost'} room chhod kar chale gaye.`);OG.left=true;olSave();break}
   olRe()}
 function olMerge(moves,clk){if(!Array.isArray(moves))return false;const a=OG.moves;
@@ -4347,6 +4351,10 @@ function olAct(a,d){if(!a||a.slice(0,3)!=='ol-')return false;
    case'ol-cancel':case'ol-leave':if(V.confirmLeave||OG&&!OG.started||OG&&OG.over){V.confirmLeave=false;olLeave()}else{V.confirmLeave=true;render();setTimeout(()=>{V.confirmLeave=false},4000)}break;
    case'ol-open':if(OG){olStart();go({name:OG.started?'ogame':'friend'})}break;
    case'ol-menu':go({name:'friend'});break;
+   case'ol-finv':{const f=lfList().find(x=>x.did===d.v);if(!f)break;if(!olName()){V.oerr=L2('Please type your name first.','Pehle apna naam likho.');render();break}olCreate();if(OG)lfSend(f.did,{t:'inv',code:OG.code});V.omsg=L2(`Invite sent to ${f.name}. Keep this screen open.`,`${f.name} ko invite bheja. Ye screen khuli rakho.`);render();break}
+   case'ol-fdel':if(V.lfdel===d.v){lfDel(d.v);V.lfdel=null}else{V.lfdel=d.v;setTimeout(()=>{V.lfdel=null},4000)}render();break;
+   case'ol-ijoin':{const x=LF.inv.shift();lfInvDraw();if(x)olJoin(x.code);break}
+   case'ol-ino':LF.inv.shift();lfInvDraw();break;
    case'ol-flip':if(OG){OG.flip=!OG.flip;olSave();vOGame()}break;
    case'ol-promo':if(OG&&OG.promo){const st=olState(OG.moves),m=legal(st).find(x=>x.f===OG.promo.f&&x.t===OG.promo.t&&x.promo===d.v);if(m)olMove(m)}break;
    case'ol-promox':if(OG){OG.promo=null;OG.sel=null;vOGame()}break;
@@ -4368,11 +4376,78 @@ function olOverText(){const o=OG.over,me=olMyColor(),opp=OG.opp||L2('Your friend
   const won=o.r===me;if(o.why==='mate')return won?L2('Checkmate. You win! 🎉','Checkmate. Aap jeet gaye! 🎉'):L2(`Checkmate. ${opp} wins.`,`Checkmate. ${opp} jeet gaye.`);
   if(o.why==='resign')return won?L2(`${opp} resigned. You win! 🎉`,`${opp} ne resign kiya. Aap jeet gaye! 🎉`):L2('You resigned.','Aapne resign kiya.');
   if(o.why==='time')return won?L2(`${opp} ran out of time. You win! 🎉`,`${opp} ka time khatam. Aap jeet gaye! 🎉`):L2('Your time ran out.','Aapka time khatam ho gaya.');return''}
+/* ---- friends list without a server: each phone has an inbox topic on the same free relay ---- */
+const LF={es:null,esT:null,on:{},inv:[],tick:null,started:false};
+const lfDid=()=>{if(!P.set.did){P.set.did=olCode()+olCode();save()}return P.set.did};
+const lfTopic=d=>OL_PFX+'u-'+d;
+const lfList=()=>P.lf||(P.lf=[]);
+function lfSend(did,m){if(!did)return;fetch(olRelay()+lfTopic(did),{method:'POST',body:JSON.stringify({...m,from:lfDid(),name:olName()||'Friend',ts:Date.now()})}).catch(()=>{})}
+function lfAdd(did,name){if(!did||did===lfDid())return;const L=lfList();const f=L.find(x=>x.did===did);const nm=String(name||'').slice(0,20)||'Friend';
+  if(f){if(f.name!==nm&&name){f.name=nm;save()}return}L.unshift({did,name:nm,since:Date.now()});save();LF.on[did]=Date.now();lfStart()}
+function lfDel(did){P.lf=lfList().filter(x=>x.did!==did);save()}
+const lfOnline=did=>Date.now()-(LF.on[did]||0)<120000;
+function lfStart(){if(LF.es||!lfList().length)return;let es;try{es=new EventSource(olRelay()+lfTopic(lfDid())+'/sse?since=10m')}catch(e){return}LF.es=es;
+  es.onmessage=ev=>{let j;try{j=JSON.parse(ev.data)}catch(e){return}if(!j||j.event!=='message')return;let d;try{d=JSON.parse(j.message)}catch(e){return}lfIn(d,(j.time||0)*1000||Date.now())};
+  es.onerror=()=>{try{es.close()}catch(e){}if(LF.es===es){LF.es=null;clearTimeout(LF.esT);LF.esT=setTimeout(lfStart,5000)}};
+  if(!LF.started){LF.started=true;setTimeout(()=>lfPingAll(true),800);clearInterval(LF.tick);LF.tick=setInterval(()=>{if(!document.hidden&&V.name==='friend')lfPingAll()},30000);
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)lfList().forEach(f=>lfSend(f.did,{t:'off'}));else lfPingAll(true)})}}
+function lfPingAll(){lfList().slice(0,12).forEach(f=>lfSend(f.did,{t:'ping'}))}
+function lfIn(d,t){if(!d||!d.from||d.from===lfDid())return;const f=lfList().find(x=>x.did===d.from);if(!f)return;const age=Date.now()-t,old=age>10*60000;
+  if(d.name&&d.name!=='Friend'&&f.name!==d.name){f.name=String(d.name).slice(0,20);save()}
+  if(d.t==='off'){if(!old)LF.on[d.from]=0}
+  else if(d.t==='ping'){if(age<90000){LF.on[d.from]=Date.now()-age;if(!document.hidden)lfSend(d.from,{t:'here'})}}
+  else if(d.t==='here'){if(age<90000)LF.on[d.from]=Date.now()-age}
+  else if(d.t==='inv'){if(!old&&/^[A-Z0-9]{6}$/.test(d.code||'')&&!(OG&&OG.code===d.code)&&!LF.inv.some(x=>x.code===d.code)){LF.inv.push({did:d.from,name:f.name,code:d.code});LF.on[d.from]=Date.now()-age;try{navigator.vibrate&&navigator.vibrate([80,60,80])}catch(e){}lfInvDraw()}}
+  if(V.name==='friend')olRe()}
+function lfInvDraw(){let el=document.getElementById('lfinv');const x=LF.inv[0],show=x&&V.name!=='ogame';
+  if(!show){if(el)el.remove();return}if(!el){el=document.createElement('div');el.id='lfinv';el.className='card stack pend lfinv';document.body.appendChild(el)}
+  el.innerHTML=`<b>♟ ${esc(x.name)} ${L2('invites you to play!','aapko khelne bula rahe hain!')}</b><div class="row"><button class="btn primary" style="flex:1" data-act="ol-ijoin">${L2('Join game','Game join karo')}</button><button class="btn" data-act="ol-ino">${L2('Not now','Abhi nahi')}</button></div>`}
+function lfCardHTML(){const L=lfList();let h=`<div class="card stack"><h3>👥 ${L2('Friends','Dost')}</h3>`;
+  if(!L.length)return h+`<p class="muted" style="font-size:14px;margin:0">${L2('After you play someone with a room code, they are saved here. Then you can invite them with one tap and see when their app is open.','Room code se kisi ke saath khelne ke baad woh yahan save ho jayenge. Phir ek tap se invite kar sakte ho aur dekh sakte ho ki unka app khula hai ya nahi.')}</p></div>`;
+  h+=L.map(f=>{const on=lfOnline(f.did);return`<div class="gstat"><span><span class="odot ${on?'on':''}"></span>${esc(f.name)} <small class="muted">${on?L2('online','online'):L2('offline','offline')}</small></span><span class="row" style="gap:6px"><button class="btn small primary" data-act="ol-finv" data-v="${esc(f.did)}">${L2('Invite','Invite')}</button><button class="btn small" data-act="ol-fdel" data-v="${esc(f.did)}" aria-label="${L2('Remove','Hatao')}">${V.lfdel===f.did?L2('Sure?','Pakka?'):'✕'}</button></span></div>`}).join('');
+  return h+`<small class="muted">${L2('Green dot = their app is open right now.','Hara dot = unka app abhi khula hai.')}</small></div>`}
+
+/* ---- in-game chat and voice notes ---- */
+const OLC={el:null,code:null,aud:{},rec:null,recT:null,cancel:false,note:'',unread:0};
+function olChatAdd(e){if(!OG)return;OG.chat=(OG.chat||[]).concat({...e,ts:Date.now()}).slice(-40);olSave();if(!e.me&&V.name!=='ogame')OLC.unread++;olChatDraw()}
+function olChatSend(txt){txt=String(txt||'').trim().slice(0,200);if(!txt||!OG)return;const m={t:'chat',txt};olSend(m,true);olChatAdd({id:'m'+Date.now(),me:true,k:'t',txt})}
+const blobB64=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(String(f.result).split(',')[1]||'');f.onerror=()=>r('');f.readAsDataURL(b)});
+function b64Blob(a,type){const s=atob(a),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return new Blob([u],{type:type||'audio/webm'})}
+async function olRecToggle(){if(OLC.rec){try{OLC.rec.stop()}catch(e){}return}
+  if(!olP2P()){OLC.note=L2('Voice notes need a direct connection. Text still works.','Voice note ke liye direct connection chahiye. Text abhi bhi chalega.');olChatDraw();return}
+  if(!navigator.mediaDevices||!window.MediaRecorder){OLC.note=L2('This phone cannot record here.','Is phone par yahan recording nahi ho sakti.');olChatDraw();return}
+  let s;try{s=await navigator.mediaDevices.getUserMedia({audio:true})}catch(e){OLC.note=L2('Microphone permission was not given.','Mic ki permission nahi mili.');olChatDraw();return}
+  const mt=['audio/webm;codecs=opus','audio/mp4','audio/ogg;codecs=opus'].find(x=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(x));let r;
+  try{r=new MediaRecorder(s,mt?{mimeType:mt,audioBitsPerSecond:24000}:{})}catch(e){r=new MediaRecorder(s)}
+  const ch=[],t0=Date.now();r.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};
+  r.onstop=async()=>{s.getTracks().forEach(t=>t.stop());clearTimeout(OLC.recT);OLC.rec=null;if(OLC.cancel){OLC.cancel=false;olChatDraw();return}
+    const blob=new Blob(ch,{type:r.mimeType||mt||'audio/webm'}),dur=Math.max(1,Math.round((Date.now()-t0)/1000));if(blob.size<200){olChatDraw();return}
+    const id=olId();OLC.aud[id]=URL.createObjectURL(blob);olChatAdd({id,me:true,k:'v',dur});
+    if(olP2P()&&OG){const a=await blobB64(blob);try{OLN.conn.send({t:'voice',a,mime:blob.type,dur,vid:id,from:OG.me,gid:OG.gid,did:lfDid()})}catch(e){}}
+    else{OLC.note=L2('Connection dropped, the voice note was not sent.','Connection toot gaya, voice note nahi gaya.');olChatDraw()}};
+  r.start();OLC.rec=r;OLC.note='';OLC.recT=setTimeout(()=>{try{OLC.rec&&OLC.rec.stop()}catch(e){}},30000);olChatDraw()}
+function olVoiceIn(d){if(!d.a||OLC.aud[d.vid])return;try{OLC.aud[d.vid]=URL.createObjectURL(b64Blob(d.a,d.mime))}catch(e){return}olChatAdd({id:d.vid,me:false,k:'v',dur:d.dur||0});olBuzz()}
+function olChatMount(){const slot=document.getElementById('olchatslot');if(!slot||!OG)return;if(OLC.code!==OG.code){OLC.el=null;OLC.code=OG.code}
+  if(!OLC.el){const el=document.createElement('div');el.className='card olchat';
+    el.innerHTML=`<div class="olch-h"><b>💬 ${L2('Chat','Chat')}</b><small class="muted olch-note"></small></div><div class="olch-list"></div><div class="olch-in"><input class="gin" maxlength="200" placeholder="${L2('Message…','Message likho…')}" enterkeyhint="send"><button class="btn small primary olch-send" aria-label="${L2('Send','Bhejo')}">➤</button><button class="btn small olch-mic" aria-label="${L2('Voice note','Voice note')}">🎤</button></div>`;
+    const inp=el.querySelector('input'),go1=()=>{olChatSend(inp.value);inp.value=''};
+    el.querySelector('.olch-send').addEventListener('click',e=>{e.stopPropagation();go1()});
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();go1()}});
+    el.querySelector('.olch-mic').addEventListener('click',e=>{e.stopPropagation();olRecToggle()});
+    el.addEventListener('click',e=>{const b=e.target.closest('[data-aud]');if(b){e.stopPropagation();const u=OLC.aud[b.dataset.aud];if(u){try{new Audio(u).play()}catch(x){}}}
+      if(e.target.closest('.olch-x')){e.stopPropagation();OLC.cancel=true;try{OLC.rec&&OLC.rec.stop()}catch(x){}}});
+    OLC.el=el}
+  slot.replaceWith(OLC.el);OLC.unread=0;olChatDraw()}
+function olChatDraw(){const el=OLC.el;if(!el||!OG)return;const L=OG.chat||[];const list=el.querySelector('.olch-list');
+  list.innerHTML=L.length?L.map(m=>`<div class="olm ${m.me?'me':''}">${m.k==='v'?(OLC.aud[m.id]?`<button class="btn small olv" data-aud="${esc(m.id)}">▶ 🔊 ${m.dur||''}s</button>`:`<span class="muted">🔊 ${L2('voice note','voice note')}</span>`):esc(m.txt)}</div>`).join(''):`<small class="muted">${L2('Say hi to your friend 👋','Dost ko hi bolo 👋')}</small>`;
+  list.scrollTop=list.scrollHeight;
+  const mic=el.querySelector('.olch-mic');mic.textContent=OLC.rec?'⏹':'🎤';mic.classList.toggle('rec',!!OLC.rec);
+  el.querySelector('.olch-note').innerHTML=OLC.rec?`● ${L2('Recording… tap ⏹ to send','Recording… ⏹ dabao bhejne ke liye')} <button class="btn small olch-x">✕</button>`:esc(OLC.note||'')}
 function vFriend(){const o=V.oo||(V.oo={color:'r',clock:'0'});const nm=olName();
   let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="playhub">← Khelo</button><span class="eyebrow">${L2('Two phones · no login','Do phone · bina login')}</span><h1>${L2('Play a friend online','Dost ke saath online khelo')}</h1><div class="card stack"><span class="eyebrow">${L2('Your board','Aapka board')}</span><div class="seg"><button class="${!P.set.olblind?'on':''}" data-act="olb" data-v="0">♟ ${L2('Pieces visible','Pieces dikhein')}</button><button class="${P.set.olblind?'on':''}" data-act="olb" data-v="1">🙈 ${L2('Blind','Blind')}</button></div><small class="muted">${L2('Only your screen changes. Your friend can choose for themselves.','Sirf aapki screen badlegi. Dost apne liye khud chun sakta hai.')}</small></div>`;
   if(V.omsg){h+=`<div class="banner">${esc(V.omsg)}</div>`;V.omsg=''}
   if(V.oerr)h+=`<p class="warn">${esc(V.oerr)}</p>`;
-  h+=fbBannerHTML();
+  h+=fbBannerHTML();if(!OG||OG.over||!OG.started)h+=lfCardHTML();
   if(OG&&OG.started){const me=olMyColor();h+=`<button class="card rungcard" data-act="ol-open" style="border:2px solid var(--accent)"><span class="eyebrow">${OG.over?L2('Last game','Pichhla game'):L2('Game in progress','Game chal raha hai')} · ${L2('room','room')} ${esc(OG.code)}</span><b style="font-size:18px">♟ ${L2('You','Aap')} (${me==='w'?L2('White','White'):L2('Black','Black')}) vs ${esc(OG.opp||'Friend')}</b><small class="muted">${OG.over?esc(olOverText()):L2(`${OG.moves.length} moves played. Tap to continue.`,`${OG.moves.length} chaalein ho gayi. Continue karne ke liye tap karo.`)}</small></button>
     <button class="btn block" data-act="ol-leave">${V.confirmLeave?L2('Tap again to leave the room','Room chhodne ke liye dobara tap karo'):L2('Leave this room','Ye room chhodo')}</button>`}
   else if(OG&&OG.role==='host'){h+=`<div class="card stack" style="text-align:center"><span class="eyebrow">${L2('Your room code','Aapka room code')}</span><div class="olcode mono">${esc(OG.code)}</div>
@@ -4433,8 +4508,9 @@ function vOGame(){const g=OG;if(!g||!g.started){go({name:'friend'});return}const
     h+=`<div class="row corow"><button class="btn" data-act="ol-draw" ${g.draw==='me'?'disabled':''}>${g.draw==='me'?L2('Draw offered','Draw bheja'):L2('Offer draw','Draw offer')}</button><button class="btn" data-act="ol-resign">${g.cres?L2('Tap again','Dobara tap'):L2('Resign','Resign')}</button><button class="btn" data-act="ol-flip">⇅</button></div>
       <button class="btn block" id="oclaim" data-act="ol-claim" hidden>${L2('Friend\'s time is over: claim the win','Dost ka time khatam: jeet claim karo')}</button>`}
   if(g.moves.length){let s=startState();const sans=[];for(const u of g.moves){const m=fromUci(s,u);sans.push(san(s,m,legal(s)));s=make(s,m)}h+=`<div class="gamemoves">${movesGridHTML(sqxSans(sans),1)}</div>`}
+  h+='<div id="olchatslot"></div>';
   h+=`<small class="muted" style="text-align:center">${L2('Room','Room')} ${esc(g.code)}${g.gid>1?` · ${L2('game','game')} ${g.gid}`:''}</small></div>`;
-  main.innerHTML=h;onSq=olTap;olWake(olLive())}
+  main.innerHTML=h;onSq=olTap;olWake(olLive());olChatMount();if(OG.started&&OG.oppDid)lfAdd(OG.oppDid,OG.opp);lfInvDraw()}
 
 /* ================= accounts: login, friends list, cloud save (Firebase) ================= */
 // Switched off until a Firebase project exists. Put its web config in FB_CONFIG below
@@ -4569,7 +4645,7 @@ function olBoot(){let code=null;try{const m=(location.hash||'').match(/join=([A-
   if(OG&&(OG.started&&!OG.over||!OG.started&&Date.now()-(OG.created||0)<6*3600e3)){olStart();V={name:OG.started?'ogame':'friend'}}
   else if(OG&&!OG.started){OG=null;olSave()}}
 try{const m=(location.hash||'').match(/lvl=(\d+)/);if(m){TABCTX='learn';HIST.push({name:'learn'});V={name:'clevel',i:+m[1]};history.replaceState(null,'',location.pathname+location.search)}}catch(e){}
-olBoot();fbInit();
+olBoot();fbInit();try{lfStart()}catch(e){}
 
 /* ==== FRIEND PLAY END ==== */
 try{const hd=document.querySelector('header.top');const setH=()=>{document.documentElement.style.setProperty('--hdr',(hd?hd.getBoundingClientRect().height:56)+'px');const cs=document.querySelector('.costick');if(cs)document.documentElement.style.setProperty('--bh',cs.getBoundingClientRect().height+'px');const nv=document.querySelector('nav.tabs');if(nv)document.documentElement.style.setProperty('--navh',nv.getBoundingClientRect().height+'px')};new MutationObserver(()=>{const cs=document.querySelector('.costick');if(cs)document.documentElement.style.setProperty('--bh',cs.getBoundingClientRect().height+'px')}).observe(document.body,{childList:true,subtree:false});setH();window.__setH=setH;addEventListener('resize',setH)}catch(e){}
