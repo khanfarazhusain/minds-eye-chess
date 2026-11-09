@@ -1,0 +1,129 @@
+Kaunsa principle **sahi nahi**?	कौन सा सिद्धांत **सही नहीं** है?
+Kaunsa square **light** hai?	कौन सा खाना **हल्का** है?
+Kaunse endgames jeet, kaunse draw	कौन से एंडगेम जीत, कौन से ड्रॉ
+Keemat ek guide hai: bishop aksar knight se thoda behtar (~{n}.{n}), khaas kar open board par.	क़ीमत एक मार्गदर्शक है: ऊँट अक्सर घोड़े से थोड़ा बेहतर (~{n}.{n}), ख़ासकर खुले बोर्ड पर।
+Key chal rahi hai. Ab mujhse kuch bhi pucho!	की काम कर रही है। अब मुझसे कुछ भी पूछें!
+Key ke saath wala	की के साथ वाला
+Key save ho gayi! Test kar raha hoon…	की सेव हो गई! जाँच रहा हूँ…
+Key save hui, par test fail:	की सेव हुई, पर जाँच विफल:
+Key yahan paste karo	की यहाँ पेस्ट करें
+Khelo	खेलें
+Khud analysis aur apne thoughts likhna	ख़ुद विश्लेषण और अपने विचार लिखना
+Khud sochne se calculation badhti hai. Engine baad mein check ke liye.	ख़ुद सोचने से गणना बढ़ती है। इंजन बाद में जाँच के लिए।
+Kinare par	किनारे पर
+King	राजा
+King + Bishop vs King + Bishop (dono bishops same colour). Result?	राजा + ऊँट बनाम राजा + ऊँट (दोनों ऊँट एक ही रंग के)। नतीजा?
+King + Rook vs akela King?	राजा + हाथी बनाम अकेला राजा?
+King + ek Knight vs akela King: kya hoga?	राजा + एक घोड़ा बनाम अकेला राजा: क्या होगा?
+King + ek bishop vs akela king?	राजा + एक ऊँट बनाम अकेला राजा?
+King + pawn vs king: pawn jeetne ke liye apna king kahan rakho?	राजा + प्यादा बनाम राजा: प्यादे से जीतने के लिए अपना राजा कहाँ रखें?
+King `e{n}` kahan ja sakta hai?	राजा `e{n}` कहाँ जा सकता है?
+King `f{n}` se guzrega, aur `c{n}` ka bishop `f{n}` ko attack kar raha hai. Isliye castling allowed nahi.	राजा `f{n}` से गुज़रेगा, और `c{n}` का ऊँट `f{n}` पर हमला कर रहा है। इसलिए कैसलिंग की अनुमति नहीं।
+King `g{n}` already `g{n}` aur `h{n}` ko control kar raha hai.	राजा `g{n}` पहले से `g{n}` और `h{n}` को नियंत्रित कर रहा है।
+King aage (`Kd{n}`/`Kf{n}`) aur `e{n}-e{n}` ka spare tempo: dono se White opposition jeet leta hai.	राजा आगे (`Kd{n}`/`Kf{n}`) और `e{n}-e{n}` का अतिरिक्त टेम्पो: दोनों से सफ़ेद अपोज़िशन जीत लेता है।
+King ab safe corner mein hai aur rook center ki taraf aa gaya.	राजा अब सुरक्षित कोने में है और हाथी केंद्र की ओर आ गया।
+King apne rook aur pawns mein "dum ghut" kar mara gaya.	राजा अपने हाथी और प्यादों में "दम घुटकर" मारा गया।
+King attack wale square par kabhi nahi ja sakta.	राजा हमले वाले खाने पर कभी नहीं जा सकता।
+King aur pawn: opposition	राजा और प्यादा: अपोज़िशन
+King aur queen ek diagonal par hain.	राजा और रानी एक विकर्ण पर हैं।
+King aur queen ek hi rank par hain.	राजा और रानी एक ही रैंक पर हैं।
+King aur rook ke beech saare squares khaali hone chahiye. Pehle `Ng{n}` ko develop karo.	राजा और हाथी के बीच सारे खाने ख़ाली होने चाहिए। पहले `Ng{n}` को विकसित करें।
+King do rooks ke beech fansa ho to ghabrao mat: ek rook ko doosri taraf le jao, taaki dono rooks ek hi side se seedhi banaayein.	राजा दो हाथियों के बीच फँसा हो तो घबराएँ नहीं: एक हाथी को दूसरी तरफ़ ले जाएँ, ताकि दोनों हाथी एक ही तरफ़ से सीढ़ी बनाएँ।
+King edge par aa jaaye to **apna king paas lao**.	राजा किनारे पर आ जाए तो **अपना राजा पास लाएँ**।
+King ek doosre ko check de rahe honge, jo illegal hai.	राजा एक-दूसरे को शह दे रहे होंगे, जो नियम के ख़िलाफ़ है।
+King escape squares band karta hai, queen {n}th rank par check deti hai: `Qb{n}#`.	राजा भागने के खाने बंद करता है, रानी {n}वीं रैंक पर शह देती है: `Qb{n}#`।
+King hatana	राजा हटाना
+King ke dono taraf apne rooks: kandhe (epaulettes) jaise.	राजा के दोनों तरफ़ अपने हाथी: कंधों (एपॉलेट) जैसे।
+King ki zaroorat nahi.	राजा की ज़रूरत नहीं।
+King ko aage lao, opposition lo, aur pawn ko **queen banao** ({n} chaal).	राजा को आगे लाएँ, अपोज़िशन लें, और प्यादे को **रानी बनाएँ** ({n} चाल)।
+King ko active karo: pawn ko escort karke **queen banao** ({n} chaal).	राजा को सक्रिय करें: प्यादे के साथ चलकर **रानी बनाएँ** ({n} चाल)।
+King ko corner mein rakhna	राजा को कोने में रखना
+King ko diagonal par chalao: `Kg{n}`, `Kf{n}`, `Ke{n}`.	राजा को विकर्ण पर चलाएँ: `Kg{n}`, `Kf{n}`, `Ke{n}`।
+King ko safe karna	राजा को सुरक्षित करना
+King ne `a{n}` aur `b{n}` band kiye, queen ne poori {n}th rank par check diya. (`Qc{n}`?? stalemate hota!)	राजा ने `a{n}` और `b{n}` बंद किए, रानी ने पूरी {n}वीं रैंक पर शह दी। (`Qc{n}`?? स्टेलमेट होता!)
+King ne pehle ek chaal chali, phir wapas `e{n}` aa gaya. Ab castling?	राजा ने पहले एक चाल चली, फिर वापस `e{n}` आ गया। अब कैसलिंग?
+King par attack	राजा पर हमला
+King par heavy attack: attacking pieces trade karo.	राजा पर भारी हमला: हमला करने वाले मोहरे बदलें।
+King pawn ke aage hoga to woh raasta banata hai. Pawn ke peeche king se aksar draw hota hai.	राजा प्यादे के आगे होगा तो वह रास्ता बनाता है। प्यादे के पीछे राजा से अक्सर ड्रॉ होता है।
+King pawn ko pakad sakta hai? Reti ka study, tempo ka khel	राजा प्यादे को पकड़ सकता है? रेटी की स्टडी, टेम्पो का खेल
+King rook ki taraf aata hai.	राजा हाथी की ओर आता है।
+King rooks ke beech hai. Do rooks se **{n} chaal** mein mate karo.	राजा हाथियों के बीच है। दो हाथियों से **{n} चाल** में मात दें।
+King rooks ke beech ho to?	राजा हाथियों के बीच हो तो?
+King se key squares (d{n}/f{n}) lo, pawn baad mein.	राजा से मुख्य खाने (d{n}/f{n}) लें, प्यादा बाद में।
+King ya woh rook ek baar bhi chal gaya to us taraf castling hamesha ke liye khatam.	राजा या वह हाथी एक बार भी चल गया तो उस तरफ़ कैसलिंग हमेशा के लिए ख़त्म।
+King ♚	राजा ♚
+King's Gambit	किंग्स गैम्बिट
+King's Gambit: `fxe{n}` trap	किंग्स गैम्बिट: `fxe{n}` जाल
+King's Indian	किंग्स इंडियन
+King's Indian Attack (KIA)	किंग्स इंडियन अटैक (KIA)
+King's Indian Defense	किंग्स इंडियन डिफ़ेंस
+King's Indian ka ulta setup White se. Fischer ki favourite.	किंग्स इंडियन का उलटा सेटअप सफ़ेद से। फ़िशर का पसंदीदा।
+King's Indian mein center band hone ke baad Black kahan attack karta hai?	किंग्स इंडियन में केंद्र बंद होने के बाद काला कहाँ हमला करता है?
+King's Indian, Nimzo-Indian, Grunfeld, English	किंग्स इंडियन, निम्ज़ो-इंडियन, ग्रुनफ़ेल्ड, इंग्लिश
+King's Indian: Black center White ko deta hai, phir `...e{n}`/`...f{n}` se vaar. Center band ho to Black kingside, White queenside.	किंग्स इंडियन: काला केंद्र सफ़ेद को देता है, फिर `...e{n}`/`...f{n}` से वार। केंद्र बंद हो तो काला किंगसाइड, सफ़ेद क्वीनसाइड।
+King+Bishop vs King?	राजा+ऊँट बनाम राजा?
+King, queen, rook, bishop, knight, pawn	राजा, रानी, हाथी, ऊँट, घोड़ा, प्यादा
+Kings aamne-saamne hon tab rook se check: king peeche jaata hai.	राजा आमने-सामने हों तब हाथी से शह: राजा पीछे जाता है।
+Kings aamne-saamne, aur chaal White ki: **opposition Black ke paas**. White aage nahi badh sakta: draw.	राजा आमने-सामने, और चाल सफ़ेद की: **अपोज़िशन काले के पास**। सफ़ेद आगे नहीं बढ़ सकता: ड्रॉ।
+Kings aamne-saamne, beech mein ek square, aur Black ko chalna padega: White ke paas opposition.	राजा आमने-सामने, बीच में एक खाना, और काले को चलना पड़ेगा: सफ़ेद के पास अपोज़िशन।
+Kings aamne-saamne. Ab `Ra{n}#`: rook poori {n}th rank par check deta hai, aur apna king `d{n}`, `e{n}`, `f{n}` band karta hai.	राजा आमने-सामने। अब `Ra{n}#`: हाथी पूरी {n}वीं रैंक पर शह देता है, और अपना राजा `d{n}`, `e{n}`, `f{n}` बंद करता है।
+Kings aamne-saamne: King `d{n}` kahan ja sakta hai?	राजा आमने-सामने: राजा `d{n}` कहाँ जा सकता है?
+Kings alag taraf castled hain (opposite side). Sabse zaroori kya hai?	राजाओं ने अलग-अलग तरफ़ कैसल किया है (विपरीत तरफ़)। सबसे ज़रूरी क्या है?
+Kingside (...f{n}, ...g{n})	किंगसाइड (...f{n}, ...g{n})
+Kingside attack	किंगसाइड हमला
+Kingside castle	किंगसाइड कैसल
+Kingside castle karo (`O-O`). King ko `g{n}` par tap karo.	किंगसाइड कैसल करें (`O-O`)। राजा को `g{n}` पर टैप करें।
+Kingside pawn storm	किंगसाइड प्यादा तूफ़ान
+Kingside pawn storm aur attack	किंगसाइड प्यादा तूफ़ान और हमला
+Kisi kaam ka nahi	किसी काम का नहीं
+Kitaab ki tarah	किताब की तरह
+Kitna time bacha hai?	कितना समय बचा है?
+Knight	घोड़ा
+Knight (defensive hero) ko kaise hatayein	घोड़े (रक्षक हीरो) को कैसे हटाएँ
+Knight `d{n}` apne pawns ke upar se koodta hai. Saare squares tap karo.	घोड़ा `d{n}` अपने प्यादों के ऊपर से कूदता है। सारे खाने टैप करें।
+Knight `d{n}` ke saare squares tap karo.	घोड़ा `d{n}` के सारे खाने टैप करें।
+Knight `d{n}` se `e{n}` par L-shape. Knight ka check **block nahi** ho sakta: ya king hatao ya knight capture karo.	घोड़ा `d{n}` से `e{n}` पर L-आकार। घोड़े की शह **रोकी नहीं** जा सकती: या राजा हटाएँ या घोड़े को मारें।
+Knight `e{n}` ke saare squares tap karo.	घोड़ा `e{n}` के सारे खाने टैप करें।
+Knight `e{n}` ne `g{n}`, `g{n}` band kiye, rook ne h-file par mate kiya.	घोड़ा `e{n}` ने `g{n}`, `g{n}` बंद किए, हाथी ने h-फ़ाइल पर मात दी।
+Knight `f{n}` rook ko protect karta hai aur `g{n}` band karta hai.	घोड़ा `f{n}` हाथी की रक्षा करता है और `g{n}` बंद करता है।
+Knight `g{n}` aur bishop `c{n}` dono `f{n}` par: Fried Liver ka idea.	घोड़ा `g{n}` और ऊँट `c{n}` दोनों `f{n}` पर: फ़्राइड लिवर का विचार।
+Knight aur rook dono check dein.	घोड़ा और हाथी दोनों शह दें।
+Knight check deta hai, king ke kuch squares apne pieces se band, baaki kisi doosre piece (jaise bishop) se. King "dam ghut-ne" se marta hai.	घोड़ा शह देता है, राजा के कुछ खाने अपने मोहरों से बंद, बाक़ी किसी दूसरे मोहरे (जैसे ऊँट) से। राजा "दम घुटने" से मरता है।
+Knight develop, `e{n}` par attack.	घोड़ा विकसित, `e{n}` पर हमला।
+Knight fork dhundo!	घोड़े का फ़ोर्क ढूँढें!
+Knight fork sabse khatarnaak: uska attack block nahi hota.	घोड़े का फ़ोर्क सबसे ख़तरनाक: उसका हमला रोका नहीं जा सकता।
+Knight g{n} se f{n} par. Bahut achhi opening chaal hai.	घोड़ा g{n} से f{n} पर। बहुत अच्छी ओपनिंग चाल है।
+Knight ka check block nahi ho sakta aur king ke saare squares apne pieces se bhare.	घोड़े की शह रोकी नहीं जा सकती और राजा के सारे खाने अपने मोहरों से भरे।
+Knight ka mate jab king apne pieces mein dab jaaye	घोड़े की मात जब राजा अपने मोहरों में दब जाए
+Knight ke liye sabse achha square kaunsa hai?	घोड़े के लिए सबसे अच्छा खाना कौन सा है?
+Knight ke liye sabse achha square?	घोड़े के लिए सबसे अच्छा खाना?
+Knight ki L-shape chaal hamesha light se dark ya dark se light.	घोड़े की L-आकार चाल हमेशा हल्के से गहरे या गहरे से हल्के खाने पर।
+Knight ko aise square par lao jo `e{n}` aur `c{n}` dono ko dekhe.	घोड़े को ऐसे खाने पर लाएँ जो `e{n}` और `c{n}` दोनों को देखे।
+Knight ne queen li aur rook ka check khul gaya. Black ko check bachana padega.	घोड़े ने रानी ली और हाथी की शह खुल गई। काले को शह से बचना पड़ेगा।
+Knight pawns ke upar se kood ke `f{n}` ya `h{n}` ja sakta hai. Isliye pehli chaal mein bhi knight chal sakta hai.	घोड़ा प्यादों के ऊपर से कूदकर `f{n}` या `h{n}` जा सकता है। इसलिए पहली चाल में भी घोड़ा चल सकता है।
+Knight ♞	घोड़ा ♞
+Knight, queen aur pawn forks	घोड़े, रानी और प्यादे के फ़ोर्क
+Knights aur bishops jaldi develop karo	घोड़े और ऊँट जल्दी विकसित करें
+Knights develop karna	घोड़े विकसित करना
+Koi baat nahi. Galat sawaal review list mein chale gaye. Lesson ek baar dekh lo ya seedha quiz dobara do.	कोई बात नहीं। ग़लत सवाल दोहराई सूची में चले गए। पाठ एक बार देख लें या सीधे क्विज़ दोबारा दें।
+Koi bhi	कोई भी
+Koi bhi mate force nahi kar sakta.	कोई भी ज़बरदस्ती मात नहीं दे सकता।
+Koi dushman pawn us piece ko bhaga na sake	कोई दुश्मन प्यादा उस मोहरे को भगा न सके
+Koi farak nahi	कोई फ़र्क़ नहीं
+Koi fayda nahi	कोई फ़ायदा नहीं
+Koi piece **free** mein mil raha hai. Lelo!	कोई मोहरा **मुफ़्त** में मिल रहा है। ले लें!
+Koi piece bina protection ke hai (hanging). Pakdo!	कोई मोहरा बिना रक्षा के है (लटका)। पकड़ें!
+Koi pin nahi	कोई पिन नहीं
+Koi rule nahi	कोई नियम नहीं
+Koi tactic nahi, koi threat nahi. Achha general plan?	कोई चाल-युक्ति नहीं, कोई ख़तरा नहीं। अच्छी सामान्य योजना?
+Kuch gadbad hui.	कुछ गड़बड़ हुई।
+Kuch mat karo	कुछ न करें
+Kuch nahi	कुछ नहीं
+Kuch nahi kar sakte	कुछ नहीं कर सकते
+Kuch sawaal mushkil lage. Koi baat nahi: yeh review list mein chale gaye, kal dobara aayenge. Chaho to lesson abhi ek baar aur kar lo.	कुछ सवाल मुश्किल लगे। कोई बात नहीं: ये दोहराई सूची में चले गए, कल दोबारा आएँगे। चाहें तो पाठ अभी एक बार और कर लें।
+Kuch trade mat karo	कुछ न बदलें
+Kya White kingside castle kar sakta hai?	क्या सफ़ेद किंगसाइड कैसल कर सकता है?
+Kya White yahan kingside castle kar sakta hai?	क्या सफ़ेद यहाँ किंगसाइड कैसल कर सकता है?
+Kya do kings bagal-bagal (jaise `e{n}` aur `e{n}`) aa sakte hain?	क्या दो राजा बग़ल-बग़ल (जैसे `e{n}` और `e{n}`) आ सकते हैं?
+Kya khelna hai, kaise yaad karna hai	क्या खेलना है, कैसे याद करना है
+Kya yahan **queenside castle** ho sakta hai? `b{n}` attack mein hai! Agar ho sakta hai, to karo.	क्या यहाँ **क्वीनसाइड कैसल** हो सकता है? `b{n}` हमले में है! अगर हो सकता है, तो करें।

@@ -1,0 +1,130 @@
+**Anastasia's mate**: mate karo!	**अनास्तासिया मात**: मात दें!
+**Arabian mate**: mate karo!	**अरेबियन मात**: मात दें!
+**Backward pawn** ke aage ka square ek **hole** banta hai.	**पिछड़े प्यादे** के आगे का खाना एक **छेद** बनता है।
+**Bad bishop**: apne hi pawns usi color par. Pawns bishop ke ulte color par rakho.	**बुरा ऊँट**: अपने ही प्यादे उसी रंग पर। प्यादों को ऊँट के उल्टे रंग पर रखें।
+**Blackburne's mate**: mate karo!	**ब्लैकबर्न मात**: मात दें!
+**Blind swine mate (mate in {n})**: mate karo!	**ब्लाइंड स्वाइन मात ({n} में मात)**: मात दें!
+**Boden's mate**: mate karo!	**बोडेन मात**: मात दें!
+**Breakthrough**: {n} vs {n} pawns mein `b{n}!` jaisi sacrifice se passed pawn.	**ब्रेकथ्रू**: {n} बनाम {n} प्यादों में `b{n}!` जैसे बलिदान से पास्ड प्यादा।
+**Castling**: king {n} square rook ki taraf, rook doosri taraf. `O-O` kingside, `O-O-O` queenside.	**कैसलिंग**: राजा {n} खाने हाथी की ओर, हाथी दूसरी तरफ़। `O-O` राजा की तरफ़, `O-O-O` रानी की तरफ़।
+**Check** se bachne ke {n} tareeke: king hatao, block karo, attacker ko capture karo.	**शह** से बचने के {n} तरीक़े: राजा हटाएँ, रोकें, हमलावर को मारें।
+**Clearance**, **desperado**, **perpetual check**: ye bhi yaad rakho.	**क्लियरेंस**, **डेस्पेराडो**, **लगातार शह**: ये भी याद रखें।
+**Corner mate**: mate karo!	**कोने की मात**: मात दें!
+**Damiano's mate**: mate karo!	**डामियानो मात**: मात दें!
+**Decoy**: dushman piece ko kharab square par lalchao.	**डिकॉय**: दुश्मन मोहरे को ख़राब खाने पर ललचाएँ।
+**Deflection**: defender ko zabardasti door le jao.	**डिफ़्लेक्शन**: रक्षक को ज़बरदस्ती दूर ले जाएँ।
+**Discovered attack**: aage wala piece hate to peeche wale ka attack khul jaata hai.	**छिपा हमला**: आगे वाला मोहरा हटे तो पीछे वाले का हमला खुल जाता है।
+**Discovered check**: bishop hatao, rook ka check khulega. Saath mein queen jeeto!	**छिपी शह**: ऊँट हटाएँ, हाथी की शह खुलेगी। साथ में रानी जीतें!
+**Double check** (do pieces ek saath check) mein kya kar sakte ho?	**दोहरी शह** (दो मोहरे एक साथ शह) में आप क्या कर सकते हैं?
+**Double check** ka jawab sirf king ko hatana hai: block ya capture nahi.	**दोहरी शह** का जवाब सिर्फ़ राजा हटाना है: रोकना या मारना नहीं।
+**Dovetail mate**: mate karo!	**डवटेल मात**: मात दें!
+**En passant**: dushman pawn {n} square chal kar bagal mein aaye to turant agli chaal mein capture.	**आं पासां**: दुश्मन प्यादा {n} खाने चलकर बगल में आए तो तुरंत अगली चाल में मारें।
+**Epaulette mate**: mate karo!	**एपोलेट मात**: मात दें!
+**Exchange sac** (rook dekar minor piece) position ke liye: Dragon ka `...Rxc{n}!`.	**एक्सचेंज बलिदान** (हाथी देकर छोटा मोहरा) पोज़ीशन के लिए: ड्रैगन का `...Rxc{n}!`।
+**Greco's mate**: mate karo!	**ग्रेको मात**: मात दें!
+**IQP**: kamzor pawn, par active pieces. IQP wala attack kare, doosra trade kare.	**IQP**: कमज़ोर प्यादा, पर सक्रिय मोहरे। IQP वाला हमला करे, दूसरा अदला-बदली करे।
+**Interference**: do dushman pieces ke beech apna piece rakh kar connection kaato.	**इंटरफ़ेरेंस**: दो दुश्मन मोहरों के बीच अपना मोहरा रखकर संपर्क काटें।
+**Jahan strong ho wahan khelo**.	**जहाँ मज़बूत हों वहाँ खेलें**।
+**Kotov rule**: line baar-baar mat dekho, ek baar gehra dekho aur faisla karo.	**कोटोव नियम**: लाइन बार-बार न देखें, एक बार गहराई से देखें और फ़ैसला करें।
+**Lolli's mate (thorn pawn)**: mate karo!	**लोली मात (काँटा प्यादा)**: मात दें!
+**Lucena** (jeet): rook {n}th rank par la kar **bridge** banao.	**लुसेना** (जीत): हाथी को {n}वीं रैंक पर लाकर **पुल** बनाएँ।
+**Mayet's mate**: mate karo!	**मायेट मात**: मात दें!
+**Minority attack** (`b{n}-b{n}`): Carlsbad structure mein `c{n}` par kamzor pawn banana.	**माइनॉरिटी हमला** (`b{n}-b{n}`): कार्ल्सबाड ढाँचे में `c{n}` पर कमज़ोर प्यादा बनाना।
+**Morphy's mate**: mate karo!	**मॉर्फ़ी मात**: मात दें!
+**Opera mate**: mate karo!	**ओपेरा मात**: मात दें!
+**Outside passed pawn** dushman king ko kinare kheenchta hai.	**बाहरी पास्ड प्यादा** दुश्मन राजा को किनारे खींचता है।
+**Overloading**: ek defender ke do kaam, ek par vaar karo.	**ओवरलोडिंग**: एक रक्षक के दो काम, एक पर वार करें।
+**Pawn mate (David & Goliath)**: mate karo!	**प्यादे से मात (डेविड और गोलियथ)**: मात दें!
+**Pillsbury's mate**: mate karo!	**पिल्सबरी मात**: मात दें!
+**Pin**: aage wala piece hil nahi sakta kyunki peeche zyada keemti piece hai.	**पिन**: आगे वाला मोहरा हिल नहीं सकता क्योंकि पीछे ज़्यादा क़ीमती मोहरा है।
+**Promotion**: aakhri rank par pawn queen/rook/bishop/knight banta hai. Kabhi knight (underpromotion) best hota hai.	**प्रमोशन**: आख़िरी रैंक पर प्यादा रानी/हाथी/ऊँट/घोड़ा बनता है। कभी घोड़ा (अंडरप्रमोशन) सबसे अच्छा होता है।
+**Removing the defender**: bachaane wale piece ko capture karo ya bhagao.	**रक्षक हटाना**: बचाने वाले मोहरे को मारें या भगाएँ।
+**Restriction**: dushman pieces ke achhe squares cheen lo.	**रोक**: दुश्मन मोहरों के अच्छे खाने छीन लें।
+**Semi-open file** kya hai?	**आधी-खुली फ़ाइल** क्या है?
+**Square ka rule**: dushman king pawn ke box mein aa sake to pawn pakda jaayega.	**खाने का नियम**: दुश्मन राजा प्यादे के डिब्बे में आ सके तो प्यादा पकड़ा जाएगा।
+**Swallow's tail mate**: mate karo!	**स्वैलो टेल मात**: मात दें!
+**Tarrasch rule**: rook passed pawn ke **peeche**. Active rook > passive rook.	**टैराश नियम**: हाथी पास्ड प्यादे के **पीछे**। सक्रिय हाथी > निष्क्रिय हाथी।
+**Touch-move**: chhua piece chalana padega. Theek karna ho to "adjust" / "J'adoube".	**टच-मूव**: छुआ मोहरा चलाना पड़ेगा। ठीक करना हो तो "adjust" / "J'adoube" कहें।
+**Triangulation**: king teen squares mein ghoom kar tempo waste karta hai.	**ट्रायंगुलेशन**: राजा तीन खानों में घूमकर एक चाल का समय गँवाता है।
+**X-ray**: piece dushman piece ke aar-paar square control karta hai.	**एक्स-रे**: मोहरा दुश्मन मोहरे के आर-पार खाना नियंत्रित करता है।
+**Zwischenzug**: recapture se pehle ek zyada forcing chaal.	**ज़्विशेनत्सुग**: वापस मारने से पहले एक ज़्यादा मजबूर करने वाली चाल।
+**{s}** ke saare lessons ho gaye! Ab test do. {n}% aaye to agla level khulega.	**{s}** के सारे पाठ हो गए! अब टेस्ट दें। {n}% आए तो अगला लेवल खुलेगा।
+**{s}**: {s} ke baad agli chaal chalo.	**{s}**: {s} के बाद अगली चाल चलें।
++{n} points ka fayda.	+{n} अंकों का फ़ायदा।
+/{s} pehli baar mein sahi. Jo galat hue woh kal phir aayenge.	/{s} पहली बार में सही। जो ग़लत हुए वे कल फिर आएँगे।
+/{s} sahi. Lesson poora karne ke liye {n}% chahiye.	/{s} सही। पाठ पूरा करने के लिए {n}% चाहिए।
+/{s}. Thodi aur practice!	/{s}। थोड़ा और अभ्यास!
+AI coach (free Gemini key) se detailed feedback bhi mil sakta hai: 🤖 button dabao.	AI कोच (मुफ़्त Gemini की) से विस्तार में राय भी मिल सकती है: 🤖 बटन दबाएँ।
+AI coach chalu karo (free, ek baar, ~{n} minute)	AI कोच चालू करें (मुफ़्त, एक बार, ~{n} मिनट)
+Aadhe endgames rook endgames hote hain.	आधे एंडगेम हाथी वाले एंडगेम होते हैं।
+Aage badhao: "passed pawns must be pushed"	आगे बढ़ाएँ: "पास्ड प्यादे बढ़ाने ही चाहिए"
+Aage ho to pieces trade.	आगे हों तो मोहरे बदलें।
+Aage wala hatega, peeche wala capture.	आगे वाला हटेगा, पीछे वाला मारा जाएगा।
+Aage ›	आगे ›
+Aaj ka agla lesson: **{s}**. Chalo shuru karte hain!	आज का अगला पाठ: **{s}**। चलिए शुरू करते हैं!
+Aaj ke kaam	आज के काम
+Aaj koi review baaki nahi	आज कोई दोहराई बाक़ी नहीं
+Aakhir mein **blunder check**: meri chaal se kuch hanging to nahi?	आख़िर में **भारी ग़लती की जाँच**: मेरी चाल से कुछ लटका तो नहीं?
+Aakhri check: opponent ka sabse forcing jawab kya hai?	आख़िरी जाँच: विरोधी का सबसे मजबूर करने वाला जवाब क्या है?
+Aam taur par nahi	आम तौर पर नहीं
+Aam taur par nahi: queenside kamzor hota hai aur pawn wapas jaata hai	आम तौर पर नहीं: रानी की तरफ़ कमज़ोर होती है और प्यादा वापस जाता है
+Aasaan	आसान
+Aasaan mate	आसान मात
+Ab White ke paas queen hai, aur yeh jeetne wali position hai.	अब सफ़ेद के पास रानी है, और यह जीतने वाली पोज़ीशन है।
+Ab bade hathiyaar: deflection, decoy, interference, clearance, x-ray aur zwischenzug. Phir calculation ke golden rules aur visualization.	अब बड़े हथियार: डिफ़्लेक्शन, डिकॉय, इंटरफ़ेरेंस, क्लियरेंस, एक्स-रे और ज़्विशेनत्सुग। फिर गणना के सुनहरे नियम और कल्पना।
+Ab d{n} openings, gambits, advanced traps, aur aakhir mein apna repertoire banana.	अब d{n} ओपनिंग, गैम्बिट, उन्नत जाल, और आख़िर में अपनी रिपर्टरी बनाना।
+Ab game ke rules pakke karo: kab jeet, kab draw, chaalein kaise likhte hain, aur tournament mein clock aur rating kaise kaam karte hain.	अब खेल के नियम पक्के करें: कब जीत, कब ड्रॉ, चालें कैसे लिखते हैं, और टूर्नामेंट में घड़ी और रेटिंग कैसे काम करते हैं।
+Ab is lesson ka chhota quiz: **{s} sawaal**, zyadatar board par. **{n}%** sahi karo to lesson poora aur agla lesson khulega.	अब इस पाठ की छोटी क्विज़: **{s} सवाल**, ज़्यादातर बोर्ड पर। **{n}%** सही करें तो पाठ पूरा और अगला पाठ खुलेगा।
+Ab khud khelo ›	अब ख़ुद खेलें ›
+Ab opposition White ke paas. Black ko hatna padega, White king aage (`Kd{n}`/`Kf{n}`) aur pawn queen banega.	अब अपोज़िशन सफ़ेद के पास। काले को हटना पड़ेगा, सफ़ेद राजा आगे (`Kd{n}`/`Kf{n}`) और प्यादा रानी बनेगा।
+Ab pieces bachana, sahi capture chunna, opening ke principles aur shuruaati traps. Aakhir mein sochne ka tareeka: checks, captures, threats.	अब मोहरे बचाना, सही मारना चुनना, ओपनिंग के सिद्धांत और शुरुआती जाल। आख़िर में सोचने का तरीक़ा: शह, मारना, ख़तरे।
+Ab poora karo: **{n} chaal** mein rook se mate.	अब पूरा करें: **{n} चाल** में हाथी से मात।
+Ab position ko plan mein badlo: rooks ko kaam do, plan banao, opponent ke plan roko, aur kabhi position ke liye material do.	अब पोज़ीशन को योजना में बदलें: हाथियों को काम दें, योजना बनाएँ, विरोधी की योजना रोकें, और कभी पोज़ीशन के लिए सामग्री दें।
+Ab practical endgames: pawn breakthroughs, rook endings (Lucena, Philidor, Vancura) aur minor piece endings.	अब व्यावहारिक एंडगेम: प्यादा ब्रेकथ्रू, हाथी एंडिंग (लुसेना, फ़िलिडोर, वानकुरा) और छोटे मोहरों की एंडिंग।
+Ab practical player banna hai: gehri calculation, clock, psychology, apne games ka analysis, aur jeetne ke tips.	अब व्यावहारिक खिलाड़ी बनना है: गहरी गणना, घड़ी, मनोविज्ञान, अपने खेलों का विश्लेषण, और जीतने के टिप्स।
+Ab sahi ✓	अब सही ✓
+Ab tum Lucena jeeto: pawn ko queen banao ({n} chaal).	अब आप लुसेना जीतें: प्यादे को रानी बनाएँ ({n} चाल)।
+Ab tum karo: Black king ko **{n} chaal** ke andar mate do.	अब आप करें: काले राजा को **{n} चाल** के अंदर मात दें।
+Ab tum karo: Reti study mein **draw bachao** ({n} chaal).	अब आप करें: रेटी स्टडी में **ड्रॉ बचाएँ** ({n} चाल)।
+Ab yaad se khelo! Tum **{s}** ho. Opponent apne aap khelega.	अब याद से खेलें! आप **{s}** हैं। विरोधी अपने आप खेलेगा।
+Abhi koi puzzle nahi.	अभी कोई पहेली नहीं।
+Abhi pass nahi ({n}% chahiye). Kamzor topics dobara karo, phir test do.	अभी पास नहीं ({n}% चाहिए)। कमज़ोर विषय दोबारा करें, फिर टेस्ट दें।
+Absolute pin (peeche king)	पूरा पिन (पीछे राजा)
+Absolute pin (peeche king): kanoonan hil nahi sakta. Relative pin (peeche queen/rook): hilega to nuksaan.	पूरा पिन (पीछे राजा): नियम से हिल नहीं सकता। आंशिक पिन (पीछे रानी/हाथी): हिलेगा तो नुक़सान।
+Absolute pin.	पूरा पिन।
+Absolute pin: peeche king, pinned piece chal hi nahi sakta. Relative pin: peeche queen/rook, chal sakta hai par nuksaan.	पूरा पिन: पीछे राजा, पिन मोहरा चल ही नहीं सकता। आंशिक पिन: पीछे रानी/हाथी, चल सकता है पर नुक़सान।
+Accelerated Dragon mein `{n}...Na{n}?` ki saza.	एक्सिलरेटेड ड्रैगन में `{n}...Na{n}?` की सज़ा।
+Achha! Ab mate do	अच्छा! अब मात दें
+Achhi chaal dikhe to ruko, behtar chaal dhundo (Lasker).	अच्छी चाल दिखे तो रुकें, बेहतर चाल ढूँढें (लास्कर)।
+Achhi chaal! 👍	अच्छी चाल! 👍
+Active hokar ladna	सक्रिय होकर लड़ना
+Active king, passed pawn ka safar, rook {n}th rank par	सक्रिय राजा, पास्ड प्यादे का सफ़र, हाथी {n}वीं रैंक पर
+Advanced motifs	उन्नत पैटर्न
+Advanced opening traps	उन्नत ओपनिंग जाल
+Advanced traps: ingredients seekho	उन्नत जाल: सामग्री सीखें
+Agar Black `{n}...Nxd{n}?` khele to White knight sacrifice karta hai.	अगर काला `{n}...Nxd{n}?` खेले तो सफ़ेद घोड़े का बलिदान करता है।
+Agar `e{n}` ka rook `e{n}` par aaye, to {n}th rank kaun bachayega?	अगर `e{n}` का हाथी `e{n}` पर आए, तो {n}वीं रैंक कौन बचाएगा?
+Agar baar-baar ek jaisi galti (jaise back-rank) hoti hai, wahi tumhara "weak link" hai.	अगर बार-बार एक जैसी ग़लती (जैसे पिछली रैंक) होती है, वही आपकी "कमज़ोर कड़ी" है।
+Agar dono bishops ek hi rang ke squares par hon?	अगर दोनों ऊँट एक ही रंग के खानों पर हों?
+Agla lesson ›	अगला पाठ ›
+Agla lesson: {s} ›	अगला पाठ: {s} ›
+Agla puzzle ›	अगली पहेली ›
+Agli chaal ›	अगली चाल ›
+Aisi position mein mate hota hai: queen king ke saamne, aur apna king queen ko protect kar raha hai. Ya queen poori edge rank par check de jabki king saamne khada ho.	ऐसी पोज़ीशन में मात होती है: रानी राजा के सामने, और अपना राजा रानी की रक्षा कर रहा है। या रानी पूरी किनारे की रैंक पर शह दे जबकि राजा सामने खड़ा हो।
+Akela king kabhi mate nahi kar sakta, isliye time par bhi draw.	अकेला राजा कभी मात नहीं दे सकता, इसलिए समय पर भी ड्रॉ।
+Akele king ko hamesha kam se kam ek square ya chaal chhodo, jab tak mate na de sako.	अकेले राजा को हमेशा कम से कम एक खाना या चाल छोड़ें, जब तक मात न दे सकें।
+Akele king ko mate karna har player ki pehli zaroorat hai. Har technique pehle samjho, phir computer ke khilaaf khud karo.	अकेले राजा को मात देना हर खिलाड़ी की पहली ज़रूरत है। हर तकनीक पहले समझें, फिर कंप्यूटर के ख़िलाफ़ ख़ुद करें।
+Akele knight ya bishop se mate nahi diya ja sakta.	अकेले घोड़े या ऊँट से मात नहीं दी जा सकती।
+Aksar trap tab lagta hai jab hum lalach mein opponent ki agli chaal nahi dekhte.	अक्सर जाल तब लगता है जब हम लालच में विरोधी की अगली चाल नहीं देखते।
+Alag-alag tareeke try karo: OTB, online, rapid, classical, puzzles, books, coach.	अलग-अलग तरीक़े आज़माएँ: बोर्ड पर, ऑनलाइन, रैपिड, क्लासिकल, पहेलियाँ, किताबें, कोच।
+Alapin Sicilian ({n}.c{n})	अलापिन सिसिलियन ({n}.c{n})
+Albin Counter-Gambit (Black)	एल्बिन काउंटर-गैम्बिट (काला)
+Albin: Lasker trap (underpromotion!)	एल्बिन: लास्कर जाल (अंडरप्रमोशन!)
+Alekhine ({n}-{n}, {n}-{n}): attack aur combinations. Euwe ({n}-{n}): amateur jo champion bana.	अलेखिन ({n}-{n}, {n}-{n}): हमला और कॉम्बिनेशन। यूवे ({n}-{n}): शौक़िया जो चैंपियन बना।
+Algebraic notation	बीजगणितीय नोटेशन
+Analyse karo: galti kahan aur kyun hui	विश्लेषण करें: ग़लती कहाँ और क्यों हुई
+Analysis ka pehla step?	विश्लेषण का पहला क़दम?
+Analysis ka sahi order?	विश्लेषण का सही क्रम?
+Analysis ka sahi tareeka	विश्लेषण का सही तरीक़ा
+Anand	आनंद
+Anastasia mate in {n}	अनास्तासिया मात {n} में

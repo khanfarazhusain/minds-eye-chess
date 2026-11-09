@@ -1,0 +1,129 @@
+Queen diagonal se, knight support. `f{n}` par apna bishop raasta band karta hai.	रानी विकर्ण से, घोड़े का सहारा। `f{n}` पर अपना ऊँट रास्ता बंद करता है।
+Queen fork: check + rook.	रानी का फ़ोर्क: शह + हाथी।
+Queen h{n} par, check	रानी h{n} पर, शह
+Queen h{n} par, checkmate	रानी h{n} पर, शह-मात
+Queen jaldi bahar laane ki saza	रानी जल्दी बाहर लाने की सज़ा
+Queen ke paas ho	रानी के पास हो
+Queen ko aage laana	रानी को आगे लाना
+Queen ko baar-baar chalana	रानी को बार-बार चलाना
+Queen ko back rank par rakhna	रानी को पीछे की रैंक पर रखना
+Queen ko bhagao, ya f{n} ko protect karo.	रानी को भगाएँ, या f{n} की रक्षा करें।
+Queen ko door bhejo	रानी को दूर भेजें
+Queen ko dushman king se **knight ki doori** par rakho: box chhota karte jao.	रानी को दुश्मन राजा से **घोड़े की दूरी** पर रखें: डिब्बा छोटा करते जाएँ।
+Queen ko king ke paas mat le jao jahan woh protect na ho!	रानी को राजा के पास वहाँ न ले जाएँ जहाँ उसकी रक्षा न हो!
+Queen ko kisi ne protect nahi kiya tha. Hamesha dekho: kya koi piece bina protection ke hai? ("hanging piece")	रानी की किसी ने रक्षा नहीं की थी। हमेशा देखें: क्या कोई मोहरा बिना रक्षा के है? ("लटका मोहरा")
+Queen ko trap	रानी को फँसाना
+Queen ne h{n} par capture kiya	रानी ने h{n} पर मारा
+Queen nikalne ke liye	रानी निकालने के लिए
+Queen pehle nikalo	रानी पहले निकालें
+Queen protected nahi thi, isliye king ne khud capture kar liya. Protected hoti to king capture nahi kar sakta.	रानी सुरक्षित नहीं थी, इसलिए राजा ने ख़ुद मार ली। सुरक्षित होती तो राजा नहीं मार सकता।
+Queen sacrifice	रानी का बलिदान
+Queen sacrifice `g{n}` par: rook ko wahan kheencha (decoy), phir smothered mate.	`g{n}` पर रानी का बलिदान: हाथी को वहाँ खींचा (चारा), फिर स्मोदर्ड मात।
+Queen sacrifice aur phir Black king ka poore board par shikaar!	रानी का बलिदान और फिर काले राजा का पूरे बोर्ड पर शिकार!
+Queen sacrifice karke mate in {n}!	रानी का बलिदान देकर {n} में मात!
+Queen se akela attack	रानी से अकेला हमला
+Queen se check do jahan se king ke paas sirf ek square bache.	रानी से ऐसी शह दें कि राजा के पास सिर्फ़ एक खाना बचे।
+Queen se mate (K+Q vs K)	रानी से मात (K+Q बनाम K)
+Queen se mate in {n} do.	रानी से {n} में मात दें।
+Queen seedha saamne, pawn `d{n}` support. Diagonal peeche apne rooks.	रानी सीधे सामने, प्यादा `d{n}` सहारा। विकर्ण पीछे अपने हाथी।
+Queen trade karo	रानी बदलें
+Queen wala	रानी वाला
+Queen ♛	रानी ♛
+Queen's Gambit	क्वीन्स गैम्बिट
+Queen's Gambit Accepted (QGA)	क्वीन्स गैम्बिट एक्सेप्टेड (QGA)
+Queen's Gambit Accepted trap	क्वीन्स गैम्बिट एक्सेप्टेड जाल
+Queen's Gambit Declined	क्वीन्स गैम्बिट डिक्लाइंड
+Queen's Gambit Exchange structure: White ke **{n} pawns** (a, b) Black ke **{n} pawns** (a, b, c) par chadhte hain: `b{n}-b{n}`. Trade ke baad Black ke paas **kamzor c-pawn** (backward/isolated) bachta hai.	क्वीन्स गैम्बिट एक्सचेंज ढाँचा: सफ़ेद के **{n} प्यादे** (a, b) काले के **{n} प्यादों** (a, b, c) पर चढ़ते हैं: `b{n}-b{n}`। अदला-बदली के बाद काले के पास **कमज़ोर c-प्यादा** (पिछड़ा/अलग-थलग) बचता है।
+Queen's Gambit `{n}.d{n} d{n} {n}.c{n}`: pawn asli mein free nahi.	क्वीन्स गैम्बिट `{n}.d{n} d{n} {n}.c{n}`: प्यादा असल में मुफ़्त नहीं।
+Queen's Gambit asli gambit nahi: {n}...dxc{n} ke baad pawn bachane ki koshish Black ki position kharab karti hai.	क्वीन्स गैम्बिट असली गैम्बिट नहीं: {n}...dxc{n} के बाद प्यादा बचाने की कोशिश काले की पोज़ीशन ख़राब करती है।
+Queen's Gambit aur Slav	क्वीन्स गैम्बिट और स्लाव
+Queen's Gambit, Slav, Indian defenses, English, gambits, advanced traps, repertoire	क्वीन्स गैम्बिट, स्लाव, इंडियन डिफ़ेंस, इंग्लिश, गैम्बिट, उन्नत जाल, रिपर्टरी
+Queen, bishop aur pawn ke mate patterns	रानी, ऊँट और प्यादे के मात पैटर्न
+Queen, bishop aur pawn patterns	रानी, ऊँट और प्यादे के पैटर्न
+Queen, rook, do rooks aur queen+rook se mate	रानी, हाथी, दो हाथी और रानी+हाथी से मात
+Queens trade ho gayi, kuch hi pieces bache, kings center ki taraf aa rahe hain. Kaunsa phase?	रानियाँ बदल गईं, कुछ ही मोहरे बचे, राजा केंद्र की ओर आ रहे हैं। कौन सा चरण?
+Queenside	क्वीनसाइड
+Queenside castle	क्वीनसाइड कैसल
+Queenside castling mein `b{n}` (ya `b{n}`) attack mein ho tab bhi castle ho sakta hai: king us square se nahi guzarta.	क्वीनसाइड कैसलिंग में `b{n}` (या `b{n}`) हमले में हो तब भी कैसल हो सकता है: राजा उस खाने से नहीं गुज़रता।
+Queenside pawns chalao	क्वीनसाइड प्यादे चलाएँ
+Quiet moves	शांत चालें
+Quiz dobara do ›	क्विज़ दोबारा दें ›
+Quiz shuru karo ›	क्विज़ शुरू करें ›
+Quiz ·	क्विज़ ·
+Quiz: {s}/{s} sahi ({s}%)	क्विज़: {s}/{s} सही ({s}%)
+Quotes, growth mindset, game ke {n} hisse, seekhne ka model	कथन, विकास की सोच, खेल के {n} हिस्से, सीखने का मॉडल
+Random pawn move	बेतरतीब प्यादा चाल
+Rank (aadi line)	रैंक (आड़ी लाइन)
+Rank number {n}	रैंक संख्या {n}
+Rating badhane ke liye time waste	रेटिंग बढ़ाने के लिए समय बर्बाद
+Rating board par nahi khelti. Apni normal chess khelo, galti ka intezaar karo.	रेटिंग बोर्ड पर नहीं खेलती। अपना सामान्य शतरंज खेलें, ग़लती का इंतज़ार करें।
+Rating chhupa do	रेटिंग छिपा दें
+Rating jaldi badhti hai	रेटिंग जल्दी बढ़ती है
+Rating ke hisaab se focus	रेटिंग के हिसाब से ध्यान
+Relative pin	सापेक्ष पिन
+Relative pin kabhi tod sakte ho (rebel) agar badle mein bada fayda ho (Legal trap, Popov-Petkovski).	सापेक्ष पिन कभी तोड़ सकते हैं (बग़ावत) अगर बदले में बड़ा फ़ायदा हो (लेगल जाल, पोपोव-पेत्कोव्स्की)।
+Relax ho jaana aur counterplay bhool jaana	ढीले पड़ जाना और जवाबी खेल भूल जाना
+Removing the defender (undermining / removing the guard): defender ko capture karo ya bhagao.	रक्षक हटाना (नींव खोदना / पहरेदार हटाना): रक्षक को मारें या भगाएँ।
+Removing the defender (undermining), overloaded piece	रक्षक हटाना (नींव खोदना), ओवरलोडेड मोहरा
+Removing the defender ko **undermining** ya **removing the guard** bhi kehte hain. Examples: Tseshkovsky-Kasparov, Karjakin-Short, Uhlmann-Schwartz, Adams-Whiteley, Inkiov-Jovanic, Cukierman vs NN.	रक्षक हटाने को **नींव खोदना** या **पहरेदार हटाना** भी कहते हैं। उदाहरण: त्सेश्कोव्स्की-कास्पारोव, कार्याकिन-शॉर्ट, उलमान-श्वार्ट्ज़, एडम्स-व्हाइटली, इंकियोव-योवानिच, कुकिएरमन बनाम NN।
+Repertoire banane ka achha tareeka?	रिपर्टरी बनाने का अच्छा तरीक़ा?
+Resign	हार मानें
+Reti Gambit (vs French)	रेटी गैम्बिट (फ़्रेंच के ख़िलाफ़)
+Reti ka jaadu ({n})	रेटी का जादू ({n})
+Reti study: chaal-dar-chaal	रेटी स्टडी: चाल-दर-चाल
+Reti study: king ek saath do kaam kar sakta hai (pawn pakadna aur apna pawn support): diagonal chaal ka jaadu.	रेटी स्टडी: राजा एक साथ दो काम कर सकता है (प्यादा पकड़ना और अपने प्यादे को सहारा): विकर्ण चाल का जादू।
+Reti: bishop + rook, king apne pieces mein (Reti-Tartakower).	रेटी: ऊँट + हाथी, राजा अपने मोहरों में (रेटी-टार्टाकोवर)।
+Review (purani galtiyan)	दोहराई (पुरानी ग़लतियाँ)
+Review ({s})	दोहराई ({s})
+Review poora	दोहराई पूरी
+Review ·	दोहराई ·
+Review: purani galtiyan dobara	दोहराई: पुरानी ग़लतियाँ दोबारा
+Reykjavik match.	रेक्याविक मैच।
+Right (usi haath se)	दाएँ (उसी हाथ से)
+Ring wala piece chalo. Sahi chaal: **	घेरे वाला मोहरा चलें। सही चाल: **
+Romantic daur ka sabse famous game: White ne dono rooks, ek bishop aur queen de diye!	रोमांटिक दौर का सबसे मशहूर खेल: सफ़ेद ने दोनों हाथी, एक ऊँट और रानी दे दिए!
+Rook	हाथी
+Rook (ya queen) ke saath mate force kar sakte hain. Yeh technique Level {n} mein seekhoge.	हाथी (या रानी) के साथ ज़बरदस्ती मात दे सकते हैं। यह तकनीक स्तर {n} में सीखेंगे।
+Rook ({n}) dekar minor piece ({n})	हाथी ({n}) देकर छोटा मोहरा ({n})
+Rook + **a-pawn** vs rook, jab White rook pawn ke aage (`a{n}`) ho aur pawn `a{n}` par. Black rook **side se** (`f{n}`) pawn par attack karta hai. White king paas aaye to side se **checks**. Black king `g{n}`/`h{n}` par. Result: **draw**.	हाथी + **a-प्यादा** बनाम हाथी, जब सफ़ेद हाथी प्यादे के आगे (`a{n}`) हो और प्यादा `a{n}` पर। काला हाथी **बग़ल से** (`f{n}`) प्यादे पर हमला करता है। सफ़ेद राजा पास आए तो बग़ल से **शह**। काला राजा `g{n}`/`h{n}` पर। नतीजा: **ड्रॉ**।
+Rook + minor piece patterns	हाथी + छोटे मोहरे के पैटर्न
+Rook + pawn wala, hamesha	हाथी + प्यादे वाला, हमेशा
+Rook `d{n}` kahan-kahan ja sakta hai? **Saare squares tap karo**, phir Check karo.	हाथी `d{n}` कहाँ-कहाँ जा सकता है? **सारे खाने टैप करें**, फिर जाँचें।
+Rook `d{n}` ke knight ko capture kar sakta hai, par uske aage nahi ja sakta. Capture karne ke liye dushman ke square par jaate hain.	हाथी `d{n}` के घोड़े को मार सकता है, पर उसके आगे नहीं जा सकता। मारने के लिए दुश्मन के खाने पर जाते हैं।
+Rook `g{n}` ko door se bishop `b{n}` support karta hai.	हाथी `g{n}` को दूर से ऊँट `b{n}` सहारा देता है।
+Rook `h{n}` ko knight `f{n}` bachata hai, knight `g{n}` bhi band karta hai.	हाथी `h{n}` को घोड़ा `f{n}` बचाता है, घोड़ा `g{n}` भी बंद करता है।
+Rook aur knight/bishop ke mate patterns	हाथी और घोड़े/ऊँट के मात पैटर्न
+Rook bachane ke liye	हाथी बचाने के लिए
+Rook back rank par, bishop `g{n}` ne `d{n}` aur `e{n}` dono sambhale.	हाथी पीछे की रैंक पर, ऊँट `g{n}` ने `d{n}` और `e{n}` दोनों सँभाले।
+Rook dekar knight liya: White ki queenside pawn structure tooti aur Black ko attack mila. Material kam, par position behtar.	हाथी देकर घोड़ा लिया: सफ़ेद का क्वीनसाइड प्यादा ढाँचा टूटा और काले को हमला मिला। सामग्री कम, पर पोज़ीशन बेहतर।
+Rook ek **deewar** banata hai: king ko ek taraf band karo.	हाथी एक **दीवार** बनाता है: राजा को एक तरफ़ बंद करें।
+Rook endgames sabse zyada aate hain	हाथी एंडगेम सबसे ज़्यादा आते हैं
+Rook endgames: Lucena aur Philidor	हाथी एंडगेम: लुसेना और फ़िलिडोर
+Rook g-file se check, bishop `b{n}` ne `g{n}` aur `h{n}` band kiye.	हाथी g-फ़ाइल से शह, ऊँट `b{n}` ने `g{n}` और `h{n}` बंद किए।
+Rook gaya, White material mein aage.	हाथी गया, सफ़ेद सामग्री में आगे।
+Rook gaya.	हाथी गया।
+Rook ka check! Beech mein piece rakh kar (block) bachao.	हाथी की शह! बीच में मोहरा रखकर (रोककर) बचाएँ।
+Rook ke liye attack ka raasta (dushman pawn par).	हाथी के लिए हमले का रास्ता (दुश्मन प्यादे पर)।
+Rook ke liye sabse achhi file kaunsi hai?	हाथी के लिए सबसे अच्छी फ़ाइल कौन सी है?
+Rook ki deewar	हाथी की दीवार
+Rook ki e-file chhodo: `d{n}`, `d{n}`, `f{n}`, `f{n}` sab safe hain.	हाथी की e-फ़ाइल छोड़ें: `d{n}`, `d{n}`, `f{n}`, `f{n}` सब सुरक्षित हैं।
+Rook ki value kitni hai?	हाथी की क़ीमत कितनी है?
+Rook ko **open file** chahiye. Wahan se woh {n}th/{n}th rank tak ghus sakta hai.	हाथी को **खुली फ़ाइल** चाहिए। वहाँ से वह {n}वीं/{n}वीं रैंक तक घुस सकता है।
+Rook ko dushman king se door rakho taaki woh capture na ho.	हाथी को दुश्मन राजा से दूर रखें ताकि वह मारा न जाए।
+Rook ko {n}th rank par lao: pawns aur king dono par dabaav.	हाथी को {n}वीं रैंक पर लाएँ: प्यादों और राजा दोनों पर दबाव।
+Rook ko {n}th rank par rakho, pawn ko attack karte raho.	हाथी को {n}वीं रैंक पर रखें, प्यादे पर हमला करते रहें।
+Rook ne g-file band ki, knight ne check diya, `h{n}` apna pawn.	हाथी ने g-फ़ाइल बंद की, घोड़े ने शह दी, `h{n}` अपना प्यादा।
+Rook ne {n}th rank band ki, queen ne {n}th rank par check diya. Yahi ladder ka idea hai.	हाथी ने {n}वीं रैंक बंद की, रानी ने {n}वीं रैंक पर शह दी। यही सीढ़ी का विचार है।
+Rook se mate (K+R vs K)	हाथी से मात (K+R बनाम K)
+Rook se mate in {n} do.	हाथी से {n} में मात दें।
+Rook seedha ({n}), bishop tirchha ({n}), queen dono ({n}), knight "L" shape ({n}), king {n} square, pawn aage {n} (pehli baar {n}).	हाथी सीधा ({n}), ऊँट तिरछा ({n}), रानी दोनों ({n}), घोड़ा "L" आकार ({n}), राजा {n} खाना, प्यादा आगे {n} (पहली बार {n})।
+Rook skewer!	हाथी का स्क्यूअर!
+Rook trade	हाथी की अदला-बदली
+Rook {n}th rank par White king ko aane se rokta hai. Pawn {n}th par aaye to rook peeche jaakar checks.	हाथी {n}वीं रैंक पर सफ़ेद राजा को आने से रोकता है। प्यादा {n}वीं पर आए तो हाथी पीछे जाकर शह।
+Rook {n}th rank par itna strong kyun hota hai?	हाथी {n}वीं रैंक पर इतना मज़बूत क्यों होता है?
+Rook {n}th rank par: pawns aur king dono atakte hain (Capablanca-Tartakower).	हाथी {n}वीं रैंक पर: प्यादे और राजा दोनों अटकते हैं (कापाब्लांका-टार्टाकोवर)।
+Rook {n}th rank rok raha hai. Queen se mate in {n}.	हाथी {n}वीं रैंक रोक रहा है। रानी से {n} में मात।
+Rook ♜	हाथी ♜
+Rooks `a{n}`, `b{n}` par aayenge.	हाथी `a{n}`, `b{n}` पर आएँगे।
+Rooks aur pieces ko zinda karo	हाथियों और मोहरों को ज़िंदा करें
+Rooks connect karke open files par lao.	हाथियों को जोड़कर खुली फ़ाइलों पर लाएँ।

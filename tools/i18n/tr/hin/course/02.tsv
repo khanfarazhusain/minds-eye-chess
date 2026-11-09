@@ -1,0 +1,129 @@
+Black ki side se dekho. Yeh square tap karo:	काले की तरफ़ से देखें। यह खाना टैप करें:
+Black ki taraf se board ulta dikhta hai. Dono taraf se squares pehchanna zaroori hai.	काले की तरफ़ से बोर्ड उल्टा दिखता है। दोनों तरफ़ से खाने पहचानना ज़रूरी है।
+Black ki taraf se trap: `Qh{n}#` ki threat.	काले की तरफ़ से जाल: `Qh{n}#` का ख़तरा।
+Black ki {n}rd chaal ke options: {n}...a{n} (Morphy, main), {n}...Nf{n} (Berlin), {n}...d{n} (Steinitz), {n}...f{n} (Schliemann), {n}...Bc{n} (Classical), {n}...Nd{n} (Bird).	काले की {n}री चाल के विकल्प: {n}...a{n} (मॉर्फ़ी, मुख्य), {n}...Nf{n} (बर्लिन), {n}...d{n} (स्टाइनित्ज़), {n}...f{n} (श्लीमैन), {n}...Bc{n} (क्लासिकल), {n}...Nd{n} (बर्ड)।
+Black king check mein nahi hai par uski har chaal attack mein jaati hai. Koi aur piece nahi, to stalemate (draw).	काला राजा शह में नहीं है पर उसकी हर चाल हमले में जाती है। कोई और मोहरा नहीं, तो स्टेलमेट (ड्रॉ)।
+Black king check mein nahi, par uske paas koi legal chaal nahi: **stalemate**. Box chhota karte waqt king ko hamesha ek square chhodo.	काला राजा शह में नहीं, पर उसके पास कोई नियमित चाल नहीं: **स्टेलमेट**। डिब्बा छोटा करते समय राजा को हमेशा एक खाना छोड़ें।
+Black king ki aakhri rank khaali hai, par pawns ne uska raasta band kiya hai.	काले राजा की आख़िरी रैंक ख़ाली है, पर प्यादों ने उसका रास्ता बंद किया है।
+Black king ko check	काले राजा को शह
+Black king ko kaun check de raha hai?	काले राजा को कौन शह दे रहा है?
+Black king par attack	काले राजा पर हमला
+Black knight `d{n}` par hai. Kis piece se capture karoge?	काला घोड़ा `d{n}` पर है। किस मोहरे से मारेंगे?
+Black ko hamesha draw milta hai	काले को हमेशा ड्रॉ मिलता है
+Black ne White ki nakal ki (`{n}...Nxe{n}?`).	काले ने सफ़ेद की नक़ल की (`{n}...Nxe{n}?`)।
+Black pawn le leta hai par use bachata nahi: development karta hai.	काला प्यादा ले लेता है पर उसे बचाता नहीं: विकास करता है।
+Black rook `g{n}` poori g-file control karta hai. Castling se check mein jaana allowed nahi.	काला हाथी `g{n}` पूरी g-फ़ाइल नियंत्रित करता है। कैसलिंग से शह में जाना मना है।
+Black vs `{n}.e{n}`: `{n}...e{n}` ya Caro-Kann. Black vs `{n}.d{n}`: QGD ya Slav.	काला बनाम `{n}.e{n}`: `{n}...e{n}` या कारो-कान। काला बनाम `{n}.d{n}`: QGD या स्लाव।
+Black's	काले का
+Blackburne Shilling trap	ब्लैकबर्न शिलिंग जाल
+Blackburne Shilling: `{n}...Nd{n}` ke baad `{n}.Nxe{n}?` lalach, `...Qg{n}!` aur smothered mate.	ब्लैकबर्न शिलिंग: `{n}...Nd{n}` के बाद `{n}.Nxe{n}?` लालच, `...Qg{n}!` और स्मदर्ड मात।
+Blackburne: do bishops + knight. Double bishop: do bishops saath diagonals par.	ब्लैकबर्न: दो ऊँट + घोड़ा। डबल ऊँट: दो ऊँट साथ-साथ विकर्णों पर।
+Blackmar-Diemer Gambit	ब्लैकमार-डीमर गैम्बिट
+Blind swine: do rooks {n}th rank par.	ब्लाइंड स्वाइन: दो हाथी {n}वीं रैंक पर।
+Blitz ki FIDE definition?	ब्लिट्ज़ की FIDE परिभाषा?
+Block karna	रोकना
+Block karo	रोकें
+Blunder check: opponent ke checks/captures/threats	भारी ग़लती जाँच: विरोधी की शह/मारना/ख़तरे
+Blunder se bacho	भारी ग़लती से बचें
+Board ke kisi bhi kone mein	बोर्ड के किसी भी कोने में
+Board nahi dikhega. Socho: **White: Kg{n}, Ra{n}. Black: Kg{n}, pawns f{n} g{n} h{n}.** White ki chaal. Mate in {n} kya hai?	बोर्ड नहीं दिखेगा। सोचें: **सफ़ेद: Kg{n}, Ra{n}। काला: Kg{n}, प्यादे f{n} g{n} h{n}।** सफ़ेद की चाल। {n} में मात क्या है?
+Board: {n} squares	बोर्ड: {n} खाने
+Bobby Fischer	बॉबी फ़िशर
+Boden mate in {n}	बोडेन मात {n} में
+Boden: do bishops crisscross (a{n} + f{n} jaisi diagonals).	बोडेन: दो ऊँट क्रॉस में (a{n} + f{n} जैसे विकर्ण)।
+Bonus time	बोनस समय
+Botvinnik ({n}-{n}, {n}-{n}, {n}-{n}): Soviet school ke pita, scientific training.	बॉट्विनिक ({n}-{n}, {n}-{n}, {n}-{n}): सोवियत स्कूल के जनक, वैज्ञानिक प्रशिक्षण।
+Box `a{n}-a{n}-d{n}-d{n}`. King `f{n}` box se bahar, apni chaal ke saath bhi `e{n}` tak hi: nahi pakad sakta.	डिब्बा `a{n}-a{n}-d{n}-d{n}`। राजा `f{n}` डिब्बे से बाहर, अपनी चाल के साथ भी `e{n}` तक ही: नहीं पकड़ सकता।
+Box method	डिब्बा तरीक़ा
+Break lo, phir analyse karo	ब्रेक लें, फिर विश्लेषण करें
+Breakthrough	ब्रेकथ्रू
+Breakthrough! Teen pawns vs teen pawns.	ब्रेकथ्रू! तीन प्यादे बनाम तीन प्यादे।
+Breakthrough, outside passer, triangulation	ब्रेकथ्रू, बाहरी पास्ड प्यादा, ट्रायंगुलेशन
+Bridge banana (rook {n}th rank)	पुल बनाना (हाथी {n}वीं रैंक)
+Built-in coach (offline)	अंदरूनी कोच (ऑफ़लाइन)
+Bure bishop ko trade karne ki koshish	बुरे ऊँट को बदलने की कोशिश
+CCT ka matlab?	CCT का मतलब?
+CCT use karo: pehle saare checks dekho. Sabse achhi chaal?	CCT इस्तेमाल करें: पहले सारी शहें देखें। सबसे अच्छी चाल?
+Calculate karo: mate in {n}! (Philidor's legacy, saari chaalein forcing)	गणना करें: {n} में मात! (फ़िलिडोर की विरासत, सारी चालें मजबूर करने वाली)
+Calculate, Check, Trade	गणना, जाँच, अदला-बदली
+Calculation aur visualization	गणना और कल्पना
+Calculation ek "draft story" hai: jo defensive hero tumhari story bigaadta hai, use hatao.	गणना एक "कच्ची कहानी" है: जो बचाव का हीरो आपकी कहानी बिगाड़ता है, उसे हटाएँ।
+Calculation kaise karein	गणना कैसे करें
+Calculation ke end mein sabse zaroori kya hai?	गणना के अंत में सबसे ज़रूरी क्या है?
+Calculation ke pro tips	गणना के प्रो टिप्स
+Calculation ke {n} golden rules	गणना के {n} सुनहरे नियम
+Calculation kya hai?	गणना क्या है?
+Cambridge Springs trap	कैम्ब्रिज स्प्रिंग्स जाल
+Candidate moves ka **tree** banao, har branch ek baar.	संभावित चालों का **पेड़** बनाएँ, हर शाखा एक बार।
+Candidate moves mein sabse pehle kaunsi dekhte hain?	संभावित चालों में सबसे पहले कौन-सी देखते हैं?
+Capablanca	कापाब्लांका
+Capablanca ({n}-{n}): saaf, simple chess aur endgame ke jaadugar.	कापाब्लांका ({n}-{n}): साफ़, सरल शतरंज और एंडगेम के जादूगर।
+Capablanca ke hisaab se game behtar karne ke liye pehle kya padho?	कापाब्लांका के हिसाब से खेल बेहतर करने के लिए पहले क्या पढ़ें?
+Capture karke promotion! Rook lo aur queen banao.	मारकर प्रमोशन! हाथी लें और रानी बनाएँ।
+Capture karna	मारना
+Capture karne se pehle gino	मारने से पहले गिनें
+Capture se file khulti hai: rook ke liye.	मारने से फ़ाइल खुलती है: हाथी के लिए।
+Capture se pehle **attackers aur defenders gino**.	मारने से पहले **हमलावर और रक्षक गिनें**।
+Capture se pehle gino: kitne attackers, kitne defenders.	मारने से पहले गिनें: कितने हमलावर, कितने रक्षक।
+Caro-Kann	कारो-कान
+Caro-Kann Defense	कारो-कान डिफ़ेंस
+Caro-Kann `{n}...c{n} {n}...d{n}`: solid, aur light bishop `...Bf{n}` se bahar aata hai.	कारो-कान `{n}...c{n} {n}...d{n}`: मज़बूत, और सफ़ेद खाने का ऊँट `...Bf{n}` से बाहर आता है।
+Caro-Kann ke variations	कारो-कान के वेरिएशन
+Caro-Kann ke variations: Classical ({n}...Bf{n}), Advance ({n}.e{n}), Exchange, Panov (c{n}).	कारो-कान के वेरिएशन: क्लासिकल ({n}...Bf{n}), एडवांस ({n}.e{n}), एक्सचेंज, पैनोव (c{n})।
+Caro-Kann trap	कारो-कान जाल
+Castle karna	कैसल करना
+Castle ke baad `h{n}` (luft) kyun khelte hain?	कैसल के बाद `h{n}` (लुफ़्ट) क्यों खेलते हैं?
+Castle! King safe.	कैसल! राजा सुरक्षित।
+Castle, Center, Tempo	कैसल, केंद्र, टेम्पो
+Castling karte waqt pehle kaunsa piece chhuna chahiye?	कैसलिंग करते समय पहले कौन-सा मोहरा छूना चाहिए?
+Castling ke rules	कैसलिंग के नियम
+Castling ki philosophy: pehle king safe karo, phir attack ("put yourself beyond defeat").	कैसलिंग का दर्शन: पहले राजा सुरक्षित करें, फिर हमला ("ख़ुद को हार से परे रखें")।
+Castling kyun?	कैसलिंग क्यों?
+Castling tab nahi: king/rook pehle chal chuke, beech mein piece, king check mein, ya king attacked square se guzre.	कैसलिंग तब नहीं: राजा/हाथी पहले चल चुके, बीच में मोहरा, राजा शह में, या राजा हमले वाले खाने से गुज़रे।
+Castling, en passant, promotion	कैसलिंग, आं पासां, प्रमोशन
+Castling: king ki suraksha	कैसलिंग: राजा की सुरक्षा
+Center White ka, Black ke pieces active.	बीच सफ़ेद का, काले के मोहरे सक्रिय।
+Center control karo	बीच नियंत्रित करें
+Center ko pawns se bharna zaroori nahi: pieces se control bhi chalega (hypermodern, Reti vs Capablanca).	बीच को प्यादों से भरना ज़रूरी नहीं: मोहरों से नियंत्रण भी चलेगा (हाइपरमॉडर्न, रेटी बनाम कापाब्लांका)।
+Center lo (`e{n}`/`d{n}`), knights aur bishops develop karo, jaldi castle.	बीच लें (`e{n}`/`d{n}`), घोड़े और ऊँट बाहर निकालें, जल्दी कैसल।
+Center mein knight {n} squares, corner mein sirf {n}. "Knight on the rim is dim": kinare par knight kamzor hota hai.	बीच में घोड़ा {n} खाने, कोने में सिर्फ़ {n}। "किनारे का घोड़ा फीका": किनारे पर घोड़ा कमज़ोर होता है।
+Center mein outpost jahan pawn bhaga na sake	बीच में आउटपोस्ट जहाँ प्यादा भगा न सके
+Center mein pawn aur bishop/queen ke liye raasta.	बीच में प्यादा और ऊँट/रानी के लिए रास्ता।
+Center mein pawns	बीच में प्यादे
+Center mein pieces sabse taakatwar: knight center mein {n} squares, corner mein sirf {n}.	बीच में मोहरे सबसे ताक़तवर: घोड़ा बीच में {n} खाने, कोने में सिर्फ़ {n}।
+Center mein queen {n} squares tak control karti hai!	बीच में रानी {n} खानों तक नियंत्रण करती है!
+Center mein, active	बीच में, सक्रिय
+Center par pehle kabza	बीच पर पहले क़ब्ज़ा
+Center sabse important	बीच सबसे ज़रूरी
+Center, development, king safety	केंद्र, विकास, राजा की सुरक्षा
+Chaal right haath se chali. Clock kis haath se?	चाल दाएँ हाथ से चली। घड़ी किस हाथ से?
+Chaal {s}/	चाल {s}/
+Chain ki base par	चेन के आधार पर
+Chain ki base par attack: French ka dil.	चेन के आधार पर हमला: फ़्रेंच का दिल।
+Chain sabse kamzor kadi se toot-ti hai.	चेन सबसे कमज़ोर कड़ी से टूटती है।
+Chalo is line ko chaal-dar-chaal dekhte hain.	चलिए इस लाइन को चाल-दर-चाल देखते हैं।
+Chalo ›	चलो ›
+Champion jaisi nazar: tactic dhundo.	चैंपियन जैसी नज़र: चाल ढूँढें।
+Check	शह
+Check do. Phir knight se checks (`Nf{n}+`, `Nh{n}+`). Aakhir mein queen sacrifice `g{n}` par.	शह दें। फिर घोड़े से शहें (`Nf{n}+`, `Nh{n}+`)। आख़िर में रानी का बलिदान `g{n}` पर।
+Check har piece de sakta hai: pawn tirchha, knight L se (block nahi ho sakta), rook/bishop/queen line se.	शह हर मोहरा दे सकता है: प्यादा तिरछा, घोड़ा L से (रोका नहीं जा सकता), हाथी/ऊँट/रानी लाइन से।
+Check karo	जाँचें
+Check mein ho to sirf woh chaal chal sakte ho jo check hataye.	शह में हों तो सिर्फ़ वह चाल चल सकते हैं जो शह हटाए।
+Check se bachne ka kaunsa tareeka **galat** hai?	शह से बचने का कौन-सा तरीक़ा **ग़लत** है?
+Check se bachne ke liye castling nahi kar sakte.	शह से बचने के लिए कैसलिंग नहीं कर सकते।
+Check se bacho: checking piece ko capture karo.	शह से बचें: शह देने वाले मोहरे को मारें।
+Check! Na capture, na block. King ko safe square par le jao.	शह! न मारना, न रोकना। राजा को सुरक्षित खाने पर ले जाएँ।
+Check, checkmate, stalemate	शह, शह-मात, स्टेलमेट
+Check, checkmate, stalemate, jeet aur draw, notation, tournament rules	शह, शह-मात, स्टेलमेट, जीत और ड्रॉ, नोटेशन, टूर्नामेंट नियम
+Check, phir knight ke checks (Nf{n}+, Nh{n}+), phir queen sacrifice `g{n}` par.	शह, फिर घोड़े की शहें (Nf{n}+, Nh{n}+), फिर रानी का बलिदान `g{n}` पर।
+Checkmate	शह-मात
+Checkmate karo	शह-मात दें
+Checkmate sab se upar: mate mil raha ho to queen bhi de sakte ho.	शह-मात सबसे ऊपर: मात मिल रही हो तो रानी भी दे सकते हैं।
+Checkmate!	शह-मात!
+Checkmate! Tumne jeet liya.	शह-मात! आप जीत गए।
+Checks shuru.	शहें शुरू।
+Checks, Captures, Threats	शह, मारना, ख़तरे
+Chess apne zamane ki culture, history aur technology dikhata hai (romantic era ke gambits se aaj ke engines tak).	शतरंज अपने ज़माने की संस्कृति, इतिहास और तकनीक दिखाता है (रोमांटिक दौर के गैम्बिट से आज के इंजन तक)।
+Chess aur zamana	शतरंज और ज़माना
+Chess ek-chaal ka game hai	शतरंज एक-चाल का खेल है
+Chess is about squares.	शतरंज खानों का खेल है।
