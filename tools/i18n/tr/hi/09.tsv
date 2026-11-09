@@ -1,0 +1,126 @@
+squares · seen from {s} side	squares · {s} ki side se
+square{s} · seen from {s} side	square{s} · {s} ki side se
+stages and {s} timed board drills. Every drill is hands-on and against the clock, so the board goes into your muscle memory. Pass them in order and you'll be playing whole games blindfold.	stages aur {s} timed board drills. Har drill haathon se aur clock ke khilaaf hai, to board aapki aadat mein bas jaata hai. Inhe kram se pass karo aur aap poore games blindfold khelne lagoge.
+starting from White's side. A square's name is its file then its rank:	White ki side se shuru karke. Square ka naam pehle file phir rank:
+starting from White's side. A square's name is its file then its rank: {s} is the e-file, {n}th rank.	White ki side se shuru karke. Square ka naam pehle file phir rank: {s} e-file, {n}th rank hai.
+starting from your side.	aapki side se shuru karke.
+still has {s} at home.	ke paas abhi bhi {s} ghar par hai.
+still in the centre	abhi bhi centre mein
+takes space in the centre	centre mein space leta hai
+th file from Black's left is the	th file Black ke baayen se hai
+the Black queen on her dark square	Black queen apne dark square par
+the Evans Gambit pawn sacrifice, b{n}	Evans Gambit ka pawn sacrifice, b{n}
+the Greek Gift sacrifice Bxh{n}+	Greek Gift sacrifice Bxh{n}+
+the London and Colle pawn, e{n}	London aur Colle ka pawn, e{n}
+the Scandinavian queen on a{n} (...Qa{n})	Scandinavian queen a{n} par (...Qa{n})
+the White queen on her light square	White queen apne light square par
+the big centre: all {n} squares from c{n} to f{n}	bada centre: c{n} se f{n} tak saare {n} squares
+the built-in engine (Stockfish could not start on this device)	built-in engine (is device par Stockfish shuru nahi ho saka)
+the dark centre square nearest Black	Black ke sabse paas ka dark centre square
+the dark centre square nearest White	White ke sabse paas ka dark centre square
+the dark corner on Black’s left	Black ke baayen ka dark corner
+the dark corner on White’s left	White ke baayen ka dark corner
+the end of the long dark diagonal in Black’s right corner	Black ke daayen corner mein long dark diagonal ka sira
+the far side back toward you	door ki side se wapas aapki taraf
+the fastest checkmate possible	sabse tez mumkin checkmate
+the four centre squares	chaar centre squares
+the four fianchetto squares	chaar fianchetto squares
+the four knights’ starting squares	chaaron knights ke shuruaati squares
+the larger of the file and rank gaps.	file aur rank gap mein se bada.
+the light centre square nearest Black	Black ke sabse paas ka light centre square
+the light centre square nearest White	White ke sabse paas ka light centre square
+the light corner on Black’s right	Black ke daayen ka light corner
+the light corner on White’s right	White ke daayen ka light corner
+the long dark diagonal, a{n} to h{n}	long dark diagonal, a{n} se h{n}
+the long light diagonal, h{n} to a{n}	long light diagonal, h{n} se a{n}
+the middle of the long light diagonal nearest Black	Black ke sabse paas long light diagonal ka beech
+the poisoned pawn: queens that grab b{n} get trapped	zehreela pawn: b{n} pakadne wali queens phans jaati hain
+the same square seen from Black’s side (flip top to bottom)	wahi square Black ki side se (upar se neeche palto)
+the square in front of Black’s queen at the start	shuruaat mein Black queen ke aage ka square
+the square in front of White’s king at the start	shuruaat mein White king ke aage ka square
+the squares knights usually develop to first	wo squares jahan knights aksar pehle jaate hain
+the starting squares of both kings and both queens	dono kings aur dono queens ke shuruaati squares
+the two weakest squares in the starting position	shuruaati position ke do sabse kamzor squares
+the {n}rd row from you	aapse {n}rd row
+the {s} square from your	aapke {s} se square
+the {s} {s} that started on	wo {s} {s} jo yahan shuru hua:
+the {s}-file next to it is open	uske bagal wali {s}-file khuli hai
+think like a human GM about long-term strategy or explain why one quiet move is better in deep positions. The explanations come from the engine's numbers plus chess rules of thumb. For a deeper, human-style talk, add the free Gemini key above and tap	lambi strategy par insaani GM ki tarah sochna ya gehri position mein ek shaant chaal kyun behtar hai samjhana. Samjhaish engine ke numbers aur chess ke aam rules se aati hai. Gehri, insaani baat ke liye upar free Gemini key daalo aur tap karo
+time{s} you left a piece loose. Before every move ask: "after this, what can my opponent take?"	baar aapne piece dheela chhoda. Har chaal se pehle poochho: "iske baad mera opponent kya le sakta hai?"
+time{s} you missed a move that won material. Look at all checks, captures and threats (in that order) first.	baar aapse material jeetne wali chaal chhooti. Pehle saare checks, captures aur threats (isi kram mein) dekho.
+to get out of check	check se nikalne ke liye
+to move. In your game you played	ki chaal. Aapke game mein aapne khela
+to play and win.	khelo aur jeeto.
+to reach a square right next to it ({s} to {s}) and	bilkul bagal wale square tak pahunchne ke liye ({s} se {s}) aur
+vs Fried Liver try	vs Fried Liver koshish
+wants to play chess with you on {n} Squares. Tap to join (code {s}):	{n} Squares par aapke saath chess khelna chahta hai. Judne ke liye tap karo (code {s}):
+was a little more precise.	thodi zyada sateek thi.
+weak square · red square: loose piece	kamzor square · laal square: dheela piece
+weakens the pawns in front of your king	aapke king ke aage ke pawns kamzor karta hai
+what did Black play here?	Black ne yahan kya khela?
+what did White play here?	White ne yahan kya khela?
+what did {s} play here?	{s} ne yahan kya khela?
+when you're lost: it shows the board for {n} seconds and is counted. Turn on	jab aap bhatak jao: ye {n} second board dikhata hai aur gina jaata hai. On karo
+where Black’s b{n} knight usually goes first	jahan Black ka b{n} knight aksar pehle jaata hai
+where Black’s g{n} knight usually goes first	jahan Black ka g{n} knight aksar pehle jaata hai
+where Black’s king lands after castling kingside	kingside castling ke baad Black king jahan pahunchta hai
+where Black’s king lands after castling queenside	queenside castling ke baad Black king jahan pahunchta hai
+where Black’s rook lands after castling queenside	queenside castling ke baad Black rook jahan pahunchta hai
+where White’s b{n} knight usually goes first	jahan White ka b{n} knight aksar pehle jaata hai
+where White’s g{n} knight usually goes first	jahan White ka g{n} knight aksar pehle jaata hai
+where White’s king lands after castling kingside	kingside castling ke baad White king jahan pahunchta hai
+where White’s king lands after castling queenside	queenside castling ke baad White king jahan pahunchta hai
+where White’s rook lands after castling kingside	kingside castling ke baad White rook jahan pahunchta hai
+where king and rook stand after castling kingside, both colours	kingside castling ke baad king aur rook kahan khade hote hain, dono colours
+where king and rook stand after castling queenside, both colours	queenside castling ke baad king aur rook kahan khade hote hain, dono colours
+where the b{n} knight jumps: Nc{n}	jahan b{n} knight koodta hai: Nc{n}
+you get mated in	aapko itne mein mate hota hai:
+you stopped before the time ran out	aap time khatam hone se pehle ruk gaye
+your back row (nearest you)	aapki pichhli row (aapke sabse paas)
+{n} XP to level {n}. Earn XP from puzzles, school topics, games and drills.	Level {n} tak {n} XP. Puzzles, school topics, games aur drills se XP kamao.
+{n} along any line, otherwise {n}.	kisi bhi line par {n}, warna {n}.
+{n} done in this session · {n} to repeat	is session mein {n} done · {n} dohrane hain
+{n} lines due · White and Black	{n} lines baaki · White aur Black
+{n} minutes: see moves in your head.	{n} minute: chaalein dimaag me dekho.
+{n} move along a file or rank, otherwise {n}.	file ya rank par {n} chaal, warna {n}.
+{n} on a diagonal, {n} to any other square of its colour, never to the other colour.	diagonal par {n}, apne colour ke kisi aur square tak {n}, doosre colour par kabhi nahi.
+{n} pieces from Black’s side	Black ki side se {n} pieces
+{n} puzzles to measure this week.	Is hafte ko naapne ke liye {n} puzzles.
+{n}% accuracy in a coach game	coach game mein {n}% accuracy
+{n}% right with no peeking	bina jhaanke {n}% sahi
+{n}...c{n} Caro-Kann, and the knight on c{n}	{n}...c{n} Caro-Kann, aur c{n} par knight
+{n}.c{n} the English, and Bc{n} in the Italian Game	{n}.c{n} English, aur Italian Game mein Bc{n}
+{n}.{n} times the target earns two stars, {n}.{n} times earns three. The board has no labels. Use Peek while you learn.	Target ka {n}.{n} guna do stars deta hai, {n}.{n} guna teen. Board par labels nahi. Seekhte waqt Peek use karo.
+{n}/{n} lessons · test not yet	{n}/{n} lessons · test abhi nahi
+{n}/{n} lessons · test not yet · {n}/{n} topics mastered	{n}/{n} lessons · test abhi nahi · {n}/{n} topics master
+▶ Replay it: guess the master's moves	▶ Dobara chalao: master ki chaalein guess karo
+★ Level test: {n}% = {n} star, {n}% = {n}, {n}% = {n} · 👑 = boss beaten	★ Level test: {n}% = {n} star, {n}% = {n}, {n}% = {n} · 👑 = boss haraya
+⚔️ After the coach's move: threats	⚔️ Coach ki chaal ke baad: threats
+✅ Your plan, step by step	✅ Aapka plan, step by step
+✋ Coach stopped the game: {s} is a {s}.	✋ Coach ne game roka: {s} ek {s} hai.
+✓ Checklist done. Now choose your move.	✓ Checklist done. Ab apni chaal chuno.
+✓ Exactly the master's move! +{n}	✓ Bilkul master ki chaal! +{n}
+✦ AI coach (free, optional)	✦ AI coach (free, optional)
+✦ AI coach is writing the explanation…	✦ AI coach samjhaish likh raha hai…
+✦ AI coach: why option {n} is best	✦ AI coach: option {n} best kyun hai
+✦ Free AI coach (optional)	✦ Free AI coach (optional)
+🌍 Random-opponent matchmaking is not available yet. Online play works with a friend by code.	🌍 Anjaan opponent se milaan abhi nahi hai. Online khel code se dost ke saath chalta hai.
+🎁 Finish all {n} for a perfect day	🎁 Perfect day ke liye saare {n} poore karo
+🎯 Your best options (see the arrows)	🎯 Aapke best options (teer dekho)
+🎯 Your options now and where they lead	🎯 Abhi aapke options aur wo kahan le jaate hain
+🏅 Topic mastered! Great work. Keep going or choose a new topic.	🏅 Topic master ho gaya! Badhiya. Chalte raho ya naya topic chuno.
+🐴 Piece moves and lines	🐴 Pieces ki chaal aur lines
+👇 Tap any level to open it	👇 Kholne ke liye koi bhi level tap karo
+👤 Account, friends list and cloud save	👤 Account, friends list aur cloud save
+💡 Build up all your pieces first, then sacrifice to break the king open.	💡 Pehle saare pieces taiyaar karo, phir king ko kholne ke liye qurbaani do.
+💡 The coach rates every move and shows a better one, with the reason.	💡 Coach har chaal ko rate karta hai aur wajah ke saath behtar chaal dikhata hai.
+📈 Progress and weak areas	📈 Progress aur kamzor hisse
+📖 Not the book move.	📖 Book chaal nahi.
+📖 You finished the {s} line. Now play on with the plan.	📖 Aapne {s} line poori ki. Ab plan ke saath khelte raho.
+📝 Notes for this level	📝 Is level ke notes
+📱 Add to Home Screen (works like an app)	📱 Home Screen par add karo (app ki tarah chalta hai)
+📲 Add to Home Screen	📲 Home Screen par add karo
+🔄 Mirror and other side	🔄 Mirror aur doosri side
+🔍 After your move {s}: what can happen	🔍 Aapki chaal {s} ke baad: kya ho sakta hai
+🧠 Plans on the board (tap a letter)	🧠 Board par plans (ek letter tap karo)
+🧠 Why the coach played	🧠 Coach ne kyun khela

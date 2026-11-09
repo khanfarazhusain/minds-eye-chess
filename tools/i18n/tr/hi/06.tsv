@@ -1,0 +1,136 @@
+Spin the board half a turn, which is what Black sees. Both flip: a{n} ↔ h{n}, b{n} ↔ g{n}, e{n} ↔ d{n}, c{n} ↔ f{n}.	Board ko aadha ghumao, yahi Black dekhta hai. Dono palat-te hain: a{n} ↔ h{n}, b{n} ↔ g{n}, e{n} ↔ d{n}, c{n} ↔ f{n}.
+Split the board into four quarters: queenside a–d, kingside e–h, White's half ranks {n}–{n}, Black's half {n}–{n}. Also think in rings: the	Board ko chaar hisson mein baanto: queenside a–d, kingside e–h, White ka half ranks {n}–{n}, Black ka half {n}–{n}. Rings mein bhi socho:
+Square colours: the up-down and left-right mirrors always have the	Square colours: upar-neeche aur baayen-daayen mirrors ka hamesha hota hai
+Square names from Black	Black ki taraf se square ke naam
+Square names from White	White ki taraf se square ke naam
+Square names from White · tutorial	White ki taraf se square ke naam · tutorial
+Square of the pawn	Pawn ka square
+Squares, files, ranks, center	Squares, files, ranks, centre
+Stage {n} · Famous games in your head	Stage {n} · Mashhoor games dimaag mein
+Stage {n} · Files and ranks, both directions	Stage {n} · Files aur ranks, dono taraf se
+Stage {n} · Landmark squares and memory tricks	Stage {n} · Landmark squares aur yaad ke tricks
+Stage {n} · Lines and diagonals	Stage {n} · Lines aur diagonals
+Stage {n} · Moves in your head	Stage {n} · Chaalein dimaag mein
+Stage {n} · Openings in your head	Stage {n} · Openings dimaag mein
+Stage {n} · Square names from Black	Stage {n} · Black ki taraf se square ke naam
+Stage {n} · Square names from White	Stage {n} · White ki taraf se square ke naam
+Stage {n} · Where every piece starts	Stage {n} · Har piece kahan shuru hota hai
+Stalemate: Black is NOT in check but has no legal move. The game is a draw! Be careful not to stalemate when you are winning.	Stalemate: Black check mein NAHI hai par koi legal chaal nahi. Game draw! Jeet-te waqt stalemate na ho, dhyaan rakho.
+Start from the opening position and play these moves in your head:	Shuruaati position se ye chaalein dimaag mein khelo:
+Start on {s}. Which square is {s}?	{s} se shuru karo. {s} kaunsa square hai?
+Start with an empty board	Khaali board se shuru karo
+Start with the tutorial · {n} step	Tutorial se shuru karo · {n} step
+Start with the tutorial · {n} steps	Tutorial se shuru karo · {n} steps
+Stay in front of the pawn. When the enemy king comes, take the opposition.	Pawn ke aage raho. Dushman king aaye to opposition lo.
+Step {n} of {n}: Put a pawn in the centre.	Step {n} / {n}: Centre mein ek pawn rakho.
+Step-by-step lessons with your own AI tutor. Uses the same Gemini key.	Apne AI tutor ke saath step-by-step lessons. Wahi Gemini key use hoti hai.
+Still stuck? Tap Hint again for more.	Abhi bhi atke? Aur madad ke liye Hint phir dabao.
+Stockfish is checking every move… {s}/	Stockfish har chaal check kar raha hai… {s}/
+Stockfish {n} (loading…), built into the app and working offline	Stockfish {n} (load ho raha…), app mein built-in aur offline chalta hai
+Stockfish {n}, a very strong engine, built into the app and working offline	Stockfish {n}, bahut strong engine, app mein built-in aur offline chalta hai
+Stop giving pieces away: before every move ask "what is attacked?". Opening rules: centre pawn, knights, bishops, castle. Basic forks and pins.	Pieces dena band karo: har chaal se pehle poochho "kis par attack hai?". Opening rules: centre pawn, knights, bishops, castle. Basic forks aur pins.
+Stop me on mistakes and let me retry	Galti par mujhe roko aur dobara try karne do
+Stopped at "{s}": not a legal move here.	"{s}" par ruke: yahan ye legal chaal nahi.
+Story squares · target {n} per minute	Story squares · target {n} per minute
+Story squares, Black’s side	Story squares, Black ki side
+Story squares, White’s side	Story squares, White ki side
+Story squares, side changes every question	Story squares, har sawaal par side badalti hai
+Strong blindfold players can see the board from either side. The final drill in this stage flips the board at random, so train both views until it feels the same.	Strong blindfold players kisi bhi side se board dekh lete hain. Is stage ki aakhri drill board ko randomly palat-ti hai, to dono nazare tab tak practice karo jab tak ek jaise na lagein.
+Tactics: skewer, discovered attack, double check. Mate patterns: back rank, smothered mate. King and pawn endings: opposition.	Tactics: skewer, discovered attack, double check. Mate patterns: back rank, smothered mate. King aur pawn endings: opposition.
+Take it back and find a better move. Use Hint if you need help.	Wapas lo aur behtar chaal dhoondo. Madad chahiye to Hint use karo.
+Take the weekly test ({n} puzzles)	Weekly test do ({n} puzzles)
+Tap a good outpost square for {s} knight: protected by a {s} pawn, and no enemy pawn can ever attack it.	{s} knight ke liye achha outpost square tap karo: {s} pawn se protected, aur koi dushman pawn kabhi attack na kar sake.
+Tap a move to see the full explanation. Start with your {s} weak move{s}.	Poori samjhaish ke liye chaal tap karo. Apni {s} kamzor chaal{s} se shuru karo.
+Tap a number on the board or a card to see that move. Then play the move yourself.	Wo chaal dekhne ke liye board par number ya card tap karo. Phir khud chaal khelo.
+Tap a piece, then its square.	Piece tap karo, phir uska square.
+Tap any square below to hear its name.	Naam sunne ke liye neeche koi bhi square tap karo.
+Tap any square on the	Koi bhi square tap karo, isme:
+Tap any square to see its name, colour and where a piece on it could move.	Koi bhi square tap karo, uska naam, colour aur us par khada piece kahan ja sakta hai, dekho.
+Tap card {n} to see why option {n} is best.	Option {n} best kyun hai dekhne ke liye card {n} tap karo.
+Tap every piece (white or black) that is hanging: attacked and not protected enough. Then press Check.	Har latakta piece tap karo (white ya black): attack mein aur kam protected. Phir Check dabao.
+Tap every square the knight on {s} can jump to	Har wo square tap karo jahan {s} wala knight jump kar sakta hai
+Tap squares to hear their names. Say the files out loud forwards until it is automatic.	Naam sunne ke liye squares tap karo. Files ko seedha zor se bolo jab tak apne aap na aane lagein.
+Tap the BAD bishop(s): a bishop blocked by many of its own pawns on its own square colour. Then press Check.	BAD bishop tap karo: jo apne colour par apne hi kai pawns se ruka ho. Phir Check dabao.
+Tap the knight’s targets	Knight ke target tap karo
+Tap the left-right mirror	Baayen-daayen mirror tap karo
+Tap the light or dark squares	Light ya dark squares tap karo
+Tap the light or dark squares on a line	Line par light ya dark squares tap karo
+Tap the light or dark squares · target {n} per minute	Light ya dark squares tap karo · target {n} per minute
+Tap the mirror · target {n} per minute	Mirror tap karo · target {n} per minute
+Tap the starting square{s} of the	Iska shuruaati square{s} tap karo:
+Tap the story square	Story square tap karo
+Tap the turned-around square, Black’s side	Ghooma hua square tap karo, Black ki side
+Tap the up-down mirror	Upar-neeche mirror tap karo
+Targets from Black’s side, no coordinates	Black ki side se targets, bina coordinates
+Test + what to do next	Test + aage kya karna hai
+Test + what to do next ›	Test + aage kya karna hai ›
+That FEN is not a legal position. Copy it again.	Wo FEN legal position nahi hai. Phir copy karo.
+That move leaves your king in check, so it is not allowed.	Wo chaal aapke king ko check mein chhodti hai, isliye allowed nahi.
+That was a big blunder.	Wo bada blunder tha.
+That was {s}. The answer is marked green.	Wo {s} tha. Jawab hara mark hai.
+The "Evergreen Game": a long combination ending in mate.	"Evergreen Game": ek lamba combination jo mate par khatam hota hai.
+The "Immortal Game" was played in London in {n} as a friendly game. Anderssen gave away a bishop, both rooks and finally his queen. Black had a huge material advantage but his pieces were far away from his king. With just two bishops and a knight, White gave mate. Lesson: active pieces near the king are worth more than material on the other side of the board.	"Immortal Game" {n} mein London mein dostana game ke roop mein khela gaya. Anderssen ne ek bishop, dono rooks aur aakhir mein queen de di. Black ke paas bahut zyada material tha par uske pieces apne king se door the. Sirf do bishops aur ek knight se White ne mate diya. Seekh: king ke paas active pieces board ki doosri taraf ke material se zyada keemti hain.
+The "Immortal Game": both rooks and the queen are given away.	"Immortal Game": dono rooks aur queen de diye jaate hain.
+The "Opera Game": fast development and a beautiful queen sacrifice.	"Opera Game": tez development aur khoobsurat queen sacrifice.
+The Evans Gambit: a pawn for fast development	Evans Gambit: tez development ke liye ek pawn
+The Home Screen app has its own storage: save a backup here first, then restore it inside the Home Screen app.	Home Screen app ka apna storage hai: pehle yahan backup save karo, phir Home Screen app ke andar restore karo.
+The answer is marked green.	Jawab hara mark hai.
+The better move is	Behtar chaal hai
+The bishop aims at f{n}. White plays c{n} and d{n} for the centre, or a slow plan with d{n}, a{n}, h{n} and Re{n}. Black develops with ...Bc{n} or ...Nf{n} and must watch the f{n} square.	Bishop f{n} par nishaana lagata hai. White centre ke liye c{n} aur d{n} khelta hai, ya d{n}, a{n}, h{n} aur Re{n} wala dheema plan. Black ...Bc{n} ya ...Nf{n} se develop karta hai aur f{n} square par nazar rakhni padti hai.
+The board has no colours. A square lights up: is it light or dark?	Board par colours nahi. Ek square chamakta hai: light hai ya dark?
+The board has no colours. A square lights up: is it light or dark? Answer as many as you can before the time runs out. Every minute is recorded.	Board par colours nahi. Ek square chamakta hai: light hai ya dark? Time khatam hone se pehle jitne ho sake utne jawab do. Har minute record hota hai.
+The board has no colours. Tap every light or dark square on the named line.	Board par colours nahi. Batayi line par har light ya dark square tap karo.
+The board has no colours. Tap every light or dark square on the named line. Answer as many as you can before the time runs out. Every minute is recorded.	Board par colours nahi. Batayi line par har light ya dark square tap karo. Time khatam hone se pehle jitne ho sake utne jawab do. Har minute record hota hai.
+The board now shows the position after the moves.	Board ab chaalon ke baad wali position dikha raha hai.
+The built-in coach explanation above still applies. Auto AI will try again on your next move.	Upar wali built-in coach ki samjhaish ab bhi sahi hai. Auto AI aapki agli chaal par phir try karega.
+The centre is balanced.	Centre barabar hai.
+The coach has not moved yet.	Coach ne abhi chaal nahi chali.
+The coach plays the book line with you and stops you if you leave it.	Coach aapke saath book line khelta hai aur line chhodne par rok deta hai.
+The coach ran out of time. You win on time!	Coach ka time khatam. Aap time par jeete!
+The colours are hidden. Tap every	Colours chhupe hain. Har tap karo:
+The diagonals of {s} and {s} cross on {s}.	{s} aur {s} ke diagonals {s} par milte hain.
+The engine's plan from here	Yahan se engine ka plan
+The famous king hunt: the king is chased all the way to g{n}.	Mashhoor king hunt: king ko g{n} tak bhagaya jaata hai.
+The fastest mate in chess: the king is opened by weak pawn moves.	Chess ka sabse tez mate: kamzor pawn chaalon se king khul jaata hai.
+The file number equals the rank: a{n}, b{n}, c{n} … h{n}.	File number rank ke barabar: a{n}, b{n}, c{n} … h{n}.
+The final boss. Show me everything!	Aakhri boss. Sab kuch dikhao!
+The game ends here. Which square is the	Game yahan khatam. Kaunsa square hai
+The hardest piece to see. Jumps, counts and shortest routes.	Dekhne mein sabse mushkil piece. Jumps, ginti aur sabse chhote raaste.
+The king helps: the queen mates right in front of the enemy king, protected by your king.	King madad karta hai: queen dushman king ke bilkul saamne mate karti hai, aapke king se protected.
+The king is flanked by its own rooks like shoulder pads, and the queen mates in front.	King ke dono taraf uske apne rooks kandhon ki tarah hain, aur queen saamne se mate karti hai.
+The king is in check: you cannot castle out of check.	King check mein hai: check se castle karke nahi nikal sakte.
+The king is stuck behind its own pawns, and a rook or queen mates on the back rank.	King apne hi pawns ke peeche phansa hai, aur rook ya queen back rank par mate karte hain.
+The king moves one square in any direction.	King kisi bhi disha mein ek square chalta hai.
+The king or the a{n} rook has already moved earlier in this game.	Is game mein king ya a{n} rook pehle hi chal chuka hai.
+The king or the h{n} rook has already moved earlier in this game.	Is game mein king ya h{n} rook pehle hi chal chuka hai.
+The king would pass through or land on an attacked square.	King attack wale square se guzrega ya us par rukega.
+The kings start on {s} and	Kings {s} aur
+The knight was not really pinned! White offers the queen	Knight asal mein pinned nahi tha! White queen offer karta hai
+The line it had in mind:	Uske dimaag mein ye line thi:
+The long diagonal {s}–{s} is all dark, {s}–{s} is all light. A bishop never leaves its colour. A knight	Long diagonal {s}–{s} poora dark hai, {s}–{s} poora light. Bishop kabhi apna colour nahi chhodta. Knight
+The microphone is blocked. Allow it, or tap your answer.	Microphone blocked hai. Allow karo, ya apna jawab tap karo.
+The move goes {s} to {s}.	Chaal {s} se {s} jaati hai.
+The next drill is open.	Agli drill khul gayi.
+The next lesson is open.	Agla lesson khul gaya.
+The number of moves a king needs is the	King ko jitni chaalein chahiye wo hai
+The only good move here, well found.	Yahan ki ikloti achhi chaal, badhiya dhoondi.
+The pieces will vanish.	Pieces gaayab ho jaayenge.
+The queen always starts on a square of her own colour: White queen on light {s}, Black queen on dark {s}. The kings sit next to them on the e-file: {s} and {s}.	Queen hamesha apne colour ke square par shuru hoti hai: White queen light {s} par, Black queen dark {s} par. Kings unke bagal mein e-file par baithte hain: {s} aur {s}.
+The queen moves like a rook and a bishop together.	Queen rook aur bishop dono ki tarah chalti hai.
+The queen recaptures early. After Nc{n} she must move again, so Black gives up time for a solid position.	Queen jaldi wapas maarti hai. Nc{n} ke baad use phir chalna padta hai, to Black solid position ke liye time deta hai.
+The queen sacrifice! It drags the knight away from d{n}	Queen sacrifice! Ye knight ko d{n} se door kheenchta hai
+The redder the square, the more often you missed it. These come back more often next time.	Square jitna laal, utni baar aapse chhoota. Ye agli baar zyada aayenge.
+The rooks take turns giving check, walking the king to the edge like a ladder.	Rooks baari baari check dete hain, seedhi ki tarah king ko edge tak le jaate hain.
+The same board turned around: h-file on your left, rank {n} nearest.	Wahi board ghooma hua: h-file aapke baayen, rank {n} sabse paas.
+The side changes every question.	Har sawaal par side badalti hai.
+The starting position (FEN) in this game is not valid.	Is game ki shuruaati position (FEN) sahi nahi hai.
+The starting square of all {n} pieces. Must be perfect before you move on.	Saare {n} pieces ka shuruaati square. Aage badhne se pehle bilkul pakka hona chahiye.
+The two long diagonals	Do long diagonals
+The windmill: knight checks win back lots of material	Windmill: knight checks bahut saara material wapas jeet-te hain
+The {s} king has more pawns in front of it and fewer enemy pieces nearby. Count: pawn shield, open files near the king, and attackers around it.	{s} king ke aage zyada pawns aur paas mein kam dushman pieces hain. Gino: pawn shield, king ke paas khuli files, aur aas paas ke attackers.
+The {s} starts on {s}. Queenside is the a to d half, kingside e to h. The queen starts on her own colour: White d{n} light, Black d{n} dark.	{s} {s} par shuru hota hai. Queenside a se d wala aadha hai, kingside e se h. Queen apne colour par shuru hoti hai: White d{n} light, Black d{n} dark.
+The {s}-file has no pawns. Put a rook there to control it.	{s}-file par koi pawn nahi. Use control karne ke liye wahan rook rakho.
+The {s}-file is {s} from {s}'s left.	{s}-file {s} ke baayen se {s} hai.
+Their captures next move: {s}.	Agli chaal mein unke captures: {s}.
+Their checks next move: {s}.	Agli chaal mein unke checks: {s}.
+Theme: Free piece · puzzle rating {n}	Theme: Free piece · puzzle rating {n}
