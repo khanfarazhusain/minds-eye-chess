@@ -2231,7 +2231,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
   if(a==='hl-go'){hlStart();return}
   if(a==='hl-share'){hlShare();return}
   if(a==='hl-again'){if(HL){HL.i=0;HL.ph=0;hlStep()}return}
-  if(a==='sfx-set'){P.set[d.k]=d.k==='sfx'?d.v==='1':+d.v;save();render();if(fxOn()){fxCtx();sfx('P')}return}
+  if(a==='sfx-set'){P.set[d.k]=d.k==='sfx'?d.v==='1':+d.v;save();render();if(d.k==='vib'){if(P.set.vib)vibMove(true);return}if(fxOn()){fxCtx();sfx('P')}return}
   if(a==='voice-test'){voiceTest();return}
   if(a==='sfx-test'){fxUnlock();const st=()=>{const el=document.getElementById('sfxst');if(el)el.innerHTML=`${L2('Phone audio','Phone audio')}: <b>${AUNL?'OK ✓':'locked ✗'}</b> · ${L2('Played','Baja')}: <b>${SNDOK?'✓':'✗'}</b> · Web audio: <b>${AC?AC.state:'none'}</b>${SNDERR?`<br><span style="color:#c0392b">${L2('Error','Error')}: ${SNDERR.replace(/</g,'&lt;')}</span>`:''}<br>${L2('If you hear nothing: turn the side switch off silent, raise the volume buttons, and close other music apps.','Kuch na sunai de to: side switch silent se hatao, volume button se awaaz badhao, aur music apps band karo.')}`};setTimeout(st,500);setTimeout(st,3000);['P','N','B','R','Q','K','cap1','Nc','cap3','Rc','castle','check'].forEach((k,i)=>setTimeout(()=>sfx(k),i*1300));return}
   if(a==='b3d-set'){P.set.board3d=d.v;save();render();setTimeout(()=>{try{window.__setH&&window.__setH()}catch(e){}},50);return}
@@ -3331,7 +3331,7 @@ function fxDetect(b,old,now,gone,came){if(!fxOn())return;const id=b.dataset.boar
   else if(stale){setTimeout(()=>sfx('stale'),300);fxBanner(b,'STALEMATE','draw','DRAW')}
   else if(chk){setTimeout(()=>sfx('check'),250);const k=bd.indexOf(moverW?'k':'K');const q=b.querySelector(`[data-sq="${sn(k)}"]`);if(q){q.classList.add('fxcheck');setTimeout(()=>q.classList.remove('fxcheck'),1600)}fxPill(b,L2('♚ CHECK!','♚ CHECK!'),'chk');
     try{if(P.set.sfxVoice!==false&&window.speechSynthesis){setTimeout(()=>narSpeak(HI()?pick(['चेक! अपने किंग को बचाइए।','चेक! किंग ख़तरे में है।']):pick(['Check!','Check. Watch your King.']),{hi:HI(),queue:true}),450)}}catch(e){}}}
-function sfxSegHTML(){const on=fxOn();return`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🔊 ${L2('Sounds and effects','Sound aur effects')}</span><div class="seg sm">${[['1',L2('On','On')],['0',L2('Off','Off')]].map(([k,t])=>`<button class="${(on?'1':'0')===k?'on':''}" data-act="sfx-set" data-k="sfx" data-v="${k}">${t}</button>`).join('')}</div></div>${on?`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:14px" class="muted">${L2('Volume','Awaaz')}</span><div class="seg sm">${[[0,L2('Low','Kam')],[1,L2('Medium','Medium')],[2,L2('High','Tez')]].map(([k,t])=>`<button class="${(P.set.sfxVol!=null?P.set.sfxVol:1)===k?'on':''}" data-act="sfx-set" data-k="sfxVol" data-v="${k}">${t}</button>`).join('')}</div></div><button class="btn" style="width:100%;font-size:17px;padding:14px" data-act="sfx-test">🔊 ${L2('Test sound','Sound test karo')}</button><small class="muted" id="sfxst"></small><details class="shelp"><summary>${L2('Sound not working?','Awaaz nahi aa rahi?')}</summary><div class="stack" style="gap:4px;margin-top:6px"><small class="muted">${L2('Still silent? Press ▶ on this player. If this is also silent, the problem is the phone sound settings, not the app.','Phir bhi awaaz nahi? Is player ka ▶ dabao. Agar ye bhi chup hai, to phone ki sound setting ka masla hai, app ka nahi.')}</small><audio controls playsinline preload="auto" style="width:100%" data-sndtest></audio></div></details>${voicePickHTML()}`:''}`}
+function sfxSegHTML(){const on=fxOn();return`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:15px">🔊 ${L2('Sounds and effects','Sound aur effects')}</span><div class="seg sm">${[['1',L2('On','On')],['0',L2('Off','Off')]].map(([k,t])=>`<button class="${(on?'1':'0')===k?'on':''}" data-act="sfx-set" data-k="sfx" data-v="${k}">${t}</button>`).join('')}</div></div><div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:14px" class="muted">📳 ${L2('Vibrate on every move','Har chaal par vibration')}</span><div class="seg sm">${[[1,L2('On','On')],[0,L2('Off','Off')]].map(([k,t])=>`<button class="${(P.set.vib!=null?P.set.vib:1)===k?'on':''}" data-act="sfx-set" data-k="vib" data-v="${k}">${t}</button>`).join('')}</div></div>${on?`<div class="gstat" style="font-weight:500;gap:8px"><span style="font-size:14px" class="muted">${L2('Volume','Awaaz')}</span><div class="seg sm">${[[0,L2('Low','Kam')],[1,L2('Medium','Medium')],[2,L2('High','Tez')]].map(([k,t])=>`<button class="${(P.set.sfxVol!=null?P.set.sfxVol:1)===k?'on':''}" data-act="sfx-set" data-k="sfxVol" data-v="${k}">${t}</button>`).join('')}</div></div><button class="btn" style="width:100%;font-size:17px;padding:14px" data-act="sfx-test">🔊 ${L2('Test sound','Sound test karo')}</button><small class="muted" id="sfxst"></small><details class="shelp"><summary>${L2('Sound not working?','Awaaz nahi aa rahi?')}</summary><div class="stack" style="gap:4px;margin-top:6px"><small class="muted">${L2('Still silent? Press ▶ on this player. If this is also silent, the problem is the phone sound settings, not the app.','Phir bhi awaaz nahi? Is player ka ▶ dabao. Agar ye bhi chup hai, to phone ki sound setting ka masla hai, app ka nahi.')}</small><audio controls playsinline preload="auto" style="width:100%" data-sndtest></audio></div></details>${voicePickHTML()}`:''}`}
 
 /* ---- game feel: combo, blunder alarm, mood, talking pieces, themes, diya, bosses, highlights ---- */
 const FUN=()=>P.set.fun!==false,TALK=()=>P.set.talk!==false;
@@ -3407,7 +3407,7 @@ function hlShare(){const z=HL;if(!z)return;const g=z.g;const pgn=g.moves.map((x,
       const gone=Object.keys(old).filter(k=>old[k]!==now[k]),came=Object.keys(now).filter(k=>now[k]!==old[k]);
       if(!came.length||came.length>2||gone.length>4)return;
       const xy=sq=>{const el=b.querySelector(`[data-sq="${sq}"]`);return el?[el.offsetLeft,el.offsetTop]:null};
-      const used=new Set();try{fxDetect(b,old,now,gone,came)}catch(e){}
+      if(gone.length)vibMove();const used=new Set();try{fxDetect(b,old,now,gone,came)}catch(e){}
       came.forEach(t=>{const f=gone.find(g=>!used.has(g)&&old[g]===now[t]&&g!==t);if(!f)return;used.add(f);const a=xy(f),c=xy(t);if(!a||!c)return;
         const pc=b.querySelector(`[data-sq="${t}"] .pc`);if(!pc)return;const base=getComputedStyle(pc).transform;const bt=base&&base!=='none'?base:'';
         pc.style.transition='none';pc.style.transform=`translate(${a[0]-c[0]}px,${a[1]-c[1]}px) ${bt}`;pc.style.zIndex=6;
@@ -3503,7 +3503,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.10 · v104';
+const APPV='2026.11.10 · v105';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -4387,6 +4387,8 @@ function olIn(d,via){if(!d||!OG||d.from===OG.me)return;OLN.lastIn=Date.now();
   if(d.id){const ack={t:'ack',ack:d.id,from:OG.me};if(olP2P())try{OLN.conn.send(ack)}catch(e){}else olRelaySend(ack);
     if(OLN.seen.has(d.id))return;OLN.seen.add(d.id)}
   if(d.t==='voice'){olVoiceIn(d);return}
+  if(d.t==='vis'){OG.oppHid=!!d.h;return}
+  if(d.t==='move'||d.t==='chat')OG.oppHid=false;
   if(!OG.opp&&d.name)OG.opp=d.name;if(d.from&&!OG.oppId)OG.oppId=d.from;if(d.did&&d.did!==lfDid())OG.oppDid=d.did;
   if(d.gid!=null&&d.gid<OG.gid&&d.t!=='hello'&&d.t!=='join')return;
   if(d.gid!=null&&d.gid>OG.gid){if(d.t==='state'){olNewGame(d.gid,d.hc)}else{olHello();return}}
@@ -4447,8 +4449,15 @@ function olTap(n){const g=OG;if(!olLive()||g.promo)return;const st=olState(g.mov
 function olMove(m){const g=OG,st=olState(g.moves);if(!st)return;const me=olMyColor();
   if(g.clock){const left=olClk(me);g.clk[me]=Math.max(0,left)+(g.moves.length>=1?g.clock[1]*1000:0)}
   g.moves.push(uciOf(m));g.sel=null;g.promo=null;g.t0=Date.now();if(g.draw==='opp')g.draw=null;g.msg='';olSave();olSend({t:'move',moves:g.moves,clk:g.clk},true);
-  olCheckEnd(make(st,m));try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}vOGame()}
-function olBuzz(){try{navigator.vibrate&&navigator.vibrate([60,40,60])}catch(e){}if(document.hidden){document.title='♟ '+L2('Your move','Aapki chaal')+' · Mind\'s Eye'}if(V.name==='ogame'||V.name==='friend')olRe()}
+  olCheckEnd(make(st,m));try{if(g.oppHid&&g.oppDid&&!g.over)lfNotify(g.oppDid,'♟ '+L2('Your move','Aapki chaal'),`${olName()||L2('Your friend','Aapka dost')} ${L2('played','ne khela')} ${san(st,m,legal(st))}`,olLink(g.code))}catch(e){}olAskNote();vOGame()}
+/* background help: tell the friend when we hide, and show a phone notification when a move arrives while hidden */
+function olAskNote(){try{if('Notification'in window&&Notification.permission==='default'&&!P.set.noteAsked){P.set.noteAsked=1;save();Notification.requestPermission()}}catch(e){}}
+async function olLocalNote(){try{if(!document.hidden||!OG||!('Notification'in window)||Notification.permission!=='granted')return;const o={body:`${OG.opp||L2('Your friend','Aapka dost')} · ${L2('room','room')} ${OG.code}`,tag:'olmove',renotify:true,vibrate:[200,100,200],icon:'icon-192.png'};
+  const r=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();if(r)r.showNotification('♟ '+L2('Your move','Aapki chaal'),o);else new Notification('♟ '+L2('Your move','Aapki chaal'),o)}catch(e){}}
+document.addEventListener('visibilitychange',()=>{try{if(OG&&olLive())olSend({t:'vis',h:document.hidden?1:0})}catch(e){}});
+let VIBT=0;
+function vibMove(force){if(!force&&(P.set.vib===0||Date.now()-VIBT<700))return;VIBT=Date.now();try{navigator.vibrate&&navigator.vibrate(40)}catch(e){}}
+function olBuzz(){VIBT=Date.now();try{P.set.vib!==0&&navigator.vibrate&&navigator.vibrate([90,50,90])}catch(e){}olLocalNote();if(document.hidden){document.title='♟ '+L2('Your move','Aapki chaal')+' · Mind\'s Eye'}if(V.name==='ogame'||V.name==='friend')olRe()}
 function olRe(){if(V.name==='ogame'){const y=window.scrollY;vOGame();window.scrollTo(0,y)}else if(V.name==='friend'){const ae=document.activeElement;if(ae&&ae.tagName==='INPUT')return;vFriend()}}
 async function olWake(on){try{if(on&&!OLN.wake&&navigator.wakeLock&&olLive()){OLN.wake=await navigator.wakeLock.request('screen');OLN.wake.addEventListener('release',()=>{OLN.wake=null})}else if(!on&&OLN.wake){OLN.wake.release();OLN.wake=null}}catch(e){}}
 async function olShare(){const c=OG&&OG.code;if(!c)return;const url=olLink(c),txt=`${olName()||'Your friend'} wants to play chess with you on 64 Squares. Tap to join (code ${c}):`;
