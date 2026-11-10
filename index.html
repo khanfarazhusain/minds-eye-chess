@@ -3503,7 +3503,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.10 · v105';
+const APPV='2026.11.10 · v106';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -4327,7 +4327,7 @@ const olName=()=>(P.set.oname||'').trim();
 const olMyColor=()=>OG?(OG.role==='host'?OG.hc:(OG.hc==='w'?'b':'w')):'w';
 function olState(moves){let st=startState();for(const u of moves){const m=fromUci(st,u);if(!m)return null;st=make(st,m)}return st}
 const olLive=()=>!!(OG&&OG.started&&!OG.over);
-const olP2P=()=>!!(OLN.conn&&OLN.conn.open&&Date.now()-OLN.lastP2P<7000);
+const olP2P=()=>!!(OLN.conn&&OLN.conn.open&&Date.now()-OLN.lastP2P<3500);
 const olOppOnline=()=>olP2P()||Date.now()-OLN.lastIn<20000;
 const olLink=c=>(/github\.io$/.test(location.hostname)?location.origin+location.pathname:OL_SITE)+'#join='+c;
 
@@ -4359,15 +4359,16 @@ function olWire(cn){cn.on('open',()=>{if(OLN.conn&&OLN.conn!==cn){try{OLN.conn.c
   cn.on('close',()=>{if(OLN.conn===cn){OLN.conn=null;olRe();if(OG&&OG.role==='guest')olRedial(2500)}});
   cn.on('error',()=>{if(OLN.conn===cn){OLN.conn=null;if(OG&&OG.role==='guest')olRedial(4000)}})}
 function olRelaySub(){if(!OG||OLN.es)return;const topic=OL_PFX+OG.code,since=OG.rid||OG.rsince||Math.floor(Date.now()/1000)-60;
-  let es;try{es=new EventSource(olRelay()+topic+'/sse?since='+encodeURIComponent(since))}catch(e){return}OLN.es=es;
+  let es;try{es=new EventSource(olRelay()+topic+'/sse?since='+encodeURIComponent(since))}catch(e){return}OLN.es=es;es.onopen=()=>{OLN.esN=0};
   es.onmessage=ev=>{let j;try{j=JSON.parse(ev.data)}catch(e){return}if(!j||j.event!=='message'||!OG)return;OG.rid=j.id;olSave();let d;try{d=JSON.parse(j.message)}catch(e){return}olIn(d,'r')};
-  es.onerror=()=>{try{es.close()}catch(e){}if(OLN.es===es){OLN.es=null;clearTimeout(OLN.esT);OLN.esT=setTimeout(()=>{if(OG)olRelaySub()},4000)}}}
-function olRelaySend(m){if(!OG)return;fetch(olRelay()+OL_PFX+OG.code,{method:'POST',body:JSON.stringify(m)}).catch(()=>{})}
+  es.onerror=()=>{try{es.close()}catch(e){}if(OLN.es===es){OLN.es=null;clearTimeout(OLN.esT);OLN.esN=(OLN.esN||0)+1;OLN.esT=setTimeout(()=>{if(OG)olRelaySub()},Math.min(8000,500*OLN.esN))}}}
+function olRelaySend(m){if(!OG)return;fetch(olRelay()+OL_PFX+OG.code,{method:'POST',body:JSON.stringify(m),keepalive:true,cache:'no-store'}).catch(()=>{})}
 // important messages wait in the outbox until the other phone acks them
 function olSend(m,important){if(!OG)return;m={...m,from:OG.me,gid:OG.gid,did:lfDid()};if(important){m.id=olId();OLN.out.push({m,t:Date.now(),relay:false,n:0})}
-  if(olP2P()){try{OLN.conn.send(m)}catch(e){}}else if(m.t!=='ping'&&m.t!=='pong'){olRelaySend(m);const o=OLN.out.find(x=>x.m===m);if(o)o.relay=true}}
+  // moves go both ways at once (direct link + relay): whichever arrives first wins, the copy is dropped by its id
+  const p2p=olP2P();if(p2p){try{OLN.conn.send(m)}catch(e){}}if((!p2p||m.t==='move'||m.t==='flag'||m.t==='resign')&&m.t!=='ping'&&m.t!=='pong'){olRelaySend(m);const o=OLN.out.find(x=>x.m===m);if(o)o.relay=true}}
 function olFlush(p2pOnly){const now=Date.now();for(const o of OLN.out){if(p2pOnly){if(olP2P())try{OLN.conn.send(o.m)}catch(e){}continue}
-  const age=now-o.t;if((!o.relay&&age>4000)||(o.relay&&age>12000)){o.t=now;o.n++;if(olP2P())try{OLN.conn.send(o.m)}catch(e){}olRelaySend(o.m);o.relay=true}}
+  const age=now-o.t;if((!o.relay&&age>1500)||(o.relay&&age>6000)){o.t=now;o.n++;if(olP2P())try{OLN.conn.send(o.m)}catch(e){}olRelaySend(o.m);o.relay=true}}
   OLN.out=OLN.out.filter(o=>o.n<25)}
 function olTick(){if(!OG)return;if(olP2P())try{OLN.conn.send({t:'ping',from:OG.me})}catch(e){}else if(OLN.conn&&OLN.conn.open&&Date.now()-OLN.lastP2P>7000)try{OLN.conn.send({t:'ping',from:OG.me})}catch(e){}
   olFlush();if(OG&&OG.role==='guest'&&!olP2P()&&OLN.peer&&OLN.peer.open&&Date.now()-(OLN.lastDial||0)>8000){OLN.lastDial=Date.now();olDial()}
