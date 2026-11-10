@@ -1322,6 +1322,8 @@ function loadLocal(){try{const j=JSON.parse(localStorage.getItem(KEY)||'null');i
 let P=loadLocal(),dbRef=null,cloud=false,saveTimer=null,writing=Promise.resolve();
 function save(){P.updated=Date.now();try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}try{window.fbSave&&window.fbSave()}catch(e){}
   clearTimeout(saveTimer);saveTimer=setTimeout(()=>{if(!dbRef)return;const data={json:JSON.stringify(P),updated:P.updated};writing=writing.then(()=>dbRef.set(data)).catch(()=>{})},1500)}
+function cloudFlush(){clearTimeout(saveTimer);if(!dbRef)return;const data={json:JSON.stringify(P),updated:P.updated};writing=writing.then(()=>dbRef.set(data)).catch(()=>{})}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)cloudFlush()});window.addEventListener('pagehide',cloudFlush);
 async function initCloud(){try{if(!window.claude||!window.claude.use)return;const[db,user]=await Promise.all([claude.use('db'),claude.use('user')]);if(!db||!user)return;
   const id=await user.id();if(!id)return;const ref=db.doc('data/users/'+id+'/progress');
   let snap=null;await Promise.race([ref.get().then(s=>{snap=s}),new Promise(r=>setTimeout(r,10000))]);if(!snap)return;
@@ -3499,7 +3501,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.10 · v99';
+const APPV='2026.11.10 · v100';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -4077,8 +4079,8 @@ function vSchool(){gymInit();const grp=V.grp;let h=`<div class="stack"><button c
   for(const[g,L]of SCH){if(grp&&g!==grp)continue;const done=L.filter(x=>skStat(x[0]).m).length;h+=`<h3 style="margin:8px 0 0">${esc(g)} <span class="muted mono" style="font-size:13px">${done}/${L.length} mastered</span></h3><div class="stack" style="gap:6px">`;
     L.forEach(([k,t])=>{const s=skStat(k);const pc=Math.min(100,Math.round(s.ok/MASTER_N*100));h+=`<button class="planrow skr ${s.m?'done':''}" data-act="sk-go" data-v="${k}"><span class="pnum">${s.m?'✓':'▶'}</span><span style="flex:1;min-width:0"><b>${esc(t)}</b><span class="bar" style="display:block;margin-top:4px"><i style="width:${s.m?100:pc}%"></i></span></span><span class="muted mono" style="font-size:12px">${s.n?Math.round(s.ok/s.n*100)+'%':''}</span></button>`});h+='</div>'}
   main.innerHTML=h+'</div>'}
-let SK=null;
-function skStart(k){SK={k,q:[],n:0,ok:0,item:null};skNext();go({name:'skdo'})}
+let SK=null;const SKS={};
+function skStart(k){const old=SKS[k];if(old&&old.item){SK=old;go({name:'skdo'});return}SK=SKS[k]={k,q:[],n:0,ok:0,item:null};skNext();go({name:'skdo'})}
 function skNext(){const z=SK;z.res=null;z.sel=null;z.picked=new Set();z.hint=0;let it=null;const due=z.q.findIndex(x=>x.at<=z.n);if(due>=0){it=z.q.splice(due,1)[0].item}else{for(let i=0;i<5&&!it;i++){try{it=SCHMAP[z.k].gen()}catch(e){it=null}}}if(!it)it=genPieceMoves('N');z.item=it;z.n++;if(V.name==='skdo')vSkDo()}
 function skAnswer(ok,detail){const z=SK,s=skStat(z.k);z.res=ok?'ok':'no';z.detail=detail||'';s.n++;if(ok){s.ok++;s.streak++}else{s.streak=0;z.q.push({at:z.n+3,item:z.item})}s.rec.push(ok?1:0);if(s.rec.length>20)s.rec.shift();
   const acc=s.rec.reduce((a,x)=>a+x,0)/s.rec.length;if(!s.m&&s.ok>=MASTER_N&&acc>=.85){s.m=true;z.newMaster=true}xpAdd(ok?2:0);save();sayC(ok?(P.set.cvoice==='hi'?'सही!':'Correct!'):(P.set.cvoice==='hi'?'ग़लत।':'Not quite.'),true);vSkDo()}
