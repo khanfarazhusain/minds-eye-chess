@@ -209,7 +209,7 @@ p{margin:0}
 .qbox.tr .prompt{font-size:19px;min-height:1.3em}
 .board[data-board="tr"] .sq.hl{box-shadow:inset 0 0 0 5px #E0A100}.board[data-board="tr"] .sq.hl::after{background:#F2B705;opacity:.8}
 .olcode{font-size:44px;font-weight:700;letter-spacing:6px;line-height:1.1;color:var(--accent)}
-.olgame{gap:8px}.olgame .board{max-width:min(440px,max(250px,calc(100svh - 330px)))}
+.olgame{gap:8px}body.fixb .olgame .fixtop{--bw:min(100vw,560px,calc(100dvh - var(--hdr,56px) - var(--navh,64px) - 205px));gap:4px}body.fixb .olgame .olbar{padding:4px 10px;max-width:none}.olgame .board{max-width:min(440px,max(250px,calc(100svh - 330px)))}
 .olbar{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:8px;background:var(--surface2);max-width:440px;width:100%;margin:0 auto;box-sizing:border-box}
 .olbar.turn{box-shadow:inset 0 0 0 2px var(--accent)}.olbar .clk{font-size:18px}.clk.low{color:var(--bad)}
 .pc-dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;border:1px solid var(--muted);vertical-align:-1px}.pc-dot.w{background:#fff}.pc-dot.b{background:#151515}
@@ -1666,7 +1666,7 @@ const TUT={
 };
 
 /* ================= app state & render ================= */
-const FIXV=['coach','puz','calc','gm','skdo','rep','bmc'];
+const FIXV=['coach','puz','calc','gm','skdo','rep','bmc','ogame'];
 function setMain(h){const f=main.querySelector('.fixscroll'),y=f?f.scrollTop:0,same=main.dataset.v===V.name;main.innerHTML=h;main.dataset.v=V.name;const g=main.querySelector('.fixscroll');if(g&&same&&y)g.scrollTop=y;try{fixBack()}catch(e){}}
 let V={name:'home'},S=null,G=null,timerInt=null,autoNext=null,onSq=null;
 const main=document.getElementById('main');
@@ -3503,7 +3503,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.10 · v103';
+const APPV='2026.11.10 · v104';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -4620,17 +4620,25 @@ function sqxPeekText(){if(!sqxOn()||!SQX.cur||!['play','ogame'].includes(V.name)
   ['pointerup','pointercancel','pointerleave','blur','scroll'].forEach(n=>(n==='blur'||n==='scroll'?window:document).addEventListener(n,up,true))})();
 function sqxPlayHTML(g){if(!sqxOn()||!g||g.two||g.over||g.thinking||(g.st.w?'w':'b')!==g.human){SQX.cur=null;return''}if(!g.sqid)g.sqid=Date.now().toString(36);
   const n=g.hist?g.hist.length:(g.moves?g.moves.length:0);return sqxCore('p:'+g.sqid+':'+n+':'+toFEN(g.st),g.st,k=>{if(V.name==='play'&&G===g&&!g.over){const y=window.scrollY;render();window.scrollTo(0,y)}})}
+/* who-is-winning bar for room-code games: quick estimate first, then Stockfish */
+let OLEV={fen:'',l:null,stw:true,cp:0};
+function olEvHTML(st){const fen=toFEN(st);if(OLEV.fen!==fen){let cp=0;try{const n=legal(st).length;cp=!n?(inCheck(st)?(st.w?-9999:9999):0):(st.w?1:-1)*qs(st,-1e9,1e9,4)}catch(e){}OLEV={fen,l:null,stw:st.w,cp};
+    if(legal(st).length)sfGo(st,{multipv:1,movetime:700}).then(r=>{if(OLEV.fen!==fen||!r||!r.lines||!r.lines[0])return;OLEV.l=r.lines[0];const el=document.getElementById('olev');if(el)el.outerHTML=olEvHTML(st)}).catch(()=>{})}
+  const l=OLEV.l,wcp=l?scCp(l)*(OLEV.stw?1:-1):OLEV.cp,pc=Math.round(Math.max(.03,Math.min(.97,wpOf(wcp)))*100);
+  const tx=l&&l.mate!=null?evTxt(l,OLEV.stw):Math.abs(wcp)>5000?'#':Math.abs(wcp)<5?'0.0':(wcp>0?'+':'−')+Math.abs(wcp/100).toFixed(1);
+  return`<div id="olev" class="evrow" title="${L2('Who is winning','Kaun jeet raha hai')}"><span class="evk"></span><div class="evbar"><i style="width:${pc}%"></i><b></b></div><span class="evk dk"></span><span class="mono evtx ${pc>55?'w':pc<45?'b':''}">${tx}</span></div>`}
 function vOGame(){const g=OG;if(!g||!g.started){go({name:'friend'});return}const st=olState(g.moves);if(!st){g.moves=[];olSave();go({name:'friend'});return}
   const me=olMyColor(),persp=g.flip?(me==='w'?'b':'w'):me,my=olLive()&&(st.w?'w':'b')===me,opp=me==='w'?'b':'w';
   const marks={};if(g.moves.length){const u=g.moves[g.moves.length-1];marks[u.slice(0,2)]='sel';marks[u.slice(2,4)]='sel'}
   if(inCheck(st)&&!g.over)marks[sn(kingSq(st.b,st.w))]='bad';
   const dots=g.sel!=null&&my?legal(st).filter(x=>x.f===g.sel).map(x=>sn(x.t)):[];
   const bar=(c,who)=>`<div class="olbar ${olLive()&&(st.w?'w':'b')===c?'turn':''}${c===me?' me':''}"><span><span class="pc-dot ${c}"></span><b>${esc(who)}</b>${c===me?'<small class="olpk mono" style="margin-left:6px;opacity:.55;font-size:11px"></small>':''}</span>${g.clock?`<span id="oclk-${c}" class="mono clk">${clkFmt(olClk(c))}</span>`:''}</div>`;
-  let h=`<div class="stack olgame"><div class="gstat"><button class="btn small" data-act="ol-menu">← ${L2('Menu','Menu')}</button>${olNetHTML()}</div>`;
+  let h=`<div class="stack olgame"><div class="fixtop"><div class="gstat"><button class="btn small" data-act="ol-menu">← ${L2('Menu','Menu')}</button>${olNetHTML()}</div>`+olEvHTML(st);
   h+=bar(persp===me?opp:me,persp===me?(g.opp||L2('Friend','Dost')):L2('You','Aap')+(olName()?` (${olName()})`:''));
   h+=boardHTML({cls:'coachb'+(P.set.olblind&&!BPEEK&&!g.over?' hidepc':''),persp,coords:true,pieces:toMap(st.b),from:g.sel!=null?sn(g.sel):null,marks,dots,id:'online'});if(P.set.olblind&&!g.over)h+=`<button class="bpeek" data-act="bpeek" ${BPEEK?'disabled':''}>👁 ${BPEEK?L2('Showing…','Dikh raha hai…'):L2('Peek 3s','Peek 3s')}</button>`;
   h+=sqxHTML(g,st,my);
   h+=bar(persp===me?me:opp,persp===me?L2('You','Aap')+(olName()?` (${olName()})`:''):(g.opp||L2('Friend','Dost')));
+  h+='</div><div class="fixscroll stack">';
   if(g.promo)h+=`<div class="card stack"><b>${L2('Pawn reached the end. Choose a piece:','Pawn aakhri row tak pahunch gaya. Piece chuno:')}</b><div class="row">${'QRBN'.split('').map(k=>`<button class="btn" style="flex:1;font-size:26px" data-act="ol-promo" data-v="${k}">${GLYPH[k]}︎</button>`).join('')}</div><button class="btn small" data-act="ol-promox">${L2('Cancel','Cancel')}</button></div>`;
   if(g.over){h+=`<div class="fb ${g.over.r===me?'ok':g.over.r==='d'?'':'no'}"><h3>${esc(olOverText())}</h3></div>`;
     h+=g.rm==='opp'?`<div class="card stack pend"><b>${esc(g.opp||'Friend')} ${L2('wants a rematch!','dobara khelna chahte hain!')}</b><div class="row"><button class="btn primary" style="flex:1" data-act="ol-rematch">${L2('Play again','Dobara khelo')}</button><button class="btn" data-act="ol-rmno">${L2('No','Nahi')}</button></div></div>`
@@ -4641,8 +4649,8 @@ function vOGame(){const g=OG;if(!g||!g.started){go({name:'friend'});return}const
       <button class="btn block" id="oclaim" data-act="ol-claim" hidden>${L2('Friend\'s time is over: claim the win','Dost ka time khatam: jeet claim karo')}</button>`}
   if(g.moves.length){let s=startState();const sans=[];for(const u of g.moves){const m=fromUci(s,u);sans.push(san(s,m,legal(s)));s=make(s,m)}h+=`<div class="gamemoves">${movesGridHTML(sqxSans(sans),1)}</div>`}
   h+='<div id="olchatslot"></div>';
-  h+=`<small class="muted" style="text-align:center">${L2('Room','Room')} ${esc(g.code)}${g.gid>1?` · ${L2('game','game')} ${g.gid}`:''}</small></div>`;
-  main.innerHTML=h;onSq=olTap;olWake(olLive());olChatMount();if(OG.started&&OG.oppDid)lfAdd(OG.oppDid,OG.opp);lfInvDraw()}
+  h+=`<small class="muted" style="text-align:center">${L2('Room','Room')} ${esc(g.code)}${g.gid>1?` · ${L2('game','game')} ${g.gid}`:''}</small></div></div>`;
+  setMain(h);onSq=olTap;olWake(olLive());olChatMount();if(OG.started&&OG.oppDid)lfAdd(OG.oppDid,OG.opp);lfInvDraw()}
 
 /* ================= accounts: login, friends list, cloud save (Firebase) ================= */
 // Switched off until a Firebase project exists. Put its web config in FB_CONFIG below
