@@ -409,7 +409,8 @@ body.b3d .board .pc{position:relative;z-index:4;display:inline-block;padding:.18
 body.b3d .board .pc.w{background-image:linear-gradient(165deg,#ffffff 15%,#efe4cf 50%,#bfae8e 88%);filter:drop-shadow(0 0 .6px rgba(0,0,0,.95)) drop-shadow(0 4px 2px rgba(0,0,0,.45))}
 body.b3d .board .pc.b{background-image:linear-gradient(165deg,#8a8a8a 0%,#3a3a3a 40%,#0e0e0e 85%);filter:drop-shadow(0 0 .5px rgba(255,255,255,.55)) drop-shadow(0 4px 2px rgba(0,0,0,.5))}
 body.b3d .board svg.arrows{z-index:5}
-body.b3d .heat .board,body.b3d .minib .board,body.b3d .board.plain{transform:none;box-shadow:0 0 0 2px var(--line);margin-block:0}
+body.b3d .heat .board,body.b3d .minib .board,body.b3d .lesfrs{display:flex;flex-direction:column;gap:12px;margin-top:6px}.lesbw{max-width:300px;margin:0 auto}.lesbw .board{width:100%}
+.board.plain{transform:none;box-shadow:0 0 0 2px var(--line);margin-block:0}
 body.b3d .heat .board .pc,body.b3d .board.plain .pc{transform:none}
 .pc.mv{transition:transform .28s cubic-bezier(.2,.8,.25,1.15)}
 
@@ -2289,6 +2290,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'next':nextQ();break;
    case'explore':go({name:'explore'});break;
    case'ex':V.o[d.k]=d.k==='coords'?!!d.v:d.v;vExplore();break;
+   case'les-bd':V.lopen=V.lopen===+d.v?null:+d.v;vLessons();break;
    case'les-f':V.lf=d.v;vLessons();break;
    case'les-ok':{const x=(P.lesj||[])[+d.v];if(x){x.ok=!x.ok;save();vLessons()}break}
    case'les-open':go({name:'lessons',from:d.from||'coachset'});break;
@@ -2981,7 +2983,7 @@ function tagOf(fb){const y=coWhy(fb),best=fb.pre&&fb.pre.lines[0];if(y.hang.leng
   const ph=phaseOf(fb.st0);if(ph==='end')return'endgame';if(y.cmp&&y.cmp.some(c=>c.includes('king')))return'king';if(ph==='open')return'opening';return'positional'}
 function coRecordMistake(fb){if(!fb||fb.lite||!['inacc','mistake','blunder'].includes(fb.cls))return;const tag=tagOf(fb);P.wstat=P.wstat||{};P.wstat[tag]=(P.wstat[tag]||0)+(fb.cls==='inacc'?1:2);
   if(fb.cls==='inacc'||!fb.pre||!fb.pre.lines[0])return;const top=wpOf(scCp(fb.pre.lines[0]));const best=fb.pre.lines.filter(l=>top-wpOf(scCp(l))<.03).map(l=>l.pv[0]);
-  const y=coWhy(fb);try{lesAdd({key:(CG?CG.id:0)+':m'+fb.ply,k:'mistake',fen:toFEN(fb.st0),mv:Math.floor(fb.ply/2)+1,san:fb.san,best:y.bestSan,why:y.reason,les:L2(...(LTIP[tag]||LTIP.positional)),tag})}catch(x){}P.diary=P.diary||[];P.diary.unshift({fen:toFEN(fb.st0),best,bestSan:y.bestSan,san:fb.san,cls:fb.cls,tag,why:y.reason,line:y.bestLine?y.bestLine.san:'',d:Date.now(),ok:0,n:0});P.diary=P.diary.slice(0,200);save()}
+  const y=coWhy(fb);try{lesAdd({key:(CG?CG.id:0)+':m'+fb.ply,k:'mistake',fen:toFEN(fb.st0),my:uciOf(fb.m),bpv:fb.pre&&fb.pre.lines[0]?fb.pre.lines[0].pv.slice(0,3):null,rep:fb.post&&fb.post.lines[0]?fb.post.lines[0].pv.slice(0,2):null,mv:Math.floor(fb.ply/2)+1,san:fb.san,best:y.bestSan,why:y.reason,les:L2(...(LTIP[tag]||LTIP.positional)),tag})}catch(x){}P.diary=P.diary||[];P.diary.unshift({fen:toFEN(fb.st0),best,bestSan:y.bestSan,san:fb.san,cls:fb.cls,tag,why:y.reason,line:y.bestLine?y.bestLine.san:'',d:Date.now(),ok:0,n:0});P.diary=P.diary.slice(0,200);save()}
 const ELO=[900,1200,1500,1800,2100,2400];
 function estElo(){const h=(P.coach||[]).slice(0,10);if(h.length<1)return null;const v=h.map(x=>(x.elo||ELO[x.lvl])+({w:200,d:0,l:-200}[x.r]||0)+(x.acc-75)*6);return{elo:Math.max(400,Math.min(2800,Math.round(v.reduce((a,b)=>a+b,0)/v.length/10)*10)),n:h.length,trend:v.slice().reverse()}}
 function weakest(){const w=P.wstat||{};const k=Object.keys(w).sort((a,b)=>w[b]-w[a]);return k[0]||null}
@@ -3168,7 +3170,23 @@ function coPlanChange(g){const ms=g.moves,st=g.st;if(ms.length<2||!g.pre||!g.pre
     :L2(`The best move changes when pieces move. Look at the new position fresh every turn.`,`Pieces hilte hi best chaal badal jaati hai. Har baari position ko naye sire se dekho.`);
   return{pts,les,nbs,tag:th?'threats':gift>=80?'punish':surprise?'surprise':forcing?'tactics':follow?'plan':'fresh'}}
 function lesAdd(o){P.lesj=P.lesj||[];if(o.key&&P.lesj.some(x=>x.key===o.key))return;P.lesj.unshift({d:Date.now(),...o});P.lesj=P.lesj.slice(0,300);save()}
-function coLesRecord(g){try{const pc=coPlanChange(g);if(!pc)return;const e=g.moves[g.moves.length-1];lesAdd({key:g.id+':'+g.moves.length,k:'plan',fen:toFEN(g.st),mv:Math.ceil(g.moves.length/2)+1,opp:e.san,best:pc.nbs,les:pc.les.replace(/<[^>]+>/g,''),tag:pc.tag})}catch(x){}}
+function coLesRecord(g){try{const pc=coPlanChange(g);if(!pc)return;const e=g.moves[g.moves.length-1];const h=g.moves[g.moves.length-2],my=uciOf(h.m),ol=h.pre.lines.find(l=>l.pv[0]===my)||h.pre.lines[0],th=g.threat&&g.threat.m?sn(g.threat.m.f)+sn(g.threat.m.t):null;lesAdd({key:g.id+':'+g.moves.length,k:'plan',fen:toFEN(g.st),f0:toFEN(h.st0),my,mySan:h.san,plan:(ol.pv[0]===my?ol.pv:[my]).slice(0,4),plan0:h.pre.lines[0].pv.slice(0,3),ou:uciOf(e.m),npv:g.pre.lines[0].pv.slice(0,3),thr:th,pts:pc.pts.map(x=>x.replace(/<[^>]+>/g,'')),mv:Math.ceil(g.moves.length/2)+1,opp:e.san,best:pc.nbs,les:pc.les.replace(/<[^>]+>/g,''),tag:pc.tag})}catch(x){}}
+function lesBoard(fen,arr,cap,id,persp,after){let st=fromFEN(fen);if(!st)return'';const marks={};
+  if(after){for(const u of after){const m=fromUci(st,u);if(!m)break;st=make(st,m);marks[sn(m.f)]='sel';marks[sn(m.t)]='sel'}}
+  const A=[];arr.forEach(([u,c,w])=>{if(u&&u.length>=4)A.push({f:si(u.slice(0,2)),t:si(u.slice(2,4)),c,w:w||.13})});
+  const bh=boardHTML({cls:'lesb',persp:persp||(st.w?'w':'b'),coords:false,pieces:toMap(st.b),marks,id});return`<div class="lesfr"><div class="lesbw">${bh.slice(0,-6)+arrowsSVG(persp||(st.w?'w':'b'),A)}</div></div><p style="margin:4px 0 0;font-size:14px">${cap}</p></div>`}
+function lesSan(fen,pv,n){const st=fromFEN(fen);if(!st||!pv)return'';return pvWalk(st,pv,n||4).steps.map(x=>x.san).join(' ')}
+function lesFrames(x,i){const fr=[];
+  if(x.k==='plan'&&x.f0){const s0=fromFEN(x.f0),me=s0&&s0.w?'w':'b';
+    fr.push(lesBoard(x.f0,[[x.plan[0],'blue',.17],[x.plan[1],'orange'],[x.plan[2],'green']],`<b>1. ${L2('Your move and the plan','Aapki chaal aur plan')}:</b> ${L2('you played','aapne khela')} <b class="mono">${esc(x.mySan||'')}</b> (${L2('blue','neela')}). ${L2('Stockfish\'s plan','Stockfish ka plan')}: <span class="mono">${esc(lesSan(x.f0,x.plan,4))}</span> (${L2('orange = expected reply, green = your next step','orange = umeed wala jawab, hara = aapka agla step')}).`,'lsa'+i,me));
+    fr.push(lesBoard(x.f0,[[x.plan[1],'grey',.1],[x.ou,'red',.17]],`<b>2. ${L2('What the coach played','Coach ne kya khela')}:</b> <b class="mono">${esc(x.opp||'')}</b> (${L2('red','laal')})${x.plan[1]&&x.plan[1]!==x.ou?`, ${L2('Stockfish expected','Stockfish ko umeed thi')} <span class="mono">${esc(lesSan(fromFEN(x.f0)?toFEN(make(fromFEN(x.f0),fromUci(fromFEN(x.f0),x.my))):x.f0,[x.plan[1]],1))}</span> (${L2('grey','grey')})`:''}.`,'lsb'+i,me,[x.my]));
+    fr.push(lesBoard(x.fen,[[x.npv&&x.npv[0],'green',.17],[x.npv&&x.npv[1],'orange'],[x.thr,'red',.1]],`<b>3. ${L2('Now','Ab')}:</b> ${L2('best move','best chaal')} <b class="mono">${esc(x.best||'')}</b> (${L2('green','hara')}), ${L2('line','line')} <span class="mono">${esc(lesSan(x.fen,x.npv,3))}</span>${x.thr?` · ${L2('red = the coach\'s threat','laal = coach ki dhamki')}`:''}.`,'lsc'+i,me));
+    if(x.pts&&x.pts.length)fr.push(`<ul class="cline" style="margin:4px 0 0">${x.pts.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`)}
+  else if(x.k==='mistake'&&x.my){const st=fromFEN(x.fen);const me=st&&st.w?'w':'b';
+    fr.push(lesBoard(x.fen,[[x.my,'red',.15],[x.bpv&&x.bpv[0],'green',.17]],`<b>1. ${L2('The move','Chaal')}:</b> ${L2('you played','aapne khela')} <b class="mono">${esc(x.san||'')}</b> (${L2('red','laal')}), ${L2('better was','behtar tha')} <b class="mono">${esc(x.best||'')}</b> (${L2('green','hara')}).`,'lsm'+i,me));
+    if(x.rep&&x.rep[0])fr.push(lesBoard(x.fen,[[x.rep[0],'red',.17]],`<b>2. ${L2('What the opponent can do after it','Iske baad dushman kya kar sakta hai')}:</b> <b class="mono">${esc(lesSan(toFEN(make(st,fromUci(st,x.my))),x.rep,2))}</b> (${L2('red','laal')}).`,'lsr'+i,me,[x.my]));
+    if(x.bpv&&x.bpv.length>1)fr.push(lesBoard(x.fen,[[x.bpv[0],'green',.17],[x.bpv[1],'orange'],[x.bpv[2],'green',.1]],`<b>${x.rep&&x.rep[0]?3:2}. ${L2('The plan with the best move','Best chaal ka plan')}:</b> <span class="mono">${esc(lesSan(x.fen,x.bpv,3))}</span>.`,'lsp'+i,me))}
+  return fr.length?`<div class="lesfrs">${fr.join('')}</div>`:`<p class="muted" style="font-size:13px">${L2('This older lesson has no saved board. New lessons do.','Is purane lesson ka board save nahi hai. Naye lessons mein hoga.')}</p>`}
 function vLessons(){const L=P.lesj||[],f=V.lf||'all',S=L.filter(x=>f==='all'||x.k===f);
   let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="go" data-v="${V.from||'coachset'}">← ${L2('Back','Wapas')}</button><span class="eyebrow">📒 ${L2('Your lessons','Aapke lessons')} · ${L.length}</span><h1>${L2('Lesson journal','Lesson diary')}</h1>
   <p class="muted">${L2('Every coach game saves what to learn: why the plan changed after the opponent\'s move, and what your mistakes teach. Read them again before your next game.','Har coach game yahan seekhne wali baatein save karta hai: dushman ki chaal ke baad plan kyun badla, aur aapki galtiyon se kya seekhna hai. Agle game se pehle inhe dobara padho.')}</p>
@@ -3176,9 +3194,9 @@ function vLessons(){const L=P.lesj||[],f=V.lf||'all',S=L.filter(x=>f==='all'||x.
   if(!S.length)h+=`<div class="card muted">${L2('No lessons yet. Play a game with the coach and they appear here by themselves.','Abhi koi lesson nahi. Coach ke saath ek game khelo, lessons apne aap yahan aayenge.')}</div>`;
   const cnt={};L.forEach(x=>{if(x.tag)cnt[x.tag]=(cnt[x.tag]||0)+1});const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0];
   if(top&&f==='all'){const nm={threats:L2('Answer the threat first','Pehle dhamki ka jawab'),surprise:L2('Re-check after surprises','Surprise par dobara socho'),tactics:L2('Checks and captures first','Pehle check aur capture'),punish:L2('Punish their mistakes','Unki galti ki saza do'),plan:L2('Follow your plan','Plan par chalo'),fresh:L2('See every position fresh','Har position naye sire se'),hanging:L2('Loose pieces','Bina bachaav pieces'),king:L2('King safety','King safety'),opening:L2('Opening rules','Opening ke niyam'),endgame:L2('Endgame','Endgame'),positional:L2('Plans','Plans')}[top[0]]||top[0];h+=`<div class="banner">🎯 ${L2('Most common lesson','Sabse zyada aane wala lesson')}: <b>${esc(nm)}</b> (${top[1]}×)</div>`}
-  S.slice(0,80).forEach(x=>{const i=L.indexOf(x);h+=`<div class="card stack" style="gap:4px${x.ok?';opacity:.6':''}"><div class="gstat"><small class="muted">${new Date(x.d).toLocaleDateString(LOC())} · ${x.k==='mistake'?'❌ '+L2('Mistake','Galti'):'🔄 '+L2('Plan change','Plan badla')}${x.mv?` · ${L2('move','chaal')} ${x.mv}`:''}</small><button class="btn small" data-act="les-ok" data-v="${i}">${x.ok?'✓ '+L2('Learned','Seekh liya'):L2('Mark learned','Seekh liya?')}</button></div>
+  S.slice(0,80).forEach(x=>{const i=L.indexOf(x);h+=`<div class="card stack" style="gap:4px${x.ok?';opacity:.6':''}"><div class="gstat"><small class="muted">${new Date(x.d).toLocaleDateString(LOC())} · ${x.k==='mistake'?'❌ '+L2('Mistake','Galti'):'🔄 '+L2('Plan change','Plan badla')}${x.mv?` · ${L2('move','chaal')} ${x.mv}`:''}</small><span class="row" style="gap:4px"><button class="btn small ${V.lopen===i?'primary':''}" data-act="les-bd" data-v="${i}">♟ ${L2('Board','Board')}</button><button class="btn small" data-act="les-ok" data-v="${i}">${x.ok?'✓ '+L2('Learned','Seekh liya'):L2('Mark learned','Seekh liya?')}</button></span></div>
     ${x.k==='mistake'?`<div>${L2('You played','Aapne khela')} <b class="mono">${esc(x.san||'')}</b>, ${L2('better was','behtar tha')} <b class="mono">${esc(x.best||'')}</b>.${x.why?` <small class="muted">${esc(x.why)}</small>`:''}</div>`:`<div>${L2('After the coach played','Coach ki chaal')} <b class="mono">${esc(x.opp||'')}</b> ${L2('the best move became','ke baad best chaal bani')} <b class="mono">${esc(x.best||'')}</b>.</div>`}
-    <div><b>🎓 ${L2('Lesson','Lesson')}:</b> ${esc(x.les||'')}</div></div>`});
+    <div><b>🎓 ${L2('Lesson','Lesson')}:</b> ${esc(x.les||'')}</div>${V.lopen===i?lesFrames(x,i):''}</div>`});
   h+='</div>';main.innerHTML=h}
 function coWhyBest(g){const st=g.st,ls=g.pre&&g.pre.lines||[];if(!ls[0])return'';const S=pvWalk(st,ls[0].pv,6).steps;if(!S[0])return'';const m=S[0].m,n=make(st,m),w=st.w;const pts=[];
   pts.push(`<b>${L2('Idea','Idea')}:</b> ${esc(S[0].san)} ${esc(moveNote(st,m))}.`);
@@ -3578,7 +3596,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.11 · v108';
+const APPV='2026.11.11 · v109';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -4279,7 +4297,7 @@ function trLoad(n){if(n.an||n.loading||!legal(n.st).length)return;n.loading=true
 function trGo(n){TT.cur=n;n.sel=null;trLoad(n);vTrn()}
 function trChild(u){const c=TT.cur,ex=c.kids.find(k=>uciOf(k.m)===u);if(ex){trGo(ex);return}const m=fromUci(c.st,u);if(!m)return;const k=trNode(make(c.st,m),c,m);k.last=[m.f,m.t];trGo(k)}
 function trGuess(m){const n=TT.cur,u=uciOf(m),L=n.an.lines,top=L.findIndex(l=>l.pv[0]===u);n.guess={u,san:san(n.st,m,legal(n.st)),top};TT.n++;if(top===0)TT.exact++;
-  if(top<0){const bm=fromUci(n.st,L[0].pv[0]),tag=bm&&(bm.cap||inCheck(make(n.st,bm)))?'tactics':'positional';lesAdd({k:'mistake',fen:toFEN(n.st),mv:Math.floor(n.st.fm),san:n.guess.san,best:bm?san(n.st,bm,legal(n.st)):'',why:bm?san(n.st,bm,legal(n.st))+' '+moveNote(n.st,bm):'',les:L2(...(LTIP[tag]||LTIP.positional)),tag})}
+  if(top<0){const bm=fromUci(n.st,L[0].pv[0]),tag=bm&&(bm.cap||inCheck(make(n.st,bm)))?'tactics':'positional';lesAdd({k:'mistake',fen:toFEN(n.st),my:n.guess.u,bpv:L[0].pv.slice(0,3),mv:Math.floor(n.st.fm),san:n.guess.san,best:bm?san(n.st,bm,legal(n.st)):'',why:bm?san(n.st,bm,legal(n.st))+' '+moveNote(n.st,bm):'',les:L2(...(LTIP[tag]||LTIP.positional)),tag})}
   save();vTrn()}
 function trPath(n){const a=[];while(n){a.unshift(n);n=n.par}return a}
 function trEvalTxt(n,l){return l?evTxt(l,n.st.w):''}
