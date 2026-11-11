@@ -2166,7 +2166,7 @@ function vStats(){const stars=ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0),passe
     ${stog('set-lowfx',L2('Fewer animations','Kam animation'),L2('Smoother on older phones and saves battery','Purane phone par smooth, battery bhi bachti hai'),P.set.lowfx)}
     ${boardSegHTML()}${tiltHTML()}${pieceHTML()}${themeHTML()}</div>
   <div class="card sgrp">${sgh('🔊',L2('Sound and voice','Sound aur aawaaz'),L2('Effects, narration, read aloud','Effects, narration, padh kar sunao'),'sg-sound','#2FA36B')}
-    ${sfxSegHTML()}${funSegHTML()}
+    ${sfxSegHTML()}${funSegHTML()}<div class="gstat" style="font-weight:500;gap:8px;align-items:flex-start"><small class="muted mono" style="font-size:11px;word-break:break-word;flex:1">⚙️ ${(sfStart(),'')}${esc(sfStatusTxt())}</small>${SF.ready?'':'<button class="btn small" data-act="sf-retry">🔁</button>'}</div>
     ${stog('set-speakq',L2('Read questions aloud','Sawaal bol kar sunao'),L2('Train with eyes closed','Aankh band karke practice'),P.set.speakQ)}
     ${stog('set-speak',L2('Read moves aloud','Chaal bol kar sunao'),L2("Hear the computer's moves and square names","Computer ki chaal aur square ke naam suno"),P.set.speak)}</div>
   <div class="card sgrp">${sgh('🎓',L2('Learning','Seekhna'),L2('How lessons unlock','Lessons kaise khulte hain'),'sg-learn','#8A63D2')}
@@ -2374,7 +2374,7 @@ document.addEventListener('keydown',e=>{if(V.name==='train'&&TR){const m=TR.m;if
 
 /* ================= coach: engine ================= */
 const SF={w:null,ready:false,failed:false,q:[],cur:null,name:'built-in engine'};
-function sfStart(){if(SF.w||SF.failed)return;SF.why='';SF.try=(SF.try||0)+1;
+function sfStart(){if(SF.w||SF.failed)return;SF.why='';SF.try=(SF.try||0)+1;SF.ts=Date.now();SF.tr=0;SF.log=[];SF.via='';
   const b=document.getElementById('sfwasm'),s=document.getElementById('sfsrc');
   if(!b||!s){sfFail('files missing');return}
   if(typeof WebAssembly!=='object'){sfFail('nowasm');return}
@@ -2383,24 +2383,31 @@ function sfStart(){if(SF.w||SF.failed)return;SF.why='';SF.try=(SF.try||0)+1;
   const code=pre+s.textContent;let w=null,err='';
   // 1) blob worker, 2) data: worker (some in-app browsers block blob workers)
   try{w=new Worker(URL.createObjectURL(new Blob([code],{type:'application/javascript'})))}catch(e){err='blob: '+(e&&e.message||e)}
-  if(!w)try{w=new Worker('data:application/javascript;base64,'+btoa(unescape(encodeURIComponent(code))))}catch(e){err+=' · data: '+(e&&e.message||e)}
-  if(!w){sfFail('worker blocked ('+err+')');return}
-  SF.w=w;w.onmessage=e=>sfMsg(String(e.data));w.onerror=e=>{try{e.preventDefault()}catch(x){}sfFail('error: '+((e&&e.message)||'worker crashed'))};
+  if(w)SF.via='blob';if(!w)try{w=new Worker('data:application/javascript;base64,'+btoa(unescape(encodeURIComponent(code))))}catch(e){err+=' · data: '+(e&&e.message||e)}
+  if(w&&!SF.via)SF.via='data';if(!w){sfFail('worker blocked ('+err+')');return}
+  SF.w=w;w.onmessage=e=>{const t=String(e.data);if(SF.log.length<6&&!/^(info|option|id )/.test(t))SF.log.push(((Date.now()-SF.ts)/1000).toFixed(1)+'s '+t.slice(0,40));sfMsg(t)};w.onerror=e=>{try{e.preventDefault()}catch(x){}sfFail('error: '+((e&&e.message)||'worker crashed'))};
   w.postMessage('uci');
   // slow phones: after 20s use the built-in engine for now, but keep waiting; switch to Stockfish when it is ready
   SF.t0=setTimeout(()=>{if(!SF.ready)sfFail('slow',true)},20000);SF.t1=setTimeout(()=>{if(!SF.ready&&SF.w){try{SF.w.terminate()}catch(e){}SF.w=null;SF.why='timeout (60s)'}},60000)}
 function sfFail(why,keep){if(why)SF.why=why;if(SF.failed&&!keep)return;SF.failed=true;SF.ready=false;if(!keep){try{SF.w&&SF.w.terminate()}catch(e){}SF.w=null}SF.name='built-in engine';
   const jobs=(SF.cur?[SF.cur]:[]).concat(SF.q);SF.cur=null;SF.q=[];jobs.forEach(j=>j.res(fbAnalyse(j.st,j.o)));if(['coach','coachset','bmc','trn'].includes(V.name))render()}
-function sfRetry(){clearTimeout(SF.t0);clearTimeout(SF.t1);try{SF.w&&SF.w.terminate()}catch(e){}SF.w=null;SF.failed=false;SF.ready=false;SF.name='built-in engine';sfStart();render();
+function sfLateRefresh(){try{
+  if(BM&&BM.an&&BM.an.eng==='js'&&BM.st){const z=BM;sfGo(z.st,{multipv:3,movetime:1500}).then(r=>{if(BM===z&&r&&r.best){z.an=r;bmcPrep();if(V.name==='bmc')vBmc()}})}
+  if(TT&&TT.cur&&TT.cur.an&&TT.cur.an.eng==='js'){TT.cur.an=null;TT.cur.all=null;trLoad(TT.cur)}
+  if(CG&&!CG.over&&CG.pre&&CG.pre.eng==='js'&&coMyTurn()&&!CG.busy)coPre()}catch(e){}}
+function sfStatusTxt(){const ua=navigator.userAgent,ios=(ua.match(/OS (\d+[_\d]*) like Mac/)||[])[1],an=(ua.match(/Android [\d.]+/)||[])[0],dev=ios?'iOS '+ios.replace(/_/g,'.'):an||navigator.platform||'',sa=window.navigator.standalone||matchMedia('(display-mode: standalone)').matches?' · home-screen app':'';
+  const st=SF.ready?`ready in ${(SF.tr/1000).toFixed(1)}s`:SF.w?`loading ${Math.round((Date.now()-(SF.ts||Date.now()))/1000)}s`:SF.failed?'stopped':'not started';
+  return `Stockfish: ${st}${SF.why?' · '+SF.why:''} · try ${SF.try||0}${SF.via?' · '+SF.via:''} · ${dev}${sa}${SF.log&&SF.log.length?' · '+SF.log.join(' | '):' · no reply yet'}`}
+function sfRetry(){if(SF.w&&!SF.ready&&Date.now()-(SF.ts||0)<60000){render();return}clearTimeout(SF.t0);clearTimeout(SF.t1);try{SF.w&&SF.w.terminate()}catch(e){}SF.w=null;SF.failed=false;SF.ready=false;SF.name='built-in engine';sfStart();render();
   const t=setInterval(()=>{if(SF.ready||SF.failed){clearInterval(t);render()}},500)}
 function sfWhyTxt(){const w=SF.why||'';return w==='nowasm'?L2('This browser has WebAssembly switched off (on iPhone: Lockdown Mode, or a very old browser). Open the app in Safari or Chrome with Lockdown Mode off.','Is browser mein WebAssembly band hai (iPhone par Lockdown Mode, ya bahut purana browser). Lockdown Mode band karke Safari ya Chrome mein kholo.')
   :w==='noworker'||w.startsWith('worker blocked')?L2('This browser blocks background workers. Open the app in Chrome or Safari, not inside WhatsApp or another app.','Ye browser background worker rok raha hai. App ko Chrome ya Safari mein kholo, WhatsApp ya kisi app ke andar nahi.')
   :w==='slow'||w.startsWith('timeout')?L2('Stockfish is taking long to start on this phone. It keeps loading in the background.','Is phone par Stockfish shuru hone mein der laga raha hai. Peeche load hota rahega.')
   :w?L2('Stockfish crashed while starting (often low memory). Close other apps and try again.','Stockfish shuru hote waqt band ho gaya (aksar memory kam hoti hai). Doosre apps band karke dobara try karo.'):''}
-function sfFailHTML(){return`<div class="card" style="font-size:13px;margin-top:6px;border-color:var(--bad,#d55)">⚠️ ${L2('Stockfish did not load on this device, so a simple built-in engine is giving these moves. They can be weak.','Is device par Stockfish load nahi hua, isliye simple built-in engine ye chaalein de raha hai. Ye kamzor ho sakti hain.')}${SF.why?`<br><small>${esc(sfWhyTxt())} <span class="muted mono">(${esc(SF.why.slice(0,80))})</span></small>`:''}<br><button class="btn small" data-act="sf-retry" style="margin-top:6px">🔁 ${L2('Load Stockfish again','Stockfish dobara load karo')}</button></div>`}
+function sfFailHTML(){return`<div class="card" style="font-size:13px;margin-top:6px;border-color:var(--bad,#d55)">⚠️ ${L2('Stockfish did not load on this device, so a simple built-in engine is giving these moves. They can be weak.','Is device par Stockfish load nahi hua, isliye simple built-in engine ye chaalein de raha hai. Ye kamzor ho sakti hain.')}${SF.ready?`<br><b>✅ ${L2('Stockfish is ready now. New analyses use it.','Stockfish ab ready hai. Nayi analysis isi se hogi.')}</b>`:SF.why?`<br><small>${esc(sfWhyTxt())}</small>`:''}<br><small class="muted mono" style="font-size:11px;word-break:break-word">${esc(sfStatusTxt())}</small><br>${SF.ready?'':`<button class="btn small" data-act="sf-retry" style="margin-top:6px">🔁 ${L2('Load Stockfish again','Stockfish dobara load karo')}</button>`}</div>`}
 function sfMsg(l){
   if(l==='uciok'){SF.w.postMessage('setoption name Hash value 16');SF.w.postMessage('isready');return}
-  if(l==='readyok'&&!SF.ready){const late=SF.failed;SF.ready=true;SF.failed=false;SF.why='';clearTimeout(SF.t0);clearTimeout(SF.t1);SF.name='Stockfish 10';sfPump();if(V.name==='coachset'||late)render();return}
+  if(l==='readyok'&&!SF.ready){const late=SF.failed;SF.tr=Date.now()-SF.ts;SF.ready=true;SF.failed=false;SF.why='';clearTimeout(SF.t0);clearTimeout(SF.t1);SF.name='Stockfish 10';sfPump();if(late)sfLateRefresh();if(V.name==='coachset'||late)render();return}
   const c=SF.cur;if(!c)return;
   if(l.startsWith('info ')&&l.includes(' pv ')&&!/ (lower|upper)bound/.test(l)){const g=k=>{const m=l.match(new RegExp(' '+k+' (-?\\d+)'));return m?+m[1]:null};
     const mp=g('multipv')||1,mate=g('mate');c.lines[mp-1]={d:g('depth'),cp:mate!=null?null:g('cp'),mate,pv:l.split(' pv ')[1].trim().split(/\s+/)};return}
@@ -3614,7 +3621,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.11 · v111';
+const APPV='2026.11.11 · v112';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
