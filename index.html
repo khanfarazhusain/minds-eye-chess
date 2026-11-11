@@ -2291,6 +2291,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'next':nextQ();break;
    case'explore':go({name:'explore'});break;
    case'ex':V.o[d.k]=d.k==='coords'?!!d.v:d.v;vExplore();break;
+   case'sf-retry':sfRetry();break;
    case'les-bd':V.lopen=V.lopen===+d.v?null:+d.v;vLessons();break;
    case'les-f':V.lf=d.v;vLessons();break;
    case'les-ok':{const x=(P.lesj||[])[+d.v];if(x){x.ok=!x.ok;save();vLessons()}break}
@@ -2373,17 +2374,33 @@ document.addEventListener('keydown',e=>{if(V.name==='train'&&TR){const m=TR.m;if
 
 /* ================= coach: engine ================= */
 const SF={w:null,ready:false,failed:false,q:[],cur:null,name:'built-in engine'};
-function sfStart(){if(SF.w||SF.failed)return;
-  try{const b=document.getElementById('sfwasm'),s=document.getElementById('sfsrc');if(!b||!s||typeof WebAssembly!=='object'||typeof Worker!=='function')throw 0;
-    const pre='self.__SFWASM=(function(){var s=atob("'+b.textContent.trim()+'");var u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u})();\n';
-    SF.w=new Worker(URL.createObjectURL(new Blob([pre,s.textContent],{type:'application/javascript'})));
-    SF.w.onmessage=e=>sfMsg(String(e.data));SF.w.onerror=()=>sfFail();
-    SF.w.postMessage('uci');SF.t0=setTimeout(()=>{if(!SF.ready)sfFail()},15000)}catch(e){sfFail()}}
-function sfFail(){if(SF.failed)return;SF.failed=true;SF.ready=false;try{SF.w&&SF.w.terminate()}catch(e){}SF.w=null;SF.name='built-in engine';
-  const jobs=(SF.cur?[SF.cur]:[]).concat(SF.q);SF.cur=null;SF.q=[];jobs.forEach(j=>j.res(fbAnalyse(j.st,j.o)));if(V.name==='coach'||V.name==='coachset')render()}
+function sfStart(){if(SF.w||SF.failed)return;SF.why='';SF.try=(SF.try||0)+1;
+  const b=document.getElementById('sfwasm'),s=document.getElementById('sfsrc');
+  if(!b||!s){sfFail('files missing');return}
+  if(typeof WebAssembly!=='object'){sfFail('nowasm');return}
+  if(typeof Worker!=='function'){sfFail('noworker');return}
+  const pre='self.__SFWASM=(function(){var s=atob("'+b.textContent.trim()+'");var u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u})();\n';
+  const code=pre+s.textContent;let w=null,err='';
+  // 1) blob worker, 2) data: worker (some in-app browsers block blob workers)
+  try{w=new Worker(URL.createObjectURL(new Blob([code],{type:'application/javascript'})))}catch(e){err='blob: '+(e&&e.message||e)}
+  if(!w)try{w=new Worker('data:application/javascript;base64,'+btoa(unescape(encodeURIComponent(code))))}catch(e){err+=' · data: '+(e&&e.message||e)}
+  if(!w){sfFail('worker blocked ('+err+')');return}
+  SF.w=w;w.onmessage=e=>sfMsg(String(e.data));w.onerror=e=>{try{e.preventDefault()}catch(x){}sfFail('error: '+((e&&e.message)||'worker crashed'))};
+  w.postMessage('uci');
+  // slow phones: after 20s use the built-in engine for now, but keep waiting; switch to Stockfish when it is ready
+  SF.t0=setTimeout(()=>{if(!SF.ready)sfFail('slow',true)},20000);SF.t1=setTimeout(()=>{if(!SF.ready&&SF.w){try{SF.w.terminate()}catch(e){}SF.w=null;SF.why='timeout (60s)'}},60000)}
+function sfFail(why,keep){if(why)SF.why=why;if(SF.failed&&!keep)return;SF.failed=true;SF.ready=false;if(!keep){try{SF.w&&SF.w.terminate()}catch(e){}SF.w=null}SF.name='built-in engine';
+  const jobs=(SF.cur?[SF.cur]:[]).concat(SF.q);SF.cur=null;SF.q=[];jobs.forEach(j=>j.res(fbAnalyse(j.st,j.o)));if(['coach','coachset','bmc','trn'].includes(V.name))render()}
+function sfRetry(){clearTimeout(SF.t0);clearTimeout(SF.t1);try{SF.w&&SF.w.terminate()}catch(e){}SF.w=null;SF.failed=false;SF.ready=false;SF.name='built-in engine';sfStart();render();
+  const t=setInterval(()=>{if(SF.ready||SF.failed){clearInterval(t);render()}},500)}
+function sfWhyTxt(){const w=SF.why||'';return w==='nowasm'?L2('This browser has WebAssembly switched off (on iPhone: Lockdown Mode, or a very old browser). Open the app in Safari or Chrome with Lockdown Mode off.','Is browser mein WebAssembly band hai (iPhone par Lockdown Mode, ya bahut purana browser). Lockdown Mode band karke Safari ya Chrome mein kholo.')
+  :w==='noworker'||w.startsWith('worker blocked')?L2('This browser blocks background workers. Open the app in Chrome or Safari, not inside WhatsApp or another app.','Ye browser background worker rok raha hai. App ko Chrome ya Safari mein kholo, WhatsApp ya kisi app ke andar nahi.')
+  :w==='slow'||w.startsWith('timeout')?L2('Stockfish is taking long to start on this phone. It keeps loading in the background.','Is phone par Stockfish shuru hone mein der laga raha hai. Peeche load hota rahega.')
+  :w?L2('Stockfish crashed while starting (often low memory). Close other apps and try again.','Stockfish shuru hote waqt band ho gaya (aksar memory kam hoti hai). Doosre apps band karke dobara try karo.'):''}
+function sfFailHTML(){return`<div class="card" style="font-size:13px;margin-top:6px;border-color:var(--bad,#d55)">⚠️ ${L2('Stockfish did not load on this device, so a simple built-in engine is giving these moves. They can be weak.','Is device par Stockfish load nahi hua, isliye simple built-in engine ye chaalein de raha hai. Ye kamzor ho sakti hain.')}${SF.why?`<br><small>${esc(sfWhyTxt())} <span class="muted mono">(${esc(SF.why.slice(0,80))})</span></small>`:''}<br><button class="btn small" data-act="sf-retry" style="margin-top:6px">🔁 ${L2('Load Stockfish again','Stockfish dobara load karo')}</button></div>`}
 function sfMsg(l){
-  if(l==='uciok'){SF.w.postMessage('setoption name Hash value 32');SF.w.postMessage('isready');return}
-  if(l==='readyok'&&!SF.ready){SF.ready=true;clearTimeout(SF.t0);SF.name='Stockfish 10';sfPump();if(V.name==='coachset')render();return}
+  if(l==='uciok'){SF.w.postMessage('setoption name Hash value 16');SF.w.postMessage('isready');return}
+  if(l==='readyok'&&!SF.ready){const late=SF.failed;SF.ready=true;SF.failed=false;SF.why='';clearTimeout(SF.t0);clearTimeout(SF.t1);SF.name='Stockfish 10';sfPump();if(V.name==='coachset'||late)render();return}
   const c=SF.cur;if(!c)return;
   if(l.startsWith('info ')&&l.includes(' pv ')&&!/ (lower|upper)bound/.test(l)){const g=k=>{const m=l.match(new RegExp(' '+k+' (-?\\d+)'));return m?+m[1]:null};
     const mp=g('multipv')||1,mate=g('mate');c.lines[mp-1]={d:g('depth'),cp:mate!=null?null:g('cp'),mate,pv:l.split(' pv ')[1].trim().split(/\s+/)};return}
@@ -3026,7 +3043,7 @@ function vCoDiary(){const D=P.diary||[];const z=V.dz||(V.dz={i:0,res:null,sel:nu
 
 /* ================= coach: views ================= */
 function vCoachSet(){const o=V.co||(V.co={color:'w',lvl:P.set.colvl!=null?P.set.colvl:2});sfStart();const hist=P.coach||[];
-  let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="playhub">← Khelo</button><span class="eyebrow">${o.blind?L2('Blind mode · board hidden','Blind mode · board chhupa'):L2('Board visible · learn while you play','Board dikhta hai · khelte hue seekho')}</span><h1>${L2('Play with coach','Coach ke saath khelo')}</h1><div class="card stack"><span class="eyebrow">${L2('Board','Board')}</span><div class="seg"><button class="${!o.blind?'on':''}" data-act="co-o" data-k="blind" data-v="">♟ ${L2('Pieces visible','Pieces dikhein')}</button><button class="${o.blind?'on':''}" data-act="co-o" data-k="blind" data-v="1">🙈 ${L2('Blind','Blind')}</button></div>${o.blind?`<small class="muted">${L2('Pieces are hidden. Tap squares from memory. Tap 👁 Peek to see the board for 3 seconds. Turn on the voice coach below to hear every move.','Pieces chhupe rahenge. Yaad se squares tap karo. 3 second dekhne ke liye 👁 Peek dabao. Har chaal sunne ke liye neeche voice coach on karo.')}</small>`:''}</div>
+  let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="playhub">← Khelo</button><span class="eyebrow">${o.blind?L2('Blind mode · board hidden','Blind mode · board chhupa'):L2('Board visible · learn while you play','Board dikhta hai · khelte hue seekho')}</span><h1>${L2('Play with coach','Coach ke saath khelo')}</h1>${SF.failed?sfFailHTML():''}<div class="card stack"><span class="eyebrow">${L2('Board','Board')}</span><div class="seg"><button class="${!o.blind?'on':''}" data-act="co-o" data-k="blind" data-v="">♟ ${L2('Pieces visible','Pieces dikhein')}</button><button class="${o.blind?'on':''}" data-act="co-o" data-k="blind" data-v="1">🙈 ${L2('Blind','Blind')}</button></div>${o.blind?`<small class="muted">${L2('Pieces are hidden. Tap squares from memory. Tap 👁 Peek to see the board for 3 seconds. Turn on the voice coach below to hear every move.','Pieces chhupe rahenge. Yaad se squares tap karo. 3 second dekhne ke liye 👁 Peek dabao. Har chaal sunne ke liye neeche voice coach on karo.')}</small>`:''}</div>
   <p class="muted" style="font-size:14px;margin:0 4px">💡 ${L2('The coach rates every move and shows a better one, with the reason.','Coach har chaal ko check karta hai aur behtar chaal wajah ke saath batata hai.')}</p>
   <div class="card stack"><div><span class="eyebrow">You play</span><div class="seg">${[['w','White'],['b','Black'],['r','Random']].map(([k,t])=>`<button class="${o.color===k?'on':''}" data-act="co-o" data-k="color" data-v="${k}">${t}</button>`).join('')}</div></div>
   ${eloPickHTML()}
@@ -3217,7 +3234,7 @@ function coEasyOpts(){const g=CG,st=g.st;if(!coMyTurn())return'<p class="muted">
   const sel=g.opt==null?0:g.opt;g.pre.lines.forEach((l,i)=>{const m=fromUci(st,l.pv[0]);if(!m)return;const L=lineInfo(st,l.pv,5),on=sel===i;
     h+=`<button class="eopt ${on?'on':''}" data-act="co-opt" data-v="${i}"><span class="en" style="background:${ACOL[OC[i]||'grey']}">${i+1}</span><span style="flex:1"><b class="sn mono">${esc(san(st,m,legal(st)))}</b> <small class="muted">${NM[i]||''}</small><div class="ex">${esc(moveNote(st,m))}.</div>${on?`<div class="ex">Result: <b>${outcomeWord(l)}</b>${Math.abs(L.gain)>=80?`, ${L.gain>0?'you win':'you lose'} ${matWord(L.gain)}`:''}.</div><div class="ol">What may follow: ${esc(L.san)}</div>`:'<div class="ol">Tap for result</div>'}</span></button>`});
   h+='<small class="muted">Tap a number on the board or a card to see that move. Then play the move yourself.</small>';
-  {const d=Math.max(0,...g.pre.lines.map(l=>l.d||0));h+=g.pre.eng==='sf'?`<div class="muted" style="font-size:12px;margin-top:4px">⚙️ ${L2('Engine','Engine')}: Stockfish · ${L2('depth','depth')} ${d}</div>`:`<div class="card" style="font-size:13px;margin-top:6px;border-color:var(--bad,#d55)">⚠️ ${L2('Stockfish did not load on this device, so a simple built-in engine is giving these moves. They can be weak.','Is device par Stockfish load nahi hua, isliye simple built-in engine ye chaalein de raha hai. Ye kamzor ho sakti hain.')}</div>`}
+  {const d=Math.max(0,...g.pre.lines.map(l=>l.d||0));h+=g.pre.eng==='sf'?`<div class="muted" style="font-size:12px;margin-top:4px">⚙️ ${L2('Engine','Engine')}: Stockfish · ${L2('depth','depth')} ${d}</div>`:sfFailHTML()}
   if(sel===0){const r=gKey()&&AIR[aiKey('opts')];if(r&&r.state==='ok'){const pc=coPlanChange(g);if(pc)h+=`<div class="whybest" style="border-top-color:#E0A100"><h4 style="color:#B07E00">🔄 ${L2('What changed after the coach\'s move','Coach ki chaal ke baad kya badla')}</h4><ul class="cline">${pc.pts.map(x=>`<li>${x}</li>`).join('')}</ul><p style="margin:6px 0 0"><b>🎓 ${L2('Lesson','Lesson')}:</b> ${pc.les}</p></div>`;h+=`<div class="whybest"><h4>✦ AI coach: why option 1 is best</h4>${mdLite(r.text)}</div>`}else{if(r&&r.state==='load')h+='<p class="muted">✦ AI coach is writing the explanation…</p>';if(r&&r.state==='err')h+=`<p class="muted">AI: ${esc(gErr(r.e))}</p>`;h+=coWhyBest(g)}}
   else{const l=g.pre.lines[sel],m=l&&fromUci(st,l.pv[0]);if(m){const d=(scCp(g.pre.lines[0])-scCp(l))/100;h+=`<div class="whybest"><h4>Option ${sel+1} vs option 1</h4><p>${d<.25?'This is almost as good as option 1. Both are fine.':`Option 1 is about ${d.toFixed(1)} pawn${d>=1.5?'s':''} better.`} Tap card 1 to see why option 1 is best.</p></div>`}}
   return h}
@@ -3597,7 +3614,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.11 · v110.1';
+const APPV='2026.11.11 · v111';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -4263,7 +4280,7 @@ function vBmc(){if(!BM){bmcNew();return}const z=BM,s=bmcStats();
     h+=`<div class="fb ${z.exact?'ok':z.close?'ok':'no'}"><h3>${z.exact?'🎯 '+L2('Exact Stockfish move!','Bilkul Stockfish wali chaal!'):z.close?'👍 '+L2('Very close','Bahut kareeb'):'✗ '+L2('Stockfish found a better move','Stockfish ne behtar chaal nikali')}</h3>
       <p>${L2('You','Aap')}: <b>${esc(z.candSan)}</b>${z.exact?'':` · Stockfish: <b>${esc(z.bestSan)}</b>`}${!z.exact?` · ${L2('cost','nuksaan')} ${(z.loss/100).toFixed(1)}`:''}</p>
       ${note?`<p>${esc(z.bestSan)} ${esc(note)}.</p>`:''}<p class="muted">${L2('Best line','Best line')}: ${esc(pv)}</p></div>`;
-    h+=`<div class="card stack" style="gap:4px"><b>${L2('Stockfish top 3','Stockfish top 3')}</b>${z.an.lines.map((l,i)=>{const m=fromUci(st,l.pv[0]);return m?`<div class="row" style="justify-content:space-between"><span>${i+1}. ${esc(san(st,m,legal(st)))}${l.pv[0]===uciOf(z.cand)?' ← '+L2('you','aap'):''}</span><span class="mono">${evTxt(l,st.w)}</span></div>`:''}).join('')}<small class="muted">${z.an.eng==='js'?L2('Built-in engine (Stockfish could not load on this device).','Built-in engine (is device par Stockfish load nahi hua).'):SF.name}</small></div>`;
+    h+=`<div class="card stack" style="gap:4px"><b>${L2('Stockfish top 3','Stockfish top 3')}</b>${z.an.lines.map((l,i)=>{const m=fromUci(st,l.pv[0]);return m?`<div class="row" style="justify-content:space-between"><span>${i+1}. ${esc(san(st,m,legal(st)))}${l.pv[0]===uciOf(z.cand)?' ← '+L2('you','aap'):''}</span><span class="mono">${evTxt(l,st.w)}</span></div>`:''}).join('')}<small class="muted">${z.an.eng==='js'?L2('Built-in engine (Stockfish could not load on this device).','Built-in engine (is device par Stockfish load nahi hua).'):SF.name}</small>${z.an.eng==='js'?sfFailHTML():''}</div>`;
     const rs=[1,2,3,4].map(i=>z.res[i]?`${i}${z.res[i].ok?'✓':'✗'}`:`${i}–`).join(' ');h+=`<small class="muted">${L2('Your 5 steps','Aapke 5 steps')}: ${rs}</small>`;
     if(gKey()){const a=z.ai;h+=a&&a.state==='ok'?`<div class="whybest"><h4>✦ AI coach</h4>${mdLite(a.text)}</div>`:a&&a.state==='load'?`<p class="muted">✦ ${L2('AI coach is writing…','AI coach likh raha hai…')}</p>`:`${a&&a.state==='err'?`<p class="muted">${esc(a.msg)}</p>`:''}<button class="btn" data-act="bmc-ai">✦ ${L2('Ask the AI coach to explain','AI coach se samjho')}</button>`}
     h+=`<div class="row"><button class="btn primary" style="flex:1" data-act="bmc-new">🔄 ${L2('New position','Nayi position')}</button><button class="btn" data-act="bmc-again">${L2('Same again','Wahi dobara')}</button></div>${z.back==='trn'?`<button class="btn block" data-act="go" data-v="trn">🌳 ${L2('Back to the training tree','Training tree par wapas')}</button>`:''}`}
@@ -4321,7 +4338,7 @@ function vTrn(){const z=TT;if(!z){go({name:'bestm'});return}const n=z.cur,st=n.s
       h+=`<button class="eopt" data-act="trn-kid" data-v="${l.pv[0]}"><span class="en" style="background:${ACOL[mine?['green','blue','grey'][i]:['red','orange','grey'][i]]}">${i+1}</span><span style="flex:1"><b class="sn mono">${esc(s)}</b> <small class="mono muted">${trEvalTxt(n,l)}</small>${kid?` <small>✓ ${L2('explored','dekhi')}</small>`:''}<div class="ex">${esc(s)} ${esc(moveNote(st,m))}.${th&&th.san?` ${L2('Next it threatens','Agli dhamki')} ${esc(th.san)}.`:''}</div><div class="ex">${i===0?L2('Best.','Sabse best.'):d<.25?L2('Almost as good as 1.','Lagbhag 1 jitna accha.'):L2(`About ${d.toFixed(1)} pawn weaker than 1.`,`1 se lagbhag ${d.toFixed(1)} pawn kamzor.`)}</div><div class="ol">${L2('Line','Line')}: ${esc(line)}</div></span><span>▶</span></button>`});
     if(mine&&g&&g.top<0&&g.u!=='-')h+=`<button class="btn block" data-act="trn-kid" data-v="${g.u}">${L2('Continue with my move','Meri chaal se aage')} ${esc(g.san)} ▶</button>`;
     if(!mine){const kids=n.kids.filter(k=>!L.some(l=>l.pv[0]===uciOf(k.m)));kids.forEach(k=>{h+=`<button class="btn block" data-act="trn-kid" data-v="${uciOf(k.m)}">${esc(k.san)} ✓ ▶</button>`})}
-    h+=trRestHTML(n)}
+    h+=trRestHTML(n);if(n.an.eng==='js')h+=sfFailHTML()}
   h+=`<div class="row">${n.par?`<button class="btn" style="flex:1" data-act="trn-up">◀ ${L2('One move back','Ek chaal peeche')}</button>`:''}<button class="btn" style="flex:1" data-act="trn-new">🔄 ${L2('New start','Naya start')}</button></div>`;
   h+=`<div class="row" style="flex-wrap:wrap;gap:4px">${[['start',L2('Normal start (White)','Normal start (White)')],['black',L2('As Black','Black se')],['rand',L2('Random position','Random position')]].concat(CG&&!CG.over?[['game',L2('My coach game','Mera coach game')]]:[]).map(([k,t])=>`<button class="btn small ${z.kind===k?'primary':''}" data-act="trn-start" data-v="${k}">${t}</button>`).join('')}</div>`;
   h+=`<small class="muted">${L2('Green/blue/grey arrows: your top 3. Red/orange/grey arrows: the coach\'s top 3 replies. Every branch you open is kept, so you can go back and train another one.','Hara/neela/grey teer: aapke top 3. Laal/orange/grey teer: coach ke top 3 jawab. Har khuli branch yaad rehti hai, wapas jaakar doosri bhi train kar sakte ho.')}</small></div></div>`;
