@@ -2291,6 +2291,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'next':nextQ();break;
    case'explore':go({name:'explore'});break;
    case'ex':V.o[d.k]=d.k==='coords'?!!d.v:d.v;vExplore();break;
+   case'tw-go':{const k=decodeURIComponent(d.k),q=TWQ[k];if(q){thinkWhy(q.st,q.pv).then(()=>render());render()}break}
    case'sf-retry':sfRetry();break;
    case'les-bd':V.lopen=V.lopen===+d.v?null:+d.v;vLessons();break;
    case'les-f':V.lf=d.v;vLessons();break;
@@ -3223,6 +3224,39 @@ function vLessons(){const L=P.lesj||[],f=V.lf||'all',S=L.filter(x=>f==='all'||x.
     ${x.k==='mistake'?`<div>${L2('You played','Aapne khela')} <b class="mono">${esc(x.san||'')}</b>, ${L2('better was','behtar tha')} <b class="mono">${esc(x.best||'')}</b>.${x.why?` <small class="muted">${esc(x.why)}</small>`:''}</div>`:`<div>${L2('After the coach played','Coach ki chaal')} <b class="mono">${esc(x.opp||'')}</b> ${L2('the best move became','ke baad best chaal bani')} <b class="mono">${esc(x.best||'')}</b>.</div>`}
     <div><b>🎓 ${L2('Lesson','Lesson')}:</b> ${esc(x.les||'')}</div>${V.lopen===i?lesFrames(x,i):''}</div>`});
   h+='</div>';main.innerHTML=h}
+/* human-style "why" for an engine move: what the opponent wanted if we did nothing, what this move stops, which squares it takes away, what it prepares */
+const TW={},TWQ={};
+function twKey(st,u){return toFEN(st)+'|'+u}
+async function thinkWhy(st,pv){const u=pv&&pv[0];if(!u)return null;const k=twKey(st,u);if(TW[k]&&TW[k].done)return TW[k];TW[k]={load:1};
+  const m=fromUci(st,u);if(!m){TW[k]={done:1,pts:[]};return TW[k]}const w=st.w,n=make(st,m),me=sideW(w),op=sideW(!w),pts=[];let thr=null;
+  if(inCheck(n)&&!legal(n).length){TW[k]={done:1,pts:[L2(`<b>Checkmate!</b> ${esc(san(st,m,legal(st)))} ends the game, nothing else matters.`,`<b>Checkmate!</b> ${esc(san(st,m,legal(st)))} se game khatam, baaki kuch maayne nahi rakhta.`)]};return TW[k]}
+  pts.push(L2(`<b>Main idea:</b> ${esc(san(st,m,legal(st)))} ${esc(moveNote(st,m))}.`,`<b>Asal idea:</b> ${esc(san(st,m,legal(st)))} ${esc(moveNote(st,m))}.`));
+  try{if(!inCheck(st)){const f={...st,w:!w,ep:-1};const fl=legal(f);
+    if(fl.length&&!fl.some(x=>x.cap&&x.cap.toUpperCase()==='K')){let r=null;try{r=await sfGo(f,{multipv:1,movetime:700})}catch(e){}
+      const tm=r&&r.best&&fromUci(f,r.best);
+      if(tm&&r.lines[0]){const nullE=-scCp(r.lines[0]),bestE=pv&&TWQ[k]&&TWQ[k].e!=null?TWQ[k].e:null;const tsan=san(f,tm,fl);
+        const ga=tm.cap?pval(tm.cap)-(attackersOf(make(f,tm).b,tm.t,w).length?pval(tm.p):0):0;const big=r.lines[0].mate!=null&&r.lines[0].mate>0||ga>=100||(bestE!=null&&bestE-nullE>=150&&(tm.cap||inCheck(make(f,tm))));
+        if(big){thr={u:uciOf(tm),san:tsan,t:tm.t,f:tm.f};
+          const nf={...n};const still=legal(nf).find(x=>uciOf(x)===uciOf(tm));let how;
+          if(m.f===tm.t)how=L2(`so our ${PN(m.p)} steps away from ${sn(tm.t)} first`,`isliye hamara ${PN(m.p)} pehle hi ${sn(tm.t)} se hat jaata hai`);
+          else if(!still)how=L2(`after ${san(st,m,legal(st))} that move is not possible any more (blocked or the piece is gone)`,`${san(st,m,legal(st))} ke baad woh chaal mumkin hi nahi (raasta band ya piece gaya)`);
+          else if(inCheck(make(f,tm))&&!inCheck(make(nf,still)))how=L2(`after it, that check does nothing`,`iske baad woh check bekaar ho jaata hai`);
+          else if(attackersOf(n.b,tm.t,w).length>attackersOf(st.b,tm.t,w).length)how=L2(`now our ${PN(m.p)} also guards ${sn(tm.t)}, so if they come there we can take back`,`ab hamara ${PN(m.p)} bhi ${sn(tm.t)} ko dekh raha hai, wahan aaye to hum wapas le sakte hain`);
+          else how=null;
+          if(how)pts.push(L2(`<b>Their idea:</b> if we did nothing, ${op} would play <b>${esc(tsan)}</b> (${esc(moveNote(f,tm))}). This move stops it: ${how}.`,`<b>Dushman ka idea:</b> agar hum kuch na karte, to ${op} <b>${esc(tsan)}</b> khelta (${esc(moveNote(f,tm))}). Ye chaal use rokti hai: ${how}.`))}}}
+    // squares taken away from their pieces
+    const took=[];for(const x of fl){if(x.p.toUpperCase()==='P'||x.cap||took.some(t=>t.t===x.t))continue;if(attackersOf(st.b,x.t,w).length===0&&attackersOf(n.b,x.t,w).length>0&&n.b[x.f]===x.p)took.push(x)}
+    if(took.length)pts.push(L2(`<b>Squares taken away:</b> ${took.slice(0,2).map(x=>`their ${PN(x.p)} can no longer come to ${sn(x.t)} for free`).join('; ')}.`,`<b>Square chheene:</b> ${took.slice(0,2).map(x=>`unka ${PN(x.p)} ab ${sn(x.t)} par free mein nahi aa sakta`).join('; ')}.`))}}catch(e){}
+  try{const tg=pieceAttacks(n.b,m.t,n.b[m.t]).filter(q=>n.b[q]&&isW(n.b[q])!==w);const tg0=new Set(pieceAttacks(st.b,m.f,st.b[m.f]).filter(q=>st.b[q]&&isW(st.b[q])!==w));const nt=tg.filter(q=>!tg0.has(q)&&n.b[q].toUpperCase()!=='P');
+    if(nt.length&&!m.cap)pts.push(L2(`<b>Piece plan:</b> from ${sn(m.t)} the ${PN(m.p)} now eyes the ${sqList(n.b,nt.slice(0,2))}, so ${op} must keep watching it.`,`<b>Piece ka plan:</b> ${sn(m.t)} se ${PN(m.p)} ab ${sqList(n.b,nt.slice(0,2))} ko dekh raha hai, ${op} ko iska dhyaan rakhna padega.`))}catch(e){}
+  try{const h0=hanging(st.b,w).filter(q=>q!==m.f),h1=new Set(hanging(n.b,w));const saved=h0.filter(q=>!h1.has(q)&&n.b[q]);if(saved.length)pts.push(L2(`<b>Protection:</b> it also guards our ${sqList(n.b,saved.slice(0,2))}.`,`<b>Hifazat:</b> ye hamare ${sqList(n.b,saved.slice(0,2))} ko bhi bachata hai.`))}catch(e){}
+  try{const S=pvWalk(st,pv,4).steps;if(S[1]&&S[2])pts.push(L2(`<b>Counter ready:</b> if ${op} answers ${esc(S[1].san)}, we already have ${esc(S[2].san)} (${esc(moveNote(S[2].st,S[2].m,S[1].m))}).`,`<b>Jawab taiyaar:</b> agar ${op} ${esc(S[1].san)} khele, to hamare paas ${esc(S[2].san)} taiyaar hai (${esc(moveNote(S[2].st,S[2].m,S[1].m))}).`));
+  }catch(e){}
+  TW[k]={done:1,pts,thr};return TW[k]}
+function thinkHTML(st,pv,e){const u=pv&&pv[0];if(!u)return'';const k=twKey(st,u);TWQ[k]={st,pv,e};const t=TW[k],m=fromUci(st,u),s=m?san(st,m,legal(st)):u;
+  if(t&&t.done)return`<div class="whybest" style="border-top-color:#7B5CD6"><h4 style="color:#7B5CD6">🧠 ${L2(`The thinking behind ${esc(s)}`,`${esc(s)} ke peeche ki soch`)}</h4><ul class="cline">${t.pts.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+  if(t&&t.load)return`<p class="muted">🧠 ${L2('Working out the idea behind the move…','Chaal ke peeche ki soch nikaal raha hoon…')}</p>`;
+  return`<button class="btn block" data-act="tw-go" data-k="${encodeURIComponent(k)}">🧠 ${L2(`Why ${s}? Explain the human idea`,`${s} kyun? Insaan ki tarah soch samjhao`)}</button>`}
 function coWhyBest(g){const st=g.st,ls=g.pre&&g.pre.lines||[];if(!ls[0])return'';const S=pvWalk(st,ls[0].pv,6).steps;if(!S[0])return'';const m=S[0].m,n=make(st,m),w=st.w;const pts=[];
   pts.push(`<b>${L2('Idea','Idea')}:</b> ${esc(S[0].san)} ${esc(moveNote(st,m))}.`);
   const th=g.threat;if(th&&th.san){const ign=th.m&&legal(n).some(x=>x.f===th.m.f&&x.t===th.m.t)&&hanging(n.b,w).includes(th.m.t);pts.push(ign?`<b>Counter-attack:</b> it ignores the coach's threat ${esc(th.san)}, because this move is even stronger.`:`<b>Defence:</b> it stops the coach's threat ${esc(th.san)}.`)}
@@ -3235,7 +3269,7 @@ function coWhyBest(g){const st=g.st,ls=g.pre&&g.pre.lines||[];if(!ls[0])return''
     pts.push(`<b>Why not ${i+2} (${esc(san(st,mm,legal(st)))})?</b> ${d<.25?'Almost as good: a fine choice too.':d<.8?`A little weaker (about ${d.toFixed(1)} pawn).`:`Clearly weaker (about ${d.toFixed(1)} pawns).`}${L2.gain<=-200?` It loses ${matWord(L2.gain)}.`:''}`)});
   const plan=positionNotes(n,w,g.moves.map(x=>x.san).concat(S[0].san)).plan;if(plan&&plan[0])pts.push(`<b>Plan after it:</b> ${esc(plan.slice(0,2).join(' Then '))}`);
   const pc=coPlanChange(g);const pcH=pc?`<div class="whybest" style="border-top-color:#E0A100"><h4 style="color:#B07E00">🔄 ${L2('What changed after the coach\'s move','Coach ki chaal ke baad kya badla')}</h4><ul class="cline">${pc.pts.map(x=>`<li>${x}</li>`).join('')}</ul><p style="margin:6px 0 0"><b>🎓 ${L2('Lesson','Lesson')}:</b> ${pc.les} <small class="muted">(${L2('saved in your lesson journal','aapki lesson diary mein save')})</small></p></div>`:'';
-  return pcH+`<div class="whybest"><h4>${L2('Why option 1 is best','Option 1 best kyun hai')}</h4><ul class="cline">${pts.map(x=>`<li>${x}</li>`).join('')}</ul></div>`}
+  return pcH+`<div class="whybest"><h4>${L2('Why option 1 is best','Option 1 best kyun hai')}</h4><ul class="cline">${pts.map(x=>`<li>${x}</li>`).join('')}</ul></div>`+thinkHTML(st,ls[0].pv,scCp(ls[0]))}
 function coEasyOpts(){const g=CG,st=g.st;if(!coMyTurn())return'<p class="muted">'+L2('Options show when it is your turn.','Aapki baari par options dikhenge.')+'</p>';if(!g.pre)return'<p class="muted">'+L2('Coach is checking your options…','Coach aapke options check kar raha hai…')+'</p>';
   const OC=['green','blue','grey'],NM=['Best','Good too','Also possible'];let h='<h4>🎯 '+L2('Your best options (see the arrows)','Aapke best options (arrows dekho)')+'</h4>';
   const sel=g.opt==null?0:g.opt;g.pre.lines.forEach((l,i)=>{const m=fromUci(st,l.pv[0]);if(!m)return;const L=lineInfo(st,l.pv,5),on=sel===i;
@@ -3621,7 +3655,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.11 · v112';
+const APPV='2026.11.12 · v113';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -4288,7 +4322,7 @@ function vBmc(){if(!BM){bmcNew();return}const z=BM,s=bmcStats();
       <p>${L2('You','Aap')}: <b>${esc(z.candSan)}</b>${z.exact?'':` · Stockfish: <b>${esc(z.bestSan)}</b>`}${!z.exact?` · ${L2('cost','nuksaan')} ${(z.loss/100).toFixed(1)}`:''}</p>
       ${note?`<p>${esc(z.bestSan)} ${esc(note)}.</p>`:''}<p class="muted">${L2('Best line','Best line')}: ${esc(pv)}</p></div>`;
     h+=`<div class="card stack" style="gap:4px"><b>${L2('Stockfish top 3','Stockfish top 3')}</b>${z.an.lines.map((l,i)=>{const m=fromUci(st,l.pv[0]);return m?`<div class="row" style="justify-content:space-between"><span>${i+1}. ${esc(san(st,m,legal(st)))}${l.pv[0]===uciOf(z.cand)?' ← '+L2('you','aap'):''}</span><span class="mono">${evTxt(l,st.w)}</span></div>`:''}).join('')}<small class="muted">${z.an.eng==='js'?L2('Built-in engine (Stockfish could not load on this device).','Built-in engine (is device par Stockfish load nahi hua).'):SF.name}</small>${z.an.eng==='js'?sfFailHTML():''}</div>`;
-    const rs=[1,2,3,4].map(i=>z.res[i]?`${i}${z.res[i].ok?'✓':'✗'}`:`${i}–`).join(' ');h+=`<small class="muted">${L2('Your 5 steps','Aapke 5 steps')}: ${rs}</small>`;
+    h+=thinkHTML(st,z.an.lines[0].pv,scCp(z.an.lines[0]));const rs=[1,2,3,4].map(i=>z.res[i]?`${i}${z.res[i].ok?'✓':'✗'}`:`${i}–`).join(' ');h+=`<small class="muted">${L2('Your 5 steps','Aapke 5 steps')}: ${rs}</small>`;
     if(gKey()){const a=z.ai;h+=a&&a.state==='ok'?`<div class="whybest"><h4>✦ AI coach</h4>${mdLite(a.text)}</div>`:a&&a.state==='load'?`<p class="muted">✦ ${L2('AI coach is writing…','AI coach likh raha hai…')}</p>`:`${a&&a.state==='err'?`<p class="muted">${esc(a.msg)}</p>`:''}<button class="btn" data-act="bmc-ai">✦ ${L2('Ask the AI coach to explain','AI coach se samjho')}</button>`}
     h+=`<div class="row"><button class="btn primary" style="flex:1" data-act="bmc-new">🔄 ${L2('New position','Nayi position')}</button><button class="btn" data-act="bmc-again">${L2('Same again','Wahi dobara')}</button></div>${z.back==='trn'?`<button class="btn block" data-act="go" data-v="trn">🌳 ${L2('Back to the training tree','Training tree par wapas')}</button>`:''}`}
   h+=`<small class="muted">${L2('Exact best found','Exact best mili')}: ${s.exact}/${s.n} · ${L2('top 3','top 3')}: ${s.top3} · ${L2('best streak','best streak')} ${s.bestStreak}</small></div></div>`;setMain(h);
@@ -4345,14 +4379,14 @@ function vTrn(){const z=TT;if(!z){go({name:'bestm'});return}const n=z.cur,st=n.s
       h+=`<button class="eopt" data-act="trn-kid" data-v="${l.pv[0]}"><span class="en" style="background:${ACOL[mine?['green','blue','grey'][i]:['red','orange','grey'][i]]}">${i+1}</span><span style="flex:1"><b class="sn mono">${esc(s)}</b> <small class="mono muted">${trEvalTxt(n,l)}</small>${kid?` <small>✓ ${L2('explored','dekhi')}</small>`:''}<div class="ex">${esc(s)} ${esc(moveNote(st,m))}.${th&&th.san?` ${L2('Next it threatens','Agli dhamki')} ${esc(th.san)}.`:''}</div><div class="ex">${i===0?L2('Best.','Sabse best.'):d<.25?L2('Almost as good as 1.','Lagbhag 1 jitna accha.'):L2(`About ${d.toFixed(1)} pawn weaker than 1.`,`1 se lagbhag ${d.toFixed(1)} pawn kamzor.`)}</div><div class="ol">${L2('Line','Line')}: ${esc(line)}</div></span><span>▶</span></button>`});
     if(mine&&g&&g.top<0&&g.u!=='-')h+=`<button class="btn block" data-act="trn-kid" data-v="${g.u}">${L2('Continue with my move','Meri chaal se aage')} ${esc(g.san)} ▶</button>`;
     if(!mine){const kids=n.kids.filter(k=>!L.some(l=>l.pv[0]===uciOf(k.m)));kids.forEach(k=>{h+=`<button class="btn block" data-act="trn-kid" data-v="${uciOf(k.m)}">${esc(k.san)} ✓ ▶</button>`})}
-    h+=trRestHTML(n);if(n.an.eng==='js')h+=sfFailHTML()}
+    if(L[0])h+=thinkHTML(st,L[0].pv,scCp(L[0]));h+=trRestHTML(n);if(n.an.eng==='js')h+=sfFailHTML()}
   h+=`<div class="row">${n.par?`<button class="btn" style="flex:1" data-act="trn-up">◀ ${L2('One move back','Ek chaal peeche')}</button>`:''}<button class="btn" style="flex:1" data-act="trn-new">🔄 ${L2('New start','Naya start')}</button></div>`;
   h+=`<div class="row" style="flex-wrap:wrap;gap:4px">${[['start',L2('Normal start (White)','Normal start (White)')],['black',L2('As Black','Black se')],['rand',L2('Random position','Random position')]].concat(CG&&!CG.over?[['game',L2('My coach game','Mera coach game')]]:[]).map(([k,t])=>`<button class="btn small ${z.kind===k?'primary':''}" data-act="trn-start" data-v="${k}">${t}</button>`).join('')}</div>`;
   h+=`<small class="muted">${L2('Green/blue/grey arrows: your top 3. Red/orange/grey arrows: the coach\'s top 3 replies. Every branch you open is kept, so you can go back and train another one.','Hara/neela/grey teer: aapke top 3. Laal/orange/grey teer: coach ke top 3 jawab. Har khuli branch yaad rehti hai, wapas jaakar doosri bhi train kar sakte ho.')}</small></div></div>`;
   setMain(h);
   onSq=q=>{if(!moving)return;const s=si(q),p=st.b[s];if(n.sel!=null&&n.sel!==s){const m=legal(st).find(x=>x.f===n.sel&&x.t===s&&(!x.promo||x.promo==='Q'));if(m){n.sel=null;trGuess(m);return}}n.sel=p&&isW(p)===st.w?s:null;vTrn()}}
 /* all the other legal moves: count them and give a short reason why each is not chosen */
-function trRestLoad(n){if(n.all||n.allLoading)return;const N=legal(n.st).length;n.allLoading=true;
+function trRestLoad(n){if(n.all||n.allLoading)return;const N=legal(n.st).length;n.allLoading=true;try{if(n.an&&n.an.lines[0]){TWQ[twKey(n.st,n.an.lines[0].pv[0])]={st:n.st,pv:n.an.lines[0].pv,e:scCp(n.an.lines[0])};thinkWhy(n.st,n.an.lines[0].pv)}}catch(e){}
   sfGo(n.st,{multipv:Math.min(80,N),movetime:Math.min(4000,1200+N*40)}).then(r=>{n.all=r;n.allLoading=false;if(TT&&TT.cur===n&&V.name==='trn')vTrn()}).catch(()=>{n.allLoading=false})}
 function trWhyNot(st,m,l,best){const w=st.w,n=make(st,m),U=m.p.toUpperCase(),loss=Math.max(0,scCp(best)-scCp(l)),R=[];
   if(l.mate!=null&&l.mate<0)R.push(L2(`it allows checkmate in ${-l.mate}`,`isse ${-l.mate} chaal mein mate ho jaata hai`));
@@ -4362,6 +4396,7 @@ function trWhyNot(st,m,l,best){const w=st.w,n=make(st,m),U=m.p.toUpperCase(),los
   const nh=h1.filter(q=>q!==m.t&&!h0.has(q));if(nh.length)R.push(L2(`it leaves your ${sqList(n.b,nh.slice(0,2))} undefended`,`isse aapka ${sqList(n.b,nh.slice(0,2))} bina bachaav reh jaata hai`));
   const li=lineInfo(st,l.pv,6);if(!R.length&&li.gain<=-80&&loss>=-li.gain*.8)R.push(L2(`it loses ${matWord(-li.gain)||'material'} in the line`,`line mein ${matWord(-li.gain)||'material'} chala jaata hai`));
   const th=threatOf(st);if(th&&th.m&&!R.length){const still=threatOf(n);if(still&&still.m&&uciOf(still.m)===uciOf(th.m))R.push(L2(`it ignores the threat ${th.san}`,`ye dhamki ${th.san} ko nazarandaaz karta hai`))}
+  try{const bt=best&&best.pv&&TW[twKey(st,best.pv[0])];const T=bt&&bt.thr;if(!R.length&&T&&loss>=40){const still=legal(n).find(x=>sn(x.f)+sn(x.t)===T.u.slice(0,4));if(still&&attackersOf(n.b,T.t,w).length<=attackersOf(st.b,T.t,w).length)R.push(L2(`it does not stop their idea ${T.san}`,`ye unka idea ${T.san} nahi rokta`))}}catch(x){}
   const ph=phaseOf(st),rr=w?m.t>>3:7-(m.t>>3),fr=w?m.f>>3:7-(m.f>>3);
   if(!R.length&&U==='K'&&!m.castle&&ph!=='end')R.push(L2('the king walks out and loses the right to castle','king bahar nikalta hai aur castle ka haq chala jaata hai'));
   if(!R.length&&ph!=='end'&&'NB'.includes(U)&&rr<fr&&rr===0)R.push(L2('the piece goes back home and loses time','piece wapas ghar jaata hai, time barbaad'));
