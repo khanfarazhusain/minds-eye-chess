@@ -1185,6 +1185,7 @@ body:not([class*="ps-"]) .pc{font-size:88cqh}body.pz-s:not([class*="ps-"]) .pc{f
 .lpbar{height:8px;border-radius:9px;background:var(--line);overflow:hidden}.lpbar i{display:block;height:100%;background:linear-gradient(90deg,#3FBF7F,#1E9E55);transition:width .2s}
 .lpbtns{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.lpok{font-weight:700;color:#1E9E55}
 [dir=rtl] .board,[dir=rtl] .board *{direction:ltr}
+.eyeb{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin:0 4px;border-radius:50%;background:rgba(123,92,214,.14);border:1px solid rgba(123,92,214,.45);font-size:15px;line-height:1;cursor:pointer;vertical-align:middle}.eyeb.on{background:#7B5CD6;color:#fff}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -2291,7 +2292,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'next':nextQ();break;
    case'explore':go({name:'explore'});break;
    case'ex':V.o[d.k]=d.k==='coords'?!!d.v:d.v;vExplore();break;
-   case'tw-go':{const k=decodeURIComponent(d.k),q=TWQ[k];if(q){thinkWhy(q.st,q.pv).then(()=>render());render()}break}
+   case'tw-go':{e.stopPropagation();const k=decodeURIComponent(d.k),q=TWQ[k];if(!q)break;if(TWO.has(k)){TWO.delete(k);render();break}TWO.add(k);if(!(TW[k]&&TW[k].done))thinkWhy(q.st,q.pv).then(()=>render());render();break}
    case'sf-retry':sfRetry();break;
    case'les-bd':V.lopen=V.lopen===+d.v?null:+d.v;vLessons();break;
    case'les-f':V.lf=d.v;vLessons();break;
@@ -2375,11 +2376,12 @@ document.addEventListener('keydown',e=>{if(V.name==='train'&&TR){const m=TR.m;if
 
 /* ================= coach: engine ================= */
 const SF={w:null,ready:false,failed:false,q:[],cur:null,name:'built-in engine'};
-function sfStart(){if(SF.w||SF.failed)return;SF.why='';SF.try=(SF.try||0)+1;SF.ts=Date.now();SF.tr=0;SF.log=[];SF.via='';
+function sfStart(){if(SF.w||SF.failed)return;sfBoot()}
+function sfBoot(){SF.why='';SF.try=(SF.try||0)+1;SF.ts=Date.now();SF.tr=0;SF.log=[];SF.via='';
   const b=document.getElementById('sfwasm'),s=document.getElementById('sfsrc');
-  if(!b||!s){sfFail('files missing');return}
-  if(typeof WebAssembly!=='object'){sfFail('nowasm');return}
-  if(typeof Worker!=='function'){sfFail('noworker');return}
+  if(!b||!s){SF.perm=1;sfFail('files missing');return}
+  if(typeof WebAssembly!=='object'){SF.perm=1;sfFail('nowasm');return}
+  if(typeof Worker!=='function'){SF.perm=1;sfFail('noworker');return}
   const pre='self.__SFWASM=(function(){var s=atob("'+b.textContent.trim()+'");var u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u})();\n';
   const code=pre+s.textContent;let w=null,err='';
   // 1) blob worker, 2) data: worker (some in-app browsers block blob workers)
@@ -2389,9 +2391,18 @@ function sfStart(){if(SF.w||SF.failed)return;SF.why='';SF.try=(SF.try||0)+1;SF.t
   SF.w=w;w.onmessage=e=>{const t=String(e.data);if(SF.log.length<6&&!/^(info|option|id )/.test(t))SF.log.push(((Date.now()-SF.ts)/1000).toFixed(1)+'s '+t.slice(0,40));sfMsg(t)};w.onerror=e=>{try{e.preventDefault()}catch(x){}sfFail('error: '+((e&&e.message)||'worker crashed'))};
   w.postMessage('uci');
   // slow phones: after 20s use the built-in engine for now, but keep waiting; switch to Stockfish when it is ready
-  SF.t0=setTimeout(()=>{if(!SF.ready)sfFail('slow',true)},20000);SF.t1=setTimeout(()=>{if(!SF.ready&&SF.w){try{SF.w.terminate()}catch(e){}SF.w=null;SF.why='timeout (60s)'}},60000)}
-function sfFail(why,keep){if(why)SF.why=why;if(SF.failed&&!keep)return;SF.failed=true;SF.ready=false;if(!keep){try{SF.w&&SF.w.terminate()}catch(e){}SF.w=null}SF.name='built-in engine';
+  SF.t0=setTimeout(()=>{if(!SF.ready)sfFail('slow',true)},20000);SF.t1=setTimeout(()=>{if(!SF.ready&&SF.w){try{SF.w.terminate()}catch(e){}SF.w=null;SF.why='timeout (60s)';sfAuto()}},60000)}
+/* self-healing: restart the engine by itself (iPhone can stop a worker in the background or fail the first start) */
+function sfRestart(why){clearTimeout(SF.t0);clearTimeout(SF.t1);clearTimeout(SF.ping);try{SF.w&&SF.w.terminate()}catch(e){}SF.w=null;SF.ready=false;SF.failed=true;SF.name='built-in engine';if(why)SF.why=why;
+  const jobs=(SF.cur?[SF.cur]:[]).concat(SF.q);SF.cur=null;SF.q=[];jobs.forEach(j=>{clearTimeout(j.wd);j.res(fbAnalyse(j.st,j.o))});sfBoot()}
+function sfAuto(){if(SF.perm)return;SF.auto=(SF.auto||0)+1;if(SF.auto>6)return;clearTimeout(SF.at);SF.at=setTimeout(()=>{if(!SF.ready)sfRestart(SF.why)},[1500,3000,6000,10000,20000,30000][SF.auto-1])}
+function sfFail(why,keep){if(why)SF.why=why;if(SF.failed&&!keep){if(!SF.w)sfAuto();return}SF.failed=true;SF.ready=false;if(!keep){try{SF.w&&SF.w.terminate()}catch(e){}SF.w=null;sfAuto()}SF.name='built-in engine';
   const jobs=(SF.cur?[SF.cur]:[]).concat(SF.q);SF.cur=null;SF.q=[];jobs.forEach(j=>j.res(fbAnalyse(j.st,j.o)));if(['coach','coachset','bmc','trn'].includes(V.name))render()}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)return;try{
+  if(SF.ready&&SF.w){SF.w.postMessage('isready');clearTimeout(SF.ping);SF.ping=setTimeout(()=>{if(SF.ready)sfRestart('asleep after background')},4000)}
+  else if(!SF.w&&!SF.perm&&(SF.failed||SF.try)){SF.auto=0;sfRestart(SF.why)}}catch(e){}});
+window.addEventListener('pageshow',e=>{if(e.persisted&&SF.ready&&SF.w){try{SF.w.postMessage('isready');clearTimeout(SF.ping);SF.ping=setTimeout(()=>{if(SF.ready)sfRestart('asleep after background')},4000)}catch(x){}}});
+setTimeout(()=>{try{sfStart()}catch(e){}},1500);
 function sfLateRefresh(){try{
   if(BM&&BM.an&&BM.an.eng==='js'&&BM.st){const z=BM;sfGo(z.st,{multipv:3,movetime:1500}).then(r=>{if(BM===z&&r&&r.best){z.an=r;bmcPrep();if(V.name==='bmc')vBmc()}})}
   if(TT&&TT.cur&&TT.cur.an&&TT.cur.an.eng==='js'){TT.cur.an=null;TT.cur.all=null;trLoad(TT.cur)}
@@ -2399,7 +2410,7 @@ function sfLateRefresh(){try{
 function sfStatusTxt(){const ua=navigator.userAgent,ios=(ua.match(/OS (\d+[_\d]*) like Mac/)||[])[1],an=(ua.match(/Android [\d.]+/)||[])[0],dev=ios?'iOS '+ios.replace(/_/g,'.'):an||navigator.platform||'',sa=window.navigator.standalone||matchMedia('(display-mode: standalone)').matches?' · home-screen app':'';
   const st=SF.ready?`ready in ${(SF.tr/1000).toFixed(1)}s`:SF.w?`loading ${Math.round((Date.now()-(SF.ts||Date.now()))/1000)}s`:SF.failed?'stopped':'not started';
   return `Stockfish: ${st}${SF.why?' · '+SF.why:''} · try ${SF.try||0}${SF.via?' · '+SF.via:''} · ${dev}${sa}${SF.log&&SF.log.length?' · '+SF.log.join(' | '):' · no reply yet'}`}
-function sfRetry(){if(SF.w&&!SF.ready&&Date.now()-(SF.ts||0)<60000){render();return}clearTimeout(SF.t0);clearTimeout(SF.t1);try{SF.w&&SF.w.terminate()}catch(e){}SF.w=null;SF.failed=false;SF.ready=false;SF.name='built-in engine';sfStart();render();
+function sfRetry(){if(SF.w&&!SF.ready&&Date.now()-(SF.ts||0)<60000){render();return}SF.perm=0;SF.auto=0;sfRestart('');render();
   const t=setInterval(()=>{if(SF.ready||SF.failed){clearInterval(t);render()}},500)}
 function sfWhyTxt(){const w=SF.why||'';return w==='nowasm'?L2('This browser has WebAssembly switched off (on iPhone: Lockdown Mode, or a very old browser). Open the app in Safari or Chrome with Lockdown Mode off.','Is browser mein WebAssembly band hai (iPhone par Lockdown Mode, ya bahut purana browser). Lockdown Mode band karke Safari ya Chrome mein kholo.')
   :w==='noworker'||w.startsWith('worker blocked')?L2('This browser blocks background workers. Open the app in Chrome or Safari, not inside WhatsApp or another app.','Ye browser background worker rok raha hai. App ko Chrome ya Safari mein kholo, WhatsApp ya kisi app ke andar nahi.')
@@ -2408,15 +2419,17 @@ function sfWhyTxt(){const w=SF.why||'';return w==='nowasm'?L2('This browser has 
 function sfFailHTML(){return`<div class="card" style="font-size:13px;margin-top:6px;border-color:var(--bad,#d55)">⚠️ ${L2('Stockfish did not load on this device, so a simple built-in engine is giving these moves. They can be weak.','Is device par Stockfish load nahi hua, isliye simple built-in engine ye chaalein de raha hai. Ye kamzor ho sakti hain.')}${SF.ready?`<br><b>✅ ${L2('Stockfish is ready now. New analyses use it.','Stockfish ab ready hai. Nayi analysis isi se hogi.')}</b>`:SF.why?`<br><small>${esc(sfWhyTxt())}</small>`:''}<br><small class="muted mono" style="font-size:11px;word-break:break-word">${esc(sfStatusTxt())}</small><br>${SF.ready?'':`<button class="btn small" data-act="sf-retry" style="margin-top:6px">🔁 ${L2('Load Stockfish again','Stockfish dobara load karo')}</button>`}</div>`}
 function sfMsg(l){
   if(l==='uciok'){SF.w.postMessage('setoption name Hash value 16');SF.w.postMessage('isready');return}
-  if(l==='readyok'&&!SF.ready){const late=SF.failed;SF.tr=Date.now()-SF.ts;SF.ready=true;SF.failed=false;SF.why='';clearTimeout(SF.t0);clearTimeout(SF.t1);SF.name='Stockfish 10';sfPump();if(late)sfLateRefresh();if(V.name==='coachset'||late)render();return}
+  if(l==='readyok'&&SF.ready){clearTimeout(SF.ping);return}
+  if(l==='readyok'&&!SF.ready){const late=SF.failed;SF.auto=0;SF.tr=Date.now()-SF.ts;SF.ready=true;SF.failed=false;SF.why='';clearTimeout(SF.t0);clearTimeout(SF.t1);SF.name='Stockfish 10';sfPump();if(late)sfLateRefresh();if(V.name==='coachset'||late)render();return}
   const c=SF.cur;if(!c)return;
   if(l.startsWith('info ')&&l.includes(' pv ')&&!/ (lower|upper)bound/.test(l)){const g=k=>{const m=l.match(new RegExp(' '+k+' (-?\\d+)'));return m?+m[1]:null};
     const mp=g('multipv')||1,mate=g('mate');c.lines[mp-1]={d:g('depth'),cp:mate!=null?null:g('cp'),mate,pv:l.split(' pv ')[1].trim().split(/\s+/)};return}
-  if(l.startsWith('bestmove')){SF.cur=null;const bm=l.split(/\s+/)[1];const lines=c.lines.filter(Boolean);
+  if(l.startsWith('bestmove')){clearTimeout(c.wd);SF.cur=null;const bm=l.split(/\s+/)[1];const lines=c.lines.filter(Boolean);
     c.res(lines.length||c.o.skill!=null?{lines:lines.length?lines:[{cp:0,pv:[bm]}],best:bm,eng:'sf'}:fbAnalyse(c.st,c.o));sfPump()}}
 function sfPump(){if(!SF.ready||SF.cur||!SF.q.length)return;const j=SF.q.shift();SF.cur=j;j.lines=[];const o=j.o;
   SF.w.postMessage('setoption name Skill Level value '+(o.skill==null?20:o.skill));SF.w.postMessage('setoption name MultiPV value '+(o.multipv||1));
-  SF.w.postMessage('position fen '+toFEN(j.st));SF.w.postMessage('go'+(o.depth?' depth '+o.depth:'')+' movetime '+(o.movetime||800))}
+  SF.w.postMessage('position fen '+toFEN(j.st));SF.w.postMessage('go'+(o.depth?' depth '+o.depth:'')+' movetime '+(o.movetime||800));
+  j.wd=setTimeout(()=>{if(SF.cur===j)sfRestart('no answer')},(o.movetime||800)+8000)}
 function sfGo(st,o){return new Promise(res=>{if(!legal(st).length){res({lines:[],best:null});return}sfStart();
   if(SF.failed){setTimeout(()=>res(fbAnalyse(st,o)),20);return}SF.q.push({st,o,res});sfPump()})}
 function fbAnalyse(st,o){const ms=legal(st);if(!ms.length)return{lines:[],best:null,eng:'js'};
@@ -3254,11 +3267,16 @@ async function thinkWhy(st,pv){const u=pv&&pv[0];if(!u)return null;const k=twKey
   }catch(e){}
   TW[k]={done:1,pts,thr};return TW[k]}
 function thinkHTML(st,pv,e){const u=pv&&pv[0];if(!u)return'';const k=twKey(st,u);TWQ[k]={st,pv,e};const t=TW[k],m=fromUci(st,u),s=m?san(st,m,legal(st)):u;
+  if(!TWO.has(k))return'';
   if(t&&t.done)return`<div class="whybest" style="border-top-color:#7B5CD6"><h4 style="color:#7B5CD6">🧠 ${L2(`The thinking behind ${esc(s)}`,`${esc(s)} ke peeche ki soch`)}</h4><ul class="cline">${t.pts.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
   if(t&&t.load)return`<p class="muted">🧠 ${L2('Working out the idea behind the move…','Chaal ke peeche ki soch nikaal raha hoon…')}</p>`;
-  return`<button class="btn block" data-act="tw-go" data-k="${encodeURIComponent(k)}">🧠 ${L2(`Why ${s}? Explain the human idea`,`${s} kyun? Insaan ki tarah soch samjhao`)}</button>`}
+  return''}
+/* small eye button next to Stockfish's best move: opens the human thinking card */
+const TWO=new Set();
+function eyeBtn(st,pv,e){const u=pv&&pv[0];if(!u)return'';const k=twKey(st,u);TWQ[k]={st,pv,e};const on=TWO.has(k);
+  return`<span role="button" tabindex="0" class="eyeb${on?' on':''}" data-act="tw-go" data-k="${encodeURIComponent(k)}" title="${L2('Human thinking behind this move','Is chaal ke peeche insaani soch')}" aria-label="${L2('Show the thinking','Soch dikhao')}">👁</span>`}
 function coWhyBest(g){const st=g.st,ls=g.pre&&g.pre.lines||[];if(!ls[0])return'';const S=pvWalk(st,ls[0].pv,6).steps;if(!S[0])return'';const m=S[0].m,n=make(st,m),w=st.w;const pts=[];
-  pts.push(`<b>${L2('Idea','Idea')}:</b> ${esc(S[0].san)} ${esc(moveNote(st,m))}.`);
+  pts.push(`<b>${L2('Idea','Idea')}:</b> ${esc(S[0].san)}${eyeBtn(st,ls[0].pv,scCp(ls[0]))} ${esc(moveNote(st,m))}.`);
   const th=g.threat;if(th&&th.san){const ign=th.m&&legal(n).some(x=>x.f===th.m.f&&x.t===th.m.t)&&hanging(n.b,w).includes(th.m.t);pts.push(ign?`<b>Counter-attack:</b> it ignores the coach's threat ${esc(th.san)}, because this move is even stronger.`:`<b>Defence:</b> it stops the coach's threat ${esc(th.san)}.`)}
   const my=threatOf(n);
   if(my&&my.san)pts.push(`<b>Threat:</b> next you want ${esc(my.san)}${my.mate?' with checkmate':my.gain>=80?`, winning ${matWord(my.gain)||'material'}`:''}. The coach must react.`);
@@ -3655,7 +3673,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.12 · v113';
+const APPV='2026.11.12 · v114';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -4319,7 +4337,7 @@ function vBmc(){if(!BM){bmcNew();return}const z=BM,s=bmcStats();
       h+=coach(L2(`You played <b>${esc(z.candSan)}</b>. ${op}'s best answer is <b>${esc(z.replySan||'—')}</b> (red arrow). ${verdict}`,`Aapne <b>${esc(z.candSan)}</b> khela. ${op} ka best jawab <b>${esc(z.replySan||'—')}</b> hai (laal teer). ${verdict}`))+`<div class="row"><button class="btn primary" style="flex:1" data-act="bmc-final">✅ ${L2('Final answer','Final jawab')}</button>${z.tries<3?`<button class="btn" data-act="bmc-retry">↩ ${L2('Try another move','Doosri chaal')}</button>`:''}</div>`}}
   else if(step===6){const pv=pvWalk(st,z.an.lines[0].pv,7).steps.map(x=>x.san).join(' '),note=z.bestM?moveNote(st,z.bestM):'';
     h+=`<div class="fb ${z.exact?'ok':z.close?'ok':'no'}"><h3>${z.exact?'🎯 '+L2('Exact Stockfish move!','Bilkul Stockfish wali chaal!'):z.close?'👍 '+L2('Very close','Bahut kareeb'):'✗ '+L2('Stockfish found a better move','Stockfish ne behtar chaal nikali')}</h3>
-      <p>${L2('You','Aap')}: <b>${esc(z.candSan)}</b>${z.exact?'':` · Stockfish: <b>${esc(z.bestSan)}</b>`}${!z.exact?` · ${L2('cost','nuksaan')} ${(z.loss/100).toFixed(1)}`:''}</p>
+      <p>${L2('You','Aap')}: <b>${esc(z.candSan)}</b>${z.exact?eyeBtn(st,z.an.lines[0].pv,scCp(z.an.lines[0])):` · Stockfish: <b>${esc(z.bestSan)}</b>${eyeBtn(st,z.an.lines[0].pv,scCp(z.an.lines[0]))}`}${!z.exact?` · ${L2('cost','nuksaan')} ${(z.loss/100).toFixed(1)}`:''}</p>
       ${note?`<p>${esc(z.bestSan)} ${esc(note)}.</p>`:''}<p class="muted">${L2('Best line','Best line')}: ${esc(pv)}</p></div>`;
     h+=`<div class="card stack" style="gap:4px"><b>${L2('Stockfish top 3','Stockfish top 3')}</b>${z.an.lines.map((l,i)=>{const m=fromUci(st,l.pv[0]);return m?`<div class="row" style="justify-content:space-between"><span>${i+1}. ${esc(san(st,m,legal(st)))}${l.pv[0]===uciOf(z.cand)?' ← '+L2('you','aap'):''}</span><span class="mono">${evTxt(l,st.w)}</span></div>`:''}).join('')}<small class="muted">${z.an.eng==='js'?L2('Built-in engine (Stockfish could not load on this device).','Built-in engine (is device par Stockfish load nahi hua).'):SF.name}</small>${z.an.eng==='js'?sfFailHTML():''}</div>`;
     h+=thinkHTML(st,z.an.lines[0].pv,scCp(z.an.lines[0]));const rs=[1,2,3,4].map(i=>z.res[i]?`${i}${z.res[i].ok?'✓':'✗'}`:`${i}–`).join(' ');h+=`<small class="muted">${L2('Your 5 steps','Aapke 5 steps')}: ${rs}</small>`;
@@ -4376,7 +4394,7 @@ function vTrn(){const z=TT;if(!z){go({name:'bestm'});return}const n=z.cur,st=n.s
     h+=`<b>${mine?'🟢 '+L2('Your best 3 options','Aapke best 3 options'):'🔴 '+L2('The coach\'s best 3 replies','Coach ke best 3 jawab')}</b><small class="muted">${L2('Pick any one to train that branch.','Koi bhi chuno, us branch ki training hogi.')}</small>`;
     L.forEach((l,i)=>{const m=fromUci(st,l.pv[0]);if(!m)return;const s=san(st,m,legal(st)),kid=n.kids.find(k=>uciOf(k.m)===l.pv[0]),d=i?(scCp(L[0])-scCp(l))/100:0,line=pvWalk(st,l.pv,5).steps.map(x=>x.san).join(' ');
       const th=threatOf(make(st,m));
-      h+=`<button class="eopt" data-act="trn-kid" data-v="${l.pv[0]}"><span class="en" style="background:${ACOL[mine?['green','blue','grey'][i]:['red','orange','grey'][i]]}">${i+1}</span><span style="flex:1"><b class="sn mono">${esc(s)}</b> <small class="mono muted">${trEvalTxt(n,l)}</small>${kid?` <small>✓ ${L2('explored','dekhi')}</small>`:''}<div class="ex">${esc(s)} ${esc(moveNote(st,m))}.${th&&th.san?` ${L2('Next it threatens','Agli dhamki')} ${esc(th.san)}.`:''}</div><div class="ex">${i===0?L2('Best.','Sabse best.'):d<.25?L2('Almost as good as 1.','Lagbhag 1 jitna accha.'):L2(`About ${d.toFixed(1)} pawn weaker than 1.`,`1 se lagbhag ${d.toFixed(1)} pawn kamzor.`)}</div><div class="ol">${L2('Line','Line')}: ${esc(line)}</div></span><span>▶</span></button>`});
+      h+=`<button class="eopt" data-act="trn-kid" data-v="${l.pv[0]}"><span class="en" style="background:${ACOL[mine?['green','blue','grey'][i]:['red','orange','grey'][i]]}">${i+1}</span><span style="flex:1"><b class="sn mono">${esc(s)}</b>${i===0?eyeBtn(st,l.pv,scCp(l)):''} <small class="mono muted">${trEvalTxt(n,l)}</small>${kid?` <small>✓ ${L2('explored','dekhi')}</small>`:''}<div class="ex">${esc(s)} ${esc(moveNote(st,m))}.${th&&th.san?` ${L2('Next it threatens','Agli dhamki')} ${esc(th.san)}.`:''}</div><div class="ex">${i===0?L2('Best.','Sabse best.'):d<.25?L2('Almost as good as 1.','Lagbhag 1 jitna accha.'):L2(`About ${d.toFixed(1)} pawn weaker than 1.`,`1 se lagbhag ${d.toFixed(1)} pawn kamzor.`)}</div><div class="ol">${L2('Line','Line')}: ${esc(line)}</div></span><span>▶</span></button>`});
     if(mine&&g&&g.top<0&&g.u!=='-')h+=`<button class="btn block" data-act="trn-kid" data-v="${g.u}">${L2('Continue with my move','Meri chaal se aage')} ${esc(g.san)} ▶</button>`;
     if(!mine){const kids=n.kids.filter(k=>!L.some(l=>l.pv[0]===uciOf(k.m)));kids.forEach(k=>{h+=`<button class="btn block" data-act="trn-kid" data-v="${uciOf(k.m)}">${esc(k.san)} ✓ ▶</button>`})}
     if(L[0])h+=thinkHTML(st,L[0].pv,scCp(L[0]));h+=trRestHTML(n);if(n.an.eng==='js')h+=sfFailHTML()}
