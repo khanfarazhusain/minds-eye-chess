@@ -2379,7 +2379,9 @@ const SF={w:null,ready:false,failed:false,q:[],cur:null,name:'built-in engine'};
 function sfStart(){if(SF.w||SF.failed)return;sfBoot()}
 function sfBoot(){SF.why='';SF.try=(SF.try||0)+1;SF.ts=Date.now();SF.tr=0;SF.log=[];SF.via='';
   const b=document.getElementById('sfwasm'),s=document.getElementById('sfsrc');
-  if(!b||!s){SF.perm=1;sfFail('files missing');return}
+  if(!b||!s||!(b.textContent||'').length||!(s.textContent||'').length){/* engine data sits at the end of the page: on a slow phone it may not be parsed yet */
+    if(document.readyState==='loading'){SF.try--;SF.why='waiting for page to finish loading';if(!SF.dw){SF.dw=1;document.addEventListener('DOMContentLoaded',()=>{SF.dw=0;sfRestart('')},{once:true})}return}
+    sfFail('engine data missing in page ('+(!b?'sfwasm':!s?'sfsrc':'empty')+')');return}
   if(typeof WebAssembly!=='object'){SF.perm=1;sfFail('nowasm');return}
   if(typeof Worker!=='function'){SF.perm=1;sfFail('noworker');return}
   const pre='self.__SFWASM=(function(){var s=atob("'+b.textContent.trim()+'");var u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u})();\n';
@@ -2395,7 +2397,7 @@ function sfBoot(){SF.why='';SF.try=(SF.try||0)+1;SF.ts=Date.now();SF.tr=0;SF.log
 /* self-healing: restart the engine by itself (iPhone can stop a worker in the background or fail the first start) */
 function sfRestart(why){clearTimeout(SF.t0);clearTimeout(SF.t1);clearTimeout(SF.ping);try{SF.w&&SF.w.terminate()}catch(e){}SF.w=null;SF.ready=false;SF.failed=true;SF.name='built-in engine';if(why)SF.why=why;
   const jobs=(SF.cur?[SF.cur]:[]).concat(SF.q);SF.cur=null;SF.q=[];jobs.forEach(j=>{clearTimeout(j.wd);j.res(fbAnalyse(j.st,j.o))});sfBoot()}
-function sfAuto(){if(SF.perm)return;SF.auto=(SF.auto||0)+1;if(SF.auto>6)return;clearTimeout(SF.at);SF.at=setTimeout(()=>{if(!SF.ready)sfRestart(SF.why)},[1500,3000,6000,10000,20000,30000][SF.auto-1])}
+function sfAuto(){if(SF.perm)return;SF.auto=(SF.auto||0)+1;clearTimeout(SF.at);const dl=[1500,3000,6000,10000,20000][SF.auto-1]||30000;SF.next=Date.now()+dl;SF.at=setTimeout(()=>{SF.next=0;if(!SF.ready&&!(SF.w&&Date.now()-(SF.ts||0)<60000))sfRestart(SF.why)},dl)}
 function sfFail(why,keep){if(why)SF.why=why;if(SF.failed&&!keep){if(!SF.w)sfAuto();return}SF.failed=true;SF.ready=false;if(!keep){try{SF.w&&SF.w.terminate()}catch(e){}SF.w=null;sfAuto()}SF.name='built-in engine';
   const jobs=(SF.cur?[SF.cur]:[]).concat(SF.q);SF.cur=null;SF.q=[];jobs.forEach(j=>j.res(fbAnalyse(j.st,j.o)));if(['coach','coachset','bmc','trn'].includes(V.name))render()}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)return;try{
@@ -2408,7 +2410,7 @@ function sfLateRefresh(){try{
   if(TT&&TT.cur&&TT.cur.an&&TT.cur.an.eng==='js'){TT.cur.an=null;TT.cur.all=null;trLoad(TT.cur)}
   if(CG&&!CG.over&&CG.pre&&CG.pre.eng==='js'&&coMyTurn()&&!CG.busy)coPre()}catch(e){}}
 function sfStatusTxt(){const ua=navigator.userAgent,ios=(ua.match(/OS (\d+[_\d]*) like Mac/)||[])[1],an=(ua.match(/Android [\d.]+/)||[])[0],dev=ios?'iOS '+ios.replace(/_/g,'.'):an||navigator.platform||'',sa=window.navigator.standalone||matchMedia('(display-mode: standalone)').matches?' · home-screen app':'';
-  const st=SF.ready?`ready in ${(SF.tr/1000).toFixed(1)}s`:SF.w?`loading ${Math.round((Date.now()-(SF.ts||Date.now()))/1000)}s`:SF.failed?'stopped':'not started';
+  const st=SF.ready?`ready in ${(SF.tr/1000).toFixed(1)}s`:SF.w?`loading ${Math.round((Date.now()-(SF.ts||Date.now()))/1000)}s`:SF.failed?(SF.next>Date.now()?`retrying in ${Math.ceil((SF.next-Date.now())/1000)}s`:'built-in engine for now'):SF.dw?'waiting for page':'not started';
   return `Stockfish: ${st}${SF.why?' · '+SF.why:''} · try ${SF.try||0}${SF.via?' · '+SF.via:''} · ${dev}${sa}${SF.log&&SF.log.length?' · '+SF.log.join(' | '):' · no reply yet'}`}
 function sfRetry(){if(SF.w&&!SF.ready&&Date.now()-(SF.ts||0)<60000){render();return}SF.perm=0;SF.auto=0;sfRestart('');render();
   const t=setInterval(()=>{if(SF.ready||SF.failed){clearInterval(t);render()}},500)}
@@ -3673,7 +3675,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.12 · v114';
+const APPV='2026.11.12 · v115';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
