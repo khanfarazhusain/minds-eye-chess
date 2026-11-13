@@ -3679,7 +3679,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.12 · v119';
+const APPV='2026.11.13 · v120';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -5051,6 +5051,9 @@ async function appUpdCheck(){try{if(!/^https:/.test(location.protocol))return;co
   try{const g=await navigator.serviceWorker.getRegistration();if(g)await g.update()}catch(e){}
   const busy=olLive()||!ROOTS.includes(V.name);if(!busy){location.reload();return}
   if(!document.getElementById('updbar')){const d=document.createElement('div');d.id='updbar';d.style.cssText='position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 8px);z-index:9999;background:#7B5CD6;color:#fff;padding:10px 14px;border-radius:12px;font-weight:600;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.3)';d.textContent='✨ '+L2('New version ready, tap to update','Naya version aa gaya, update ke liye tap karo');d.onclick=()=>location.reload();document.body.appendChild(d)}}catch(e){}}
+/* reopening the app after a while starts on Home, not inside a training screen */
+let HIDT=0;document.addEventListener('visibilitychange',()=>{if(document.hidden){HIDT=Date.now();return}try{if(HIDT&&Date.now()-HIDT>120000&&['trn','bmc','lessons'].includes(V.name)){TABCTX='home';HIST.length=0;S=null;go({name:'home'})}}catch(e){}});
+window.addEventListener('pageshow',e=>{try{if(e.persisted&&['trn','bmc','lessons'].includes(V.name)){TABCTX='home';HIST.length=0;go({name:'home'})}}catch(x){}});
 setTimeout(appUpdCheck,4000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)appUpdCheck()});
 try{if('serviceWorker'in navigator&&/^https:/.test(location.protocol)&&/github\.io$/.test(location.hostname))window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').then(r=>{try{r.update()}catch(e){}}).catch(()=>{}))}catch(e){}
 
