@@ -206,6 +206,8 @@ function features3(pos, lastTo) {
     x.f.qGain = Math.max(-1500, Math.min(1500, v - before));
     if (x.f.qGain > 0) x.f.qWin = x.f.qGain; else if (x.f.qGain < 0) x.f.qLose = -x.f.qGain;
     x.f.sqL = sqMove(pos, x.move);
+    const b0 = posVals(pos, us); pos.make(x.move); const b1 = posVals(pos, us); pos.unmake();
+    x.f.pawnAdv = b1.pawn - b0.pawn; x.f.kCtr = b1.kc - b0.kc;
   }
   return F;
 }
@@ -233,6 +235,15 @@ function sqLevel(t, f, r, eg) {
   }
   return 0;
 }
+// 6-rule card helpers: pawn levels (mine - his) and "king on c-f file in the middlegame" (mine - his)
+function posVals(pos, me) {
+  const eg = pos.phase <= 12; let pawn = 0, kc = 0;
+  for (let s = 21; s < 99; s++) { const p = pos.b[s]; if (!p || p === OFF) continue; const t = p & 7, c = p & 8, sg = c === me ? 1 : -1;
+    const w = c === WHITE, f = E.fileOf(s), r = w ? 8 - E.rowOf(s) : E.rowOf(s) + 1;
+    if (t === PAWN) pawn += sg * sqLevel(PAWN, f, r, eg);
+    else if (t === KING && !eg && f >= 2 && f <= 5) kc += sg; }
+  return { pawn, kc };
+}
 function sqMove(pos, m) {
   if (E.mPromo(m)) return 3; if (E.mFlag(m) & E.F_CASTLE) return 2;
   const from = E.mFrom(m), to = E.mTo(m), t = pos.b[from] & 7, w = pos.side === WHITE, eg = pos.phase <= 12;
@@ -243,15 +254,16 @@ function sqPts(d) { return d >= 8 ? 3 : d >= 4 ? 2 : d >= 1 ? 1 : d <= -8 ? -3 :
 function simplePts(f, n) { let s = 0; const why = []; const add = (k, v) => { if (v) { s += v; why.push([k, v]); } };
   const p = Math.round((f.qGain || 0) / 100); add(p > 0 ? 'qWin' : 'qLose', p * 10);
   add('check', (f.check || f.mate) ? 3 : 0);
+  if (n === 6) { add('threat', f.threat ? 1 : 0); add('allowMate', f.allowMate ? -100 : 0); add('pawnAdv', (f.pawnAdv || 0) * 6); add('kCtr', (f.kCtr || 0) * -6); return { pts: s, why }; }
   if (n === 8) { add('threat', f.threat ? 2 : 0); add('pawnThreat', f.pawnThreat ? 1 : 0); add('captureLowest', f.captureLowest ? 2 : 0); add('allowMate', f.allowMate ? -100 : 0); }
   add('pstDelta', f.sqL !== undefined ? f.sqL : sqPts(f.pstDelta || 0)); return { pts: s, why }; }
-function cardPoints(f, W) { return simplePts(f, W === CARDS[4] ? 4 : 8); }
+function cardPoints(f, W) { return simplePts(f, W === CARDS[4] ? 4 : W === 6 ? 6 : 8); }
 // opts: { best (uci, optional), rules: 0|4|8, K, depth: 1..4 }
 function modeData(pos, S, opts) {
   const F = features3(pos, 0);
   const moves = F.map(x => {
-    const c4 = cardPoints(x.f, CARDS[4]), c8 = cardPoints(x.f, CARDS[8]);
-    return { m: x.move, uci: pos.uci(x.move), san: pos.san(x.move), p4: c4.pts, w4: c4.why, p8: c8.pts, w8: c8.why, q: x.f.qGain || 0, ps: x.f.pstDelta || 0 };
+    const c4 = cardPoints(x.f, CARDS[4]), c8 = cardPoints(x.f, CARDS[8]), c6 = simplePts(x.f, 6);
+    return { m: x.move, uci: pos.uci(x.move), san: pos.san(x.move), p4: c4.pts, w4: c4.why, p8: c8.pts, w8: c8.why, p6: c6.pts, w6: c6.why, q: x.f.qGain || 0, ps: x.f.pstDelta || 0 };
   });
   // "engine jaisi chaal": every move searched to depth 6, good = within 30cp of the best
   for (const mv of moves) mv.lab = S.go(pos, { depth: 6, time: 150, moves: [mv.m] }).score;
@@ -259,7 +271,7 @@ function modeData(pos, S, opts) {
   let best = opts.best && moves.some(m => m.uci === opts.best) ? opts.best : moves.reduce((a, b) => (b.lab > a.lab ? b : a)).uci;
   for (const mv of moves) mv.good = mv.uci === best || mv.lab >= mx - 30;
   // rule ranking
-  const key = opts.rules === 4 ? 'p4' : 'p8';
+  const key = opts.rules === 4 ? 'p4' : opts.rules === 6 ? 'p6' : 'p8';
   const ranked = moves.slice().sort((a, b) => b[key] - a[key] || b.ps - a.ps);
   ranked.forEach((mv, i) => { mv.rank = i + 1; });
   // calculation (only for the moves that the mode calculates)
@@ -272,7 +284,7 @@ function modeData(pos, S, opts) {
     }
     calc.sort((a, b) => b.score - a.score);
   }
-  const strip = mv => ({ uci: mv.uci, san: mv.san, p4: mv.p4, w4: mv.w4, p8: mv.p8, w8: mv.w8, q: mv.q, lab: mv.lab, good: mv.good, rank: mv.rank });
+  const strip = mv => ({ uci: mv.uci, san: mv.san, p4: mv.p4, w4: mv.w4, p8: mv.p8, w8: mv.w8, p6: mv.p6, w6: mv.w6, q: mv.q, lab: mv.lab, good: mv.good, rank: mv.rank });
   return { best, bestSan: moves.find(m => m.uci === best).san, moves: ranked.map(strip), calc, n: moves.length };
 }
 const api = { features2, features3, Q, CARDS, modeData, simplePts, sqPts, sqLevel, sqMove };
