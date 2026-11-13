@@ -77,7 +77,17 @@ function describeMove(pos, m) {
     const q = pos.b[x] & 7; if (q === KING) return true;
     return VAL[q] > VAL[p] || !defended(pos, x);
   });
+  let pinTxt = null;
+  if ((p === BISHOP || p === ROOK || p === QUEEN) && !mate) {
+    const b = pos.b, us = b[to] & 8;
+    for (const d of (p === BISHOP ? E.B_OFF : p === ROOK ? E.R_OFF : E.K_OFF)) {
+      let x1 = to + d; while (b[x1] === 0) x1 += d; const q1 = b[x1]; if (q1 === OFF || (q1 & 8) === us) continue;
+      let x2 = x1 + d; while (b[x2] === 0) x2 += d; const q2 = b[x2]; if (q2 === OFF || (q2 & 8) === us) continue;
+      if (VAL[q2 & 7] > VAL[q1 & 7] || (q2 & 7) === KING) { if ((q1 & 7) !== KING) pinTxt = `pin: ${PNAME[q1 & 7]} ${sqName(x1)} ke peeche ${PNAME[q2 & 7]}`; }
+    }
+  }
   pos.unmake();
+  if (pinTxt) tags.push(pinTxt);
   if (mate) tags.push('checkmate');
   else if (check) tags.push('check');
   if (capT && !mate) tags.push(s > 0 ? `${PNAME[capT]} jeetta hai` : s === 0 ? `${PNAME[capT]} ka badla (trade)` : `${PNAME[capT]} leta hai par wapas kat jayega`);
@@ -86,7 +96,7 @@ function describeMove(pos, m) {
   const bigTargets = tnames.filter(n => n !== 'pawn');
   if (targets.length >= 2 && bigTargets.length >= 1 && (bigTargets.length >= 2 || check || tnames.includes('king'))) tags.push('fork: ' + tnames.join(' + ') + ' par ek saath hamla');
   else if (bigTargets.length && bigTargets[0] !== 'king') tags.push(bigTargets.filter(n => n !== 'king').join(' + ') + ' par hamla');
-  return { san: pos.san(m), uci: pos.uci(m), tags, see: s, check, capture: !!capT, threat: bigTargets.some(n => n !== 'king') && !capT };
+  return { san: pos.san(m), uci: pos.uci(m), tags, see: s, check, capture: !!capT, threat: (bigTargets.some(n => n !== 'king') || !!pinTxt) && !capT };
 }
 
 // All forcing moves for the side to move
@@ -100,6 +110,68 @@ function forcingMoves(pos) {
   }
   out.captures.sort((a, b) => b.see - a.see);
   return out;
+}
+
+
+// ---------- Human candidate checklist ----------
+// Rules in the order a human should scan them. Each legal move gets the FIRST rule that finds it.
+const RULES = {
+  A: 'Rule A: Forcing chaal (check, capture ya threat)',
+  B: 'Rule B: Khatre se bachao (hamla hue mohre ko hatao ya bachao)',
+  C: 'Rule C: Mohra sudhaaro (kamzor mohra active karo, develop karo)',
+  D: 'Rule D: Pawn break (opponent ke pawn par pawn se hamla)',
+  E: 'Rule E: Raja ki safety (castling)',
+  F: 'Rule F: Rook ko open file par lao',
+  G: 'Rule G: Center lo / mohron ke raaste kholo'
+};
+function totalMob(pos, side) { let n = 0; for (let s = 21; s < 99; s++) { const p = pos.b[s]; if (p && p !== OFF && (p & 8) === side) { const t = p & 7; if (t >= KNIGHT && t <= QUEEN) n += pieceMob(pos, s); } } return n; }
+// squares a piece controls that are usable (not own piece, not hit by enemy pawn)
+function pieceMob(pos, s) {
+  const b = pos.b, p = b[s], t = p & 7, us = p & 8; let n = 0;
+  const pawnHit = x => us === WHITE ? (b[x - 9] === (PAWN | 8) || b[x - 11] === (PAWN | 8)) : (b[x + 9] === PAWN || b[x + 11] === PAWN);
+  const ok = x => { const q = b[x]; return q !== OFF && (q === 0 || (q & 8) !== us) && !pawnHit(x); };
+  if (t === KNIGHT || t === KING) { for (const d of (t === KNIGHT ? E.N_OFF : E.K_OFF)) if (ok(s + d)) n++; }
+  else if (t === BISHOP || t === ROOK || t === QUEEN) for (const d of (t === BISHOP ? E.B_OFF : t === ROOK ? E.R_OFF : E.K_OFF)) { let x = s + d; while (b[x] !== OFF) { if (ok(x)) n++; if (b[x] !== 0) break; x += d; } }
+  return n;
+}
+function hangValue(pos, side) { return hangingPieces(pos, side).reduce((a, h) => a + h.gain, 0); }
+function humanCandidates(pos, threat) {
+  const us = pos.side, b = pos.b, res = new Map();
+  // worst piece: lowest mobility among our N/B/R/Q
+  let worst = null;
+  for (let s = 21; s < 99; s++) { const p = b[s]; if (!p || p === OFF || (p & 8) !== us) continue; const t = p & 7; if (t < KNIGHT || t > QUEEN) continue;
+    const m = pieceMob(pos, s); const score = m + (t === QUEEN ? 3 : 0); if (!worst || score < worst.score) worst = { s, m, t, score }; }
+  const hangBefore = hangValue(pos, us); const totBefore = totalMob(pos, us);
+  const homeRow = us === WHITE ? 7 : 0;
+  const realThreat = threat && (threat.kind === 'mate' || threat.kind === 'material');
+  const ownPawnOnFile = f => { for (let r = 0; r < 8; r++) if (b[E.sqOf(f, r)] === (PAWN | us)) return true; return false; };
+  const oppPawnOnFile = f => { for (let r = 0; r < 8; r++) if (b[E.sqOf(f, r)] === (PAWN | (us ^ 8))) return true; return false; };
+  for (const m of pos.legalMoves()) {
+    const from = mFrom(m), to = mTo(m), p = b[from], t = p & 7;
+    const d = describeMove(pos, m);
+    if (d.check || d.capture || d.threat) { res.set(m, { rule: 'A', why: d.tags.join(', ') || 'forcing' }); continue; }
+    pos.make(m);
+    const hangAfter = hangValue(pos, us);
+    let threatStopped = false;
+    if (realThreat && threat.kind === 'mate') { /* checked by search elsewhere */ }
+    const mobAfter = (t >= KNIGHT && t <= QUEEN) ? pieceMob(pos, to) : 0;
+    const totAfter = totalMob(pos, us);
+    let pawnBreak = false;
+    if (t === PAWN) for (const x of attacksFrom(pos, to)) if ((pos.b[x] & 7) === PAWN) pawnBreak = true;
+    pos.unmake();
+    if (hangBefore > 0 && hangAfter < hangBefore) { res.set(m, { rule: 'B', why: `latakta mohra bacha (${hangBefore - hangAfter >= 300 ? 'bada' : 'chhota'} nuksan ruka)` }); continue; }
+    void threatStopped;
+    if (worst && from === worst.s && mobAfter - worst.m >= 2) { res.set(m, { rule: 'C', why: `${PNAME[t]} ${sqName(from)} sabse kamzor tha (${worst.m} squares), ${sqName(to)} par ${mobAfter} squares` }); continue; }
+    if (pawnBreak) { res.set(m, { rule: 'D', why: `pawn ${sqName(to)} se opponent ke pawn par hamla` }); continue; }
+    if (mFlag(m) & E.F_CASTLE) { res.set(m, { rule: 'E', why: 'castling: raja safe, rook khel mein' }); continue; }
+    if (t === ROOK && !ownPawnOnFile(E.fileOf(to)) && E.fileOf(to) !== E.fileOf(from)) { res.set(m, { rule: 'F', why: `rook ${'abcdefgh'[E.fileOf(to)]}-file par (${oppPawnOnFile(E.fileOf(to)) ? 'half-open' : 'open'})` }); continue; }
+    if ((t === KNIGHT || t === BISHOP) && E.rowOf(from) === homeRow) { res.set(m, { rule: 'C', why: `development: ${PNAME[t]} ghar se bahar, ${mobAfter} squares` }); continue; }
+    if (t >= KNIGHT && t <= QUEEN) { const before = pieceMob(pos, from); if (mobAfter - before >= 3) { res.set(m, { rule: 'C', why: `${PNAME[t]} zyada active: ${before} se ${mobAfter} squares` }); continue; } }
+    const center = ['d4', 'e4', 'd5', 'e5', 'c4', 'c5', 'f4', 'f5'].includes(sqName(to));
+    if (t === PAWN && center) { res.set(m, { rule: 'G', why: `pawn ${sqName(to)}: center par kabza${totAfter - totBefore >= 2 ? ', mohron ke raaste khule (+' + (totAfter - totBefore) + ' squares)' : ''}` }); continue; }
+    if (totAfter - totBefore >= 4) res.set(m, { rule: 'G', why: `mohron ke raaste khulte hain: kul ${totBefore} se ${totAfter} squares` });
+  }
+  return res;
 }
 
 // Material change along a line (from mover's perspective), plus where it ends
@@ -196,7 +268,9 @@ function explain(pos, S, opts) {
     rest.splice(rest.indexOf(r.move), 1);
   }
   const tail = cands.slice(1).sort((a, b) => b.score - a.score); cands.length = 1; cands.push(...tail);
+  const human = humanCandidates(pos, threat);
   for (const c of cands) {
+    const h = human.get(c.move); c.rule = h ? h.rule : null; c.ruleText = h ? RULES[h.rule] + ': ' + h.why : 'Kisi aasaan rule se nahi milti: ye chaal gehri calculation se nikli';
     c.san = pos.san(c.move); c.uci = pos.uci(c.move); c.line = sanLine(pos, c.pv.slice(0, 8));
     c.out = lineOutcome(pos, c.pv); c.desc = describeMove(pos, c.move); c.scoreText = scoreText(c.score);
   }
@@ -209,7 +283,7 @@ function explain(pos, S, opts) {
     const r = searchMove(pos, S, m, Math.max(150, altTime / 2));
     alts.push(refutationText(pos, m, r, cands[0]));
   }
-  steps.push({ id: 'candidates', title: 'Candidate chaalein', data: { cands: cands.map(c => ({ san: c.san, uci: c.uci, score: c.score, scoreText: c.scoreText, line: c.line, tags: c.desc.tags, matGain: c.out.matGain })), alts } });
+  steps.push({ id: 'candidates', title: 'Candidate chaalein', data: { cands: cands.map(c => ({ san: c.san, uci: c.uci, score: c.score, scoreText: c.scoreText, line: c.line, tags: c.desc.tags, matGain: c.out.matGain, rule: c.rule, ruleText: c.ruleText })), alts, checklist: (() => { const g = {}; for (const [m, h] of human) { (g[h.rule] = g[h.rule] || []).push(pos.san(m)); } return Object.keys(RULES).filter(k => g[k]).map(k => ({ rule: k, title: RULES[k], moves: g[k].slice(0, 8), more: Math.max(0, g[k].length - 8) })); })() } });
 
   const best = cands[0];
   let reason = reasonFrom(pos, best, curTerms);
@@ -251,7 +325,134 @@ function judge(pos, S, uci, bestInfo, time) {
   return res;
 }
 
-const api = { explain, judge, hangingPieces, forcingMoves, describeMove, scoreText, sanLine };
+
+// ---------- Rule-scored candidate ranking (a human-followable method) ----------
+// Each legal move gets a feature vector from simple, checkable rules; score = weighted sum.
+// Top 3-5 by score = the candidates a human should calculate. Strongly negative = "ignore" (pruned).
+const FEAT = ['mate','check','checkFew','capGain','capLoss','trade','promo','fork','threat','pin','saveHang','newHang','stopMate','allowMate',
+  'develop','worstPiece','mobDelta','pawnBreak','castle','kingWalkMid','rookOpen','centerPawn','totMob','queenEarly',
+  'kingCentral','passedPush','pawnPushEnd','pstDelta','backRetreat','edgePawnOpen','tradeAhead','recapture','attackKingZone','luft','pawnThreat','defendAttacked','shieldPawn','tradeBehind','captureTowardCenter','kingAttackers'];
+const FEAT_TEXT = { mate: ['A', 'checkmate'], check: ['A', 'check'], checkFew: ['A', 'check, raja ke paas kam squares'], capGain: ['A', 'material jeetta hai'], capLoss: ['A', 'capture mein nuksan'],
+  trade: ['A', 'barabar trade'], promo: ['A', 'promotion'], fork: ['A', 'fork'], threat: ['A', 'bade/bina bachaav mohre par hamla'], pin: ['A', 'pin'], saveHang: ['B', 'latakta mohra bachaya'],
+  newHang: ['B', 'mohra latak jaata hai (blunder check)'], stopMate: ['B', 'mate ka khatra roka'], allowMate: ['B', 'mate in 1 de deta hai'], develop: ['C', 'development'], worstPiece: ['C', 'sabse kamzor mohra active'],
+  mobDelta: ['C', 'mohra zyada active'], pawnBreak: ['D', 'pawn break'], castle: ['E', 'castling'], kingWalkMid: ['E', 'middlegame mein raja chalana'], rookOpen: ['F', 'rook open file par'],
+  centerPawn: ['G', 'center pawn'], totMob: ['G', 'mohron ke raaste khule'], queenEarly: ['C', 'queen jaldi bahar'], kingCentral: ['H', 'endgame: raja center/pawns ki taraf'],
+  passedPush: ['H', 'passed pawn aage'], pawnPushEnd: ['H', 'endgame: pawn aage'], pstDelta: ['C', 'mohra behtar square par'], backRetreat: ['C', 'bina wajah peeche'], edgePawnOpen: ['G', 'opening mein kinare ka pawn'],
+  tradeAhead: ['A', 'aage ho to trade karo'], recapture: ['A', 'wapas maaro (recapture)'], attackKingZone: ['A', 'raja ke paas hamla'], luft: ['E', 'raja ko saans (luft)'], pawnThreat: ['A', 'pawn/undefended mohre par hamla'], defendAttacked: ['B', 'hamla hue mohre ko support'], shieldPawn: ['E', 'raja ke aage ka pawn hilana'], tradeBehind: ['A', 'peeche ho to trade se bacho'], captureTowardCenter: ['G', 'center ki taraf capture'], kingAttackers: ['A', 'opponent ke raja ki taraf mohre'] };
+const RW = { mate: 3000, check: 40, checkFew: 40, capGain: 1, capLoss: 1, trade: 5, promo: 700, fork: 150, threat: 45, pin: 50, saveHang: 0.9, newHang: -1, stopMate: 600, allowMate: -3000,
+  develop: 30, worstPiece: 25, mobDelta: 5, pawnBreak: 25, castle: 70, kingWalkMid: -40, rookOpen: 30, centerPawn: 25, totMob: 3, queenEarly: -25,
+  kingCentral: 0, passedPush: 0, pawnPushEnd: 0, pstDelta: 0, backRetreat: 0, edgePawnOpen: 0, tradeAhead: 0, recapture: 0, attackKingZone: 0, luft: 0, pawnThreat: 0, defendAttacked: 0, shieldPawn: 0, tradeBehind: 0, captureTowardCenter: 0, kingAttackers: 0 };
+function oppHasMateIn1(pos) {
+  for (const m of pos.legalMoves()) { pos.make(m); const mate = pos.inCheck() && pos.legalMoves().length === 0; pos.unmake(); if (mate) return true; }
+  return false;
+}
+function isPassed(pos, s) {
+  const p = pos.b[s], us = p & 8, f = E.fileOf(s), r = E.rowOf(s);
+  for (let ff = Math.max(0, f - 1); ff <= Math.min(7, f + 1); ff++) for (let rr = 0; rr < 8; rr++) {
+    if (us === WHITE ? rr >= r : rr <= r) continue; if (pos.b[E.sqOf(ff, rr)] === (PAWN | (us ^ 8))) return false; }
+  return true;
+}
+const centerDist = s => Math.max(Math.abs(E.fileOf(s) * 2 - 7), Math.abs(E.rowOf(s) * 2 - 7)); // 1 (center) .. 7 (corner)
+function ruleFeatures(pos, lastTo) {
+  const us = pos.side, b = pos.b, out = [];
+  const hangBefore = hangValue(pos, us), totBefore = totalMob(pos, us);
+  pos.makeNull(); const mateThreat = !pos.inCheck() && oppHasMateIn1(pos); pos.unmakeNull();
+  let worst = null;
+  for (let s = 21; s < 99; s++) { const p = b[s]; if (!p || p === OFF || (p & 8) !== us) continue; const t = p & 7; if (t < KNIGHT || t > QUEEN) continue;
+    const mb = pieceMob(pos, s) + (t === QUEEN ? 3 : 0); if (!worst || mb < worst.m) worst = { s, m: mb }; }
+  const homeRow = us === WHITE ? 7 : 0;
+  let devCount = 0; for (let f = 0; f < 8; f++) { const p = b[E.sqOf(f, homeRow)]; if (p === (KNIGHT | us) || p === (BISHOP | us)) devCount++; }
+  const ownPawnOnFile = f => { for (let r = 0; r < 8; r++) if (b[E.sqOf(f, r)] === (PAWN | us)) return true; return false; };
+  const ph = Math.min(pos.phase, 24), endgame = pos.phase <= 8, opening = devCount >= 2;
+  const matAhead = matDiff(pos, us);
+  const ek = pos.kingSq[(us ^ 8) >> 3], myK = pos.kingSq[us >> 3];
+  const near = (a, c) => Math.max(Math.abs(E.fileOf(a) - E.fileOf(c)), Math.abs(E.rowOf(a) - E.rowOf(c)));
+  const tap = (p, s) => ((E.PST_MG[p][s] * ph + E.PST_EG[p][s] * (24 - ph)) / 24) * (us === WHITE ? 1 : -1);
+  // opponent pawns for king-centralization target
+  for (const m of pos.legalMoves()) {
+    const from = mFrom(m), to = mTo(m), pc = b[from], t = pc & 7; const f = {};
+    const d = describeMove(pos, m);
+    const capT = (mFlag(m) & F_EP) ? PAWN : (b[to] & 7);
+    if (d.tags.includes('checkmate')) f.mate = 1;
+    if (capT) { if (d.see > 0) f.capGain = d.see; else if (d.see < 0) f.capLoss = d.see; else f.trade = 1;
+      if (d.see >= 0 && matAhead >= 2 && capT !== PAWN) f.tradeAhead = 1; if (to === lastTo) f.recapture = 1; }
+    if (mPromo(m) === QUEEN) f.promo = 1;
+    const fork = d.tags.some(x => x.startsWith('fork')), pin = d.tags.some(x => x.startsWith('pin')), thr = d.tags.some(x => x.endsWith('par hamla') && !x.startsWith('fork'));
+    const pstBefore = tap(pc, from);
+    pos.make(m);
+    const check = pos.inCheck();
+    const hangAfter = hangValue(pos, us);
+    const movedHang = hangingPieces(pos, us).some(x => x.sq === sqName(to));
+    const allowMate = !check && oppHasMateIn1(pos);
+    const mobAfter = (t >= KNIGHT && t <= QUEEN) ? pieceMob(pos, to) : 0;
+    const totAfter = totalMob(pos, us);
+    let pawnBreak = false; if (t === PAWN) for (const x of attacksFrom(pos, to)) if ((pos.b[x] & 7) === PAWN) pawnBreak = true;
+    const kingEscapes = check ? pos.legalMoves().length : 99;
+    const passed = t === PAWN && isPassed(pos, to);
+    const pstAfter = tap(pos.b[to], to);
+    let kz = 0; if (t >= KNIGHT && t <= QUEEN) for (const x of attacksFrom(pos, to)) {} // placeholder (attacksFrom only returns enemy pieces)
+    pos.unmake();
+    if (check && !f.mate) { f.check = 1; if (kingEscapes <= 2) f.checkFew = 1; }
+    if (fork && !movedHang) f.fork = 1; else if (thr && !movedHang) f.threat = 1;
+    if (pin && !movedHang) f.pin = 1;
+    if (hangBefore > 0 && hangAfter < hangBefore) f.saveHang = hangBefore - hangAfter;
+    if (hangAfter > hangBefore) f.newHang = hangAfter - hangBefore;
+    if (mateThreat && !allowMate) f.stopMate = 1;
+    if (allowMate) f.allowMate = 1;
+    if ((t === KNIGHT || t === BISHOP) && E.rowOf(from) === homeRow) f.develop = 1;
+    if (worst && from === worst.s && mobAfter > worst.m) f.worstPiece = 1;
+    if (t >= KNIGHT && t <= QUEEN) f.mobDelta = mobAfter - pieceMob(pos, from);
+    if (pawnBreak && !capT) f.pawnBreak = 1;
+    if (mFlag(m) & E.F_CASTLE) f.castle = 1;
+    if (t === KING && !(mFlag(m) & E.F_CASTLE) && pos.phase > 12) f.kingWalkMid = 1;
+    if (t === KING && endgame) f.kingCentral = (centerDist(from) - centerDist(to)) + (near(from, ek) - near(to, ek)) * 0.5;
+    if (t === ROOK && !ownPawnOnFile(E.fileOf(to)) && E.fileOf(to) !== E.fileOf(from)) f.rookOpen = 1;
+    if (t === PAWN && ['d4', 'e4', 'd5', 'e5', 'c4', 'c5', 'f4', 'f5'].includes(sqName(to))) f.centerPawn = 1;
+    f.totMob = totAfter - totBefore;
+    if (t === QUEEN && devCount >= 3) f.queenEarly = 1;
+    if (passed && !capT) f.passedPush = us === WHITE ? 7 - E.rowOf(to) : E.rowOf(to);
+    if (t === PAWN && endgame && !capT) f.pawnPushEnd = 1;
+    f.pstDelta = (pstAfter - pstBefore) / 10;
+    if (t !== PAWN && t !== KING && E.rowOf(to) === homeRow && E.rowOf(from) !== homeRow && !capT) f.backRetreat = 1;
+    if (t === PAWN && opening && (E.fileOf(from) === 0 || E.fileOf(from) === 7)) f.edgePawnOpen = 1;
+    if (t === PAWN && !endgame && near(to, myK) <= 1 && E.rowOf(myK) === homeRow && !capT && (E.fileOf(from) === 7 || E.fileOf(from) === 6 || E.fileOf(from) === 0)) f.luft = 1;
+    void kz;
+    // new features
+    {
+      pos.make(m);
+      const att = attacksFrom(pos, to);
+      let pthr = 0; for (const s2 of att) { const q = pos.b[s2] & 7; if (q === PAWN && !defended(pos, s2)) pthr = 1; }
+      // defend: a piece of ours that is attacked and was undefended becomes defended
+      pos.unmake();
+      if (pthr && !capT && !movedHang) f.pawnThreat = 1;
+      if (capT && d.see === 0 && matAhead <= -2) f.tradeBehind = 1;
+      if (capT && t === PAWN && Math.abs(E.fileOf(to) * 2 - 7) < Math.abs(E.fileOf(from) * 2 - 7)) f.captureTowardCenter = 1;
+      if (!endgame && t === PAWN && near(from, myK) <= 1 && E.rowOf(myK) === homeRow && !f.luft) f.shieldPawn = 1;
+      if (t >= KNIGHT && t <= QUEEN && !endgame) f.kingAttackers = near(from, ek) - near(to, ek);
+    }
+    if (hangBefore > 0 && !f.saveHang) {
+      // supported an attacked piece without moving it?
+      pos.make(m); const ha = hangingPieces(pos, us).length; pos.unmake();
+      const hb = hangingPieces(pos, us).length; if (ha < hb) f.defendAttacked = 1;
+    }
+    out.push({ move: m, f });
+  }
+  return out;
+}
+function scoreFeat(f, W) { let s = 0; for (const k in f) s += (W[k] || 0) * f[k]; return s; }
+function ruleRank(pos, W, lastTo) {
+  W = W || RW;
+  const fs = ruleFeatures(pos, lastTo);
+  const out = fs.map(x => {
+    const why = []; for (const k in x.f) { const v = (W[k] || 0) * x.f[k]; if (Math.abs(v) >= 10 && FEAT_TEXT[k]) why.push({ r: FEAT_TEXT[k][0], w: FEAT_TEXT[k][1], v: Math.round(v) }); }
+    why.sort((a, b) => Math.abs(b.v) - Math.abs(a.v));
+    return { move: x.move, san: pos.san(x.move), uci: pos.uci(x.move), score: Math.round(scoreFeat(x.f, W)), why, f: x.f };
+  });
+  out.sort((a, b) => b.score - a.score);
+  return out;
+}
+
+const api = { ruleRank, ruleFeatures, scoreFeat, FEAT, FEAT_TEXT, RW, humanCandidates, RULES, explain, judge, hangingPieces, forcingMoves, describeMove, scoreText, sanLine };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 root.MEExplain = api;
 })(typeof self !== 'undefined' ? self : this);
