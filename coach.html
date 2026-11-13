@@ -97,6 +97,7 @@ table.mt{width:100%;border-collapse:collapse} table.mt td,table.mt th{text-align
   <details class="card" id="modeCard"><summary><b>Training mode:</b> <span id="modeName"></span></summary>
     <p class="small muted">Koi bhi mode chuno. % = research mein kitni baar engine jaisi chaal (best se 0.3 pawn ke andar) mili. Training = 321 positions, Games = 10,910 positions (FHK vs Stockfish ke games, sirf test).</p>
     <div id="modeList"></div></details>
+  <button class="btn" id="exBtn" style="width:100%;margin-bottom:6px">📖 Is mode ke 5 examples (step by step)</button>
   <div class="card method" id="methodCard">
     <h2>Engine ka tareeka (har chaal par)</h2>
     <ol>
@@ -315,9 +316,10 @@ async function nextPosition(){
   tStatus.textContent = `${sideHi(pos.side)} ki chaal. Engine ki tarah socho.`;
   setSteps();
   panel.innerHTML = `<div class="card"><span class="spinner"></span>Engine is position par soch raha hai… (aap tab tak board dekho)</div>`;
-  try { T.rep = await ask({ cmd: 'analyze', fen: p.fen, time: ANALYZE_MS });
-    if (T.rep.best !== p.best && T.p === p) { panel.innerHTML = `<div class="card"><span class="spinner"></span>Position mushkil hai, engine thoda aur gehra soch raha hai…</div>`; T.rep = await ask({ cmd: 'analyze', fen: p.fen, time: ANALYZE_MS * 2.5 }); } }
-  catch (e) { panel.innerHTML = `<div class="card bad">Engine load nahi hua: ${esc(e.message)}</div>`; return; }
+  const myT = T;
+  try { myT.rep = await ask({ cmd: 'analyze', fen: p.fen, time: ANALYZE_MS });
+    if (myT.rep.best !== p.best && T === myT) { panel.innerHTML = `<div class="card"><span class="spinner"></span>Position mushkil hai, engine thoda aur gehra soch raha hai…</div>`; myT.rep = await ask({ cmd: 'analyze', fen: p.fen, time: ANALYZE_MS * 2.5 }); } }
+  catch (e) { if (T === myT) panel.innerHTML = `<div class="card bad">Engine load nahi hua: ${esc(e.message)}</div>`; return; }
   if (T.p !== p) return;
   stepThreat();
 }
@@ -550,7 +552,7 @@ async function modeStart(p, pos){
   panel.innerHTML = `<div class="card"><span class="spinner"></span>Engine is position ki saari chaalein check kar raha hai… (aap tab tak board dekho)</div>`;
   let d;
   try { d = await ask({ cmd: 'mode', fen: p.fen, best: p.best, rules: M.rules || 0, K: M.K || 0, depth: M.depth || 0 }); }
-  catch (e) { panel.innerHTML = `<div class="card bad">Engine load nahi hua: ${esc(e.message)}</div>`; return; }
+  catch (e) { if (T.p === p) panel.innerHTML = `<div class="card bad">Engine load nahi hua: ${esc(e.message)}</div>`; return; }
   if (T.p !== p) return;
   T.d = d; T.busy = false;
   if (M.rules) mfCands(); else mfFinal();
@@ -659,6 +661,39 @@ function renderModeStats(){
     rows.push(`<tr><td>${esc(M.name)}${M.optimal ? ' <span class="badge">Optimal</span>' : ''}</td><td>${a.length}</td><td><b>${pct(a.map(x => x.ok))}</b></td><td class="muted">${ref}%</td></tr>`); }
   el.innerHTML = rows.length ? `<table class="mt small"><tr><th>Mode</th><th>Positions</th><th>Aapka</th><th>Rules/engine (games)</th></tr>${rows.join('')}</table><p class="small muted">"Aapka" = kitni baar aapki list (rules mode) ya aapki chaal (calculation mode) mein engine jaisi chaal thi.</p>` : '<span class="muted small">Abhi kisi naye mode mein position nahi kheli.</span>';
 }
+// ---------- Examples: 5 full step-by-step examples for each mode ----------
+let EXD = null; const EX = { k: 'm8_10', i: 0, s: 0 };
+const EXMAP = { classic: 'soch' };
+async function openExamples(){
+  EX.k = EXMAP[MODE] || MODE; EX.i = 0; EX.s = 0; T = { ex: true, step: 0 };
+  document.getElementById('stepBar').classList.add('hidden'); document.getElementById('methodCard').classList.add('hidden');
+  panel.innerHTML = `<div class="card"><span class="spinner"></span>Examples load ho rahe hain…</div>`;
+  if (!EXD) { try { EXD = (await (await fetch('engine/examples.json')).json()).modes; } catch (e) { panel.innerHTML = `<div class="card bad">Examples load nahi hue: ${esc(e.message)}</div>`; return; } }
+  drawExample(); window.scrollTo(0, 0);
+}
+function drawExample(){
+  const L = EXD[EX.k] || [], ex = L[EX.i]; if (!ex) return;
+  const st = ex.steps[EX.s], last = EX.s === ex.steps.length - 1, pos = new E.Position(ex.fen);
+  tBoard.flip = pos.side === E.BLACK;
+  tBoard.set(pos, last ? [E.nameSq(ex.best.slice(0, 2)), E.nameSq(ex.best.slice(2, 4))] : null);
+  const name = EX.k === 'soch' ? 'FHK ki soch (5 steps)' : MODES[EX.k].name;
+  tStatus.textContent = `📖 ${name}: example ${EX.i + 1}/5`;
+  const h = [];
+  h.push(`<div class="card"><div class="row">${L.map((e, i) => `<button class="chip${i === EX.i ? ' on' : ''}" data-ex="${i}">${i + 1}</button>`).join('')}<span class="small muted">Level: ${esc(ex.lvl)} · engine se verified</span></div>`);
+  h.push(`<div class="steps">${ex.steps.map((x, i) => `<span class="${i < EX.s ? 'done' : i === EX.s ? 'cur' : ''}"></span>`).join('')}</div>`);
+  h.push(`<p class="small muted" style="margin:0">Step ${EX.s + 1} / ${ex.steps.length}</p><h2>${esc(st.t)}</h2>${st.l.filter(Boolean).map(x => `<p>${esc(x)}</p>`).join('')}`);
+  if (st.li && st.li.length) h.push(`<ol class="small cl">${st.li.map(x => `<li><b>${esc(x.s)}</b> ${esc(x.x)}${x.y ? `<br><span class="line muted">${esc(x.y)}</span>` : ''}</li>`).join('')}</ol>`);
+  if (st.y) h.push(`<p class="line">${esc(st.y)}</p>`);
+  if (st.ok) h.push(`<p class="good"><b>✓ Engine ki chaal se match: ${esc(st.best)}</b></p>`);
+  h.push(`<div class="row"><button class="btn" id="exPrev" ${EX.s ? '' : 'disabled'}>◀ Peeche</button>${last ? (EX.i < L.length - 1 ? `<button class="btn pri" id="exNextEx">Agla example ▶</button>` : '') : `<button class="btn pri" id="exNext">Aage ▶</button>`}<button class="btn" id="exQuit">Training par wapas</button></div></div>`);
+  panel.innerHTML = h.join('');
+  panel.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => { EX.i = +b.dataset.ex; EX.s = 0; drawExample(); });
+  const on = (id, f) => { const b = panel.querySelector(id); if (b) b.onclick = f; };
+  on('#exPrev', () => { EX.s--; drawExample(); }); on('#exNext', () => { EX.s++; drawExample(); });
+  on('#exNextEx', () => { EX.i++; EX.s = 0; drawExample(); window.scrollTo(0, 0); });
+  on('#exQuit', () => { applyModeLayout(); nextPosition(); });
+}
+document.getElementById('exBtn').onclick = () => { document.getElementById('modeCard').open = false; openExamples(); };
 renderModes(); applyModeLayout();
 try { if (!localStorage.getItem(STORE + '.mode')) document.getElementById('modeCard').open = true; } catch (e) {}
 
