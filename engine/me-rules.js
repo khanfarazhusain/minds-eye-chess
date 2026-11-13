@@ -182,16 +182,16 @@ function features2(pos, lastTo) {
 
 // ---- material-only quiescence: "saare captures gin kar dekho" ----
 const QV = [0, 100, 320, 330, 500, 950, 0];
-function matOf(pos, side) { let v = 0; for (let s = 21; s < 99; s++) { const p = pos.b[s]; if (p && p !== OFF) v += ((p & 8) === side ? 1 : -1) * QV[p & 7]; } return v; }
-function qMat(pos, alpha, beta, depth, side) { // returns material from `side` perspective, side to move = pos.side
+function matOf(pos, side, T) { T = T || QV; let v = 0; for (let s = 21; s < 99; s++) { const p = pos.b[s]; if (p && p !== OFF) v += ((p & 8) === side ? 1 : -1) * T[p & 7]; } return v; }
+function qMat(pos, alpha, beta, depth, side, T) { // returns material from `side` perspective, side to move = pos.side
   const sgn = pos.side === side ? 1 : -1;
-  const stand = sgn * matOf(pos, side);
+  const stand = sgn * matOf(pos, side, T);
   if (depth <= 0) return stand;
   if (stand >= beta) return stand; if (stand > alpha) alpha = stand;
   const buf = new Int32Array(256); const n = pos.gen(buf, 0, true);
   const caps = []; for (let i = 0; i < n; i++) caps.push([QV[pos.b[E.mTo(buf[i])] & 7] * 10 - QV[pos.b[E.mFrom(buf[i])] & 7] / 10, buf[i]]);
   caps.sort((a, b) => b[0] - a[0]);
-  for (const [, m] of caps) { if (!pos.make(m)) continue; if (pos.legalMoves().length === 0 && pos.inCheck()) { pos.unmake(); return 30000; } const v = -qMat(pos, -beta, -alpha, depth - 1, side); pos.unmake(); if (v >= beta) return v; if (v > alpha) alpha = v; }
+  for (const [, m] of caps) { if (!pos.make(m)) continue; if (pos.legalMoves().length === 0 && pos.inCheck()) { pos.unmake(); return 30000; } const v = -qMat(pos, -beta, -alpha, depth - 1, side, T); pos.unmake(); if (v >= beta) return v; if (v > alpha) alpha = v; }
   return alpha;
 }
 function features3(pos, lastTo) {
@@ -259,12 +259,37 @@ function simplePts(f, n) { let s = 0; const why = []; const add = (k, v) => { if
   if (n === 8) { add('threat', f.threat ? 2 : 0); add('pawnThreat', f.pawnThreat ? 1 : 0); add('captureLowest', f.captureLowest ? 2 : 0); add('allowMate', f.allowMate ? -100 : 0); }
   add('pstDelta', f.sqL !== undefined ? f.sqL : sqPts(f.pstDelta || 0)); return { pts: s, why }; }
 function cardPoints(f, W) { return simplePts(f, W === CARDS[4] ? 4 : W === 6 ? 6 : 8); }
+// "Best routine" insaani hisaab: meri chaal ke baad opponent ke jawab = har capture/promotion, har check, har dhamki
+// + 1 sabse achha shaant jawab (square gain se). Har jawab ke baad: material (captures nipta ke, 1 pawn = 10 points)
+// + square points (meri chaal ka nakshaa level +, uske jawab ka −). Sabse bura jawab = us chaal ka score.
+const HV = [0, 100, 300, 300, 500, 900, 0];
+function pstGain(pos, m) { const ph = Math.min(pos.phase, 24), sg = pos.side === WHITE ? 1 : -1; const f = E.mFrom(m), t = E.mTo(m), pc = pos.b[f];
+  return sg * (((E.PST_MG[pc][t] - E.PST_MG[pc][f]) * ph + (E.PST_EG[pc][t] - E.PST_EG[pc][f]) * (24 - ph)) / 24); }
+function humanReplies(pos) { const out = [], sc = [];
+  for (const m of pos.legalMoves()) { const cap = (E.mFlag(m) & E.F_CAP) !== 0 || E.mPromo(m); pos.make(m); const chk = pos.inCheck(); pos.unmake();
+    if (cap) { out.push([m, 'capture']); continue; } if (chk) { out.push([m, 'check']); continue; }
+    if (X.describeMove(pos, m).threat) { out.push([m, 'threat']); continue; } sc.push([pstGain(pos, m), m]); }
+  sc.sort((a, b) => b[0] - a[0]); if (sc.length) out.push([sc[0][1], 'quiet']); return out; }
+function humanCalc(pos, m, wantAll) { // pos: before my move, me to move
+  const me = pos.side; const mySq = sqMove(pos, m); const san = pos.san(m);
+  const matNow = () => { const v = qMat(pos, -1e9, 1e9, 8, me, HV); return Math.round(((pos.side === me ? v : -v) - base) / 10); };
+  const base = matOf(pos, me, HV);
+  pos.make(m);
+  let res;
+  if (!pos.legalMoves().length) res = { score: pos.inCheck() ? 999 : 0, mat: 0, mySq, opSq: 0, line: [san], kind: pos.inCheck() ? 'mate' : 'draw' };
+  else { res = null; const all = [];
+    for (const [r, kind] of humanReplies(pos)) { const opSq = sqMove(pos, r); const rs = pos.san(r); pos.make(r);
+      let mat, score; if (!pos.legalMoves().length) { mat = pos.inCheck() ? -999 : 0; score = mat; } else { mat = matNow(); score = mat + mySq - opSq; }
+      pos.unmake(); if (wantAll) all.push({ san: rs, kind, mat, opSq, score });
+      if (!res || score < res.score) res = { score, mat, mySq, opSq, line: [san, rs], kind }; }
+    if (wantAll) res.all = all; }
+  pos.unmake(); return res; }
 // opts: { best (uci, optional), rules: 0|4|8, K, depth: 1..4 }
 function modeData(pos, S, opts) {
   const F = features3(pos, 0);
   const moves = F.map(x => {
     const c4 = cardPoints(x.f, CARDS[4]), c8 = cardPoints(x.f, CARDS[8]), c6 = simplePts(x.f, 6);
-    return { m: x.move, uci: pos.uci(x.move), san: pos.san(x.move), p4: c4.pts, w4: c4.why, p8: c8.pts, w8: c8.why, p6: c6.pts, w6: c6.why, q: x.f.qGain || 0, ps: x.f.pstDelta || 0 };
+    return { m: x.move, uci: pos.uci(x.move), san: pos.san(x.move), p4: c4.pts, w4: c4.why, p8: c8.pts, w8: c8.why, p6: c6.pts, w6: c6.why, q: x.f.qGain || 0, ps: x.f.pstDelta || 0, sq: x.f.sqL || 0 };
   });
   // "engine jaisi chaal": every move searched to depth 6, good = within 30cp of the best
   for (const mv of moves) mv.lab = S.go(pos, { depth: 6, time: 150, moves: [mv.m] }).score;
@@ -273,7 +298,7 @@ function modeData(pos, S, opts) {
   for (const mv of moves) mv.good = mv.uci === best || mv.lab >= mx - 30;
   // rule ranking
   const key = opts.rules === 4 ? 'p4' : opts.rules === 6 ? 'p6' : 'p8';
-  const ranked = moves.slice().sort((a, b) => b[key] - a[key] || b.ps - a.ps);
+  const ranked = moves.slice().sort((a, b) => b[key] - a[key] || b.sq - a.sq || b.ps - a.ps); // tie-break: nakshe wala square level, phir PeSTO
   ranked.forEach((mv, i) => { mv.rank = i + 1; });
   // calculation (only for the moves that the mode calculates)
   const calc = [];
@@ -285,10 +310,15 @@ function modeData(pos, S, opts) {
     }
     calc.sort((a, b) => b.score - a.score);
   }
-  const strip = mv => ({ uci: mv.uci, san: mv.san, p4: mv.p4, w4: mv.w4, p8: mv.p8, w8: mv.w8, p6: mv.p6, w6: mv.w6, q: mv.q, lab: mv.lab, good: mv.good, rank: mv.rank });
-  return { best, bestSan: moves.find(m => m.uci === best).san, moves: ranked.map(strip), calc, n: moves.length };
+  const hcalc = [];
+  if (opts.human) {
+    for (const mv of ranked.slice(0, opts.human)) hcalc.push({ uci: mv.uci, san: mv.san, rank: mv.rank, ...humanCalc(pos, mv.m) });
+    hcalc.sort((a, b) => b.score - a.score || a.rank - b.rank);
+  }
+  const strip = mv => ({ uci: mv.uci, san: mv.san, p4: mv.p4, w4: mv.w4, p8: mv.p8, w8: mv.w8, p6: mv.p6, w6: mv.w6, q: mv.q, lab: mv.lab, good: mv.good, rank: mv.rank, sq: mv.sq });
+  return { best, bestSan: moves.find(m => m.uci === best).san, moves: ranked.map(strip), calc, hcalc, n: moves.length };
 }
-const api = { features2, features3, Q, CARDS, modeData, simplePts, sqPts, sqLevel, sqMove };
+const api = { features2, features3, Q, CARDS, modeData, simplePts, sqPts, sqLevel, sqMove, humanCalc };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 root.MERules = api;
 })(typeof self !== 'undefined' ? self : this);
