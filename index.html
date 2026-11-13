@@ -2083,7 +2083,7 @@ function vPlay(){{const fx=!!G&&!V.setup;if(document.body.classList.contains('fi
   <div class="card stack"><div ${o.two?'hidden':''}><span class="eyebrow">You play</span><div class="seg">${[['w','White'],['b','Black'],['r','Random']].map(([k,t])=>`<button class="${o.color===k?'on':''}" data-act="po" data-k="color" data-v="${k}">${t}</button>`).join('')}</div></div>
   <div><span class="eyebrow">What you see</span><div class="seg">${[['full','Full board'],['ghost','Empty board'],['blind','No board']].map(([k,t])=>`<button class="${o.vis===k?'on':''}" data-act="po" data-k="vis" data-v="${k}">${t}</button>`).join('')}</div>
   <p class="muted" style="font-size:14px;margin-top:6px">${{full:'Warm-up: pieces visible, moves by keypad or tapping.',ghost:'Coordinates only. You must remember where every piece is.',blind:'Just the move list. True blindfold chess.'}[o.vis]}</p></div>
-  <div ${o.two?'hidden':''}>${eloPickHTML()}</div>
+  <div ${o.two?'hidden':''}>${(eloPickHTML()+engPickHTML())}</div>
   <button class="btn primary block" data-act="newgame">Start game</button>${G&&!G.over?`<button class="btn block" data-act="resume">Back to current game</button>`:''}</div>
   ${TUT.play?`<button class="btn block" data-act="tut" data-stage="play">How blindfold play works</button>`:''}</div>`;return}
   const g=G,myTurn=g.st.w===(g.human==='w')&&!g.over;const last=g.sans[g.sans.length-1];
@@ -2211,6 +2211,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
   if(!a&&d.tab){if(d.tab==='play')V.setup=false;S=null;go({name:d.tab});return}
   if(gymAct(a,d))return;
   if(olAct(a,d)||fbAct(a,d))return;
+  if(a==='eng-set'){P.set.eng=d.v==='fhk'?'fhk':'sf';save();if(P.set.eng==='fhk')fhkStart();render();return}
   if(a==='install'){doInstall();return}
   if(a==='sk-grp'){go({name:'school',grp:d.v});return}
   if(a==='rp-side'){V.rside=d.v;repState().side=d.v;save();render();return}
@@ -2615,11 +2616,27 @@ function ELOP(e){e=eloClamp(e);const lerp=(a,b,t)=>a+(b-a)*Math.max(0,Math.min(1
   const t=(e-1300)/1500;return{n:e+' '+L2('rating','rating'),elo:'~'+e,e,skill:Math.round(lerp(0,20,t)),mt:Math.round(lerp(60,1500,t)),d:e>=2600?0:Math.round(lerp(1,16,t)),js:e<1700?1:e<2200?2:3}}
 function coL(g){return g&&g.elo?ELOP(g.elo):CLV[(g&&g.lvl)||0]}
 /* one computer move at a given rating (Promise of a move) */
+/* ---- FHK Engine (our own engine, separate worker, same UCI talk as Stockfish) ---- */
+const FHK={w:null,ready:false,q:[],cur:null,fail:0};
+function fhkStart(){if(FHK.w||FHK.fail>2)return;try{const w=new Worker('engine/me-uci.js');FHK.w=w;FHK.ready=false;
+  w.onmessage=e=>{const l=String(e.data||'');if(l==='uciok'){w.postMessage('isready');return}if(l==='readyok'){FHK.ready=true;fhkPump();return}
+    const c=FHK.cur;if(!c)return;if(l.startsWith('info ')&&l.includes(' pv ')){const g=k=>{const m=l.match(new RegExp(' '+k+' (-?\\d+)'));return m?+m[1]:null};const mp=g('multipv')||1,mate=g('mate');c.lines[mp-1]={d:g('depth'),cp:mate!=null?null:g('cp'),mate,pv:l.split(' pv ')[1].trim().split(/\s+/)};return}
+    if(l.startsWith('bestmove')){clearTimeout(c.wd);FHK.cur=null;const bm=l.split(/\s+/)[1];const lines=c.lines.filter(Boolean);c.res({lines:lines.length?lines:[{cp:0,pv:[bm]}],best:bm,eng:'fhk'});fhkPump()}};
+  w.onerror=()=>fhkDead();w.postMessage('uci');setTimeout(()=>{if(!FHK.ready)fhkDead()},8000)}catch(e){fhkDead()}}
+function fhkDead(){FHK.fail++;try{FHK.w&&FHK.w.terminate()}catch(e){}FHK.w=null;FHK.ready=false;const j=(FHK.cur?[FHK.cur]:[]).concat(FHK.q);FHK.cur=null;FHK.q=[];j.forEach(x=>{clearTimeout(x.wd);sfGo(x.st,x.o).then(x.res)})}
+function fhkPump(){if(!FHK.ready||FHK.cur||!FHK.q.length)return;const j=FHK.q.shift();FHK.cur=j;j.lines=[];const o=j.o;
+  FHK.w.postMessage('setoption name Skill Level value '+(o.skill==null?20:o.skill));FHK.w.postMessage('setoption name MultiPV value '+Math.min(5,o.multipv||1));
+  FHK.w.postMessage('position fen '+toFEN(j.st));FHK.w.postMessage('go '+(o.depth?'depth '+o.depth:'movetime '+(o.movetime||800)));
+  j.wd=setTimeout(()=>{if(FHK.cur===j)fhkDead()},(o.movetime||800)+8000)}
+function fhkGo(st,o){return new Promise(res=>{if(!legal(st).length){res({lines:[],best:null});return}fhkStart();if(!FHK.w){sfGo(st,o).then(res);return}FHK.q.push({st,o,res});fhkPump()})}
+const oppEng=()=>P.set.eng==='fhk'?'fhk':'sf';
+const oppGo=(st,o)=>oppEng()==='fhk'?fhkGo(st,o):sfGo(st,o);
+function engPickHTML(){const e=oppEng();return`<div class="stack" style="gap:6px"><b>⚙️ ${L2('Computer engine','Computer ka engine')}</b><div class="seg"><button class="${e==='sf'?'on':''}" data-act="eng-set" data-v="sf">Stockfish</button><button class="${e==='fhk'?'on':''}" data-act="eng-set" data-v="fhk">FHK Engine</button></div><small class="muted">${e==='fhk'?L2('FHK Engine: our own engine (~2600). The level setting works the same.','FHK Engine: hamara apna engine (~2600). Level ki setting waise hi chalti hai.'):L2('Stockfish: the world-famous engine. Hints and analysis always use Stockfish.','Stockfish: duniya ka mashhoor engine. Hint aur analysis hamesha Stockfish se.')}</small></div>`}
 async function ratedMove(st,e){const L=ELOP(e),ms=legal(st);if(!ms.length)return null;
-  if(L.weak){if(Math.random()<L.pr)return pick(ms);let r=null;try{r=await sfGo(st,{multipv:Math.min(8,ms.length),movetime:L.mt})}catch(x){}
+  if(L.weak){if(Math.random()<L.pr)return pick(ms);let r=null;try{r=await oppGo(st,{multipv:Math.min(oppEng()==='fhk'?5:8,ms.length),movetime:L.mt})}catch(x){}
     const ls=(r&&r.lines||[]).filter(l=>l&&l.pv&&l.pv[0]);if(!ls.length)return engineMove(st,1);const b=scCp(ls[0]);const w=ls.map(l=>Math.exp(-Math.max(0,b-scCp(l))/L.T));let x=Math.random()*w.reduce((a,c)=>a+c,0);
     for(let i=0;i<ls.length;i++){x-=w[i];if(x<=0)return fromUci(st,ls[i].pv[0])||engineMove(st,1)}return fromUci(st,ls[0].pv[0])||engineMove(st,1)}
-  let r=null;try{r=await sfGo(st,{skill:L.skill,movetime:L.mt,depth:L.d||null,js:L.js,multipv:1})}catch(x){}return(r&&fromUci(st,r.best))||engineMove(st,L.js)}
+  let r=null;try{r=await oppGo(st,{skill:L.skill,movetime:L.mt,depth:L.d||null,js:L.js,multipv:1})}catch(x){}return(r&&fromUci(st,r.best))||engineMove(st,L.js)}
 /* after a game: auto level. win -> computer +50, loss -> -50 */
 function eloAfter(r){if(P.set.eloAuto===false)return null;const old=myElo(),nw=eloClamp(old+(r==='w'?50:r==='l'?-50:0));P.set.elo=nw;save();return nw!==old?{old,nw}:null}
 function eloPickHTML(){const e=myElo(),auto=P.set.eloAuto!==false,lab=e<800?L2('Total beginner','Bilkul naya'):e<1100?L2('Beginner','Beginner'):e<1400?L2('Casual player','Casual player'):e<1700?L2('Club player','Club player'):e<2000?L2('Strong club','Strong club'):e<2300?L2('Expert','Expert'):L2('Master','Master');
@@ -3070,7 +3087,7 @@ function vCoachSet(){const o=V.co||(V.co={color:'w',lvl:P.set.colvl!=null?P.set.
   let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="tab" data-tab="playhub">← Khelo</button><span class="eyebrow">${o.blind?L2('Blind mode · board hidden','Blind mode · board chhupa'):L2('Board visible · learn while you play','Board dikhta hai · khelte hue seekho')}</span><h1>${L2('Play with coach','Coach ke saath khelo')}</h1>${SF.failed?sfFailHTML():''}<div class="card stack"><span class="eyebrow">${L2('Board','Board')}</span><div class="seg"><button class="${!o.blind?'on':''}" data-act="co-o" data-k="blind" data-v="">♟ ${L2('Pieces visible','Pieces dikhein')}</button><button class="${o.blind?'on':''}" data-act="co-o" data-k="blind" data-v="1">🙈 ${L2('Blind','Blind')}</button></div>${o.blind?`<small class="muted">${L2('Pieces are hidden. Tap squares from memory. Tap 👁 Peek to see the board for 3 seconds. Turn on the voice coach below to hear every move.','Pieces chhupe rahenge. Yaad se squares tap karo. 3 second dekhne ke liye 👁 Peek dabao. Har chaal sunne ke liye neeche voice coach on karo.')}</small>`:''}</div>
   <p class="muted" style="font-size:14px;margin:0 4px">💡 ${L2('The coach rates every move and shows a better one, with the reason.','Coach har chaal ko check karta hai aur behtar chaal wajah ke saath batata hai.')}</p>
   <div class="card stack"><div><span class="eyebrow">You play</span><div class="seg">${[['w','White'],['b','Black'],['r','Random']].map(([k,t])=>`<button class="${o.color===k?'on':''}" data-act="co-o" data-k="color" data-v="${k}">${t}</button>`).join('')}</div></div>
-  ${eloPickHTML()}
+  ${(eloPickHTML()+engPickHTML())}
   <div><span class="eyebrow">Opening trainer</span><div class="opgrid"><button class="${!o.open?'on':''}" data-act="co-o" data-k="open" data-v="">Off: free play</button>${OPENT.map(x=>`<button class="${o.open===x[0]?'on':''}" data-act="co-o" data-k="open" data-v="${x[0]}">${esc(x[1])}<small>you play ${x[2]==='w'?'White':'Black'}</small></button>`).join('')}</div><small class="muted">The coach plays the book line with you and stops you if you leave it.</small></div>
   <div><span class="eyebrow">Clock</span><div class="seg">${[['0','No clock'],['5','5 min'],['10','10 min'],['15+10','15 + 10s']].map(([k,t])=>`<button class="${String(o.clock||'0')===k?'on':''}" data-act="co-o" data-k="clock" data-v="${k}">${t}</button>`).join('')}</div><small class="muted">With a clock you learn to think fast. "+10s" adds 10 seconds after each move.</small></div>
   <div><span class="eyebrow">Start from</span><div class="seg">${[['normal','Normal start'],['end','Endgame'],['attack','Attack'],['fen','My position']].map(([k,t])=>`<button class="${(o.start||'normal')===k?'on':''}" data-act="co-o" data-k="start" data-v="${k}">${t}</button>`).join('')}</div>
@@ -3679,7 +3696,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.13 · v126';
+const APPV='2026.11.13 · v127';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
