@@ -548,7 +548,7 @@ function applyModeLayout(){
   document.getElementById('methodCard').classList.toggle('hidden', !classic || hideM);
 }
 function cardHTML(n){
-  return `<div class="rulecard"><b>Rule card (${n} rules)</b><ol class="small">${CARD_KEYS[n].map(k => `<li><b>${esc(RULE_TXT[k][0])}:</b> ${esc(RULE_TXT[k][1])}</li>`).join('')}</ol><p class="small muted">Har chaal ke points jodo (sab whole numbers). Sabse zyada points wali chaalein tumhare candidates hain. Barabar points par jo mohra zyada active ho, wo pehle.</p>${SQH}</div>`;
+  return `<div class="rulecard"><b>Rule card (${n} rules)</b><ol class="small">${CARD_KEYS[n].map(k => `<li><b>${esc(RULE_TXT[k][0])}:</b> ${esc(RULE_TXT[k][1])}</li>`).join('')}</ol><p class="small muted">Har chaal ke points jodo (sab whole numbers). Sabse zyada points wali chaalein tumhare candidates hain. Barabar points par: jis chaal se mohre ka nakshe wala square level zyada badhe (naya level − purana), wo pehle. Phir bhi barabar ho to jo mohra center ke zyada paas jaaye.</p>${SQH}</div>`;
 }
 const fmtPts = v => (v > 0 ? '+' : '') + v;
 const fmtSc = v => Math.abs(v) > 20000 ? (v > 0 ? 'mate' : 'mate (khilaaf)') : (v >= 0 ? '+' : '') + (v / 100).toFixed(2);

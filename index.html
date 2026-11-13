@@ -2695,7 +2695,7 @@ function fcData(st,k){const f=toFEN(st),key=k+'|'+f;if(FT.c[key])return FT.c[key
 const fcPts=v=>(v>0?'+':'')+v;
 const fcSc=v=>Math.abs(v)>20000?(v>0?'mate':'mate (khilaaf)'):(v>=0?'+':'')+(v/100).toFixed(2);
 const fcWhy=w=>w&&w.length?w.map(([k,v])=>(FCR[k]?FCR[k][0]:k)+' '+fcPts(v)).join(', '):'koi rule nahi';
-function fcCardRules(n){return`<div class="fcrc"><b>Rule card (${n} rules)</b><ol>${FCK[n].map(k=>`<li><b>${FCR[k][0]}:</b> ${esc(FCR[k][1])}</li>`).join('')}</ol><small class="muted">Har chaal ke points jodo (sab whole numbers). Sabse zyada points wali chaalein candidates hain. Barabar points par jo mohra zyada active ho, wo pehle.</small></div>`}
+function fcCardRules(n){return`<div class="fcrc"><b>Rule card (${n} rules)</b><ol>${FCK[n].map(k=>`<li><b>${FCR[k][0]}:</b> ${esc(FCR[k][1])}</li>`).join('')}</ol><small class="muted">Har chaal ke points jodo (sab whole numbers). Sabse zyada points wali chaalein candidates hain. Barabar points par: jis chaal se mohre ka nakshe wala square level zyada badhe (naya level − purana), wo pehle. Phir bhi barabar ho to jo mohra center ke zyada paas jaaye.</small></div>`}
 /* after the player's move: was it an engine-like move in this mode? */
 function fcAfterMove(st0,m){try{if(!fcOn())return;const k=fcMode(),o=FT.c[k+'|'+toFEN(st0)];if(!o||!o.r)return;const u=uciOf(m),s=san(st0,m,legal(st0));let ok,best;
   if(k==='soch'){const S=Object.fromEntries(o.r.steps.map(x=>[x.id,x.data]));best=S.best.san;const top=o.r.score;ok=u===o.r.best||S.candidates.cands.some(c=>c.uci===u&&c.score!=null&&top!=null&&c.score>=top-30)}
@@ -3868,7 +3868,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.13 · v135';
+const APPV='2026.11.13 · v136';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
