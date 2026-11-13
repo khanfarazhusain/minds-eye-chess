@@ -2673,20 +2673,20 @@ function ftBody(st,rep){const S=Object.fromEntries(rep.steps.map(x=>[x.id,x.data
 /* ---- FHK Coach panel inside games (Play with Coach and Play the computer), shown when FHK Engine is chosen ----
    Same modes as the Engine Coach page. % = measured research numbers (engine-like move = within 0.3 pawn of the best). */
 const FCM={soch:{n:'FHK ki soch (5 steps)',p:'Khatra, latakte mohre, forcing chaalein, candidates, best chaal'},
-  r4_6:{r:4,K:6,n:'4 rules, 6 candidates',p:'Sahi chaal list mein: Training 95% · Games 95.5%'},r4_9:{r:4,K:9,n:'4 rules, 9 candidates',p:'Training 97.5% · Games 97.6%'},r4_11:{r:4,K:11,n:'4 rules, 11 candidates',p:'Training 98.1% · Games 98.3%'},
+  r4_5:{r:4,K:5,n:'4 rules, 5 candidates',p:'Sahi chaal list mein: Training 96.3% · Games 95.1%'},r4_7:{r:4,K:7,n:'4 rules, 7 candidates',p:'Training 97.5% · Games 97.2%'},r4_9:{r:4,K:9,n:'4 rules, 9 candidates',p:'Training 98.8% · Games 98.3%'},
   r8_5:{r:8,K:5,n:'8 rules, 5 candidates',p:'Training 96% · Games 95.9%'},r8_7:{r:8,K:7,n:'8 rules, 7 candidates',p:'Training 97.5% · Games 97.7%'},r8_8:{r:8,K:8,n:'8 rules, 8 candidates',p:'Training 97.8% · Games 98.1%'},
   r6_5:{r:6,K:5,n:'6 rules (position wale), 5 candidates',p:'Training 96.6% · Games 95.5%'},r6_7:{r:6,K:7,n:'6 rules (position wale), 7 candidates',p:'Training 97.8% · Games 97.4%'},r6_9:{r:6,K:9,n:'6 rules (position wale), 9 candidates',p:'Training 99.1% · Games 98.4%'},
   c1:{d:1,n:'Sirf apni chaal + captures',p:'Top 1/2/3: Training 81.9/91/92.8% · Games 75.1/87.4/92.1%'},c2:{d:2,n:'1 chaal aage',p:'Training 91.3/97.2/98.4% · Games 83.9/93.8/96.5%'},
   c3:{d:3,n:'1.5 chaal aage',p:'Training 96.3/99.7/99.7% · Games 91.3/97.2/98.5%'},c4:{d:4,n:'2 chaal aage',p:'Training 99.7/99.7/99.7% · Games 98.1/99.7/99.9%'},
-  m4_12:{r:4,K:12,d:4,n:'4 rules + 12 candidates + 2 chaal',p:'Top 1/2/3: Training 97.5/98.1/98.4% · Games 96.3/97.9/98.2%'},
-  m8_10:{r:8,K:10,d:4,n:'8 rules + 10 candidates + 2 chaal',p:'Top 1/2/3: Training 97.5/98.1/98.1% · Games 96.5/98/98.4%',opt:1},
+  m4_12:{r:4,K:12,d:4,n:'4 rules + 12 candidates + 2 chaal',p:'Top 1/2/3: Training 98.1/98.8/99.1% · Games 96.9/98.4/98.7%',opt:1},
+  m8_10:{r:8,K:10,d:4,n:'8 rules + 10 candidates + 2 chaal',p:'Top 1/2/3: Training 97.5/98.1/98.1% · Games 96.5/98/98.4%'},
   m8_8:{r:8,K:8,d:4,n:'8 rules + 8 candidates + 2 chaal',p:'Top 1/2/3: Training 96.6/97.5/97.5% · Games 95.8/97.3/97.7%'}};
-const FCG=[['FHK ki soch',['soch']],['1. Sirf rules',['r4_6','r4_9','r4_11','r8_5','r8_7','r8_8','r6_5','r6_7','r6_9']],['2. Sirf calculation',['c1','c2','c3','c4']],['3. Rules + calculation',['m4_12','m8_10','m8_8']]];
+const FCG=[['FHK ki soch',['soch']],['1. Sirf rules',['r4_5','r4_7','r4_9','r8_5','r8_7','r8_8','r6_5','r6_7','r6_9']],['2. Sirf calculation',['c1','c2','c3','c4']],['3. Rules + calculation',['m4_12','m8_10','m8_8']]];
 const FCR={threat6:['Dhamki','bade ya bina bachaav mohre par hamla, +1'],pawnAdv:['Pawn aage','pawn ka naya level − purana level, ×6 (5th rank +1, 6th +2, 7th +3). Jaise pawn 5th se 6th = +6. Dushman ka aage wala pawn maara to bhi uska level ×6 milta hai'],kCtr:['Raja center se door','middlegame mein raja c-f file par aaye −6; c-f se bahar jaaye (jaise castle) +6'],qWin:['Material jeet','saare captures gin kar: pawn +10, ghoda/oont +30, haathi +50, wazir +90'],qLose:['Material nuksaan','saare captures gin kar: pawn −10, ghoda/oont −30, haathi −50, wazir −90'],check:['Check','+3'],threat:['Dhamki','bade ya bina bachaav mohre par hamla, +2'],pawnThreat:['Pawn par dhamki','bina bachaav pawn par hamla, +1'],captureLowest:['Sasta capture','sabse saste mohre se capture, +2'],pstDelta:['Behtar square','naye square ka level − purane ka level (±3). Jaise ghoda kinare (−1) se center (+1) = +2. Har mohre ka nakshaa: Examples → Behtar square kaise ginen'],allowMate:['Mate allow','iske baad opponent mate in 1 kar sakta hai, −100 (kabhi mat khelo)']};
-const FCK={6:['qWin','qLose','check','threat6','allowMate','pawnAdv','kCtr'],4:['qWin','qLose','check','pstDelta'],8:['qWin','qLose','check','threat','pawnThreat','captureLowest','pstDelta','allowMate']};
+const FCK={6:['qWin','qLose','check','threat6','allowMate','pawnAdv','kCtr'],4:['qWin','qLose','check','threat','allowMate'],8:['qWin','qLose','check','threat','pawnThreat','captureLowest','pstDelta','allowMate']};
 const FCD={1:'Har chaal ke baad sirf captures gin lo.',2:'Meri chaal, opponent ka sabse achha jawab, phir captures gin lo.',3:'Meri chaal, uska jawab, meri agli chaal, phir captures gin lo.',4:'Meri chaal, uska jawab, meri chaal, uska jawab, phir captures gin lo.'};
 const FCDN={1:'sirf apni chaal + captures',2:'1 chaal aage',3:'1.5 chaal aage',4:'2 chaal aage'};
-const fcMode=()=>FCM[P.set.fcmode]?P.set.fcmode:'m8_10';
+const fcMode=()=>FCM[P.set.fcmode]?P.set.fcmode:'m4_12';
 const fcOn=()=>oppEng()==='fhk';
 function fcSetMode(v){if(!FCM[v])return;P.set.fcmode=v;save();fcRerender()}
 function fcRerender(){if(V.name==='coach'&&CG)vCoach();else if(V.name==='play'&&G)vPlay()}
@@ -3868,7 +3868,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.13 · v134';
+const APPV='2026.11.13 · v135';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}

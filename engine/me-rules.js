@@ -255,6 +255,7 @@ function simplePts(f, n) { let s = 0; const why = []; const add = (k, v) => { if
   const p = Math.round((f.qGain || 0) / 100); add(p > 0 ? 'qWin' : 'qLose', p * 10);
   add('check', (f.check || f.mate) ? 3 : 0);
   if (n === 6) { add('threat', f.threat ? 1 : 0); add('allowMate', f.allowMate ? -100 : 0); add('pawnAdv', (f.pawnAdv || 0) * 6); add('kCtr', (f.kCtr || 0) * -6); return { pts: s, why }; }
+  if (n === 4) { add('threat', f.threat ? 2 : 0); add('allowMate', f.allowMate ? -100 : 0); return { pts: s, why }; }
   if (n === 8) { add('threat', f.threat ? 2 : 0); add('pawnThreat', f.pawnThreat ? 1 : 0); add('captureLowest', f.captureLowest ? 2 : 0); add('allowMate', f.allowMate ? -100 : 0); }
   add('pstDelta', f.sqL !== undefined ? f.sqL : sqPts(f.pstDelta || 0)); return { pts: s, why }; }
 function cardPoints(f, W) { return simplePts(f, W === CARDS[4] ? 4 : W === 6 ? 6 : 8); }
