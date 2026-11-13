@@ -1186,6 +1186,7 @@ body:not([class*="ps-"]) .pc{font-size:88cqh}body.pz-s:not([class*="ps-"]) .pc{f
 .lpbtns{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.lpok{font-weight:700;color:#1E9E55}
 [dir=rtl] .board,[dir=rtl] .board *{direction:ltr}
 .eyeb{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin:0 4px;border-radius:50%;background:rgba(123,92,214,.14);border:1px solid rgba(123,92,214,.45);font-size:15px;line-height:1;cursor:pointer;vertical-align:middle}.eyeb.on{background:#7B5CD6;color:#fff}
+.fcrc{background:rgba(127,127,127,.13);border-radius:10px;padding:8px 10px}.fcrc ol,.fcl{margin:4px 0;padding-left:22px}.fcl li{margin:5px 0}.fcopt{background:#23664A;color:#fff;border-radius:6px;padding:0 7px;font-size:12px;font-weight:700}.fcsel{width:100%;font:inherit;padding:8px;border-radius:8px}.fcp details summary{cursor:pointer;padding:4px 0}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -2099,6 +2100,7 @@ function vPlay(){{const fx=!!G&&!V.setup;if(document.body.classList.contains('fi
     :last?`<div class="lmline ${g.two?'':(lastW===(g.human==='w')?'me':'cpu')}"><b>${g.two?(lastW?'⚪ White':'⚫ Black'):(lastW===(g.human==='w')?'👤 '+L2('You','Aap'):'🤖 Computer')}:</b> ${esc(sanWords(last))} <span class="mono">(${esc(last)})</span></div>`
     :`<div class="lmline muted">${myTurn?L2('Your move: tap a piece, then its square','Aapki chaal: piece tap karo, phir square'):''}</div>`;
   h+=`</div><div class="fixscroll stack">`;
+  if(!g.two&&!g.over&&fcOn()&&g.vis==='full')h+=`<div class="card">${fcPanelHTML(g.st,myTurn&&!g.thinking)}</div>`;
   if(g.over)h+=`<div class="fb ${g.over.r==='w'?'ok':'no'}"><h3>${g.over.msg}</h3>${g.eloCh?`<p>📈 ${L2('Next game: computer rating','Agla game: computer rating')} <b>${g.eloCh.old} → ${g.eloCh.nw}</b></p>`:''}<p>${g.sans.length} half-moves${g.vis!=='full'?`, ${g.peeks} peeks`:''}.</p></div>`;
   if(!g.over&&kb){h+=`<div class="slot">${esc(g.input)||'<span class="muted">type a move</span>'}</div><div class="pad ipad">
    <div class="npad">${['K','Q','R','B','N'].map(p=>`<button class="key" data-act="gk" data-v="${p}">${p}</button>`).join('')}</div>
@@ -2113,7 +2115,7 @@ function vPlay(){{const fx=!!G&&!V.setup;if(document.body.classList.contains('fi
 function newGame(){const o=V.po;const human=o.color==='r'?pick(['w','b']):o.color;const two=!!o.two;G={two,st:startState(),human:two?'w':human,level:o.level,elo:two?null:myElo(),vis:o.vis,sans:[],input:'',sel:null,peek:false,peeks:0,over:null,msg:'',lastMv:null};V={name:'play'};render();if(!two&&human==='b')engineTurn()}
 function tryMove(inp){const g=G;const m=findMove(g.st,inp);g.sel=null;
   if(!m){g.msg=`${inp} isn't legal here. Try again.`;g.msgBad=true;g.input='';vPlay();return}
-  playMove(m);if(g.two){if(!g.over)g.human=g.st.w?'w':'b';vPlay();return}if(!g.over)engineTurn()}
+  if(!g.two)fcAfterMove(g.st,m);playMove(m);if(g.two){if(!g.over)g.human=g.st.w?'w':'b';vPlay();return}if(!g.over)engineTurn()}
 function playMove(m){const g=G;const s=san(g.st,m,legal(g.st));g.sans.push(s);g.st=make(g.st,m);g.lastMv=g.vis==='full'?m:null;g.input='';g.msg='';g.msgBad=false;checkEnd();return s}
 function checkEnd(){const g=G,ms=legal(g.st);let over=null;const humanW=g.human==='w';
   if(!ms.length){if(inCheck(g.st)){const winW=!g.st.w;over={r:winW===humanW?'w':'l',msg:winW===humanW?'Checkmate. You win!':'Checkmate. The computer wins.'}}else over={r:'d',msg:'Stalemate. Draw.'}}
@@ -2641,8 +2643,8 @@ function ftLoad(st){const f=toFEN(st);if(FT.c[f])return FT.c[f];if(++FT.n>60){FT
 function ftLine(st,line){let n=st.fm,w=st.w;const out=[];(line||[]).forEach((x,i)=>{if(w)out.push(n+'.');else if(i===0)out.push(n+'...');out.push(x);if(!w)n++;w=!w});return out.join(' ')}
 function ftHTML(){const g=CG;if(!g)return'';if(!coMyTurn())return`<p class="muted">${L2('FHK Engine shows its thinking when it is your move.','Aapki chaal aane par FHK Engine apni soch dikhayega.')}</p>`;
   const o=ftLoad(g.st);if(o.load)return`<p class="muted">🧠 ${L2('FHK Engine is thinking step by step…','FHK Engine step by step soch raha hai…')}</p>`;
-  if(o.err||!o.rep)return`<p class="muted">${L2('FHK thinking could not load','FHK ki soch load nahi hui')}: ${esc(o.err||'')}</p>`;
-  const S=Object.fromEntries(o.rep.steps.map(x=>[x.id,x.data])),st=g.st,h=[];
+  if(o.err||!o.rep)return`<p class="muted">${L2('FHK thinking could not load','FHK ki soch load nahi hui')}: ${esc(o.err||'')}</p>`;return ftBody(g.st,o.rep)}
+function ftBody(st,rep){const S=Object.fromEntries(rep.steps.map(x=>[x.id,x.data])),h=[];
   const fl=a=>a&&a.length?a.map(d=>`<b>${esc(d.san)}</b>${d.tags&&d.tags.length?` <span class="muted">(${esc(d.tags.join(', '))})</span>`:''}`).join(', '):L2('none','koi nahi');
   h.push(`<div class="stack" style="gap:6px"><small class="muted">${L2('Follow these steps yourself first, then open the answer below.','Pehle ye steps khud socho, phir neeche jawab kholo.')}</small>`);
   h.push(`<div><b>1. ${L2('Danger','Khatra')}:</b> ${esc(S.threat?S.threat.text:L2('No threat.','Koi khatra nahi.'))}</div>`);
@@ -2653,7 +2655,55 @@ function ftHTML(){const g=CG;if(!g)return'';if(!coMyTurn())return`<p class="mute
   for(const c of S.candidates.cands)h.push(`<li style="margin:4px 0"><b>${esc(c.san)}</b> ${esc(c.scoreText)}${c.ruleText?`<br><small>🔎 ${esc(c.ruleText)}</small>`:''}<br><small class="mono muted">${esc(ftLine(st,c.line))}</small></li>`);
   h.push(`</ol>`);if(S.candidates.alts&&S.candidates.alts.length){h.push(`<small><b>${L2('Why not these forcing moves','Ye forcing chaalein kyun nahi')}:</b></small><ul style="margin:4px 0;padding-left:20px">`);for(const a of S.candidates.alts)h.push(`<li><small>${esc(a.text)} <span class="mono muted">${esc(ftLine(st,a.line))}</span></small></li>`);h.push(`</ul>`)}
   h.push(`<div><b>${L2('Best move','Best chaal')}: ${esc(S.best.san)}</b> <span class="mono">${esc(S.best.scoreText)}</span><br>${esc(S.best.reason)}<br><small class="mono muted">${esc(ftLine(st,S.best.line))}</small></div></details>`);
-  h.push(`<small class="muted">FHK Engine · depth ${o.rep.depth}</small></div>`);return h.join('')}
+  h.push(`<small class="muted">FHK Engine · depth ${rep.depth}</small></div>`);return h.join('')}
+/* ---- FHK Coach panel inside games (Play with Coach and Play the computer), shown when FHK Engine is chosen ----
+   Same modes as the Engine Coach page. % = measured research numbers (engine-like move = within 0.3 pawn of the best). */
+const FCM={soch:{n:'FHK ki soch (5 steps)',p:'Khatra, latakte mohre, forcing chaalein, candidates, best chaal'},
+  r4_6:{r:4,K:6,n:'4 rules, 6 candidates',p:'Sahi chaal list mein: Training 95% · Games 95.5%'},r4_9:{r:4,K:9,n:'4 rules, 9 candidates',p:'Training 97.8% · Games 97.8%'},r4_11:{r:4,K:11,n:'4 rules, 11 candidates',p:'Training 98.4% · Games 98.5%'},
+  r8_5:{r:8,K:5,n:'8 rules, 5 candidates',p:'Training 96.6% · Games 95.8%'},r8_7:{r:8,K:7,n:'8 rules, 7 candidates',p:'Training 97.8% · Games 97.7%'},r8_8:{r:8,K:8,n:'8 rules, 8 candidates',p:'Training 97.8% · Games 98.3%'},
+  c1:{d:1,n:'Sirf apni chaal + captures',p:'Top 1/2/3: Training 81.9/91/92.8% · Games 75.1/87.4/92.1%'},c2:{d:2,n:'1 chaal aage',p:'Training 91.3/97.2/98.4% · Games 83.9/93.8/96.5%'},
+  c3:{d:3,n:'1.5 chaal aage',p:'Training 96.3/99.7/99.7% · Games 91.3/97.2/98.5%'},c4:{d:4,n:'2 chaal aage',p:'Training 99.7/99.7/99.7% · Games 98.1/99.7/99.9%'},
+  m4_12:{r:4,K:12,d:4,n:'4 rules + 12 candidates + 2 chaal',p:'Top 1/2/3: Training 97.5/98.1/98.4% · Games 96.3/98/98.4%'},
+  m8_10:{r:8,K:10,d:4,n:'8 rules + 10 candidates + 2 chaal',p:'Top 1/2/3: Training 97.8/98.4/98.4% · Games 96.5/98.2/98.6%',opt:1},
+  m8_8:{r:8,K:8,d:4,n:'8 rules + 8 candidates + 2 chaal',p:'Top 1/2/3: Training 96.9/97.5/97.8% · Games 95.9/97.6/98%'}};
+const FCG=[['FHK ki soch',['soch']],['1. Sirf rules',['r4_6','r4_9','r4_11','r8_5','r8_7','r8_8']],['2. Sirf calculation',['c1','c2','c3','c4']],['3. Rules + calculation',['m4_12','m8_10','m8_8']]];
+const FCR={qWin:['Material jeet','saare captures gin kar, har pawn +100 (knight/bishop ~+320, rook +500, queen +950)'],qLose:['Material nuksaan','saare captures gin kar, har pawn −125'],check:['Check','+8'],threat:['Dhamki','bade ya bina bachaav mohre par hamla, +7'],pawnThreat:['Pawn par dhamki','bina bachaav pawn par hamla, +4'],captureLowest:['Sasta capture','sabse saste mohre se capture, +11'],pstDelta:['Behtar square','kinare se center, peeche se aage: lagbhag +1 se +10'],allowMate:['Mate allow','iske baad opponent mate in 1 kar sakta hai, −750 (kabhi mat khelo)']};
+const FCK={4:['qWin','qLose','check','pstDelta'],8:['qWin','qLose','check','threat','pawnThreat','captureLowest','pstDelta','allowMate']};
+const FCD={1:'Har chaal ke baad sirf captures gin lo.',2:'Meri chaal, opponent ka sabse achha jawab, phir captures gin lo.',3:'Meri chaal, uska jawab, meri agli chaal, phir captures gin lo.',4:'Meri chaal, uska jawab, meri chaal, uska jawab, phir captures gin lo.'};
+const FCDN={1:'sirf apni chaal + captures',2:'1 chaal aage',3:'1.5 chaal aage',4:'2 chaal aage'};
+const fcMode=()=>FCM[P.set.fcmode]?P.set.fcmode:'m8_10';
+const fcOn=()=>oppEng()==='fhk';
+function fcSetMode(v){if(!FCM[v])return;P.set.fcmode=v;save();fcRerender()}
+function fcRerender(){if(V.name==='coach'&&CG)vCoach();else if(V.name==='play'&&G)vPlay()}
+function fcData(st,k){const f=toFEN(st),key=k+'|'+f;if(FT.c[key])return FT.c[key];if(++FT.n>80){FT.c={};FT.n=1}const M=FCM[k],o={load:1};FT.c[key]=o;
+  (k==='soch'?ftAsk({cmd:'analyze',fen:f,time:1800,multi:3}):ftAsk({cmd:'mode',fen:f,rules:M.r||0,K:M.K||0,depth:M.d||0})).then(r=>{o.r=r;o.load=0}).catch(e=>{o.err=String(e&&e.message||e);o.load=0}).then(()=>fcRerender());return o}
+const fcPts=v=>(v>0?'+':'')+v;
+const fcSc=v=>Math.abs(v)>20000?(v>0?'mate':'mate (khilaaf)'):(v>=0?'+':'')+(v/100).toFixed(2);
+const fcWhy=w=>w&&w.length?w.map(([k,v])=>(FCR[k]?FCR[k][0]:k)+' '+fcPts(v)).join(', '):'koi rule nahi';
+function fcCardRules(n){return`<div class="fcrc"><b>Rule card (${n} rules)</b><ol>${FCK[n].map(k=>`<li><b>${FCR[k][0]}:</b> ${esc(FCR[k][1])}</li>`).join('')}</ol><small class="muted">Har chaal ke points jodo. Sabse zyada points wali chaalein candidates hain.</small></div>`}
+/* after the player's move: was it an engine-like move in this mode? */
+function fcAfterMove(st0,m){try{if(!fcOn())return;const k=fcMode(),o=FT.c[k+'|'+toFEN(st0)];if(!o||!o.r)return;const u=uciOf(m),s=san(st0,m,legal(st0));let ok,best;
+  if(k==='soch'){const S=Object.fromEntries(o.r.steps.map(x=>[x.id,x.data]));best=S.best.san;const top=o.r.score;ok=u===o.r.best||S.candidates.cands.some(c=>c.uci===u&&c.score!=null&&top!=null&&c.score>=top-30)}
+  else{const mv=o.r.moves.find(x=>x.uci===u);best=o.r.bestSan;ok=!!(mv&&mv.good)}
+  P.fcst=P.fcst||{};const r=P.fcst[k]||(P.fcst[k]={n:0,ok:0});r.n++;if(ok)r.ok++;FT.last={k,san:s,ok,best};save()}catch(e){}}
+function fcBody(st,my){const k=fcMode(),M=FCM[k];if(!my)return`<p class="muted">${L2('Your coach panel appears when it is your move.','Aapki chaal aane par FHK Coach yahan madad karega.')}</p>`;
+  const o=fcData(st,k);if(o.load)return`<p class="muted">🧠 ${L2('FHK Engine is working this position out…','FHK Engine is position ko soch raha hai…')}</p>`;if(o.err||!o.r)return`<p class="muted">FHK load nahi hua: ${esc(o.err||'')}</p>`;
+  if(k==='soch')return ftBody(st,o.r);
+  const d=o.r,h=[],key=M.r===4?'p4':'p8',wk=M.r===4?'w4':'w8';
+  if(M.r)h.push(fcCardRules(M.r));
+  if(M.r)h.push(`<p><b>Step 1:</b> rule card se points do aur sabse zyada points wali <b>${M.K} chaalein</b> socho.</p>`);
+  if(M.d)h.push(`<p><b>${M.r?'Step 2':'Step 1'}:</b> ${M.r?`in ${M.K} candidates ko`:`saari ${d.n} chaalein`} ${FCDN[M.d]} calculate karo. ${esc(FCD[M.d])}</p>`);
+  h.push(`<p>${M.d?'Phir':'Phir in mein se'} sabse achhi chaal board par khelo.</p>`);
+  if(M.r){h.push(`<details><summary><b>FHK ki rule list (top ${M.K}), jawab</b></summary><ol class="fcl">`);for(const m of d.moves.slice(0,M.K))h.push(`<li><b>${esc(m.san)}</b> ${fcPts(m[key])} pts${m.good?' ★':''}<br><small class="muted">${esc(fcWhy(m[wk]))}</small></li>`);h.push(`</ol></details>`)}
+  if(M.d){h.push(`<details><summary><b>FHK ki calculation (${FCDN[M.d]}), jawab</b></summary><ol class="fcl">`);for(const c of (M.r?d.calc:d.calc.slice(0,6)))h.push(`<li><b>${esc(c.san)}</b> ${fcSc(c.score)}${d.moves.some(x=>x.uci===c.uci&&x.good)?' ★':''}<br><small class="mono muted">${esc(ftLine(st,c.line))}</small></li>`);h.push(`</ol></details>`)}
+  h.push(`<small class="muted">★ = engine jaisi chaal (best se 0.3 pawn ke andar).</small>`);return h.join('')}
+function fcStatLine(){const k=fcMode(),r=(P.fcst||{})[k];const l=FT.last&&FT.last.k===k?FT.last:null;let h='';
+  if(l)h+=`<div class="${l.ok?'good':'bad'}" style="font-size:14px"><b>${l.ok?'✓':'✗'} ${esc(l.san)}</b> ${l.ok?'engine jaisi chaal thi.':`engine jaisi nahi thi. FHK ki chaal: <b>${esc(l.best)}</b>`}</div>`;
+  if(r&&r.n)h+=`<small class="muted">Is mode mein aapka match: ${Math.round(100*r.ok/r.n)}% (${r.n} chaalein)</small>`;return h}
+function fcPanelHTML(st,my){if(!fcOn())return'';const k=fcMode(),M=FCM[k];
+  const sel=`<select class="fcsel" onchange="fcSetMode(this.value)">${FCG.map(([g,ks])=>`<optgroup label="${esc(g)}">${ks.map(x=>`<option value="${x}"${x===k?' selected':''}>${esc(FCM[x].n)}${FCM[x].opt?' ★ Optimal':''}</option>`).join('')}</optgroup>`).join('')}</select>`;
+  return`<div class="stack fcp" style="gap:8px"><div class="row" style="gap:6px;align-items:center;flex-wrap:wrap"><b>🧠 FHK Coach</b>${M.opt?'<span class="fcopt">Optimal</span>':''}</div>${sel}<small class="muted">${esc(M.p)}</small>${fcStatLine()}${fcBody(st,my)}</div>`}
+
 function engPickHTML(){const e=oppEng();return`<div class="stack" style="gap:6px"><b>⚙️ ${L2('Computer engine','Computer ka engine')}</b><div class="seg"><button class="${e==='sf'?'on':''}" data-act="eng-set" data-v="sf">Stockfish</button><button class="${e==='fhk'?'on':''}" data-act="eng-set" data-v="fhk">FHK Engine</button></div><small class="muted">${e==='fhk'?L2('FHK Engine: our own engine (~2600). The level setting works the same.','FHK Engine: hamara apna engine (~2600). Level ki setting waise hi chalti hai.'):L2('Stockfish: the world-famous engine. Hints and analysis always use Stockfish.','Stockfish: duniya ka mashhoor engine. Hint aur analysis hamesha Stockfish se.')}</small></div>`}
 async function ratedMove(st,e){const L=ELOP(e),ms=legal(st);if(!ms.length)return null;
   if(L.weak){if(Math.random()<L.pr)return pick(ms);let r=null;try{r=await oppGo(st,{multipv:Math.min(oppEng()==='fhk'?5:8,ms.length),movetime:L.mt})}catch(x){}
@@ -2693,7 +2743,7 @@ const coMyTurn=()=>CG&&!CG.over&&CG.st.w===(CG.human==='w');
 function coPreOpts(g){const L=g.elo?CLV[5]:(CLV[g.lvl]||{});const mt=Math.max(900,Math.round((L.mt||0)*1.6));return{multipv:3,movetime:mt,depth:L.d===0?null:18}}
 function coPre(){const g=CG,t=g.tok,st=g.st;clkSwitch(g,'h');g.pre=null;g.threat=threatOf(st);g.hint=0;g.opt=null;g.psel=null;g.chk={};g.pend=null;g.waitNext=false;g.arrBest=false;if(g.moves.length&&g.moves[g.moves.length-1].by==='e'){const e=g.moves[g.moves.length-1],th=g.threat;sayC((P.set.cvoice==='hi'?'कोच की चाल: ':pick(['Coach plays ','The coach plays ']))+e.san+'. '+(th&&th.san?(P.set.cvoice==='hi'?'ध्यान दीजिए, ख़तरा है: ':'Careful, it threatens ')+th.san+'.':''),true)}g.preP=coGo(st,coPreOpts(g)).then(r=>{if(CG===g&&g.tok===t&&g.st===st){g.pre=r;coLesRecord(g);if(aiAuto()&&g.fb&&!g.fb.lite&&!AIR[aiKey('turn')])aiGo('turn',null,true);else if(V.name==='coach'&&!g.busy)vCoach()}return r});if(V.name==='coach')vCoach()}
 async function coHuman(m){const g=CG,t=g.tok,st0=g.st,list=legal(st0),s=san(st0,m,list);g.sel=null;g.busy='Coach is checking your move…';
-  const st1=make(st0,m);g.st=st1;g.states.push(st1);const rec={m,san:s,by:'h',fb:null};g.moves.push(rec);vCoach();
+  fcAfterMove(st0,m);const st1=make(st0,m);g.st=st1;g.states.push(st1);const rec={m,san:s,by:'h',fb:null};g.moves.push(rec);vCoach();
   const pre=await g.preP;if(CG!==g||g.tok!==t)return;rec.pre=pre;rec.st0=st0;
   let post=legal(st1).length?await coGo(st1,{multipv:1,movetime:700,depth:16}):{lines:[]};if(CG!==g||g.tok!==t)return;
   rec.fb=coJudge(st0,m,s,st1,pre,post);g.fb=rec.fb;g.busy='';coRecordMistake(rec.fb);sayJudge(rec.fb);try{fxJudge(rec.fb,g)}catch(e){}
@@ -3214,7 +3264,7 @@ function coEasyHTML(){const g=CG,my=coMyTurn();let h='';const pre=(g.boss!=null&
   const EB=(act,v,on,dis,ic,t,sub)=>`<button class="btn eb ${on?'on':''}" data-act="${act}"${v?` data-v="${v}"`:''} ${dis?'disabled':''}><span class="ei">${ic}</span><b>${t}</b><small>${sub}</small></button>`;
   h+=`<div class="ebtns e4">${EB('co-hint','',g.hint,!(my&&!g.busy&&(g.hint||0)<3),'💡',L2('Hint','Hint')+(g.hint?` ${g.hint}/3`:''),L2('Show a clue','Ishara do'))}${EB('co-ep','opts',ep==='opts',false,'🎯',L2('Best moves','Best chaal'),L2('Top 3 moves','Top 3 chaalein'))}${EB('co-undo','',false,!canUndo,'↶',L2('Undo','Wapas lo'),L2('Take back','Chaal wapas'))}${EB('co-ep','more',ep==='more'||ep==='think',false,'☰',L2('More','Aur'),L2('Plans, resign…','Plans, resign…'))}</div>`;
   if(!P.set.coGuide||g.showGuide)h+=`<div class="card coguide"><b>❓ ${L2('How to use these buttons','Ye buttons kaise use karein')}</b><ul><li><b>💡 ${L2('Hint','Hint')}</b>: ${L2('tap once for a clue, again to see the piece, a third time for the full move.','ek baar tap = ishara, dobara = kaunsa mohra, teesri baar = poori chaal.')}</li><li><b>🎯 ${L2('Best moves','Best chaal')}</b>: ${L2('the coach shows its top 3 moves with numbered arrows and what each one does.','coach apni top 3 chaalein number wale arrows ke saath dikhata hai, har ek kya karti hai.')}</li><li><b>↶ ${L2('Undo','Wapas lo')}</b>: ${L2('take your last move back and try again.','apni pichhli chaal wapas lo aur dobara try karo.')}</li><li><b>☰ ${L2('More','Aur')}</b>: ${L2('plans, coach notes, resign and new game.','plans, coach ki baatein, resign aur naya game.')}</li></ul><p class="muted" style="font-size:14px">${L2('Just play: tap a piece, then a square. Buttons are only for help.','Bas khelo: mohra tap karo, phir square. Buttons sirf madad ke liye hain.')}</p><button class="btn primary block" data-act="co-guide-ok">${L2('Got it ✓','Samajh gaya ✓')}</button></div>`;h+=pre;
-  h+=`<div id="coside">${coSideHTML()}</div>`;if(!ep&&P.set.cchk!==false&&checklistHTML())h+=g.chkOpen?checklistHTML().replace('<b>Before you move: think like a coach</b>',`<button class="chkline" data-act="co-chkopen"><b>${L2('Before you move: Check, Capture, Threat','Chaal se pehle: Check, Capture, Threat')}</b> ▴</button>`):`<button class="chkline card" data-act="co-chkopen">🔎 ${L2('Before you move: Check · Capture · Threat','Chaal se pehle: Check · Capture · Threat')} <span class="muted">▾</span></button>`;
+  h+=`<div id="coside">${coSideHTML()}</div>`;if(fcOn()&&!ep)h+=`<div class="card">${fcPanelHTML(g.st,my)}</div>`;if(!ep&&P.set.cchk!==false&&checklistHTML())h+=g.chkOpen?checklistHTML().replace('<b>Before you move: think like a coach</b>',`<button class="chkline" data-act="co-chkopen"><b>${L2('Before you move: Check, Capture, Threat','Chaal se pehle: Check, Capture, Threat')}</b> ▴</button>`):`<button class="chkline card" data-act="co-chkopen">🔎 ${L2('Before you move: Check · Capture · Threat','Chaal se pehle: Check · Capture · Threat')} <span class="muted">▾</span></button>`;
   if(ep==='opts')h+=`<div class="card epanel">${coEasyOpts()}</div>`;
   else if(ep==='think')h+=`<div class="card epanel">${coEasyThink()}</div>`;
   else if(ep==='more'){const tabs=coTabs().filter(x=>x[0]!=='opts'),tab=tabs.find(x=>x[0]===g.tab)?g.tab:tabs[0][0];g.tab=tab;
@@ -3371,7 +3421,7 @@ function coTabs(){const g=CG,my=coMyTurn(),t=[];const r=g.fb&&AIR[aiKey('turn')]
 function coTabHTML(k){const g=CG;
   if(k==='ai')return aiButtons(g.fb&&!g.fb.lite?['turn','pos']:['pos']);
   if(k==='move')return g.fb?coFbHTML(g.fb).replace(/^<div class="card stack cfb">/,'<div class="stack cfb">'):'<p class="muted">Make a move and the coach will judge it here.</p>';
-  if(k==='fhk')return ftHTML();
+  if(k==='fhk')return fcPanelHTML(g.st,coMyTurn());
   if(k==='think')return(coEngHTML()+coViewHTML('think'))||'<p class="muted">The coach has not moved yet.</p>';
   if(k==='threat')return checklistHTML().replace(/^<div class="card stack checklist">/,'<div class="stack checklist">')+coViewHTML('threat');
   if(k==='opts')return coViewHTML('opts')||'<p class="muted">Options appear when it is your move.</p>';
@@ -3720,7 +3770,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.13 · v128';
+const APPV='2026.11.13 · v129';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
