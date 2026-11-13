@@ -2631,6 +2631,29 @@ function fhkPump(){if(!FHK.ready||FHK.cur||!FHK.q.length)return;const j=FHK.q.sh
 function fhkGo(st,o){return new Promise(res=>{if(!legal(st).length){res({lines:[],best:null});return}fhkStart();if(!FHK.w){sfGo(st,o).then(res);return}FHK.q.push({st,o,res});fhkPump()})}
 const oppEng=()=>P.set.eng==='fhk'?'fhk':'sf';
 const oppGo=(st,o)=>oppEng()==='fhk'?fhkGo(st,o):sfGo(st,o);
+/* coach analysis (hints, best moves, eval bar, move check) uses the chosen engine; FHK gets full strength and a time limit instead of a depth */
+const coGo=(st,o)=>oppEng()==='fhk'?fhkGo(st,Object.assign({},o,{depth:null,skill:20})):sfGo(st,o);
+/* FHK step-by-step thinking inside Play with Coach (own worker, same files as Engine Coach) */
+const FT={w:null,id:0,p:new Map(),c:{},n:0};
+function ftAsk(msg){return new Promise((res,rej)=>{if(!FT.w){try{const w=new Worker('engine/me-worker.js');FT.w=w;w.onmessage=e=>{const d=e.data,q=FT.p.get(d.id);if(!q)return;FT.p.delete(d.id);d.ok?q.res(d.result):q.rej(new Error(d.error))};w.onerror=()=>{FT.p.forEach(q=>q.rej(new Error('FHK worker error')));FT.p.clear();try{w.terminate()}catch(x){}FT.w=null}}catch(e){rej(e);return}}const id=++FT.id;FT.p.set(id,{res,rej});FT.w.postMessage(Object.assign({id},msg))})}
+function ftLoad(st){const f=toFEN(st);if(FT.c[f])return FT.c[f];if(++FT.n>60){FT.c={};FT.n=1}const o={load:1};FT.c[f]=o;
+  ftAsk({cmd:'analyze',fen:f,time:1800,multi:3}).then(r=>{o.rep=r;o.load=0}).catch(e=>{o.err=String(e&&e.message||e);o.load=0}).then(()=>{if(V.name==='coach'&&CG&&toFEN(CG.st)===f&&CG.tab==='fhk')vCoach()});return o}
+function ftLine(st,line){let n=st.fm,w=st.w;const out=[];(line||[]).forEach((x,i)=>{if(w)out.push(n+'.');else if(i===0)out.push(n+'...');out.push(x);if(!w)n++;w=!w});return out.join(' ')}
+function ftHTML(){const g=CG;if(!g)return'';if(!coMyTurn())return`<p class="muted">${L2('FHK Engine shows its thinking when it is your move.','Aapki chaal aane par FHK Engine apni soch dikhayega.')}</p>`;
+  const o=ftLoad(g.st);if(o.load)return`<p class="muted">🧠 ${L2('FHK Engine is thinking step by step…','FHK Engine step by step soch raha hai…')}</p>`;
+  if(o.err||!o.rep)return`<p class="muted">${L2('FHK thinking could not load','FHK ki soch load nahi hui')}: ${esc(o.err||'')}</p>`;
+  const S=Object.fromEntries(o.rep.steps.map(x=>[x.id,x.data])),st=g.st,h=[];
+  const fl=a=>a&&a.length?a.map(d=>`<b>${esc(d.san)}</b>${d.tags&&d.tags.length?` <span class="muted">(${esc(d.tags.join(', '))})</span>`:''}`).join(', '):L2('none','koi nahi');
+  h.push(`<div class="stack" style="gap:6px"><small class="muted">${L2('Follow these steps yourself first, then open the answer below.','Pehle ye steps khud socho, phir neeche jawab kholo.')}</small>`);
+  h.push(`<div><b>1. ${L2('Danger','Khatra')}:</b> ${esc(S.threat?S.threat.text:L2('No threat.','Koi khatra nahi.'))}</div>`);
+  const hm=S.hanging.mine,ht=S.hanging.theirs;
+  h.push(`<div><b>2. ${L2('Loose pieces','Latakte mohre')}:</b> ${L2('Mine','Mere')}: ${hm.length?hm.map(x=>esc(x.piece+' '+x.sq)).join(', '):L2('none','koi nahi')} · ${L2('Theirs','Unke')}: ${ht.length?ht.map(x=>esc(x.piece+' '+x.sq)).join(', '):L2('none','koi nahi')}</div>`);
+  h.push(`<div><b>3. ${L2('Checks, captures, threats','Checks, captures, threats')}:</b><br>Checks: ${fl(S.forcing.checks)}<br>Captures: ${fl(S.forcing.captures)}<br>Threats: ${fl(S.forcing.threats.slice(0,6))}</div>`);
+  h.push(`<details><summary><b>4–5. ${L2('Candidates and the best move (answer)','Candidates aur best chaal (jawab)')}</b></summary><ol style="margin:6px 0;padding-left:20px">`);
+  for(const c of S.candidates.cands)h.push(`<li style="margin:4px 0"><b>${esc(c.san)}</b> ${esc(c.scoreText)}${c.ruleText?`<br><small>🔎 ${esc(c.ruleText)}</small>`:''}<br><small class="mono muted">${esc(ftLine(st,c.line))}</small></li>`);
+  h.push(`</ol>`);if(S.candidates.alts&&S.candidates.alts.length){h.push(`<small><b>${L2('Why not these forcing moves','Ye forcing chaalein kyun nahi')}:</b></small><ul style="margin:4px 0;padding-left:20px">`);for(const a of S.candidates.alts)h.push(`<li><small>${esc(a.text)} <span class="mono muted">${esc(ftLine(st,a.line))}</span></small></li>`);h.push(`</ul>`)}
+  h.push(`<div><b>${L2('Best move','Best chaal')}: ${esc(S.best.san)}</b> <span class="mono">${esc(S.best.scoreText)}</span><br>${esc(S.best.reason)}<br><small class="mono muted">${esc(ftLine(st,S.best.line))}</small></div></details>`);
+  h.push(`<small class="muted">FHK Engine · depth ${o.rep.depth}</small></div>`);return h.join('')}
 function engPickHTML(){const e=oppEng();return`<div class="stack" style="gap:6px"><b>⚙️ ${L2('Computer engine','Computer ka engine')}</b><div class="seg"><button class="${e==='sf'?'on':''}" data-act="eng-set" data-v="sf">Stockfish</button><button class="${e==='fhk'?'on':''}" data-act="eng-set" data-v="fhk">FHK Engine</button></div><small class="muted">${e==='fhk'?L2('FHK Engine: our own engine (~2600). The level setting works the same.','FHK Engine: hamara apna engine (~2600). Level ki setting waise hi chalti hai.'):L2('Stockfish: the world-famous engine. Hints and analysis always use Stockfish.','Stockfish: duniya ka mashhoor engine. Hint aur analysis hamesha Stockfish se.')}</small></div>`}
 async function ratedMove(st,e){const L=ELOP(e),ms=legal(st);if(!ms.length)return null;
   if(L.weak){if(Math.random()<L.pr)return pick(ms);let r=null;try{r=await oppGo(st,{multipv:Math.min(oppEng()==='fhk'?5:8,ms.length),movetime:L.mt})}catch(x){}
@@ -2668,11 +2691,11 @@ function coResume(){const g=P.cgame;if(!g)return;const s0=g.start&&fromFEN(g.sta
   sfStart();go({name:'coach'});coCheckEnd();if(CG.over)return;if(CG.st.w===(CG.human==='w'))coPre();else coEngine()}
 const coMyTurn=()=>CG&&!CG.over&&CG.st.w===(CG.human==='w');
 function coPreOpts(g){const L=g.elo?CLV[5]:(CLV[g.lvl]||{});const mt=Math.max(900,Math.round((L.mt||0)*1.6));return{multipv:3,movetime:mt,depth:L.d===0?null:18}}
-function coPre(){const g=CG,t=g.tok,st=g.st;clkSwitch(g,'h');g.pre=null;g.threat=threatOf(st);g.hint=0;g.opt=null;g.psel=null;g.chk={};g.pend=null;g.waitNext=false;g.arrBest=false;if(g.moves.length&&g.moves[g.moves.length-1].by==='e'){const e=g.moves[g.moves.length-1],th=g.threat;sayC((P.set.cvoice==='hi'?'कोच की चाल: ':pick(['Coach plays ','The coach plays ']))+e.san+'. '+(th&&th.san?(P.set.cvoice==='hi'?'ध्यान दीजिए, ख़तरा है: ':'Careful, it threatens ')+th.san+'.':''),true)}g.preP=sfGo(st,coPreOpts(g)).then(r=>{if(CG===g&&g.tok===t&&g.st===st){g.pre=r;coLesRecord(g);if(aiAuto()&&g.fb&&!g.fb.lite&&!AIR[aiKey('turn')])aiGo('turn',null,true);else if(V.name==='coach'&&!g.busy)vCoach()}return r});if(V.name==='coach')vCoach()}
+function coPre(){const g=CG,t=g.tok,st=g.st;clkSwitch(g,'h');g.pre=null;g.threat=threatOf(st);g.hint=0;g.opt=null;g.psel=null;g.chk={};g.pend=null;g.waitNext=false;g.arrBest=false;if(g.moves.length&&g.moves[g.moves.length-1].by==='e'){const e=g.moves[g.moves.length-1],th=g.threat;sayC((P.set.cvoice==='hi'?'कोच की चाल: ':pick(['Coach plays ','The coach plays ']))+e.san+'. '+(th&&th.san?(P.set.cvoice==='hi'?'ध्यान दीजिए, ख़तरा है: ':'Careful, it threatens ')+th.san+'.':''),true)}g.preP=coGo(st,coPreOpts(g)).then(r=>{if(CG===g&&g.tok===t&&g.st===st){g.pre=r;coLesRecord(g);if(aiAuto()&&g.fb&&!g.fb.lite&&!AIR[aiKey('turn')])aiGo('turn',null,true);else if(V.name==='coach'&&!g.busy)vCoach()}return r});if(V.name==='coach')vCoach()}
 async function coHuman(m){const g=CG,t=g.tok,st0=g.st,list=legal(st0),s=san(st0,m,list);g.sel=null;g.busy='Coach is checking your move…';
   const st1=make(st0,m);g.st=st1;g.states.push(st1);const rec={m,san:s,by:'h',fb:null};g.moves.push(rec);vCoach();
   const pre=await g.preP;if(CG!==g||g.tok!==t)return;rec.pre=pre;rec.st0=st0;
-  let post=legal(st1).length?await sfGo(st1,{multipv:1,movetime:700,depth:16}):{lines:[]};if(CG!==g||g.tok!==t)return;
+  let post=legal(st1).length?await coGo(st1,{multipv:1,movetime:700,depth:16}):{lines:[]};if(CG!==g||g.tok!==t)return;
   rec.fb=coJudge(st0,m,s,st1,pre,post);g.fb=rec.fb;g.busy='';coRecordMistake(rec.fb);sayJudge(rec.fb);try{fxJudge(rec.fb,g)}catch(e){}
   const bs=g.book&&g.bookOk&&rec.fb.ply<g.book.moves.length?g.book.moves[rec.fb.ply]:null;
   if(legal(st1).length){if(bs&&normSan(bs)!==normSan(s))g.pend={type:'book',exp:bs};else if(P.set.cretry!==false&&['mistake','blunder'].includes(rec.fb.cls))g.pend={type:'mistake'}}
@@ -3100,7 +3123,7 @@ function vCoachSet(){const o=V.co||(V.co={color:'w',lvl:P.set.colvl!=null?P.set.
   if(hist.length){const last=hist.slice(0,10);h+=`<div class="card stack"><h3>Coach games</h3><div class="gstat"><span>Average accuracy (last ${last.length})</span><b class="mono">${Math.round(last.reduce((a,x)=>a+x.acc,0)/last.length)}%</b></div>
     ${last.map(x=>`<div class="gstat"><span>${new Date(x.d).toLocaleDateString(LOC())} · ${x.elo?x.elo+' rating':CLV[x.lvl].n} · ${{w:'Won',l:'Lost',d:'Draw'}[x.r]}</span><span class="mono">${x.acc}% · ${x.c.blunder}?? ${x.c.mistake}? ${x.c.inacc}?!</span></div>`).join('')}</div>`}
   if(!gKey())h+=`<button class="card rungcard" data-act="ai-setup"><b>✦ AI coach (free, optional)</b><small class="muted">Add a free Gemini key once in the Main tab, and the coach explains moves in Hinglish. Tap to set it up ›</small></button>`;
-  h+=`<div class="card stack"><h3>What the coach can and can't do</h3><p class="muted" style="font-size:14px"><b>Can:</b> judge every move with ${SF.failed?'the built-in engine (Stockfish could not start on this device)':SF.ready?'Stockfish 10, a very strong engine, built into the app and working offline':'Stockfish 10 (loading…), built into the app and working offline'}; show the better move and the best line move by move; spot hanging pieces, forks, mates and threats; describe pawn structure, outposts and weak squares, king safety, piece activity and open files; name the opening and its usual plans.</p>
+  h+=`<div class="card stack"><h3>What the coach can and can't do</h3><p class="muted" style="font-size:14px"><b>Can:</b> judge every move with ${oppEng()==='fhk'?'FHK Engine (our own engine, about 2600 rating), with its step-by-step thinking in the 🧠 FHK tab':SF.failed?'the built-in engine (Stockfish could not start on this device)':SF.ready?'Stockfish 10, a very strong engine, built into the app and working offline':'Stockfish 10 (loading…), built into the app and working offline'}; show the better move and the best line move by move; spot hanging pieces, forks, mates and threats; describe pawn structure, outposts and weak squares, king safety, piece activity and open files; name the opening and its usual plans.</p>
   <p class="muted" style="font-size:14px"><b>Can't:</b> think like a human GM about long-term strategy or explain why one quiet move is better in deep positions. The explanations come from the engine's numbers plus chess rules of thumb. For a deeper, human-style talk, add the free Gemini key above and tap <b>Explain with AI</b>.</p><small class="muted">Stockfish is free software (GPL v3).</small></div></div>`;
   main.innerHTML=h}
 function coDrawSide(){const el=document.getElementById('coside');if(el)el.innerHTML=coSideHTML();const ev=document.getElementById('coev');if(ev)ev.outerHTML=coEvalHTML()}
@@ -3344,10 +3367,11 @@ function coEasyThinkOld(){const g=CG,last=[...g.moves].reverse().find(x=>x.by===
 function coTabs(){const g=CG,my=coMyTurn(),t=[];const r=g.fb&&AIR[aiKey('turn')];
   if(gKey())t.push(['ai','✦ '+L2('Ask AI','AI se pucho'),r&&r.state==='load'?'busy':r&&r.state==='ok'?'new':'']);
   if(g.fb)t.push(['move','✅ '+L2('Your move check','Meri chaal kaisi thi'),g.fb.lite?'':['mistake','blunder'].includes(g.fb.cls)?'bad':'']);
-  t.push(['think','🤖 '+L2("Computer's idea",'Computer ki soch'),''],['threat','⚠️ '+L2('Dangers','Khatre'),my&&(g.threat||hanging(g.st.b,g.human==='w').length)?'bad':''],['opts','🎯 Options',''],['plan','📋 '+L2('Your plan','Aage ka plan'),'']);if(!gKey())t.push(['ai','✦ '+L2('Ask AI','AI se pucho'),'']);return t}
+  t.push(['think','🤖 '+L2("Computer's idea",'Computer ki soch'),''],...(oppEng()==='fhk'?[['fhk','🧠 '+L2('FHK step by step','FHK ki soch'),'']]:[]),['threat','⚠️ '+L2('Dangers','Khatre'),my&&(g.threat||hanging(g.st.b,g.human==='w').length)?'bad':''],['opts','🎯 Options',''],['plan','📋 '+L2('Your plan','Aage ka plan'),'']);if(!gKey())t.push(['ai','✦ '+L2('Ask AI','AI se pucho'),'']);return t}
 function coTabHTML(k){const g=CG;
   if(k==='ai')return aiButtons(g.fb&&!g.fb.lite?['turn','pos']:['pos']);
   if(k==='move')return g.fb?coFbHTML(g.fb).replace(/^<div class="card stack cfb">/,'<div class="stack cfb">'):'<p class="muted">Make a move and the coach will judge it here.</p>';
+  if(k==='fhk')return ftHTML();
   if(k==='think')return(coEngHTML()+coViewHTML('think'))||'<p class="muted">The coach has not moved yet.</p>';
   if(k==='threat')return checklistHTML().replace(/^<div class="card stack checklist">/,'<div class="stack checklist">')+coViewHTML('threat');
   if(k==='opts')return coViewHTML('opts')||'<p class="muted">Options appear when it is your move.</p>';
@@ -3696,7 +3720,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.13 · v127';
+const APPV='2026.11.13 · v128';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
