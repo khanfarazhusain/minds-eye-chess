@@ -2327,6 +2327,8 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'fx-open':fxOpen(fcMode());break;
    case'fx-back':go({name:FX.from});break;
    case'fx-ex':FX.i=+d.v;FX.s=0;vFcEx();window.scrollTo(0,0);break;
+   case'fx-tab':FX.tab=d.v==='calc'?'calc':'ex';FX.i=0;FX.s=0;vFcEx();break;
+   case'fx-open2':fxOpen(fcMode(),'calc');break;
    case'fx-step':FX.s=Math.max(0,FX.s+(+d.v));vFcEx();break;
    case'co-tab':if(CG){CG.tab=d.v;P.set.ctab=d.v;save();vCoach()}break;
    case'co-psel':if(CG){CG.psel=CG.psel===d.v?null:d.v;CG.ep='think';vCoach();if(CG.psel){const x=coPlanItems(CG).find(y=>y.k===CG.psel);if(x)sayC(x.x,true)}}break;
@@ -2664,15 +2666,15 @@ function ftBody(st,rep){const S=Object.fromEntries(rep.steps.map(x=>[x.id,x.data
 /* ---- FHK Coach panel inside games (Play with Coach and Play the computer), shown when FHK Engine is chosen ----
    Same modes as the Engine Coach page. % = measured research numbers (engine-like move = within 0.3 pawn of the best). */
 const FCM={soch:{n:'FHK ki soch (5 steps)',p:'Khatra, latakte mohre, forcing chaalein, candidates, best chaal'},
-  r4_6:{r:4,K:6,n:'4 rules, 6 candidates',p:'Sahi chaal list mein: Training 95% · Games 95.5%'},r4_9:{r:4,K:9,n:'4 rules, 9 candidates',p:'Training 97.8% · Games 97.8%'},r4_11:{r:4,K:11,n:'4 rules, 11 candidates',p:'Training 98.4% · Games 98.5%'},
-  r8_5:{r:8,K:5,n:'8 rules, 5 candidates',p:'Training 96.6% · Games 95.8%'},r8_7:{r:8,K:7,n:'8 rules, 7 candidates',p:'Training 97.8% · Games 97.7%'},r8_8:{r:8,K:8,n:'8 rules, 8 candidates',p:'Training 97.8% · Games 98.3%'},
+  r4_6:{r:4,K:6,n:'4 rules, 6 candidates',p:'Sahi chaal list mein: Training 95% · Games 95.3%'},r4_9:{r:4,K:9,n:'4 rules, 9 candidates',p:'Training 97.8% · Games 97.6%'},r4_11:{r:4,K:11,n:'4 rules, 11 candidates',p:'Training 98.4% · Games 98.3%'},
+  r8_5:{r:8,K:5,n:'8 rules, 5 candidates',p:'Training 96% · Games 95.5%'},r8_7:{r:8,K:7,n:'8 rules, 7 candidates',p:'Training 97.5% · Games 97.5%'},r8_8:{r:8,K:8,n:'8 rules, 8 candidates',p:'Training 97.5% · Games 98.1%'},
   c1:{d:1,n:'Sirf apni chaal + captures',p:'Top 1/2/3: Training 81.9/91/92.8% · Games 75.1/87.4/92.1%'},c2:{d:2,n:'1 chaal aage',p:'Training 91.3/97.2/98.4% · Games 83.9/93.8/96.5%'},
   c3:{d:3,n:'1.5 chaal aage',p:'Training 96.3/99.7/99.7% · Games 91.3/97.2/98.5%'},c4:{d:4,n:'2 chaal aage',p:'Training 99.7/99.7/99.7% · Games 98.1/99.7/99.9%'},
-  m4_12:{r:4,K:12,d:4,n:'4 rules + 12 candidates + 2 chaal',p:'Top 1/2/3: Training 97.5/98.1/98.4% · Games 96.3/98/98.4%'},
-  m8_10:{r:8,K:10,d:4,n:'8 rules + 10 candidates + 2 chaal',p:'Top 1/2/3: Training 97.8/98.4/98.4% · Games 96.5/98.2/98.6%',opt:1},
-  m8_8:{r:8,K:8,d:4,n:'8 rules + 8 candidates + 2 chaal',p:'Top 1/2/3: Training 96.9/97.5/97.8% · Games 95.9/97.6/98%'}};
+  m4_12:{r:4,K:12,d:4,n:'4 rules + 12 candidates + 2 chaal',p:'Top 1/2/3: Training 97.5/98.1/98.4% · Games 96.3/97.9/98.2%'},
+  m8_10:{r:8,K:10,d:4,n:'8 rules + 10 candidates + 2 chaal',p:'Top 1/2/3: Training 97.5/98.1/98.1% · Games 96.5/98/98.4%',opt:1},
+  m8_8:{r:8,K:8,d:4,n:'8 rules + 8 candidates + 2 chaal',p:'Top 1/2/3: Training 96.6/97.5/97.5% · Games 95.8/97.3/97.7%'}};
 const FCG=[['FHK ki soch',['soch']],['1. Sirf rules',['r4_6','r4_9','r4_11','r8_5','r8_7','r8_8']],['2. Sirf calculation',['c1','c2','c3','c4']],['3. Rules + calculation',['m4_12','m8_10','m8_8']]];
-const FCR={qWin:['Material jeet','saare captures gin kar, har pawn +100 (knight/bishop ~+320, rook +500, queen +950)'],qLose:['Material nuksaan','saare captures gin kar, har pawn −125'],check:['Check','+8'],threat:['Dhamki','bade ya bina bachaav mohre par hamla, +7'],pawnThreat:['Pawn par dhamki','bina bachaav pawn par hamla, +4'],captureLowest:['Sasta capture','sabse saste mohre se capture, +11'],pstDelta:['Behtar square','kinare se center, peeche se aage: lagbhag +1 se +10'],allowMate:['Mate allow','iske baad opponent mate in 1 kar sakta hai, −750 (kabhi mat khelo)']};
+const FCR={qWin:['Material jeet','saare captures gin kar: pawn +10, ghoda/oont +30, haathi +50, wazir +90'],qLose:['Material nuksaan','saare captures gin kar: pawn −10, ghoda/oont −30, haathi −50, wazir −90'],check:['Check','+3'],threat:['Dhamki','bade ya bina bachaav mohre par hamla, +2'],pawnThreat:['Pawn par dhamki','bina bachaav pawn par hamla, +1'],captureLowest:['Sasta capture','sabse saste mohre se capture, +2'],pstDelta:['Behtar square','thoda behtar +1, achha +2, bahut achha (kinare/peeche se center ya aage) +3; kharab square −1/−2/−3'],allowMate:['Mate allow','iske baad opponent mate in 1 kar sakta hai, −100 (kabhi mat khelo)']};
 const FCK={4:['qWin','qLose','check','pstDelta'],8:['qWin','qLose','check','threat','pawnThreat','captureLowest','pstDelta','allowMate']};
 const FCD={1:'Har chaal ke baad sirf captures gin lo.',2:'Meri chaal, opponent ka sabse achha jawab, phir captures gin lo.',3:'Meri chaal, uska jawab, meri agli chaal, phir captures gin lo.',4:'Meri chaal, uska jawab, meri chaal, uska jawab, phir captures gin lo.'};
 const FCDN={1:'sirf apni chaal + captures',2:'1 chaal aage',3:'1.5 chaal aage',4:'2 chaal aage'};
@@ -2685,7 +2687,7 @@ function fcData(st,k){const f=toFEN(st),key=k+'|'+f;if(FT.c[key])return FT.c[key
 const fcPts=v=>(v>0?'+':'')+v;
 const fcSc=v=>Math.abs(v)>20000?(v>0?'mate':'mate (khilaaf)'):(v>=0?'+':'')+(v/100).toFixed(2);
 const fcWhy=w=>w&&w.length?w.map(([k,v])=>(FCR[k]?FCR[k][0]:k)+' '+fcPts(v)).join(', '):'koi rule nahi';
-function fcCardRules(n){return`<div class="fcrc"><b>Rule card (${n} rules)</b><ol>${FCK[n].map(k=>`<li><b>${FCR[k][0]}:</b> ${esc(FCR[k][1])}</li>`).join('')}</ol><small class="muted">Har chaal ke points jodo. Sabse zyada points wali chaalein candidates hain.</small></div>`}
+function fcCardRules(n){return`<div class="fcrc"><b>Rule card (${n} rules)</b><ol>${FCK[n].map(k=>`<li><b>${FCR[k][0]}:</b> ${esc(FCR[k][1])}</li>`).join('')}</ol><small class="muted">Har chaal ke points jodo (sab whole numbers). Sabse zyada points wali chaalein candidates hain. Barabar points par jo mohra zyada active ho, wo pehle.</small></div>`}
 /* after the player's move: was it an engine-like move in this mode? */
 function fcAfterMove(st0,m){try{if(!fcOn())return;const k=fcMode(),o=FT.c[k+'|'+toFEN(st0)];if(!o||!o.r)return;const u=uciOf(m),s=san(st0,m,legal(st0));let ok,best;
   if(k==='soch'){const S=Object.fromEntries(o.r.steps.map(x=>[x.id,x.data]));best=S.best.san;const top=o.r.score;ok=u===o.r.best||S.candidates.cands.some(c=>c.uci===u&&c.score!=null&&top!=null&&c.score>=top-30)}
@@ -2706,16 +2708,19 @@ function fcStatLine(){const k=fcMode(),r=(P.fcst||{})[k];const l=FT.last&&FT.las
   if(l)h+=`<div class="${l.ok?'good':'bad'}" style="font-size:14px"><b>${l.ok?'✓':'✗'} ${esc(l.san)}</b> ${l.ok?'engine jaisi chaal thi.':`engine jaisi nahi thi. FHK ki chaal: <b>${esc(l.best)}</b>`}</div>`;
   if(r&&r.n)h+=`<small class="muted">Is mode mein aapka match: ${Math.round(100*r.ok/r.n)}% (${r.n} chaalein)</small>`;return h}
 /* ---- FHK Coach examples: 5 full step-by-step examples per mode (engine/examples.json, built from engine-verified positions) ---- */
-let FXD=null,FXL=0;const FX={k:'m8_10',i:0,s:0,from:'coach'};
+let FXD=null,FXL=0,FXC=null,FXCL=0;const FX={k:'m8_10',i:0,s:0,from:'coach',tab:'ex'};
+function fxcLoad(){if(FXC||FXCL)return;FXCL=1;fetch('engine/examples_calc.json').then(r=>r.json()).then(j=>{FXC=j;FXCL=0;if(V.name==='fcex')vFcEx()}).catch(e=>{FXCL=0;FXC={err:String(e&&e.message||e)};if(V.name==='fcex')vFcEx()})}
 function fxLoad(){if(FXD||FXL)return;FXL=1;fetch('engine/examples.json').then(r=>r.json()).then(j=>{FXD=j.modes;FXL=0;if(V.name==='fcex')vFcEx()}).catch(e=>{FXL=0;FXD={err:String(e&&e.message||e)};if(V.name==='fcex')vFcEx()})}
-function fxOpen(k){FX.k=FCM[k]?k:fcMode();FX.i=0;FX.s=0;FX.from=V.name==='play'?'play':V.name==='coach'?'coach':'playhub';fxLoad();go({name:'fcex'})}
-function fxMode(v){if(!FCM[v])return;FX.k=v;FX.i=0;FX.s=0;vFcEx()}
+function fxOpen(k,tab){FX.k=FCM[k]?k:fcMode();FX.i=0;FX.s=0;FX.tab=tab==='calc'&&FCM[FX.k].d?'calc':'ex';if(FX.tab==='calc')fxcLoad();FX.from=V.name==='play'?'play':V.name==='coach'?'coach':'playhub';fxLoad();go({name:'fcex'})}
+function fxMode(v){if(!FCM[v])return;FX.k=v;FX.i=0;FX.s=0;if(!FCM[v].d)FX.tab='ex';vFcEx()}
 function vFcEx(){document.body.classList.remove('fixb');try{window.__setH&&window.__setH()}catch(e){}
   const M=FCM[FX.k];let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="fx-back">← ${L2('Back to game','Game par wapas')}</button><h1>📖 ${L2('FHK Coach examples','FHK Coach examples')}</h1>`;
   h+=`<select class="fcsel" onchange="fxMode(this.value)">${FCG.map(([g,ks])=>`<optgroup label="${esc(g)}">${ks.map(x=>`<option value="${x}"${x===FX.k?' selected':''}>${esc(FCM[x].n)}${FCM[x].opt?' ★ Optimal':''}</option>`).join('')}</optgroup>`).join('')}</select><small class="muted">${esc(M.p)}</small>`;
-  if(!FXD){h+=`<div class="card muted">${L2('Loading examples…','Examples load ho rahe hain…')}</div></div>`;main.innerHTML=h;fxLoad();return}
-  if(FXD.err){h+=`<div class="card">${L2('Examples could not load','Examples load nahi hue')}: ${esc(FXD.err)}</div></div>`;main.innerHTML=h;return}
-  const L=FXD[FX.k]||[];const ex=L[FX.i];if(!ex){main.innerHTML=h+'</div>';return}
+  if(M.d)h+=`<div class="seg"><button class="${FX.tab==='ex'?'on':''}" data-act="fx-tab" data-v="ex">📖 Examples</button><button class="${FX.tab==='calc'?'on':''}" data-act="fx-tab" data-v="calc">🧮 ${L2('How to calculate ahead','Aage ki chaalein kaise sochein')}</button></div>`;
+  const DS=FX.tab==='calc'?FXC:FXD;if(FX.tab==='calc')fxcLoad();
+  if(!DS){h+=`<div class="card muted">${L2('Loading examples…','Examples load ho rahe hain…')}</div></div>`;main.innerHTML=h;fxLoad();return}
+  if(DS.err){h+=`<div class="card">${L2('Examples could not load','Examples load nahi hue')}: ${esc(DS.err)}</div></div>`;main.innerHTML=h;return}
+  const L=DS[FX.k]||[];const ex=L[FX.i];if(!ex){main.innerHTML=h+'</div>';return}
   const st=fromFEN(ex.fen),step=ex.steps[FX.s],last=FX.s===ex.steps.length-1;
   h+=`<div class="seg">${L.map((e,i)=>`<button class="${i===FX.i?'on':''}" data-act="fx-ex" data-v="${i}">${L2('Example','Example')} ${i+1}</button>`).join('')}</div>`;
   h+=`<small class="muted">${L2('Real position from the training set. Level','Training set ki asli position. Level')}: ${{easy:'Easy',med:'Medium',hard:'Hard'}[ex.lvl]||ex.lvl} · ${L2('engine-verified best move','engine se verified best chaal')}</small>`;
@@ -2724,13 +2729,14 @@ function vFcEx(){document.body.classList.remove('fixb');try{window.__setH&&windo
   h+=`<div class="steps fxsteps">${ex.steps.map((x,i)=>`<i class="${i<FX.s?'d':i===FX.s?'c':''}"></i>`).join('')}</div>`;
   h+=`<div class="card stack fxc"><span class="eyebrow">Step ${FX.s+1} / ${ex.steps.length}</span><h3 style="margin:0">${esc(step.t)}</h3>${step.l.filter(Boolean).map(x=>`<p style="margin:0">${esc(x)}</p>`).join('')}`;
   if(step.li&&step.li.length)h+=`<ol class="fcl">${step.li.map(x=>`<li><b class="mono">${esc(x.s)}</b> <span>${esc(x.x)}</span>${x.y?`<br><small class="mono muted">${esc(x.y)}</small>`:''}</li>`).join('')}</ol>`;
+  if(step.z)h+=`<p style="margin:0"><b>${esc(step.z)}</b></p>`;
   if(step.y)h+=`<p class="mono" style="margin:0;font-size:14px">${esc(step.y)}</p>`;
   if(step.ok)h+=`<p class="good" style="margin:0"><b>✓ ${L2('Matches the engine','Engine ki chaal se match')}: ${esc(step.best)}</b></p>`;
   h+=`</div><div class="row"><button class="btn" data-act="fx-step" data-v="-1" ${FX.s?'':'disabled'}>◀ ${L2('Back','Peeche')}</button>`+(last?(FX.i<L.length-1?`<button class="btn primary" style="flex:1" data-act="fx-ex" data-v="${FX.i+1}">${L2('Next example','Agla example')} ▶</button>`:`<button class="btn primary" style="flex:1" data-act="fx-back">${L2('Done, back to game','Ho gaya, game par wapas')}</button>`):`<button class="btn primary" style="flex:1" data-act="fx-step" data-v="1">${L2('Next step','Aage')} ▶</button>`)+`</div></div>`;
   main.innerHTML=h}
 function fcPanelHTML(st,my){if(!fcOn())return'';const k=fcMode(),M=FCM[k];
   const sel=`<select class="fcsel" onchange="fcSetMode(this.value)">${FCG.map(([g,ks])=>`<optgroup label="${esc(g)}">${ks.map(x=>`<option value="${x}"${x===k?' selected':''}>${esc(FCM[x].n)}${FCM[x].opt?' ★ Optimal':''}</option>`).join('')}</optgroup>`).join('')}</select>`;
-  return`<div class="stack fcp" style="gap:8px"><div class="row" style="gap:6px;align-items:center;flex-wrap:wrap"><b>🧠 FHK Coach</b>${M.opt?'<span class="fcopt">Optimal</span>':''}<button class="btn small" style="margin-left:auto" data-act="fx-open">📖 Examples (5)</button></div>${sel}<small class="muted">${esc(M.p)}</small>${fcStatLine()}${fcBody(st,my)}</div>`}
+  return`<div class="stack fcp" style="gap:8px"><div class="row" style="gap:6px;align-items:center;flex-wrap:wrap"><b>🧠 FHK Coach</b>${M.opt?'<span class="fcopt">Optimal</span>':''}<button class="btn small" style="margin-left:auto" data-act="fx-open">📖 Examples (5)</button></div>${sel}${M.d?`<button class="btn small" data-act="fx-open2">🧮 ${L2('How to calculate ahead (5 examples)','Aage ki chaalein kaise sochein (5 examples)')}</button>`:''}<small class="muted">${esc(M.p)}</small>${fcStatLine()}${fcBody(st,my)}</div>`}
 
 function engPickHTML(){const e=oppEng();return`<div class="stack" style="gap:6px"><b>⚙️ ${L2('Computer engine','Computer ka engine')}</b><div class="seg"><button class="${e==='sf'?'on':''}" data-act="eng-set" data-v="sf">Stockfish</button><button class="${e==='fhk'?'on':''}" data-act="eng-set" data-v="fhk">FHK Engine</button></div><small class="muted">${e==='fhk'?L2('FHK Engine: our own engine (~2600). The level setting works the same.','FHK Engine: hamara apna engine (~2600). Level ki setting waise hi chalti hai.'):L2('Stockfish: the world-famous engine. Hints and analysis always use Stockfish.','Stockfish: duniya ka mashhoor engine. Hint aur analysis hamesha Stockfish se.')}</small></div>`}
 async function ratedMove(st,e){const L=ELOP(e),ms=legal(st);if(!ms.length)return null;
@@ -3798,7 +3804,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.13 · v130';
+const APPV='2026.11.13 · v131';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
