@@ -477,23 +477,23 @@ function finish(found, gaveUp){
 // Training = 321 training positions, Games = 10,910 positions from 80+ FHK vs Stockfish games (test only).
 const MODES = {
   classic: { g: 0, name: 'Purana tareeka (5 steps)', sub: 'Khatra, scan, candidates, phir final chaal' },
-  r4_5: { g: 1, rules: 4, K: 5, name: '4 rules, 5 candidates', tr: 95.6, gm: 95.3 },
-  r4_7: { g: 1, rules: 4, K: 7, name: '4 rules, 7 candidates', tr: 97.5, gm: 97.2 },
+  r4_5: { g: 1, rules: 4, K: 5, name: '4 rules, 5 candidates', tr: 96, gm: 95.3 },
+  r4_7: { g: 1, rules: 4, K: 7, name: '4 rules, 7 candidates', tr: 97.8, gm: 97.2 },
   r4_9: { g: 1, rules: 4, K: 9, name: '4 rules, 9 candidates', tr: 98.8, gm: 98.2 },
-  r8_5: { g: 1, rules: 8, K: 5, name: '8 rules, 5 candidates', tr: 96, gm: 95.7 },
-  r8_7: { g: 1, rules: 8, K: 7, name: '8 rules, 7 candidates', tr: 97.5, gm: 97.5 },
-  r8_8: { g: 1, rules: 8, K: 8, name: '8 rules, 8 candidates', tr: 97.8, gm: 98 },
-  r6_5: { g: 1, rules: 6, K: 5, name: '6 rules (position wale), 5 candidates', tr: 96.9, gm: 95.6 },
-  r6_7: { g: 1, rules: 6, K: 7, name: '6 rules (position wale), 7 candidates', tr: 97.8, gm: 97.3 },
+  r8_5: { g: 1, rules: 8, K: 5, name: '8 rules, 5 candidates', tr: 96.3, gm: 95.7 },
+  r8_7: { g: 1, rules: 8, K: 7, name: '8 rules, 7 candidates', tr: 97.8, gm: 97.5 },
+  r8_8: { g: 1, rules: 8, K: 8, name: '8 rules, 8 candidates', tr: 98.1, gm: 98 },
+  r6_5: { g: 1, rules: 6, K: 5, name: '6 rules (position wale), 5 candidates', tr: 97.2, gm: 95.5 },
+  r6_7: { g: 1, rules: 6, K: 7, name: '6 rules (position wale), 7 candidates', tr: 98.1, gm: 97.3 },
   r6_9: { g: 1, rules: 6, K: 9, name: '6 rules (position wale), 9 candidates', tr: 99.1, gm: 98.3 },
-  c1: { g: 2, depth: 1, name: 'Sirf apni chaal + captures', tr: [81.9, 91, 92.8], gm: [76.1, 88.1, 92.6] },
-  c2: { g: 2, depth: 2, name: '1 chaal aage', tr: [91, 97.2, 98.4], gm: [84.2, 93.9, 96.6] },
-  c3: { g: 2, depth: 3, name: '1.5 chaal aage', tr: [96.6, 99.4, 99.7], gm: [91.5, 97.2, 98.5] },
-  c4: { g: 2, depth: 4, name: '2 chaal aage', tr: [99.4, 100, 100], gm: [98.5, 99.7, 99.8] },
-  m4_12: { g: 3, rules: 4, K: 12, depth: 4, name: '4 rules + 12 candidates + 2 chaal', tr: [98.1, 98.8, 98.8], gm: [97.3, 98.5, 98.7], optimal: true },
-  m8_10: { g: 3, rules: 8, K: 10, depth: 4, name: '8 rules + 10 candidates + 2 chaal', tr: [98.1, 98.8, 98.8], gm: [97, 98.1, 98.4] },
-  hb: { g: 4, rules: 4, K: 12, human: 5, name: '⭐ Best routine: 4 rules + 12 candidates + insaani hisaab', tr: [81, 90.3, 94.4], gm: [71.2, 86.1, 91.4] },
-  m8_8: { g: 3, rules: 8, K: 8, depth: 4, name: '8 rules + 8 candidates + 2 chaal', tr: [96.9, 97.8, 97.8], gm: [96.3, 97.4, 97.7] }
+  c1: { g: 2, depth: 1, name: 'Sirf apni chaal + captures', tr: [81.9, 91, 92.8], gm: [75.9, 88, 92.4] },
+  c2: { g: 2, depth: 2, name: '1 chaal aage', tr: [91, 97.2, 98.4], gm: [83.9, 93.7, 96.4] },
+  c3: { g: 2, depth: 3, name: '1.5 chaal aage', tr: [96.9, 99.7, 99.7], gm: [91.4, 97.1, 98.5] },
+  c4: { g: 2, depth: 4, name: '2 chaal aage', tr: [99.7, 100, 100], gm: [98.1, 99.5, 99.8] },
+  m4_12: { g: 3, rules: 4, K: 12, depth: 4, name: '4 rules + 12 candidates + 2 chaal', tr: [98.4, 98.8, 98.8], gm: [96.9, 98.4, 98.7], optimal: true },
+  m8_10: { g: 3, rules: 8, K: 10, depth: 4, name: '8 rules + 10 candidates + 2 chaal', tr: [98.4, 98.8, 98.8], gm: [96.6, 98, 98.3] },
+  hb: { g: 4, rules: 4, K: 12, human: 5, name: '⭐ Best routine: 4 rules + 12 candidates + insaani hisaab', tr: [80.7, 91, 94.7], gm: [71, 86.1, 91.2] },
+  m8_8: { g: 3, rules: 8, K: 8, depth: 4, name: '8 rules + 8 candidates + 2 chaal', tr: [97.8, 98.1, 98.1], gm: [95.9, 97.3, 97.6] }
 };
 const GROUPS = ['Purana', '1. Sirf rules (calculation nahi)', '2. Sirf calculation (rules nahi, saari chaalein)', '3. Rules + calculation', '4. Insaani best routine (bina engine)'];
 const RULE_TXT = {
