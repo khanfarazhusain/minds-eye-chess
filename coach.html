@@ -73,6 +73,13 @@ h2{font-size:17px;margin:4px 0 6px} h3{font-size:15px;margin:10px 0 4px}
 input[type=text]{width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font-family:ui-monospace,Menlo,monospace;font-size:13px}
 select{font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
 .method ol{margin:6px 0;padding-left:20px} .method li{margin:3px 0}
+.opt.sel{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.badge{display:inline-block;background:var(--accent);color:var(--accent-fg);border-radius:6px;padding:0 7px;font-size:12px;font-weight:700;vertical-align:1px}
+#modeCard summary{cursor:pointer;padding:2px 0}
+.rulecard{background:var(--surface2);border-radius:8px;padding:8px 10px;margin:6px 0}
+.rulecard ol{margin:4px 0;padding-left:20px}
+ol.cl{padding-left:22px} ol.cl li{margin:5px 0}
+table.mt{width:100%;border-collapse:collapse} table.mt td,table.mt th{text-align:left;padding:5px 4px;border-bottom:1px solid var(--line);vertical-align:top}
 .hidden{display:none}
 </style>
 </head>
@@ -87,6 +94,9 @@ select{font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);b
 </div>
 
 <section id="tab-train">
+  <details class="card" id="modeCard"><summary><b>Training mode:</b> <span id="modeName"></span></summary>
+    <p class="small muted">Koi bhi mode chuno. % = research mein kitni baar engine jaisi chaal (best se 0.3 pawn ke andar) mili. Training = 321 positions, Games = 10,910 positions (FHK vs Stockfish ke games, sirf test).</p>
+    <div id="modeList"></div></details>
   <div class="card method" id="methodCard">
     <h2>Engine ka tareeka (har chaal par)</h2>
     <ol>
@@ -155,6 +165,7 @@ select{font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);b
     <div class="stat"><div><b id="stMatch">0%</b><span class="small muted">Pehli koshish mein engine wali chaal</span></div><div><b id="stThreat">0%</b><span class="small muted">Khatra sahi pehchana</span></div><div><b id="stScan">0%</b><span class="small muted">Checks/captures dhoondhe</span></div><div><b id="stCand">0%</b><span class="small muted">Engine ke candidates dhoondhe</span></div></div>
     <p class="small muted" id="stInfo"></p>
   </div>
+  <div class="card"><h2>Training modes</h2><div id="stModes"></div></div>
   <div class="card"><h2>Pichhli 20 positions</h2><div id="stRecent" class="line"></div></div>
   <div class="card small muted">Sach baat: koi bhi insaan har position mein engine se 100% match nahi karta. Yahan sirf wo positions hain jahan ek chaal baaki sab se saaf behtar hai, isliye tareeka follow karke 90%+ tak pahunchna mumkin hai. Galat hui positions kuch der baad dobara aati hain.</div>
 </section>
@@ -298,6 +309,7 @@ async function nextPosition(){
   if (!POS.length) return;
   const p = pickPosition();
   const pos = new E.Position(p.fen);
+  if (MODE !== 'classic') return modeStart(p, pos);
   T = { p, pos, step: 1, rep: null, tries: 0, cands: [], compared: false, res: { threat: null, scan: null, match: null, cands: undefined } };
   tBoard.flip = pos.side === E.BLACK; tBoard.set(pos, null);
   tStatus.textContent = `${sideHi(pos.side)} ki chaal. Engine ki tarah socho.`;
@@ -416,6 +428,7 @@ function stepMove(){
   panel.querySelector('#giveUp').onclick = () => finish(false, true);
 }
 async function onTrainMove(m){
+  if (T && T.mf) return mfMove(m);
   const uci = T.pos.uci(m), san = T.pos.san(m);
   if (T.step === 3) {
     if (T.compared) return;
@@ -455,6 +468,199 @@ function finish(found, gaveUp){
   panel.querySelector('#nextP').onclick = nextPosition;
   panel.querySelector('[data-play="best"]').onclick = () => playLine(tBoard, T.p.fen, sanToUci(T.p.fen, S.best.line));
 }
+
+// ================= TRAINING MODES (rules / calculation / mixed) =================
+// Percentages are the measured research numbers: "engine jaisi chaal" = within 0.3 pawn of the engine's best.
+// Training = 321 training positions, Games = 10,910 positions from 80+ FHK vs Stockfish games (test only).
+const MODES = {
+  classic: { g: 0, name: 'Purana tareeka (5 steps)', sub: 'Khatra, scan, candidates, phir final chaal' },
+  r4_6: { g: 1, rules: 4, K: 6, name: '4 rules, 6 candidates', tr: 95.0, gm: 95.5 },
+  r4_9: { g: 1, rules: 4, K: 9, name: '4 rules, 9 candidates', tr: 97.8, gm: 97.8 },
+  r4_11: { g: 1, rules: 4, K: 11, name: '4 rules, 11 candidates', tr: 98.4, gm: 98.5 },
+  r8_5: { g: 1, rules: 8, K: 5, name: '8 rules, 5 candidates', tr: 96.6, gm: 95.8 },
+  r8_7: { g: 1, rules: 8, K: 7, name: '8 rules, 7 candidates', tr: 97.8, gm: 97.7 },
+  r8_8: { g: 1, rules: 8, K: 8, name: '8 rules, 8 candidates', tr: 97.8, gm: 98.3 },
+  c1: { g: 2, depth: 1, name: 'Sirf apni chaal + captures', tr: [81.9, 91.0, 92.8], gm: [75.1, 87.4, 92.1] },
+  c2: { g: 2, depth: 2, name: '1 chaal aage', tr: [91.3, 97.2, 98.4], gm: [83.9, 93.8, 96.5] },
+  c3: { g: 2, depth: 3, name: '1.5 chaal aage', tr: [96.3, 99.7, 99.7], gm: [91.3, 97.2, 98.5] },
+  c4: { g: 2, depth: 4, name: '2 chaal aage', tr: [99.7, 99.7, 99.7], gm: [98.1, 99.7, 99.9] },
+  m4_12: { g: 3, rules: 4, K: 12, depth: 4, name: '4 rules + 12 candidates + 2 chaal', tr: [97.5, 98.1, 98.4], gm: [96.3, 98.0, 98.4] },
+  m8_10: { g: 3, rules: 8, K: 10, depth: 4, name: '8 rules + 10 candidates + 2 chaal', tr: [97.8, 98.4, 98.4], gm: [96.5, 98.2, 98.6], optimal: true },
+  m8_8: { g: 3, rules: 8, K: 8, depth: 4, name: '8 rules + 8 candidates + 2 chaal', tr: [96.9, 97.5, 97.8], gm: [95.9, 97.6, 98.0] }
+};
+const GROUPS = ['Purana', '1. Sirf rules (calculation nahi)', '2. Sirf calculation (rules nahi, saari chaalein)', '3. Rules + calculation'];
+const RULE_TXT = {
+  qWin: ['Material jeet', 'Saare captures gin kar: har pawn jeetne par +100 (knight/bishop ~+320, rook +500, queen +950)'],
+  qLose: ['Material nuksaan', 'Saare captures gin kar: har pawn khone par −125'],
+  check: ['Check', 'Chaal check deti hai: +8'],
+  threat: ['Dhamki', 'Bade ya bina bachaav mohre par hamla: +7'],
+  pawnThreat: ['Pawn par dhamki', 'Bina bachaav pawn par hamla: +4'],
+  captureLowest: ['Sasta capture', 'Sabse saste mohre se capture: +11'],
+  pstDelta: ['Behtar square', 'Mohra behtar square par (kinare se center, peeche se aage): lagbhag +1 se +10'],
+  allowMate: ['Mate allow', 'Iske baad opponent mate in 1 kar sakta hai: −750 (kabhi mat khelo)']
+};
+const CARD_KEYS = { 4: ['qWin', 'qLose', 'check', 'pstDelta'], 8: ['qWin', 'qLose', 'check', 'threat', 'pawnThreat', 'captureLowest', 'pstDelta', 'allowMate'] };
+const DEPTH_TXT = {
+  1: 'Har chaal ke baad sirf captures gin lo. Opponent ki koi aur chaal nahi socho.',
+  2: 'Meri chaal, phir opponent ka sabse achha jawab, phir captures gin lo.',
+  3: 'Meri chaal, uska jawab, phir meri agli chaal, phir captures gin lo.',
+  4: 'Meri chaal, uska jawab, meri chaal, uska jawab, phir captures gin lo.'
+};
+const DEPTH_NAME = { 1: 'sirf apni chaal + captures', 2: '1 chaal aage', 3: '1.5 chaal aage', 4: '2 chaal aage' };
+let MODE = 'classic';
+try { const m = localStorage.getItem(STORE + '.mode'); if (m && MODES[m]) MODE = m; } catch (e) {}
+function modePct(M){
+  if (M.g === 0) return esc(M.sub);
+  if (M.g === 1) return `Sahi chaal ${M.K} candidates mein: Training <b>${M.tr}%</b> · Games <b>${M.gm}%</b>`;
+  return `Top 1 / 2 / 3: Training <b>${M.tr.join(' / ')}%</b> · Games <b>${M.gm.join(' / ')}%</b>`;
+}
+function renderModes(){
+  const h = [];
+  for (let g = 1; g <= 3; g++) {
+    h.push(`<h3>${esc(GROUPS[g])}</h3>`);
+    for (const k in MODES) { const M = MODES[k]; if (M.g !== g) continue;
+      h.push(`<button class="opt mode${k === MODE ? ' sel' : ''}" data-mode="${k}"><b>${esc(M.name)}</b>${M.optimal ? ' <span class="badge">Optimal</span>' : ''}<br><span class="small muted">${modePct(M)}</span></button>`); }
+  }
+  h.push(`<h3>${esc(GROUPS[0])}</h3><button class="opt mode${MODE === 'classic' ? ' sel' : ''}" data-mode="classic"><b>${esc(MODES.classic.name)}</b><br><span class="small muted">${modePct(MODES.classic)}</span></button>`);
+  document.getElementById('modeList').innerHTML = h.join('');
+  document.getElementById('modeName').innerHTML = esc(MODES[MODE].name) + (MODES[MODE].optimal ? ' <span class="badge">Optimal</span>' : '');
+  document.querySelectorAll('#modeList .mode').forEach(b => b.onclick = () => {
+    MODE = b.dataset.mode; try { localStorage.setItem(STORE + '.mode', MODE); } catch (e) {}
+    renderModes(); document.getElementById('modeCard').open = false; applyModeLayout(); nextPosition();
+  });
+}
+function applyModeLayout(){
+  const classic = MODE === 'classic';
+  document.getElementById('stepBar').classList.toggle('hidden', !classic);
+  let hideM = false; try { hideM = !!localStorage.getItem(STORE + '.hideMethod'); } catch (e) {}
+  document.getElementById('methodCard').classList.toggle('hidden', !classic || hideM);
+}
+function cardHTML(n){
+  return `<div class="rulecard"><b>Rule card (${n} rules)</b><ol class="small">${CARD_KEYS[n].map(k => `<li><b>${esc(RULE_TXT[k][0])}:</b> ${esc(RULE_TXT[k][1])}</li>`).join('')}</ol><p class="small muted">Har chaal ke points jodo. Sabse zyada points wali chaalein tumhare candidates hain.</p></div>`;
+}
+const fmtPts = v => (v > 0 ? '+' : '') + v;
+const fmtSc = v => Math.abs(v) > 20000 ? (v > 0 ? 'mate' : 'mate (khilaaf)') : (v >= 0 ? '+' : '') + (v / 100).toFixed(2);
+function whyTxt(w){ return w.length ? w.map(([k, v]) => `${RULE_TXT[k] ? RULE_TXT[k][0] : k} ${fmtPts(v)}`).join(', ') : 'koi rule nahi'; }
+
+async function modeStart(p, pos){
+  const M = MODES[MODE];
+  T = { p, pos, mf: true, M, mk: MODE, step: 0, cands: [], busy: true, d: null };
+  tBoard.flip = pos.side === E.BLACK; tBoard.set(pos, null);
+  tStatus.textContent = `${sideHi(pos.side)} ki chaal. Mode: ${M.name}`;
+  panel.innerHTML = `<div class="card"><span class="spinner"></span>Engine is position ki saari chaalein check kar raha hai… (aap tab tak board dekho)</div>`;
+  let d;
+  try { d = await ask({ cmd: 'mode', fen: p.fen, best: p.best, rules: M.rules || 0, K: M.K || 0, depth: M.depth || 0 }); }
+  catch (e) { panel.innerHTML = `<div class="card bad">Engine load nahi hua: ${esc(e.message)}</div>`; return; }
+  if (T.p !== p) return;
+  T.d = d; T.busy = false;
+  if (M.rules) mfCands(); else mfFinal();
+}
+function mfCands(){
+  const M = T.M; T.step = 3; T.cands = []; T.compared = false;
+  panel.innerHTML = `<div class="card"><h2>Step 1: ${M.K} candidates chuno</h2>${cardHTML(M.rules)}
+    <p>Har chaal ke points socho aur sabse zyada points wali <b>${M.K} chaalein board par khelo</b>. Har chaal list mein jud jaayegi (board wapas aa jaayega). Chip dabane se hat jaati hai.</p>
+    <div class="row" id="myC"></div>
+    <div class="row" style="margin-top:10px"><button class="btn pri" id="cmp" disabled>Engine se milaan karo</button><button class="btn" id="clrC">Saaf karo</button></div><div id="fbC"></div></div>`;
+  tStatus.textContent = `${sideHi(T.pos.side)}: ${M.K} candidate chaalein board par dikhao`;
+  panel.querySelector('#clrC').onclick = () => { if (T.compared) return; T.cands = []; mfDrawCands(); };
+  panel.querySelector('#cmp').onclick = mfCompare;
+  mfDrawCands();
+}
+function mfDrawCands(){
+  const el = panel.querySelector('#myC'); if (!el) return;
+  el.innerHTML = T.cands.length ? T.cands.map((s, i) => `<button class="chip on" data-i="${i}">${esc(s)}</button>`).join('') + `<span class="small muted">${T.cands.length}/${T.M.K}</span>` : `<span class="muted small">Abhi koi nahi (0/${T.M.K})</span>`;
+  el.querySelectorAll('button[data-i]').forEach(b => b.onclick = () => { if (T.compared) return; T.cands.splice(+b.dataset.i, 1); mfDrawCands(); });
+  panel.querySelector('#cmp').disabled = !T.cands.length;
+}
+function mfCompare(){
+  if (T.compared) return; T.compared = true;
+  const M = T.M, d = T.d, key = M.rules === 4 ? 'p4' : 'p8', wk = M.rules === 4 ? 'w4' : 'w8';
+  const top = d.moves.slice(0, M.K), mine = new Set(T.cands);
+  const same = top.filter(m => mine.has(m.san)).length;
+  const bestM = d.moves.find(m => m.uci === d.best);
+  const ruleHas = top.some(m => m.good), myHas = d.moves.some(m => m.good && mine.has(m.san));
+  T.ruleOk = ruleHas; T.myOk = myHas;
+  const h = [];
+  h.push(`<h3>Engine ki rule list (top ${M.K})</h3><ol class="small cl">`);
+  for (const m of top) h.push(`<li class="${mine.has(m.san) ? 'good' : ''}"><b>${esc(m.san)}</b> ${fmtPts(m[key])} pts${m.good ? ' ★' : ''}${mine.has(m.san) ? ' ✓' : ''}<br><span class="muted">${esc(whyTxt(m[wk]))}</span></li>`);
+  h.push(`</ol><p class="small muted">★ = engine jaisi chaal (best se 0.3 pawn ke andar). ✓ = aapne bhi chuni.</p>`);
+  h.push(`<p>Aapke ${T.cands.length} mein se <b>${same}</b> engine ki rule list mein bhi hain.</p>`);
+  h.push(`<p>Engine ki best chaal: <b>${esc(d.bestSan)}</b> (${bestM ? fmtPts(bestM[key]) + ' pts, rule list mein number ' + bestM.rank : ''}).</p>`);
+  h.push(`<p class="${myHas ? 'good' : 'bad'}"><b>${myHas ? '✓ Aapki list mein engine jaisi chaal hai.' : '✗ Aapki list mein engine jaisi chaal nahi hai.'}</b></p>`);
+  if (!ruleHas) h.push(`<p class="small">Is position mein rule card ki top ${M.K} mein bhi engine jaisi chaal nahi aayi. Ye wo kuch % positions hain jahan rules kaafi nahi hote.</p>`);
+  const extra = T.cands.filter(s => !top.some(m => m.san === s));
+  if (extra.length) { h.push(`<p class="small">Aapki ye chaalein engine ki list mein nahi:</p><ul class="small">`); for (const s of extra) { const m = d.moves.find(x => x.san === s); if (m) h.push(`<li><b>${esc(s)}</b> ${fmtPts(m[key])} pts (number ${m.rank}): ${esc(whyTxt(m[wk]))}</li>`); } h.push(`</ul>`); }
+  h.push(`<details><summary class="small">Saari ${d.n} chaalein, points ke hisaab se</summary><ol class="small cl">${d.moves.map(m => `<li><b>${esc(m.san)}</b> ${fmtPts(m[key])}${m.good ? ' ★' : ''} <span class="muted">${esc(whyTxt(m[wk]))}</span></li>`).join('')}</ol></details>`);
+  if (M.depth) h.push(`<button class="btn pri" id="goCalc">Aage: in ${M.K} candidates ko ${DEPTH_NAME[M.depth]} calculate karo</button>`);
+  else h.push(`<div class="row"><button class="btn pri" id="nextP">Agli position ›</button></div>`);
+  panel.querySelector('#fbC').innerHTML = h.join('');
+  mfDrawCands();
+  if (M.depth) panel.querySelector('#goCalc').onclick = mfFinal;
+  else { mfRecord(myHas); tStatus.textContent = `Engine: ${d.bestSan}`; panel.querySelector('#nextP').onclick = nextPosition; }
+}
+function mfFinal(){
+  const M = T.M, d = T.d; T.step = 4;
+  const list = M.rules ? d.moves.slice(0, M.K).map(m => m.san) : null;
+  panel.innerHTML = `<div class="card"><h2>${M.rules ? 'Step 2' : 'Step 1'}: Calculate karo (${DEPTH_NAME[M.depth]})</h2>
+    <p>${esc(DEPTH_TXT[M.depth])}</p>
+    ${list ? `<p class="small">In ${list.length} candidates ko calculate karo:</p><div class="row">${list.map(s => `<span class="chip">${esc(s)}</span>`).join('')}</div>` : `<p class="small">Is mode mein rules nahi hain: saari ${d.n} legal chaalein isi tarah calculate karo.</p>`}
+    <p style="margin-top:8px">Jis chaal ke baad material aur position sabse achhe bachte hain, wo <b>board par khelo</b>.</p><div id="fb"></div>
+    <div class="row"><button class="btn" id="giveUp">Batao (haar maan li)</button></div></div>`;
+  tStatus.textContent = `${sideHi(T.pos.side)}: calculate karke apni chaal board par khelo`;
+  panel.querySelector('#giveUp').onclick = () => mfReveal(null);
+}
+function mfMove(m){
+  if (T.busy) return;
+  const uci = T.pos.uci(m), san = T.pos.san(m);
+  if (T.step === 3) {
+    if (T.compared) return;
+    if (!T.cands.includes(san) && T.cands.length < T.M.K) T.cands.push(san);
+    const a = new E.Position(T.p.fen); a.make(a.parseUci(uci)); tBoard.set(a, [E.mFrom(m), E.mTo(m)]);
+    mfDrawCands(); setTimeout(() => { if (T.step === 3) tBoard.set(new E.Position(T.p.fen), null); }, 600);
+    return;
+  }
+  if (T.step === 4) { const a = new E.Position(T.p.fen); a.make(a.parseUci(uci)); tBoard.set(a, [E.mFrom(m), E.mTo(m)]); mfReveal(uci); }
+}
+function mfReveal(uci){
+  const M = T.M, d = T.d; T.step = 5;
+  const mine = uci ? d.moves.find(m => m.uci === uci) : null;
+  const ok = !!(mine && mine.good);
+  const goodSet = new Set(d.moves.filter(m => m.good).map(m => m.uci));
+  const calc = d.calc, top3 = calc.slice(0, 3);
+  const h = [];
+  h.push(ok ? `<div class="card" style="border-color:var(--good)"><h2 class="good">✓ ${esc(mine.san)}: engine jaisi chaal!</h2>${uci === d.best ? '' : `<p class="small">Engine ki pehli pasand ${esc(d.bestSan)} thi, par aapki chaal bhi 0.3 pawn ke andar hai.</p>`}</div>`
+    : `<div class="card" style="border-color:var(--bad)"><h2 class="bad">${mine ? esc(mine.san) + ' nahi. ' : ''}Engine ki chaal: ${esc(d.bestSan)}</h2><p class="small">Ye position thodi der baad dobara aayegi.</p></div>`);
+  h.push(`<div class="card"><h2>Calculation (${DEPTH_NAME[M.depth]})</h2><p class="small muted">Score ${sideHi(T.pos.side)} ki nazar se, pawn mein. ★ = engine jaisi chaal.</p><ol class="small cl">`);
+  const show = M.rules ? calc : calc.slice(0, 6);
+  for (const c of show) h.push(`<li class="${c.uci === uci ? (ok ? 'good' : 'bad') : ''}"><b>${esc(c.san)}</b> ${fmtSc(c.score)}${goodSet.has(c.uci) ? ' ★' : ''}${c.uci === uci ? ' ← aapki' : ''}<br><span class="line muted">${esc(moveLine(c.line, T.pos))}</span></li>`);
+  h.push(`</ol>`);
+  if (!M.rules && mine && !show.some(c => c.uci === uci)) { const i = calc.findIndex(c => c.uci === uci); if (i >= 0) h.push(`<p class="small">Aapki chaal ${esc(mine.san)} is calculation mein number ${i + 1} par hai (${fmtSc(calc[i].score)}).</p>`); }
+  if (M.rules && mine && !calc.some(c => c.uci === uci)) h.push(`<p class="small">Aapki chaal ${esc(mine.san)} rule list ki top ${M.K} mein nahi thi (number ${mine.rank}).</p>`);
+  const t3 = top3.some(c => goodSet.has(c.uci)), t1 = top3.length && goodSet.has(top3[0].uci);
+  h.push(`<p>Is mode ki calculation ki top 3: <b>${top3.map(c => esc(c.san)).join(', ')}</b>. ${t1 ? 'Pehli hi engine jaisi chaal hai.' : t3 ? 'Engine jaisi chaal top 3 mein hai.' : 'Is baar engine jaisi chaal top 3 mein nahi aayi: yahan aur gehri calculation chahiye thi.'}</p></div>`);
+  h.push(`<div class="row"><button class="btn pri" id="nextP">Agli position ›</button></div>`);
+  panel.innerHTML = h.join('');
+  tStatus.textContent = `Engine: ${d.bestSan}`;
+  mfRecord(ok);
+  panel.querySelector('#nextP').onclick = nextPosition;
+}
+function mfRecord(ok){
+  if (T.recorded) return; T.recorded = true;
+  st.mh = st.mh || []; st.mh.push({ k: T.mk, ok: ok ? 1 : 0, san: T.d.bestSan, at: Date.now() }); if (st.mh.length > 1000) st.mh.shift();
+  st.seen[T.p.fen] = (st.seen[T.p.fen] || 0) + 1;
+  if (!ok) { st.queue = st.queue.filter(q => q.fen !== T.p.fen); st.queue.push({ fen: T.p.fen, at: st.counter + 4 + Math.floor(Math.random() * 4) }); }
+  save();
+}
+function renderModeStats(){
+  const el = document.getElementById('stModes'); if (!el) return;
+  const mh = st.mh || []; const rows = [];
+  for (const k in MODES) { if (k === 'classic') continue; const a = mh.filter(x => x.k === k).slice(-100); if (!a.length) continue;
+    const M = MODES[k]; const ref = M.g === 1 ? M.gm : M.gm[0];
+    rows.push(`<tr><td>${esc(M.name)}${M.optimal ? ' <span class="badge">Optimal</span>' : ''}</td><td>${a.length}</td><td><b>${pct(a.map(x => x.ok))}</b></td><td class="muted">${ref}%</td></tr>`); }
+  el.innerHTML = rows.length ? `<table class="mt small"><tr><th>Mode</th><th>Positions</th><th>Aapka</th><th>Rules/engine (games)</th></tr>${rows.join('')}</table><p class="small muted">"Aapka" = kitni baar aapki list (rules mode) ya aapki chaal (calculation mode) mein engine jaisi chaal thi.</p>` : '<span class="muted small">Abhi kisi naye mode mein position nahi kheli.</span>';
+}
+renderModes(); applyModeLayout();
+try { if (!localStorage.getItem(STORE + '.mode')) document.getElementById('modeCard').open = true; } catch (e) {}
 
 // ================= THINK TAB =================
 let thinkPos = new E.Position(); const thinkHist = [];
@@ -607,6 +813,7 @@ function renderStats(){
   document.getElementById('stScan').textContent = pct(h.filter(x => x.s >= 0).map(x => x.s));
   document.getElementById('stCand').textContent = pct(h.filter(x => x.c !== undefined && x.c >= 0).map(x => x.c));
   document.getElementById('stInfo').textContent = `Pichhli ${h.length} positions ka hisaab. Kul ${st.hist.length} positions kheli. Dohrane ke liye ${st.queue.length} positions line mein.`;
+  renderModeStats();
   document.getElementById('stRecent').innerHTML = st.hist.slice(-20).reverse().map(x => `<span class="${x.m ? 'good' : 'bad'}">${x.m ? '✓' : '✗'} ${esc(x.san)}</span>`).join(' &nbsp; ') || '<span class="muted">Abhi koi nahi</span>';
 }
 

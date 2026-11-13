@@ -709,7 +709,7 @@ class Searcher {
   }
 }
 
-const api = { Position, Searcher, evaluate, see, PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, WHITE, BLACK, MATE, MATE_BOUND, INF, SEEVAL,
+const api = { PST_MG, PST_EG, Position, Searcher, evaluate, see, PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, WHITE, BLACK, MATE, MATE_BOUND, INF, SEEVAL,
   mFrom, mTo, mPromo, mFlag, F_CAP, F_EP, F_CASTLE, sqName, nameSq, fileOf, rowOf, sqOf, N_OFF, K_OFF, B_OFF, R_OFF, OFF, NAMES, leastAttacker };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 root.MEEngine = api;
