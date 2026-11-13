@@ -1,4 +1,4 @@
-"""Build the 64 Squares puzzle pack from the open Lichess puzzle database (CC0).
+"""Build the 64 Squares puzzle pack (v2) from the open Lichess puzzle database (CC0).
 
 Input : lichess_db_puzzle.csv (PuzzleId,FEN,Moves,Rating,RatingDeviation,Popularity,NbPlays,Themes,GameUrl,OpeningTags)
 Output: packs/puz/index.json and packs/puz/r<band>.json, one file per 200-point rating band.
