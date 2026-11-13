@@ -1669,7 +1669,7 @@ const TUT={
 };
 
 /* ================= app state & render ================= */
-const FIXV=['coach','puz','calc','gm','skdo','rep','bmc','ogame','trn'];
+const FIXV=['coach','puz','calc','gm','skdo','rep','bmc','ogame','trn','oline'];
 function setMain(h){const f=main.querySelector('.fixscroll'),y=f?f.scrollTop:0,same=main.dataset.v===V.name;main.innerHTML=h;main.dataset.v=V.name;const g=main.querySelector('.fixscroll');if(g&&same&&y)g.scrollTop=y;try{fixBack()}catch(e){}}
 let V={name:'home'},S=null,G=null,timerInt=null,autoNext=null,onSq=null;
 const main=document.getElementById('main');
@@ -1700,7 +1700,7 @@ function clearTimers(){clearInterval(timerInt);timerInt=null;clearTimeout(autoNe
 function renderChips(){const d=dueItems().length;document.getElementById('chips').innerHTML=`${diyaChip()}<span class="chip" title="Stars">★ ${ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0)}</span>`}
 function render(){try{applyAppTheme()}catch(e){}try{applyPieces()}catch(e){}const fx=FIXV.includes(V.name);if(document.body.classList.contains('fixb')!==fx){document.body.classList.toggle('fixb',fx);try{window.__setH&&window.__setH()}catch(e){}}document.body.classList.toggle('inq',V.name==='q'||V.name==='train');document.body.classList.toggle('cfr',V.name==='cframe');renderChips();onSq=null;const tab=tabOf(V.name);try{navLabels()}catch(e){}document.body.classList.toggle('b3d',P.set.board3d==='3d');applyTheme();applyTilt();
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
-  ({pcat:vPCat,cframe:vCFrame,clevels:vCLevels,clevel:vCLevel,blind:vBlind,'x-learn':vLearn,'x-practice':vPractice,'x-playhub':vPlayHub,'x-me':vStats,'x-home':vHome,hl:vHl,home:vHome,learn:vLearn,playhub:vPlayHub,me:vStats,path:vLearn,stage:vStage,tut:vTut,q:vQ,result:vResult,practice:vPractice,explore:vExplore,play:vPlay,coach:vCoach,coachset:vCoachSet,coachrev:vCoachRev,codiary:vCoDiary,stats:vStats,gym:vHome,gmstory:vGmStory,replist:vRepList,rep:vRep,school:vSchool,bestm:vBestM,bmc:vBmc,trn:vTrn,lessons:vLessons,crev:vCRev,skdo:vSkDo,road:vRoad,puz:vPuz,week:vWeek,endg:vEndg,calc:vCalc,gmlist:vGmList,gm:vGm,pgn:vPgn,trainset:vTrainSet,train:trRender,trainres:vTrainRes,friend:vFriend,ogame:vOGame})[V.name]();try{fbInvDraw()}catch(e){}try{fixBack();pageHead()}catch(e){}}
+  ({pcat:vPCat,cframe:vCFrame,clevels:vCLevels,clevel:vCLevel,blind:vBlind,'x-learn':vLearn,'x-practice':vPractice,'x-playhub':vPlayHub,'x-me':vStats,'x-home':vHome,hl:vHl,home:vHome,learn:vLearn,playhub:vPlayHub,me:vStats,path:vLearn,stage:vStage,tut:vTut,q:vQ,result:vResult,practice:vPractice,explore:vExplore,play:vPlay,coach:vCoach,coachset:vCoachSet,coachrev:vCoachRev,codiary:vCoDiary,stats:vStats,gym:vHome,gmstory:vGmStory,replist:vRepList,rep:vRep,school:vSchool,bestm:vBestM,bmc:vBmc,trn:vTrn,lessons:vLessons,crev:vCRev,olib:vOlib,oline:vOline,skdo:vSkDo,road:vRoad,puz:vPuz,week:vWeek,endg:vEndg,calc:vCalc,gmlist:vGmList,gm:vGm,pgn:vPgn,trainset:vTrainSet,train:trRender,trainres:vTrainRes,friend:vFriend,ogame:vOGame})[V.name]();try{fbInvDraw()}catch(e){}try{fixBack();pageHead()}catch(e){}}
 
 const COURSE_URL=(()=>{try{return/github\.io$/.test(location.hostname)?'course.html':'https://khanfarazhusain.github.io/minds-eye-chess/course.html'}catch(e){return'https://khanfarazhusain.github.io/minds-eye-chess/course.html'}})();
 const NOTES_URL=COURSE_URL.replace(/course\.html$/,'notes.html');
@@ -2222,7 +2222,7 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
   if(a==='gm-story'){V.story=d.v;go({name:'gmstory',story:d.v});return}
   if(skAct(a,d))return;
   if(bmcAct(a,d))return;
-  if(trnAct(a,d))return;if(crevAct(a,d))return;
+  if(trnAct(a,d))return;if(crevAct(a,d))return;if(olbAct(a,d))return;
   if(a==='bk-copy'){copyText(backupCode());P.lastBackup=Date.now();save();V.bkmsg='Backup code copied. Paste it into Notes or WhatsApp to keep it safe.';render();return}
   if(a==='bk-file'){const blob=new Blob([backupCode()],{type:'text/plain'});const u=URL.createObjectURL(blob);const x=document.createElement('a');x.href=u;x.download='minds-eye-chess-backup-'+dayK()+'.txt';document.body.appendChild(x);x.click();x.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);P.lastBackup=Date.now();save();V.bkmsg='Backup file saved. Keep it in Files or iCloud.';render();return}
   if(a==='bk-restore'){const t=document.getElementById('bkin');bkRestore(t&&t.value);return}
@@ -3644,15 +3644,15 @@ function trTree(root){if(!I18N.dict||!root)return;if(root.nodeType===3){trText(r
   const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT|NodeFilter.SHOW_ELEMENT,{acceptNode:x=>x.nodeType===1&&x.matches(TR_SKIP)?2:1});
   trAttrs(root);let x;while(x=w.nextNode()){if(x.nodeType===3)trText(x);else trAttrs(x)}}
 let TRMO=null,TRQ=new Set(),TRT=0;
-function trStart(){if(TRMO)return;TRMO=new MutationObserver(ms=>{if(!I18N.dict)return;for(const m of ms){if(m.type==='characterData')TRQ.add(m.target);else m.addedNodes.forEach(n=>TRQ.add(n))}if(!TRT)TRT=requestAnimationFrame?0:0;queueMicrotask(trFlush)});
+function i18nObs(){if(TRMO)return;TRMO=new MutationObserver(ms=>{if(!I18N.dict)return;for(const m of ms){if(m.type==='characterData')TRQ.add(m.target);else m.addedNodes.forEach(n=>TRQ.add(n))}if(!TRT)TRT=requestAnimationFrame?0:0;queueMicrotask(trFlush)});
   TRMO.observe(document.body,{childList:true,subtree:true,characterData:true})}
 function trFlush(){const q=[...TRQ];TRQ.clear();for(const n of q){if(n.isConnected)trTree(n)}}
 function applyDir(){const r=langRow(curLang());document.documentElement.dir=r&&r[4]?'rtl':'ltr';document.documentElement.lang={hi:'en',hin:'hi'}[curLang()]||curLang()}
 async function i18nApply(){const c=curLang();applyDir();
-  if(c==='hi'&&typeof HL_DICT!=='undefined'){I18N.code='hi';i18nSet({ui:HL_DICT});trStart();trTree(document.body);return}
+  if(c==='hi'&&typeof HL_DICT!=='undefined'){I18N.code='hi';i18nSet({ui:HL_DICT});i18nObs();trTree(document.body);return}
   if(!isPackLang(c)){i18nSet(null);return}
   const pk=await packLoad(c);if(!pk){i18nSet(null);return}
-  I18N.code=c;i18nSet(pk);trStart();trTree(document.body)}
+  I18N.code=c;i18nSet(pk);i18nObs();trTree(document.body)}
 function packPct(c){if(BUILTIN.includes(c))return 100;const x=PACKIDX[c];return x?x.pct:0}
 function langLabel(r){const pc=packPct(r[0]);return`${r[2]}${r[2]!==r[1]?' · '+r[1]:''}${BUILTIN.includes(r[0])?'':pc?` (${pc}%)`:' (soon)'}`}
 function langPickHTML(){const c=curLang(),grp=(g,t)=>`<optgroup label="${t}">${LANGS.filter(r=>r[3]===g).map(r=>`<option value="${r[0]}" ${r[0]===c?'selected':''} ${!BUILTIN.includes(r[0])&&!packPct(r[0])?'disabled':''}>${esc(langLabel(r))}</option>`).join('')}</optgroup>`;
@@ -3679,7 +3679,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.13 · v121';
+const APPV='2026.11.13 · v122';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -3845,7 +3845,7 @@ function pcats(){const sk=g=>(SCH.find(x=>x[0]===g)||[0,[]])[1],skm=L=>L.filter(
   ['bas','♟️',L2('Rules & safety','Rules aur safety'),`${skm(sk('Rules'))+skm(sk('Seeing the board'))}/${sk('Rules').length+sk('Seeing the board').length} ${L2('mastered','master')}`,'q1',[['sch','Rules'],['sch','Seeing the board']]],
   ['str','🧭',L2('Strategy & endgames','Strategy aur endgames'),`${Object.values(P.endg).filter(x=>x.ok).length}/${ENDG.length} ${L2('endgames','endgames')}`,'q3',[
     ['go','endg','👑',L2('Endgame drills','Endgame drills'),`${Object.values(P.endg).filter(x=>x.ok).length}/${ENDG.length} done`],['go','gmlist','📜',L2('Master games','Master games'),`${Object.keys(P.gmg).length}/${GMG.length} studied`],['sch','Strategy basics']]],
-  ['opn','📖',L2('Openings','Openings'),`${rp} ${L2('lines due','lines baaki')}`,'q5',[['go','replist','📖',L2('Your opening lines','Apni opening lines'),`${rp} ${L2('lines due · White and Black','lines baaki · White aur Black')}`]]],
+  ['opn','📖',L2('Openings','Openings'),`${rp} ${L2('lines due','lines baaki')}`,'q5',[['go','replist','📖',L2('Your opening lines','Apni opening lines'),`${rp} ${L2('lines due · White and Black','lines baaki · White aur Black')}`],['go','olib','📚',L2('Opening library','Opening library'),L2('3,800+ named lines · next-move quiz','3,800+ lines · agli chaal quiz')]]],
   ['vis','👀',L2('Board vision','Board vision'),`${drills.filter(k=>trBest(k)>0).length}/${drills.length} ${L2('drills tried','drills kheli')}`,'q6',[['vis'],['go','explore','🔎',L2('Board explorer','Board explorer'),L2('Tap squares, see moves','Square tap karo, chaal dekho')]]],
   ['crs','📗',L2('Course revision','Course revision'),`${crevN()}/${crevTot()} ${L2('remembered','yaad')}`,'q3',[['go','crev','📗',L2('Revision sheet: 15 levels','Revision sheet: 15 levels'),`${crevTot()} ${L2('lessons · say it first, then check','lessons · pehle khud bolo, phir milao')}`],['course-go','review','📘',L2('Course review questions','Course ke review sawaal'),L2('Due review questions','Baaki review sawaal')]]],
   ['rev','🔁',L2('Revision','Revision'),dz?`${dz} ${L2('due','baaki')}`:L2('All clear','Sab clear'),'q7',[
@@ -4373,7 +4373,7 @@ function bmcAct(a,d){if(!a||a.slice(0,4)!=='bmc-')return false;const z=BM;
 /* Complete Training mode: a tree of variations. At your turn find the best move, then see Stockfish's top 3; at the coach's turn see its top 3 replies. Explore any branch. */
 let TT=null;
 function trNode(st,par,m){const n={st,par,kids:[],an:null,guess:null,m:m||null,san:m&&par?san(par.st,m,legal(par.st)):'',d:par?par.d+1:0};if(par)par.kids.push(n);return n}
-function trStart(kind){let st=startState(),last=null,me='w';
+function trnStart(kind){let st=startState(),last=null,me='w';
   if(kind==='game'&&CG){st=CG.st;me=CG.human}else if(kind==='rand'){let p=null;for(let i=0;i<10&&!p;i++)p=bmcPos();if(p){st=p.st;last=p.last}me=st.w?'w':'b'}else if(kind==='black'){me='b'}
   const root=trNode(st,null,null);root.last=last;TT={root,cur:root,me,kind,n:0,exact:0};trLoad(root);go({name:'trn'})}
 function trMine(n){return(n.st.w?'w':'b')===TT.me}
@@ -4474,9 +4474,55 @@ function crevAct(a,d){switch(a){
   case'crev-all':{const L=CREV[V.lv];if(L)L.l.forEach(x=>d.v==='1'?CRR.add(x.n):CRR.delete(x.n));vCRev();return true}
   case'crev-mark':P.crev=P.crev||{};P.crev[d.v]=+d.k;save();vCRev();return true}
   return false}
+/* ---- data packs (downloaded once, kept offline in the browser cache) ---- */
+const DPK={};
+async function dataPack(name,v){if(DPK[name])return DPK[name];const key=PACK_BASE+name+'.json';let C=null;try{C=await caches.open('squares64-data')}catch(e){}
+  let txt=null;if(C){try{const r=await C.match(key);if(r){const h=r.headers.get('x-v');if(!v||h===String(v))txt=await r.text()}}catch(e){}}
+  if(!txt){let res=null;try{res=await fetch(key+'?v='+(v||1),{cache:'no-store'})}catch(e){}
+    if((!res||!res.ok)&&!/github\.io/.test(PACK_BASE)){try{res=await fetch('https://khanfarazhusain.github.io/minds-eye-chess/packs/'+name+'.json?v='+(v||1),{cache:'no-store'})}catch(e){}}
+    if(!res||!res.ok)throw new Error('net');txt=await res.text();if(C)try{await C.put(key,new Response(txt,{headers:{'content-type':'application/json','x-v':String(v||1)}}))}catch(e){}}
+  DPK[name]=JSON.parse(txt);return DPK[name]}
+/* ---- opening library: ~3,900 named lines (open data) ---- */
+let OL={st:'idle',fam:null,q:'',sel:null,k:0};
+function olibLoad(){if(OL.st==='ok'||OL.st==='load')return;OL.st='load';dataPack('openings',1).then(d=>{OL.d=d;OL.st='ok';OL.fams=olibFams(d);if(V.name==='olib')vOlib()}).catch(()=>{OL.st='err';if(V.name==='olib')vOlib()})}
+function olibFams(d){const m=new Map();d.forEach((x,i)=>{const f=x[1].split(':')[0].trim();if(!m.has(f))m.set(f,[]);m.get(f).push(i)});return[...m.entries()].sort((a,b)=>b[1].length-a[1].length)}
+function olibParse(s){const out=[];let st=startState();for(const t of s.split(' ')){const m=findMove(st,t);if(!m)break;out.push({m,san:san(st,m,legal(st)),st});st=make(st,m)}return{moves:out,end:st}}
+function olibRows(ids){return ids.slice(0,150).map(i=>{const x=OL.d[i],nm=x[1].includes(':')?x[1].split(':').slice(1).join(':').trim():L2('Main line','Main line');return`<button class="lvrow" data-act="olb-line" data-v="${i}"><span class="lvn" style="font-size:11px">${esc(x[0])}</span><span class="lvt">${esc(OL.fam?nm:x[1])}<small class="mono">${esc(x[2].split(' ').slice(0,8).join(' '))}${x[2].split(' ').length>8?' …':''}</small></span><span class="lvs">›</span></button>`}).join('')+(ids.length>150?`<p class="muted" style="padding:6px">${L2('Showing 150. Type more to narrow down.','150 dikha rahe hain. Aur likho to list chhoti hogi.')}</p>`:'')}
+function olibList(){const q=OL.q.trim().toLowerCase();if(q){const ids=[];OL.d.forEach((x,i)=>{if(x[1].toLowerCase().includes(q)||x[0].toLowerCase()===q)ids.push(i)});return ids.length?`<div class="lgrp glist" style="padding:6px">${olibRows(ids)}</div>`:`<p class="muted">${L2('No opening found.','Koi opening nahi mili.')}</p>`}
+  if(OL.fam!=null){const f=OL.fams[OL.fam];return`<h3 style="margin:4px 0">${esc(f[0])} <small class="muted">${f[1].length}</small></h3><div class="lgrp glist" style="padding:6px">${olibRows(f[1])}</div>`}
+  return`<div class="lgrp glist" style="padding:6px">${OL.fams.map((f,j)=>`<button class="lvrow" data-act="olb-fam" data-v="${j}"><span class="lvn">♟</span><span class="lvt">${esc(f[0])}<small>${f[1].length} ${L2('lines','lines')}</small></span><span class="lvs">›</span></button>`).join('')}</div>`}
+function vOlib(){olibLoad();let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="${OL.fam!=null&&!OL.q?'olb-fam':'tab'}" ${OL.fam!=null&&!OL.q?'data-v="-1"':'data-tab="practice"'}>← ${OL.fam!=null&&!OL.q?L2('All openings','Sab openings'):'Practice'}</button><span class="eyebrow">📚 ${L2('Opening library','Opening library')}${OL.d?` · ${OL.d.length} ${L2('lines','lines')}`:''}</span><h1>${L2('Opening library','Opening library')}</h1>`;
+  if(OL.st==='load'||OL.st==='idle'){setMain(h+`<div class="card muted">${L2('Downloading the opening pack (about 360 KB, one time)…','Opening pack download ho raha hai (lagbhag 360 KB, sirf ek baar)…')}</div></div>`);return}
+  if(OL.st==='err'){setMain(h+`<div class="card stack"><b>${L2('Could not download the opening pack.','Opening pack download nahi hua.')}</b><p class="muted" style="margin:0">${L2('Check the internet and try again. After one download it works offline.','Internet check karke dobara try karo. Ek baar download ke baad offline chalega.')}</p><button class="btn primary" data-act="olb-retry">↻ ${L2('Try again','Dobara try karo')}</button></div></div>`);return}
+  h+=`<p class="muted" style="margin:0">${L2('Every named opening with its moves. Open a line to replay it, learn it from memory, or take the next-move quiz.','Har opening ka naam aur chaalein. Line kholo, board par dekho, yaad karke khelo, ya agli chaal ka quiz do.')}</p>
+  <div class="row"><button class="btn primary" style="flex:1" data-act="olb-quiz">🎲 ${L2('Next-move quiz','Agli chaal quiz')}</button></div>
+  <input id="olq" type="search" placeholder="${L2('Search: Sicilian, Najdorf, London, C50…','Dhoondho: Sicilian, Najdorf, London, C50…')}" value="${esc(OL.q)}" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:inherit;font-size:16px" autocomplete="off"><div id="ollist">${olibList()}</div>`;
+  setMain(h+'</div>');const inp=document.getElementById('olq');if(inp)inp.oninput=()=>{OL.q=inp.value;const l=document.getElementById('ollist');if(l)l.innerHTML=olibList()}}
+function vOline(){const x=OL.d&&OL.d[OL.sel];if(!x){go({name:'olib'});return}const p=olibParse(x[2]),M=p.moves,k=Math.max(0,Math.min(OL.k,M.length));let st=startState();for(let i=0;i<k;i++)st=M[i].st&&make(M[i].st,M[i].m);
+  const last=k?M[k-1]:null,marks={};if(last){marks[sn(last.m.f)]='sel';marks[sn(last.m.t)]='sel'}
+  const nxt=M[k],arr=nxt?[{f:nxt.m.f,t:nxt.m.t,c:'green'}]:[];
+  let h=`<div class="stack"><div class="fixtop"><div class="gstat"><button class="btn small" data-act="go" data-v="olib">← ${L2('Library','Library')}</button><span class="mono" style="font-size:13px">${esc(x[0])}</span></div>`;
+  const bh=boardHTML({cls:'coachb',persp:'w',coords:true,pieces:toMap(st.b),marks,id:'oline'+OL.sel+'_'+k});h+=bh.slice(0,-6)+arrowsSVG('w',arr)+'</div></div><div class="fixscroll stack">';
+  h+=`<h2 style="margin:0">${esc(x[1])}</h2><div class="gamemoves">${M.map((y,i)=>`${i%2?'':`${i/2+1}. `}<span style="${i===k-1?'font-weight:800;text-decoration:underline':''}">${esc(y.san)}</span>`).join(' ')}</div>`;
+  h+=`<div class="row"><button class="btn" style="flex:1" data-act="olb-k" data-v="0">⏮</button><button class="btn" style="flex:1" data-act="olb-k" data-v="${k-1}">◀</button><button class="btn primary" style="flex:1" data-act="olb-k" data-v="${k+1}">▶</button><button class="btn" style="flex:1" data-act="olb-k" data-v="${M.length}">⏭</button></div>`;
+  if(nxt)h+=`<p class="muted" style="margin:0">${L2('Next','Agli chaal')}: <b class="mono">${esc(nxt.san)}</b>, ${esc(moveNote(nxt.st,nxt.m))}.</p>`;else if(last)h+=`<p class="muted" style="margin:0">${L2('End of the line.','Line yahan khatam.')} ${esc(last.san)} ${esc(moveNote(last.st,last.m))}.</p>`;
+  h+=`<b>${L2('Learn it from memory','Yaad karke khelo')}</b><div class="row"><button class="btn" style="flex:1" data-act="olb-learn" data-v="w">♔ ${L2('As White','White se')}</button><button class="btn" style="flex:1" data-act="olb-learn" data-v="b">♚ ${L2('As Black','Black se')}</button></div>`;
+  setMain(h+'</div></div>')}
+function olTrain(i,side,quiz){const x=OL.d[i];const p=olibParse(x[2]);if(!p.moves.length)return;const R=repState();const id='lib:'+x[0]+':'+i;
+  RP={side,l:[id,x[1],x[2]],moves:p.moves,k:0,st:startState(),err:0,sel:null,msg:'',last:null,learn:!quiz&&!R.cards[id],lib:true};
+  if(quiz){const n=p.moves.length;let k=Math.max(0,n-1);while(k>0&&(p.moves[k].st.w?'w':'b')!==side)k--;for(let j=0;j<k;j++){RP.last=p.moves[j].m;RP.st=make(RP.st,p.moves[j].m)}RP.k=k;RP.quiz=true}
+  rpAuto();go({name:'rep'})}
+function olbAct(a,d){switch(a){
+  case'olb-fam':OL.fam=+d.v<0?null:+d.v;OL.q='';vOlib();try{main.scrollTop=0;window.scrollTo(0,0)}catch(e){}return true;
+  case'olb-retry':OL.st='idle';vOlib();return true;
+  case'olb-line':OL.sel=+d.v;OL.k=0;go({name:'oline'});return true;
+  case'olb-k':OL.k=Math.max(0,+d.v);vOline();return true;
+  case'olb-learn':olTrain(OL.sel,d.v,false);return true;
+  case'olb-quiz':{if(!OL.d)return true;let i,tries=0;do{i=Math.floor(Math.random()*OL.d.length);tries++}while(OL.d[i][2].split(' ').length<6&&tries<50);OL.sel=i;const n=OL.d[i][2].split(' ').length;olTrain(i,n%2?'w':'b',true);return true}}
+  return false}
 function trnAct(a,d){if(!a||a.slice(0,4)!=='trn-')return false;const z=TT;
-  switch(a){case'trn-open':if(TT)go({name:'trn'});else trStart('start');return true;
-    case'trn-start':trStart(d.v);return true;case'trn-new':trStart(z?z.kind:'start');return true;
+  switch(a){case'trn-open':if(TT)go({name:'trn'});else trnStart('start');return true;
+    case'trn-start':trnStart(d.v);return true;case'trn-new':trnStart(z?z.kind:'start');return true;
     case'trn-kid':trChild(d.v);return true;case'trn-up':if(z.cur.par)trGo(z.cur.par);return true;
     case'trn-jump':{const p=trPath(z.cur)[+d.v];if(p)trGo(p);return true}
     case'trn-rest':z.cur.restOpen=true;trRestLoad(z.cur);vTrn();return true;
@@ -4578,11 +4624,12 @@ function rpStart(side,id){const R=repState();R.side=side;const L=REP[side].lines
 function rpAuto(){const z=RP;const auto=()=>{while(z.k<z.moves.length&&(z.moves[z.k].st.w?'w':'b')!==z.side){z.last=z.moves[z.k].m;z.st=make(z.st,z.moves[z.k].m);z.k++}};auto();if(z.k>=z.moves.length)rpFinish()}
 function rpFinish(){const z=RP,R=repState();if(z.done)return;z.done=true;const c=R.cards[z.l[0]]||{box:0,due:0};if(z.err===0)c.box=Math.min(5,c.box+1);else c.box=1;c.due=Date.now()+SRI[c.box]*864e5-36e5;R.cards[z.l[0]]=c;xpAdd(z.err?2:5);save()}
 function vRep(){const z=RP;if(!z){go({name:'replist'});return}const persp=z.side;const nx=z.moves[z.k];
-  let h=`<div class="stack"><div class="fixtop"><div class="gstat"><button class="btn small" data-act="go" data-v="replist">← Lines</button><span class="mono" style="font-size:13px">${esc(z.l[1])}</span></div>`;
+  let h=`<div class="stack"><div class="fixtop"><div class="gstat"><button class="btn small" data-act="go" data-v="${z.lib?'olib':'replist'}">← ${z.lib?L2('Library','Library'):'Lines'}</button><span class="mono" style="font-size:13px">${esc(z.l[1])}</span></div>`;
   const marks={},arr=[];if(z.last){marks[sn(z.last.f)]='sel';marks[sn(z.last.t)]='sel'}if((z.learn||z.show)&&nx&&!z.done)arr.push({f:nx.m.f,t:nx.m.t,c:'green'});
   const dots=z.sel!=null?legal(z.st).filter(x=>x.f===z.sel).map(x=>sn(x.t)):[];const bh=boardHTML({cls:'coachb',persp,coords:true,pieces:toMap(z.st.b),from:z.sel!=null?sn(z.sel):null,marks,dots,id:'rep'});h+=bh.slice(0,-6)+arrowsSVG(persp,arr)+'</div></div><div class="fixscroll stack">';
   h+=`<div class="gamemoves">${z.moves.slice(0,z.k).map((x,i)=>(i%2?'':`${i/2+1}. `)+x.san).join(' ')||'Start position'}</div>`;
-  if(z.done)h+=`<div class="fb ${z.err?'no':'ok'}"><h3>${z.err?`Line finished with ${z.err} mistake${z.err>1?'s':''}`:'✓ Perfect! Line remembered'}</h3><p>${z.err?'It comes back tomorrow.':`It comes back in ${SRI[repState().cards[z.l[0]].box]} day(s).`}</p></div><div class="row"><button class="btn primary" style="flex:1" data-act="rp-go">Next line</button><button class="btn" data-act="go" data-v="replist">All lines</button></div>`;
+  if(z.done&&z.lib)h+=`<div class="fb ${z.err?'no':'ok'}"><h3>${z.err?L2(`Finished with ${z.err} mistake(s)`,`${z.err} galti ke saath poora hua`):'✓ '+L2('Perfect!','Bilkul sahi!')}</h3><p class="mono" style="margin:0">${esc(z.l[1])}</p></div><div class="row">${z.quiz?`<button class="btn primary" style="flex:1" data-act="olb-quiz">🎲 ${L2('Next quiz','Agla quiz')}</button>`:''}<button class="btn" style="flex:1" data-act="go" data-v="olib">📚 Library</button></div>`;
+  else if(z.done)h+=`<div class="fb ${z.err?'no':'ok'}"><h3>${z.err?`Line finished with ${z.err} mistake${z.err>1?'s':''}`:'✓ Perfect! Line remembered'}</h3><p>${z.err?'It comes back tomorrow.':`It comes back in ${SRI[repState().cards[z.l[0]].box]} day(s).`}</p></div><div class="row"><button class="btn primary" style="flex:1" data-act="rp-go">Next line</button><button class="btn" data-act="go" data-v="replist">All lines</button></div>`;
   else h+=`<p style="margin:0;font-size:17px"><b>${z.learn?'Learn it: play the move shown by the green arrow.':'Your move: play the repertoire move from memory.'}</b></p>${z.msg?`<p class="${z.bad?'warn':'good'}" style="margin:0">${esc(z.msg)}</p>`:''}${!z.learn?`<button class="btn" data-act="rp-show">${z.show?'Hide':'Show'} the move</button>`:''}`;
   h+='</div>';setMain(h);
   onSq=n=>{if(z.done)return;const s=si(n),p=z.st.b[s];if(z.sel!=null&&z.sel!==s){const m=legal(z.st).find(x=>x.f===z.sel&&x.t===s&&(!x.promo||x.promo==='Q'));if(m){z.sel=null;const e=z.moves[z.k];if(uciOf(m)===uciOf(e.m)){z.msg=`✓ ${e.san}: ${moveNote(e.st,e.m)}.`;z.bad=false;z.show=false;z.last=e.m;z.st=make(z.st,e.m);z.k++;rpAuto();vRep()}else{z.err++;z.bad=true;z.msg=`Not this one. In this line you play ${e.san}: ${moveNote(e.st,e.m)}. Try it.`;z.show=true;vRep()}return}}z.sel=p&&isW(p)===z.st.w?s:null;vRep()}}
