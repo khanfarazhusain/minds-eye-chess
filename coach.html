@@ -502,6 +502,8 @@ const RULE_TXT = {
   pstDelta: ['Behtar square', 'Mohra thoda behtar square par +1, achha +2, bahut achha (kinare/peeche se center ya aage) +3. Kharab square par −1/−2/−3'],
   allowMate: ['Mate allow', 'Iske baad opponent mate in 1 kar sakta hai: −100 (kabhi mat khelo)']
 };
+const SQH=`<details class="card"><summary><b>🟩 Behtar square kaise ginen?</b></summary><div class="stack small" style="gap:6px;margin-top:6px"><p style="margin:0">Engine ki square table (PeSTO) mein har mohre ke har square ka ek number hai. <b>Naye square ka number − purane ka number</b> = farq (pawn ka 1/10 = 1).</p><p style="margin:0"><b>Farq → points:</b> 8+ → +3 · 4 se 7 → +2 · 1 se 3 → +1 · −1 se −3 → −1 · −4 se −7 → −2 · −8 ya kam → −3</p><p style="margin:0">Shuru/middlegame aur endgame ki alag tables hain. Jitne kam mohre (queen 4, rook 2, minor 1; shuru mein 24), utna endgame table ka hissa.</p><ul style="margin:0;padding-left:18px"><li><b>Pawn:</b> aage badhna achha. 6th rank +4, 7th +10. Endgame mein 6th +8, 7th +17.</li><li><b>Knight:</b> center (c3-f6) achha, dushman ki 6th rank sabse achhi. Kinara bura, kona bahut bura.</li><li><b>Bishop:</b> back rank par baithna bura. Center aur lambe diagonal achhe.</li><li><b>Rook:</b> 7th rank sabse achhi, 6th/8th bhi. Apni taraf a/h kinare bure.</li><li><b>Queen:</b> middlegame mein jaldi aage aana bekaar, dushman ka kingside achha. Endgame mein center.</li><li><b>Raja:</b> middlegame mein castle wala kona (g1/b1) achha, center bura. Endgame mein center achha, kinara bura.</li></ul><p style="margin:0"><b>Examples:</b> 1.Nc3 (b1→c3) farq +3.3 → <b>+1</b> · Nc3→a4 farq −2.5 → <b>−1</b> · endgame pawn d5→d6 farq +6.2 → <b>+2</b> · middlegame raja e1→f1 farq −3.6 → <b>−1</b></p></div></details>`;
+
 const CARD_KEYS = { 4: ['qWin', 'qLose', 'check', 'pstDelta'], 8: ['qWin', 'qLose', 'check', 'threat', 'pawnThreat', 'captureLowest', 'pstDelta', 'allowMate'] };
 const DEPTH_TXT = {
   1: 'Har chaal ke baad sirf captures gin lo. Opponent ki koi aur chaal nahi socho.',
@@ -540,7 +542,7 @@ function applyModeLayout(){
   document.getElementById('methodCard').classList.toggle('hidden', !classic || hideM);
 }
 function cardHTML(n){
-  return `<div class="rulecard"><b>Rule card (${n} rules)</b><ol class="small">${CARD_KEYS[n].map(k => `<li><b>${esc(RULE_TXT[k][0])}:</b> ${esc(RULE_TXT[k][1])}</li>`).join('')}</ol><p class="small muted">Har chaal ke points jodo (sab whole numbers). Sabse zyada points wali chaalein tumhare candidates hain. Barabar points par jo mohra zyada active ho, wo pehle.</p></div>`;
+  return `<div class="rulecard"><b>Rule card (${n} rules)</b><ol class="small">${CARD_KEYS[n].map(k => `<li><b>${esc(RULE_TXT[k][0])}:</b> ${esc(RULE_TXT[k][1])}</li>`).join('')}</ol><p class="small muted">Har chaal ke points jodo (sab whole numbers). Sabse zyada points wali chaalein tumhare candidates hain. Barabar points par jo mohra zyada active ho, wo pehle.</p>${SQH}</div>`;
 }
 const fmtPts = v => (v > 0 ? '+' : '') + v;
 const fmtSc = v => Math.abs(v) > 20000 ? (v > 0 ? 'mate' : 'mate (khilaaf)') : (v >= 0 ? '+' : '') + (v / 100).toFixed(2);
