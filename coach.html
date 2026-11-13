@@ -524,6 +524,8 @@ const DEPTH_TXT = {
 const DEPTH_NAME = { 1: 'sirf apni chaal + captures', 2: '1 chaal aage', 3: '1.5 chaal aage', 4: '2 chaal aage' };
 let MODE = 'classic';
 try { const m = localStorage.getItem(STORE + '.mode'); if (m && MODES[m]) MODE = m; } catch (e) {}
+const FCT={soch:"1 / 2-3 / 1-2 min",classic:"1 / 2-3 / 1-2 min",r4:"15-20 / 30-40 / 20-30 sec",r6:"20-25 / 35-45 / 25-35 sec",r8:"25-35 / 45-60 / 30-40 sec",c1:"1-2 / 3-4 / 2-3 min",c2:"8-10 / 15-20 / 10-12 min · game mein mushkil",c3:"20+ / 40+ / 25+ min · game mein mumkin nahi",c4:"60+ / 90+ / 60+ min · game mein mumkin nahi",m4_12:"8-12 / 15-25 / 10-15 min · poora game mein mumkin nahi, engine ka kaam",m8_10:"7-10 / 12-20 / 8-12 min · game mein mumkin nahi",m8_8:"6-8 / 10-15 / 7-10 min · game mein mumkin nahi",hb:"1-1.5 / 2.5-4 / 1.5-2.5 min · game mein kiya ja sakta hai"};
+const modeTime=k=>{const t=FCT[k]||FCT[k.slice(0,2)];return t?`⏱ Andaaza (3 mahine practice ke baad, har chaal): Opening / Middlegame / Endgame = ${t}. Naye khiladi ko 2-3 guna.`:''};
 function modePct(M){
   if (M.g === 0) return esc(M.sub);
   if (M.g === 1) return `Sahi chaal ${M.K} candidates mein: Training <b>${M.tr}%</b> · Games <b>${M.gm}%</b>`;
@@ -534,9 +536,9 @@ function renderModes(){
   for (let g = 1; g <= 4; g++) {
     h.push(`<h3>${esc(GROUPS[g])}</h3>`);
     for (const k in MODES) { const M = MODES[k]; if (M.g !== g) continue;
-      h.push(`<button class="opt mode${k === MODE ? ' sel' : ''}" data-mode="${k}"><b>${esc(M.name)}</b>${M.optimal ? ' <span class="badge">Optimal</span>' : ''}<br><span class="small muted">${modePct(M)}</span></button>`); }
+      h.push(`<button class="opt mode${k === MODE ? ' sel' : ''}" data-mode="${k}"><b>${esc(M.name)}</b>${M.optimal ? ' <span class="badge">Optimal</span>' : ''}<br><span class="small muted">${modePct(M)}<br>${esc(modeTime(k))}</span></button>`); }
   }
-  h.push(`<h3>${esc(GROUPS[0])}</h3><button class="opt mode${MODE === 'classic' ? ' sel' : ''}" data-mode="classic"><b>${esc(MODES.classic.name)}</b><br><span class="small muted">${modePct(MODES.classic)}</span></button>`);
+  h.push(`<h3>${esc(GROUPS[0])}</h3><button class="opt mode${MODE === 'classic' ? ' sel' : ''}" data-mode="classic"><b>${esc(MODES.classic.name)}</b><br><span class="small muted">${modePct(MODES.classic)}<br>${esc(modeTime('classic'))}</span></button>`);
   document.getElementById('modeList').innerHTML = h.join('');
   document.getElementById('modeName').innerHTML = esc(MODES[MODE].name) + (MODES[MODE].optimal ? ' <span class="badge">Optimal</span>' : '');
   document.querySelectorAll('#modeList .mode').forEach(b => b.onclick = () => {
