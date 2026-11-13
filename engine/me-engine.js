@@ -18,8 +18,9 @@ const SEEVAL = [0, 100, 320, 330, 500, 950, 20000];
 
 // 10x12 mailbox: sq = 21 + file + 10*row, row 0 = rank 8.
 const sqOf = (f, r) => 21 + f + 10 * r;          // r = row from top
-const fileOf = s => (s % 10) - 1;
-const rowOf = s => ((s / 10) | 0) - 2;
+const FILE_T = new Int8Array(120), ROW_T = new Int8Array(120); for (let s = 0; s < 120; s++) { FILE_T[s] = (s % 10) - 1; ROW_T[s] = ((s / 10) | 0) - 2; }
+const fileOf = s => FILE_T[s];
+const rowOf = s => ROW_T[s];
 const sqName = s => 'abcdefgh'[fileOf(s)] + (8 - rowOf(s));
 const nameSq = n => sqOf(n.charCodeAt(0) - 97, 8 - (+n[1]));
 const idx64 = s => rowOf(s) * 8 + fileOf(s);
@@ -172,8 +173,8 @@ class Position {
             if (rowOf(s) === startRow && b[one + fwd] === 0) out[n++] = mk(s, one + fwd, 0, F_DOUBLE);
           }
         }
-        for (const d of [fwd - 1, fwd + 1]) {
-          const to = s + d, q = b[to];
+        for (let k = 0; k < 2; k++) {
+          const to = s + fwd - 1 + 2 * k, q = b[to];
           if (q !== 0 && q !== OFF && (q & 8) === them) {
             if (promo) { for (let pr = QUEEN; pr >= KNIGHT; pr--) out[n++] = mk(s, to, pr, F_CAP); }
             else out[n++] = mk(s, to, 0, F_CAP);
@@ -341,18 +342,19 @@ function leastAttacker(pos, s, side) { // returns square or 0
   return 0;
 }
 // Static exchange evaluation of move m for side to move (in centipawn-ish values)
+const SEE_GAIN = new Int32Array(40), SEE_RS = new Int32Array(40), SEE_RP = new Int32Array(40);
 function see(pos, m) {
   const b = pos.b, from = mFrom(m), to = mTo(m);
   if (mFlag(m) & F_CASTLE) return 0;
-  const gain = new Int32Array(32); const removed = [];
+  const gain = SEE_GAIN; const remS = SEE_RS, remP = SEE_RP; let nr = 0;
   let d = 0, side = pos.side;
   let captured = (mFlag(m) & F_EP) ? PAWN : (b[to] & 7);
   gain[0] = SEEVAL[captured];
   let attackerVal = mPromo(m) ? SEEVAL[mPromo(m)] : SEEVAL[b[from] & 7];
   if (mPromo(m)) gain[0] += SEEVAL[mPromo(m)] - 100;
   const saveTo = b[to];
-  removed.push([from, b[from]]); b[from] = 0;
-  let epSq = 0; if (mFlag(m) & F_EP) { epSq = to + (side === WHITE ? 10 : -10); removed.push([epSq, b[epSq]]); b[epSq] = 0; }
+  remS[nr] = from; remP[nr++] = b[from]; b[from] = 0;
+  let epSq = 0; if (mFlag(m) & F_EP) { epSq = to + (side === WHITE ? 10 : -10); remS[nr] = epSq; remP[nr++] = b[epSq]; b[epSq] = 0; }
   side ^= 8;
   while (true) {
     const a = leastAttacker(pos, to, side);
@@ -361,12 +363,12 @@ function see(pos, m) {
     gain[d] = attackerVal - gain[d - 1];
     if (Math.max(-gain[d - 1], gain[d]) < 0) break;
     attackerVal = SEEVAL[b[a] & 7];
-    removed.push([a, b[a]]); b[a] = 0;
+    remS[nr] = a; remP[nr++] = b[a]; b[a] = 0;
     side ^= 8;
     if (d >= 30) break;
   }
   while (d > 0) { gain[d - 1] = -Math.max(-gain[d - 1], gain[d]); d--; }
-  for (let i = removed.length - 1; i >= 0; i--) b[removed[i][0]] = removed[i][1];
+  for (let i = nr - 1; i >= 0; i--) b[remS[i]] = remP[i];
   b[to] = saveTo;
   return gain[0];
 }
@@ -378,14 +380,17 @@ const KS_W = [0, 0, 20, 20, 40, 80, 0]; // king zone attack weight per piece
 const fileMask = new Int8Array(10);
 
 // Returns score from side-to-move perspective. If `terms` object given, fills a breakdown (white perspective, centipawns).
+const EV_WP = new Int8Array(10), EV_BP = new Int8Array(10), EV_WMIN = new Int8Array(10), EV_BMAX = new Int8Array(10), EV_WMAX = new Int8Array(10), EV_BMIN = new Int8Array(10);
+const kdist = (a, c) => Math.max(Math.abs(fileOf(a) - fileOf(c)), Math.abs(rowOf(a) - rowOf(c)));
+const KZONE = new Uint8Array(241); for (const d of [-11, -10, -9, -1, 0, 1, 9, 10, 11]) KZONE[d + 120] = 1;
 function evaluate(pos, terms) {
   const b = pos.b;
   let mg = pos.mg, eg = pos.eg;
   const ph = Math.min(pos.phase, 24);
   // pawn files
-  const wp = new Int8Array(10), bp = new Int8Array(10); // counts per file (index file+1)
-  const wpMinRow = new Int8Array(10).fill(9), bpMaxRow = new Int8Array(10).fill(-1); // most advanced pawns
-  const wpMaxRow = new Int8Array(10).fill(-1), bpMinRow = new Int8Array(10).fill(9);
+  const wp = EV_WP.fill(0), bp = EV_BP.fill(0); // counts per file (index file+1)
+  const wpMinRow = EV_WMIN.fill(9), bpMaxRow = EV_BMAX.fill(-1); // most advanced pawns
+  const wpMaxRow = EV_WMAX.fill(-1), bpMinRow = EV_BMIN.fill(9);
   let wb = 0, bb = 0;
   for (let s = 21; s < 99; s++) {
     const p = b[s]; if (p === 0 || p === OFF) continue;
@@ -410,8 +415,7 @@ function evaluate(pos, terms) {
           let e = PASSED_EG[rr];
           if (b[s - 10] !== 0) e = e * 2 / 3 | 0; // blocked
           // king distance in endgame
-          const dist = (a, c) => Math.max(Math.abs(fileOf(a) - fileOf(c)), Math.abs(rowOf(a) - rowOf(c)));
-          e += (dist(s - 10, bk) * 5 - dist(s - 10, wk) * 2) * rr / 3 | 0;
+          e += (kdist(s - 10, bk) * 5 - kdist(s - 10, wk) * 2) * rr / 3 | 0;
           passMG += PASSED_MG[rr]; passEG += e;
         }
       } else {
@@ -421,8 +425,7 @@ function evaluate(pos, terms) {
           const rr = r;
           let e = PASSED_EG[rr];
           if (b[s + 10] !== 0) e = e * 2 / 3 | 0;
-          const dist = (a, c) => Math.max(Math.abs(fileOf(a) - fileOf(c)), Math.abs(rowOf(a) - rowOf(c)));
-          e += (dist(s + 10, wk) * 5 - dist(s + 10, bk) * 2) * rr / 3 | 0;
+          e += (kdist(s + 10, wk) * 5 - kdist(s + 10, bk) * 2) * rr / 3 | 0;
           passMG -= PASSED_MG[rr]; passEG -= e;
         }
       }
@@ -433,9 +436,8 @@ function evaluate(pos, terms) {
     const enemyK = white ? bk : wk; const sgn = white ? 1 : -1;
     let mob = 0, katt = 0;
     const us = p & 8;
-    const enemyPawnAtt = (x) => white ? (b[x - 9] === (PAWN | 8) || b[x - 11] === (PAWN | 8)) : (b[x + 9] === PAWN || b[x + 11] === PAWN);
     if (t === KNIGHT) {
-      for (let i = 0; i < 8; i++) { const x = s + N_OFF[i], q = b[x]; if (q === OFF) continue; if ((q === 0 || (q & 8) !== us) && !enemyPawnAtt(x)) mob++; if (Math.abs(fileOf(x) - fileOf(enemyK)) <= 1 && Math.abs(rowOf(x) - rowOf(enemyK)) <= 1) katt++; }
+      for (let i = 0; i < 8; i++) { const x = s + N_OFF[i], q = b[x]; if (q === OFF) continue; if ((q === 0 || (q & 8) !== us) && !(white ? (b[x - 9] === 9 || b[x - 11] === 9) : (b[x + 9] === 1 || b[x + 11] === 1))) mob++; if (KZONE[x - enemyK + 120]) katt++; }
       mob -= 4;
     } else {
       const dirs = t === BISHOP ? B_OFF : t === ROOK ? R_OFF : K_OFF;
@@ -443,8 +445,8 @@ function evaluate(pos, terms) {
         const d = dirs[i]; let x = s + d, q;
         while (true) {
           q = b[x]; if (q === OFF) break;
-          if ((q === 0 || (q & 8) !== us) && !enemyPawnAtt(x)) mob++;
-          if (Math.abs(fileOf(x) - fileOf(enemyK)) <= 1 && Math.abs(rowOf(x) - rowOf(enemyK)) <= 1) katt++;
+          if ((q === 0 || (q & 8) !== us) && !(white ? (b[x - 9] === 9 || b[x - 11] === 9) : (b[x + 9] === 1 || b[x + 11] === 1))) mob++;
+          if (KZONE[x - enemyK + 120]) katt++;
           if (q !== 0) break; x += d;
         }
       }
@@ -474,8 +476,9 @@ function evaluate(pos, terms) {
   eg += pEG + passEG + mobEG + kingEG + rookEG + bpEG;
   let score = ((mg * ph + eg * (24 - ph)) / 24) | 0;
   // drawish scaling: no pawns and small material edge
-  if (!wp.some(x => x) && score > 0 && score < 400) score = score / 4 | 0;
-  if (!bp.some(x => x) && score < 0 && score > -400) score = score / 4 | 0;
+  let anyW = 0, anyB = 0; for (let i = 0; i < 10; i++) { anyW |= wp[i]; anyB |= bp[i]; }
+  if (!anyW && score > 0 && score < 400) score = score / 4 | 0;
+  if (!anyB && score < 0 && score > -400) score = score / 4 | 0;
   const tempo = 12;
   if (terms) {
     const tp = (m, e) => ((m * ph + e * (24 - ph)) / 24) | 0;
@@ -502,7 +505,7 @@ class Searcher {
   constructor(ttBits) {
     const size = 1 << (ttBits || TT_BITS); this.ttMask = size - 1;
     this.ttKey = new Int32Array(size); this.ttMove = new Int32Array(size); this.ttScore = new Int16Array(size); this.ttDepth = new Int8Array(size); this.ttFlag = new Int8Array(size);
-    this.moveBuf = new Int32Array(MAXPLY * 256); this.scoreBuf = new Int32Array(MAXPLY * 256);
+    this.moveBuf = new Int32Array(MAXPLY * 256); this.scoreBuf = new Int32Array(MAXPLY * 256); this.quietBuf = new Int32Array(MAXPLY * 256);
     this.killers = new Int32Array(MAXPLY * 2); this.history = new Int32Array(16 * 120);
     this.pvTable = new Int32Array(MAXPLY * MAXPLY); this.pvLen = new Int32Array(MAXPLY);
     this.lmr = []; for (let d = 0; d < 64; d++) { this.lmr.push(new Int8Array(64)); for (let m = 0; m < 64; m++) this.lmr[d][m] = (d && m) ? Math.floor(0.75 + Math.log(d) * Math.log(m) / 2.25) : 0; }
@@ -544,6 +547,9 @@ class Searcher {
     this.nodes++; this.checkTime(); if (this.stop) return 0;
     this.pvLen[ply] = 0;
     if (ply >= MAXPLY - 1) return evaluate(pos);
+    const qti = this.ttProbe(pos);
+    if (qti >= 0) { let ts = this.ttScore[qti]; if (ts > MATE_BOUND) ts -= ply; else if (ts < -MATE_BOUND) ts += ply; const f = this.ttFlag[qti];
+      if (f === TT_EXACT || (f === TT_LOWER && ts >= beta) || (f === TT_UPPER && ts <= alpha)) return ts; }
     const stand = evaluate(pos);
     if (stand >= beta) return stand;
     if (stand > alpha) alpha = stand;
@@ -612,7 +618,7 @@ class Searcher {
     if (ply === 0 && this.rootFilter) { for (let i = base; i < base + n; i++) if (!this.rootFilter.has(this.moveBuf[i])) this.scoreBuf[i] = -1e9; }
     let legal = 0, best = -INF, bestMove = 0, origAlpha = alpha;
     const futile = !pvNode && !inCheck && depth <= 3 && staticEval + 120 * depth + 60 <= alpha;
-    const quietsTried = [];
+    const qb = ply * 256; let nq = 0; const QT = this.quietBuf;
     for (let i = base; i < base + n; i++) {
       const m = this.pick(base, i, base + n);
       if (ply === 0 && this.rootFilter && !this.rootFilter.has(m)) continue;
@@ -652,13 +658,13 @@ class Searcher {
             if (isQuiet) {
               if (this.killers[ply * 2] !== m) { this.killers[ply * 2 + 1] = this.killers[ply * 2]; this.killers[ply * 2] = m; }
               const hi = pos.b[mFrom(m)] * 120 + mTo(m); this.history[hi] += depth * depth; if (this.history[hi] > 800000) for (let z = 0; z < this.history.length; z++) this.history[z] >>= 1;
-              for (const q of quietsTried) { const qi = pos.b[mFrom(q)] * 120 + mTo(q); this.history[qi] -= depth * depth; }
+              for (let qq = 0; qq < nq; qq++) { const q = QT[qb + qq]; const qi = pos.b[mFrom(q)] * 120 + mTo(q); this.history[qi] -= depth * depth; }
             }
             break;
           }
         }
       }
-      if (isQuiet) quietsTried.push(m);
+      if (isQuiet) QT[qb + nq++] = m;
     }
     if (legal === 0) return inCheck ? -MATE + ply : 0;
     this.ttStore(pos, depth, best >= beta ? TT_LOWER : (best > origAlpha ? TT_EXACT : TT_UPPER), best, bestMove, ply);

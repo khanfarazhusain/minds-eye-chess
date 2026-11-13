@@ -776,7 +776,7 @@ function sfStartW(){
 function sfCmd(cmd, waitRe){ return new Promise(res => { if (waitRe) sfWaiter = { re: waitRe, res }; sfw.postMessage(cmd); if (!waitRe) res(); }); }
 const SF_LEVELS = [[0,'Level 0 (bahut kamzor)'],[3,'Level 3'],[6,'Level 6'],[9,'Level 9'],[12,'Level 12'],[15,'Level 15'],[18,'Level 18'],[20,'Level 20 (poori taakat)']];
 const wLvl = document.getElementById('wLvl'); wLvl.innerHTML = SF_LEVELS.map(([v, l]) => `<option value="${v}"${v === 12 ? ' selected' : ''}>${l}</option>`).join('');
-const ME_LEVELS = [[1,'Level 1 (depth 1, bahut kamzor)'],[2,'Level 2 (depth 2)'],[3,'Level 3 (depth 3)'],[4,'Level 4 (depth 4)'],[5,'Level 5 (depth 5)'],[6,'Level 6 (depth 7)'],[7,'Level 7 (depth 9)'],[8,'Level 8 (poori taakat ~2600)']];
+const ME_LEVELS = [[1,'Level 1 (depth 1, bahut kamzor)'],[2,'Level 2 (depth 2)'],[3,'Level 3 (depth 3)'],[4,'Level 4 (depth 4)'],[5,'Level 5 (depth 5)'],[6,'Level 6 (depth 7)'],[7,'Level 7 (depth 9)'],[8,'Level 8 (poori taakat ~2700)']];
 const ME_DEPTH = {1:1,2:2,3:3,4:4,5:5,6:7,7:9,8:0};
 const wMeLvl = document.getElementById('wMeLvl'); wMeLvl.innerHTML = ME_LEVELS.map(([v, l]) => `<option value="${v}"${v === 8 ? ' selected' : ''}>${l}</option>`).join('');
 const wBoard = new Board(document.getElementById('watchBoard'), { onMove: () => {}, canMove: () => false });
