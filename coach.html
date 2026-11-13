@@ -479,21 +479,21 @@ const MODES = {
   classic: { g: 0, name: 'Purana tareeka (5 steps)', sub: 'Khatra, scan, candidates, phir final chaal' },
   r4_5: { g: 1, rules: 4, K: 5, name: '4 rules, 5 candidates', tr: 95.6, gm: 95.3 },
   r4_7: { g: 1, rules: 4, K: 7, name: '4 rules, 7 candidates', tr: 97.5, gm: 97.2 },
-  r4_9: { g: 1, rules: 4, K: 9, name: '4 rules, 9 candidates', tr: 98.8, gm: 98.3 },
-  r8_5: { g: 1, rules: 8, K: 5, name: '8 rules, 5 candidates', tr: 96, gm: 95.8 },
-  r8_7: { g: 1, rules: 8, K: 7, name: '8 rules, 7 candidates', tr: 97.5, gm: 97.6 },
-  r8_8: { g: 1, rules: 8, K: 8, name: '8 rules, 8 candidates', tr: 97.8, gm: 98.1 },
+  r4_9: { g: 1, rules: 4, K: 9, name: '4 rules, 9 candidates', tr: 98.8, gm: 98.2 },
+  r8_5: { g: 1, rules: 8, K: 5, name: '8 rules, 5 candidates', tr: 96, gm: 95.7 },
+  r8_7: { g: 1, rules: 8, K: 7, name: '8 rules, 7 candidates', tr: 97.5, gm: 97.5 },
+  r8_8: { g: 1, rules: 8, K: 8, name: '8 rules, 8 candidates', tr: 97.8, gm: 98 },
   r6_5: { g: 1, rules: 6, K: 5, name: '6 rules (position wale), 5 candidates', tr: 96.9, gm: 95.6 },
   r6_7: { g: 1, rules: 6, K: 7, name: '6 rules (position wale), 7 candidates', tr: 97.8, gm: 97.3 },
-  r6_9: { g: 1, rules: 6, K: 9, name: '6 rules (position wale), 9 candidates', tr: 99.1, gm: 98.4 },
-  c1: { g: 2, depth: 1, name: 'Sirf apni chaal + captures', tr: [81.9, 91, 92.8], gm: [75, 87.3, 92] },
-  c2: { g: 2, depth: 2, name: '1 chaal aage', tr: [91, 97.2, 98.4], gm: [83.8, 93.8, 96.5] },
-  c3: { g: 2, depth: 3, name: '1.5 chaal aage', tr: [96.6, 99.4, 99.7], gm: [91.3, 97.1, 98.5] },
-  c4: { g: 2, depth: 4, name: '2 chaal aage', tr: [99.4, 100, 100], gm: [98.5, 99.6, 99.8] },
-  m4_12: { g: 3, rules: 4, K: 12, depth: 4, name: '4 rules + 12 candidates + 2 chaal', tr: [98.1, 98.8, 98.8], gm: [97.4, 98.5, 98.7], optimal: true },
-  m8_10: { g: 3, rules: 8, K: 10, depth: 4, name: '8 rules + 10 candidates + 2 chaal', tr: [98.1, 98.8, 98.8], gm: [97.1, 98.3, 98.5] },
-  hb: { g: 4, rules: 4, K: 12, human: 5, name: '⭐ Best routine: 4 rules + 12 candidates + insaani hisaab', tr: [81, 90.3, 94.4], gm: [69.7, 85.3, 91] },
-  m8_8: { g: 3, rules: 8, K: 8, depth: 4, name: '8 rules + 8 candidates + 2 chaal', tr: [96.9, 97.8, 97.8], gm: [96.4, 97.5, 97.8] }
+  r6_9: { g: 1, rules: 6, K: 9, name: '6 rules (position wale), 9 candidates', tr: 99.1, gm: 98.3 },
+  c1: { g: 2, depth: 1, name: 'Sirf apni chaal + captures', tr: [81.9, 91, 92.8], gm: [76.1, 88.1, 92.6] },
+  c2: { g: 2, depth: 2, name: '1 chaal aage', tr: [91, 97.2, 98.4], gm: [84.2, 93.9, 96.6] },
+  c3: { g: 2, depth: 3, name: '1.5 chaal aage', tr: [96.6, 99.4, 99.7], gm: [91.5, 97.2, 98.5] },
+  c4: { g: 2, depth: 4, name: '2 chaal aage', tr: [99.4, 100, 100], gm: [98.5, 99.7, 99.8] },
+  m4_12: { g: 3, rules: 4, K: 12, depth: 4, name: '4 rules + 12 candidates + 2 chaal', tr: [98.1, 98.8, 98.8], gm: [97.3, 98.5, 98.7], optimal: true },
+  m8_10: { g: 3, rules: 8, K: 10, depth: 4, name: '8 rules + 10 candidates + 2 chaal', tr: [98.1, 98.8, 98.8], gm: [97, 98.1, 98.4] },
+  hb: { g: 4, rules: 4, K: 12, human: 5, name: '⭐ Best routine: 4 rules + 12 candidates + insaani hisaab', tr: [81, 90.3, 94.4], gm: [71.2, 86.1, 91.4] },
+  m8_8: { g: 3, rules: 8, K: 8, depth: 4, name: '8 rules + 8 candidates + 2 chaal', tr: [96.9, 97.8, 97.8], gm: [96.3, 97.4, 97.7] }
 };
 const GROUPS = ['Purana', '1. Sirf rules (calculation nahi)', '2. Sirf calculation (rules nahi, saari chaalein)', '3. Rules + calculation', '4. Insaani best routine (bina engine)'];
 const RULE_TXT = {
@@ -513,7 +513,7 @@ const SQH=`<details class="card"><summary><b>🟩 Behtar square kaise ginen?</b>
 
 const HB_KIND = { capture: 'capture', check: 'check', threat: 'dhamki', quiet: 'shaant chaal' };
 const hbTxt = c => c.kind === 'mate' ? '<b>mate!</b>' : c.score <= -900 ? '<b>mate (khilaaf)</b>' : `<b>${fmtPts(c.score)}</b> = material ${fmtPts(c.mat)} + meri square ${fmtPts(c.mySq)} − uski square ${fmtPts(c.opSq)} <span class="muted">(sabse bura jawab: ${HB_KIND[c.kind] || c.kind})</span>`;
-const HBH = `<details class="card"><summary><b>🧮 Insaani hisaab kaise karein?</b></summary><div class="small" style="margin-top:6px"><p>Har candidate chaal ko dimaag mein khelo. Phir opponent ke ye jawab socho: <b>har capture, har check, har dhamki</b>, aur <b>1 sabse achhi shaant chaal</b> (jo uska mohra sabse behtar square par le jaaye).</p><p>Har jawab ke baad score: <b>material</b> (captures ka len-den poora karke, pawn 10, ghoda/oont 30, haathi 50, wazir 90; mera faayda +, uska −) <b>+ meri chaal ke square points − uske jawab ke square points</b>.</p><p>Opponent apna sabse achha jawab dega, isliye chaal ka score = <b>sabse bure jawab wala score</b>. Jis candidate ka ye score sabse zyada, wo khelo. Barabar ho to card mein upar wali.</p><p class="muted"><b>Farq:</b> "4 rules + 12 candidates + 2 chaal" mode mein 12 chaalon ko engine 2 poori chaal gehra search karta hai (games 97%). Best routine mein sirf 5 chaalein aur 1 jawab, sab aap khud dimaag se ginte ho (games 70%), isliye ye game mein sach mein kar sakte ho.</p></div></details>`;
+const HBH = `<details class="card"><summary><b>🧮 Insaani hisaab kaise karein?</b></summary><div class="small" style="margin-top:6px"><p>Har candidate chaal ko dimaag mein khelo. Phir opponent ke ye jawab socho: <b>har capture, har check, har dhamki</b>, aur <b>1 sabse achhi shaant chaal</b> (jo uska mohra sabse behtar square par le jaaye).</p><p>Har jawab ke baad score: <b>material</b> (captures ka len-den poora karke, pawn 10, ghoda/oont 30, haathi 50, wazir 90; mera faayda +, uska −) <b>+ meri chaal ke square points − uske jawab ke square points</b>.</p><p>Opponent apna sabse achha jawab dega, isliye chaal ka score = <b>sabse bure jawab wala score</b>. Jis candidate ka ye score sabse zyada, wo khelo. Barabar ho to card mein upar wali.</p><p class="muted"><b>Farq:</b> "4 rules + 12 candidates + 2 chaal" mode mein 12 chaalon ko engine 2 poori chaal gehra search karta hai (games 97%). Best routine mein sirf 5 chaalein aur 1 jawab, sab aap khud dimaag se ginte ho (games 71%), isliye ye game mein sach mein kar sakte ho.</p></div></details>`;
 const CARD_KEYS = { 6: ['qWin', 'qLose', 'check', 'threat6', 'allowMate', 'pawnAdv', 'kCtr'], 4: ['qWin', 'qLose', 'check', 'threat', 'allowMate'], 8: ['qWin', 'qLose', 'check', 'threat', 'pawnThreat', 'captureLowest', 'pstDelta', 'allowMate'] };
 const DEPTH_TXT = {
   1: 'Har chaal ke baad sirf captures gin lo. Opponent ki koi aur chaal nahi socho.',
