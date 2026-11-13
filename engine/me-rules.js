@@ -205,6 +205,7 @@ function features3(pos, lastTo) {
     pos.unmake();
     x.f.qGain = Math.max(-1500, Math.min(1500, v - before));
     if (x.f.qGain > 0) x.f.qWin = x.f.qGain; else if (x.f.qGain < 0) x.f.qLose = -x.f.qGain;
+    x.f.sqL = sqMove(pos, x.move);
   }
   return F;
 }
@@ -218,12 +219,32 @@ const CARDS = {
 };
 // Simple whole-number card (easy mental maths): pawn 10 (1-3-3-5-9 x10, same for win and loss), check +3,
 // threat +2, pawn threat +1, cheapest capture +2, better square +1/+2/+3 (worse -1/-2/-3), mate allowed -100
+// "Behtar square" thumb-rule map (level per square; points = new level - old level, max +-3).
+// r = rank from the mover's side (1..8), f = file 0..7 (a..h). Endgame = phase (Q4 R2 B/N1, start 24) <= 12.
+function sqLevel(t, f, r, eg) {
+  const ctr = f >= 2 && f <= 5 && r >= 3 && r <= 6, edge = f === 0 || f === 7 || r === 1 || r === 8, corner = (f === 0 || f === 7) && (r === 1 || r === 8);
+  switch (t) {
+    case PAWN: return r === 7 ? 3 : r === 6 ? 2 : r === 5 ? 1 : 0;
+    case KNIGHT: return corner ? -2 : edge ? -1 : (!eg && r === 6) ? 2 : ctr ? 1 : 0;
+    case BISHOP: return (r === 1 || r === 8) ? -1 : (ctr || (!eg && f >= 1 && f <= 6)) ? 1 : 0;
+    case ROOK: return eg ? 0 : r === 7 ? 2 : (r === 6 || r === 8) ? 1 : 0;
+    case QUEEN: return eg ? (r <= 2 ? -1 : ctr ? 1 : 0) : (r >= 6 ? 1 : 0);
+    case KING: return eg ? (ctr ? 1 : edge ? -1 : 0) : (r === 1 ? [1, 1, 1, -1, 0, 0, 1, 1][f] : -2);
+  }
+  return 0;
+}
+function sqMove(pos, m) {
+  if (E.mPromo(m)) return 3; if (E.mFlag(m) & E.F_CASTLE) return 2;
+  const from = E.mFrom(m), to = E.mTo(m), t = pos.b[from] & 7, w = pos.side === WHITE, eg = pos.phase <= 12;
+  const L = s => { const f = E.fileOf(s), r = w ? 8 - E.rowOf(s) : E.rowOf(s) + 1; return sqLevel(t, f, r, eg); };
+  return Math.max(-3, Math.min(3, L(to) - L(from)));
+}
 function sqPts(d) { return d >= 8 ? 3 : d >= 4 ? 2 : d >= 1 ? 1 : d <= -8 ? -3 : d <= -4 ? -2 : d <= -1 ? -1 : 0; }
 function simplePts(f, n) { let s = 0; const why = []; const add = (k, v) => { if (v) { s += v; why.push([k, v]); } };
   const p = Math.round((f.qGain || 0) / 100); add(p > 0 ? 'qWin' : 'qLose', p * 10);
   add('check', (f.check || f.mate) ? 3 : 0);
   if (n === 8) { add('threat', f.threat ? 2 : 0); add('pawnThreat', f.pawnThreat ? 1 : 0); add('captureLowest', f.captureLowest ? 2 : 0); add('allowMate', f.allowMate ? -100 : 0); }
-  add('pstDelta', sqPts(f.pstDelta || 0)); return { pts: s, why }; }
+  add('pstDelta', f.sqL !== undefined ? f.sqL : sqPts(f.pstDelta || 0)); return { pts: s, why }; }
 function cardPoints(f, W) { return simplePts(f, W === CARDS[4] ? 4 : 8); }
 // opts: { best (uci, optional), rules: 0|4|8, K, depth: 1..4 }
 function modeData(pos, S, opts) {
@@ -254,7 +275,7 @@ function modeData(pos, S, opts) {
   const strip = mv => ({ uci: mv.uci, san: mv.san, p4: mv.p4, w4: mv.w4, p8: mv.p8, w8: mv.w8, q: mv.q, lab: mv.lab, good: mv.good, rank: mv.rank });
   return { best, bestSan: moves.find(m => m.uci === best).san, moves: ranked.map(strip), calc, n: moves.length };
 }
-const api = { features2, features3, Q, CARDS, modeData, simplePts, sqPts };
+const api = { features2, features3, Q, CARDS, modeData, simplePts, sqPts, sqLevel, sqMove };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 root.MERules = api;
 })(typeof self !== 'undefined' ? self : this);
