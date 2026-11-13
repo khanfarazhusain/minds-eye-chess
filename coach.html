@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Engine Coach</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1F5C3E">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+:root{
+  --bg:#EDF1EC; --surface:#FFFFFF; --surface2:#E1E8E1; --fg:#17211B; --muted:#56655B; --line:#C9D4CB;
+  --accent:#23664A; --accent-fg:#FFFFFF; --brass:#9C7216; --good:#1F7D4C; --bad:#B53D27; --good-soft:#D7EEDF; --bad-soft:#F6DCD5; --warn-soft:#F7ECCF;
+  --sq-light:#E7DFC4; --sq-dark:#789560; --hl:#F0BE45; --sel:#F6D86B; --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1512; --surface:#17201B; --surface2:#202B25; --fg:#E3EBE5; --muted:#98A79D; --line:#2D3A33;
+  --accent:#5DBB8A; --accent-fg:#0A1A11; --brass:#E2B552; --good:#55C688; --bad:#EF7B64; --good-soft:#173826; --bad-soft:#41201A; --warn-soft:#3A3115;
+  --sq-light:#D8CFAF; --sq-dark:#68844F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1512; --surface:#17201B; --surface2:#202B25; --fg:#E3EBE5; --muted:#98A79D; --line:#2D3A33;
+  --accent:#5DBB8A; --accent-fg:#0A1A11; --brass:#E2B552; --good:#55C688; --bad:#EF7B64; --good-soft:#173826; --bad-soft:#41201A; --warn-soft:#3A3115;
+  --sq-light:#D8CFAF; --sq-dark:#68844F; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg)}
+body{color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent;padding-bottom:env(safe-area-inset-bottom)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--hl);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto;padding:12px 16px 40px}
+header{display:flex;align-items:center;gap:10px;padding-top:max(8px,env(safe-area-inset-top))}
+header a{color:var(--accent);text-decoration:none;font-weight:700;padding:6px 0}
+header h1{font-size:20px;margin:0;flex:1}
+.tabs{display:flex;gap:6px;margin:10px 0 12px;background:var(--surface2);padding:4px;border-radius:12px}
+.tabs button{flex:1;border:0;background:transparent;padding:9px 4px;border-radius:9px;font-weight:600;font-size:14px;color:var(--muted)}
+.tabs button.on{background:var(--surface);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:10px 0}
+.muted{color:var(--muted)} .small{font-size:13px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--surface);padding:10px 14px;border-radius:10px;font-weight:600}
+.btn.pri{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn:disabled{opacity:.5}
+.chip{border:1px solid var(--line);background:var(--surface);padding:8px 12px;border-radius:999px;font-weight:600;font-family:ui-monospace,Menlo,monospace;font-size:15px}
+.chip.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.chip.ok{background:var(--good-soft);border-color:var(--good)} .chip.no{background:var(--bad-soft);border-color:var(--bad)} .chip.miss{background:var(--warn-soft);border-color:var(--brass)}
+.opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--surface);padding:11px 12px;border-radius:10px;margin:6px 0;font-weight:500}
+.opt.ok{background:var(--good-soft);border-color:var(--good)} .opt.no{background:var(--bad-soft);border-color:var(--bad)}
+.board{position:relative;width:100%;aspect-ratio:1;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);border-radius:8px;overflow:hidden;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.sq{position:relative;display:flex;align-items:center;justify-content:center;font-size:min(10.5vw,56px);line-height:1}
+.sq.l{background:var(--sq-light)} .sq.d{background:var(--sq-dark)}
+.sq.last::after{content:"";position:absolute;inset:0;background:rgba(240,190,69,.45)}
+.sq.sel::after{content:"";position:absolute;inset:0;background:rgba(246,216,107,.75)}
+.sq.dot::before{content:"";position:absolute;width:28%;height:28%;border-radius:50%;background:rgba(0,0,0,.22);z-index:2}
+.sq.cap::before{content:"";position:absolute;inset:4%;border-radius:50%;border:4px solid rgba(0,0,0,.22);z-index:2}
+.sq .pc{position:relative;z-index:1}
+.pc.w{color:#fff;text-shadow:0 0 1px #000,0 0 1px #000,0 1px 2px rgba(0,0,0,.5);-webkit-text-stroke:1px #222}
+.pc.b{color:#151515;text-shadow:0 0 1px #fff3}
+.coord{position:absolute;font-size:10px;font-weight:700;opacity:.75;z-index:1}
+.coord.f{right:3px;bottom:1px} .coord.r{left:3px;top:1px}
+.sq.l .coord{color:var(--sq-dark)} .sq.d .coord{color:var(--sq-light)}
+.status{font-weight:700;margin:8px 0 2px}
+.steps{display:flex;gap:4px;margin:10px 0}
+.steps span{flex:1;height:6px;border-radius:3px;background:var(--surface2)}
+.steps span.done{background:var(--accent)} .steps span.cur{background:var(--brass)}
+h2{font-size:17px;margin:4px 0 6px} h3{font-size:15px;margin:10px 0 4px}
+.line{font-family:ui-monospace,Menlo,monospace;font-size:14px;word-break:break-word}
+.good{color:var(--good)} .bad{color:var(--bad)}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat div{background:var(--surface2);border-radius:10px;padding:10px;text-align:center}
+.stat b{display:block;font-size:22px}
+.think li{margin:4px 0}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp 0.8s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+input[type=text]{width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font-family:ui-monospace,Menlo,monospace;font-size:13px}
+select{font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+.method ol{margin:6px 0;padding-left:20px} .method li{margin:3px 0}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a href="index.html">‹ App</a><h1>Engine Coach</h1><span class="small muted" id="eloTag"></span></header>
+<div class="tabs" role="tablist">
+  <button class="on" data-tab="train">Follow karo</button>
+  <button data-tab="think">Engine ki soch</button>
+  <button data-tab="watch">vs Stockfish</button>
+  <button data-tab="stats">Progress</button>
+</div>
+
+<section id="tab-train">
+  <div class="card method" id="methodCard">
+    <h2>Engine ka tareeka (har chaal par)</h2>
+    <ol>
+      <li><b>Khatra:</b> opponent agli chaal mein kya karna chahta hai?</li>
+      <li><b>Latakte mohre:</b> kaunsa mohra bina bachaav ke hai, mera ya uska?</li>
+      <li><b>Checks, captures, threats:</b> saari forcing chaalein dhoondo.</li>
+      <li><b>Candidates:</b> 2-3 achhi chaalein chuno, har ek ka opponent ka sabse achha jawab socho.</li>
+      <li><b>Final:</b> jo chaal har jawab ke baad bhi achhi rahe, wahi khelo.</li>
+    </ol>
+    <div class="row"><label class="small muted">Level</label>
+      <select id="lvl"><option value="mix">Mix</option><option value="easy">Easy</option><option value="med">Medium</option><option value="hard">Hard</option></select>
+      <button class="btn small" id="hideMethod">Chhupao</button></div>
+  </div>
+  <div class="steps" id="stepBar"><span></span><span></span><span></span><span></span></div>
+  <div class="status" id="trainStatus"></div>
+  <div class="board" id="trainBoard"></div>
+  <div id="trainPanel"></div>
+</section>
+
+<section id="tab-think" class="hidden">
+  <div class="status" id="thinkStatus">Board par chaalein khelo (dono taraf), phir "Engine ki soch" dabao.</div>
+  <div class="board" id="thinkBoard"></div>
+  <div class="row" style="margin-top:10px">
+    <button class="btn pri" id="btnThink">Engine ki soch</button>
+    <button class="btn" id="btnEngMove">Engine chaal khele</button>
+    <button class="btn" id="btnUndo">↶ Wapas</button>
+    <button class="btn" id="btnFlip">⇅</button>
+    <button class="btn" id="btnReset">Naya</button>
+  </div>
+  <div class="row small" style="margin-top:8px"><label><input type="checkbox" id="autoReply"> Mere har chaal par engine jawab de (engine se khelo)</label></div>
+  <details class="card"><summary class="small">FEN se position</summary>
+    <input type="text" id="fenIn" placeholder="FEN paste karo"><div class="row" style="margin-top:8px"><button class="btn" id="btnFen">Load</button><button class="btn" id="btnFenCopy">Copy current FEN</button></div></details>
+  <div id="thinkOut"></div>
+</section>
+
+<section id="tab-watch" class="hidden">
+  <div class="card">
+    <h2>Hamara engine vs Stockfish</h2>
+    <div class="row small">
+      <label>Hamare engine ka level <select id="wMeLvl"></select></label>
+      <label>Stockfish level <select id="wLvl"></select></label>
+      <label>Sochne ka time (har chaal) <select id="wTime"><option value="500">0.5 sec</option><option value="1000" selected>1 sec</option><option value="2000">2 sec</option><option value="4000">4 sec</option></select></label>
+      <label>Dekhne ki speed <select id="wDelay"><option value="0">Tez</option><option value="700" selected>Normal</option><option value="2000">Dheere</option></select></label>
+      <label>Hamare engine ka rang <select id="wCol"><option value="w">White</option><option value="b">Black</option><option value="r" selected>Random</option></select></label>
+    </div>
+    <div class="row small" style="margin-top:6px"><label><input type="checkbox" id="wFull"> Har chaal par engine ki poori soch (dheema)</label></div>
+    <div class="row" style="margin-top:10px"><button class="btn pri" id="wStart">▶ Game shuru</button><button class="btn" id="wPause" disabled>⏸ Pause</button><button class="btn" id="wPgn" disabled>PGN copy</button></div>
+    <p class="small muted">Live game: dono engine isi phone par chalte hain. Ek game se rating pata nahi chalti, ye dekhne ke maze ke liye hai.</p>
+  </div>
+  <div class="status" id="wStatus"></div>
+  <div class="row small" id="wNames" style="justify-content:space-between"></div>
+  <div class="board" id="watchBoard"></div>
+  <div class="card"><h3>Hamare engine ki soch (aakhri chaal)</h3><div id="wThink" class="small muted">Game shuru karo.</div></div>
+  <div class="card"><h3>Chaalein</h3><div id="wMoves" class="line"></div></div>
+  <details class="card"><summary><b>Rating test ke purane games (replay)</b></summary><p class="small muted" id="tgInfo">Load ho rahe hain…</p>
+    <select id="tgSel" style="width:100%"></select>
+    <div class="row" style="margin-top:8px"><button class="btn" id="tgFirst">⏮</button><button class="btn" id="tgPrev">◀</button><button class="btn" id="tgNext">▶</button><button class="btn" id="tgLast">⏭</button><button class="btn" id="tgAuto">Auto ▶</button><button class="btn" id="tgFlip">⇅</button></div>
+    <div class="status small" id="tgStatus"></div>
+    <div class="board" id="tgBoard"></div>
+    <div id="tgMoves" class="line small" style="margin-top:8px"></div>
+  </details>
+</section>
+
+<section id="tab-stats" class="hidden">
+  <div class="card"><h2>Aapka match rate</h2>
+    <div class="stat"><div><b id="stMatch">0%</b><span class="small muted">Pehli koshish mein engine wali chaal</span></div><div><b id="stThreat">0%</b><span class="small muted">Khatra sahi pehchana</span></div><div><b id="stScan">0%</b><span class="small muted">Checks/captures dhoondhe</span></div></div>
+    <p class="small muted" id="stInfo"></p>
+  </div>
+  <div class="card"><h2>Pichhli 20 positions</h2><div id="stRecent" class="line"></div></div>
+  <div class="card small muted">Sach baat: koi bhi insaan har position mein engine se 100% match nahi karta. Yahan sirf wo positions hain jahan ek chaal baaki sab se saaf behtar hai, isliye tareeka follow karke 90%+ tak pahunchna mumkin hai. Galat hui positions kuch der baad dobara aati hain.</div>
+</section>
+</div>
+
+<script src="engine/me-engine.js"></script>
+<script>
+(function(){
+'use strict';
+const E = window.MEEngine;
+const GLYPH = {1:'♟',2:'♞',3:'♝',4:'♜',5:'♛',6:'♚'};
+const VS = '︎';
+const STORE = 'mindseye.coach.v1';
+const ANALYZE_MS = 2200;
+
+// ---------- storage ----------
+function load(){ try{ return JSON.parse(localStorage.getItem(STORE)) || null; }catch(e){ return null; } }
+function save(){ try{ localStorage.setItem(STORE, JSON.stringify(st)); }catch(e){} }
+let st = load() || { seen:{}, hist:[], queue:[], counter:0 };
+st.seen = st.seen || {}; st.hist = st.hist || []; st.queue = st.queue || []; st.counter = st.counter || 0;
+
+// ---------- worker ----------
+let worker = null, reqId = 0; const pending = new Map();
+function getWorker(){
+  if (worker) return worker;
+  worker = new Worker('engine/me-worker.js');
+  worker.onmessage = e => { const d = e.data; const p = pending.get(d.id); if (!p) return; pending.delete(d.id); d.ok ? p.res(d.result) : p.rej(new Error(d.error)); };
+  worker.onerror = e => { for (const p of pending.values()) p.rej(new Error(e.message || 'worker error')); pending.clear(); };
+  return worker;
+}
+function ask(msg){ return new Promise((res, rej) => { const id = ++reqId; pending.set(id, {res, rej}); getWorker().postMessage(Object.assign({id}, msg)); }); }
+
+// ---------- board widget ----------
+function Board(el, opts){
+  this.el = el; this.flip = false; this.pos = null; this.sel = 0; this.last = null; this.onMove = opts.onMove; this.canMove = opts.canMove || (()=>true);
+  el.addEventListener('click', ev => { const t = ev.target.closest('.sq'); if (t) this.tap(+t.dataset.sq); });
+}
+Board.prototype.set = function(pos, last){ this.pos = pos; this.sel = 0; if (last !== undefined) this.last = last; this.render(); };
+Board.prototype.render = function(){
+  const pos = this.pos, h = []; const legalTo = new Map();
+  if (this.sel) for (const m of pos.legalMoves()) if (E.mFrom(m) === this.sel) legalTo.set(E.mTo(m), m);
+  for (let r = 0; r < 8; r++) for (let f = 0; f < 8; f++) {
+    const rr = this.flip ? 7 - r : r, ff = this.flip ? 7 - f : f;
+    const s = E.sqOf(ff, rr), p = pos.b[s];
+    let cls = 'sq ' + (((rr + ff) & 1) ? 'd' : 'l');
+    if (this.last && (s === this.last[0] || s === this.last[1])) cls += ' last';
+    if (s === this.sel) cls += ' sel';
+    if (legalTo.has(s)) cls += p ? ' cap' : ' dot';
+    let inner = p ? `<span class="pc ${(p & 8) ? 'b' : 'w'}">${GLYPH[p & 7]}${VS}</span>` : '';
+    if (f === 7) inner += `<span class="coord r">${8 - rr}</span>`;
+    if (r === 7) inner += `<span class="coord f">${'abcdefgh'[ff]}</span>`;
+    h.push(`<div class="${cls}" data-sq="${s}">${inner}</div>`);
+  }
+  this.el.innerHTML = h.join('');
+};
+Board.prototype.tap = function(s){
+  if (!this.pos || !this.canMove()) return;
+  const p = this.pos.b[s];
+  if (this.sel) {
+    const ms = this.pos.legalMoves().filter(m => E.mFrom(m) === this.sel && E.mTo(m) === s);
+    if (ms.length) { const m = ms.find(x => !E.mPromo(x) || E.mPromo(x) === E.QUEEN) || ms[0]; this.sel = 0; this.onMove(m); return; }
+  }
+  if (p && (p & 8) === this.pos.side) { this.sel = (this.sel === s) ? 0 : s; this.render(); }
+  else if (this.sel) { this.sel = 0; this.render(); }
+};
+
+// ---------- helpers ----------
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function shuffle(a){ for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function sideHi(side){ return side === E.WHITE ? 'White' : 'Black'; }
+function moveLine(line, startPos){ // numbered SAN
+  if (!line || !line.length) return '';
+  let n = startPos.fullmove, white = startPos.side === E.WHITE, out = [];
+  line.forEach((s, i) => { if (white) out.push(n + '.'); else if (i === 0) out.push(n + '...'); out.push(s); if (!white) n++; white = !white; });
+  return out.join(' ');
+}
+
+// Render the engine's full thinking report (shared by both tabs)
+function thinkingHTML(rep, pos){
+  const S = Object.fromEntries(rep.steps.map(s => [s.id, s.data]));
+  const h = [];
+  h.push(`<div class="card think"><h2>Engine ki soch, step by step</h2><p class="small muted">Depth ${rep.depth}, ${Math.round(rep.nodes/1000)}k positions dekhi. Score ${esc(S.best.scoreText)} (${sideHi(pos.side)} ki nazar se).</p>`);
+  h.push(`<h3>1. Khatra</h3><p>${esc(S.threat ? S.threat.text : 'Koi khatra nahi.')}</p>`);
+  const hm = S.hanging.mine, ht = S.hanging.theirs;
+  h.push(`<h3>2. Latakte mohre</h3><ul>`);
+  h.push(`<li>Mere: ${hm.length ? hm.map(x => `${x.piece} ${x.sq} (${esc(x.san)} se jaa sakta hai)`).join(', ') : 'koi nahi'}</li>`);
+  h.push(`<li>Opponent ke: ${ht.length ? ht.map(x => `${x.piece} ${x.sq} (${esc(x.san)})`).join(', ') : 'koi nahi'}</li></ul>`);
+  const F = S.forcing, fmt = arr => arr.length ? arr.map(d => `<b>${esc(d.san)}</b>${d.tags.length ? ' <span class="muted">(' + esc(d.tags.join(', ')) + ')</span>' : ''}`).join(', ') : 'koi nahi';
+  h.push(`<h3>3. Checks, captures, threats</h3><ul><li>Checks: ${fmt(F.checks)}</li><li>Captures: ${fmt(F.captures)}</li><li>Threats: ${fmt(F.threats.slice(0, 6))}</li></ul>`);
+  h.push(`<h3>4. Candidates</h3><ol>`);
+  for (const c of S.candidates.cands) h.push(`<li><b>${esc(c.san)}</b> ${esc(c.scoreText)} <span class="line muted">${esc(moveLine(c.line, pos))}</span></li>`);
+  h.push(`</ol>`);
+  if (S.candidates.alts.length) { h.push(`<p class="small"><b>Ye forcing chaalein kyun nahi:</b></p><ul>`); for (const a of S.candidates.alts) h.push(`<li>${esc(a.text)} <span class="line muted">${esc(moveLine(a.line, pos))}</span></li>`); h.push(`</ul>`); }
+  h.push(`<h3>5. Best move: ${esc(S.best.san)}</h3><p>${esc(S.best.reason)}</p><p class="line">${esc(moveLine(S.best.line, pos))}</p>`);
+  if (rep.iters && rep.iters.length) h.push(`<details><summary class="small">Engine ne depth ke saath kya socha</summary><p class="small line">${rep.iters.map(i => `d${i.depth}: ${esc(i.san)} (${(i.score/100).toFixed(2)})`).join(' · ')}</p></details>`);
+  h.push(`<div class="row" style="margin-top:8px"><button class="btn" data-play="best">▶ Best line board par chalao</button></div></div>`);
+  return h.join('');
+}
+function playLine(board, fen, uciLine, done){
+  const p = new E.Position(fen); board.set(p, null); let i = 0;
+  const step = () => { if (i >= uciLine.length) { if (done) setTimeout(done, 900); return; } const m = p.parseUci(uciLine[i++]); if (!m) return; p.make(m); board.set(p, [E.mFrom(m), E.mTo(m)]); setTimeout(step, 750); };
+  setTimeout(step, 400);
+}
+function sanToUci(fen, sans){ const p = new E.Position(fen), out = []; for (const s of sans) { const m = p.parseSan(s); if (!m) break; out.push(p.uci(m)); p.make(m); } return out; }
+
+// ---------- tabs ----------
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b));
+  for (const t of ['train', 'think', 'watch', 'stats']) document.getElementById('tab-' + t).classList.toggle('hidden', b.dataset.tab !== t);
+  if (b.dataset.tab === 'stats') renderStats();
+  if (b.dataset.tab === 'watch') loadTestGames();
+});
+
+// ================= TRAINING =================
+let POS = [];
+const tBoard = new Board(document.getElementById('trainBoard'), { onMove: m => onTrainMove(m), canMove: () => T && T.step === 3 && !T.busy });
+let T = null;
+const panel = document.getElementById('trainPanel'), tStatus = document.getElementById('trainStatus');
+document.getElementById('hideMethod').onclick = () => { document.getElementById('methodCard').classList.add('hidden'); try{ localStorage.setItem(STORE + '.hideMethod', '1'); }catch(e){} };
+try{ if (localStorage.getItem(STORE + '.hideMethod')) document.getElementById('methodCard').classList.add('hidden'); }catch(e){}
+const lvlSel = document.getElementById('lvl');
+try{ lvlSel.value = localStorage.getItem(STORE + '.lvl') || 'mix'; }catch(e){}
+lvlSel.onchange = () => { try{ localStorage.setItem(STORE + '.lvl', lvlSel.value); }catch(e){} nextPosition(); };
+
+function bucket(p){ return p.d <= 3 ? 'easy' : p.d <= 6 ? 'med' : 'hard'; }
+function pickPosition(){
+  st.counter++;
+  // due review first
+  const due = st.queue.findIndex(q => q.at <= st.counter);
+  if (due >= 0) { const q = st.queue.splice(due, 1)[0]; const p = POS.find(x => x.fen === q.fen); if (p) return p; }
+  const lv = lvlSel.value;
+  let pool = POS.filter(p => (lv === 'mix' || bucket(p) === lv) && !st.seen[p.fen]);
+  if (!pool.length) pool = POS.filter(p => lv === 'mix' || bucket(p) === lv);
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+function setSteps(){ const bars = document.querySelectorAll('#stepBar span'); bars.forEach((b, i) => { b.className = (i + 1 < T.step) ? 'done' : (i + 1 === T.step ? 'cur' : ''); }); }
+
+async function nextPosition(){
+  if (!POS.length) return;
+  const p = pickPosition();
+  const pos = new E.Position(p.fen);
+  T = { p, pos, step: 1, rep: null, tries: 0, res: { threat: null, scan: null, match: null } };
+  tBoard.flip = pos.side === E.BLACK; tBoard.set(pos, null);
+  tStatus.textContent = `${sideHi(pos.side)} ki chaal. Engine ki tarah socho.`;
+  setSteps();
+  panel.innerHTML = `<div class="card"><span class="spinner"></span>Engine is position par soch raha hai… (aap tab tak board dekho)</div>`;
+  try { T.rep = await ask({ cmd: 'analyze', fen: p.fen, time: ANALYZE_MS });
+    if (T.rep.best !== p.best && T.p === p) { panel.innerHTML = `<div class="card"><span class="spinner"></span>Position mushkil hai, engine thoda aur gehra soch raha hai…</div>`; T.rep = await ask({ cmd: 'analyze', fen: p.fen, time: ANALYZE_MS * 2.5 }); } }
+  catch (e) { panel.innerHTML = `<div class="card bad">Engine load nahi hua: ${esc(e.message)}</div>`; return; }
+  if (T.p !== p) return;
+  stepThreat();
+}
+
+// Step 1: threat
+function stepThreat(){
+  T.step = 1; setSteps();
+  const S = Object.fromEntries(T.rep.steps.map(s => [s.id, s.data]));
+  const th = S.threat;
+  let correct, options;
+  if (th && th.kind === 'check') { stepScan(); return; }
+  const opp = new E.Position(T.p.fen.replace(/ [wb] /, T.pos.side === E.WHITE ? ' b ' : ' w ').replace(/ ([KQkq-]+) [a-h][36] /, ' $1 - '));
+  const oppMoves = opp.inCheck() ? [] : opp.legalMoves().map(m => opp.san(m));
+  const real = th && (th.kind === 'mate' || th.kind === 'material');
+  const none = 'Koi bada khatra nahi';
+  if (real) {
+    correct = th.san;
+    const forcing = oppMoves.filter(s => s !== th.san && /[x+]/.test(s));
+    const quiet = oppMoves.filter(s => s !== th.san && !/[x+]/.test(s));
+    options = shuffle([th.san, ...shuffle(forcing).slice(0, 2), ...shuffle(quiet).slice(0, 2)].slice(0, 4)); options.push(none);
+  } else {
+    correct = none;
+    const forcing = oppMoves.filter(s => /[x+]/.test(s));
+    options = shuffle([...shuffle(forcing).slice(0, 2), ...shuffle(oppMoves.filter(s => !/[x+]/.test(s))).slice(0, 4 - Math.min(2, forcing.length))]).slice(0, 4); options.push(none);
+  }
+  panel.innerHTML = `<div class="card"><h2>Step 1: Khatra</h2><p>Agar aap abhi "pass" karo, to opponent ki sabse khatarnaak chaal kaunsi hogi?</p>
+    <div id="opts">${options.map(o => `<button class="opt" data-o="${esc(o)}">${esc(o)}</button>`).join('')}</div><div id="fb"></div></div>`;
+  panel.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    if (T.res.threat !== null) return;
+    const ok = b.dataset.o === correct; T.res.threat = ok;
+    panel.querySelectorAll('.opt').forEach(x => { if (x.dataset.o === correct) x.classList.add('ok'); else if (x === b) x.classList.add('no'); });
+    panel.querySelector('#fb').innerHTML = `<p class="${ok ? 'good' : 'bad'}"><b>${ok ? 'Sahi!' : 'Nahi.'}</b> ${esc(th ? th.text : '')}</p><button class="btn pri" id="go2">Aage: checks aur captures</button>`;
+    panel.querySelector('#go2').onclick = stepScan;
+  });
+}
+
+// Step 2: forcing-move scan
+function stepScan(){
+  T.step = 2; setSteps();
+  const S = Object.fromEntries(T.rep.steps.map(s => [s.id, s.data]));
+  const forcingSet = new Set([...S.forcing.checks, ...S.forcing.captures].map(d => d.san));
+  const all = T.pos.legalMoves().map(m => T.pos.san(m));
+  const quiet = shuffle(all.filter(s => !forcingSet.has(s))).slice(0, Math.max(3, Math.min(5, 8 - forcingSet.size)));
+  const chips = shuffle([...forcingSet, ...quiet]);
+  const picked = new Set();
+  panel.innerHTML = `<div class="card"><h2>Step 2: Checks aur captures</h2><p>In mein se <b>saare</b> checks aur captures chuno (aapki taraf se). ${forcingSet.size ? '' : '<span class="muted">(ho sakta hai ek bhi na ho)</span>'}</p>
+    <div class="row" id="chips">${chips.map(c => `<button class="chip" data-c="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+    <div class="row" style="margin-top:10px"><button class="btn pri" id="chk">Check karo</button></div><div id="fb"></div></div>`;
+  panel.querySelectorAll('.chip').forEach(b => b.onclick = () => { if (T.res.scan !== null) return; const c = b.dataset.c; picked.has(c) ? picked.delete(c) : picked.add(c); b.classList.toggle('on'); });
+  panel.querySelector('#chk').onclick = () => {
+    if (T.res.scan !== null) return;
+    let wrong = 0, missed = 0;
+    panel.querySelectorAll('.chip').forEach(b => { const c = b.dataset.c, f = forcingSet.has(c), p = picked.has(c); b.classList.remove('on'); if (f && p) b.classList.add('ok'); else if (f) { b.classList.add('miss'); missed++; } else if (p) { b.classList.add('no'); wrong++; } });
+    T.res.scan = !wrong && !missed;
+    const fmt = arr => arr.map(d => `${d.san}${d.tags.length ? ' (' + d.tags.join(', ') + ')' : ''}`).join('; ');
+    const caps = S.forcing.captures, checks = S.forcing.checks;
+    panel.querySelector('#fb').innerHTML = `<p class="${T.res.scan ? 'good' : 'bad'}"><b>${T.res.scan ? 'Sab sahi!' : (missed ? missed + ' miss hui' : '') + (missed && wrong ? ', ' : '') + (wrong ? wrong + ' galat chuni' : '')}</b></p>
+      <p class="small">Checks: ${esc(fmt(checks) || 'koi nahi')}<br>Captures: ${esc(fmt(caps) || 'koi nahi')}${S.forcing.threats.length ? '<br>Threats: ' + esc(fmt(S.forcing.threats.slice(0, 5))) : ''}</p>
+      <button class="btn pri" id="go3">Aage: apni best chaal</button>`;
+    panel.querySelector('#go3').onclick = stepMove;
+  };
+}
+
+// Step 3: play the move
+function stepMove(){
+  T.step = 3; setSteps();
+  panel.innerHTML = `<div class="card"><h2>Step 3: Best chaal board par khelo</h2><p>Candidates socho: har chaal ke baad opponent ka sabse achha jawab kya hai? Jo chaal har jawab ke baad bhi achhi rahe, wo khelo.</p><div id="fb"></div>
+    <div class="row"><button class="btn" id="giveUp">Batao (haar maan li)</button></div></div>`;
+  tStatus.textContent = `${sideHi(T.pos.side)}: apni chaal board par khelo`;
+  panel.querySelector('#giveUp').onclick = () => finish(false, true);
+}
+async function onTrainMove(m){
+  const uci = T.pos.uci(m), san = T.pos.san(m);
+  const after = new E.Position(T.p.fen); after.make(after.parseUci(uci)); tBoard.set(after, [E.mFrom(m), E.mTo(m)]);
+  if (uci === T.rep.best || uci === T.p.best) { if (T.tries === 0) T.res.match = true; finish(true); return; }
+  T.tries++; T.busy = true;
+  const fb = panel.querySelector('#fb'); fb.innerHTML = `<p><span class="spinner"></span>${esc(san)} ko engine check kar raha hai…</p>`;
+  let j = null; try { j = await ask({ cmd: 'judge', fen: T.p.fen, uci, best: { best: T.rep.best, score: T.rep.score }, time: 900 }); } catch (e) {}
+  T.busy = false;
+  if (T.tries === 1) T.res.match = false;
+  const lineTxt = j ? moveLine(j.line, T.pos) : '';
+  fb.innerHTML = `<p class="bad"><b>${esc(san)} nahi.</b> ${esc(j ? j.text : '')}</p>${lineTxt ? `<p class="line small muted">${esc(lineTxt)}</p>` : ''}
+    <p>${T.tries < 2 ? 'Dobara socho aur ek aur koshish karo.' : ''}</p>`;
+  setTimeout(() => { if (T.step === 3) tBoard.set(new E.Position(T.p.fen), null); }, 1800);
+  if (T.tries >= 2) setTimeout(() => finish(false), 1900);
+}
+
+// Step 4: reveal thinking + record result
+function finish(found, gaveUp){
+  if (T.step === 4) return;
+  T.step = 4; setSteps(); if (T.res.match === null) T.res.match = false;
+  const rec = { f: T.p.fen, m: T.res.match ? 1 : 0, t: T.res.threat === null ? -1 : (T.res.threat ? 1 : 0), s: T.res.scan === null ? -1 : (T.res.scan ? 1 : 0), san: T.p.san, at: Date.now() };
+  st.hist.push(rec); if (st.hist.length > 500) st.hist.shift();
+  st.seen[T.p.fen] = (st.seen[T.p.fen] || 0) + 1;
+  if (!T.res.match) { st.queue = st.queue.filter(q => q.fen !== T.p.fen); st.queue.push({ fen: T.p.fen, at: st.counter + 4 + Math.floor(Math.random() * 4) }); }
+  save();
+  const S = Object.fromEntries(T.rep.steps.map(s => [s.id, s.data]));
+  const head = found ? `<div class="card" style="border-color:var(--good)"><h2 class="good">✓ ${esc(T.p.san)}! Engine wali chaal${T.tries ? ' (doosri koshish mein)' : ''}.</h2></div>`
+    : `<div class="card" style="border-color:var(--bad)"><h2 class="bad">Engine ki chaal: ${esc(T.p.san)}</h2><p class="small">Ye position thodi der baad dobara aayegi.</p></div>`;
+  tStatus.textContent = `Engine: ${T.p.san}`;
+  panel.innerHTML = head + thinkingHTML(T.rep, T.pos) + `<div class="row"><button class="btn pri" id="nextP">Agli position ›</button></div>`;
+  panel.querySelector('#nextP').onclick = nextPosition;
+  panel.querySelector('[data-play="best"]').onclick = () => playLine(tBoard, T.p.fen, sanToUci(T.p.fen, S.best.line));
+}
+
+// ================= THINK TAB =================
+let thinkPos = new E.Position(); const thinkHist = [];
+const kBoard = new Board(document.getElementById('thinkBoard'), { onMove: m => { applyThink(m); if (document.getElementById('autoReply').checked) engineMove(); } });
+kBoard.set(thinkPos, null);
+const thinkOut = document.getElementById('thinkOut'), thinkStatus = document.getElementById('thinkStatus');
+function applyThink(m){ thinkHist.push(m); thinkPos.make(m); kBoard.set(thinkPos, [E.mFrom(m), E.mTo(m)]); thinkOut.innerHTML = ''; updThinkStatus(); }
+function updThinkStatus(){ const n = thinkPos.legalMoves().length; thinkStatus.textContent = n ? `${sideHi(thinkPos.side)} ki chaal.` : (thinkPos.inCheck() ? 'Checkmate!' : 'Stalemate.'); }
+let thinking = false;
+async function engineMove(){
+  if (thinking || !thinkPos.legalMoves().length) return; thinking = true; thinkStatus.innerHTML = '<span class="spinner"></span>Engine soch raha hai…';
+  try { const r = await ask({ cmd: 'play', fen: thinkPos.fen(), time: 1500 }); const m = thinkPos.parseUci(r.uci); if (m) applyThink(m); } catch (e) { thinkStatus.textContent = 'Engine error: ' + e.message; }
+  thinking = false; updThinkStatus();
+}
+document.getElementById('btnEngMove').onclick = engineMove;
+document.getElementById('btnThink').onclick = async () => {
+  if (thinking) return; if (!thinkPos.legalMoves().length) return;
+  thinking = true; const fen = thinkPos.fen(); const snap = new E.Position(fen);
+  thinkOut.innerHTML = `<div class="card"><span class="spinner"></span>Engine 5 steps mein soch raha hai…</div>`;
+  try { const rep = await ask({ cmd: 'analyze', fen, time: 3000 }); thinkOut.innerHTML = thinkingHTML(rep, snap);
+    const S = Object.fromEntries(rep.steps.map(s => [s.id, s.data]));
+    thinkOut.querySelector('[data-play="best"]').onclick = () => playLine(kBoard, fen, sanToUci(fen, S.best.line), () => kBoard.set(thinkPos, null)); }
+  catch (e) { thinkOut.innerHTML = `<div class="card bad">Error: ${esc(e.message)}</div>`; }
+  thinking = false;
+};
+document.getElementById('btnUndo').onclick = () => { if (thinking || !thinkHist.length) return; thinkHist.pop(); thinkPos.unmake(); kBoard.set(thinkPos, null); thinkOut.innerHTML = ''; updThinkStatus(); };
+document.getElementById('btnFlip').onclick = () => { kBoard.flip = !kBoard.flip; kBoard.render(); };
+document.getElementById('btnReset').onclick = () => { if (thinking) return; thinkPos = new E.Position(); thinkHist.length = 0; kBoard.set(thinkPos, null); thinkOut.innerHTML = ''; ask({ cmd: 'newgame', fen: thinkPos.fen() }).catch(()=>{}); updThinkStatus(); };
+document.getElementById('btnFen').onclick = () => { const f = document.getElementById('fenIn').value.trim(); if (!f) return; try { const p = new E.Position(f); if (!p.kingSq[0] || !p.kingSq[1]) throw 0; thinkPos = p; thinkHist.length = 0; kBoard.flip = p.side === E.BLACK; kBoard.set(p, null); thinkOut.innerHTML = ''; updThinkStatus(); } catch (e) { thinkStatus.textContent = 'FEN sahi nahi hai.'; } };
+document.getElementById('btnFenCopy').onclick = () => { const f = thinkPos.fen(); document.getElementById('fenIn').value = f; try { navigator.clipboard.writeText(f); } catch (e) {} };
+
+
+// ================= WATCH: ME engine vs Stockfish =================
+let sfw = null, sfReady = null, sfWaiter = null;
+function sfStartW(){
+  if (sfReady) return sfReady;
+  sfReady = new Promise((res, rej) => {
+    try { sfw = new Worker('engine/sf-worker.js'); } catch (e) { rej(e); return; }
+    sfw.onmessage = e => { const t = String(e.data); if (t === 'uciok') res(); if (sfWaiter && sfWaiter.re.test(t)) { const w = sfWaiter; sfWaiter = null; w.res(t); } };
+    sfw.onerror = e => { rej(new Error(e.message || 'Stockfish load nahi hua')); sfReady = null; };
+    sfw.postMessage('uci');
+  });
+  return sfReady;
+}
+function sfCmd(cmd, waitRe){ return new Promise(res => { if (waitRe) sfWaiter = { re: waitRe, res }; sfw.postMessage(cmd); if (!waitRe) res(); }); }
+const SF_LEVELS = [[0,'Level 0 (bahut kamzor)'],[3,'Level 3'],[6,'Level 6'],[9,'Level 9'],[12,'Level 12'],[15,'Level 15'],[18,'Level 18'],[20,'Level 20 (poori taakat)']];
+const wLvl = document.getElementById('wLvl'); wLvl.innerHTML = SF_LEVELS.map(([v, l]) => `<option value="${v}"${v === 12 ? ' selected' : ''}>${l}</option>`).join('');
+const ME_LEVELS = [[1,'Level 1 (depth 1, bahut kamzor)'],[2,'Level 2 (depth 2)'],[3,'Level 3 (depth 3)'],[4,'Level 4 (depth 4)'],[5,'Level 5 (depth 5)'],[6,'Level 6 (depth 7)'],[7,'Level 7 (depth 9)'],[8,'Level 8 (poori taakat ~2600)']];
+const ME_DEPTH = {1:1,2:2,3:3,4:4,5:5,6:7,7:9,8:0};
+const wMeLvl = document.getElementById('wMeLvl'); wMeLvl.innerHTML = ME_LEVELS.map(([v, l]) => `<option value="${v}"${v === 8 ? ' selected' : ''}>${l}</option>`).join('');
+const wBoard = new Board(document.getElementById('watchBoard'), { onMove: () => {}, canMove: () => false });
+wBoard.set(new E.Position(), null);
+let W = null;
+function wNames(){ if (!W) return; const me = 'ME Engine L' + W.meLvl, sf = 'Stockfish L' + W.lvl; const top = wBoard.flip ? (W.meWhite ? me : sf) + ' (White)' : (W.meWhite ? sf : me) + ' (Black)'; const bot = wBoard.flip ? (W.meWhite ? sf : me) + ' (Black)' : (W.meWhite ? me : sf) + ' (White)'; document.getElementById('wNames').innerHTML = `<span>⬆ ${esc(top)}</span><span>⬇ ${esc(bot)}</span>`; }
+function wMovesHTML(){ let h = '', n = 1; W.sans.forEach((s, i) => { if (i % 2 === 0) h += `<b>${n++}.</b> `; h += esc(s) + ' '; }); document.getElementById('wMoves').innerHTML = h || '<span class="muted">–</span>'; }
+function wPgn(){ let mv = ''; W.sans.forEach((s, i) => { if (i % 2 === 0) mv += (i / 2 + 1) + '. '; mv += s + ' '; }); const sf = 'Stockfish level ' + W.lvl; return `[Event "ME Engine vs Stockfish"]\n[White "${W.meWhite ? 'ME Engine L' + W.meLvl : sf}"]\n[Black "${W.meWhite ? sf : 'ME Engine L' + W.meLvl}"]\n[Result "${W.result || '*'}"]\n\n${mv}${W.result || '*'}\n`; }
+function gameOver(p, hashes){
+  if (!p.legalMoves().length) return p.inCheck() ? (p.side === E.WHITE ? '0-1' : '1-0') : '1/2-1/2';
+  if (p.half >= 100 || p.insufficient()) return '1/2-1/2';
+  const k = p.fen().split(' ').slice(0, 4).join(' '); hashes[k] = (hashes[k] || 0) + 1; if (hashes[k] >= 3) return '1/2-1/2';
+  return null;
+}
+async function wLoop(){
+  const me = W; const wStatus = document.getElementById('wStatus');
+  while (W === me && !me.result) {
+    if (me.paused) { await new Promise(r => setTimeout(r, 300)); continue; }
+    const p = me.pos, meToMove = (p.side === E.WHITE) === me.meWhite;
+    wStatus.innerHTML = `<span class="spinner"></span>${meToMove ? 'Hamara engine' : 'Stockfish'} soch raha hai…`;
+    let uci;
+    try {
+      if (meToMove) {
+        if (document.getElementById('wFull').checked) { const rep = await ask({ cmd: 'analyze', fen: p.fen(), time: me.ms }); uci = rep.best; document.getElementById('wThink').innerHTML = thinkingHTML(rep, new E.Position(p.fen())).replace(/<div class="row" style="margin-top:8px"><button class="btn" data-play="best">.*?<\/button><\/div>/, ''); }
+        else { const r = await ask({ cmd: 'play', fen: p.fen(), time: me.ms, depth: ME_DEPTH[me.meLvl] }); uci = r.uci; document.getElementById('wThink').innerHTML = `<b>${esc(r.san)}</b>, depth ${r.depth}, ${Math.round(r.nodes / 1000)}k positions, score ${(r.score / 100 * (p.side === E.WHITE ? 1 : -1)).toFixed(2)} (White ki nazar se)<br><span class="line">Socha hua line: ${esc(moveLine(r.line, p))}</span>`; }
+      } else {
+        await sfCmd('position fen ' + p.fen()); const l = await sfCmd('go movetime ' + me.ms, /^bestmove/); uci = l.split(' ')[1];
+      }
+    } catch (e) { wStatus.textContent = 'Error: ' + e.message; return; }
+    if (W !== me) return;
+    const m = p.parseUci(uci); if (!m) { wStatus.textContent = 'Galat chaal aayi: ' + uci; return; }
+    me.sans.push(p.san(m)); p.make(m); wBoard.set(p, [E.mFrom(m), E.mTo(m)]); wMovesHTML();
+    me.result = gameOver(p, me.hashes);
+    await new Promise(r => setTimeout(r, +document.getElementById('wDelay').value + 50));
+  }
+  if (W === me && me.result) {
+    const r = me.result, meWon = (r === '1-0' && me.meWhite) || (r === '0-1' && !me.meWhite);
+    document.getElementById('wStatus').textContent = `Result ${r}: ` + (r === '1/2-1/2' ? 'draw' : meWon ? 'hamara engine jeeta!' : 'Stockfish jeeta.');
+    document.getElementById('wStart').textContent = '▶ Naya game'; document.getElementById('wPause').disabled = true;
+  }
+}
+document.getElementById('wStart').onclick = async () => {
+  const wStatus = document.getElementById('wStatus');
+  wStatus.innerHTML = '<span class="spinner"></span>Stockfish load ho raha hai…';
+  try { await sfStartW(); } catch (e) { wStatus.textContent = 'Stockfish load nahi hua: ' + e.message; return; }
+  const lvl = +wLvl.value, col = document.getElementById('wCol').value;
+  await sfCmd('setoption name Skill Level value ' + lvl); await sfCmd('ucinewgame'); await sfCmd('isready', /readyok/);
+  ask({ cmd: 'newgame', fen: new E.Position().fen() }).catch(() => {});
+  W = { pos: new E.Position(), sans: [], hashes: {}, lvl, meLvl: +wMeLvl.value, ms: +document.getElementById('wTime').value, meWhite: col === 'w' ? true : col === 'b' ? false : Math.random() < 0.5, paused: false, result: null };
+  wBoard.flip = !W.meWhite; wBoard.set(W.pos, null); wNames(); wMovesHTML();
+  document.getElementById('wStart').textContent = '↻ Restart'; document.getElementById('wPause').disabled = false; document.getElementById('wPause').textContent = '⏸ Pause'; document.getElementById('wPgn').disabled = false;
+  wLoop();
+};
+document.getElementById('wPause').onclick = () => { if (!W) return; W.paused = !W.paused; document.getElementById('wPause').textContent = W.paused ? '▶ Chalao' : '⏸ Pause'; };
+document.getElementById('wPgn').onclick = () => { if (!W) return; const t = wPgn(); try { navigator.clipboard.writeText(t); document.getElementById('wStatus').textContent = 'PGN copy ho gaya.'; } catch (e) { prompt('PGN', t); } };
+
+// ---- test-match game viewer ----
+let TG = null;
+const tgBoard = new Board(document.getElementById('tgBoard'), { onMove: () => {}, canMove: () => false });
+function parsePgn(txt){
+  const games = [];
+  for (const chunk of txt.split(/\n(?=\[Event )/)) {
+    const tags = {}; chunk.replace(/\[(\w+) "([^"]*)"\]/g, (_, k, v) => { tags[k] = v; });
+    const body = chunk.replace(/\[[^\]]*\]/g, '').replace(/\{[^}]*\}/g, '').replace(/\d+\.(\.\.)?/g, ' ').trim();
+    const toks = body.split(/\s+/).filter(t => t && !/^(1-0|0-1|1\/2-1\/2|\*)$/.test(t));
+    if (toks.length) games.push({ tags, sans: toks });
+  }
+  return games;
+}
+function tgShow(){
+  if (!TG) return; const g = TG.games[TG.gi]; const p = new E.Position(); let last = null;
+  for (let i = 0; i < TG.ply; i++) { const m = p.parseSan(g.sans[i]); if (!m) break; p.make(m); last = [E.mFrom(m), E.mTo(m)]; }
+  tgBoard.set(p, last);
+  document.getElementById('tgStatus').textContent = `Chaal ${TG.ply}/${g.sans.length} · ${g.tags.White} vs ${g.tags.Black} · Result ${g.tags.Result}`;
+  let h = '', n = 1; g.sans.forEach((s, i) => { if (i % 2 === 0) h += `<b>${n++}.</b> `; h += `<span style="${i === TG.ply - 1 ? 'background:var(--hl);color:#000;border-radius:3px;padding:0 2px' : ''}">${esc(s)}</span> `; });
+  document.getElementById('tgMoves').innerHTML = h;
+}
+let tgLoaded = false, tgTimer = null;
+function loadTestGames(){
+  if (tgLoaded) return; tgLoaded = true;
+  fetch('engine/test-games.pgn').then(r => { if (!r.ok) throw new Error(r.status); return r.text(); }).then(t => {
+    const games = parsePgn(t); if (!games.length) throw new Error('khaali');
+    TG = { games, gi: 0, ply: 0 };
+    document.getElementById('tgSel').innerHTML = games.map((g, i) => `<option value="${i}">${i + 1}. ${esc(g.tags.White)} vs ${esc(g.tags.Black)}: ${esc(g.tags.Result)}</option>`).join('');
+    document.getElementById('tgInfo').textContent = `${games.length} games jo rating test mein khele gaye (Stockfish 16, alag-alag Elo level). Game chuno aur chaal-chaal dekho.`;
+    tgBoard.flip = !/ME Engine/.test(games[0].tags.White); tgShow();
+  }).catch(e => { document.getElementById('tgInfo').textContent = 'Test games load nahi hue (' + e.message + ').'; });
+}
+document.getElementById('tgSel').onchange = e => { if (!TG) return; TG.gi = +e.target.value; TG.ply = 0; tgBoard.flip = !/ME Engine/.test(TG.games[TG.gi].tags.White); tgShow(); };
+const tgMove = d => { if (!TG) return; const n = TG.games[TG.gi].sans.length; TG.ply = Math.max(0, Math.min(n, d === 'f' ? 0 : d === 'l' ? n : TG.ply + d)); tgShow(); };
+document.getElementById('tgFirst').onclick = () => tgMove('f'); document.getElementById('tgLast').onclick = () => tgMove('l');
+document.getElementById('tgPrev').onclick = () => tgMove(-1); document.getElementById('tgNext').onclick = () => tgMove(1);
+document.getElementById('tgFlip').onclick = () => { tgBoard.flip = !tgBoard.flip; tgBoard.render(); };
+document.getElementById('tgAuto').onclick = () => { if (tgTimer) { clearInterval(tgTimer); tgTimer = null; document.getElementById('tgAuto').textContent = 'Auto ▶'; return; } document.getElementById('tgAuto').textContent = '⏸'; tgTimer = setInterval(() => { if (!TG || TG.ply >= TG.games[TG.gi].sans.length) { clearInterval(tgTimer); tgTimer = null; document.getElementById('tgAuto').textContent = 'Auto ▶'; return; } tgMove(1); }, 900); };
+
+// ================= STATS =================
+function pct(arr){ return arr.length ? Math.round(100 * arr.reduce((a, b) => a + b, 0) / arr.length) + '%' : '–'; }
+function renderStats(){
+  const h = st.hist.slice(-100);
+  document.getElementById('stMatch').textContent = pct(h.map(x => x.m));
+  document.getElementById('stThreat').textContent = pct(h.filter(x => x.t >= 0).map(x => x.t));
+  document.getElementById('stScan').textContent = pct(h.filter(x => x.s >= 0).map(x => x.s));
+  document.getElementById('stInfo').textContent = `Pichhli ${h.length} positions ka hisaab. Kul ${st.hist.length} positions kheli. Dohrane ke liye ${st.queue.length} positions line mein.`;
+  document.getElementById('stRecent').innerHTML = st.hist.slice(-20).reverse().map(x => `<span class="${x.m ? 'good' : 'bad'}">${x.m ? '✓' : '✗'} ${esc(x.san)}</span>`).join(' &nbsp; ') || '<span class="muted">Abhi koi nahi</span>';
+}
+
+// ================= START =================
+fetch('engine/positions.json').then(r => r.json()).then(j => { POS = j.positions; document.getElementById('eloTag').textContent = j.engine || ''; nextPosition(); })
+  .catch(e => { panel.innerHTML = `<div class="card bad">Positions load nahi hui (${esc(e.message)}). Internet check karo.</div>`; });
+updThinkStatus();
+})();
+</script>
+</body>
+</html>
