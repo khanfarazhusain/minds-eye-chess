@@ -1187,6 +1187,7 @@ body:not([class*="ps-"]) .pc{font-size:88cqh}body.pz-s:not([class*="ps-"]) .pc{f
 [dir=rtl] .board,[dir=rtl] .board *{direction:ltr}
 .eyeb{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin:0 4px;border-radius:50%;background:rgba(123,92,214,.14);border:1px solid rgba(123,92,214,.45);font-size:15px;line-height:1;cursor:pointer;vertical-align:middle}.eyeb.on{background:#7B5CD6;color:#fff}
 .fcrc{background:rgba(127,127,127,.13);border-radius:10px;padding:8px 10px}.fcrc ol,.fcl{margin:4px 0;padding-left:22px}.fcl li{margin:5px 0}.fcopt{background:#23664A;color:#fff;border-radius:6px;padding:0 7px;font-size:12px;font-weight:700}.fcsel{width:100%;font:inherit;padding:8px;border-radius:8px}.fcp details summary{cursor:pointer;padding:4px 0}
+.fxsteps{display:flex;gap:4px}.fxsteps i{flex:1;height:6px;border-radius:3px;background:rgba(127,127,127,.25)}.fxsteps i.d{background:#23664A}.fxsteps i.c{background:#9C7216}.fxc p{line-height:1.45}
 </style>
 
 <header class="top"><div class="wrap"><div class="brand"><i class="b64">64</i><span class="bname">64 Squares<small>Learn &amp; Play Chess</small></span></div><div class="chips" id="chips"></div></div></header>
@@ -1701,7 +1702,7 @@ function clearTimers(){clearInterval(timerInt);timerInt=null;clearTimeout(autoNe
 function renderChips(){const d=dueItems().length;document.getElementById('chips').innerHTML=`${diyaChip()}<span class="chip" title="Stars">★ ${ALL_LESSONS.reduce((a,l)=>a+starsOf(l.id),0)}</span>`}
 function render(){try{applyAppTheme()}catch(e){}try{applyPieces()}catch(e){}const fx=FIXV.includes(V.name);if(document.body.classList.contains('fixb')!==fx){document.body.classList.toggle('fixb',fx);try{window.__setH&&window.__setH()}catch(e){}}document.body.classList.toggle('inq',V.name==='q'||V.name==='train');document.body.classList.toggle('cfr',V.name==='cframe');renderChips();onSq=null;const tab=tabOf(V.name);try{navLabels()}catch(e){}document.body.classList.toggle('b3d',P.set.board3d==='3d');applyTheme();applyTilt();
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
-  ({pcat:vPCat,cframe:vCFrame,clevels:vCLevels,clevel:vCLevel,blind:vBlind,'x-learn':vLearn,'x-practice':vPractice,'x-playhub':vPlayHub,'x-me':vStats,'x-home':vHome,hl:vHl,home:vHome,learn:vLearn,playhub:vPlayHub,me:vStats,path:vLearn,stage:vStage,tut:vTut,q:vQ,result:vResult,practice:vPractice,explore:vExplore,play:vPlay,coach:vCoach,coachset:vCoachSet,coachrev:vCoachRev,codiary:vCoDiary,stats:vStats,gym:vHome,gmstory:vGmStory,replist:vRepList,rep:vRep,school:vSchool,bestm:vBestM,bmc:vBmc,trn:vTrn,lessons:vLessons,crev:vCRev,olib:vOlib,oline:vOline,pzthemes:vPzThemes,stq:vStq,skdo:vSkDo,road:vRoad,puz:vPuz,week:vWeek,endg:vEndg,calc:vCalc,gmlist:vGmList,gm:vGm,pgn:vPgn,trainset:vTrainSet,train:trRender,trainres:vTrainRes,friend:vFriend,ogame:vOGame})[V.name]();try{fbInvDraw()}catch(e){}try{fixBack();pageHead()}catch(e){}}
+  ({pcat:vPCat,cframe:vCFrame,clevels:vCLevels,clevel:vCLevel,blind:vBlind,'x-learn':vLearn,'x-practice':vPractice,'x-playhub':vPlayHub,'x-me':vStats,'x-home':vHome,hl:vHl,home:vHome,learn:vLearn,playhub:vPlayHub,me:vStats,path:vLearn,stage:vStage,tut:vTut,q:vQ,result:vResult,practice:vPractice,explore:vExplore,play:vPlay,coach:vCoach,coachset:vCoachSet,coachrev:vCoachRev,codiary:vCoDiary,stats:vStats,gym:vHome,gmstory:vGmStory,replist:vRepList,rep:vRep,school:vSchool,bestm:vBestM,bmc:vBmc,trn:vTrn,lessons:vLessons,crev:vCRev,olib:vOlib,oline:vOline,pzthemes:vPzThemes,stq:vStq,skdo:vSkDo,road:vRoad,puz:vPuz,week:vWeek,endg:vEndg,calc:vCalc,gmlist:vGmList,gm:vGm,pgn:vPgn,trainset:vTrainSet,train:trRender,trainres:vTrainRes,friend:vFriend,ogame:vOGame,fcex:vFcEx})[V.name]();try{fbInvDraw()}catch(e){}try{fixBack();pageHead()}catch(e){}}
 
 const COURSE_URL=(()=>{try{return/github\.io$/.test(location.hostname)?'course.html':'https://khanfarazhusain.github.io/minds-eye-chess/course.html'}catch(e){return'https://khanfarazhusain.github.io/minds-eye-chess/course.html'}})();
 const NOTES_URL=COURSE_URL.replace(/course\.html$/,'notes.html');
@@ -2323,6 +2324,10 @@ document.addEventListener('click',e=>{const sqEl=e.target.closest('.board [data-
    case'co-back':go({name:'coach'});break;
    case'co-setup':go({name:'coachset'});break;
    case'co-hint':if(CG){CG.hint=Math.min(3,(CG.hint||0)+1);vCoach();if(CG.hint===3){const m=coHintMove(CG);if(m)sayC((P.set.cvoice==='hi'?'Hint: ':'Hint: ')+san(CG.st,m,legal(CG.st))+'.')}}break;
+   case'fx-open':fxOpen(fcMode());break;
+   case'fx-back':go({name:FX.from});break;
+   case'fx-ex':FX.i=+d.v;FX.s=0;vFcEx();window.scrollTo(0,0);break;
+   case'fx-step':FX.s=Math.max(0,FX.s+(+d.v));vFcEx();break;
    case'co-tab':if(CG){CG.tab=d.v;P.set.ctab=d.v;save();vCoach()}break;
    case'co-psel':if(CG){CG.psel=CG.psel===d.v?null:d.v;CG.ep='think';vCoach();if(CG.psel){const x=coPlanItems(CG).find(y=>y.k===CG.psel);if(x)sayC(x.x,true)}}break;
    case'co-arrow':P.set.carrow=P.set.carrow===false;save();if(CG)vCoach();break;
@@ -2700,9 +2705,32 @@ function fcBody(st,my){const k=fcMode(),M=FCM[k];if(!my)return`<p class="muted">
 function fcStatLine(){const k=fcMode(),r=(P.fcst||{})[k];const l=FT.last&&FT.last.k===k?FT.last:null;let h='';
   if(l)h+=`<div class="${l.ok?'good':'bad'}" style="font-size:14px"><b>${l.ok?'✓':'✗'} ${esc(l.san)}</b> ${l.ok?'engine jaisi chaal thi.':`engine jaisi nahi thi. FHK ki chaal: <b>${esc(l.best)}</b>`}</div>`;
   if(r&&r.n)h+=`<small class="muted">Is mode mein aapka match: ${Math.round(100*r.ok/r.n)}% (${r.n} chaalein)</small>`;return h}
+/* ---- FHK Coach examples: 5 full step-by-step examples per mode (engine/examples.json, built from engine-verified positions) ---- */
+let FXD=null,FXL=0;const FX={k:'m8_10',i:0,s:0,from:'coach'};
+function fxLoad(){if(FXD||FXL)return;FXL=1;fetch('engine/examples.json').then(r=>r.json()).then(j=>{FXD=j.modes;FXL=0;if(V.name==='fcex')vFcEx()}).catch(e=>{FXL=0;FXD={err:String(e&&e.message||e)};if(V.name==='fcex')vFcEx()})}
+function fxOpen(k){FX.k=FCM[k]?k:fcMode();FX.i=0;FX.s=0;FX.from=V.name==='play'?'play':V.name==='coach'?'coach':'playhub';fxLoad();go({name:'fcex'})}
+function fxMode(v){if(!FCM[v])return;FX.k=v;FX.i=0;FX.s=0;vFcEx()}
+function vFcEx(){document.body.classList.remove('fixb');try{window.__setH&&window.__setH()}catch(e){}
+  const M=FCM[FX.k];let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="fx-back">← ${L2('Back to game','Game par wapas')}</button><h1>📖 ${L2('FHK Coach examples','FHK Coach examples')}</h1>`;
+  h+=`<select class="fcsel" onchange="fxMode(this.value)">${FCG.map(([g,ks])=>`<optgroup label="${esc(g)}">${ks.map(x=>`<option value="${x}"${x===FX.k?' selected':''}>${esc(FCM[x].n)}${FCM[x].opt?' ★ Optimal':''}</option>`).join('')}</optgroup>`).join('')}</select><small class="muted">${esc(M.p)}</small>`;
+  if(!FXD){h+=`<div class="card muted">${L2('Loading examples…','Examples load ho rahe hain…')}</div></div>`;main.innerHTML=h;fxLoad();return}
+  if(FXD.err){h+=`<div class="card">${L2('Examples could not load','Examples load nahi hue')}: ${esc(FXD.err)}</div></div>`;main.innerHTML=h;return}
+  const L=FXD[FX.k]||[];const ex=L[FX.i];if(!ex){main.innerHTML=h+'</div>';return}
+  const st=fromFEN(ex.fen),step=ex.steps[FX.s],last=FX.s===ex.steps.length-1;
+  h+=`<div class="seg">${L.map((e,i)=>`<button class="${i===FX.i?'on':''}" data-act="fx-ex" data-v="${i}">${L2('Example','Example')} ${i+1}</button>`).join('')}</div>`;
+  h+=`<small class="muted">${L2('Real position from the training set. Level','Training set ki asli position. Level')}: ${{easy:'Easy',med:'Medium',hard:'Hard'}[ex.lvl]||ex.lvl} · ${L2('engine-verified best move','engine se verified best chaal')}</small>`;
+  let marks=null;if(last&&ex.best){const f=ex.best.slice(0,2),t=ex.best.slice(2,4);marks={[f]:'good',[t]:'good'}}
+  h+=boardHTML({persp:st.w?'w':'b',coords:true,pieces:toMap(st.b),marks});
+  h+=`<div class="steps fxsteps">${ex.steps.map((x,i)=>`<i class="${i<FX.s?'d':i===FX.s?'c':''}"></i>`).join('')}</div>`;
+  h+=`<div class="card stack fxc"><span class="eyebrow">Step ${FX.s+1} / ${ex.steps.length}</span><h3 style="margin:0">${esc(step.t)}</h3>${step.l.filter(Boolean).map(x=>`<p style="margin:0">${esc(x)}</p>`).join('')}`;
+  if(step.li&&step.li.length)h+=`<ol class="fcl">${step.li.map(x=>`<li><b class="mono">${esc(x.s)}</b> <span>${esc(x.x)}</span>${x.y?`<br><small class="mono muted">${esc(x.y)}</small>`:''}</li>`).join('')}</ol>`;
+  if(step.y)h+=`<p class="mono" style="margin:0;font-size:14px">${esc(step.y)}</p>`;
+  if(step.ok)h+=`<p class="good" style="margin:0"><b>✓ ${L2('Matches the engine','Engine ki chaal se match')}: ${esc(step.best)}</b></p>`;
+  h+=`</div><div class="row"><button class="btn" data-act="fx-step" data-v="-1" ${FX.s?'':'disabled'}>◀ ${L2('Back','Peeche')}</button>`+(last?(FX.i<L.length-1?`<button class="btn primary" style="flex:1" data-act="fx-ex" data-v="${FX.i+1}">${L2('Next example','Agla example')} ▶</button>`:`<button class="btn primary" style="flex:1" data-act="fx-back">${L2('Done, back to game','Ho gaya, game par wapas')}</button>`):`<button class="btn primary" style="flex:1" data-act="fx-step" data-v="1">${L2('Next step','Aage')} ▶</button>`)+`</div></div>`;
+  main.innerHTML=h}
 function fcPanelHTML(st,my){if(!fcOn())return'';const k=fcMode(),M=FCM[k];
   const sel=`<select class="fcsel" onchange="fcSetMode(this.value)">${FCG.map(([g,ks])=>`<optgroup label="${esc(g)}">${ks.map(x=>`<option value="${x}"${x===k?' selected':''}>${esc(FCM[x].n)}${FCM[x].opt?' ★ Optimal':''}</option>`).join('')}</optgroup>`).join('')}</select>`;
-  return`<div class="stack fcp" style="gap:8px"><div class="row" style="gap:6px;align-items:center;flex-wrap:wrap"><b>🧠 FHK Coach</b>${M.opt?'<span class="fcopt">Optimal</span>':''}</div>${sel}<small class="muted">${esc(M.p)}</small>${fcStatLine()}${fcBody(st,my)}</div>`}
+  return`<div class="stack fcp" style="gap:8px"><div class="row" style="gap:6px;align-items:center;flex-wrap:wrap"><b>🧠 FHK Coach</b>${M.opt?'<span class="fcopt">Optimal</span>':''}<button class="btn small" style="margin-left:auto" data-act="fx-open">📖 Examples (5)</button></div>${sel}<small class="muted">${esc(M.p)}</small>${fcStatLine()}${fcBody(st,my)}</div>`}
 
 function engPickHTML(){const e=oppEng();return`<div class="stack" style="gap:6px"><b>⚙️ ${L2('Computer engine','Computer ka engine')}</b><div class="seg"><button class="${e==='sf'?'on':''}" data-act="eng-set" data-v="sf">Stockfish</button><button class="${e==='fhk'?'on':''}" data-act="eng-set" data-v="fhk">FHK Engine</button></div><small class="muted">${e==='fhk'?L2('FHK Engine: our own engine (~2600). The level setting works the same.','FHK Engine: hamara apna engine (~2600). Level ki setting waise hi chalti hai.'):L2('Stockfish: the world-famous engine. Hints and analysis always use Stockfish.','Stockfish: duniya ka mashhoor engine. Hint aur analysis hamesha Stockfish se.')}</small></div>`}
 async function ratedMove(st,e){const L=ELOP(e),ms=legal(st);if(!ms.length)return null;
@@ -3770,7 +3798,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.13 · v129';
+const APPV='2026.11.13 · v130';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
@@ -3829,7 +3857,7 @@ function boardSegHTML(){return`<div class="gstat" style="font-weight:500;gap:8px
 function navLabels(){const N={home:['Home','Home'],learn:['Learn','Seekho'],practice:['Practice','Practice'],playhub:['Play','Khelo'],me:['Settings','Settings']};document.querySelectorAll('#tabs button').forEach(b=>{const x=N[b.dataset.tab];if(!x)return;const t=HI()?x[1]:x[0];const n=b.querySelector('em');if(n&&n.textContent!==t)n.textContent=t})}
 function tabOf(n){if(ROOTS.includes(n))return n;return TABCTX;const T={hl:'playhub',home:'home',gym:'home',learn:'learn',path:'learn',stage:'learn',tut:'learn',school:'learn',bestm:'learn',bmc:'learn',trn:'learn',lessons:'playhub',skdo:'learn',replist:'learn',rep:'learn',
   practice:'practice',explore:'practice',puz:'practice',week:'practice',endg:'practice',calc:'practice',gmlist:'practice',gm:'practice',gmstory:'practice',codiary:'practice',
-  playhub:'playhub',play:'playhub',coach:'playhub',coachset:'playhub',coachrev:'playhub',friend:'playhub',ogame:'playhub',pgn:'playhub',
+  playhub:'playhub',play:'playhub',coach:'playhub',coachset:'playhub',coachrev:'playhub',fcex:'playhub',friend:'playhub',ogame:'playhub',pgn:'playhub',
   me:'me',stats:'me',road:'me'};
   if(n==='q'||n==='result')return(S&&S.from)==='practice'?'practice':'learn';
   if(n==='trainset')return V.from==='practice'?'practice':'learn';
