@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Engine Coach</title>
+<title>FHK Engine Coach</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1F5C3E">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -78,7 +78,7 @@ select{font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);b
 </head>
 <body>
 <div class="wrap">
-<header><a href="index.html">‹ App</a><h1>Engine Coach</h1><span class="small muted" id="eloTag"></span></header>
+<header><a href="index.html">‹ App</a><h1>FHK Engine Coach</h1><span class="small muted" id="eloTag"></span></header>
 <div class="tabs" role="tablist">
   <button class="on" data-tab="train">Follow karo</button>
   <button data-tab="think">Engine ki soch</button>
@@ -124,13 +124,13 @@ select{font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);b
 
 <section id="tab-watch" class="hidden">
   <div class="card">
-    <h2>Hamara engine vs Stockfish</h2>
+    <h2>FHK Engine vs Stockfish</h2>
     <div class="row small">
-      <label>Hamare engine ka level <select id="wMeLvl"></select></label>
+      <label>FHK Engine ka level <select id="wMeLvl"></select></label>
       <label>Stockfish level <select id="wLvl"></select></label>
       <label>Sochne ka time (har chaal) <select id="wTime"><option value="500">0.5 sec</option><option value="1000" selected>1 sec</option><option value="2000">2 sec</option><option value="4000">4 sec</option></select></label>
       <label>Dekhne ki speed <select id="wDelay"><option value="0">Tez</option><option value="700" selected>Normal</option><option value="2000">Dheere</option></select></label>
-      <label>Hamare engine ka rang <select id="wCol"><option value="w">White</option><option value="b">Black</option><option value="r" selected>Random</option></select></label>
+      <label>FHK Engine ka rang <select id="wCol"><option value="w">White</option><option value="b">Black</option><option value="r" selected>Random</option></select></label>
     </div>
     <div class="row small" style="margin-top:6px"><label><input type="checkbox" id="wFull"> Har chaal par engine ki poori soch (dheema)</label></div>
     <div class="row" style="margin-top:10px"><button class="btn pri" id="wStart">▶ Game shuru</button><button class="btn" id="wPause" disabled>⏸ Pause</button><button class="btn" id="wPgn" disabled>PGN copy</button></div>
@@ -139,7 +139,7 @@ select{font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);b
   <div class="status" id="wStatus"></div>
   <div class="row small" id="wNames" style="justify-content:space-between"></div>
   <div class="board" id="watchBoard"></div>
-  <div class="card"><h3>Hamare engine ki soch (aakhri chaal)</h3><div id="wThink" class="small muted">Game shuru karo.</div></div>
+  <div class="card"><h3>FHK Engine ki soch (aakhri chaal)</h3><div id="wThink" class="small muted">Game shuru karo.</div></div>
   <div class="card"><h3>Chaalein</h3><div id="wMoves" class="line"></div></div>
   <details class="card"><summary><b>Rating test ke purane games (replay)</b></summary><p class="small muted" id="tgInfo">Load ho rahe hain…</p>
     <select id="tgSel" style="width:100%"></select>
@@ -461,9 +461,9 @@ const wMeLvl = document.getElementById('wMeLvl'); wMeLvl.innerHTML = ME_LEVELS.m
 const wBoard = new Board(document.getElementById('watchBoard'), { onMove: () => {}, canMove: () => false });
 wBoard.set(new E.Position(), null);
 let W = null;
-function wNames(){ if (!W) return; const me = 'ME Engine L' + W.meLvl, sf = 'Stockfish L' + W.lvl; const top = wBoard.flip ? (W.meWhite ? me : sf) + ' (White)' : (W.meWhite ? sf : me) + ' (Black)'; const bot = wBoard.flip ? (W.meWhite ? sf : me) + ' (Black)' : (W.meWhite ? me : sf) + ' (White)'; document.getElementById('wNames').innerHTML = `<span>⬆ ${esc(top)}</span><span>⬇ ${esc(bot)}</span>`; }
+function wNames(){ if (!W) return; const me = 'FHK Engine L' + W.meLvl, sf = 'Stockfish L' + W.lvl; const top = wBoard.flip ? (W.meWhite ? me : sf) + ' (White)' : (W.meWhite ? sf : me) + ' (Black)'; const bot = wBoard.flip ? (W.meWhite ? sf : me) + ' (Black)' : (W.meWhite ? me : sf) + ' (White)'; document.getElementById('wNames').innerHTML = `<span>⬆ ${esc(top)}</span><span>⬇ ${esc(bot)}</span>`; }
 function wMovesHTML(){ let h = '', n = 1; W.sans.forEach((s, i) => { if (i % 2 === 0) h += `<b>${n++}.</b> `; h += esc(s) + ' '; }); document.getElementById('wMoves').innerHTML = h || '<span class="muted">–</span>'; }
-function wPgn(){ let mv = ''; W.sans.forEach((s, i) => { if (i % 2 === 0) mv += (i / 2 + 1) + '. '; mv += s + ' '; }); const sf = 'Stockfish level ' + W.lvl; return `[Event "ME Engine vs Stockfish"]\n[White "${W.meWhite ? 'ME Engine L' + W.meLvl : sf}"]\n[Black "${W.meWhite ? sf : 'ME Engine L' + W.meLvl}"]\n[Result "${W.result || '*'}"]\n\n${mv}${W.result || '*'}\n`; }
+function wPgn(){ let mv = ''; W.sans.forEach((s, i) => { if (i % 2 === 0) mv += (i / 2 + 1) + '. '; mv += s + ' '; }); const sf = 'Stockfish level ' + W.lvl; return `[Event "FHK Engine vs Stockfish"]\n[White "${W.meWhite ? 'FHK Engine L' + W.meLvl : sf}"]\n[Black "${W.meWhite ? sf : 'FHK Engine L' + W.meLvl}"]\n[Result "${W.result || '*'}"]\n\n${mv}${W.result || '*'}\n`; }
 function gameOver(p, hashes){
   if (!p.legalMoves().length) return p.inCheck() ? (p.side === E.WHITE ? '0-1' : '1-0') : '1/2-1/2';
   if (p.half >= 100 || p.insufficient()) return '1/2-1/2';
@@ -475,7 +475,7 @@ async function wLoop(){
   while (W === me && !me.result) {
     if (me.paused) { await new Promise(r => setTimeout(r, 300)); continue; }
     const p = me.pos, meToMove = (p.side === E.WHITE) === me.meWhite;
-    wStatus.innerHTML = `<span class="spinner"></span>${meToMove ? 'Hamara engine' : 'Stockfish'} soch raha hai…`;
+    wStatus.innerHTML = `<span class="spinner"></span>${meToMove ? 'FHK Engine' : 'Stockfish'} soch raha hai…`;
     let uci;
     try {
       if (meToMove) {
@@ -493,7 +493,7 @@ async function wLoop(){
   }
   if (W === me && me.result) {
     const r = me.result, meWon = (r === '1-0' && me.meWhite) || (r === '0-1' && !me.meWhite);
-    document.getElementById('wStatus').textContent = `Result ${r}: ` + (r === '1/2-1/2' ? 'draw' : meWon ? 'hamara engine jeeta!' : 'Stockfish jeeta.');
+    document.getElementById('wStatus').textContent = `Result ${r}: ` + (r === '1/2-1/2' ? 'draw' : meWon ? 'FHK Engine jeeta!' : 'Stockfish jeeta.');
     document.getElementById('wStart').textContent = '▶ Naya game'; document.getElementById('wPause').disabled = true;
   }
 }
@@ -541,10 +541,10 @@ function loadTestGames(){
     TG = { games, gi: 0, ply: 0 };
     document.getElementById('tgSel').innerHTML = games.map((g, i) => `<option value="${i}">${i + 1}. ${esc(g.tags.White)} vs ${esc(g.tags.Black)}: ${esc(g.tags.Result)}</option>`).join('');
     document.getElementById('tgInfo').textContent = `${games.length} games jo rating test mein khele gaye (Stockfish 16, alag-alag Elo level). Game chuno aur chaal-chaal dekho.`;
-    tgBoard.flip = !/ME Engine/.test(games[0].tags.White); tgShow();
+    tgBoard.flip = !/FHK Engine/.test(games[0].tags.White); tgShow();
   }).catch(e => { document.getElementById('tgInfo').textContent = 'Test games load nahi hue (' + e.message + ').'; });
 }
-document.getElementById('tgSel').onchange = e => { if (!TG) return; TG.gi = +e.target.value; TG.ply = 0; tgBoard.flip = !/ME Engine/.test(TG.games[TG.gi].tags.White); tgShow(); };
+document.getElementById('tgSel').onchange = e => { if (!TG) return; TG.gi = +e.target.value; TG.ply = 0; tgBoard.flip = !/FHK Engine/.test(TG.games[TG.gi].tags.White); tgShow(); };
 const tgMove = d => { if (!TG) return; const n = TG.games[TG.gi].sans.length; TG.ply = Math.max(0, Math.min(n, d === 'f' ? 0 : d === 'l' ? n : TG.ply + d)); tgShow(); };
 document.getElementById('tgFirst').onclick = () => tgMove('f'); document.getElementById('tgLast').onclick = () => tgMove('l');
 document.getElementById('tgPrev').onclick = () => tgMove(-1); document.getElementById('tgNext').onclick = () => tgMove(1);

@@ -24,7 +24,7 @@ async function game(idx){
   sans.push(pos.san(m));pos.make(m);moves.push(u);
  }
  s.send('quit');
- const sfName=eloArg==='full'?'Stockfish 16':'Stockfish 16 (Elo '+eloArg+')';const W=meWhite?'ME Engine v1':sfName,B=meWhite?sfName:'ME Engine v1';
+ const sfName=eloArg==='full'?'Stockfish 16':'Stockfish 16 (Elo '+eloArg+')';const W=meWhite?'FHK Engine v1':sfName,B=meWhite?sfName:'FHK Engine v1';
  const res=result==='1/2'?'1/2-1/2':result;let mv='';sans.forEach((x,i)=>{if(i%2===0)mv+=(i/2+1)+'. ';mv+=x+' ';if(i===nOpen-1)mv+='{opening book end} ';});
  PGN.push(`[Event "ME Engine test"]\n[Site "Mind's Eye Chess"]\n[Round "${idx+1}"]\n[White "${W}"]\n[Black "${B}"]\n[Result "${res}"]\n[TimeControl "${myMs}ms/move vs ${sfMs}ms/move"]\n\n${mv.trim()} ${res}\n`);
  require('fs').writeFileSync(PGNFILE,PGN.join('\n'));
