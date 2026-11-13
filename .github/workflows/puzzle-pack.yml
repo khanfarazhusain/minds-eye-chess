@@ -1,0 +1,38 @@
+name: Build puzzle pack
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['tools/puzzles/**']
+permissions:
+  contents: write
+  pages: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install chess==1.10.0
+      - name: Download the Lichess puzzle database (CC0)
+        run: |
+          curl -sSL --retry 4 -o puz.csv.zst https://database.lichess.org/lichess_db_puzzle.csv.zst
+          zstd -d -q puz.csv.zst -o puz.csv
+          ls -la puz.csv
+      - run: python tools/puzzles/build.py puz.csv packs/puz
+      - name: Commit the pack
+        run: |
+          git config user.name "puzzle-pack-bot"
+          git config user.email "puzzle-pack-bot@users.noreply.github.com"
+          git add packs/puz
+          git diff --cached --quiet && exit 0
+          git commit -m "Puzzle pack: rebuild from the open puzzle database"
+          git push
+      - name: Ask Pages to rebuild
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST repos/${{ github.repository }}/pages/builds
