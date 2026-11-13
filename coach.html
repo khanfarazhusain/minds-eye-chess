@@ -64,7 +64,7 @@ header h1{font-size:20px;margin:0;flex:1}
 h2{font-size:17px;margin:4px 0 6px} h3{font-size:15px;margin:10px 0 4px}
 .line{font-family:ui-monospace,Menlo,monospace;font-size:14px;word-break:break-word}
 .good{color:var(--good)} .bad{color:var(--bad)}
-.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .stat div{background:var(--surface2);border-radius:10px;padding:10px;text-align:center}
 .stat b{display:block;font-size:22px}
 .think li{margin:4px 0}
@@ -93,14 +93,14 @@ select{font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);b
       <li><b>Khatra:</b> opponent agli chaal mein kya karna chahta hai?</li>
       <li><b>Latakte mohre:</b> kaunsa mohra bina bachaav ke hai, mera ya uska?</li>
       <li><b>Checks, captures, threats:</b> saari forcing chaalein dhoondo.</li>
-      <li><b>Candidates:</b> 2-3 achhi chaalein chuno, har ek ka opponent ka sabse achha jawab socho.</li>
+      <li><b>Candidates:</b> checklist A-G se 2-3 chaalein chuno (forcing, khatre se bachao, mohra sudhaaro, pawn break, castling, open file, center). Har ek ka opponent ka sabse achha jawab socho.</li>
       <li><b>Final:</b> jo chaal har jawab ke baad bhi achhi rahe, wahi khelo.</li>
     </ol>
     <div class="row"><label class="small muted">Level</label>
       <select id="lvl"><option value="mix">Mix</option><option value="easy">Easy</option><option value="med">Medium</option><option value="hard">Hard</option></select>
       <button class="btn small" id="hideMethod">Chhupao</button></div>
   </div>
-  <div class="steps" id="stepBar"><span></span><span></span><span></span><span></span></div>
+  <div class="steps" id="stepBar"><span></span><span></span><span></span><span></span><span></span></div>
   <div class="status" id="trainStatus"></div>
   <div class="board" id="trainBoard"></div>
   <div id="trainPanel"></div>
@@ -152,7 +152,7 @@ select{font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);b
 
 <section id="tab-stats" class="hidden">
   <div class="card"><h2>Aapka match rate</h2>
-    <div class="stat"><div><b id="stMatch">0%</b><span class="small muted">Pehli koshish mein engine wali chaal</span></div><div><b id="stThreat">0%</b><span class="small muted">Khatra sahi pehchana</span></div><div><b id="stScan">0%</b><span class="small muted">Checks/captures dhoondhe</span></div></div>
+    <div class="stat"><div><b id="stMatch">0%</b><span class="small muted">Pehli koshish mein engine wali chaal</span></div><div><b id="stThreat">0%</b><span class="small muted">Khatra sahi pehchana</span></div><div><b id="stScan">0%</b><span class="small muted">Checks/captures dhoondhe</span></div><div><b id="stCand">0%</b><span class="small muted">Engine ke candidates dhoondhe</span></div></div>
     <p class="small muted" id="stInfo"></p>
   </div>
   <div class="card"><h2>Pichhli 20 positions</h2><div id="stRecent" class="line"></div></div>
@@ -245,8 +245,10 @@ function thinkingHTML(rep, pos){
   const F = S.forcing, fmt = arr => arr.length ? arr.map(d => `<b>${esc(d.san)}</b>${d.tags.length ? ' <span class="muted">(' + esc(d.tags.join(', ')) + ')</span>' : ''}`).join(', ') : 'koi nahi';
   h.push(`<h3>3. Checks, captures, threats</h3><ul><li>Checks: ${fmt(F.checks)}</li><li>Captures: ${fmt(F.captures)}</li><li>Threats: ${fmt(F.threats.slice(0, 6))}</li></ul>`);
   h.push(`<h3>4. Candidates</h3><ol>`);
-  for (const c of S.candidates.cands) h.push(`<li><b>${esc(c.san)}</b> ${esc(c.scoreText)} <span class="line muted">${esc(moveLine(c.line, pos))}</span></li>`);
+  for (const c of S.candidates.cands) h.push(`<li><b>${esc(c.san)}</b> ${esc(c.scoreText)}${c.ruleText ? `<br><span class="small">🔎 ${esc(c.ruleText)}</span>` : ''}<br><span class="line muted small">${esc(moveLine(c.line, pos))}</span></li>`);
   h.push(`</ol>`);
+  h.push(`<p class="small muted">Engine sach mein har legal chaal gehrai tak check karta hai. Upar ka 🔎 batata hai ki ek insaan wahi chaal checklist (A se G) ke kis rule se dhoondh sakta hai.</p>`);
+  if (S.candidates.checklist && S.candidates.checklist.length) { h.push(`<details><summary class="small">Checklist se nikalne wali saari chaalein</summary><ul class="small">`); for (const g of S.candidates.checklist) h.push(`<li><b>${esc(g.title)}:</b> ${esc(g.moves.join(', '))}${g.more ? ' +' + g.more : ''}</li>`); h.push(`</ul></details>`); }
   if (S.candidates.alts.length) { h.push(`<p class="small"><b>Ye forcing chaalein kyun nahi:</b></p><ul>`); for (const a of S.candidates.alts) h.push(`<li>${esc(a.text)} <span class="line muted">${esc(moveLine(a.line, pos))}</span></li>`); h.push(`</ul>`); }
   h.push(`<h3>5. Best move: ${esc(S.best.san)}</h3><p>${esc(S.best.reason)}</p><p class="line">${esc(moveLine(S.best.line, pos))}</p>`);
   if (rep.iters && rep.iters.length) h.push(`<details><summary class="small">Engine ne depth ke saath kya socha</summary><p class="small line">${rep.iters.map(i => `d${i.depth}: ${esc(i.san)} (${(i.score/100).toFixed(2)})`).join(' · ')}</p></details>`);
@@ -270,7 +272,7 @@ document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
 
 // ================= TRAINING =================
 let POS = [];
-const tBoard = new Board(document.getElementById('trainBoard'), { onMove: m => onTrainMove(m), canMove: () => T && T.step === 3 && !T.busy });
+const tBoard = new Board(document.getElementById('trainBoard'), { onMove: m => onTrainMove(m), canMove: () => T && (T.step === 3 || T.step === 4) && !T.busy });
 let T = null;
 const panel = document.getElementById('trainPanel'), tStatus = document.getElementById('trainStatus');
 document.getElementById('hideMethod').onclick = () => { document.getElementById('methodCard').classList.add('hidden'); try{ localStorage.setItem(STORE + '.hideMethod', '1'); }catch(e){} };
@@ -296,7 +298,7 @@ async function nextPosition(){
   if (!POS.length) return;
   const p = pickPosition();
   const pos = new E.Position(p.fen);
-  T = { p, pos, step: 1, rep: null, tries: 0, res: { threat: null, scan: null, match: null } };
+  T = { p, pos, step: 1, rep: null, tries: 0, cands: [], compared: false, res: { threat: null, scan: null, match: null, cands: undefined } };
   tBoard.flip = pos.side === E.BLACK; tBoard.set(pos, null);
   tStatus.textContent = `${sideHi(pos.side)} ki chaal. Engine ki tarah socho.`;
   setSteps();
@@ -362,21 +364,66 @@ function stepScan(){
     const caps = S.forcing.captures, checks = S.forcing.checks;
     panel.querySelector('#fb').innerHTML = `<p class="${T.res.scan ? 'good' : 'bad'}"><b>${T.res.scan ? 'Sab sahi!' : (missed ? missed + ' miss hui' : '') + (missed && wrong ? ', ' : '') + (wrong ? wrong + ' galat chuni' : '')}</b></p>
       <p class="small">Checks: ${esc(fmt(checks) || 'koi nahi')}<br>Captures: ${esc(fmt(caps) || 'koi nahi')}${S.forcing.threats.length ? '<br>Threats: ' + esc(fmt(S.forcing.threats.slice(0, 5))) : ''}</p>
-      <button class="btn pri" id="go3">Aage: apni best chaal</button>`;
-    panel.querySelector('#go3').onclick = stepMove;
+      <button class="btn pri" id="go3">Aage: candidates chuno</button>`;
+    panel.querySelector('#go3').onclick = stepCands;
   };
 }
 
-// Step 3: play the move
+// Step 3: user picks candidates, then compare with the engine's candidates
+const RULE_HELP = [['A','Forcing: check, capture, threat (pin, fork bhi)'],['B','Khatre se bachao: hamla hue mohre ko hatao ya bachao'],['C','Mohra sudhaaro: sabse kamzor mohra active karo, develop karo'],['D','Pawn break: opponent ke pawn par pawn se hamla'],['E','Raja ki safety: castling'],['F','Rook ko open file par lao'],['G','Center lo, mohron ke raaste kholo']];
+function stepCands(){
+  T.step = 3; setSteps(); T.cands = [];
+  panel.innerHTML = `<div class="card"><h2>Step 3: Apne candidates chuno</h2><p>Ye checklist upar se neeche dekho aur 2-3 achhi chaalein <b>board par khelo</b>. Har chaal yahan list mein jud jaayegi (board wapas aa jaayega).</p>
+    <ol class="small" style="padding-left:18px;margin:6px 0">${RULE_HELP.map(([k, t]) => `<li value="${k.charCodeAt(0) - 64}"><b>${k}:</b> ${esc(t)}</li>`).join('')}</ol>
+    <div class="row" id="myC"><span class="muted small">Abhi koi nahi</span></div>
+    <div class="row" style="margin-top:10px"><button class="btn pri" id="cmp" disabled>Engine se milaan karo</button><button class="btn" id="clrC">Saaf karo</button></div><div id="fbC"></div></div>`;
+  tStatus.textContent = `${sideHi(T.pos.side)}: 2-3 candidate chaalein board par dikhao`;
+  panel.querySelector('#clrC').onclick = () => { if (T.step !== 3) return; T.cands = []; drawCands(); };
+  panel.querySelector('#cmp').onclick = compareCands;
+}
+function drawCands(){
+  const el = panel.querySelector('#myC'); if (!el) return;
+  el.innerHTML = T.cands.length ? T.cands.map(s => `<span class="chip on">${esc(s)}</span>`).join('') : '<span class="muted small">Abhi koi nahi</span>';
+  panel.querySelector('#cmp').disabled = !T.cands.length;
+}
+function ruleOf(S, san){ for (const g of (S.candidates.checklist || [])) if (g.moves.includes(san)) return g.title; return null; }
+function compareCands(){
+  if (T.step !== 3 || T.compared) return; T.compared = true;
+  const S = Object.fromEntries(T.rep.steps.map(s => [s.id, s.data]));
+  const eng = S.candidates.cands, mine = new Set(T.cands);
+  const found = eng.filter(c => mine.has(c.san)).length;
+  T.res.cands = eng.length ? found / eng.length : 0;
+  const h = [];
+  h.push(`<h3>Engine ke top candidates</h3><ul>`);
+  for (const c of eng) h.push(`<li class="${mine.has(c.san) ? 'good' : 'bad'}"><b>${mine.has(c.san) ? '✓' : '✗'} ${esc(c.san)}</b> <span class="muted">(${esc(c.scoreText)})</span><br><span class="small" style="color:var(--fg)">${mine.has(c.san) ? 'Aapne dhoondha. ' : 'Miss hua. '}${esc(c.ruleText || '')}</span></li>`);
+  h.push(`</ul>`);
+  const extra = T.cands.filter(s => !eng.some(c => c.san === s));
+  if (extra.length) { h.push(`<h3>Aapke baaki candidates</h3><ul>`); for (const s of extra) { const r = ruleOf(S, s); h.push(`<li><b>${esc(s)}</b>: ${r ? esc(r) + ' se sahi socha, ' : ''}par engine ki top ${eng.length} mein nahi. Step 4 mein khelo to engine batayega kyun.</li>`); } h.push(`</ul>`); }
+  const cl = S.candidates.checklist || [];
+  if (cl.length) { h.push(`<details><summary class="small">Checklist se is position mein kaunsi chaalein nikalti hain</summary><ul class="small">`); for (const g of cl) h.push(`<li><b>${esc(g.title)}:</b> ${esc(g.moves.join(', '))}${g.more ? ' +' + g.more : ''}</li>`); h.push(`</ul></details>`); }
+  h.push(`<p class="small">${found === eng.length ? 'Badhiya, saare candidates mil gaye!' : `Aapne ${found}/${eng.length} candidates dhoondhe. Jo miss hue, unka rule upar likha hai: agli baar checklist mein wahi rule dhyaan se dekhna.`}</p>`);
+  h.push(`<button class="btn pri" id="go4">Aage: final chaal khelo</button>`);
+  panel.querySelector('#fbC').innerHTML = h.join('');
+  panel.querySelector('#go4').onclick = stepMove;
+}
+
+// Step 4: play the move
 function stepMove(){
-  T.step = 3; setSteps();
-  panel.innerHTML = `<div class="card"><h2>Step 3: Best chaal board par khelo</h2><p>Candidates socho: har chaal ke baad opponent ka sabse achha jawab kya hai? Jo chaal har jawab ke baad bhi achhi rahe, wo khelo.</p><div id="fb"></div>
+  T.step = 4; setSteps();
+  panel.innerHTML = `<div class="card"><h2>Step 4: Best chaal board par khelo</h2><p>Candidates socho: har chaal ke baad opponent ka sabse achha jawab kya hai? Jo chaal har jawab ke baad bhi achhi rahe, wo khelo.</p><div id="fb"></div>
     <div class="row"><button class="btn" id="giveUp">Batao (haar maan li)</button></div></div>`;
   tStatus.textContent = `${sideHi(T.pos.side)}: apni chaal board par khelo`;
   panel.querySelector('#giveUp').onclick = () => finish(false, true);
 }
 async function onTrainMove(m){
   const uci = T.pos.uci(m), san = T.pos.san(m);
+  if (T.step === 3) {
+    if (T.compared) return;
+    if (!T.cands.includes(san) && T.cands.length < 4) T.cands.push(san);
+    const a = new E.Position(T.p.fen); a.make(a.parseUci(uci)); tBoard.set(a, [E.mFrom(m), E.mTo(m)]);
+    drawCands(); setTimeout(() => { if (T.step === 3) tBoard.set(new E.Position(T.p.fen), null); }, 600);
+    return;
+  }
   const after = new E.Position(T.p.fen); after.make(after.parseUci(uci)); tBoard.set(after, [E.mFrom(m), E.mTo(m)]);
   if (uci === T.rep.best || uci === T.p.best) { if (T.tries === 0) T.res.match = true; finish(true); return; }
   T.tries++; T.busy = true;
@@ -387,15 +434,15 @@ async function onTrainMove(m){
   const lineTxt = j ? moveLine(j.line, T.pos) : '';
   fb.innerHTML = `<p class="bad"><b>${esc(san)} nahi.</b> ${esc(j ? j.text : '')}</p>${lineTxt ? `<p class="line small muted">${esc(lineTxt)}</p>` : ''}
     <p>${T.tries < 2 ? 'Dobara socho aur ek aur koshish karo.' : ''}</p>`;
-  setTimeout(() => { if (T.step === 3) tBoard.set(new E.Position(T.p.fen), null); }, 1800);
+  setTimeout(() => { if (T.step === 4) tBoard.set(new E.Position(T.p.fen), null); }, 1800);
   if (T.tries >= 2) setTimeout(() => finish(false), 1900);
 }
 
-// Step 4: reveal thinking + record result
+// Step 5: reveal thinking + record result
 function finish(found, gaveUp){
-  if (T.step === 4) return;
-  T.step = 4; setSteps(); if (T.res.match === null) T.res.match = false;
-  const rec = { f: T.p.fen, m: T.res.match ? 1 : 0, t: T.res.threat === null ? -1 : (T.res.threat ? 1 : 0), s: T.res.scan === null ? -1 : (T.res.scan ? 1 : 0), san: T.p.san, at: Date.now() };
+  if (T.step === 5) return;
+  T.step = 5; setSteps(); if (T.res.match === null) T.res.match = false;
+  const rec = { f: T.p.fen, m: T.res.match ? 1 : 0, t: T.res.threat === null ? -1 : (T.res.threat ? 1 : 0), s: T.res.scan === null ? -1 : (T.res.scan ? 1 : 0), c: T.res.cands === undefined ? -1 : T.res.cands, san: T.p.san, at: Date.now() };
   st.hist.push(rec); if (st.hist.length > 500) st.hist.shift();
   st.seen[T.p.fen] = (st.seen[T.p.fen] || 0) + 1;
   if (!T.res.match) { st.queue = st.queue.filter(q => q.fen !== T.p.fen); st.queue.push({ fen: T.p.fen, at: st.counter + 4 + Math.floor(Math.random() * 4) }); }
@@ -558,6 +605,7 @@ function renderStats(){
   document.getElementById('stMatch').textContent = pct(h.map(x => x.m));
   document.getElementById('stThreat').textContent = pct(h.filter(x => x.t >= 0).map(x => x.t));
   document.getElementById('stScan').textContent = pct(h.filter(x => x.s >= 0).map(x => x.s));
+  document.getElementById('stCand').textContent = pct(h.filter(x => x.c !== undefined && x.c >= 0).map(x => x.c));
   document.getElementById('stInfo').textContent = `Pichhli ${h.length} positions ka hisaab. Kul ${st.hist.length} positions kheli. Dohrane ke liye ${st.queue.length} positions line mein.`;
   document.getElementById('stRecent').innerHTML = st.hist.slice(-20).reverse().map(x => `<span class="${x.m ? 'good' : 'bad'}">${x.m ? '✓' : '✗'} ${esc(x.san)}</span>`).join(' &nbsp; ') || '<span class="muted">Abhi koi nahi</span>';
 }

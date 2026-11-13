@@ -77,7 +77,17 @@ function describeMove(pos, m) {
     const q = pos.b[x] & 7; if (q === KING) return true;
     return VAL[q] > VAL[p] || !defended(pos, x);
   });
+  let pinTxt = null;
+  if ((p === BISHOP || p === ROOK || p === QUEEN) && !mate) {
+    const b = pos.b, us = b[to] & 8;
+    for (const d of (p === BISHOP ? E.B_OFF : p === ROOK ? E.R_OFF : E.K_OFF)) {
+      let x1 = to + d; while (b[x1] === 0) x1 += d; const q1 = b[x1]; if (q1 === OFF || (q1 & 8) === us) continue;
+      let x2 = x1 + d; while (b[x2] === 0) x2 += d; const q2 = b[x2]; if (q2 === OFF || (q2 & 8) === us) continue;
+      if (VAL[q2 & 7] > VAL[q1 & 7] || (q2 & 7) === KING) { if ((q1 & 7) !== KING) pinTxt = `pin: ${PNAME[q1 & 7]} ${sqName(x1)} ke peeche ${PNAME[q2 & 7]}`; }
+    }
+  }
   pos.unmake();
+  if (pinTxt) tags.push(pinTxt);
   if (mate) tags.push('checkmate');
   else if (check) tags.push('check');
   if (capT && !mate) tags.push(s > 0 ? `${PNAME[capT]} jeetta hai` : s === 0 ? `${PNAME[capT]} ka badla (trade)` : `${PNAME[capT]} leta hai par wapas kat jayega`);
@@ -86,7 +96,7 @@ function describeMove(pos, m) {
   const bigTargets = tnames.filter(n => n !== 'pawn');
   if (targets.length >= 2 && bigTargets.length >= 1 && (bigTargets.length >= 2 || check || tnames.includes('king'))) tags.push('fork: ' + tnames.join(' + ') + ' par ek saath hamla');
   else if (bigTargets.length && bigTargets[0] !== 'king') tags.push(bigTargets.filter(n => n !== 'king').join(' + ') + ' par hamla');
-  return { san: pos.san(m), uci: pos.uci(m), tags, see: s, check, capture: !!capT, threat: bigTargets.some(n => n !== 'king') && !capT };
+  return { san: pos.san(m), uci: pos.uci(m), tags, see: s, check, capture: !!capT, threat: (bigTargets.some(n => n !== 'king') || !!pinTxt) && !capT };
 }
 
 // All forcing moves for the side to move
@@ -100,6 +110,68 @@ function forcingMoves(pos) {
   }
   out.captures.sort((a, b) => b.see - a.see);
   return out;
+}
+
+
+// ---------- Human candidate checklist ----------
+// Rules in the order a human should scan them. Each legal move gets the FIRST rule that finds it.
+const RULES = {
+  A: 'Rule A: Forcing chaal (check, capture ya threat)',
+  B: 'Rule B: Khatre se bachao (hamla hue mohre ko hatao ya bachao)',
+  C: 'Rule C: Mohra sudhaaro (kamzor mohra active karo, develop karo)',
+  D: 'Rule D: Pawn break (opponent ke pawn par pawn se hamla)',
+  E: 'Rule E: Raja ki safety (castling)',
+  F: 'Rule F: Rook ko open file par lao',
+  G: 'Rule G: Center lo / mohron ke raaste kholo'
+};
+function totalMob(pos, side) { let n = 0; for (let s = 21; s < 99; s++) { const p = pos.b[s]; if (p && p !== OFF && (p & 8) === side) { const t = p & 7; if (t >= KNIGHT && t <= QUEEN) n += pieceMob(pos, s); } } return n; }
+// squares a piece controls that are usable (not own piece, not hit by enemy pawn)
+function pieceMob(pos, s) {
+  const b = pos.b, p = b[s], t = p & 7, us = p & 8; let n = 0;
+  const pawnHit = x => us === WHITE ? (b[x - 9] === (PAWN | 8) || b[x - 11] === (PAWN | 8)) : (b[x + 9] === PAWN || b[x + 11] === PAWN);
+  const ok = x => { const q = b[x]; return q !== OFF && (q === 0 || (q & 8) !== us) && !pawnHit(x); };
+  if (t === KNIGHT || t === KING) { for (const d of (t === KNIGHT ? E.N_OFF : E.K_OFF)) if (ok(s + d)) n++; }
+  else if (t === BISHOP || t === ROOK || t === QUEEN) for (const d of (t === BISHOP ? E.B_OFF : t === ROOK ? E.R_OFF : E.K_OFF)) { let x = s + d; while (b[x] !== OFF) { if (ok(x)) n++; if (b[x] !== 0) break; x += d; } }
+  return n;
+}
+function hangValue(pos, side) { return hangingPieces(pos, side).reduce((a, h) => a + h.gain, 0); }
+function humanCandidates(pos, threat) {
+  const us = pos.side, b = pos.b, res = new Map();
+  // worst piece: lowest mobility among our N/B/R/Q
+  let worst = null;
+  for (let s = 21; s < 99; s++) { const p = b[s]; if (!p || p === OFF || (p & 8) !== us) continue; const t = p & 7; if (t < KNIGHT || t > QUEEN) continue;
+    const m = pieceMob(pos, s); const score = m + (t === QUEEN ? 3 : 0); if (!worst || score < worst.score) worst = { s, m, t, score }; }
+  const hangBefore = hangValue(pos, us); const totBefore = totalMob(pos, us);
+  const homeRow = us === WHITE ? 7 : 0;
+  const realThreat = threat && (threat.kind === 'mate' || threat.kind === 'material');
+  const ownPawnOnFile = f => { for (let r = 0; r < 8; r++) if (b[E.sqOf(f, r)] === (PAWN | us)) return true; return false; };
+  const oppPawnOnFile = f => { for (let r = 0; r < 8; r++) if (b[E.sqOf(f, r)] === (PAWN | (us ^ 8))) return true; return false; };
+  for (const m of pos.legalMoves()) {
+    const from = mFrom(m), to = mTo(m), p = b[from], t = p & 7;
+    const d = describeMove(pos, m);
+    if (d.check || d.capture || d.threat) { res.set(m, { rule: 'A', why: d.tags.join(', ') || 'forcing' }); continue; }
+    pos.make(m);
+    const hangAfter = hangValue(pos, us);
+    let threatStopped = false;
+    if (realThreat && threat.kind === 'mate') { /* checked by search elsewhere */ }
+    const mobAfter = (t >= KNIGHT && t <= QUEEN) ? pieceMob(pos, to) : 0;
+    const totAfter = totalMob(pos, us);
+    let pawnBreak = false;
+    if (t === PAWN) for (const x of attacksFrom(pos, to)) if ((pos.b[x] & 7) === PAWN) pawnBreak = true;
+    pos.unmake();
+    if (hangBefore > 0 && hangAfter < hangBefore) { res.set(m, { rule: 'B', why: `latakta mohra bacha (${hangBefore - hangAfter >= 300 ? 'bada' : 'chhota'} nuksan ruka)` }); continue; }
+    void threatStopped;
+    if (worst && from === worst.s && mobAfter - worst.m >= 2) { res.set(m, { rule: 'C', why: `${PNAME[t]} ${sqName(from)} sabse kamzor tha (${worst.m} squares), ${sqName(to)} par ${mobAfter} squares` }); continue; }
+    if (pawnBreak) { res.set(m, { rule: 'D', why: `pawn ${sqName(to)} se opponent ke pawn par hamla` }); continue; }
+    if (mFlag(m) & E.F_CASTLE) { res.set(m, { rule: 'E', why: 'castling: raja safe, rook khel mein' }); continue; }
+    if (t === ROOK && !ownPawnOnFile(E.fileOf(to)) && E.fileOf(to) !== E.fileOf(from)) { res.set(m, { rule: 'F', why: `rook ${'abcdefgh'[E.fileOf(to)]}-file par (${oppPawnOnFile(E.fileOf(to)) ? 'half-open' : 'open'})` }); continue; }
+    if ((t === KNIGHT || t === BISHOP) && E.rowOf(from) === homeRow) { res.set(m, { rule: 'C', why: `development: ${PNAME[t]} ghar se bahar, ${mobAfter} squares` }); continue; }
+    if (t >= KNIGHT && t <= QUEEN) { const before = pieceMob(pos, from); if (mobAfter - before >= 3) { res.set(m, { rule: 'C', why: `${PNAME[t]} zyada active: ${before} se ${mobAfter} squares` }); continue; } }
+    const center = ['d4', 'e4', 'd5', 'e5', 'c4', 'c5', 'f4', 'f5'].includes(sqName(to));
+    if (t === PAWN && center) { res.set(m, { rule: 'G', why: `pawn ${sqName(to)}: center par kabza${totAfter - totBefore >= 2 ? ', mohron ke raaste khule (+' + (totAfter - totBefore) + ' squares)' : ''}` }); continue; }
+    if (totAfter - totBefore >= 4) res.set(m, { rule: 'G', why: `mohron ke raaste khulte hain: kul ${totBefore} se ${totAfter} squares` });
+  }
+  return res;
 }
 
 // Material change along a line (from mover's perspective), plus where it ends
@@ -196,7 +268,9 @@ function explain(pos, S, opts) {
     rest.splice(rest.indexOf(r.move), 1);
   }
   const tail = cands.slice(1).sort((a, b) => b.score - a.score); cands.length = 1; cands.push(...tail);
+  const human = humanCandidates(pos, threat);
   for (const c of cands) {
+    const h = human.get(c.move); c.rule = h ? h.rule : null; c.ruleText = h ? RULES[h.rule] + ': ' + h.why : 'Kisi aasaan rule se nahi milti: ye chaal gehri calculation se nikli';
     c.san = pos.san(c.move); c.uci = pos.uci(c.move); c.line = sanLine(pos, c.pv.slice(0, 8));
     c.out = lineOutcome(pos, c.pv); c.desc = describeMove(pos, c.move); c.scoreText = scoreText(c.score);
   }
@@ -209,7 +283,7 @@ function explain(pos, S, opts) {
     const r = searchMove(pos, S, m, Math.max(150, altTime / 2));
     alts.push(refutationText(pos, m, r, cands[0]));
   }
-  steps.push({ id: 'candidates', title: 'Candidate chaalein', data: { cands: cands.map(c => ({ san: c.san, uci: c.uci, score: c.score, scoreText: c.scoreText, line: c.line, tags: c.desc.tags, matGain: c.out.matGain })), alts } });
+  steps.push({ id: 'candidates', title: 'Candidate chaalein', data: { cands: cands.map(c => ({ san: c.san, uci: c.uci, score: c.score, scoreText: c.scoreText, line: c.line, tags: c.desc.tags, matGain: c.out.matGain, rule: c.rule, ruleText: c.ruleText })), alts, checklist: (() => { const g = {}; for (const [m, h] of human) { (g[h.rule] = g[h.rule] || []).push(pos.san(m)); } return Object.keys(RULES).filter(k => g[k]).map(k => ({ rule: k, title: RULES[k], moves: g[k].slice(0, 8), more: Math.max(0, g[k].length - 8) })); })() } });
 
   const best = cands[0];
   let reason = reasonFrom(pos, best, curTerms);
@@ -251,7 +325,7 @@ function judge(pos, S, uci, bestInfo, time) {
   return res;
 }
 
-const api = { explain, judge, hangingPieces, forcingMoves, describeMove, scoreText, sanLine };
+const api = { humanCandidates, RULES, explain, judge, hangingPieces, forcingMoves, describeMove, scoreText, sanLine };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 root.MEExplain = api;
 })(typeof self !== 'undefined' ? self : this);
