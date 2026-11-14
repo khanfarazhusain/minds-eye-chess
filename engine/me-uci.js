@@ -2,10 +2,10 @@
  * Supports: uci, isready, ucinewgame, setoption (Skill Level 0-20, MultiPV, UCI_LimitStrength/UCI_Elo ignored),
  * position startpos|fen ... [moves ...], go [movetime N] [depth N] [wtime/btime/winc/binc] [infinite], stop, quit.
  * Output: id/option/uciok, readyok, info depth .. score cp|mate .. multipv k .. pv .., bestmove. */
-importScripts('me-engine.js');
+importScripts('me-engine.js', 'fhk-wasm.js');
 const E = self.MEEngine;
 const S = new E.Searcher(19);
-let pos = new E.Position();
+let pos = new E.Position(), prev = [];
 let skill = 20, multiPV = 1;
 // Skill -> depth limit (0 = no limit, time only) and blunder chance
 const SKILL_DEPTH = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 7, 8, 9, 10, 12, 14, 0];
@@ -17,7 +17,8 @@ function setPosition(args) {
   else if (args[0] === 'fen') { const j = args.indexOf('moves'); fen = args.slice(1, j < 0 ? args.length : j).join(' '); i = j < 0 ? args.length : j; }
   pos = new E.Position(fen);
   const k = args.indexOf('moves');
-  if (k >= 0) for (const u of args.slice(k + 1)) { const m = pos.parseUci(u); if (!m) break; pos.make(m); }
+  prev = [];
+  if (k >= 0) for (const u of args.slice(k + 1)) { const m = pos.parseUci(u); if (!m) break; prev.push({ b: pos.b.slice(), side: pos.side, castle: pos.castle, ep: pos.ep, half: pos.half }); pos.make(m); }
 }
 function go(args) {
   const g = {}; for (let i = 0; i < args.length; i += 2) g[args[i]] = +args[i + 1];
@@ -30,6 +31,10 @@ function go(args) {
   const legal = pos.legalMoves();
   if (!legal.length) { out('info depth 0 score ' + (pos.inCheck() ? 'mate 0' : 'cp 0')); out('bestmove (none)'); return; }
   const t0 = Date.now();
+  if (skill >= 20 && multiPV === 1) { // full strength: fast WASM core with FHK-Net (falls back to JS if it can't load)
+    const w = FHKW.go(pos, { time, depth, prev });
+    if (w && w.move) { out(`info depth ${w.depth} score ${scoreStr(w.score)} nodes ${w.nodes} time ${Date.now() - t0} multipv 1 pv ${w.pv.map(m => pos.uci(m)).join(' ')}`); out('bestmove ' + pos.uci(w.move)); return; }
+  }
   const main = S.go(pos, { time, depth, onIter: it => { const pv = it.pv.map(m => pos.uci(m)).join(' '); out(`info depth ${it.depth} score ${scoreStr(it.score)} nodes ${S.nodes} time ${Date.now() - t0} multipv 1 pv ${pv}`); } });
   let best = main.move;
   // extra lines for MultiPV
@@ -60,7 +65,7 @@ function handle(line) {
   const a = String(line).trim().split(/\s+/), c = a[0];
   if (c === 'uci') { out('id name FHK Engine 1'); out('id author Mind\'s Eye Chess'); out('option name Skill Level type spin default 20 min 0 max 20'); out('option name MultiPV type spin default 1 min 1 max 5'); out('option name Hash type spin default 16 min 1 max 64'); out('uciok'); }
   else if (c === 'isready') out('readyok');
-  else if (c === 'ucinewgame') { S.clear(); pos = new E.Position(); }
+  else if (c === 'ucinewgame') { S.clear(); FHKW.clear(); pos = new E.Position(); }
   else if (c === 'setoption') { const ni = a.indexOf('name'), vi = a.indexOf('value'); const name = a.slice(ni + 1, vi < 0 ? a.length : vi).join(' ').toLowerCase(), val = vi < 0 ? '' : a.slice(vi + 1).join(' ');
     if (name === 'skill level') skill = Math.max(0, Math.min(20, parseInt(val, 10) || 0)); else if (name === 'multipv') multiPV = Math.max(1, Math.min(5, parseInt(val, 10) || 1)); }
   else if (c === 'position') setPosition(a.slice(1));
