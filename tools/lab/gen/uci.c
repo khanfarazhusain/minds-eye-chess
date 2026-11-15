@@ -62,7 +62,7 @@ static void goCmd(char *a) {
   double hard;
   if (mt > 0) { hard = mt - 20 > 10 ? mt - 20 : 10; uciSoft = 1.0; }
   else if (wt >= 0 || bt >= 0) { double rem = side == WHITE ? wt : bt, inc = side == WHITE ? wi : bi; if (rem < 0) rem = 1000;
-    double alloc = rem / (mtg > 0 ? mtg + 2 : 35) + inc * 0.7; if (alloc > rem * 0.15) alloc = rem * 0.15; hard = alloc * 2; if (hard > rem * 0.2) hard = rem * 0.2; hard -= 30; if (hard < 10) hard = 10;
+    double alloc = rem / (mtg > 0 ? mtg + 2 : 26) + inc * 0.8; if (alloc > rem * 0.15) alloc = rem * 0.15; hard = alloc * 2; if (hard > rem * 0.2) hard = rem * 0.2; hard -= 30; if (hard < 10) hard = 10;
     uciSoft = alloc * 0.6 / hard; if (uciSoft > 0.9) uciSoft = 0.9; }
   else { hard = 1e9; uciSoft = 1.0; if (!depth && !nodesL) depth = 64; }
   tStart = host_now(); i32 m = go(hard, depth, (i32)nodesL); char ms[8];

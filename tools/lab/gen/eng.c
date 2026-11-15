@@ -392,7 +392,9 @@ static i32 evaluate0(void) {
   return (side == WHITE ? score : -score) + EP[41];
 }
 // ---- search ----
+#ifndef TTB
 #define TTB 20
+#endif
 #define TTS (1 << TTB)
 static i32 ttKey[TTS], ttMove[TTS]; static i16 ttScore[TTS]; static i8 ttDepth[TTS], ttFlag[TTS]; static i32 ttMask = TTS - 1;
 #ifdef TTEV
