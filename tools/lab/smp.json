@@ -1,0 +1,1 @@
+{"name":"smp_2T_vs_1T_10+0.1","flags":"-DNNH=512 -DPARTIAL -DHLMR=5000 -DSE=8 -DIMPR1 -DHNEG=5000 -DCMOVE -DBBATT -DSEEBB -DGENBB -DIIR=4 -DTTEV -DRAZOR=250 -DQTTS -DTTB=22","A":2,"B":1,"tc":"10+0.1","rounds":60,"shards":8,"run":1}

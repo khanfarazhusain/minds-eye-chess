@@ -1,5 +1,9 @@
 // FHK engine: native UCI front end. Own code. Build: gcc -O3 -DNATIVE -DNNH=512 <flags> uci.c -o fhk
 #define NATIVE 1
+#ifndef TL
+#define TL __thread
+#endif
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -40,12 +44,17 @@ static int playMove(const char *s) {
   i32 buf[256]; int n = gen(buf, 0, 0); char ms[8];
   for (int i = 0; i < n; i++) { moveStr(buf[i], ms); if (strcmp(ms, s)) continue; if (!make(buf[i])) return 0; set_state(side, castle, ep, half, nhist, 0); return 1; }
   return 0; }
+static char lastPos[1 << 16];
 static void position(char *p) {
+  if (!smpId) snprintf(lastPos, sizeof lastPos, "%s", p);
+  char tmp[1 << 16]; snprintf(tmp, sizeof tmp, "%s", p); p = tmp;
   char *mv = strstr(p, " moves ");
   if (mv) *mv = 0;
   if (strncmp(p, "startpos", 8) == 0) loadFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
   else if (strncmp(p, "fen ", 4) == 0) loadFen(p + 4);
-  if (mv) { char *t = strtok(mv + 7, " \r\n"); while (t) { playMove(t); t = strtok(NULL, " \r\n"); } } }
+  if (mv) { char *q = mv + 7; while (*q) { while (*q == ' ') q++; if (!*q) break; char t[8]; int k = 0; while (*q && *q != ' ' && k < 7) t[k++] = *q++; t[k] = 0; while (*q && *q != ' ') q++; playMove(t); } } }
+static int nThreads = 1; typedef struct { int id; double hard; } HArg;
+static void *helperMain(void *a) { HArg *h = a; smpId = h->id; char pp[1 << 16]; snprintf(pp, sizeof pp, "%s", lastPos); position(pp); go(h->hard, 0, 0); return 0; }
 static int loadNet(const char *path) {
   FILE *nf = fopen(path, "rb"); if (!nf) return 0; int Hn = 0; if (fread(&Hn, 4, 1, nf) != 1 || Hn != NNH) { fclose(nf); return 0; }
   static float f[768 * NNH + NNH + 2 * NNH + 1]; if (fread(f, 4, 768 * NNH + 3 * NNH + 1, nf) != (size_t)(768 * NNH + 3 * NNH + 1)) { fclose(nf); return 0; } fclose(nf); int o = 0;
@@ -65,7 +74,10 @@ static void goCmd(char *a) {
     double alloc = rem / (mtg > 0 ? mtg + 2 : 26) + inc * 0.8; if (alloc > rem * 0.15) alloc = rem * 0.15; hard = alloc * 2; if (hard > rem * 0.2) hard = rem * 0.2; hard -= 30; if (hard < 10) hard = 10;
     uciSoft = alloc * 0.6 / hard; if (uciSoft > 0.9) uciSoft = 0.9; }
   else { hard = 1e9; uciSoft = 1.0; if (!depth && !nodesL) depth = 64; }
-  tStart = host_now(); i32 m = go(hard, depth, (i32)nodesL); char ms[8];
+  tStart = host_now(); stop = 0; pthread_t th[64]; HArg ha[64]; int nh = (depth || nodesL) ? 0 : nThreads - 1;
+  pthread_attr_t at; pthread_attr_init(&at); pthread_attr_setstacksize(&at, 32 << 20);
+  for (int i = 0; i < nh; i++) { ha[i].id = i + 1; ha[i].hard = hard; pthread_create(&th[i], &at, helperMain, &ha[i]); }
+  i32 m = go(hard, depth, (i32)nodesL); stop = 1; for (int i = 0; i < nh; i++) pthread_join(th[i], 0); char ms[8];
   if (m) { moveStr(m, ms); printf("bestmove %s\n", ms); } else printf("bestmove 0000\n"); fflush(stdout); }
 int main(int argc, char **argv) {
   for (int p = 0; p < 16; p++) for (int s = 0; s < 120; s++) { PST_MG[p][s] = PSTMG_INIT[p][s]; PST_EG[p][s] = PSTEG_INIT[p][s]; }
@@ -79,7 +91,8 @@ int main(int argc, char **argv) {
   setvbuf(stdout, NULL, _IONBF, 0);
   while (fgets(line, sizeof line, stdin)) {
     line[strcspn(line, "\r\n")] = 0;
-    if (!strcmp(line, "uci")) { printf("id name FHK\nid author FARAZ & Claude\noption name Hash type spin default 16 min 1 max 16\nuciok\n"); }
+    if (!strcmp(line, "uci")) { printf("id name FHK\nid author FARAZ & Claude\noption name Hash type spin default 16 min 1 max 16\noption name Threads type spin default 1 min 1 max 64\nuciok\n"); }
+    else if (!strncmp(line, "setoption name Threads value ", 29)) { nThreads = atoi(line + 29); if (nThreads < 1) nThreads = 1; if (nThreads > 64) nThreads = 64; }
     else if (!strcmp(line, "isready")) printf("readyok\n");
     else if (!strcmp(line, "ucinewgame")) tt_clear();
     else if (!strncmp(line, "position ", 9)) position(line + 9);

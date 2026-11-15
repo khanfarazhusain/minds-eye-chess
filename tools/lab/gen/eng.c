@@ -13,6 +13,9 @@ typedef int i32; typedef unsigned int u32; typedef signed char i8; typedef short
 #define MATE_BOUND 29000
 #define INF 32000
 #define MAXPLY 128
+#ifndef TL
+#define TL
+#endif
 #define F_CAP 1
 #define F_EP 2
 #define F_CASTLE 4
@@ -41,10 +44,10 @@ i32 PST_MG[16][120], PST_EG[16][120]; // filled from JS (exact same tables)
 static i32 ZL[16][120], ZH[16][120], ZSL, ZSH, ZCL[16], ZCH[16], ZEL[120], ZEH[120];
 static u8 CMASK[120];
 typedef unsigned long long u64;
-static u8 SQ64[120], SQ120[64]; static u64 occ[2];
+static u8 SQ64[120], SQ120[64]; static TL u64 occ[2];
 #define OSET(s, c) (occ[(c) >> 3] |= 1ULL << SQ64[s], pbb[c] |= 1ULL << SQ64[s])
 #define OCLR(s, c) (occ[(c) >> 3] &= ~(1ULL << SQ64[s]), pbb[c] &= ~(1ULL << SQ64[s]))
-static u64 pbb[16], KNA[64], KGA[64], PAA[2][64], RAY[8][64];
+static TL u64 pbb[16]; static u64 KNA[64], KGA[64], PAA[2][64], RAY[8][64];
 static const int RDR[8] = {-1, 1, 0, 0, -1, -1, 1, 1}, RDF[8] = {0, 0, 1, -1, 1, -1, 1, -1}; // N S E W NE NW SE SW (r=0 is rank 8)
 static const int RPOS[8] = {0, 1, 1, 0, 0, 0, 1, 1}; // direction increases the 64-index
 static void bbInit(void) {
@@ -67,9 +70,9 @@ static i32 EP[43] = {7, 2, 12, 24, 0, 0, 1, 15, 71, 34, 32, 24, 50, 71, 39, 12, 
 static i32 PASSED_MG[8], PASSED_EG[8], MOB_MG[7], MOB_EG[7], KS_W[7];
 static u8 KZONE[241];
 // ---- position ----
-i8 B[120]; i32 side, castle, ep, half, hl, hh, mg, eg, phase, kingSq[2];
-static i32 stk[(MAXPLY + 1100) * 10]; static i32 sp = 0;
-i32 hist[2048]; i32 nhist = 0;
+TL i8 B[120]; TL i32 side, castle, ep, half, hl, hh, mg, eg, phase, kingSq[2];
+static TL i32 stk[(MAXPLY + 1100) * 10]; static TL i32 sp = 0;
+TL i32 hist[2048]; TL i32 nhist = 0;
 static u32 seed = 0x9E3779B9u;
 static i32 rnd(void) { seed ^= seed << 13; seed ^= seed >> 17; seed ^= seed << 5; return (i32)seed; }
 static i32 rndH(void) { u32 x = (u32)rnd(); x = (x ^ (x >> 16)) * 0x85ebca6bu; x = (x ^ (x >> 13)) * 0xc2b2ae35u; x ^= x >> 16; return (i32)x; }
@@ -85,7 +88,7 @@ void init(void) {
   bbInit();
   int dd[9] = {-11, -10, -9, -1, 0, 1, 9, 10, 11}; for (int i = 0; i < 9; i++) KZONE[dd[i] + 120] = 1;
 }
-extern i32 useNN; static i32 nnRec; static void nnFull(i32 L);
+extern i32 useNN; static TL i32 nnRec; static void nnFull(i32 L);
 void recompute(void) { // after JS filled B, side, castle, ep, half
   i32 l = 0, h = 0, m = 0, e = 0, ph = 0; kingSq[0] = kingSq[1] = 0; occ[0] = occ[1] = 0; for (int i = 0; i < 16; i++) pbb[i] = 0;
   for (int s = 21; s < 99; s++) { i32 p = B[s]; if (p == 0 || p == OFF) continue; l ^= ZL[p][s]; h ^= ZH[p][s]; m += PST_MG[p][s]; e += PST_EG[p][s]; ph += PHASEW[p & 7]; OSET(s, p); if ((p & 7) == KING) kingSq[p >> 3] = s; }
@@ -137,8 +140,8 @@ static i32 gen(i32 *out, i32 n, int capsOnly) {
 #undef gen
 static i32 genMB(i32 *out, i32 n, int capsOnly);
 static int cmpi(const void *a, const void *b) { return *(const i32 *)a - *(const i32 *)b; }
-static long gcBad = 0, gcN = 0;
-static i32 gen(i32 *out, i32 n, int capsOnly) { static i32 x[512], y[512]; i32 k = genBBi(out, n, capsOnly), k2 = genMB(x, 0, capsOnly);
+static TL long gcBad = 0, gcN = 0;
+static i32 gen(i32 *out, i32 n, int capsOnly) { static TL i32 x[512], y[512]; i32 k = genBBi(out, n, capsOnly), k2 = genMB(x, 0, capsOnly);
   gcN++; if (k - n != k2) gcBad++; else { for (int i = 0; i < k2; i++) y[i] = out[n + i]; qsort(x, k2, 4, cmpi); qsort(y, k2, 4, cmpi); for (int i = 0; i < k2; i++) if (x[i] != y[i]) { gcBad++; break; } }
   return k; }
 static i32 genMB(i32 *out, i32 n, int capsOnly) {
@@ -206,8 +209,8 @@ static i32 gen(i32 *out, i32 n, int capsOnly) {
 #endif
 i32 nn_h(void) { return NNH; }
 i32 useNN = 0; i16 NW1[768 * NNH], NB1[NNH], NW2[2 * NNH]; i32 NB2 = 0, nnOutMul = 400, nnOutDiv = 255 * 64;
-static i16 nnAcc[NNLV][2][NNH]; static u8 nnOk[NNLV], nnNA[NNLV], nnNS[NNLV]; static i16 nnAdd[NNLV][4], nnSub[NNLV][4];
-static i32 nnRec;
+static TL i16 nnAcc[NNLV][2][NNH]; static TL u8 nnOk[NNLV], nnNA[NNLV], nnNS[NNLV]; static TL i16 nnAdd[NNLV][4], nnSub[NNLV][4];
+static TL i32 nnRec;
 static inline i32 nnF(i32 s, i32 p) { return (((p >> 3) * 6 + (p & 7) - 1) << 6) + (SQ64[s] ^ 56); }
 static inline i32 nnFlip(i32 f) { i32 ct = f >> 6, sq = f & 63, col = ct / 6, t = ct % 6; return (((1 - col) * 6 + t) << 6) + (sq ^ 56); }
 #ifdef __wasm_simd128__
@@ -335,7 +338,7 @@ static i32 see(i32 m) {
 // ---- eval ----
 static i32 kdist(i32 a, i32 c) { return imax(iabs(fileOf(a) - fileOf(c)), iabs(rowOf(a) - rowOf(c))); }
 #define ECB 16
-static i32 ecKey[1 << ECB], ecKey2[1 << ECB], ecVal[1 << ECB];
+static TL i32 ecKey[1 << ECB], ecKey2[1 << ECB], ecVal[1 << ECB];
 static i32 evaluate0(void);
 static i32 evalRaw(void) { i32 i = hl & ((1 << ECB) - 1); if (ecKey[i] == hh && ecKey2[i] == hl) return ecVal[i]; i32 v = useNN ? nnEval() : evaluate0(); ecKey[i] = hh; ecKey2[i] = hl; ecVal[i] = v; return v; }
 #ifdef FIFTY
@@ -400,14 +403,14 @@ static i32 ttKey[TTS], ttMove[TTS]; static i16 ttScore[TTS]; static i8 ttDepth[T
 #ifdef TTEV
 static i16 ttEv[TTS];
 #endif
-static i32 moveBuf[MAXPLY * 256], scoreBuf[MAXPLY * 256], quietBuf[MAXPLY * 256], killers[MAXPLY * 2], history[16 * 120], pvLen[MAXPLY];
-i32 pvTable[MAXPLY * MAXPLY]; static i8 lmrT[64][64];
-i32 r_move, r_score, r_depth, r_nodes, r_pvlen; i32 r_pv[MAXPLY];
+static TL i32 moveBuf[MAXPLY * 256], scoreBuf[MAXPLY * 256], quietBuf[MAXPLY * 256], killers[MAXPLY * 2], history[16 * 120], pvLen[MAXPLY];
+TL i32 pvTable[MAXPLY * MAXPLY]; static i8 lmrT[64][64];
+TL i32 r_move, r_score, r_depth, r_nodes, r_pvlen; TL i32 r_pv[MAXPLY];
 #ifndef SOFTT
 #define SOFTT 0.55
 #endif
-static i32 nodes, stop, nodeLimit, rootPartial; static double deadline;
-i32 rootFilter[256]; i32 nRootFilter = 0;
+static TL i32 nodes, nodeLimit, rootPartial; static volatile i32 stop; static TL double deadline; TL i32 smpId = 0;
+TL i32 rootFilter[256]; TL i32 nRootFilter = 0;
 void set_tt_bits(i32 bits) { ttMask = (1 << (bits > TTB ? TTB : bits)) - 1; }
 void lmr_init(void) { for (int d = 0; d < 64; d++) for (int m = 0; m < 64; m++) { double v = (d && m) ? 0.75 + logd(d) * logd(m) / 2.25 : 0; i32 iv = (i32)v; if (v < 0 && iv != v) iv--; lmrT[d][m] = (d && m) ? iv : 0; } }
 i32 lmr_get(i32 d, i32 m) { return lmrT[d][m]; }
@@ -426,7 +429,7 @@ static void ttStore(i32 depth, i32 flag, i32 score, i32 move, i32 ply, i32 ev) {
 }
 static void checkTime(void) { if ((nodes & 2047) == 0) { if (host_now() > deadline || (nodeLimit && nodes > nodeLimit)) stop = 1; } }
 #ifdef CMOVE
-static i32 counterM[16 * 120];
+static TL i32 counterM[16 * 120];
 static inline i32 cmIdx(void) { if (sp < 10) return -1; i32 pm = stk[sp - 10]; if (!pm) return -1; return B[mTo(pm)] * 120 + mTo(pm); }
 #endif
 static void scoreMoves(i32 base, i32 n, i32 ttM, i32 ply) {
@@ -481,7 +484,7 @@ static i32 qsearch(i32 alpha, i32 beta, i32 ply) {
   QST(best > qOrigA ? TT_EXACT : TT_UPPER, best, qBestM);
   return best;
 }
-static i32 excl[MAXPLY + 2]; static i32 evs[MAXPLY + 2];
+static TL i32 excl[MAXPLY + 2]; static TL i32 evs[MAXPLY + 2];
 static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
   i32 ex = excl[ply];
   int pvNode = beta - alpha > 1; pvLen[ply] = 0;
@@ -584,16 +587,16 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
 }
 // results
 
-static i32 legalList[256];
+static TL i32 legalList[256];
 i32 go(double timeMs, i32 maxDepthIn, i32 nodeLim) {
-  stop = 0; nodes = 0; double t0 = host_now(); deadline = t0 + (timeMs > 0 ? timeMs : 1000); nodeLimit = nodeLim;
+  if (!smpId) stop = 0; nodes = 0; double t0 = host_now(); deadline = t0 + (timeMs > 0 ? timeMs : 1000); nodeLimit = nodeLim;
   for (int i = 0; i < MAXPLY * 2; i++) killers[i] = 0; for (int i = 0; i < 16 * 120; i++) history[i] >>= 2;
   i32 maxDepth = maxDepthIn ? maxDepthIn : 64;
   i32 buf[256]; i32 n = gen(buf, 0, 0), nl = 0;
   for (int i = 0; i < n; i++) if (make(buf[i])) { unmake(); if (!nRootFilter || inRoot(buf[i])) legalList[nl++] = buf[i]; }
   if (!nl) { r_move = 0; r_score = inCheck() ? -MATE : 0; r_depth = 0; r_pvlen = 0; r_nodes = 0; return 0; }
   int have = 0; i32 prev = 0;
-  for (i32 d = 1; d <= maxDepth; d++) {
+  for (i32 d = 1 + (smpId & 1); d <= maxDepth; d++) {
     i32 window = 30, alpha = -INF, beta = INF, s;
     if (d >= 5) { alpha = prev - window; beta = prev + window; }
     while (1) { s = search(d, alpha, beta, 0, 0); if (stop) break;
@@ -604,12 +607,12 @@ i32 go(double timeMs, i32 maxDepthIn, i32 nodeLim) {
       r_pvlen = pvLen[0]; for (i32 j = 0; j < pvLen[0]; j++) r_pv[j] = pvTable[j];
       if (!r_pvlen) { r_pv[0] = legalList[0]; r_pvlen = 1; }
       r_move = r_pv[0]; r_score = s; r_depth = d; r_nodes = nodes; have = 1; prev = s;
-      host_iter(d, s, nodes, r_pvlen);
+      if (!smpId) host_iter(d, s, nodes, r_pvlen);
     }
     if (stop) break;
     if (iabs(s) > MATE_BOUND && d > 6) break;
-    if (!maxDepthIn && host_now() - t0 > (timeMs > 0 ? timeMs : 1000) * SOFTT) break;
-    if (nl == 1 && d >= 4) break;
+    if (!smpId && !maxDepthIn && host_now() - t0 > (timeMs > 0 ? timeMs : 1000) * SOFTT) break;
+    if (!smpId && nl == 1 && d >= 4) break;
   }
   r_nodes = nodes; return r_move;
 }

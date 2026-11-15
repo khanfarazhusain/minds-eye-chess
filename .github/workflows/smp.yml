@@ -1,0 +1,55 @@
+name: smp-match
+on:
+  push:
+    branches: [engine-lab]
+    paths: [tools/lab/smp.json]
+  workflow_dispatch:
+jobs:
+  play:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0,1,2,3,4,5,6,7]
+    steps:
+      - uses: actions/checkout@v4
+      - name: build
+        run: |
+          git clone --depth 1 https://github.com/Disservin/fastchess /tmp/fc && make -C /tmp/fc -j4 >/dev/null
+          cd tools/lab/gen && gcc -O3 -march=native $(jq -r .flags ../smp.json) uci.c -o /tmp/fhk -lpthread
+          cp ../bin/fhk-net.bin /tmp/fhk-net.bin
+          jq -r '.[]' ../openings.json | shuf --random-source=<(yes ${{ matrix.shard }}) > /tmp/op.epd
+      - name: play
+        run: |
+          C=tools/lab/smp.json; A=$(jq -r .A $C); B=$(jq -r .B $C)
+          /tmp/fc/fastchess -engine cmd=/tmp/fhk name=T$A option.Threads=$A -engine cmd=/tmp/fhk name=T$B option.Threads=$B \
+            -each proto=uci tc=$(jq -r .tc $C) -openings file=/tmp/op.epd format=epd order=sequential \
+            -rounds $(jq -r .rounds $C) -games 2 -repeat -concurrency 1 -pgnout file=out_${{ matrix.shard }}.pgn > log.txt 2>&1 || true
+          tail -20 log.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: smp_${{ matrix.shard }}
+          path: out_${{ matrix.shard }}.pgn
+  sum:
+    needs: play
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+      - name: sum
+        run: |
+          cat smp_*/*.pgn > all.pgn
+          python3 - <<'P' | tee -a $GITHUB_STEP_SUMMARY
+          import re,math
+          s=open('all.pgn').read().split('[Event ')
+          w=d=l=0
+          for g in s[1:]:
+            W=re.search(r'\[White "(\w+)"',g).group(1); r=re.search(r'\[Result "([^"]+)"',g).group(1)
+            a=1 if W=='T2' else 0
+            if r=='1/2-1/2': d+=1
+            elif (r=='1-0')==(a==1): w+=1
+            elif r in('1-0','0-1'): l+=1
+          n=w+d+l; p=(w+d/2)/max(n,1); e=-400*math.log10(1/p-1) if 0<p<1 else 0
+          print(f"T2 vs T1: games {n} W{w} D{d} L{l} score {100*p:.1f}% elo {e:+.0f}")
+          P
