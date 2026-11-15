@@ -5,12 +5,13 @@ on:
   push:
     branches: [engine-lab]
     paths: [tools/lab/loop_kick.txt]
+  workflow_dispatch:
 concurrency:
   group: fhk-loop
   cancel-in-progress: false
 permissions:
   contents: write
-  actions: read
+  actions: write
 jobs:
   gen:
     if: github.repository == 'khanfarazhusain/minds-eye-chess'
@@ -136,3 +137,12 @@ jobs:
             git reset -q --hard origin/engine-lab; sleep 5
           done
           tail -3 tools/lab/loop_log.txt | tee -a $GITHUB_STEP_SUMMARY
+  next:
+    needs: [promote]
+    if: always() && github.repository == 'khanfarazhusain/minds-eye-chess'
+    runs-on: ubuntu-latest
+    steps:
+      - name: start next iteration
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run loop.yml --ref engine-lab -R ${{ github.repository }}

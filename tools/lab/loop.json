@@ -1,1 +1,17 @@
-{"gen_seconds": 5400, "nodes": 20000, "flags": "-DNNH=512 -DPARTIAL -DHLMR=5000 -DSE=8 -DIMPR1 -DHNEG=5000 -DCMOVE -DBBATT -DSEEBB -DGENBB", "epochs": 3, "lr": 0.0003, "lambda": 0.8, "base_run": 43660933797, "gate_ms": 200, "gate_pairs": 376, "promote_elo": 10, "helpers": ["umaimamehrozkhan-lgtm/minds-eye-chess", "fhkyz132/minds-eye-chess", "umaimamehroz-cmd/minds-eye-chess"]}
+{
+  "gen_seconds": 5400,
+  "nodes": 20000,
+  "flags": "-DNNH=512 -DPARTIAL -DHLMR=5000 -DSE=8 -DIMPR1 -DHNEG=5000 -DCMOVE -DBBATT -DSEEBB -DGENBB",
+  "epochs": 3,
+  "lr": 0.0001,
+  "lambda": 0.8,
+  "base_run": 43660933797,
+  "gate_ms": 200,
+  "gate_pairs": 376,
+  "promote_elo": 10,
+  "helpers": [
+    "umaimamehrozkhan-lgtm/minds-eye-chess",
+    "fhkyz132/minds-eye-chess",
+    "umaimamehroz-cmd/minds-eye-chess"
+  ]
+}
