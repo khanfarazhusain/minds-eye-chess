@@ -545,6 +545,19 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
 #endif
       makeNull(); i32 s = -search(depth - R, -beta, -beta + 1, ply + 1, 0); unmakeNull();
       if (stop) return 0; if (s >= beta) return s > MATE_BOUND ? beta : s; }
+#ifdef PCUT
+    if (depth >= 5 && iabs(beta) < MATE_BOUND) { i32 rB = beta + PCUT, pb = ply * 256; i32 pn = gen(moveBuf, pb, 1) - pb;
+      for (i32 i = pb; i < pb + pn; i++) { i32 m = moveBuf[i]; if (m == ex || !(mFlag(m) & F_CAP)) continue; if (see(m) < rB - staticEval) continue;
+#ifdef CONTH
+        i32 mvPc = B[mFrom(m)];
+#endif
+        if (!make(m)) continue;
+#ifdef CONTH
+        cmPc[ply] = mvPc; cmTo[ply] = mTo(m);
+#endif
+        i32 v = -qsearch(-rB, -rB + 1, ply + 1); if (v >= rB) v = -search(depth - 4, -rB, -rB + 1, ply + 1, 1);
+        unmake(); if (stop) return 0; if (v >= rB) return v; } }
+#endif
   }
   int singExt = 0;
 #ifdef SE

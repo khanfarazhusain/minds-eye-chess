@@ -1,1 +1,1 @@
-{"name":"ch(conthist)_vs_c1_200ms","type":"sp","A":"ch.wasm:nets/current.bin","B":"c1.wasm:nets/current.bin","pairs":376,"ms":200,"shards":20,"procs":4,"pairsPerProc":1,"run":24}
+{"name":"pc(probcut200)_vs_c1_200ms","type":"sp","A":"pc.wasm:nets/current.bin","B":"c1.wasm:nets/current.bin","pairs":376,"ms":200,"shards":20,"procs":4,"pairsPerProc":1,"run":25}
