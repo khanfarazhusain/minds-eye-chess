@@ -1,1 +1,1 @@
-{"name":"pc(probcut200)_vs_c1_200ms","type":"sp","A":"pc.wasm:nets/current.bin","B":"c1.wasm:nets/current.bin","pairs":376,"ms":200,"shards":20,"procs":4,"pairsPerProc":1,"run":25}
+{"name":"nx(negext+multicut)_vs_c1_200ms","type":"sp","A":"nx.wasm:nets/current.bin","B":"c1.wasm:nets/current.bin","pairs":376,"ms":200,"shards":20,"procs":4,"pairsPerProc":1,"run":26}

@@ -562,7 +562,11 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
   int singExt = 0;
 #ifdef SE
   if (!ex && ply > 0 && depth >= SE && ttM && ti >= 0 && (ttFlag[ti] == TT_LOWER || ttFlag[ti] == TT_EXACT) && ttDepth[ti] >= depth - 3) {
-    i32 ts = ttScore[ti]; if (iabs(ts) < MATE_BOUND) { i32 sB = ts - 2 * depth; excl[ply] = ttM; i32 ss = search((depth - 1) / 2, sB - 1, sB, ply, 0); excl[ply] = 0; if (stop) return 0; if (ss < sB) singExt = 1; } }
+    i32 ts = ttScore[ti]; if (iabs(ts) < MATE_BOUND) { i32 sB = ts - 2 * depth; excl[ply] = ttM; i32 ss = search((depth - 1) / 2, sB - 1, sB, ply, 0); excl[ply] = 0; if (stop) return 0; if (ss < sB) singExt = 1;
+#ifdef NEGX
+      else if (sB >= beta) return sB; else if (ts >= beta) singExt = -1;
+#endif
+    } }
 #endif
   if (!ttM && depth >= 5 && pvNode) depth--;
   i32 base = ply * 256; i32 n = gen(moveBuf, base, 0) - base;
@@ -589,7 +593,7 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
     cmPc[ply] = mvPc; cmTo[ply] = mTo(m);
 #endif
     int givesCheck = inCheck(); i32 s;
-    i32 ext = (singExt && m == ttM) ? 1 : 0;
+    i32 ext = (singExt && m == ttM) ? singExt : 0;
     if (legal == 1) s = -search(depth - 1 + ext, -beta, -alpha, ply + 1, 1);
     else { i32 R = 0;
       if (depth >= 3 && isQuiet && !inChk && !givesCheck) { R = lmrT[imin(depth, 63)][imin(legal, 63)]; if (pvNode) R--;
