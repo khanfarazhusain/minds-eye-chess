@@ -1,0 +1,1 @@
+{"name":"n14_1024_cont","init":"nets/n14.bin","epochs":12,"ep0":7,"lr":0.001,"lambda":0.8,"capn":250000000,"wasm_new":"bb1024.wasm","gate_ms":200,"gate_pairs":376}
