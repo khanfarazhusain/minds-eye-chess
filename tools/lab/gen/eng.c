@@ -390,6 +390,9 @@ static i32 evaluate0(void) {
 #define TTB 20
 #define TTS (1 << TTB)
 static i32 ttKey[TTS], ttMove[TTS]; static i16 ttScore[TTS]; static i8 ttDepth[TTS], ttFlag[TTS]; static i32 ttMask = TTS - 1;
+#ifdef TTEV
+static i16 ttEv[TTS];
+#endif
 static i32 moveBuf[MAXPLY * 256], scoreBuf[MAXPLY * 256], quietBuf[MAXPLY * 256], killers[MAXPLY * 2], history[16 * 120], pvLen[MAXPLY];
 i32 pvTable[MAXPLY * MAXPLY]; static i8 lmrT[64][64];
 i32 r_move, r_score, r_depth, r_nodes, r_pvlen; i32 r_pv[MAXPLY];
@@ -404,11 +407,15 @@ i32 lmr_get(i32 d, i32 m) { return lmrT[d][m]; }
 void tt_clear(void) { for (int i = 0; i < TTS; i++) { ttKey[i] = 0; ttMove[i] = 0; ttDepth[i] = 0; ttFlag[i] = 0; } for (int i = 0; i < 16 * 120; i++) history[i] = 0; for (int i = 0; i < MAXPLY * 2; i++) killers[i] = 0; }
 static int inRoot(i32 m) { for (int i = 0; i < nRootFilter; i++) if (rootFilter[i] == m) return 1; return 0; }
 static i32 ttProbe(void) { i32 i = hl & ttMask; return ttKey[i] == hh && ttFlag[i] ? i : -1; }
-static void ttStore(i32 depth, i32 flag, i32 score, i32 move, i32 ply) {
+static void ttStore(i32 depth, i32 flag, i32 score, i32 move, i32 ply, i32 ev) {
   i32 i = hl & ttMask;
   if (ttKey[i] == hh && ttDepth[i] > depth && flag != TT_EXACT) return;
   if (score > MATE_BOUND) score += ply; else if (score < -MATE_BOUND) score -= ply;
   ttKey[i] = hh; ttMove[i] = move ? move : (ttKey[i] == hh ? ttMove[i] : 0); ttScore[i] = (i16)score; ttDepth[i] = (i8)depth; ttFlag[i] = (i8)flag;
+#ifdef TTEV
+  ttEv[i] = (i16)(ev == -INF ? -32768 : ev);
+#endif
+  (void)ev;
 }
 static void checkTime(void) { if ((nodes & 2047) == 0) { if (host_now() > deadline || (nodeLimit && nodes > nodeLimit)) stop = 1; } }
 #ifdef CMOVE
@@ -466,7 +473,14 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
   i32 ttM = 0; i32 ti = ttProbe();
   if (ti >= 0) { ttM = ttMove[ti]; if (!ex && !pvNode && ply > 0 && ttDepth[ti] >= depth) { i32 s = ttScore[ti]; if (s > MATE_BOUND) s -= ply; else if (s < -MATE_BOUND) s += ply; i32 f = ttFlag[ti];
       if (f == TT_EXACT || (f == TT_LOWER && s >= beta) || (f == TT_UPPER && s <= alpha)) return s; } }
+#ifdef TTEV
+  i32 staticEval = inChk ? -INF : (ti >= 0 && ttEv[ti] != -32768 ? ttEv[ti] : evaluate()); evs[ply] = staticEval;
+#else
   i32 staticEval = inChk ? -INF : evaluate(); evs[ply] = staticEval;
+#endif
+#ifdef IIR
+  if (!ttM && !ex && depth >= IIR) depth--;
+#endif
   int improving = !inChk && ply >= 2 && evs[ply - 2] != -INF && staticEval > evs[ply - 2];
   if (!pvNode && !inChk && ply > 0 && !ex) {
     #ifdef IMPR1
@@ -536,7 +550,7 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
     if (isQuiet) quietBuf[qb + nq++] = m;
   }
   if (legal == 0) return ex ? alpha : (inChk ? -MATE + ply : 0);
-  if (!ex) ttStore(depth, best >= beta ? TT_LOWER : (best > origAlpha ? TT_EXACT : TT_UPPER), best, bestMove, ply);
+  if (!ex) ttStore(depth, best >= beta ? TT_LOWER : (best > origAlpha ? TT_EXACT : TT_UPPER), best, bestMove, ply, staticEval);
   return best;
 }
 // results
