@@ -210,7 +210,6 @@ static i32 gen(i32 *out, i32 n, int capsOnly) {
 i32 nn_h(void) { return NNH; }
 i32 useNN = 0; i16 NW1[768 * NNH], NB1[NNH], NW2[2 * NNH]; i32 NB2 = 0, nnOutMul = 400, nnOutDiv = 255 * 64;
 static TL i16 nnAcc[NNLV][2][NNH]; static TL u8 nnOk[NNLV], nnNA[NNLV], nnNS[NNLV]; static TL i16 nnAdd[NNLV][4], nnSub[NNLV][4];
-static TL i32 nnRec;
 static inline i32 nnF(i32 s, i32 p) { return (((p >> 3) * 6 + (p & 7) - 1) << 6) + (SQ64[s] ^ 56); }
 static inline i32 nnFlip(i32 f) { i32 ct = f >> 6, sq = f & 63, col = ct / 6, t = ct % 6; return (((1 - col) * 6 + t) << 6) + (sq ^ 56); }
 #ifdef __wasm_simd128__

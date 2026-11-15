@@ -100,7 +100,7 @@ jobs:
       - name: match
         run: |
           cd tools/lab; C=loop.json
-          for p in 0 1 2 3; do node wsp.js bb512.wasm:new.bin bb512.wasm:nets/current.bin $(jq -r .gate_pairs $C) $(jq -r .gate_ms $C) $(( ${{ matrix.shard }}*4 + p )) 40 g_${{ matrix.shard }}_$p.json > /dev/null 2>&1 & done; wait
+          for p in 0 1 2 3; do node wsp.js c1.wasm:new.bin c1.wasm:nets/current.bin $(jq -r .gate_pairs $C) $(jq -r .gate_ms $C) $(( ${{ matrix.shard }}*4 + p )) 40 g_${{ matrix.shard }}_$p.json > /dev/null 2>&1 & done; wait
       - uses: actions/upload-artifact@v4
         with:
           name: gate-${{ matrix.shard }}
