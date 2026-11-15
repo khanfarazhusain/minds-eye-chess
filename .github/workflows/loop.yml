@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [0,1,2,3,4,5,6,7,8,9]
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,7 +30,7 @@ jobs:
           cd tools/lab; C=loop.json
           gcc -O3 -march=native $(jq -r .flags $C) -o gen/gen gen/gen.c
           for p in $(seq 0 $(( $(nproc) - 1 ))); do
-            OPEN=gen/open.txt timeout $(jq -r .gen_seconds $C) ./gen/gen $(jq -r .nodes $C) $(( (${{ github.run_id }} % 100000) * 100 + ${{ matrix.shard }} * 10 + p )) 100000000 nets/current.bin > sp_$p.txt &
+            OPEN=gen/open.txt timeout $(jq -r .gen_seconds $C) ./gen/gen $(jq -r .nodes $C) $(( (${{ github.run_id }} % 100000) * 1000 + ${{ matrix.shard }} * 10 + p )) 100000000 nets/current.bin > sp_$p.txt &
           done
           wait || true
           cat sp_*.txt | gzip -4 > sp_${{ matrix.shard }}.txt.gz; zcat sp_${{ matrix.shard }}.txt.gz | wc -l
@@ -58,17 +58,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          B=$(jq -r .base_run tools/lab/loop.json); P=$(jq -r .last_run tools/lab/loop_state.json)
+          B=$(jq -r .base_run tools/lab/loop.json); PR=$(jq -r '(.runs // [.last_run]) | map(tostring) | join(" ")' tools/lab/loop_state.json)
           mkdir -p data/base data/prev
           gh run download $B -R ${{ github.repository }} -n base-data -D data/base || echo "no base"
-          if [ "$P" != "0" ]; then for s in 0 1 2 3 4 5 6 7 8 9; do gh run download $P -R ${{ github.repository }} -n sp-$s -D data/prev || true; done; fi
+          for P in $PR; do [ "$P" = "0" ] && continue; mkdir -p data/prev/$P; for s in $(seq 0 19); do gh run download $P -R ${{ github.repository }} -n sp-$s -D data/prev/$P || true; done; done
           for h in $(jq -r '.helpers[]?' tools/lab/loop.json); do git clone -q --depth 1 -b sp-data https://github.com/$h data/helper_$(echo $h | tr / _) || true; done
           ls -la data/*
       - name: train
         run: |
           C=tools/lab/loop.json
           gcc -O3 -march=native -fopenmp -DH=512 -o train2 tools/lab/train/train2.c -lm
-          zcat data/new/*.gz > all_new.txt; ls data/prev/*.gz >/dev/null 2>&1 && zcat data/prev/*.gz > all_prev.txt || touch all_prev.txt
+          zcat data/new/*.gz > all_new.txt; ls data/prev/*/*.gz >/dev/null 2>&1 && zcat data/prev/*/*.gz > all_prev.txt || touch all_prev.txt
           ls data/base/*.gz >/dev/null 2>&1 && zcat data/base/*.gz > all_base.txt || touch all_base.txt
           cat data/helper_*/part_* 2>/dev/null | zcat > all_help.txt || touch all_help.txt
           rm -rf data; wc -l all_*.txt; df -h .
@@ -131,7 +131,7 @@ jobs:
             git pull -q --rebase origin engine-lab || true
             IT=$(jq -r .iter tools/lab/loop_state.json); TH=$(jq -r .promote_elo tools/lab/loop.json)
             if [ "$E" -ge "$TH" ]; then IT=$((IT+1)); cp new.bin tools/lab/nets/current.bin; cp new.bin tools/lab/nets/iter_$IT.bin; P=promoted; else P=rejected; fi
-            jq ".iter=$IT | .last_run=${{ github.run_id }}" tools/lab/loop_state.json > s.tmp && mv s.tmp tools/lab/loop_state.json
+            jq ".iter=$IT | .last_run=${{ github.run_id }} | .runs=(((.runs // []) + [${{ github.run_id }}])[-3:])" tools/lab/loop_state.json > s.tmp && mv s.tmp tools/lab/loop_state.json
             echo "$(date -u +%FT%TZ) run ${{ github.run_id }} games $N score $S elo $E $P iter $IT" >> tools/lab/loop_log.txt
             git add tools/lab/loop_state.json tools/lab/loop_log.txt tools/lab/nets && git commit -qm "fhk-loop: $P (elo $E) iter $IT" && git push -q origin HEAD:engine-lab && break
             git reset -q --hard origin/engine-lab; sleep 5
