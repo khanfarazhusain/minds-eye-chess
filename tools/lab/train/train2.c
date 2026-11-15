@@ -10,7 +10,9 @@
 #endif
 typedef struct __attribute__((packed)) { unsigned char b[32]; unsigned char stm; float t; } Pos; // b: 4 bits per square, 0 empty, 1..12 piece
 typedef struct { unsigned char n, stm; unsigned short f[32]; } Feat;
-static void unpack(const Pos *p, Feat *q) { int n = 0; for (int sq = 0; sq < 64; sq++) { int v = (p->b[sq >> 1] >> ((sq & 1) * 4)) & 15; if (v && n < 32) q->f[n++] = (v - 1) * 64 + sq; } q->n = n; q->stm = p->stm; }
+static void unpackM(const Pos *p, Feat *q, int m) { int n = 0; for (int sq = 0; sq < 64; sq++) { int v = (p->b[sq >> 1] >> ((sq & 1) * 4)) & 15; if (v && n < 32) q->f[n++] = (v - 1) * 64 + (m ? sq ^ 7 : sq); } q->n = n; q->stm = p->stm; }
+static void unpack(const Pos *p, Feat *q) { unpackM(p, q, 0); }
+static int AUG = 0; // AUG=1: mirror files a<->h on half the samples (castling rights are not in the data)
 static Pos *D; static long ND = 0, CAP = 0;
 static float W1[768 * H], B1[H], W2[2 * H], B2;
 static float gW1[768 * H], gB1[H], gW2[2 * H], gB2;
@@ -33,7 +35,7 @@ static float fwd(const Feat *p, float *aU, float *aT, float *xU, float *xT) {
   return r; }
 int main(int argc, char **argv) {
   // argv: out.bin epochs lam files...
-  const char *out = argv[1]; int EPOCHS = atoi(argv[2]); float lam = atof(argv[3]);
+  AUG = getenv("AUG") ? atoi(getenv("AUG")) : 0; const char *out = argv[1]; int EPOCHS = atoi(argv[2]); float lam = atof(argv[3]);
   char line[300]; setvbuf(stderr, NULL, _IONBF, 0);
   for (int a = 4; a < argc; a++) { FILE *fp = fopen(argv[a], "r"); while (fgets(line, sizeof line, fp)) {
       char *s1 = strchr(line, ';'); if (!s1) continue; *s1 = 0; char *s2 = strchr(s1 + 1, ';'); if (!s2) continue; char *s3 = strchr(s2 + 1, ';'); if (!s3) continue;
@@ -62,7 +64,7 @@ int main(int argc, char **argv) {
         memset(gb1, 0, H * 4); memset(gw2, 0, 2 * H * 4); double gb2 = 0, ll = 0;
         float aU[H], aT[H], xU[H], xT[H], dU[H], dT[H]; Feat q;
         #pragma omp for schedule(static)
-        for (long k = bs; k < be; k++) { unpack(&D[k], &q); float r = fwd(&q, aU, aT, xU, xT); float pr = 1 / (1 + expf(-r * CS)); float e = pr - D[k].t; ll += e * e;
+        for (long k = bs; k < be; k++) { unpackM(&D[k], &q, AUG && (((unsigned long)k * 2654435761u + ep) >> 7 & 1)); float r = fwd(&q, aU, aT, xU, xT); float pr = 1 / (1 + expf(-r * CS)); float e = pr - D[k].t; ll += e * e;
           float dr = 2 * e * pr * (1 - pr) * CS; gb2 += dr;
           for (int j = 0; j < H; j++) { gw2[j] += dr * aU[j]; gw2[H + j] += dr * aT[j]; dU[j] = (xU[j] > 0 && xU[j] < 1) ? dr * W2[j] : 0; dT[j] = (xT[j] > 0 && xT[j] < 1) ? dr * W2[H + j] : 0; gb1[j] += dU[j] + dT[j]; }
           float *dW = q.stm ? dT : dU, *dB = q.stm ? dU : dT;
