@@ -1,1 +1,1 @@
-{"name":"razor250_qtts_vs_bb512_200ms","type":"sp","A":"rq.wasm:nets/current.bin","B":"bb512.wasm:nets/current.bin","pairs":376,"ms":200,"shards":20,"procs":4,"pairsPerProc":1,"run":19}
+{"name":"ttcapR_hprune4000_fifty_vs_bb512_200ms","type":"sp","A":"sb.wasm:nets/current.bin","B":"bb512.wasm:nets/current.bin","pairs":376,"ms":200,"shards":20,"procs":4,"pairsPerProc":1,"run":20}

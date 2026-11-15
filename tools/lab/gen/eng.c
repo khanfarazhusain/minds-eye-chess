@@ -337,7 +337,12 @@ static i32 kdist(i32 a, i32 c) { return imax(iabs(fileOf(a) - fileOf(c)), iabs(r
 #define ECB 16
 static i32 ecKey[1 << ECB], ecKey2[1 << ECB], ecVal[1 << ECB];
 static i32 evaluate0(void);
-i32 evaluate(void) { i32 i = hl & ((1 << ECB) - 1); if (ecKey[i] == hh && ecKey2[i] == hl) return ecVal[i]; i32 v = useNN ? nnEval() : evaluate0(); ecKey[i] = hh; ecKey2[i] = hl; ecVal[i] = v; return v; }
+static i32 evalRaw(void) { i32 i = hl & ((1 << ECB) - 1); if (ecKey[i] == hh && ecKey2[i] == hl) return ecVal[i]; i32 v = useNN ? nnEval() : evaluate0(); ecKey[i] = hh; ecKey2[i] = hl; ecVal[i] = v; return v; }
+#ifdef FIFTY
+i32 evaluate(void) { i32 v = evalRaw(); return half > 8 ? v * (200 - half) / 200 : v; }
+#else
+i32 evaluate(void) { return evalRaw(); }
+#endif
 static i32 evaluate0(void) {
   i32 m = mg, e = eg; i32 ph = imin(phase, 24);
   i8 wp[10] = {0}, bp[10] = {0}, wpMinRow[10], bpMaxRow[10], wpMaxRow[10], bpMinRow[10];
@@ -525,6 +530,9 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
     if (m == ex) continue;
     int isCap = (mFlag(m) & F_CAP) != 0, isQuiet = !isCap && !mPromo(m);
     if (legal > 0 && isQuiet && !inChk && best > -MATE_BOUND) { if (futile) continue; if (!pvNode && depth <= 4 && legal >= 4 + depth * depth * 2) continue; }
+#ifdef HPRUNE
+    if (legal > 0 && isQuiet && !pvNode && !inChk && depth <= 3 && best > -MATE_BOUND && history[B[mFrom(m)] * 120 + mTo(m)] < -HPRUNE * depth) continue;
+#endif
     if (legal > 0 && !pvNode && isCap && depth <= 4 && scoreBuf[i] < 900000 && see(m) < -80 * depth) continue;
     if (!make(m)) continue;
     legal++;
@@ -537,6 +545,9 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
         if (!improving) R++;
 #endif
  if (m == killers[ply * 2] || m == killers[ply * 2 + 1]) R--;
+#ifdef TTCAPR
+        if (ttM && (mFlag(ttM) & F_CAP)) R++;
+#endif
 #ifdef HLMR
         { i32 h = history[B[mTo(m)] * 120 + mTo(m)]; if (h < 0) R++; else if (h > HLMR) R--;
 #ifdef HNEG
