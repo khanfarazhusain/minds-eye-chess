@@ -1,1 +1,1 @@
-{"name":"bb_n13_L20_2s","wasm":"bb512.wasm","net":"nets/n13.bin","level":20,"ms":2000,"shards":20,"pairsPerProc":2,"procs":3,"run":16}
+{"name":"tm100_n13_L20_2s","wasm":"tm100.wasm","net":"nets/n13.bin","level":20,"ms":2000,"shards":20,"pairsPerProc":2,"procs":3,"run":17}
