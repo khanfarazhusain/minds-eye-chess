@@ -1,1 +1,1 @@
-{"name":"iir4_ttev_vs_bb512_200ms","type":"sp","A":"it.wasm:nets/current.bin","B":"bb512.wasm:nets/current.bin","pairs":376,"ms":200,"shards":20,"procs":4,"pairsPerProc":1,"run":18}
+{"name":"razor250_qtts_vs_bb512_200ms","type":"sp","A":"rq.wasm:nets/current.bin","B":"bb512.wasm:nets/current.bin","pairs":376,"ms":200,"shards":20,"procs":4,"pairsPerProc":1,"run":19}

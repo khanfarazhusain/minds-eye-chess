@@ -439,7 +439,19 @@ static void scoreMoves(i32 base, i32 n, i32 ttM, i32 ply) {
 }
 static i32 pick(i32 i, i32 end) { i32 best = i; for (i32 j = i + 1; j < end; j++) if (scoreBuf[j] > scoreBuf[best]) best = j;
   if (best != i) { i32 t = moveBuf[i]; moveBuf[i] = moveBuf[best]; moveBuf[best] = t; t = scoreBuf[i]; scoreBuf[i] = scoreBuf[best]; scoreBuf[best] = t; } return moveBuf[i]; }
+#ifdef QTTS
+static void qStore(i32 flag, i32 score, i32 move, i32 ply) { i32 i = hl & ttMask; if (ttFlag[i] && ttDepth[i] > 0) return; if (score > MATE_BOUND) score += ply; else if (score < -MATE_BOUND) score -= ply;
+  ttKey[i] = hh; ttMove[i] = move; ttScore[i] = (i16)score; ttDepth[i] = 0; ttFlag[i] = (i8)flag;
+#ifdef TTEV
+  ttEv[i] = -32768;
+#endif
+}
+#define QST(f, sc, mv) qStore(f, sc, mv, ply)
+#else
+#define QST(f, sc, mv)
+#endif
 static i32 qsearch(i32 alpha, i32 beta, i32 ply) {
+  i32 qOrigA = alpha; i32 qBestM = 0; (void)qOrigA; (void)qBestM;
   nodes++; checkTime(); if (stop) return 0;
   pvLen[ply] = 0;
   if (ply >= MAXPLY - 1) return evaluate();
@@ -458,7 +470,8 @@ static i32 qsearch(i32 alpha, i32 beta, i32 ply) {
     if (!make(m)) continue;
     i32 s = -qsearch(-beta, -alpha, ply + 1); unmake();
     if (stop) return 0;
-    if (s > best) { best = s; if (s > alpha) { alpha = s; if (s >= beta) return s; } } }
+    if (s > best) { best = s; if (s > alpha) { alpha = s; qBestM = m; if (s >= beta) { QST(TT_LOWER, s, m); return s; } } } }
+  QST(best > qOrigA ? TT_EXACT : TT_UPPER, best, qBestM);
   return best;
 }
 static i32 excl[MAXPLY + 2]; static i32 evs[MAXPLY + 2];
@@ -479,10 +492,13 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
   i32 staticEval = inChk ? -INF : evaluate(); evs[ply] = staticEval;
 #endif
 #ifdef IIR
-  if (!ttM && !ex && depth >= IIR) depth--;
+  if (!ttM && !ex && !inChk && depth >= (pvNode ? 6 : IIR)) depth--;
 #endif
   int improving = !inChk && ply >= 2 && evs[ply - 2] != -INF && staticEval > evs[ply - 2];
   if (!pvNode && !inChk && ply > 0 && !ex) {
+#ifdef RAZOR
+    if (depth <= 3 && staticEval + RAZOR * depth <= alpha) { i32 v = qsearch(alpha, alpha + 1, ply); if (stop) return 0; if (v <= alpha) return v; }
+#endif
     #ifdef IMPR1
     if (depth <= 6 && staticEval - 85 * (depth - improving) >= beta && iabs(beta) < MATE_BOUND) return staticEval - 85 * (depth - improving);
 #endif
