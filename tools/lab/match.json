@@ -1,1 +1,1 @@
-{"name":"ttcapR_hprune4000_fifty_vs_bb512_200ms","type":"sp","A":"sb.wasm:nets/current.bin","B":"bb512.wasm:nets/current.bin","pairs":376,"ms":200,"shards":20,"procs":4,"pairsPerProc":1,"run":20}
+{"name":"c1(iir+ttev+razor+qtts+soft1)_vs_bb512_200ms","type":"sp","A":"c1.wasm:nets/current.bin","B":"bb512.wasm:nets/current.bin","pairs":376,"ms":200,"shards":20,"procs":4,"pairsPerProc":1,"run":21}
