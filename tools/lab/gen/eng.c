@@ -431,7 +431,19 @@ static void checkTime(void) { if ((nodes & 2047) == 0) { if (host_now() > deadli
 static TL i32 counterM[16 * 120];
 static inline i32 cmIdx(void) { if (sp < 10) return -1; i32 pm = stk[sp - 10]; if (!pm) return -1; return B[mTo(pm)] * 120 + mTo(pm); }
 #endif
+#ifdef CONTH
+static TL i16 chT[768 * 768]; static TL i32 cmPc[MAXPLY + 2], cmTo[MAXPLY + 2];
+static inline i32 pcSq(i32 p, i32 sq) { return ((p >> 3) * 6 + (p & 7) - 1) * 64 + SQ64[sq]; }
+static inline i32 chPrev(i32 ply, i32 k) { if (ply < k) return -1; i32 pp = cmPc[ply - k]; return pp ? pcSq(pp, cmTo[ply - k]) * 768 : -1; }
+static inline i32 chScore(i32 c1, i32 c2, i32 m) { i32 j = pcSq(B[mFrom(m)], mTo(m)), v = 0; if (c1 >= 0) v += chT[c1 + j]; if (c2 >= 0) v += chT[c2 + j]; return v; }
+static inline void chUpd(i32 c1, i32 c2, i32 m, i32 bonus) { i32 j = pcSq(B[mFrom(m)], mTo(m));
+  if (c1 >= 0) { i16 *e = &chT[c1 + j]; *e += bonus - *e * iabs(bonus) / 16384; }
+  if (c2 >= 0) { i16 *e = &chT[c2 + j]; *e += bonus - *e * iabs(bonus) / 16384; } }
+#endif
 static void scoreMoves(i32 base, i32 n, i32 ttM, i32 ply) {
+#ifdef CONTH
+  i32 c1 = chPrev(ply, 1), c2 = chPrev(ply, 2);
+#endif
   i32 k1 = killers[ply * 2], k2 = killers[ply * 2 + 1];
 #ifdef CMOVE
   i32 ci = cmIdx(), cmv = ci >= 0 ? counterM[ci] : 0;
@@ -444,7 +456,12 @@ static void scoreMoves(i32 base, i32 n, i32 ttM, i32 ply) {
 #ifdef CMOVE
     else if (m == cmv) scoreBuf[i] = 850000;
 #endif
-    else scoreBuf[i] = history[B[mFrom(m)] * 120 + mTo(m)]; }
+#ifdef CONTH
+    else scoreBuf[i] = history[B[mFrom(m)] * 120 + mTo(m)] + CONTH * chScore(c1, c2, m);
+#else
+    else scoreBuf[i] = history[B[mFrom(m)] * 120 + mTo(m)];
+#endif
+  }
 }
 static i32 pick(i32 i, i32 end) { i32 best = i; for (i32 j = i + 1; j < end; j++) if (scoreBuf[j] > scoreBuf[best]) best = j;
   if (best != i) { i32 t = moveBuf[i]; moveBuf[i] = moveBuf[best]; moveBuf[best] = t; t = scoreBuf[i]; scoreBuf[i] = scoreBuf[best]; scoreBuf[best] = t; } return moveBuf[i]; }
@@ -523,6 +540,9 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
     if (depth <= 6 && staticEval - 85 * depth >= beta && iabs(beta) < MATE_BOUND) return staticEval - 85 * depth;
     if (allowNull && depth >= 3 && staticEval >= beta && nonPawnMat(side)) {
       i32 R = 3 + depth / 4 + imin(3, (staticEval - beta) / 200);
+#ifdef CONTH
+      cmPc[ply] = 0;
+#endif
       makeNull(); i32 s = -search(depth - R, -beta, -beta + 1, ply + 1, 0); unmakeNull();
       if (stop) return 0; if (s >= beta) return s > MATE_BOUND ? beta : s; }
   }
@@ -547,8 +567,14 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
     if (legal > 0 && isQuiet && !pvNode && !inChk && depth <= 3 && best > -MATE_BOUND && history[B[mFrom(m)] * 120 + mTo(m)] < -HPRUNE * depth) continue;
 #endif
     if (legal > 0 && !pvNode && isCap && depth <= 4 && scoreBuf[i] < 900000 && see(m) < -80 * depth) continue;
+#ifdef CONTH
+    i32 mvPc = B[mFrom(m)];
+#endif
     if (!make(m)) continue;
     legal++;
+#ifdef CONTH
+    cmPc[ply] = mvPc; cmTo[ply] = mTo(m);
+#endif
     int givesCheck = inCheck(); i32 s;
     i32 ext = (singExt && m == ttM) ? 1 : 0;
     if (legal == 1) s = -search(depth - 1 + ext, -beta, -alpha, ply + 1, 1);
@@ -585,7 +611,11 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
 #endif
 
             i32 hi = B[mFrom(m)] * 120 + mTo(m); history[hi] += depth * depth; if (history[hi] > 800000) for (int z = 0; z < 16 * 120; z++) history[z] >>= 1;
-            for (i32 qq = 0; qq < nq; qq++) { i32 q = quietBuf[qb + qq]; i32 qi = B[mFrom(q)] * 120 + mTo(q); history[qi] -= depth * depth; } }
+            for (i32 qq = 0; qq < nq; qq++) { i32 q = quietBuf[qb + qq]; i32 qi = B[mFrom(q)] * 120 + mTo(q); history[qi] -= depth * depth; }
+#ifdef CONTH
+            { i32 c1 = chPrev(ply, 1), c2 = chPrev(ply, 2), bo = imin(depth * depth * 16, 2400); chUpd(c1, c2, m, bo); for (i32 qq = 0; qq < nq; qq++) chUpd(c1, c2, quietBuf[qb + qq], -bo); }
+#endif
+          }
           break; } } }
     if (isQuiet) quietBuf[qb + nq++] = m;
   }
