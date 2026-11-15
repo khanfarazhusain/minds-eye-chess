@@ -1,1 +1,1 @@
-{"name":"c1(iir+ttev+razor+qtts)_vs_bb512_200ms","type":"sp","A":"c1.wasm:nets/current.bin","B":"bb512.wasm:nets/current.bin","pairs":376,"ms":200,"shards":20,"procs":4,"pairsPerProc":1,"run":22}
+{"name":"cr(corrhist32)_vs_c1_200ms","type":"sp","A":"cr.wasm:nets/current.bin","B":"c1.wasm:nets/current.bin","pairs":376,"ms":200,"shards":20,"procs":4,"pairsPerProc":1,"run":23}

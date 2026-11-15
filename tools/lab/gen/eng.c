@@ -484,6 +484,11 @@ static i32 qsearch(i32 alpha, i32 beta, i32 ply) {
   return best;
 }
 static TL i32 excl[MAXPLY + 2]; static TL i32 evs[MAXPLY + 2];
+#ifdef CORR
+#define CORRN 16384
+static TL i32 corrH[2][CORRN];
+static inline i32 corrIdx(void) { u64 k = pbb[1 | WHITE] * 0x9E3779B97F4A7C15ull ^ pbb[1 | BLACK] * 0xC2B2AE3D27D4EB4Full; return (i32)(k >> 50); }
+#endif
 static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
   i32 ex = excl[ply];
   int pvNode = beta - alpha > 1; pvLen[ply] = 0;
@@ -499,6 +504,10 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
   i32 staticEval = inChk ? -INF : (ti >= 0 && ttEv[ti] != -32768 ? ttEv[ti] : evaluate()); evs[ply] = staticEval;
 #else
   i32 staticEval = inChk ? -INF : evaluate(); evs[ply] = staticEval;
+#endif
+  i32 rawEval = staticEval;
+#ifdef CORR
+  i32 cIdx = corrIdx(); if (!inChk) { staticEval += corrH[side >> 3][cIdx] / 256; if (staticEval > MATE_BOUND - 1) staticEval = MATE_BOUND - 1; if (staticEval < -MATE_BOUND + 1) staticEval = -MATE_BOUND + 1; evs[ply] = staticEval; }
 #endif
 #ifdef IIR
   if (!ttM && !ex && !inChk && depth >= (pvNode ? 6 : IIR)) depth--;
@@ -581,7 +590,11 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
     if (isQuiet) quietBuf[qb + nq++] = m;
   }
   if (legal == 0) return ex ? alpha : (inChk ? -MATE + ply : 0);
-  if (!ex) ttStore(depth, best >= beta ? TT_LOWER : (best > origAlpha ? TT_EXACT : TT_UPPER), best, bestMove, ply, staticEval);
+#ifdef CORR
+  if (!ex && !inChk && (!bestMove || !(mFlag(bestMove) & F_CAP)) && iabs(best) < MATE_BOUND && !(best >= beta && best <= staticEval) && !(best <= origAlpha && best >= staticEval)) {
+    i32 *e = &corrH[side >> 3][cIdx]; i32 w = imin(depth + 1, 16), d = (best - staticEval) * 256; i32 v = (*e * (256 - w) + d * w) / 256; *e = imax(-CORR * 256, imin(CORR * 256, v)); }
+#endif
+  if (!ex) ttStore(depth, best >= beta ? TT_LOWER : (best > origAlpha ? TT_EXACT : TT_UPPER), best, bestMove, ply, rawEval);
   return best;
 }
 // results
