@@ -9,7 +9,7 @@ function cats(pos) { // returns legal moves in category order
   const info = L.map(m => { const fr = E.mFrom(m), to = E.mTo(m), pc = pos.pieceAt ? pos.b[fr] & 7 : 0, cap = (E.mFlag(m) & E.F_CAP) ? (pos.b[to] & 7) || 1 : 0;
     pos.make(m); const chk = pos.inCheck(); pos.unmake(); const f = fm.get(m) || {};
     const la = E.leastAttacker(pos, fr, us ^ 8); const attacked = !!la && (!pos.attacked(fr, us) || VAL[pos.b[la] & 7] < VAL[pc]); const see = cap ? E.see(pos, m) : 0;
-    return { m, pc, cap, chk, attacked, see, threat: (f.threat || 0) + (f.pawnAttackPiece || 0) + (f.pin || 0) + (f.skewer || 0), dev: (f.pstDelta || 0) + (f.develop || 0) + (f.centralize || 0) - (f.newHang || 0) * 3 }; });
+    return { m, pc, cap, chk, attacked, see, threat: (f.threat || 0) + (f.pawnAttackPiece || 0) + (f.pin || 0) + (f.skewer || 0), dev: process.env.DEV === 'pts' ? R.simplePts(f, 4).pts * 10 + (f.pstDelta || 0) / 10 : (f.pstDelta || 0) + (f.develop || 0) + (f.centralize || 0) - (f.newHang || 0) * 3, q: f.qGain || 0 }; });
   const groups = [
     info.filter(x => x.cap && x.see >= 0).sort((a, b) => VAL[b.cap] - VAL[a.cap] || VAL[a.pc] - VAL[b.pc]),      // 1. good captures (bigger victim first)
     info.filter(x => x.chk).sort((a, b) => b.see - a.see),                                                           // 2. checks
@@ -17,6 +17,11 @@ function cats(pos) { // returns legal moves in category order
     info.filter(x => x.threat > 0).sort((a, b) => b.threat - a.threat || b.dev - a.dev),                            // 4. new threats
     info.slice().sort((a, b) => b.dev - a.dev)];                                                                       // 5. rest: development / centre
   const ORD = (process.env.ORD || '01234').split('').map(Number);
+  if (process.env.QUOTA) { // round-robin: take up to q[i] from each group per pass, so quiet moves get a slot early
+    const q = process.env.QUOTA.split('').map(Number), ix = groups.map(() => 0); let added = true;
+    while (added) { added = false; for (let k = 0; k < ORD.length; k++) { const g = groups[ORD[k]]; let t = 0;
+      while (t < q[k] && ix[ORD[k]] < g.length) { const x = g[ix[ORD[k]]++]; if (!seen.has(x.m)) { seen.add(x.m); out.push(x.m); t++; added = true; } } } }
+    return out; }
   for (const gi of ORD) for (const x of groups[gi]) if (!seen.has(x.m)) { seen.add(x.m); out.push(x.m); }
   return out; }
 const hit = { 3: 0, 5: 0, 7: 0 }; let n = 0, legalSum = 0;

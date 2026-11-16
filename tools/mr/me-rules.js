@@ -285,6 +285,28 @@ function humanCalc(pos, m, wantAll) { // pos: before my move, me to move
     if (wantAll) res.all = all; }
   pos.unmake(); return res; }
 // opts: { best (uci, optional), rules: 0|4|8, K, depth: 1..4 }
+// "Tez candidates": har chaal score kiye bina, kram se groups dekho aur K chaalein milte hi ruk jao.
+// Kram: 1 achhe captures (bada shikaar pehle), 2 checks, 3 khatre wala apna mohra bachao, 4 nayi dhamki, 5 baaki (4-rule points se).
+// Har round mein group 1 se 2 chaalein, baaki groups se 1-1 (taaki shaant chaalein bhi jaldi aayein).
+const FC_GROUPS = ['Achha capture', 'Check', 'Mohra bachao', 'Nayi dhamki', 'Shaant chaal'];
+function fastCands(pos, F, K) {
+  const L = pos.legalMoves(), us = pos.side, fm = new Map((F || features3(pos, 0)).map(x => [x.move, x.f])), V = [0, 100, 300, 300, 500, 900, 0];
+  const info = L.map(m => { const fr = E.mFrom(m), to = E.mTo(m), pc = pos.b[fr] & 7, cap = (E.mFlag(m) & E.F_CAP) ? (pos.b[to] & 7) || 1 : 0;
+    pos.make(m); const chk = pos.inCheck(); pos.unmake(); const f = fm.get(m) || {};
+    const la = E.leastAttacker(pos, fr, us ^ 8); const attacked = !!la && (!pos.attacked(fr, us) || V[pos.b[la] & 7] < V[pc]);
+    return { m, pc, cap, chk, attacked, see: cap ? E.see(pos, m) : 0, threat: (f.threat || 0) + (f.pawnAttackPiece || 0) + (f.pin || 0) + (f.skewer || 0),
+      dev: simplePts(f, 4).pts * 10 + (f.pstDelta || 0) / 10 }; });
+  const groups = [
+    info.filter(x => x.cap && x.see >= 0).sort((a, b) => V[b.cap] - V[a.cap] || V[a.pc] - V[b.pc]),
+    info.filter(x => x.chk).sort((a, b) => b.see - a.see),
+    info.filter(x => x.attacked && x.pc !== KING).sort((a, b) => V[b.pc] - V[a.pc] || b.dev - a.dev),
+    info.filter(x => x.threat > 0).sort((a, b) => b.threat - a.threat || b.dev - a.dev),
+    info.slice().sort((a, b) => b.dev - a.dev)];
+  const quota = [2, 1, 1, 1, 1], ix = [0, 0, 0, 0, 0], seen = new Set(), out = []; let added = true;
+  while (added && out.length < (K || L.length)) { added = false;
+    for (let g = 0; g < 5; g++) { let t = 0;
+      while (t < quota[g] && ix[g] < groups[g].length) { const x = groups[g][ix[g]++]; if (!seen.has(x.m)) { seen.add(x.m); out.push({ m: x.m, g }); t++; added = true; } } } }
+  return K ? out.slice(0, K) : out; }
 function modeData(pos, S, opts) {
   const F = features3(pos, 0);
   const moves = F.map(x => {
@@ -315,10 +337,11 @@ function modeData(pos, S, opts) {
     for (const mv of ranked.slice(0, opts.human)) hcalc.push({ uci: mv.uci, san: mv.san, rank: mv.rank, ...humanCalc(pos, mv.m) });
     hcalc.sort((a, b) => b.score - a.score || a.rank - b.rank);
   }
+  const fast = fastCands(pos, F, 12).map(x => { const mv = moves.find(y => y.m === x.m); return { uci: mv.uci, san: mv.san, g: x.g, good: mv.good }; });
   const strip = mv => ({ uci: mv.uci, san: mv.san, p4: mv.p4, w4: mv.w4, p8: mv.p8, w8: mv.w8, p6: mv.p6, w6: mv.w6, q: mv.q, lab: mv.lab, good: mv.good, rank: mv.rank, sq: mv.sq });
-  return { best, bestSan: moves.find(m => m.uci === best).san, moves: ranked.map(strip), calc, hcalc, n: moves.length };
+  return { best, bestSan: moves.find(m => m.uci === best).san, moves: ranked.map(strip), calc, hcalc, fast, n: moves.length };
 }
-const api = { features2, features3, Q, CARDS, modeData, simplePts, sqPts, sqLevel, sqMove, humanCalc };
+const api = { fastCands, FC_GROUPS, features2, features3, Q, CARDS, modeData, simplePts, sqPts, sqLevel, sqMove, humanCalc };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 root.MERules = api;
 })(typeof self !== 'undefined' ? self : this);
