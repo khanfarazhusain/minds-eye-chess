@@ -24,5 +24,5 @@ for(const g of G){if(done.has(g.u.join(' ')))continue;const pos=new E.Position()
    s:pos.san(m),ps:b.sc[u],pg:good(u)?1:0,b:pos.san(pos.parseUci(best)),bs:top});
   pos.make(m);}
  res.push({w:g.w,b:g.b,we:g.we,be:g.be,ev:g.ev,dt:g.dt,r:g.r,u:g.u,p:P});
- fs.writeFileSync(out,JSON.stringify(res));process.stderr.write(`shard ${sh}: ${res.length}/${G.length}\n`);}
+ fs.writeFileSync(out+'.tmp',JSON.stringify(res));fs.renameSync(out+'.tmp',out);process.stderr.write(`shard ${sh}: ${res.length}/${G.length}\n`);}
 p.kill();process.exit(0);})();
