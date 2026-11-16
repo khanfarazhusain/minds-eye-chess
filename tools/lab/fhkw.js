@@ -17,7 +17,14 @@ function create(E, wasmPath, ttBits) {
   }
   return {
     X, load,
-    loadNet(file) { const buf = fs.readFileSync(file); const f = new Float32Array(buf.buffer, buf.byteOffset + 4, (buf.length - 4) / 4); const Hn = buf.readInt32LE(0); if (Hn !== (X.nn_h ? X.nn_h() : 256)) throw new Error('net H ' + Hn);
+    loadNet(file) { const buf0 = fs.readFileSync(file); const buf = Buffer.from(buf0);
+      if (buf.readInt32LE(0) < 0) { const Hn = -buf.readInt32LE(0), KB = buf.readInt32LE(4); const f = new Float32Array(buf.buffer, buf.byteOffset + 8, (buf.length - 8) / 4);
+        if (Hn !== X.nn_h() || !X.ptr_nb2v) throw new Error('v2 net needs NNKB wasm');
+        const w1 = new Int16Array(mem(), X.ptr_nw1(), KB * 768 * Hn), b1 = new Int16Array(mem(), X.ptr_nb1(), Hn), w2 = new Int16Array(mem(), X.ptr_nw2(), 16 * Hn), b2 = new Int32Array(mem(), X.ptr_nb2v(), 8); let o = 0;
+        const q = (v, s) => Math.max(-32767, Math.min(32767, Math.round(v * s)));
+        for (let i = 0; i < KB * 768 * Hn; i++) w1[i] = q(f[o++], 255); for (let i = 0; i < Hn; i++) b1[i] = q(f[o++], 255); for (let i = 0; i < 16 * Hn; i++) w2[i] = q(f[o++], 1024); for (let i = 0; i < 8; i++) b2[i] = Math.round(f[o++] * 255 * 1024);
+        X.set_nn(1, 0); X.tt_clear(); return; }
+      const f = new Float32Array(buf.buffer, buf.byteOffset + 4, (buf.length - 4) / 4); const Hn = buf.readInt32LE(0); if (Hn !== (X.nn_h ? X.nn_h() : 256)) throw new Error('net H ' + Hn);
       const w1 = new Int16Array(mem(), X.ptr_nw1(), 768 * Hn), b1 = new Int16Array(mem(), X.ptr_nb1(), Hn), w2 = new Int16Array(mem(), X.ptr_nw2(), 2 * Hn); let o = 0;
       const q = (v, s) => Math.max(-32767, Math.min(32767, Math.round(v * s)));
       for (let i = 0; i < 768 * Hn; i++) w1[i] = q(f[o++], 255); for (let i = 0; i < Hn; i++) b1[i] = q(f[o++], 255); for (let i = 0; i < 2 * Hn; i++) w2[i] = q(f[o++], 1024);

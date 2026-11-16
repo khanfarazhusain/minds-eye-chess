@@ -208,7 +208,19 @@ static i32 gen(i32 *out, i32 n, int capsOnly) {
 #include <wasm_simd128.h>
 #endif
 i32 nn_h(void) { return NNH; }
+#ifdef NNKB
+#define NNOB 8
+i32 useNN = 0; i16 NW1[NNKB * 768 * NNH], NB1[NNH], NW2[NNOB * 2 * NNH]; i32 NB2 = 0, NB2v[NNOB], nnOutMul = 400, nnOutDiv = 255 * 64;
+static TL i32 nnKS[NNLV][2];
+static inline i32 kbk(i32 rk) { return rk == 0 ? 0 : rk == 1 ? 1 : rk <= 3 ? 2 : 3; }
+static inline i32 ksOf(i32 P) { i32 s = P ? SQ64[kingSq[1]] : (SQ64[kingSq[0]] ^ 56); return kbk(s >> 3) * 768 + (((s & 7) < 4 ? 7 : 0) << 24); }
+#define FW(f, k) (((k)[0] & 0xffffff) + ((f) ^ ((k)[0] >> 24)))
+#define FB(f, k) (((k)[1] & 0xffffff) + (nnFlip(f) ^ ((k)[1] >> 24)))
+#else
 i32 useNN = 0; i16 NW1[768 * NNH], NB1[NNH], NW2[2 * NNH]; i32 NB2 = 0, nnOutMul = 400, nnOutDiv = 255 * 64;
+#define FW(f, k) (f)
+#define FB(f, k) nnFlip(f)
+#endif
 static TL i16 nnAcc[NNLV][2][NNH]; static TL u8 nnOk[NNLV], nnNA[NNLV], nnNS[NNLV]; static TL i16 nnAdd[NNLV][4], nnSub[NNLV][4];
 static inline i32 nnF(i32 s, i32 p) { return (((p >> 3) * 6 + (p & 7) - 1) << 6) + (SQ64[s] ^ 56); }
 static inline i32 nnFlip(i32 f) { i32 ct = f >> 6, sq = f & 63, col = ct / 6, t = ct % 6; return (((1 - col) * 6 + t) << 6) + (sq ^ 56); }
@@ -220,35 +232,47 @@ static inline void vadd2(i16 *a, i16 *b, const i16 *w, const i16 *v) { for (int 
 static inline void vsub2(i16 *a, i16 *b, const i16 *w, const i16 *v) { for (int j = 0; j < NNH; j++) { a[j] -= w[j]; b[j] -= v[j]; } }
 #endif
 static void nnFull(i32 L) { i16 *a = nnAcc[L][0], *b = nnAcc[L][1]; for (int j = 0; j < NNH; j++) { a[j] = NB1[j]; b[j] = NB1[j]; }
-  FOR_OCC(occ[0] | occ[1], s) { i32 f = nnF(s, B[s]), g = nnFlip(f); vadd2(a, b, &NW1[f * NNH], &NW1[g * NNH]); } nnOk[L] = 1; }
+#ifdef NNKB
+  nnKS[L][0] = ksOf(0); nnKS[L][1] = ksOf(1); const i32 *kk = nnKS[L];
+#endif
+  FOR_OCC(occ[0] | occ[1], s) { i32 f = nnF(s, B[s]); vadd2(a, b, &NW1[FW(f, kk) * NNH], &NW1[FB(f, kk) * NNH]); } nnOk[L] = 1; }
 static void nnUpdate(i32 L) { // make level L valid from earlier levels
   i32 k = L; while (!nnOk[k]) k--;
+#ifdef NNKB
+  for (i32 l = k + 1; l <= L; l++) if (nnKS[l][0] != nnKS[k][0] || nnKS[l][1] != nnKS[k][1]) { nnFull(L); return; }
+  const i32 *kk = nnKS[k];
+#endif
   for (i32 l = k + 1; l <= L; l++) { i16 *pa = nnAcc[l - 1][0], *pb = nnAcc[l - 1][1], *a = nnAcc[l][0], *b = nnAcc[l][1];
 #ifdef __wasm_simd128__
     { const i16 *aw[4], *av[4], *sw[4], *sv[4]; i32 na = nnNA[l], ns = nnNS[l];
-      for (int i = 0; i < na; i++) { i32 f = nnAdd[l][i]; aw[i] = &NW1[f * NNH]; av[i] = &NW1[nnFlip(f) * NNH]; }
-      for (int i = 0; i < ns; i++) { i32 f = nnSub[l][i]; sw[i] = &NW1[f * NNH]; sv[i] = &NW1[nnFlip(f) * NNH]; }
+      for (int i = 0; i < na; i++) { i32 f = nnAdd[l][i]; aw[i] = &NW1[FW(f, kk) * NNH]; av[i] = &NW1[FB(f, kk) * NNH]; }
+      for (int i = 0; i < ns; i++) { i32 f = nnSub[l][i]; sw[i] = &NW1[FW(f, kk) * NNH]; sv[i] = &NW1[FB(f, kk) * NNH]; }
       for (int j = 0; j < NNH; j += 8) { v128_t x = wasm_v128_load(pa + j), y = wasm_v128_load(pb + j);
         for (int i = 0; i < na; i++) { x = wasm_i16x8_add(x, wasm_v128_load(aw[i] + j)); y = wasm_i16x8_add(y, wasm_v128_load(av[i] + j)); }
         for (int i = 0; i < ns; i++) { x = wasm_i16x8_sub(x, wasm_v128_load(sw[i] + j)); y = wasm_i16x8_sub(y, wasm_v128_load(sv[i] + j)); }
         wasm_v128_store(a + j, x); wasm_v128_store(b + j, y); } }
 #else
     for (int j = 0; j < NNH; j++) { a[j] = pa[j]; b[j] = pb[j]; }
-    for (int i = 0; i < nnNA[l]; i++) { i32 f = nnAdd[l][i], g = nnFlip(f); vadd2(a, b, &NW1[f * NNH], &NW1[g * NNH]); }
-    for (int i = 0; i < nnNS[l]; i++) { i32 f = nnSub[l][i], g = nnFlip(f); vsub2(a, b, &NW1[f * NNH], &NW1[g * NNH]); }
+    for (int i = 0; i < nnNA[l]; i++) { i32 f = nnAdd[l][i]; vadd2(a, b, &NW1[FW(f, kk) * NNH], &NW1[FB(f, kk) * NNH]); }
+    for (int i = 0; i < nnNS[l]; i++) { i32 f = nnSub[l][i]; vsub2(a, b, &NW1[FW(f, kk) * NNH], &NW1[FB(f, kk) * NNH]); }
 #endif
     nnOk[l] = 1; } }
 static i32 nnEval(void) { i32 L = sp / 10; if (!nnOk[L]) nnUpdate(L);
   const i16 *u = nnAcc[L][side >> 3], *t = nnAcc[L][(side >> 3) ^ 1]; i32 sum = 0;
+#ifdef NNKB
+  i32 ob = (__builtin_popcountll(occ[0] | occ[1]) - 2) / 4; ob = ob < 0 ? 0 : ob > 7 ? 7 : ob; const i16 *W2 = NW2 + ob * 2 * NNH; i32 B2 = NB2v[ob];
+#else
+  const i16 *W2 = NW2; i32 B2 = NB2;
+#endif
 #ifdef __wasm_simd128__
   { v128_t z = wasm_i16x8_splat(0), c = wasm_i16x8_splat(255), acc = wasm_i32x4_splat(0);
     for (int j = 0; j < NNH; j += 8) { v128_t x = wasm_i16x8_min(wasm_i16x8_max(wasm_v128_load(u + j), z), c), y = wasm_i16x8_min(wasm_i16x8_max(wasm_v128_load(t + j), z), c);
-      acc = wasm_i32x4_add(acc, wasm_i32x4_add(wasm_i32x4_dot_i16x8(x, wasm_v128_load(NW2 + j)), wasm_i32x4_dot_i16x8(y, wasm_v128_load(NW2 + NNH + j)))); }
+      acc = wasm_i32x4_add(acc, wasm_i32x4_add(wasm_i32x4_dot_i16x8(x, wasm_v128_load(W2 + j)), wasm_i32x4_dot_i16x8(y, wasm_v128_load(W2 + NNH + j)))); }
     sum = wasm_i32x4_extract_lane(acc, 0) + wasm_i32x4_extract_lane(acc, 1) + wasm_i32x4_extract_lane(acc, 2) + wasm_i32x4_extract_lane(acc, 3); }
 #else
-  for (int j = 0; j < NNH; j++) { i32 x = u[j], y = t[j]; x = x < 0 ? 0 : x > 255 ? 255 : x; y = y < 0 ? 0 : y > 255 ? 255 : y; sum += x * NW2[j] + y * NW2[NNH + j]; }
+  for (int j = 0; j < NNH; j++) { i32 x = u[j], y = t[j]; x = x < 0 ? 0 : x > 255 ? 255 : x; y = y < 0 ? 0 : y > 255 ? 255 : y; sum += x * W2[j] + y * W2[NNH + j]; }
 #endif
-  return (i32)(((long long)sum + NB2) * 400 / (255 * 1024)); }
+  return (i32)(((long long)sum + B2) * 400 / (255 * 1024)); }
 static void put(i32 s, i32 p) { if (nnRec) { i32 L = sp / 10; nnAdd[L][nnNA[L]++] = nnF(s, p); } B[s] = p; OSET(s, p); hl ^= ZL[p][s]; hh ^= ZH[p][s]; mg += PST_MG[p][s]; eg += PST_EG[p][s]; }
 static i32 del(i32 s) { i32 p = B[s]; if (nnRec) { i32 L = sp / 10; nnSub[L][nnNS[L]++] = nnF(s, p); } B[s] = 0; OCLR(s, p); hl ^= ZL[p][s]; hh ^= ZH[p][s]; mg -= PST_MG[p][s]; eg -= PST_EG[p][s]; return p; }
 static void unmake(void);
@@ -270,6 +294,9 @@ static int make(i32 m) {
   half = ((p & 7) == PAWN || cap) ? 0 : half + 1;
   side ^= 8; hl ^= ZSL; hh ^= ZSH;
   if (attacked(kingSq[us >> 3], side)) { unmake(); return 0; }
+#ifdef NNKB
+  { i32 L = sp / 10; if ((p & 7) == KING) { i32 P = us >> 3; nnKS[L][P] = ksOf(P); nnKS[L][P ^ 1] = nnKS[L - 1][P ^ 1]; } else { nnKS[L][0] = nnKS[L - 1][0]; nnKS[L][1] = nnKS[L - 1][1]; } }
+#endif
   return 1;
 }
 static void unmake(void) {
@@ -283,7 +310,11 @@ static void unmake(void) {
   if (fl & F_CASTLE) { i32 rf, rt; if (to == 97) { rf = 98; rt = 96; } else if (to == 93) { rf = 91; rt = 94; } else if (to == 27) { rf = 28; rt = 26; } else { rf = 21; rt = 24; } i32 rk = B[rt]; B[rf] = rk; B[rt] = 0; OCLR(rt, rk); OSET(rf, rk); }
 }
 static void makeNull(void) { i32 *st = &stk[sp]; st[0] = 0; st[1] = castle; st[2] = ep; st[3] = half; st[4] = hl; st[5] = hh; st[6] = mg; st[7] = eg; st[8] = phase; st[9] = 0; sp += 10; { i32 L = sp / 10; nnOk[L] = 0; nnNA[L] = 0; nnNS[L] = 0; }
-  hist[nhist++] = hl; if (ep) { hl ^= ZEL[ep]; hh ^= ZEH[ep]; ep = 0; } side ^= 8; hl ^= ZSL; hh ^= ZSH; half++; }
+  hist[nhist++] = hl; if (ep) { hl ^= ZEL[ep]; hh ^= ZEH[ep]; ep = 0; } side ^= 8; hl ^= ZSL; hh ^= ZSH; half++;
+#ifdef NNKB
+  { i32 L = sp / 10; nnKS[L][0] = nnKS[L - 1][0]; nnKS[L][1] = nnKS[L - 1][1]; }
+#endif
+}
 static void unmakeNull(void) { sp -= 10; i32 *st = &stk[sp]; phase = st[8]; eg = st[7]; mg = st[6]; hh = st[5]; hl = st[4]; half = st[3]; ep = st[2]; castle = st[1]; nhist--; side ^= 8; }
 static int isRepetition(void) { i32 n = nhist, lim = imax(0, n - half); for (i32 i = n - 2; i >= lim; i -= 2) if (hist[i] == hl) return 1; return 0; }
 static int insufficient(void) { int minors = 0; FOR_OCC(occ[0] | occ[1], s) { i32 t = B[s] & 7; if (t == PAWN || t == ROOK || t == QUEEN) return 0; if (t == KNIGHT || t == BISHOP) minors++; } return minors <= 1; }
@@ -683,6 +714,10 @@ i8 *ptr_board(void) { return B; } i16 *ptr_nw1(void) { return NW1; } i16 *ptr_nb
     if ((r & 3) == 0 && made > 1) { unmake(); made--; }
     i32 L = sp / 10; if (!nnOk[L]) nnUpdate(L); i32 a = nnEval(); nnFull(L); i32 b = nnEval(); if (a != b) bad++; }
   while (made--) unmake(); return bad; }
-void set_nn(i32 on, i32 b2) { useNN = on; NB2 = b2; for (int i = 0; i < (1 << ECB); i++) { ecKey[i] = 0; ecKey2[i] = 0; } } i32 *ptr_hist(void) { return hist; } i32 *ptr_rootFilter(void) { return rootFilter; } i32 *ptr_pv(void) { return r_pv; } i32 *ptr_pst_mg(void) { return &PST_MG[0][0]; } i32 *ptr_pst_eg(void) { return &PST_EG[0][0]; }
+void set_nn(i32 on, i32 b2) { useNN = on; NB2 = b2; for (int i = 0; i < (1 << ECB); i++) { ecKey[i] = 0; ecKey2[i] = 0; } } i32 *ptr_hist(void) { return hist; }
+#ifdef NNKB
+i32 *ptr_nb2v(void) { return NB2v; }
+#endif
+ i32 *ptr_rootFilter(void) { return rootFilter; } i32 *ptr_pv(void) { return r_pv; } i32 *ptr_pst_mg(void) { return &PST_MG[0][0]; } i32 *ptr_pst_eg(void) { return &PST_EG[0][0]; }
 void set_state(i32 sd, i32 cs, i32 e, i32 hf, i32 nh, i32 nrf) { side = sd; castle = cs; ep = e; half = hf; nhist = nh; nRootFilter = nrf; recompute(); }
 i32 res_score(void) { return r_score; } i32 res_depth(void) { return r_depth; } i32 res_nodes(void) { return r_nodes; } i32 res_pvlen(void) { return r_pvlen; }

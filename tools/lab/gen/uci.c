@@ -55,12 +55,21 @@ static void position(char *p) {
   if (mv) { char *q = mv + 7; while (*q) { while (*q == ' ') q++; if (!*q) break; char t[8]; int k = 0; while (*q && *q != ' ' && k < 7) t[k++] = *q++; t[k] = 0; while (*q && *q != ' ') q++; playMove(t); } } }
 static int nThreads = 1; typedef struct { int id; double hard; } HArg;
 static void *helperMain(void *a) { HArg *h = a; smpId = h->id; char pp[1 << 16]; snprintf(pp, sizeof pp, "%s", lastPos); position(pp); go(h->hard, 0, 0); return 0; }
+#ifdef NNKB
+static int loadNet(const char *path) {
+  FILE *nf = fopen(path, "rb"); if (!nf) return 0; int hd[2]; if (fread(hd, 4, 2, nf) != 2 || hd[0] != -NNH || hd[1] != NNKB) { fclose(nf); return 0; }
+  size_t N = (size_t)NNKB * 768 * NNH + NNH + NNOB * 2 * NNH + NNOB; float *f = malloc(N * 4); if (fread(f, 4, N, nf) != N) { fclose(nf); free(f); return 0; } fclose(nf); size_t o = 0;
+  #define QZ(v, sc) ({ double _x = (v) * (sc); _x = _x > 32767 ? 32767 : _x < -32767 ? -32767 : _x; (i16)(_x < 0 ? -(int)(-_x + 0.5) : (int)(_x + 0.5)); })
+  for (size_t i = 0; i < (size_t)NNKB * 768 * NNH; i++) NW1[i] = QZ(f[o++], 255); for (int i = 0; i < NNH; i++) NB1[i] = QZ(f[o++], 255); for (int i = 0; i < NNOB * 2 * NNH; i++) NW2[i] = QZ(f[o++], 1024);
+  for (int i = 0; i < NNOB; i++) { double b2 = f[o++] * 255 * 1024; NB2v[i] = (int)(b2 < 0 ? b2 - 0.5 : b2 + 0.5); } free(f); set_nn(1, 0); return 1; }
+#else
 static int loadNet(const char *path) {
   FILE *nf = fopen(path, "rb"); if (!nf) return 0; int Hn = 0; if (fread(&Hn, 4, 1, nf) != 1 || Hn != NNH) { fclose(nf); return 0; }
   static float f[768 * NNH + NNH + 2 * NNH + 1]; if (fread(f, 4, 768 * NNH + 3 * NNH + 1, nf) != (size_t)(768 * NNH + 3 * NNH + 1)) { fclose(nf); return 0; } fclose(nf); int o = 0;
   #define QZ(v, sc) ({ double _x = (v) * (sc); _x = _x > 32767 ? 32767 : _x < -32767 ? -32767 : _x; (i16)(_x < 0 ? -(int)(-_x + 0.5) : (int)(_x + 0.5)); })
   for (int i = 0; i < 768 * NNH; i++) NW1[i] = QZ(f[o++], 255); for (int i = 0; i < NNH; i++) NB1[i] = QZ(f[o++], 255); for (int i = 0; i < 2 * NNH; i++) NW2[i] = QZ(f[o++], 1024);
   double b2 = f[o] * 255 * 1024; set_nn(1, (int)(b2 < 0 ? b2 - 0.5 : b2 + 0.5)); return 1; }
+#endif
 static void goCmd(char *a) {
   double wt = -1, bt = -1, wi = 0, bi = 0, mt = -1; int depth = 0, mtg = 0; long nodesL = 0; char *t = strtok(a, " \r\n");
   while (t) { char *v = strtok(NULL, " \r\n");
@@ -97,6 +106,7 @@ int main(int argc, char **argv) {
     else if (!strcmp(line, "ucinewgame")) tt_clear();
     else if (!strncmp(line, "position ", 9)) position(line + 9);
     else if (!strncmp(line, "go", 2)) goCmd(line + 2);
+    else if (!strcmp(line, "selftest")) printf("selftest bad %d\n", nn_selftest(20000, 12345));
     else if (!strcmp(line, "quit")) break;
   }
   return 0; }
