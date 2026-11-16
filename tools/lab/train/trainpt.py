@@ -9,9 +9,11 @@ KB, H, OB = a.kb, a.h, 8; NF = KB * 768; CS = 0.98 * 2.302585
 dev = 'cuda' if torch.cuda.is_available() else 'cpu'; print('device', dev, flush=True)
 with open(a.feat, 'rb') as f: ND = struct.unpack('<q', f.read(8))[0]
 rec = np.dtype([('f', '<u2', 32), ('g', '<u2', 32), ('stm', 'u1'), ('ob', 'u1'), ('n', 'u1'), ('pad', 'u1'), ('t', '<f4')])
-D = np.memmap(a.feat, dtype=rec, mode='r', offset=8, shape=(ND,)); NV = ND // 50; NT = ND - NV; print('positions', ND, flush=True)
-def T(x, dt): return torch.from_numpy(np.ascontiguousarray(x)).to(dev, dt)
-Fw, Fb = T(D['f'], torch.int32), T(D['g'], torch.int32); STM, OBt, TG = T(D['stm'], torch.bool), T(D['ob'], torch.int64), T(D['t'], torch.float32)
+D = np.fromfile(a.feat, dtype=rec, offset=8, count=ND); NV = ND // 50; NT = ND - NV; print('positions', ND, flush=True)
+Fa, Ga, Sa, Oa, Ta = D['f'], D['g'], D['stm'], D['ob'], D['t']  # stay in RAM; each batch goes to the GPU on its own (data can be bigger than GPU memory)
+def batch(idx):
+    g = lambda x, dt: torch.from_numpy(np.ascontiguousarray(x[idx])).to(dev, dt, non_blocking=True)
+    return g(Fa, torch.int32), g(Ga, torch.int32), g(Sa, torch.bool), g(Oa, torch.int64), g(Ta, torch.float32)
 rng = np.random.default_rng(12345)
 W1 = torch.zeros(NF + 1, H); B1 = torch.zeros(H); W2 = torch.zeros(OB, 2 * H); B2 = torch.zeros(OB)
 W1[:NF] = torch.from_numpy((rng.random((NF, H)) - 0.5) * 0.2); B1[:] = torch.from_numpy(0.1 + (rng.random(H) - 0.5) * 0.05); W2[:] = torch.from_numpy((rng.random((OB, 2 * H)) - 0.5) * 0.1)
@@ -28,10 +30,10 @@ if a.init:
 P = [torch.nn.Parameter(x.to(dev)) for x in (W1, B1, W2, B2)]; W1, B1, W2, B2 = P
 with torch.no_grad(): W1[NF].zero_()
 opt = torch.optim.Adam(P, lr=a.lr, betas=(0.9, 0.999), eps=1e-8)
-def fwd(idx):
-    ew = torch.nn.functional.embedding(Fw[idx], W1).sum(1) + B1; eb = torch.nn.functional.embedding(Fb[idx], W1).sum(1) + B1
-    s = STM[idx].unsqueeze(1); u = torch.where(s, eb, ew).clamp(0, 1); t = torch.where(s, ew, eb).clamp(0, 1)
-    ob = OBt[idx]; w2 = W2[ob]; return (u * w2[:, :H]).sum(1) + (t * w2[:, H:]).sum(1) + B2[ob]
+def fwd(fw, fb, stm, ob):
+    ew = torch.nn.functional.embedding(fw, W1).sum(1) + B1; eb = torch.nn.functional.embedding(fb, W1).sum(1) + B1
+    s = stm.unsqueeze(1); u = torch.where(s, eb, ew).clamp(0, 1); t = torch.where(s, ew, eb).clamp(0, 1)
+    w2 = W2[ob]; return (u * w2[:, :H]).sum(1) + (t * w2[:, H:]).sum(1) + B2[ob]
 def save():
     with torch.no_grad():
         out = struct.pack('<ii', -H, KB) + W1[:NF].cpu().numpy().astype('<f4').tobytes() + B1.cpu().numpy().astype('<f4').tobytes() + W2.cpu().numpy().astype('<f4').tobytes() + B2.cpu().numpy().astype('<f4').tobytes()
@@ -39,9 +41,9 @@ def save():
 for ep in range(a.epochs):
     if ep == int(a.epochs * 0.6) or ep == int(a.epochs * 0.85):
         for g in opt.param_groups: g['lr'] *= 0.3
-    t0 = time.time(); perm = torch.randperm(NT, device=dev); tl = 0.0
+    t0 = time.time(); perm = rng.permutation(NT); tl = 0.0
     for i in range(0, NT, a.bs):
-        idx = perm[i:i + a.bs]; pr = torch.sigmoid(fwd(idx) * CS); loss = ((pr - TG[idx]) ** 2).mean()
+        idx = np.sort(perm[i:i + a.bs]); fw, fb, stm, ob, tg = batch(idx); pr = torch.sigmoid(fwd(fw, fb, stm, ob) * CS); loss = ((pr - tg) ** 2).mean()
         opt.zero_grad(set_to_none=True); loss.backward()
         with torch.no_grad(): W1.grad[NF].zero_()
         opt.step()
@@ -50,5 +52,5 @@ for ep in range(a.epochs):
     with torch.no_grad():
         vl = 0.0
         for i in range(NT, ND, 65536):
-            idx = torch.arange(i, min(i + 65536, ND), device=dev); vl += ((torch.sigmoid(fwd(idx) * CS) - TG[idx]) ** 2).sum().item()
+            fw, fb, stm, ob, tg = batch(np.arange(i, min(i + 65536, ND))); vl += ((torch.sigmoid(fwd(fw, fb, stm, ob) * CS) - tg) ** 2).sum().item()
     print(f'epoch {ep} train {tl / NT:.6f} valid {vl / NV:.6f} lr {opt.param_groups[0]["lr"]:g} {time.time() - t0:.0f}s', flush=True); save()
