@@ -1,0 +1,61 @@
+name: fhk-selfhost
+# Self-play data on our own machines (Oracle servers, office PCs) registered as self-hosted runners with label "fhk".
+# Each job: run gen on all cores for sh.json minutes, then force-push the data to branch sp-data-sh-<runner name>. The loop reads every sp-data-sh-* branch.
+on:
+  schedule:
+    - cron: "15 */3 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  plan:
+    if: github.repository == 'khanfarazhusain/minds-eye-chess'
+    runs-on: ubuntu-latest
+    outputs:
+      slots: ${{ steps.p.outputs.slots }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+          sparse-checkout: tools/lab/sh.json
+      - id: p
+        run: echo "slots=$(jq -c '[range(.slots)]' tools/lab/sh.json)" >> $GITHUB_OUTPUT
+  gen:
+    needs: plan
+    if: needs.plan.outputs.slots != '[]'
+    runs-on: [self-hosted, fhk]
+    timeout-minutes: 200
+    strategy:
+      fail-fast: false
+      matrix:
+        slot: ${{ fromJSON(needs.plan.outputs.slots) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+          sparse-checkout: |
+            tools/lab
+      - name: self-play
+        shell: bash
+        run: |
+          cd tools/lab
+          MIN=$(grep -o '"minutes":[0-9]*' sh.json | cut -d: -f2); NODES=$(grep -o '"nodes":[0-9]*' loop.json | cut -d: -f2)
+          if [ "$RUNNER_OS" = "Windows" ]; then GEN=./bin/gen.exe; N=$NUMBER_OF_PROCESSORS; else
+            gcc -O3 -march=native $(sed -n 's/.*"flags":"\([^"]*\)".*/\1/p' loop.json) -o gen/gen gen/gen.c; GEN=./gen/gen; N=$(nproc); fi
+          echo "runner $RUNNER_NAME os $RUNNER_OS cores $N minutes $MIN"
+          for p in $(seq 0 $((N - 1))); do
+            OPEN=gen/open.txt timeout $((MIN * 60)) $GEN $NODES $(( (${{ github.run_id }} % 100000) * 1000 + 500 + ${{ matrix.slot }} * 64 + p )) 100000000 nets/current.bin > sh_$p.txt &
+          done
+          wait || true
+          mkdir -p ../../shout; cat sh_*.txt | gzip -4 > ../../shout/data.gz; rm -f sh_*.txt
+          echo "lines $(zcat ../../shout/data.gz | wc -l)"
+      - name: publish
+        shell: bash
+        run: |
+          B=sp-data-sh-$(echo "$RUNNER_NAME" | tr -c 'A-Za-z0-9\n-' '-')
+          cd shout; zcat data.gz | gzip -4 | split -b 90m -d - part_; rm data.gz
+          echo "run ${{ github.run_id }} runner $RUNNER_NAME $(date -u +%FT%TZ)" > STAMP.txt
+          rm -rf .git; git init -q -b "$B"; git config user.name fhk-selfhost; git config user.email fhk-selfhost@users.noreply.github.com
+          git add -A; git commit -qm "self-play data $RUNNER_NAME ${{ github.run_id }}"
+          git push -f -q "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" "$B"
+          cd ..; rm -rf shout

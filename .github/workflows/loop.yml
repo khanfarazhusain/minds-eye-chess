@@ -64,6 +64,7 @@ jobs:
           gh run download $B -R ${{ github.repository }} -n base-data -D data/base || echo "no base"
           for P in $PR; do [ "$P" = "0" ] && continue; mkdir -p data/prev/$P; for s in $(seq 0 19); do gh run download $P -R ${{ github.repository }} -n sp-$s -D data/prev/$P || true; done; done
           for h in $(jq -r '.helpers[]?' tools/lab/loop.json); do git clone -q --depth 1 -b sp-data https://github.com/$h data/helper_$(echo $h | tr / _) || true; done
+          for b in $(git ls-remote --heads https://github.com/${{ github.repository }} 'sp-data-sh-*' | awk '{print $2}' | sed 's#refs/heads/##'); do git clone -q --depth 1 -b $b https://github.com/${{ github.repository }} data/helper_$b || true; done
           ls -la data/*
       - name: train
         run: |
