@@ -48,7 +48,10 @@ jobs:
           gcc -O3 -march=native $(jq -r .flags loop.json) -DTTB=22 -o fhkuci gen/uci.c -lm -lpthread
           for p in 0 1 2 3; do python3 tac/run.py ./fhkuci nets/current.bin tac/tac1000.csv 1000000 $(( ${{ matrix.shard }} * 4 + p )) 16 > r_$p.json & done
           wait
+          for p in 0 1 2 3; do python3 tac/run.py ./fhkuci nets/current.bin tac/tac1000.csv 100000 $(( ${{ matrix.shard }} * 4 + p )) 16 > q_$p.json & done
+          wait
           python3 -c "import json;json.dump(sum([json.load(open(f'r_{p}.json')) for p in range(4)],[]),open('tac_${{ matrix.shard }}.json','w'))"
+          python3 -c "import json;json.dump(sum([json.load(open(f'q_{p}.json')) for p in range(4)],[]),open('tacq_${{ matrix.shard }}.json','w'))"
       - uses: actions/upload-artifact@v4
         with:
           name: tac-${{ matrix.shard }}
@@ -71,14 +74,18 @@ jobs:
           python3 - <<'EOF' | tee -a $GITHUB_STEP_SUMMARY > line.txt
           import json, glob, collections, hashlib
           a = sum([json.load(open(f)) for f in glob.glob('res/tac_*.json')], [])
+          q = sum([json.load(open(f)) for f in glob.glob('res/tacq_*.json')], [])
+          qok = sum(x['ok'] for x in q)
           ok = sum(x['ok'] for x in a); fi = sum(x['first'] for x in a)
           c = collections.Counter(); t = collections.Counter()
           for x in a:
               for th in x['themes'].split(): t[th] += 1; c[th] += (not x['ok'])
-          worst = ' '.join(f"{th}:{c[th]}/{t[th]}" for th in sorted(t, key=lambda z: -c[z])[:6])
+          for x in q:
+              for th in x['themes'].split(): c[th] += (not x['ok'])
+          worst = ' '.join(f"{th}:{c[th]}/{t[th]}" for th in sorted(t, key=lambda z: -c[z] / t[z] if t[z] >= 20 else 0)[:6])
           net = hashlib.sha256(open('tools/lab/nets/current.bin', 'rb').read()).hexdigest()[:12]
           it = json.load(open('tools/lab/loop_state.json'))['iter']
-          print(f"TACTICS iter {it} net {net} n {len(a)} solved {ok} ({100*ok/len(a):.1f}%) first-move {fi} ({100*fi/len(a):.1f}%) worst {worst}")
+          print(f"TACTICS iter {it} net {net} n {len(a)} solved {ok} ({100*ok/len(a):.1f}%) first-move {fi} ({100*fi/len(a):.1f}%) fast100k {qok} ({100*qok/max(1,len(q)):.1f}%) worst {worst}")
           EOF
           echo "$(date -u +%FT%TZ) run ${{ github.run_id }} $(cat line.txt)" > line.txt
           git config user.name fhk-tactics; git config user.email fhk-tactics@users.noreply.github.com

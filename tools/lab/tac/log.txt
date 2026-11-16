@@ -1,1 +1,2 @@
 2026-11-16T17:47:09Z local TACTICS iter 3 net 57ef44d104c0 n 1000 solved 985 (98.5%) first-move 988 (98.8%) worst crushing:12/593 endgame:12/524 long:7/439 queenEndgame:3/13
+2026-11-16T17:48:26Z local FAST100K iter 3 net 57ef44d104c0 solved 924 (92.4%) first-move 948 worst quietMove:21/134 defensiveMove:22/157 pawnEndgame:12/100 rookEndgame:7/52 bishopEndgame:4/27
