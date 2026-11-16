@@ -1188,6 +1188,11 @@ body:not([class*="ps-"]) .pc{font-size:88cqh}body.pz-s:not([class*="ps-"]) .pc{f
 [dir=rtl] .board,[dir=rtl] .board *{direction:ltr}
 .eyeb{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin:0 4px;border-radius:50%;background:rgba(123,92,214,.14);border:1px solid rgba(123,92,214,.45);font-size:15px;line-height:1;cursor:pointer;vertical-align:middle}.eyeb.on{background:#7B5CD6;color:#fff}
 .fcrc{background:rgba(127,127,127,.13);border-radius:10px;padding:8px 10px}.fcrc ol,.fcl{margin:4px 0;padding-left:22px}.fcl li{margin:5px 0}.fcopt{background:#23664A;color:#fff;border-radius:6px;padding:0 7px;font-size:12px;font-weight:700}.fcsel{width:100%;font:inherit;padding:8px;border-radius:8px}.fcp details summary{cursor:pointer;padding:4px 0}
+.fxbw{position:sticky;top:var(--hdr,56px);z-index:3;background:var(--bg);padding:4px 0 6px;display:flex;flex-direction:column;gap:6px}.fxbw .board{width:100%;max-width:min(100%,36svh);margin:0 auto}
+.tzst{margin:0;padding-left:20px}.tzst li{margin:4px 0;line-height:1.4}.tzd summary{cursor:pointer;padding:2px 0}.tzw{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.tztb{width:100%;border-collapse:collapse;font-size:14px;line-height:1.3}.tztb th,.tztb td{text-align:left;vertical-align:top;padding:5px 6px;border-bottom:1px solid var(--line)}.tztb th{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted,#888);font-weight:700}
+.tztb.pl td:nth-child(2){color:#23664A;font-weight:700}.tztb.mi td:nth-child(2){color:#B3261E;font-weight:700}.tztb.pl td:first-child,.tztb.mi td:first-child{width:58%}.tztb small{font-family:inherit;font-weight:400}.tztb.pl th:first-child{color:#23664A}.tztb.mi th:first-child{color:#B3261E}
+.tztb.tzc td:nth-child(2){white-space:normal}.tztb.tzc td:first-child{width:18px;color:var(--muted,#888)}.tztb.tzc tr.eng td{background:rgba(35,102,74,.12)}.tztb.tzc td:nth-child(3){white-space:nowrap}
 .fxsteps{display:flex;gap:4px}.fxsteps i{flex:1;height:6px;border-radius:3px;background:rgba(127,127,127,.25)}.fxsteps i.d{background:#23664A}.fxsteps i.c{background:#9C7216}.fxc p{line-height:1.45}
 </style>
 
@@ -2785,6 +2790,23 @@ function vSqp(){document.body.classList.remove('fixb');if(!SQP.q)sqNewQ();const 
   h+=`<details class="card"><summary><b>${L2('All thumb rules','Saare thumb rules')}</b></summary><div class="stack small" style="gap:6px;margin-top:6px">${Object.keys(SQN).map(k=>`<p style="margin:0"><b>${SQN[k]}:</b> ${SQT[k][0]} <i>${SQT[k][1]}</i></p>`).join('')}<p style="margin:0"><b>Endgame kab?</b> Dono taraf ke mohre gino: wazir 4, haathi 2, ghoda/oont 1. Shuru mein 24 hota hai. 12 ya kam = endgame.</p><p style="margin:0"><b>Points:</b> naye square ka level − purane ka level (zyada se zyada ±3). Promotion +3, castling +2.</p></div></details></div>`;
   main.innerHTML=h}
 function sqpOpen(){SQP.from=V.name||'practice';SQP.q=null;go({name:'sqp'})}
+/* Tez tarika step: rules paragraph -> short steps + PLUS/MINUS points tables; candidates -> table (v154) */
+function fxTezItem(t){t=t.trim().replace(/\.$/,'');const sg=/[+−-]\d+/g;let m=sg.exec(t);if(!m)return{n:t,p:''};const po=t.indexOf('(');
+  if(po>=0&&po<m.index&&t.indexOf(')',po)>m.index){const pc=t.lastIndexOf(')');return{n:t.slice(0,po).trim(),p:t.slice(po+1,pc).trim()}}
+  let n=t.slice(0,m.index).trim(),p=t.slice(m.index).trim();const q=p.match(/^([^()]*?)\s*\((.*)\)$/);if(q)p=q[1]+'<br><small class="muted">'+esc(q[2])+'</small>';else p=esc(p);
+  return{n,p,raw:1}}
+function fxTezTbl(lab,txt,cls){const rows=txt.split('|').map(fxTezItem).filter(r=>r.n);
+  return`<table class="tztb ${cls}"><thead><tr><th>${lab}</th><th>Points</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.n)}</td><td class="mono">${r.raw?r.p:esc(r.p)}</td></tr>`).join('')}</tbody></table>`}
+function fxTezHTML(step){const t=step.l.filter(Boolean).join(' ');const ip=t.indexOf('PLUS:'),im=t.indexOf('MINUS:');let h='';
+  if(ip<0||im<0)return step.l.filter(Boolean).map(x=>`<p style="margin:0">${esc(x)}</p>`).join('');
+  const intro=t.slice(0,ip),minus=t.slice(im+6);const em=minus.search(/\.\s+[A-Z]/);const mt=em>=0?minus.slice(0,em):minus,tail=em>=0?minus.slice(em+1).trim():'';
+  const s1=intro.match(/Step 1,\s*(.*?)(?=Step 2,)/),s2=intro.match(/Step 2,\s*(.*)$/),pre=intro.split(/Step 1,/)[0].trim();
+  if(pre)h+=`<p class="small muted" style="margin:0">${esc(pre)}</p>`;
+  if(s1&&s2)h+=`<ol class="tzst"><li>${esc(s1[1].trim())}</li><li>${esc(s2[1].trim())}</li></ol>`;else h+=`<p style="margin:0">${esc(intro)}</p>`;
+  h+=`<details class="tzd" open><summary><b>📋 Points card</b> <small class="muted">(${L2('tap to hide','chhupane ke liye tap')})</small></summary><div class="tzw">${fxTezTbl('➕ PLUS',t.slice(ip+5,im),'pl')}${fxTezTbl('➖ MINUS',mt,'mi')}</div></details>`;
+  if(tail)h+=`<p class="small" style="margin:0">${esc(tail)}</p>`;return h}
+function fxTezLi(li){return`<table class="tztb tzc"><thead><tr><th>#</th><th>${L2('Move','Chaal')}</th><th>Pts</th><th>${L2('Why','Kyun')}</th></tr></thead><tbody>${li.map((x,i)=>{const m=String(x.x||'').match(/^(.*?)\s*([+−-]?\d+)\s*pts\s*(.*)$/),star=/★/.test(x.x||'');
+  const grp=m?m[1]:'',pts=m?m[2]:'',rest=m?m[3].replace('★','').trim():x.x;return`<tr class="${star?'eng':''}"><td>${i+1}</td><td><b class="mono">${esc(x.s)}</b>${star?' ★':''}<br><small class="muted">${esc(grp)}</small></td><td class="mono"><b>${esc(pts)}</b></td><td><small>${esc(x.y||'')}${rest&&!star?' '+esc(rest):''}${star?`<br><b class="good">${esc(rest||'engine ki chaal')}</b>`:''}</small></td></tr>`}).join('')}</tbody></table>`}
 function vFcEx(){document.body.classList.remove('fixb');try{window.__setH&&window.__setH()}catch(e){}
   const M=FCM[FX.k];let h=`<div class="stack"><button class="btn small" style="align-self:flex-start" data-act="fx-back">← ${L2('Back to game','Game par wapas')}</button><h1>📖 ${L2('FHK Coach examples','FHK Coach examples')}</h1>`;
   h+=`<select class="fcsel" onchange="fxMode(this.value)">${FCG.map(([g,ks])=>`<optgroup label="${esc(g)}">${ks.map(x=>`<option value="${x}"${x===FX.k?' selected':''}>${esc(FCM[x].n)}${FCM[x].opt?' ★ Optimal':''}</option>`).join('')}</optgroup>`).join('')}</select><small class="muted">${esc(M.p)}</small><small class="muted">${esc(fcTime(FX.k))}</small>`+SQH;
@@ -2797,10 +2819,10 @@ function vFcEx(){document.body.classList.remove('fixb');try{window.__setH&&windo
   h+=`<div class="seg">${L.map((e,i)=>`<button class="${i===FX.i?'on':''}" data-act="fx-ex" data-v="${i}">${L2('Example','Example')} ${i+1}</button>`).join('')}</div>`;
   h+=`<small class="muted">${L2('Real position from the training set. Level','Training set ki asli position. Level')}: ${{easy:'Easy',med:'Medium',hard:'Hard'}[ex.lvl]||ex.lvl} · ${L2('engine-verified best move','engine se verified best chaal')}</small>`;
   let marks=null;if(last&&ex.best){const f=ex.best.slice(0,2),t=ex.best.slice(2,4);marks={[f]:'good',[t]:'good'}}
-  h+=boardHTML({persp:st.w?'w':'b',coords:true,pieces:toMap(st.b),marks});
-  h+=`<div class="steps fxsteps">${ex.steps.map((x,i)=>`<i class="${i<FX.s?'d':i===FX.s?'c':''}"></i>`).join('')}</div>`;
-  h+=`<div class="card stack fxc"><span class="eyebrow">Step ${FX.s+1} / ${ex.steps.length}</span><h3 style="margin:0">${esc(step.t)}</h3>${step.l.filter(Boolean).map(x=>`<p style="margin:0">${esc(x)}</p>`).join('')}`;
-  if(step.li&&step.li.length)h+=`<ol class="fcl">${step.li.map(x=>`<li><b class="mono">${esc(x.s)}</b> <span>${esc(x.x)}</span>${x.y?`<br><small class="mono muted">${esc(x.y)}</small>`:''}</li>`).join('')}</ol>`;
+  h+=`<div class="fxbw">`+boardHTML({persp:st.w?'w':'b',coords:true,pieces:toMap(st.b),marks});
+  h+=`<div class="steps fxsteps">${ex.steps.map((x,i)=>`<i class="${i<FX.s?'d':i===FX.s?'c':''}"></i>`).join('')}</div></div>`;
+  h+=`<div class="card stack fxc"><span class="eyebrow">Step ${FX.s+1} / ${ex.steps.length}</span><h3 style="margin:0">${esc(step.t)}</h3>${step.tez?fxTezHTML(step):step.l.filter(Boolean).map(x=>`<p style="margin:0">${esc(x)}</p>`).join('')}`;
+  if(step.tez&&step.li&&step.li.length)h+=fxTezLi(step.li);else if(step.li&&step.li.length)h+=`<ol class="fcl">${step.li.map(x=>`<li><b class="mono">${esc(x.s)}</b> <span>${esc(x.x)}</span>${x.y?`<br><small class="mono muted">${esc(x.y)}</small>`:''}</li>`).join('')}</ol>`;
   if(step.z)h+=`<p style="margin:0"><b>${esc(step.z)}</b></p>`;
   if(step.y)h+=`<p class="mono" style="margin:0;font-size:14px">${esc(step.y)}</p>`;
   if(step.ok)h+=`<p class="good" style="margin:0"><b>✓ ${L2('Matches the engine','Engine ki chaal se match')}: ${esc(step.best)}</b></p>`;
@@ -3876,7 +3898,7 @@ async function i18nBoot(){try{const r=await fetch(PACK_BASE+'index.json',{cache:
   if(document.getElementById('langsel')){rerenderLangCard()}}
 
 function langSegHTML(card){const h=`<div class="lrow">${langPickHTML()}</div><small class="muted lnote">📒 ${L2('Notes stay in English. Everything else changes.','Notes sirf English mein rahenge. Baaki sab badal jayega.')}</small>`;return card?`<div class="card stack" style="gap:6px">${h}<small class="muted">${L2('Changes menus, the coach and the voice.','Menu, coach aur awaaz sab badal jaate hain.')} · <b>64 Squares: Learn &amp; Play Chess · ${APPV}</b></small>${boardSegHTML()}${tiltHTML()}${themeHTML()}${sfxSegHTML()}${funSegHTML()}</div>`:h}
-const APPV='2026.11.16 · v153';
+const APPV='2026.11.17 · v154';
 /* 3D view control: tap the 360° button, then drag the board with one finger to turn and tilt it (like a bike/car viewer) */
 const VICON=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px"><path d="M12 6.8l4.2 2.3v4.7L12 16.1l-4.2-2.3V9.1z"/><path d="M7.8 9.1l4.2 2.3 4.2-2.3M12 11.4v4.7"/><path d="M19.6 14.6c-1.4 1.9-4.3 3.2-7.6 3.2-.7 0-1.4-.1-2-.2"/><path d="M11.4 16.2l-1.4 1.4 1.4 1.4"/><path d="M4.4 9.4C5.8 7.5 8.7 6.2 12 6.2"/></svg>`;
 function tiltVal(){return P.set.tilt!=null?P.set.tilt:30}
