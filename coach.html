@@ -87,6 +87,7 @@ body.exmode #trainTop{position:sticky;top:0;z-index:3;background:var(--bg);paddi
 .tztb.tzc td:first-child{width:18px;color:var(--muted)}.tztb.tzc tr.eng td{background:var(--good-soft)}.tztb.tzc td:nth-child(3){white-space:nowrap;font-family:ui-monospace,Menlo,monospace}.tztb.tzc td:nth-child(2) b{font-family:ui-monospace,Menlo,monospace}
 table.mt{width:100%;border-collapse:collapse} table.mt td,table.mt th{text-align:left;padding:5px 4px;border-bottom:1px solid var(--line);vertical-align:top}
 .hidden{display:none}
+.tztb.tzc tr.ply td{box-shadow:inset 3px 0 0 var(--accent)} .tztb.tzc tr.ply.eng td{background:var(--good-soft)} .gw-meta{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap} .gw-v{border-radius:10px;padding:8px 10px;margin:8px 0;line-height:1.4} .gw-v.ok{background:var(--good-soft)} .gw-v.no{background:var(--bad-soft)} .gw-v.mid{background:var(--warn-soft)} .gw-nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px} .gw-nav .btn{flex:1 1 auto} #gwRange{width:100%;margin:6px 0 0} .gw-sum td,.gw-sum th{padding:4px 6px}
 </style>
 </head>
 <body>
@@ -104,6 +105,7 @@ table.mt{width:100%;border-collapse:collapse} table.mt td,table.mt th{text-align
     <p class="small muted">Koi bhi mode chuno. % = research mein kitni baar engine jaisi chaal (best se 0.3 pawn ke andar) mili. Training = 321 positions, Games = 20,602 positions (FHK vs Stockfish ke games, sirf test). Answers v147 engine (depth 8-10) se check kiye gaye.</p>
     <div id="modeList"></div></details>
   <button class="btn" id="exBtn" style="width:100%;margin-bottom:6px">📖 Is mode ke 5 examples (step by step)</button>
+  <button class="btn" id="gwBtn" style="width:100%;margin-bottom:6px">🎬 Asli game, chaal-dar-chaal (Tez tarika)</button>
   <button class="btn hidden" id="exCalcBtn" style="width:100%;margin-bottom:6px">🧮 Aage ki chaalein kaise sochein (5 examples)</button>
   <div class="card method" id="methodCard">
     <h2>Engine ka tareeka (har chaal par)</h2>
@@ -795,6 +797,113 @@ function drawExample(){
   on('#exNextEx', () => { EX.i++; EX.s = 0; drawExample(); window.scrollTo(0, 0); });
   on('#exQuit', () => { applyModeLayout(); nextPosition(); });
 }
+// ---------- Asli game walkthrough (v157): ek poora real game, har chaal par Tez tarika ----------
+// Data: engine/games_tez.json = Lichess broadcast games (CC0, dono khiladi 2200+). Har chaal: Tez top 5 (me-rules fastCands),
+// khiladi ki chaal ka Tez number, aur Stockfish 16 (depth 13) se check: ★ = best se 0.3 pyaade ke andar.
+// User FHK chune to har chaal live 'mode' cmd se check hoti hai (cache key mein ENGV, to naye engine version par dobara).
+let GW = null, GWD = null, GWE = 'Stockfish 16'; const GWC = {}; // GWC: FHK labels, fen -> label (har engine version ka alag)
+const gwEngKey = STORE + '.gwEng'; let gwEng = 'sf'; try { gwEng = localStorage.getItem(gwEngKey) || 'sf'; } catch (e) {}
+const gwEngName = () => gwEng === 'sf' ? GWE : `FHK Engine (${ENGV})`;
+const gwCacheKey = fen => `${STORE}.gwf.${ENGV}.${fen}`;
+function gwL(k){ const p = GW.g.p[k];
+  if (gwEng === 'sf' && p.bs !== undefined) return { t: p.t, pg: p.pg, b: p.b, bs: p.bs, ps: p.ps };
+  const fen = GW.fens[k]; if (GWC[fen]) return GWC[fen];
+  try { const c = localStorage.getItem(gwCacheKey(fen)); if (c) return GWC[fen] = JSON.parse(c); } catch (e) {}
+  return null; }
+const gwBusy = {};
+async function gwFetch(k){ // FHK se live check (training modes jaisa: har chaal depth 6, best se 0.3 pyaade = ★), phir cache
+  const fen = GW.fens[k]; if (GWC[fen] || gwBusy[fen]) return gwBusy[fen]; const p = GW.g.p[k], uci = GW.u[k];
+  return gwBusy[fen] = ask({ cmd: 'mode', fen, rules: 4, K: 5, depth: 0, human: 0 }).then(d => {
+    const by = new Map(d.moves.map(m => [m.san, m])), mx = Math.max(...d.moves.map(m => m.lab)), me = d.moves.find(m => m.uci === uci);
+    const L = { t: p.t.map(x => { const m = by.get(x[0]); return [x[0], x[1], x[2], x[3], m && m.good ? 1 : 0]; }), pg: me && me.good ? 1 : 0, b: d.bestSan, bs: mx, ps: me ? me.lab : mx };
+    GWC[fen] = L; try { localStorage.setItem(gwCacheKey(fen), JSON.stringify(L)); } catch (e) {} delete gwBusy[fen]; return L; }); }
+const gwEngSel = () => `<label class="small">Check karne wala engine: <select id="gwEng"><option value="sf"${gwEng === 'sf' ? ' selected' : ''}>${esc(GWE)}</option><option value="fhk"${gwEng === 'fhk' ? ' selected' : ''}>FHK Engine (${ENGV})</option></select></label>`;
+const gwSeenKey = STORE + '.gwSeen';
+function gwPick(){ let seen = []; try { seen = JSON.parse(localStorage.getItem(gwSeenKey) || '[]'); } catch (e) {}
+  const all = GWD.map((_, i) => i), fresh = all.filter(i => !seen.includes(i)), pool = fresh.length ? fresh : all;
+  const i = pool[Math.floor(Math.random() * pool.length)]; seen.push(i); if (seen.length > GWD.length - 1) seen = seen.slice(-Math.floor(GWD.length / 2));
+  try { localStorage.setItem(gwSeenKey, JSON.stringify(seen)); } catch (e) {} return i; }
+async function openGame(){
+  T = { ex: true, step: 0 };
+  document.getElementById('stepBar').classList.add('hidden'); document.getElementById('methodCard').classList.add('hidden');
+  panel.innerHTML = `<div class="card"><span class="spinner"></span>Asli game load ho raha hai…</div>`;
+  try { if (!GWD) { const j = await (await fetch('engine/games_tez.json')).json(); GWD = j.games || j; if (j.eng) GWE = j.eng; }
+    if (!EXD) { try { EXD = (await (await fetch('engine/examples.json')).json()).modes; } catch (e) {} } }
+  catch (e) { panel.innerHTML = `<div class="card bad">Game load nahi hua: ${esc(e.message)}</div>`; return; }
+  gwStart(gwPick());
+}
+function gwStart(i){ const g = GWD[i], u = g.u.split(' '); const fens = [], pos = new E.Position(), sq = [];
+  for (const x of u) { fens.push(pos.fen()); sq.push([E.nameSq(x.slice(0, 2)), E.nameSq(x.slice(2, 4))]); pos.make(pos.parseUci(x)); }
+  fens.push(pos.fen()); GW = { i, g, u, fens, sq, k: -1 }; gwDraw(); window.scrollTo(0, 0); }
+const gwName = s => s.replace(/^(.*?),\s*(.*)$/, '$2 $1');
+const gwSc = v => Math.abs(v) > 20000 ? (v > 0 ? 'mate' : 'mate (khilaaf)') : (v >= 0 ? '+' : '') + (v / 100).toFixed(1);
+function gwTezCard(){ // same points card as the Tez examples step (examples.json), simple words
+  for (const k in (EXD || {})) for (const ex of EXD[k]) for (const st of ex.steps) if (st.tez) return tezHTML(st);
+  return FC_TXT.replace('__K__', 5); }
+const gwWhy = w => (w || []).map(([k, v]) => `${TEZ_N[k] || k} ${v > 0 ? '+' : ''}${v}`).join(', ');
+function gwRes(r){ return r === '1-0' ? 'White jeeta' : r === '0-1' ? 'Black jeeta' : 'Draw'; }
+function gwStats(upto){ let n = 0, tz = 0, inl = 0, pg = 0;
+  for (let k = 0; k < upto; k++) { const L = gwL(k); if (!L) continue; n++; if (L.t.some(x => x[4])) tz++; if (GW.g.p[k].pr[0] <= 5) inl++; if (L.pg) pg++; } return { n, tz, inl, pg }; }
+function gwDraw(){
+  document.body.classList.add('exmode');
+  const { g, k } = GW, N = GW.u.length; const h = [];
+  const W = `${esc(gwName(g.w))} (${g.we})`, B = `${esc(gwName(g.b))} (${g.be})`;
+  tBoard.flip = false;
+  if (k < 0) {
+    tBoard.set(new E.Position(GW.fens[0]), null); tStatus.textContent = `🎬 Asli game: ${N} chaalein`;
+    h.push(`<div class="card"><h2>🎬 Asli game, chaal-dar-chaal</h2>
+      <p><b>⚪ ${W}</b><br><b>⚫ ${B}</b></p><p class="small muted">${esc(g.ev)} · ${esc(g.dt)} · Nateeja: ${gwRes(g.r)}</p>
+      <p>Ye ek asli tournament game hai (insaanon ne khela). Har chaal par hum <b>Tez tarika</b> lagayenge, jaise aap khud khel rahe ho:</p>
+      <ol class="tzst"><li>Tez tarike se <b>5 chaalein</b> chuno (pehle Shikaar, phir Points card).</li><li>Dekho khiladi ne kya khela, aur kya wo aapki list mein tha.</li><li>Engine se check: kaunsi chaalein achhi thi (★).</li></ol>
+      <p>${gwEngSel()}<br><small class="muted">Stockfish ke answers pehle se taiyaar hain. FHK chuno to app har chaal abhi check karega (thoda waqt lagta hai) aur yaad rakhega. Naya FHK version aaya to dobara check hoga.</small></p>
+      <details class="small"><summary><b>📋 Tez tarika yaad karo</b> (tap)</summary>${gwTezCard()}</details>
+      <p class="small muted">Har baar naya game aata hai (${GWD.length} asli games mein se). Games: Lichess broadcast database (CC0).</p>
+      <div class="gw-nav"><button class="btn pri" id="gwNext">Shuru karo ▶</button><button class="btn" id="gwNew">🎲 Doosra game</button><button class="btn" id="gwQuit">Training par wapas</button></div></div>`);
+  } else if (k >= N) {
+    tBoard.set(new E.Position(GW.fens[N]), GW.sq[N - 1]); tStatus.textContent = `🏁 Game khatam: ${gwRes(g.r)}`;
+    const s = gwStats(N), pc = (a, b) => Math.round(100 * a / Math.max(1, b)) + '%';
+    const bad = g.p.map((p, j) => { const L = gwL(j); return L && { j, p, loss: L.bs - L.ps, bs: L.bs }; }).filter(x => x && x.loss >= 100 && Math.abs(x.bs) < 20000).slice(0, 8);
+    h.push(`<div class="card"><h2>🏁 Game khatam: ${gwRes(g.r)}</h2><p class="small muted">⚪ ${W} · ⚫ ${B}</p>
+      <table class="tztb gw-sum"><tbody>
+      <tr><td colspan="2" class="small muted">Engine: ${esc(gwEngName())}${s.n < N ? ` · sirf dekhi hui ${s.n} chaalein` : ''}</td></tr>
+      <tr><td>Tez list (5 chaalein) mein engine jaisi chaal thi</td><td><b>${s.tz}/${s.n}</b> (${pc(s.tz, s.n)})</td></tr>
+      <tr><td>Khiladi ki chaal Tez list mein thi</td><td><b>${s.inl}/${s.n}</b> (${pc(s.inl, s.n)})</td></tr>
+      <tr><td>Khiladi ki chaal engine jaisi thi (★)</td><td><b>${s.pg}/${s.n}</b> (${pc(s.pg, s.n)})</td></tr></tbody></table>
+      ${bad.length ? `<p style="margin-top:10px"><b>Badi galtiyan</b> (1 pyaade se zyada nuksaan). Tap karke dekho:</p><div class="row">${bad.map(x => `<button class="chip no" data-j="${x.j}">${Math.floor(x.j / 2) + 1}${x.j % 2 ? '…' : '.'} ${esc(x.p.s)}</button>`).join('')}</div>` : '<p class="small">Is game mein koi badi galti (1 pyaade se zyada) nahi hui.</p>'}
+      <p>${gwEngSel()}</p><div class="gw-nav"><button class="btn" id="gwPrev">◀ Peeche</button><button class="btn pri" id="gwNew">🎲 Naya game</button><button class="btn" id="gwQuit">Training par wapas</button></div></div>`);
+  } else {
+    const L = gwL(k);
+    if (!L) { tBoard.set(new E.Position(GW.fens[k]), GW.sq[k]); panel.innerHTML = `<div class="card"><span class="spinner"></span>FHK Engine chaal ${k + 1} check kar raha hai…</div>`;
+      gwFetch(k).then(() => { if (GW.k === k) gwDraw(); }).catch(e => { panel.innerHTML = `<div class="card bad">Engine error: ${esc(e.message)}</div>`; }); return; }
+    if (gwEng !== 'sf' && k + 1 < N) gwFetch(k + 1).catch(() => {});
+    const p = Object.assign({}, g.p[k], L), side = k % 2 ? 'Black' : 'White', who = k % 2 ? B : W, no = Math.floor(k / 2) + 1;
+    tBoard.set(new E.Position(GW.fens[k]), GW.sq[k]);
+    tStatus.textContent = `Chaal ${no}${k % 2 ? '…' : '.'} ${side} ki baari · peele ghar = khiladi ki chaal`;
+    const tz = p.t.some(x => x[4]), inl = p.pr[0] <= 5, loss = p.bs - p.ps, mate = Math.abs(p.bs) > 20000 || Math.abs(p.ps) > 20000;
+    const rows = p.t.map((x, j) => { const [san, pts, gp, why, good] = x, ply = san === p.s;
+      return `<tr class="${good ? 'eng' : ''}${ply ? ' ply' : ''}"><td>${j + 1}</td><td><b>${esc(san)}</b>${good ? ' ★' : ''}<br><small class="muted">${esc(FC_G[gp])}</small></td><td><b>${pts > 0 ? '+' : ''}${pts}</b></td><td><small>${tzWhy(gwWhy(why)) || 'kuch khaas nahi'}${ply ? '<br><b>👤 Khiladi ne yahi khela</b>' : ''}</small></td></tr>`; }).join('');
+    const st = gwStats(k + 1);
+    h.push(`<div class="card"><div class="gw-meta"><span class="small muted">Chaal ${k + 1} / ${N} · ${side}: ${who}</span><span class="small muted">${gwEng === 'sf' ? 'Stockfish' : 'FHK'} · Tez sahi: ${st.tz}/${st.n}</span></div>
+      <input type="range" id="gwRange" min="1" max="${N}" value="${k + 1}">
+      <h2>${no}${k % 2 ? '…' : '.'} ${esc(p.s)}</h2>
+      <p class="small muted" style="margin:6px 0 4px">Step 1-2: is position mein Tez list (${p.n} legal chaalon mein se 5):</p>
+      <table class="tztb tzc"><thead><tr><th>#</th><th>Chaal</th><th>Points</th><th>Kyun</th></tr></thead><tbody>${rows}</tbody></table>
+      <p class="small muted" style="margin:4px 0 0">★ = engine ke hisaab se achhi chaal (best se 0.3 pyaade ke andar).</p>
+      <div class="gw-v ${tz ? 'ok' : 'no'}">${tz ? '✓ Tez list mein engine jaisi chaal thi.' : `✗ Tez list mein engine jaisi chaal nahi thi. Engine ki chaal: <b>${esc(p.b)}</b>.`}</div>
+      <div class="gw-v ${inl ? 'ok' : 'mid'}">👤 Khiladi ne <b>${esc(p.s)}</b> khela. ${inl ? `Ye aapki Tez list mein number <b>${p.pr[0]}</b> par thi.` : `Ye Tez list mein nahi thi: Tez mein iska number <b>${p.pr[0]}</b> (${p.pr[1] > 0 ? '+' : ''}${p.pr[1]} points${p.pr[3] && p.pr[3].length ? ': ' + esc(gwWhy(p.pr[3])) : ''}).`}</div>
+      <div class="gw-v ${p.pg ? 'ok' : loss >= 100 ? 'no' : 'mid'}">🤖 ${esc(gwEngName())}: ${p.pg ? `${esc(p.s)} achhi chaal thi ★${p.b !== p.s ? ` (engine ki pehli pasand ${esc(p.b)})` : ''}.` : `best chaal <b>${esc(p.b)}</b> thi. ${mate ? 'Yahan mate ka farq tha.' : `Khiladi ki chaal se lagbhag <b>${(loss / 100).toFixed(1)} pyaade</b> ka nuksaan${loss >= 100 ? ' (badi galti)' : ''}.`}`} <span class="small muted">Best chaal ka score: ${gwSc(p.bs)}</span></div>
+      <div class="gw-nav"><button class="btn" id="gwPrev">◀ Peeche</button><button class="btn pri" id="gwNext">Aage ▶</button></div>
+      <div class="gw-nav"><button class="btn" id="gwNew">🎲 Naya game</button><button class="btn" id="gwQuit">Training par wapas</button></div></div>`);
+  }
+  panel.innerHTML = h.join('');
+  const on = (id, f) => { const b = panel.querySelector(id); if (b) b.onclick = f; };
+  on('#gwPrev', () => { GW.k--; gwDraw(); }); on('#gwNext', () => { GW.k++; gwDraw(); });
+  on('#gwNew', () => gwStart(gwPick())); on('#gwQuit', () => { applyModeLayout(); nextPosition(); });
+  const r = panel.querySelector('#gwRange'); if (r) r.oninput = () => { GW.k = +r.value - 1; gwDraw(); const q = panel.querySelector('#gwRange'); if (q) q.focus(); };
+  const es = panel.querySelector('#gwEng'); if (es) es.onchange = () => { gwEng = es.value; try { localStorage.setItem(gwEngKey, gwEng); } catch (e) {} gwDraw(); };
+  panel.querySelectorAll('[data-j]').forEach(b => b.onclick = () => { GW.k = +b.dataset.j; gwDraw(); window.scrollTo(0, 0); });
+}
+document.getElementById('gwBtn').onclick = () => { document.getElementById('modeCard').open = false; openGame(); };
 document.getElementById('exBtn').onclick = () => { document.getElementById('modeCard').open = false; openExamples('ex'); };
 document.getElementById('exCalcBtn').onclick = () => { document.getElementById('modeCard').open = false; openExamples('calc'); };
 function exCalcVis(){ const M = MODES[MODE]; document.getElementById('exCalcBtn').classList.toggle('hidden', !(M && M.depth)); }
