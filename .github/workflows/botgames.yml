@@ -15,7 +15,7 @@ jobs:
           ref: engine-lab
       - name: fetch FHK_bot games from lichess (public API)
         run: |
-          cd tools/lab/botgames
+          mkdir -p tools/lab/botgames && cd tools/lab/botgames
           curl -sfL --retry 5 -H 'Accept: application/x-chess-pgn' 'https://lichess.org/api/games/user/FHK_bot?clocks=false&evals=false&opening=true' > all.pgn.new || exit 0
           [ -s all.pgn.new ] && mv all.pgn.new all.pgn || rm -f all.pgn.new
           python3 - <<'P' > stats.txt
