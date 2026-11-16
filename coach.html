@@ -746,24 +746,30 @@ async function openExamples(kind){
   drawExample(); window.scrollTo(0, 0);
 }
 /* Tez tarika step: rules paragraph -> 2 steps + PLUS/MINUS points tables; candidates -> table */
-function tzItem(t){t=t.trim().replace(/\.$/,'');const m=/[+−-]\d+/.exec(t);if(!m)return{n:t,p:''};const po=t.indexOf('(');
-  if(po>=0&&po<m.index&&t.indexOf(')',po)>m.index){const pc=t.lastIndexOf(')');return{n:t.slice(0,po).trim(),p:esc(t.slice(po+1,pc).trim())}}
-  let n=t.slice(0,m.index).trim(),p=t.slice(m.index).trim();const q=p.match(/^([^()]*?)\s*\((.*)\)$/);
-  return{n,p:q?esc(q[1])+'<br><small class="muted">'+esc(q[2])+'</small>':esc(p)}}
-function tzTbl(lab,txt,cls){const rows=txt.split('|').map(tzItem).filter(r=>r.n);
-  return`<table class="tztb ${cls}"><thead><tr><th>${lab}</th><th>Points</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.n)}</td><td>${r.p}</td></tr>`).join('')}</tbody></table>`}
+/* Tez tarika step, simple words (v156): same rules + numbers as engine/examples.json, written for a beginner */
+const TZ_PLUS=[['material jeet','Unka mohra jeetna','Har pyaada +10. Ghoda ya oont 30, haathi 50, wazir 90.'],['mate rokna','Apne raja par aane wala mate rokna',''],['mate ki dhamki','Agli chaal mein mate karne ki dhamki dena',''],['castling','Castling karna (raja ko kone mein safe karna)',''],['fork','Fork: ek hi chaal se unke do mohron par hamla',''],['barabar trade','Barabar ka len-den: apna mohra do, utna hi bada unka lo',''],['check','Check dena',''],['dhamki','Unke mohre par hamla karna','Sirf tab gino jab wo mohra aapke hamla karne wale mohre se bada ho, ya use koi bacha na raha ho.'],['hamle wale apne','Apne jis mohre par hamla hai, use bachaav dena','Yaani koi doosra mohra aisi jagah rakho ki wo use bacha sake.'],['pawn aage','Pyaada aage badhana',''],['mohra hamle se','Hamle wale apne mohre ko hata kar safe jagah le jaana',''],['bina rakshak pawn','Aise pyaade par hamla jise koi bacha nahi raha',''],['behtar square','Mohre ko behtar ghar par le jaana','Ghar jitna behtar, utne zyada points (+1 se +3).']];
+const TZ_MINUS=[['opponent ko mate','Unko ek chaal mein mate karne ka mauka dena','Ye chaal kabhi mat khelo.'],['material haar','Apna mohra gawana','Har pyaade jitna −10 (ghoda/oont −30, haathi −50, wazir −90).'],['opponent ko fork','Unko fork ka mauka dena',''],['castling ka haq','Castling ka mauka kho dena','Castling se pehle raja ya haathi hilaya to ye lagta hai.'],['opening mein','Shuru ke khel mein ek hi mohra do baar chalana',''],['raja center','Raja ko beech ki taraf le jaana',''],['opponent ko har naya','Unko check dene ka naya safe mauka dena','Har aise check ke liye −3.']];
+function tzRows(txt,dict,cls){const items=txt.split('|').map(x=>x.trim().replace(/\.$/,'')).filter(Boolean);
+  return items.map(t=>{const d=dict.find(e=>t.toLowerCase().startsWith(e[0]))||[t,t,''];let pts;
+    if(d[0]==='pawn aage'){const q=t.match(/5th rank \+(\d+), 6th \+(\d+), 7th \+(\d+), har level x(\d+)/);pts=q?`5vi line +${q[1]*q[4]}<br>6vi line +${q[2]*q[4]}<br>7vi line +${q[3]*q[4]}`:esc(t.replace(/^pawn aage\s*/,''))}
+    else{const m=[...t.replace(/\(.*?\)/g,'').matchAll(/[+−-]\d+/g)].map(x=>x[0]);pts=m.length>1?m.join(' se '):(m[0]||'')}
+    return`<tr><td>${esc(d[1])}${d[2]?`<br><small class="muted">${esc(d[2])}</small>`:''}</td><td>${pts}</td></tr>`}).join('')}
 function tezHTML(st){const t=st.l.filter(Boolean).join(' ');const ip=t.indexOf('PLUS:'),im=t.indexOf('MINUS:');
   if(ip<0||im<0)return st.l.filter(Boolean).map(x=>`<p>${esc(x)}</p>`).join('');
-  const intro=t.slice(0,ip),minus=t.slice(im+6),em=minus.search(/\.\s+[A-Z]/),mt=em>=0?minus.slice(0,em):minus,tail=em>=0?minus.slice(em+1).trim():'';
-  const s1=intro.match(/Step 1,\s*(.*?)(?=Step 2,)/),s2=intro.match(/Step 2,\s*(.*)$/),pre=intro.split(/Step 1,/)[0].trim();let h='';
-  if(pre)h+=`<p class="small muted">${esc(pre)}</p>`;
-  const tzSub=x=>{x=x.trim();const c=x.indexOf(':'),hd=c>0&&c<40?x.slice(0,c):'',body=hd?x.slice(c+1):x;const pts=body.split(/;|\.\s+|,\s*(?=aur |unke )/).map(y=>y.trim().replace(/\.$/,'').replace(/^aur /,'')).filter(Boolean);
-    return`${hd?`<b>${esc(hd)}</b>`:''}<ul class="tzsub">${pts.map(y=>`<li>${esc(y.charAt(0).toUpperCase()+y.slice(1))}</li>`).join('')}</ul>`};
-  h+=s1&&s2?`<ol class="tzst"><li>${tzSub(s1[1])}</li><li>${tzSub(s2[1])}</li></ol>`:`<p>${esc(intro)}</p>`;
-  h+=`<details class="tzd" open><summary><b>📋 Points card</b> <span class="small muted">(chhupane ke liye tap)</span></summary><div class="tzw">${tzTbl('➕ PLUS',t.slice(ip+5,im),'pl')}${tzTbl('➖ MINUS',mt,'mi')}</div></details>`;
-  if(tail)h+=`<p class="small">${esc(tail)}</p>`;return h}
-function tezLi(li){return`<table class="tztb tzc"><thead><tr><th>#</th><th>Chaal</th><th>Pts</th><th>Kyun</th></tr></thead><tbody>${li.map((x,i)=>{const m=String(x.x||'').match(/^(.*?)\s*([+−-]?\d+)\s*pts\s*(.*)$/),star=/★/.test(x.x||'');
-  const grp=m?m[1]:'',pts=m?m[2]:'',rest=m?m[3].replace('★','').trim():(x.x||'');return`<tr class="${star?'eng':''}"><td>${i+1}</td><td><b>${esc(x.s)}</b>${star?' ★':''}<br><small class="muted">${esc(grp)}</small></td><td><b>${esc(pts)}</b></td><td><small>${esc(x.y||'')}${rest&&!star?' '+esc(rest):''}${star?`<br><b class="good">${esc(rest||'engine ki chaal')}</b>`:''}</small></td></tr>`}).join('')}</tbody></table>`}
+  const minus=t.slice(im+6),em=minus.search(/\.\s+[A-Z]/),mt=em>=0?minus.slice(0,em):minus;
+  const K=(t.match(/kul (\d+)/)||[])[1]||'5',N=(t.match(/Pehli (\d+) chaal/)||[])[1]||'3',D=(t.match(/([\d,]+) positions/)||[])[1]||'25,000';
+  let h=`<p class="small muted">Har chaal ko gehraai se sochne ki zaroorat nahi. Ye tareeka ${D} asli positions dekh kar bana hai. Bas 2 kaam karo:</p>`;
+  h+=`<ol class="tzst"><li><b>Pehle muft mohra dhoondo (Shikaar)</b><ul class="tzsub"><li>Dekho, kya aap unka koi mohra maar sakte ho jo muft mile, ya barabar ke badle mile?</li><li>Aise kai hon to sabse bada mohra maaro.</li><li>Do mohre barabar hon to apne chhote mohre se maaro.</li><li>Aisa sirf 1 chaal lo. Koi na mile to seedha Step 2 par jao.</li></ul></li>`;
+  h+=`<li><b>Baaki chaalon ko number do (Points card)</b><ul class="tzsub"><li>Neeche ki hari list dekho. Jis chaal mein inme se koi achhi baat ho, sirf wahi chaal gino.</li><li>Us chaal ki har achhi baat ke points jodo, aur laal list ki har galti ke points ghatao.</li><li>Sabse zyada points wali chaal pehle. Aise chunte jao jab tak kul ${esc(K)} chaalein na ho jaayein (Shikaar wali bhi isme ginti hai).</li></ul></li></ol>`;
+  h+=`<p><b>Inme se pehli ${esc(N)} chaalein aapki sabse achhi ${esc(N)} chaalein hain.</b> Inko dhyaan se socho, phir khelo.</p>`;
+  h+=`<details class="tzd" open><summary><b>📋 Points card</b> <span class="small muted">(chhupane ke liye tap)</span></summary><div class="tzw">`;
+  h+=`<table class="tztb pl"><thead><tr><th>✅ Achhi baat</th><th>Points</th></tr></thead><tbody>${tzRows(t.slice(ip+5,im),TZ_PLUS)}</tbody></table>`;
+  h+=`<table class="tztb mi"><thead><tr><th>❌ Galti</th><th>Points</th></tr></thead><tbody>${tzRows(mt,TZ_MINUS)}</tbody></table></div></details>`;
+  return h}
+const TZ_WHY={'material jeet':'mohra jeeta','material haar':'mohra gaya','hamle se hata':'mohra hamle se bachaya','pawn aage':'pyaada aage','dhamki':'mohre par hamla','pawn par dhamki':'pyaade par hamla','fork diya':'unko fork ka mauka','fork':'fork','check':'check','naye check diye':'unko check ke naye mauke','square':'ghar badla','barabar trade':'barabar len-den','raja center':'raja beech mein','mate rokna':'mate roka','mate ki dhamki':'mate ki dhamki','castling':'castling','castling haq gaya':'castling ka mauka gaya','mohra do baar':'ek mohra do baar','mate in 1 diya':'unko mate ka mauka','rakshak diya':'mohre ko bachaav diya'};
+function tzWhy(y){return String(y||'').split(',').map(x=>x.trim()).filter(Boolean).map(x=>{const m=x.match(/^(.*?)\s*([+−-]?\d+)$/);if(!m)return esc(x);const w=TZ_WHY[m[1]]||m[1];return`${esc(w)} <b>${esc(m[2])}</b>`}).join('<br>')}
+function tezLi(li){return`<p class="small muted" style="margin:6px 0 4px">Is position mein aapki Tez list:</p><table class="tztb tzc"><thead><tr><th>#</th><th>Chaal</th><th>Points</th><th>Kyun</th></tr></thead><tbody>${li.map((x,i)=>{const m=String(x.x||'').match(/^(.*?)\s*([+−-]?\d+)\s*pts\s*(.*)$/),star=/★/.test(x.x||'');
+  const grp=m?m[1]:'',pts=m?m[2]:'';return`<tr class="${star?'eng':''}"><td>${i+1}</td><td><b>${esc(x.s)}</b>${star?' ★':''}<br><small class="muted">${esc(grp)}</small></td><td><b>${esc(pts)}</b></td><td><small>${tzWhy(x.y)||'kuch khaas nahi'}${star?`<br><b class="good">★ Engine ki chaal yahi hai</b>`:''}</small></td></tr>`}).join('')}</tbody></table>`}
 function drawExample(){
   document.body.classList.add('exmode');
   const L = EXS[EX.k] || [], ex = L[EX.i]; if (!ex) return;
