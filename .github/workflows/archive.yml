@@ -1,0 +1,49 @@
+name: fhk-data-archive
+# Keeps every self-play data set forever: copies each loop run's data (and the base data) into the public release "data-archive",
+# one asset per run, before the 30-day artifacts expire. Never deletes anything; runs that are already archived are skipped.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 */12 * * *"
+  push:
+    branches: [engine-lab]
+    paths: [tools/lab/archive_kick.txt]
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: fhk-data-archive
+  cancel-in-progress: false
+jobs:
+  archive:
+    if: github.repository == 'khanfarazhusain/minds-eye-chess'
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      GH_TOKEN: ${{ github.token }}
+      R: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+      - name: archive runs
+        run: |
+          W=/mnt/arch; sudo mkdir -p $W; sudo chown $(id -u) $W
+          gh release view data-archive -R $R >/dev/null 2>&1 || gh release create data-archive -R $R --target engine-lab --title "FHK self-play data archive" --notes "Every FHK self-play data set, one file per run (gzip text: fen | target). Never deleted."
+          have=$(gh release view data-archive -R $R --json assets -q '.assets[].name')
+          B=$(jq -r .base_run tools/lab/loop.json)
+          runs="$B $(gh api "repos/$R/actions/workflows/loop.yml/runs?per_page=100&status=completed" -q '.workflow_runs[].id')"
+          for id in $runs; do
+            if echo "$have" | grep -q "^run_${id}"; then echo "skip $id"; continue; fi
+            names=$(gh api "repos/$R/actions/runs/$id/artifacts?per_page=100" -q '.artifacts[] | select(.expired==false) | select(.name|test("^(sp-[0-9]+|base-data)$")) | .name')
+            [ -z "$names" ] && { echo "no data $id"; continue; }
+            rm -rf $W/d $W/o; mkdir -p $W/d $W/o
+            for n in $names; do gh run download $id -R $R -n $n -D $W/d/$n || true; done
+            find $W/d -name '*.gz' | sort | xargs -r cat > $W/o/all.gz
+            sz=$(stat -c %s $W/o/all.gz); [ "$sz" -lt 1000 ] && { echo "empty $id"; continue; }
+            lines=$(zcat $W/o/all.gz | wc -l)
+            if [ "$sz" -gt 1900000000 ]; then (cd $W/o && split -b 1900m -d all.gz run_${id}_part_ && rm all.gz); else mv $W/o/all.gz $W/o/run_${id}.gz; fi
+            gh release upload data-archive -R $R $W/o/run_${id}* --clobber
+            echo "$(date -u +%FT%TZ) run $id lines $lines bytes $sz" | tee -a $GITHUB_STEP_SUMMARY
+          done
+          gh release view data-archive -R $R --json assets -q '.assets[] | "\(.name) \(.size)"' | tee -a $GITHUB_STEP_SUMMARY
