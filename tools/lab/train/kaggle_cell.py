@@ -10,7 +10,7 @@
 #   FHK_HOURS  stop and save after this many hours (default 11; Kaggle kills a run at 12)   FHK_LR  learning rate (default 1e-3, 5e-4 with init)
 import os, sys, subprocess, json, urllib.request, urllib.error, time, shutil
 T0 = time.time()
-R = 'khanfarazhusain/minds-eye-chess'; RAW = f'https://raw.githubusercontent.com/{R}/engine-lab/tools/lab/'
+R = 'khanfarazhusain/minds-eye-chess'; RAW = os.environ.get('FHK_RAW', f'https://raw.githubusercontent.com/{R}/engine-lab/tools/lab/')
 W = '/kaggle/working' if os.path.isdir('/kaggle/working') else os.path.abspath('out'); D = '/tmp/fhk'
 os.makedirs(W, exist_ok=True); os.makedirs(D, exist_ok=True); os.chdir(D)
 LOG = open(os.path.join(W, 'train_log.txt'), 'a')
@@ -38,7 +38,7 @@ train, total = [], 0
 for a in sorted(assets[1:], key=lambda a: a['name'], reverse=True):
     if total + a['size'] <= budget: train.append(a); total += a['size']
 say('train files', len(train), 'of', len(assets) - 1, 'GB', round(total / 1e9, 2), '(about', round(total / 1e9 * 8), 'crore positions), valid from', valid_src['name'])
-sh(f"curl -fsSL --retry 4 {valid_src['browser_download_url']} | zcat | head -n 1000000 | gzip -1 > valid.gz || true")
+sh(f"curl -sSL --retry 4 {valid_src['browser_download_url']} 2>/dev/null | zcat 2>/dev/null | head -n 1000000 | gzip -1 > valid.gz || true")
 for a in train:
     if not (os.path.exists(a['name']) and os.path.getsize(a['name']) == a['size']): sh(f"curl -fsSL --retry 4 -o {a['name']} {a['browser_download_url']}")
 t = time.time()
