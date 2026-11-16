@@ -1,0 +1,90 @@
+name: match-rate
+on:
+  push:
+    branches: [engine-lab]
+    paths: [tools/mr/run.txt]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        f: [lab0, lab1, nlab0, nlab1, nlab2, nlab3, n2lab0, n2lab1, n2lab2, n2lab3, n3lab0, n3lab1, n3lab2, n3lab3, hlab0, hlab1, hlab2, hlab3, pos]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: relabel with v147 engine
+        run: |
+          cd tools/mr
+          if [ "${{ matrix.f }}" = pos ]; then node relabelpos.js | tail -2; else node relabel.js ${{ matrix.f }} 8 | tail -2; fi
+          mkdir -p o && mv *.json o/ 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab-${{ matrix.f }}
+          path: tools/mr/o/
+          retention-days: 7
+  research:
+    needs: label
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        w: [old, new40, new80, held]
+        p: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lab-*
+          path: tools/mr
+          merge-multiple: true
+      - name: rules/calc research on new labels
+        run: |
+          cd tools/mr; gunzip -c in/feat.json.gz > feat.json; ls *.json | wc -l
+          node allm.js ${{ matrix.p }} 4 ${{ matrix.w }} | tail -1
+          node hb.js ${{ matrix.p }} 4 ${{ matrix.w }} | tail -1
+          mkdir -p r && mv allm_*.json hb_*.json r/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: res-${{ matrix.w }}-${{ matrix.p }}
+          path: tools/mr/r/
+          retention-days: 7
+  sum:
+    needs: research
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: res-*
+          path: tools/mr
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: lab-pos
+          path: tools/mr
+      - name: sum and save
+        run: |
+          cd tools/mr; node allma.js > /dev/null; node pooled.js | tee -a $GITHUB_STEP_SUMMARY
+          mkdir -p out && cp allmres_pooled.json positions_v147.json out/
+          git config user.name fhk-loop; git config user.email fhk-loop@users.noreply.github.com
+          git add out; git commit -m "match-rate: v147 results"; for i in 1 2 3 4 5; do git pull -q --rebase origin engine-lab && git push -q origin HEAD:engine-lab && break; sleep 5; done
