@@ -80,6 +80,11 @@ select{font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);b
 .rulecard{background:var(--surface2);border-radius:8px;padding:8px 10px;margin:6px 0}
 .rulecard ol{margin:4px 0;padding-left:20px}
 ol.cl{padding-left:22px} ol.cl li{margin:5px 0}
+body.exmode #trainTop{position:sticky;top:0;z-index:3;background:var(--bg);padding:4px 0 6px}body.exmode #trainBoard{max-width:min(100%,36svh);margin:0 auto;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr))}
+.tzst{margin:0 0 8px;padding-left:20px}.tzst li{margin:4px 0;line-height:1.4}.tzd{margin:8px 0}.tzd summary{cursor:pointer;padding:2px 0}.tzw{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.tztb{width:100%;border-collapse:collapse;font-size:14px;line-height:1.3}.tztb th,.tztb td{text-align:left;vertical-align:top;padding:5px 6px;border-bottom:1px solid var(--line)}.tztb th{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);font-weight:700}
+.tztb.pl td:nth-child(2){color:var(--good);font-weight:700}.tztb.mi td:nth-child(2){color:var(--bad);font-weight:700}.tztb.pl td:first-child,.tztb.mi td:first-child{width:58%}.tztb.pl th:first-child{color:var(--good)}.tztb.mi th:first-child{color:var(--bad)}.tztb small{font-weight:400}
+.tztb.tzc td:first-child{width:18px;color:var(--muted)}.tztb.tzc tr.eng td{background:var(--good-soft)}.tztb.tzc td:nth-child(3){white-space:nowrap;font-family:ui-monospace,Menlo,monospace}.tztb.tzc td:nth-child(2) b{font-family:ui-monospace,Menlo,monospace}
 table.mt{width:100%;border-collapse:collapse} table.mt td,table.mt th{text-align:left;padding:5px 4px;border-bottom:1px solid var(--line);vertical-align:top}
 .hidden{display:none}
 </style>
@@ -114,8 +119,8 @@ table.mt{width:100%;border-collapse:collapse} table.mt td,table.mt th{text-align
       <button class="btn small" id="hideMethod">Chhupao</button></div>
   </div>
   <div class="steps" id="stepBar"><span></span><span></span><span></span><span></span><span></span></div>
-  <div class="status" id="trainStatus"></div>
-  <div class="board" id="trainBoard"></div>
+  <div id="trainTop"><div class="status" id="trainStatus"></div>
+  <div class="board" id="trainBoard"></div></div>
   <div id="trainPanel"></div>
 </section>
 
@@ -549,7 +554,7 @@ function renderModes(){
     renderModes(); document.getElementById('modeCard').open = false; applyModeLayout(); nextPosition();
   });
 }
-function applyModeLayout(){
+function applyModeLayout(){ document.body.classList.remove('exmode');
   try { exCalcVis(); } catch (e) {}
   const classic = MODE === 'classic';
   document.getElementById('stepBar').classList.toggle('hidden', !classic);
@@ -740,7 +745,25 @@ async function openExamples(kind){
   catch (e) { panel.innerHTML = `<div class="card bad">Examples load nahi hue: ${esc(e.message)}</div>`; return; }
   drawExample(); window.scrollTo(0, 0);
 }
+/* Tez tarika step: rules paragraph -> 2 steps + PLUS/MINUS points tables; candidates -> table */
+function tzItem(t){t=t.trim().replace(/\.$/,'');const m=/[+−-]\d+/.exec(t);if(!m)return{n:t,p:''};const po=t.indexOf('(');
+  if(po>=0&&po<m.index&&t.indexOf(')',po)>m.index){const pc=t.lastIndexOf(')');return{n:t.slice(0,po).trim(),p:esc(t.slice(po+1,pc).trim())}}
+  let n=t.slice(0,m.index).trim(),p=t.slice(m.index).trim();const q=p.match(/^([^()]*?)\s*\((.*)\)$/);
+  return{n,p:q?esc(q[1])+'<br><small class="muted">'+esc(q[2])+'</small>':esc(p)}}
+function tzTbl(lab,txt,cls){const rows=txt.split('|').map(tzItem).filter(r=>r.n);
+  return`<table class="tztb ${cls}"><thead><tr><th>${lab}</th><th>Points</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.n)}</td><td>${r.p}</td></tr>`).join('')}</tbody></table>`}
+function tezHTML(st){const t=st.l.filter(Boolean).join(' ');const ip=t.indexOf('PLUS:'),im=t.indexOf('MINUS:');
+  if(ip<0||im<0)return st.l.filter(Boolean).map(x=>`<p>${esc(x)}</p>`).join('');
+  const intro=t.slice(0,ip),minus=t.slice(im+6),em=minus.search(/\.\s+[A-Z]/),mt=em>=0?minus.slice(0,em):minus,tail=em>=0?minus.slice(em+1).trim():'';
+  const s1=intro.match(/Step 1,\s*(.*?)(?=Step 2,)/),s2=intro.match(/Step 2,\s*(.*)$/),pre=intro.split(/Step 1,/)[0].trim();let h='';
+  if(pre)h+=`<p class="small muted">${esc(pre)}</p>`;
+  h+=s1&&s2?`<ol class="tzst"><li>${esc(s1[1].trim())}</li><li>${esc(s2[1].trim())}</li></ol>`:`<p>${esc(intro)}</p>`;
+  h+=`<details class="tzd" open><summary><b>📋 Points card</b> <span class="small muted">(chhupane ke liye tap)</span></summary><div class="tzw">${tzTbl('➕ PLUS',t.slice(ip+5,im),'pl')}${tzTbl('➖ MINUS',mt,'mi')}</div></details>`;
+  if(tail)h+=`<p class="small">${esc(tail)}</p>`;return h}
+function tezLi(li){return`<table class="tztb tzc"><thead><tr><th>#</th><th>Chaal</th><th>Pts</th><th>Kyun</th></tr></thead><tbody>${li.map((x,i)=>{const m=String(x.x||'').match(/^(.*?)\s*([+−-]?\d+)\s*pts\s*(.*)$/),star=/★/.test(x.x||'');
+  const grp=m?m[1]:'',pts=m?m[2]:'',rest=m?m[3].replace('★','').trim():(x.x||'');return`<tr class="${star?'eng':''}"><td>${i+1}</td><td><b>${esc(x.s)}</b>${star?' ★':''}<br><small class="muted">${esc(grp)}</small></td><td><b>${esc(pts)}</b></td><td><small>${esc(x.y||'')}${rest&&!star?' '+esc(rest):''}${star?`<br><b class="good">${esc(rest||'engine ki chaal')}</b>`:''}</small></td></tr>`}).join('')}</tbody></table>`}
 function drawExample(){
+  document.body.classList.add('exmode');
   const L = EXS[EX.k] || [], ex = L[EX.i]; if (!ex) return;
   const st = ex.steps[EX.s], last = EX.s === ex.steps.length - 1, pos = new E.Position(ex.fen);
   tBoard.flip = pos.side === E.BLACK;
@@ -750,8 +773,9 @@ function drawExample(){
   const h = [];
   h.push(`<div class="card"><div class="row">${L.map((e, i) => `<button class="chip${i === EX.i ? ' on' : ''}" data-ex="${i}">${i + 1}</button>`).join('')}<span class="small muted">Level: ${esc(ex.lvl)} · engine se verified</span></div>`);
   h.push(`<div class="steps">${ex.steps.map((x, i) => `<span class="${i < EX.s ? 'done' : i === EX.s ? 'cur' : ''}"></span>`).join('')}</div>`);
-  h.push(`<p class="small muted" style="margin:0">Step ${EX.s + 1} / ${ex.steps.length}</p><h2>${esc(st.t)}</h2>${st.l.filter(Boolean).map(x => `<p>${esc(x)}</p>`).join('')}`);
-  if (st.li && st.li.length) h.push(`<ol class="small cl">${st.li.map(x => `<li><b>${esc(x.s)}</b> ${esc(x.x)}${x.y ? `<br><span class="line muted">${esc(x.y)}</span>` : ''}</li>`).join('')}</ol>`);
+  h.push(`<p class="small muted" style="margin:0">Step ${EX.s + 1} / ${ex.steps.length}</p><h2>${esc(st.t)}</h2>${st.tez ? tezHTML(st) : st.l.filter(Boolean).map(x => `<p>${esc(x)}</p>`).join('')}`);
+  if (st.tez && st.li && st.li.length) h.push(tezLi(st.li));
+  else if (st.li && st.li.length) h.push(`<ol class="small cl">${st.li.map(x => `<li><b>${esc(x.s)}</b> ${esc(x.x)}${x.y ? `<br><span class="line muted">${esc(x.y)}</span>` : ''}</li>`).join('')}</ol>`);
   if (st.z) h.push(`<p><b>${esc(st.z)}</b></p>`);
   if (st.y) h.push(`<p class="line">${esc(st.y)}</p>`);
   if (st.ok) h.push(`<p class="good"><b>✓ Engine ki chaal se match: ${esc(st.best)}</b></p>`);
