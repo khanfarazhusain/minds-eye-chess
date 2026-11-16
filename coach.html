@@ -81,7 +81,7 @@ select{font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);b
 .rulecard ol{margin:4px 0;padding-left:20px}
 ol.cl{padding-left:22px} ol.cl li{margin:5px 0}
 body.exmode #trainTop{position:sticky;top:0;z-index:3;background:var(--bg);padding:4px 0 6px}body.exmode #trainBoard{max-width:min(100%,36svh);margin:0 auto;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr))}
-.tzst{margin:0 0 8px;padding-left:20px}.tzst li{margin:4px 0;line-height:1.4}.tzd{margin:8px 0}.tzd summary{cursor:pointer;padding:2px 0}.tzw{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.tzst{margin:0 0 8px;padding-left:20px}.tzsub{margin:2px 0 0;padding-left:18px}.tzsub li{margin:3px 0}.tzst li{margin:4px 0;line-height:1.4}.tzd{margin:8px 0}.tzd summary{cursor:pointer;padding:2px 0}.tzw{display:flex;flex-direction:column;gap:8px;margin-top:6px}
 .tztb{width:100%;border-collapse:collapse;font-size:14px;line-height:1.3}.tztb th,.tztb td{text-align:left;vertical-align:top;padding:5px 6px;border-bottom:1px solid var(--line)}.tztb th{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);font-weight:700}
 .tztb.pl td:nth-child(2){color:var(--good);font-weight:700}.tztb.mi td:nth-child(2){color:var(--bad);font-weight:700}.tztb.pl td:first-child,.tztb.mi td:first-child{width:58%}.tztb.pl th:first-child{color:var(--good)}.tztb.mi th:first-child{color:var(--bad)}.tztb small{font-weight:400}
 .tztb.tzc td:first-child{width:18px;color:var(--muted)}.tztb.tzc tr.eng td{background:var(--good-soft)}.tztb.tzc td:nth-child(3){white-space:nowrap;font-family:ui-monospace,Menlo,monospace}.tztb.tzc td:nth-child(2) b{font-family:ui-monospace,Menlo,monospace}
@@ -757,7 +757,9 @@ function tezHTML(st){const t=st.l.filter(Boolean).join(' ');const ip=t.indexOf('
   const intro=t.slice(0,ip),minus=t.slice(im+6),em=minus.search(/\.\s+[A-Z]/),mt=em>=0?minus.slice(0,em):minus,tail=em>=0?minus.slice(em+1).trim():'';
   const s1=intro.match(/Step 1,\s*(.*?)(?=Step 2,)/),s2=intro.match(/Step 2,\s*(.*)$/),pre=intro.split(/Step 1,/)[0].trim();let h='';
   if(pre)h+=`<p class="small muted">${esc(pre)}</p>`;
-  h+=s1&&s2?`<ol class="tzst"><li>${esc(s1[1].trim())}</li><li>${esc(s2[1].trim())}</li></ol>`:`<p>${esc(intro)}</p>`;
+  const tzSub=x=>{x=x.trim();const c=x.indexOf(':'),hd=c>0&&c<40?x.slice(0,c):'',body=hd?x.slice(c+1):x;const pts=body.split(/;|\.\s+|,\s*(?=aur |unke )/).map(y=>y.trim().replace(/\.$/,'').replace(/^aur /,'')).filter(Boolean);
+    return`${hd?`<b>${esc(hd)}</b>`:''}<ul class="tzsub">${pts.map(y=>`<li>${esc(y.charAt(0).toUpperCase()+y.slice(1))}</li>`).join('')}</ul>`};
+  h+=s1&&s2?`<ol class="tzst"><li>${tzSub(s1[1])}</li><li>${tzSub(s2[1])}</li></ol>`:`<p>${esc(intro)}</p>`;
   h+=`<details class="tzd" open><summary><b>📋 Points card</b> <span class="small muted">(chhupane ke liye tap)</span></summary><div class="tzw">${tzTbl('➕ PLUS',t.slice(ip+5,im),'pl')}${tzTbl('➖ MINUS',mt,'mi')}</div></details>`;
   if(tail)h+=`<p class="small">${esc(tail)}</p>`;return h}
 function tezLi(li){return`<table class="tztb tzc"><thead><tr><th>#</th><th>Chaal</th><th>Pts</th><th>Kyun</th></tr></thead><tbody>${li.map((x,i)=>{const m=String(x.x||'').match(/^(.*?)\s*([+−-]?\d+)\s*pts\s*(.*)$/),star=/★/.test(x.x||'');
