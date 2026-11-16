@@ -54,7 +54,7 @@ jobs:
         run: |
           B=sp-data-sh-$(echo "$RUNNER_NAME" | tr -c 'A-Za-z0-9\n-' '-')
           cd shout; zcat data.gz | gzip -4 | split -b 90m -d - part_; rm data.gz
-          echo "run ${{ github.run_id }} runner $RUNNER_NAME $(date -u +%FT%TZ)" > STAMP.txt
+          echo "run ${{ github.run_id }} runner $RUNNER_NAME $(date -u +%FT%TZ) net_iter $(grep -o '"iter":[0-9]*' ../tools/lab/loop_state.json | cut -d: -f2) net_sha $(sha256sum ../tools/lab/nets/current.bin | cut -c1-12)" > STAMP.txt
           rm -rf .git; git init -q -b "$B"; git config user.name fhk-selfhost; git config user.email fhk-selfhost@users.noreply.github.com
           git add -A; git commit -qm "self-play data $RUNNER_NAME ${{ github.run_id }}"
           git push -f -q "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" "$B"

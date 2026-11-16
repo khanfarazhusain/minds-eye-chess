@@ -61,7 +61,11 @@ static int loadNet(const char *path) {
   size_t N = (size_t)NNKB * 768 * NNH + NNH + NNOB * 2 * NNH + NNOB; float *f = malloc(N * 4); if (fread(f, 4, N, nf) != N) { fclose(nf); free(f); return 0; } fclose(nf); size_t o = 0;
   #define QZ(v, sc) ({ double _x = (v) * (sc); _x = _x > 32767 ? 32767 : _x < -32767 ? -32767 : _x; (i16)(_x < 0 ? -(int)(-_x + 0.5) : (int)(_x + 0.5)); })
   for (size_t i = 0; i < (size_t)NNKB * 768 * NNH; i++) NW1[i] = QZ(f[o++], 255); for (int i = 0; i < NNH; i++) NB1[i] = QZ(f[o++], 255); for (int i = 0; i < NNOB * 2 * NNH; i++) NW2[i] = QZ(f[o++], 1024);
-  for (int i = 0; i < NNOB; i++) { double b2 = f[o++] * 255 * 1024; NB2v[i] = (int)(b2 < 0 ? b2 - 0.5 : b2 + 0.5); } free(f); set_nn(1, 0); return 1; }
+  for (int i = 0; i < NNOB; i++) { double b2 = f[o++] * 255 * 1024; NB2v[i] = (int)(b2 < 0 ? b2 - 0.5 : b2 + 0.5); } free(f);
+#ifndef __wasm_simd128__
+  { extern i32 nnGen; nnGen++; }
+#endif
+  set_nn(1, 0); return 1; }
 #else
 static int loadNet(const char *path) {
   FILE *nf = fopen(path, "rb"); if (!nf) return 0; int Hn = 0; if (fread(&Hn, 4, 1, nf) != 1 || Hn != NNH) { fclose(nf); return 0; }
@@ -106,6 +110,7 @@ int main(int argc, char **argv) {
     else if (!strcmp(line, "ucinewgame")) tt_clear();
     else if (!strncmp(line, "position ", 9)) position(line + 9);
     else if (!strncmp(line, "go", 2)) goCmd(line + 2);
+    else if (!strcmp(line, "nneval")) printf("nneval %d\n", evalRaw());
     else if (!strcmp(line, "selftest")) printf("selftest bad %d\n", nn_selftest(20000, 12345));
     else if (!strcmp(line, "quit")) break;
   }

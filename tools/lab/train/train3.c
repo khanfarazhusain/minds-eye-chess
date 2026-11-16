@@ -15,10 +15,16 @@
 #endif
 typedef struct __attribute__((packed)) { unsigned char b[32]; unsigned char stm; float t; } Pos; // b: 4 bits per square, 0 empty, 1..12 piece
 typedef struct { unsigned char n, stm, ob; unsigned short f[32], g[32]; } Feat; // f: white-perspective index, g: black-perspective index
-static inline int kbk(int rk) { return rk == 0 ? 0 : rk == 1 ? 1 : rk <= 3 ? 2 : 3; }
+#if KB == 16
+static const unsigned char KBM16[32] = {0,1,2,3, 4,5,6,7, 8,8,9,9, 10,10,11,11, 12,12,13,13, 12,12,13,13, 14,14,15,15, 14,14,15,15};
+static inline int kbs(int s) { int f = ((s & 7) ^ ((s & 7) < 4 ? 7 : 0)) - 4; return KBM16[(s >> 3) * 4 + f]; } // s: own king square from own side (a1=0), file-mirrored to e..h
+#else
+static inline int kbs(int s) { int rk = s >> 3; return rk == 0 ? 0 : rk == 1 ? 1 : rk <= 3 ? 2 : 3; }
+#endif
+
 static void unpackM(const Pos *p, Feat *q, int m) { int n = 0, raw[32], wk = 0, bk = 0;
   for (int sq = 0; sq < 64; sq++) { int v = (p->b[sq >> 1] >> ((sq & 1) * 4)) & 15; if (!v || n >= 32) continue; int s2 = m ? sq ^ 7 : sq; raw[n++] = (v - 1) * 64 + s2; if (v == 6) wk = s2; if (v == 12) bk = s2; }
-  int wm = (wk & 7) < 4 ? 7 : 0, bkr = bk ^ 56, bm = (bkr & 7) < 4 ? 7 : 0; int wb = kbk(wk >> 3) * 768, bb = kbk(bkr >> 3) * 768;
+  int wm = (wk & 7) < 4 ? 7 : 0, bkr = bk ^ 56, bm = (bkr & 7) < 4 ? 7 : 0; int wb = kbs(wk) * 768, bb = kbs(bkr) * 768;
   for (int i = 0; i < n; i++) { int x = raw[i], ct = x >> 6, sq = x & 63, col = ct / 6, t = ct % 6;
     q->f[i] = wb + ct * 64 + (sq ^ wm); q->g[i] = bb + ((1 - col) * 6 + t) * 64 + ((sq ^ 56) ^ bm); }
   q->n = n; q->stm = p->stm; int o = (n - 2) / 4; q->ob = o < 0 ? 0 : o > 7 ? 7 : o; }

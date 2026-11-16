@@ -51,7 +51,7 @@ jobs:
       - name: push data branch
         run: |
           mkdir out; zcat hp/*.gz | gzip -4 | split -b 90m -d - out/part_
-          echo "run ${{ github.run_id }} $(date -u +%FT%TZ) lines $(zcat hp/*.gz | wc -l)" > out/STAMP.txt
+          echo "run ${{ github.run_id }} $(date -u +%FT%TZ) lines $(zcat hp/*.gz | wc -l) net_iter $(curl -fsSL https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/engine-lab/tools/lab/loop_state.json | jq -r .iter) net_sha $(curl -fsSL https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/engine-lab/tools/lab/nets/current.bin | sha256sum | cut -c1-12)" > out/STAMP.txt
           cd out; git init -q -b sp-data; git config user.name fhk-helper; git config user.email fhk-helper@users.noreply.github.com
           git add -A; git commit -qm "self-play data ${{ github.run_id }}"
           git push -f -q https://x-access-token:${{ github.token }}@github.com/${{ github.repository }} sp-data
