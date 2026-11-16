@@ -10,7 +10,7 @@ for f in ['trainpt2.py', 'fhkfeat.py', 'featpack.c']: urllib.request.urlretrieve
 sh('gcc -O2 -o featpack featpack.c -lm')
 rel = json.load(urllib.request.urlopen(f'https://api.github.com/repos/{R}/releases/tags/data-archive'))
 assets = sorted([a for a in rel['assets'] if a['name'].endswith('.gz')], key=lambda a: a['name'])
-budget = int(os.environ.get('FHK_GB', '9')) * 1_000_000_000  # ~9 GB of gz = roughly 25-30 crore positions (fits Kaggle disk)
+budget = int(float(os.environ.get('FHK_GB', '3.5')) * 1_000_000_000)  # ~3.5 GB of gz = roughly 25-30 crore positions
 valid_src, train = assets[0], []; total = 0
 for a in assets[1:][::-1]:
     if total + a['size'] > budget: continue
