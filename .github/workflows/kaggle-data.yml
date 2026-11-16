@@ -1,0 +1,38 @@
+name: fhk-kaggle-data
+# Publishes the current training data (same set the loop trains on) as public release assets, so a free Kaggle GPU notebook can download it without any token.
+on:
+  workflow_dispatch:
+  push:
+    branches: [engine-lab]
+    paths: [tools/lab/kaggle_kick.txt]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  pack:
+    if: github.repository == 'khanfarazhusain/minds-eye-chess'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+      - name: collect
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          B=$(jq -r .base_run tools/lab/loop.json); PR=$(jq -r '(.runs // [.last_run]) | map(tostring) | join(" ")' tools/lab/loop_state.json)
+          mkdir -p data/base data/prev out
+          gh run download $B -R ${{ github.repository }} -n base-data -D data/base || echo "no base"
+          for P in $PR; do [ "$P" = "0" ] && continue; mkdir -p data/prev/$P; for s in $(seq 0 19); do gh run download $P -R ${{ github.repository }} -n sp-$s -D data/prev/$P || true; done; done
+          for h in $(jq -r '.helpers[]?' tools/lab/loop.json); do git clone -q --depth 1 -b sp-data https://github.com/$h data/helper_$(echo $h | tr / _) || true; done
+          for b in $(git ls-remote --heads https://github.com/${{ github.repository }} 'sp-data-sh-*' | awk '{print $2}' | sed 's#refs/heads/##'); do git clone -q --depth 1 -b $b https://github.com/${{ github.repository }} data/helper_$b || true; done
+          ( ls data/base/*.gz data/prev/*/*.gz 2>/dev/null | xargs -r zcat; cat data/helper_*/part_* 2>/dev/null | zcat ) | gzip -4 | split -b 1900m -d - out/data_part_
+          rm -rf data; ls -la out; cp tools/lab/nets/current.bin out/current.bin
+          echo "made $(date -u +%FT%TZ) from loop runs $PR" > out/STAMP.txt
+      - name: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete train-data -R ${{ github.repository }} -y --cleanup-tag || true
+          gh release create train-data -R ${{ github.repository }} --target engine-lab --title "FHK training data" --notes "Data for the Kaggle GPU trainer (tools/lab/train/trainpt.py). $(cat out/STAMP.txt)" out/*

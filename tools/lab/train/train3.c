@@ -55,6 +55,11 @@ int main(int argc, char **argv) {
   fprintf(stderr, "positions %ld\n", ND);
   srand(12345); for (long i = ND - 1; i > 0; i--) { long j = (long)(frand() * i); Pos t = D[i]; D[i] = D[j]; D[j] = t; }
   long NV = ND / 50, NT = ND - NV; // last 2% validation
+  if (getenv("DUMP")) { // write features for the GPU trainer (trainpt.py): int64 ND, then per position 32 u16 f, 32 u16 g (pad NF), u8 stm, u8 ob, u8 n, u8 0, f32 t
+    FILE *fd = fopen(getenv("DUMP"), "wb"); long long nd = ND; fwrite(&nd, 8, 1, fd); Feat q; unsigned short pf[32], pg[32]; unsigned char hdr[4];
+    for (long k = 0; k < ND; k++) { unpackM(&D[k], &q, AUG && k < NT && ((unsigned long)k * 2654435761u >> 7 & 1)); for (int i = 0; i < 32; i++) { pf[i] = i < q.n ? q.f[i] : NF; pg[i] = i < q.n ? q.g[i] : NF; }
+      fwrite(pf, 2, 32, fd); fwrite(pg, 2, 32, fd); hdr[0] = q.stm; hdr[1] = q.ob; hdr[2] = q.n; hdr[3] = 0; fwrite(hdr, 1, 4, fd); fwrite(&D[k].t, 4, 1, fd); }
+    fclose(fd); fprintf(stderr, "dumped %ld (valid = last %ld)\n", ND, NV); return 0; }
   for (int i = 0; i < NF * H; i++) W1[i] = (frand() - 0.5) * 0.2; for (int j = 0; j < H; j++) B1[j] = 0.1 + (frand() - 0.5) * 0.05; for (int o = 0; o < OB; o++) { for (int j = 0; j < 2 * H; j++) W2[o][j] = (frand() - 0.5) * 0.1; B2[o] = 0; }
   // init: material-ish bias into W1 so training starts sane is unnecessary; Adam handles it
   if (getenv("INIT")) { FILE *fi = fopen(getenv("INIT"), "rb"); int hh = 0; if (fi && fread(&hh, 4, 1, fi) == 1 && hh == H) { // v1 net (768) -> replicate into every bucket (mirrored where needed) and every output bucket
