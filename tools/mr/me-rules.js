@@ -285,27 +285,22 @@ function humanCalc(pos, m, wantAll) { // pos: before my move, me to move
     if (wantAll) res.all = all; }
   pos.unmake(); return res; }
 // opts: { best (uci, optional), rules: 0|4|8, K, depth: 1..4 }
-// "Tez candidates": har chaal score kiye bina, kram se groups dekho aur K chaalein milte hi ruk jao.
-// Kram: 1 achhe captures (bada shikaar pehle), 2 checks, 3 khatre wala apna mohra bachao, 4 nayi dhamki, 5 baaki (4-rule points se).
-// Har round mein group 1 se 2 chaalein, baaki groups se 1-1 (taaki shaant chaalein bhi jaldi aayein).
-const FC_GROUPS = ['Achha capture', 'Check', 'Mohra bachao', 'Nayi dhamki', 'Shaant chaal'];
+// "Tez candidates" v2 (v152): 25,000 engine-labelled positions se seekha. Step 1: 1 Shikaar. Step 2: Points card se baaki chaalein.
+const FC_GROUPS = ['Shikaar', 'Check', 'Mohra bachao', 'Nayi dhamki', 'Points card'];
+const TEZ_CARD = [ // [feature, points, 'value' = multiply by feature value]
+  ['stopMate', 12], ['mateThreat', 10], ['castle', 9], ['fork', 8], ['trade', 7], ['check', 7], ['threat', 6], ['defendAttacked', 6], ['pawnAdv', 6, 1],
+  ['escapeAttack', 4], ['pawnThreat', 3], ['loseCastle', -5], ['allowFork', -5], ['samePieceTwice', -5], ['kCtr', -5, 1], ['allowChecks', -3, 1], ['allowMate', -100], ['mate', 1000]];
+function tezPts(f) { let s = Math.round((f.qGain || 0) / 100) * 10; const why = []; if (s) why.push([s > 0 ? 'qWin' : 'qLose', s]);
+  for (const [k, w, byVal] of TEZ_CARD) { const v = f[k] || 0; if (!v) continue; const add = byVal ? w * v : w; s += add; why.push([k, add]); }
+  const q = sqPts(f.pstDelta || 0); if (q) { s += q; why.push(['pstDelta', q]); } return { pts: s, why }; }
 function fastCands(pos, F, K) {
-  const L = pos.legalMoves(), us = pos.side, fm = new Map((F || features3(pos, 0)).map(x => [x.move, x.f])), V = [0, 100, 300, 300, 500, 900, 0];
-  const info = L.map(m => { const fr = E.mFrom(m), to = E.mTo(m), pc = pos.b[fr] & 7, cap = (E.mFlag(m) & E.F_CAP) ? (pos.b[to] & 7) || 1 : 0;
-    pos.make(m); const chk = pos.inCheck(); pos.unmake(); const f = fm.get(m) || {};
-    const la = E.leastAttacker(pos, fr, us ^ 8); const attacked = !!la && (!pos.attacked(fr, us) || V[pos.b[la] & 7] < V[pc]);
-    return { m, pc, cap, chk, attacked, see: cap ? E.see(pos, m) : 0, threat: (f.threat || 0) + (f.pawnAttackPiece || 0) + (f.pin || 0) + (f.skewer || 0),
-      dev: simplePts(f, 4).pts * 10 + (f.pstDelta || 0) / 10 }; });
-  const groups = [
-    info.filter(x => x.cap && x.see >= 0).sort((a, b) => V[b.cap] - V[a.cap] || V[a.pc] - V[b.pc]),
-    info.filter(x => x.chk).sort((a, b) => b.see - a.see),
-    info.filter(x => x.attacked && x.pc !== KING).sort((a, b) => V[b.pc] - V[a.pc] || b.dev - a.dev),
-    info.filter(x => x.threat > 0).sort((a, b) => b.threat - a.threat || b.dev - a.dev),
-    info.slice().sort((a, b) => b.dev - a.dev)];
-  const quota = [2, 1, 1, 1, 1], ix = [0, 0, 0, 0, 0], seen = new Set(), out = []; let added = true;
-  while (added && out.length < (K || L.length)) { added = false;
-    for (let g = 0; g < 5; g++) { let t = 0;
-      while (t < quota[g] && ix[g] < groups[g].length) { const x = groups[g][ix[g]++]; if (!seen.has(x.m)) { seen.add(x.m); out.push({ m: x.m, g }); t++; added = true; } } } }
+  const L = pos.legalMoves(), fm = new Map((F || features3(pos, 0)).map(x => [x.move, x.f])), V = [0, 100, 300, 300, 500, 900, 0];
+  const info = L.map(m => { const fr = E.mFrom(m), to = E.mTo(m), pc = pos.b[fr] & 7, cap = (E.mFlag(m) & E.F_CAP) ? (pos.b[to] & 7) || 1 : 0; const f = fm.get(m) || {};
+    const t = tezPts(f); return { m, pc, cap, see: cap ? E.see(pos, m) : 0, pts: t.pts, why: t.why, dev: t.pts * 10 + (f.pstDelta || 0) / 10 }; });
+  const shik = info.filter(x => x.cap && x.see >= 0).sort((a, b) => V[b.cap] - V[a.cap] || V[a.pc] - V[b.pc]);
+  const rest = info.slice().sort((a, b) => b.dev - a.dev); const out = [], seen = new Set();
+  const take = (x, g) => { if (!seen.has(x.m)) { seen.add(x.m); out.push({ m: x.m, g, pts: x.pts, why: x.why }); } };
+  if (shik.length) take(shik[0], 0); for (const x of rest) take(x, 4); for (const x of shik) take(x, 0);
   return K ? out.slice(0, K) : out; }
 function modeData(pos, S, opts) {
   const F = features3(pos, 0);
@@ -337,11 +332,11 @@ function modeData(pos, S, opts) {
     for (const mv of ranked.slice(0, opts.human)) hcalc.push({ uci: mv.uci, san: mv.san, rank: mv.rank, ...humanCalc(pos, mv.m) });
     hcalc.sort((a, b) => b.score - a.score || a.rank - b.rank);
   }
-  const fast = fastCands(pos, F, 12).map(x => { const mv = moves.find(y => y.m === x.m); return { uci: mv.uci, san: mv.san, g: x.g, good: mv.good }; });
+  const fast = fastCands(pos, F, 12).map(x => { const mv = moves.find(y => y.m === x.m); return { uci: mv.uci, san: mv.san, g: x.g, good: mv.good, pts: x.pts, why: x.why }; });
   const strip = mv => ({ uci: mv.uci, san: mv.san, p4: mv.p4, w4: mv.w4, p8: mv.p8, w8: mv.w8, p6: mv.p6, w6: mv.w6, q: mv.q, lab: mv.lab, good: mv.good, rank: mv.rank, sq: mv.sq });
   return { best, bestSan: moves.find(m => m.uci === best).san, moves: ranked.map(strip), calc, hcalc, fast, n: moves.length };
 }
-const api = { fastCands, FC_GROUPS, features2, features3, Q, CARDS, modeData, simplePts, sqPts, sqLevel, sqMove, humanCalc };
+const api = { fastCands, FC_GROUPS, TEZ_CARD, tezPts, features2, features3, Q, CARDS, modeData, simplePts, sqPts, sqLevel, sqMove, humanCalc };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 root.MERules = api;
 })(typeof self !== 'undefined' ? self : this);
