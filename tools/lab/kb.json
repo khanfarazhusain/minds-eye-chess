@@ -1,0 +1,1 @@
+{"kb": 4, "init": "tools/lab/nets/current.bin", "lr": 0.0005, "epochs": 4, "wasm": "kb4.wasm", "note": "king-bucket net try 1"}

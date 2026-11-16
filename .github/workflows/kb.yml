@@ -1,0 +1,86 @@
+name: fhk-kbnet
+on:
+  push:
+    branches: [engine-lab]
+    paths: [tools/lab/kb.json]
+  workflow_dispatch:
+concurrency:
+  group: fhk-kbnet
+  cancel-in-progress: false
+permissions:
+  contents: read
+  actions: read
+jobs:
+  train:
+    if: github.repository == 'khanfarazhusain/minds-eye-chess'
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+      - name: older data
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          B=$(jq -r .base_run tools/lab/loop.json); PR=$(jq -r '(.runs // [.last_run]) | map(tostring) | join(" ")' tools/lab/loop_state.json)
+          mkdir -p data/base data/prev
+          gh run download $B -R ${{ github.repository }} -n base-data -D data/base || echo "no base"
+          for P in $PR; do [ "$P" = "0" ] && continue; mkdir -p data/prev/$P; for s in $(seq 0 19); do gh run download $P -R ${{ github.repository }} -n sp-$s -D data/prev/$P || true; done; done
+          for h in $(jq -r '.helpers[]?' tools/lab/loop.json); do git clone -q --depth 1 -b sp-data https://github.com/$h data/helper_$(echo $h | tr / _) || true; done
+          ls -la data/*
+      - name: train
+        run: |
+          C=tools/lab/loop.json
+          K=tools/lab/kb.json
+          gcc -O3 -march=native -fopenmp -DH=512 -DKB=$(jq -r .kb $K) -o train3 tools/lab/train/train3.c -lm
+          touch all_new.txt; ls data/prev/*/*.gz >/dev/null 2>&1 && zcat data/prev/*/*.gz > all_prev.txt || touch all_prev.txt
+          ls data/base/*.gz >/dev/null 2>&1 && zcat data/base/*.gz > all_base.txt || touch all_base.txt
+          cat data/helper_*/part_* 2>/dev/null | zcat > all_help.txt || touch all_help.txt
+          rm -rf data; wc -l all_*.txt; df -h .
+          AUG=$(jq -r ".aug // 0" $C) CAPN=$(( $(cat all_*.txt | wc -l) + 1000 )) INIT=$(jq -r .init $K) LR0=$(jq -r .lr $K) ./train3 new.bin $(jq -r .epochs $K) $(jq -r .lambda $C) all_new.txt all_prev.txt all_base.txt all_help.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kb-net
+          path: new.bin
+          retention-days: 30
+  gate:
+    needs: train
+    if: always() && needs.train.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/download-artifact@v4
+        with:
+          name: kb-net
+          path: tools/lab
+      - name: match
+        run: |
+          cd tools/lab; C=loop.json
+          for p in 0 1 2 3; do node wsp.js $(jq -r .wasm kb.json):new.bin c1.wasm:nets/current.bin $(jq -r .gate_pairs $C) $(jq -r .gate_ms $C) $(( ${{ matrix.shard }}*4 + p )) 40 g_${{ matrix.shard }}_$p.json > /dev/null 2>&1 & done; wait
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gate-${{ matrix.shard }}
+          path: tools/lab/g_*.json
+          retention-days: 7
+  sum:
+    needs: gate
+    if: always() && needs.gate.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: gate-*
+          path: g
+          merge-multiple: true
+      - run: node -e "const fs=require('fs');let a=[];for(const f of fs.readdirSync('g'))a.push(...JSON.parse(fs.readFileSync('g/'+f)));const s=a.reduce((x,y)=>x+y,0)/a.length;console.log('RESULT kbnet vs c1 games',a.length,'score',(100*s).toFixed(1),'elo',Math.round(-400*Math.log10(1/s-1)))" | tee -a $GITHUB_STEP_SUMMARY
