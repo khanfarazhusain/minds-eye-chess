@@ -34,6 +34,7 @@ header h1{font-size:20px;margin:0;flex:1}
 .tabs button{flex:1;border:0;background:transparent;padding:9px 4px;border-radius:9px;font-weight:600;font-size:14px;color:var(--muted)}
 .tabs button.on{background:var(--surface);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:10px 0}
+.tez summary{cursor:pointer;padding:4px 0} .tez-steps{margin:6px 0 8px;padding-left:20px} .tez-steps li{margin:4px 0;line-height:1.45} .tez-card{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:6px 0} .tez-card>div{display:flex;gap:10px;padding:5px 10px;border-top:1px solid var(--line);line-height:1.35} .tez-card>div:first-child{border-top:0} .tez-card span{flex:0 0 88px;font-weight:700;font-family:ui-monospace,Menlo,monospace} .tez-h{font-weight:700;letter-spacing:.05em} .tez-h.good{background:var(--good-soft)} .tez-h.bad{background:var(--bad-soft)}
 .muted{color:var(--muted)} .small{font-size:13px}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .btn{border:1px solid var(--line);background:var(--surface);padding:10px 14px;border-radius:10px;font-weight:600}
@@ -578,7 +579,35 @@ async function modeStart(p, pos){
 const FC_G = ['Shikaar', 'Check', 'Mohra bachao', 'Nayi dhamki', 'Points card'];
 const TEZ_N = { qWin: 'material jeet', qLose: 'material haar', stopMate: 'mate rokna', mateThreat: 'mate ki dhamki', castle: 'castling', fork: 'fork', trade: 'barabar trade', check: 'check', threat: 'dhamki', defendAttacked: 'rakshak diya', pawnAdv: 'pawn aage', escapeAttack: 'hamle se hata', pawnThreat: 'pawn par dhamki', loseCastle: 'castling haq gaya', allowFork: 'fork diya', samePieceTwice: 'mohra do baar', kCtr: 'raja center', allowChecks: 'naye check diye', allowMate: 'mate in 1 diya', mate: 'MATE', pstDelta: 'square' };
 const tezWhy = m => m.why && m.why.length ? ` ${m.pts > 0 ? '+' : ''}${m.pts}: ` + m.why.map(([k, v]) => `${TEZ_N[k] || k} ${v > 0 ? '+' : ''}${v}`).join(', ') : '';
-const FC_TXT = `<details class="small" open><summary><b>⚡ Tez tarika (v152):</b> 1 Shikaar + Points card</summary><p>Naya tarika, 25,000 positions ke data se bana. Har chaal ki poori ginti nahi karni. Step 1, Shikaar (1 chaal): wo capture jisme mohra muft ya barabar mile; sabse bada shikaar, barabar ho to chhote mohre se maaro. Shikaar nahi hai to seedha Step 2. Step 2, Points card: baaki chaalon mein sirf wo dekho jinme neeche ka koi plus ho, unke points jodo, aur sabse zyada points wali chaalein lo jab tak kul __K__ na ho jaayein. PLUS: material jeet har pawn +10 (ghoda/oont 30, haathi 50, wazir 90) | mate rokna +12 | mate ki dhamki +10 | castling +9 | fork +8 | barabar trade +7 | check +7 | dhamki (bada ya bina rakshak mohra) +6 | hamle wale apne mohre ko rakshak dena +6 | pawn aage (5th rank +1, 6th +2, 7th +3, har level x6) | mohra hamle se hatana +4 | bina rakshak pawn par dhamki +3 | behtar square +1 se +3. MINUS: opponent ko mate in 1 −100 | material haar har pawn −10 | opponent ko fork dena −5 | castling ka haq khona −5 | opening mein ek hi mohra do baar −5 | raja center ki taraf −5 | opponent ko har naya safe check −3. Pehli 3 chaalein aapke top 3 hain.</p></details>`;
+const FC_TXT = `<details class="small tez" open><summary><b>⚡ Tez tarika:</b> 1 Shikaar + Points card</summary>
+<p class="muted">25,000 positions ke data se bana. Har chaal ki poori ginti nahi karni, bas ye 2 step.</p>
+<ol class="tez-steps">
+<li><b>Shikaar (1 chaal):</b> wo capture dhundho jisme mohra muft ya barabar mile. Sabse bada shikaar lo; barabar ho to chhote mohre se maaro. Shikaar nahi hai to seedha Step 2.</li>
+<li><b>Points card:</b> baaki chaalon mein neeche ke plus/minus jodo. Sabse zyada points wali chaalein lo, jab tak kul <b>__K__</b> chaalein na ho jaayein.</li>
+</ol>
+<div class="tez-card"><div class="tez-h good">PLUS</div>
+<div><span>+10/pawn</span>Material jeet (ghoda/oont 30, haathi 50, wazir 90)</div>
+<div><span>+12</span>Mate rokna</div>
+<div><span>+10</span>Mate ki dhamki</div>
+<div><span>+9</span>Castling</div>
+<div><span>+8</span>Fork</div>
+<div><span>+7</span>Barabar trade</div>
+<div><span>+7</span>Check</div>
+<div><span>+6</span>Dhamki (bada ya bina rakshak mohra)</div>
+<div><span>+6</span>Hamle wale apne mohre ko rakshak dena</div>
+<div><span>+6/12/18</span>Pawn aage (5th / 6th / 7th rank)</div>
+<div><span>+4</span>Mohra hamle se hatana</div>
+<div><span>+3</span>Bina rakshak pawn par dhamki</div>
+<div><span>+1 se +3</span>Behtar square</div>
+<div class="tez-h bad">MINUS</div>
+<div><span>−100</span>Opponent ko mate in 1 dena</div>
+<div><span>−10/pawn</span>Material haar</div>
+<div><span>−5</span>Opponent ko fork dena</div>
+<div><span>−5</span>Castling ka haq khona</div>
+<div><span>−5</span>Opening mein ek hi mohra do baar</div>
+<div><span>−5</span>Raja center ki taraf</div>
+<div><span>−3/check</span>Opponent ko naya safe check dena</div></div>
+<p>Pehli 3 chaalein aapke top 3 hain.</p></details>`;
 function fcHTML(d, K){ const a = (d.fast || []).slice(0, K); if (!a.length) return '';
   const has = a.some(m => m.good);
   return `<h3>⚡ Tez candidates (top ${K})</h3><ol class="small cl">${a.map(m => `<li><b>${esc(m.san)}</b> <span class="muted">${esc(FC_G[m.g] + tezWhy(m))}</span>${m.good ? ' ★' : ''}</li>`).join('')}</ol><p class="small ${has ? 'good' : 'bad'}">${has ? '✓ Tez tarike se bhi engine jaisi chaal mil gayi.' : '✗ Is baar tez tarike ki list mein engine jaisi chaal nahi aayi.'}</p>`; }
