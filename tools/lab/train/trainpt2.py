@@ -39,7 +39,7 @@ with torch.no_grad(): W1[NF].zero_()
 opt = torch.optim.Adam(P, lr=a.lr)
 def fwd(b32, stm, mirror=None):
     F, G, n, ob = feats(torch, b32, KB, mirror)
-    ew = torch.nn.functional.embedding(F, W1).sum(1) + B1; eb = torch.nn.functional.embedding(G, W1).sum(1) + B1
+    ew = torch.nn.functional.embedding_bag(F, W1, mode='sum') + B1; eb = torch.nn.functional.embedding_bag(G, W1, mode='sum') + B1  # bag: no (N,64,H) tensor, fits 1536 on a 16GB GPU
     s = stm.unsqueeze(1); u = torch.where(s, eb, ew).clamp(0, 1); t = torch.where(s, ew, eb).clamp(0, 1)
     w2 = W2[ob]; return (u * w2[:, :H]).sum(1) + (t * w2[:, H:]).sum(1) + B2[ob]
 def to_dev(c): return torch.from_numpy(np.ascontiguousarray(c['b'])).to(dev), torch.from_numpy(c['stm'].astype(bool)).to(dev), torch.from_numpy(c['t'].copy()).to(dev)
