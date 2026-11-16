@@ -4,7 +4,7 @@ name: fhk-data-archive
 on:
   workflow_dispatch:
   schedule:
-    - cron: "15 */12 * * *"
+    - cron: "15 */3 * * *"
   push:
     branches: [engine-lab]
     paths: [tools/lab/archive_kick.txt]
