@@ -7,7 +7,9 @@ from fhkfeat import feats
 ap = argparse.ArgumentParser(); ap.add_argument('out'); ap.add_argument('files', nargs='+'); ap.add_argument('--valid', required=True)
 ap.add_argument('--epochs', type=int, default=3); ap.add_argument('--lr', type=float, default=1e-3); ap.add_argument('--kb', type=int, default=16)
 ap.add_argument('--h', type=int, default=1536); ap.add_argument('--init'); ap.add_argument('--bs', type=int, default=16384); ap.add_argument('--chunk', type=int, default=8_000_000)
-ap.add_argument('--lam', type=float, default=0.8); ap.add_argument('--aug', action='store_true'); ap.add_argument('--featpack', default='./featpack'); a = ap.parse_args()
+ap.add_argument('--lam', type=float, default=0.8); ap.add_argument('--aug', action='store_true'); ap.add_argument('--featpack', default='./featpack')
+ap.add_argument('--ckdir', help='copy the net here after every epoch as ep<N>.bin'); ap.add_argument('--max-hours', type=float, default=0, help='stop cleanly (save) after this many hours')
+a = ap.parse_args(); T_START = time.time()
 KB, H, OB = a.kb, a.h, 8; NF = KB * 768; CS = 0.98 * 2.302585; dev = 'cuda' if torch.cuda.is_available() else 'cpu'; print('device', dev, flush=True)
 REC = np.dtype([('b', 'u1', 32), ('stm', 'u1'), ('t', '<f4')])
 def stream(path):  # yields numpy chunks of packed positions
@@ -41,10 +43,11 @@ def fwd(b32, stm, mirror=None):
     s = stm.unsqueeze(1); u = torch.where(s, eb, ew).clamp(0, 1); t = torch.where(s, ew, eb).clamp(0, 1)
     w2 = W2[ob]; return (u * w2[:, :H]).sum(1) + (t * w2[:, H:]).sum(1) + B2[ob]
 def to_dev(c): return torch.from_numpy(np.ascontiguousarray(c['b'])).to(dev), torch.from_numpy(c['stm'].astype(bool)).to(dev), torch.from_numpy(c['t'].copy()).to(dev)
-def save():
+def save(path=None):
+    path = path or a.out
     with torch.no_grad():
         out = struct.pack('<ii', -H, KB) + b''.join(x.detach().cpu().numpy().astype('<f4').tobytes() for x in (W1[:NF], B1, W2, B2))
-    open(a.out + '.tmp', 'wb').write(out); os.replace(a.out + '.tmp', a.out)
+    open(path + '.tmp', 'wb').write(out); os.replace(path + '.tmp', path)
 VAL = np.concatenate(list(stream(a.valid)))[:1_000_000]; print('valid positions', len(VAL), flush=True)
 def valid():
     with torch.no_grad():
@@ -69,6 +72,10 @@ for ep in range(a.epochs):
                 opt.step()
                 with torch.no_grad(): W2.clamp_(-2, 2); W1[NF].zero_()
                 tl += loss.item() * len(tg); nn += len(tg)
-            seen += len(c); print(f'  ep {ep} {path} +{len(c)} total {seen} train {tl / max(nn, 1):.6f} {time.time() - t0:.0f}s', flush=True)
+            seen += len(c)
+            if a.max_hours and time.time() - T_START > a.max_hours * 3600:
+                save(); print(f'TIME LIMIT {a.max_hours}h reached in epoch {ep}: saved {a.out}, valid {valid():.6f}', flush=True); raise SystemExit(0)
+            print(f'  ep {ep} {os.path.basename(path)} +{len(c)} total {seen} train {tl / max(nn, 1):.6f} {time.time() - t0:.0f}s {seen / max(time.time() - T_START, 1) / 1000:.0f}k pos/s', flush=True)
         save()
     print(f'epoch {ep} train {tl / max(nn, 1):.6f} valid {valid():.6f} lr {opt.param_groups[0]["lr"]:g} {time.time() - t0:.0f}s', flush=True); save()
+    if a.ckdir: os.makedirs(a.ckdir, exist_ok=True); save(os.path.join(a.ckdir, f'ep{ep + 1}.bin')); print('checkpoint', os.path.join(a.ckdir, f'ep{ep + 1}.bin'), flush=True)

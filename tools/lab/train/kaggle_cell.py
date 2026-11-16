@@ -1,24 +1,72 @@
-# FHK big-net sanity training on a free Kaggle GPU. Paste ONE line into a Kaggle notebook cell:
+# FHK net training on a free Kaggle GPU. Paste ONE line into a Kaggle notebook cell:
 #   !curl -fsSL https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/engine-lab/tools/lab/train/kaggle_cell.py -o k.py && python k.py
-# Downloads public FHK self-play data (release "data-archive"), trains the 1536-neuron / 16-king-bucket net, writes /kaggle/working/fhk_kb16_1536.bin.
-# Needs: Accelerator = GPU, Internet = On. No tokens or logins.
-import os, subprocess, json, urllib.request, time
-R = 'khanfarazhusain/minds-eye-chess'; RAW = f'https://raw.githubusercontent.com/{R}/engine-lab/tools/lab/train/'
-W = '/kaggle/working'; D = '/tmp/fhk'; os.makedirs(D, exist_ok=True); os.chdir(D)
-def sh(c): print('$', c, flush=True); subprocess.run(c, shell=True, check=True)
-for f in ['trainpt2.py', 'fhkfeat.py', 'featpack.c']: urllib.request.urlretrieve(RAW + f, f)
+# Needs: Accelerator = GPU, Internet = On. No login needed to train.
+# What it does: downloads the public self-play archive (release "data-archive"), trains with the streaming trainer (trainpt2.py,
+# data never has to fit in RAM), saves the net + one checkpoint per epoch in /kaggle/working, and, if a Kaggle Secret named
+# GH_TOKEN is attached, uploads them to the GitHub release "kaggle-nets" so they reach the repo without any manual download.
+# Settings (optional, put them before "python k.py", e.g.  FHK_NET=kb16_1536 FHK_EPOCHS=1 python k.py):
+#   FHK_NET    kb4_512 (default; roadmap step "512+KB4+OB8", starts from the loop's current.bin) | kb8_768 | kb16_1536
+#   FHK_EPOCHS passes over the data (default 3)      FHK_GB    max GB of .gz data to download (default: all that fits)
+#   FHK_HOURS  stop and save after this many hours (default 11; Kaggle kills a run at 12)   FHK_LR  learning rate (default 1e-3, 5e-4 with init)
+import os, sys, subprocess, json, urllib.request, urllib.error, time, shutil
+T0 = time.time()
+R = 'khanfarazhusain/minds-eye-chess'; RAW = f'https://raw.githubusercontent.com/{R}/engine-lab/tools/lab/'
+W = '/kaggle/working' if os.path.isdir('/kaggle/working') else os.path.abspath('out'); D = '/tmp/fhk'
+os.makedirs(W, exist_ok=True); os.makedirs(D, exist_ok=True); os.chdir(D)
+LOG = open(os.path.join(W, 'train_log.txt'), 'a')
+def say(*x):
+    m = ' '.join(str(v) for v in x); print(m, flush=True); LOG.write(m + '\n'); LOG.flush()
+def sh(c): say('$', c); subprocess.run(c, shell=True, check=True)
+PRESETS = {'kb4_512': (4, 512, 'nets/current.bin'), 'kb8_768': (8, 768, None), 'kb16_1536': (16, 1536, None)}
+NET = os.environ.get('FHK_NET', 'kb4_512'); KB, H, INIT = PRESETS[NET]
+EPOCHS = int(os.environ.get('FHK_EPOCHS', '3')); HOURS = float(os.environ.get('FHK_HOURS', '11'))
+LR = os.environ.get('FHK_LR', '5e-4' if INIT else '1e-3')
+if KB == 8: sys.exit('kb8 is not in fhkfeat.py yet; use kb4_512 or kb16_1536')
+STAMP = time.strftime('%Y%m%d_%H%M', time.gmtime()); NAME = f'fhk_{NET}_{STAMP}'
+OUT = os.path.join(W, NAME + '.bin'); CK = os.path.join(W, 'checkpoints_' + NAME)
+say('== FHK Kaggle trainer', NAME, 'kb', KB, 'h', H, 'epochs', EPOCHS, 'lr', LR, 'max hours', HOURS)
+sh('nvidia-smi --query-gpu=name,memory.total --format=csv || echo "NO GPU! Settings > Accelerator > GPU"')
+for f in ['trainpt2.py', 'fhkfeat.py', 'featpack.c']: urllib.request.urlretrieve(RAW + 'train/' + f, f)
 sh('gcc -O2 -o featpack featpack.c -lm')
+if INIT: urllib.request.urlretrieve(RAW + INIT, 'init.bin'); say('init from', INIT)
 rel = json.load(urllib.request.urlopen(f'https://api.github.com/repos/{R}/releases/tags/data-archive'))
-assets = sorted([a for a in rel['assets'] if a['name'].endswith('.gz')], key=lambda a: a['name'])
-budget = int(float(os.environ.get('FHK_GB', '3.5')) * 1_000_000_000)  # ~3.5 GB of gz = roughly 25-30 crore positions
-valid_src, train = assets[0], []; total = 0
-for a in assets[1:][::-1]:
-    if total + a['size'] > budget: continue
-    train.append(a); total += a['size']
-print('train files', len(train), 'GB', round(total / 1e9, 2), 'valid from', valid_src['name'], flush=True)
-sh(f"curl -fsSL {valid_src['browser_download_url']} | zcat | head -n 1000000 | gzip -1 > valid.gz")
-for a in train: sh(f"curl -fsSL --retry 4 -o {a['name']} {a['browser_download_url']}")
-sh('nvidia-smi --query-gpu=name,memory.total --format=csv')
+assets = sorted([a for a in rel['assets'] if a['name'].endswith('.gz')], key=lambda a: a['size'])
+valid_src = assets[0]  # smallest file is held out completely: only used to measure the net
+free = shutil.disk_usage(D).free - 3_000_000_000
+budget = min(free, int(float(os.environ.get('FHK_GB', '1000')) * 1e9))
+train, total = [], 0
+for a in sorted(assets[1:], key=lambda a: a['name'], reverse=True):
+    if total + a['size'] <= budget: train.append(a); total += a['size']
+say('train files', len(train), 'of', len(assets) - 1, 'GB', round(total / 1e9, 2), '(about', round(total / 1e9 * 8), 'crore positions), valid from', valid_src['name'])
+sh(f"curl -fsSL --retry 4 {valid_src['browser_download_url']} | zcat | head -n 1000000 | gzip -1 > valid.gz || true")
+for a in train:
+    if not (os.path.exists(a['name']) and os.path.getsize(a['name']) == a['size']): sh(f"curl -fsSL --retry 4 -o {a['name']} {a['browser_download_url']}")
 t = time.time()
-sh('python trainpt2.py ' + W + '/fhk_kb16_1536.bin ' + ' '.join(a['name'] for a in train) + ' --valid valid.gz --epochs 1 --kb 16 --h 1536 --lr 1e-3')
-print('DONE in', round((time.time() - t) / 3600, 2), 'hours. Download fhk_kb16_1536.bin from the Output panel.', flush=True)
+cmd = (f'python -u trainpt2.py {OUT} ' + ' '.join(a['name'] for a in train) + f' --valid valid.gz --epochs {EPOCHS} --kb {KB} --h {H} --lr {LR}'
+       + f' --ckdir {CK} --max-hours {max(HOURS - (time.time() - T0) / 3600 - 0.3, 0.02):.2f}' + (' --init init.bin' if INIT else ''))
+say('$', cmd)
+p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+for line in p.stdout: print(line, end='', flush=True); LOG.write(line); LOG.flush()
+rc = p.wait(); say('trainer exit', rc, 'after', round((time.time() - t) / 3600, 2), 'hours')
+if not os.path.exists(OUT): sys.exit('no net was written, see train_log.txt')
+# Optional: send the result to GitHub (release "kaggle-nets"). Needs a Kaggle Secret GH_TOKEN (Add-ons > Secrets, attached to this notebook).
+tok = None
+try:
+    from kaggle_secrets import UserSecretsClient; tok = UserSecretsClient().get_secret('GH_TOKEN')
+except Exception as e: say('no GH_TOKEN secret, skipping upload:', type(e).__name__)
+if tok:
+    def api(url, data=None, method='GET', ctype='application/json'):
+        rq = urllib.request.Request(url, data=data, method=method, headers={'Authorization': 'Bearer ' + tok, 'Accept': 'application/vnd.github+json', 'Content-Type': ctype})
+        with urllib.request.urlopen(rq) as r: return json.loads(r.read() or b'{}')
+    try:
+        try: rl = api(f'https://api.github.com/repos/{R}/releases/tags/kaggle-nets')
+        except urllib.error.HTTPError:
+            rl = api(f'https://api.github.com/repos/{R}/releases', json.dumps({'tag_name': 'kaggle-nets', 'target_commitish': 'engine-lab', 'name': 'Nets trained on Kaggle', 'body': 'Uploaded by tools/lab/train/kaggle_cell.py'}).encode(), 'POST')
+        up = rl['upload_url'].split('{')[0]
+        files = [OUT, LOG.name] + ([os.path.join(CK, f) for f in sorted(os.listdir(CK))] if os.path.isdir(CK) else [])
+        for f in files:
+            nm = NAME + '.bin' if f == OUT else (NAME + '_log.txt' if f == LOG.name else NAME + '_' + os.path.basename(f))
+            api(f'{up}?name={nm}', open(f, 'rb').read(), 'POST', 'application/octet-stream'); say('uploaded', nm)
+        say('GitHub: https://github.com/' + R + '/releases/tag/kaggle-nets')
+    except Exception as e: say('upload failed (net is still in the Output tab):', e)
+say('DONE. Net:', OUT, '| checkpoints:', CK, '| log: train_log.txt (all in the Output tab)')
