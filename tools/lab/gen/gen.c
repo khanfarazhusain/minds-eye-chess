@@ -19,6 +19,8 @@ void loadFen(const char *fen) {
 }
 void fen(char *o) { for (int r = 0; r < 8; r++) { int e = 0; for (int f = 0; f < 8; f++) { int p = B[sqOf(f, r)]; if (!p) { e++; continue; } if (e) { *o++ = '0' + e; e = 0; } char ch = NM[p & 7]; if (!(p & 8)) ch -= 32; *o++ = ch; } if (e) *o++ = '0' + e; if (r < 7) *o++ = '/'; }
   *o++ = ' '; *o++ = side ? 'b' : 'w'; *o = 0; }
+static int applyUci(const char *u) { if (strlen(u) < 4) return 0; int fr = sqOf(u[0] - 'a', 8 - (u[1] - '0')), to = sqOf(u[2] - 'a', 8 - (u[3] - '0')); int pr = u[4] ? (int)(strchr(NM, u[4]) - NM) : 0;
+  i32 buf[256]; int n = gen(buf, 0, 0); for (int i = 0; i < n; i++) if (mFrom(buf[i]) == fr && mTo(buf[i]) == to && mPromo(buf[i]) == pr) { if (make(buf[i])) return 1; } return 0; }
 static u32 rs = 1; static u32 rr(void) { rs ^= rs << 13; rs ^= rs >> 17; rs ^= rs << 5; return rs; }
 int main(int argc, char **argv) {
   int NODES = atoi(argv[1]); rs = atoi(argv[2]) * 2654435761u + 1; long GAMES = atol(argv[3]);
@@ -30,10 +32,15 @@ int main(int argc, char **argv) {
     for (int i = 0; i < 768 * NNH; i++) NW1[i] = QZ(f[o++], 255); for (int i = 0; i < NNH; i++) NB1[i] = QZ(f[o++], 255); for (int i = 0; i < 2 * NNH; i++) NW2[i] = QZ(f[o++], 1024);
     double b2 = f[o] * 255 * 1024; set_nn(1, (int)(b2 < 0 ? b2 - 0.5 : b2 + 0.5)); }
   static char ops[400][100]; int nop = 0; FILE *fo = fopen(getenv("OPEN") ? getenv("OPEN") : "/home/user/nn/open.txt", "r"); while (nop < 400 && fgets(ops[nop], 100, fo)) { ops[nop][strcspn(ops[nop], "\n")] = 0; nop++; } fclose(fo);
+  // Tactics mix: tools/lab/gen/puz.txt holds Lichess puzzle starts ("FEN|first move", never the tac1000 test set). PUZP % of games start there, with no random moves.
+  static char (*pz)[128] = 0; int npz = 0, puzp = getenv("PUZP") ? atoi(getenv("PUZP")) : 25;
+  { FILE *fp = fopen(getenv("PUZ") ? getenv("PUZ") : "gen/puz.txt", "r"); if (fp) { pz = malloc(sizeof(*pz) * 300000); while (npz < 300000 && fgets(pz[npz], 128, fp)) { pz[npz][strcspn(pz[npz], "\n")] = 0; npz++; } fclose(fp); } }
   static char fens[400][90]; static int scs[400];
   for (long g = 0; g < GAMES; g++) {
-    tt_clear(); loadFen(ops[rr() % nop]);
-    int ok = 1; for (int k = 0; k < 6 && ok; k++) { i32 buf[256]; int n = gen(buf, 0, 0), nl = 0; i32 lg[256]; for (int i = 0; i < n; i++) if (make(buf[i])) { unmake(); lg[nl++] = buf[i]; } if (!nl) { ok = 0; break; } make(lg[rr() % nl]); }
+    tt_clear(); int fromPz = npz && (int)(rr() % 100) < puzp;
+    if (fromPz) { char ln[128]; snprintf(ln, sizeof ln, "%s", pz[rr() % npz]); char *bar = strchr(ln, '|'); if (!bar) continue; *bar = 0; loadFen(ln); if (!applyUci(bar + 1)) continue; }
+    else loadFen(ops[rr() % nop]);
+    int ok = 1; for (int k = 0; k < (fromPz ? 0 : 6) && ok; k++) { i32 buf[256]; int n = gen(buf, 0, 0), nl = 0; i32 lg[256]; for (int i = 0; i < n; i++) if (make(buf[i])) { unmake(); lg[nl++] = buf[i]; } if (!nl) { ok = 0; break; } make(lg[rr() % nl]); }
     if (!ok) continue;
     int np = 0, ply = 0, adj = 0; double res = -1;
     while (1) {
