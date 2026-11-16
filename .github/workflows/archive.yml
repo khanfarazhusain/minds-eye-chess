@@ -46,4 +46,18 @@ jobs:
             gh release upload data-archive -R $R $W/o/run_${id}* --clobber
             echo "$(date -u +%FT%TZ) run $id lines $lines bytes $sz" | tee -a $GITHUB_STEP_SUMMARY
           done
+          # helper forks: each sp-data push is one helper run; archive it once, named by owner and run id
+          for h in $(jq -r '.helpers[]?' tools/lab/loop.json); do
+            st=$(curl -fsSL https://raw.githubusercontent.com/$h/sp-data/STAMP.txt || true)
+            hr=$(echo "$st" | awk '{print $2}'); [ -z "$hr" ] && { echo "no stamp $h"; continue; }
+            nm=helper_${h%%/*}_${hr}
+            if echo "$have" | grep -q "^${nm}"; then echo "skip $nm"; continue; fi
+            rm -rf $W/h; git clone -q --depth 1 -b sp-data https://github.com/$h $W/h || { echo "clone fail $h"; continue; }
+            ls $W/h/part_* >/dev/null 2>&1 || { echo "no parts $h"; continue; }
+            rm -rf $W/o; mkdir -p $W/o; cat $W/h/part_* > $W/o/all.gz; rm -rf $W/h
+            lines=$(zcat $W/o/all.gz | wc -l); sz=$(stat -c %s $W/o/all.gz)
+            if [ "$sz" -gt 1900000000 ]; then (cd $W/o && split -b 1900m -d all.gz ${nm}_part_ && rm all.gz); else mv $W/o/all.gz $W/o/${nm}.gz; fi
+            gh release upload data-archive -R $R $W/o/${nm}* --clobber
+            echo "$(date -u +%FT%TZ) $nm lines $lines bytes $sz ($st)" | tee -a $GITHUB_STEP_SUMMARY
+          done
           gh release view data-archive -R $R --json assets -q '.assets[] | "\(.name) \(.size)"' | tee -a $GITHUB_STEP_SUMMARY
