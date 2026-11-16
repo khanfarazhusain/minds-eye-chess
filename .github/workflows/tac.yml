@@ -55,7 +55,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: tac-${{ matrix.shard }}
-          path: tools/lab/tac_*.json
+          path: tools/lab/tac*_*.json
           retention-days: 30
   sum:
     needs: test
