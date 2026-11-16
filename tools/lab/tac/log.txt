@@ -1,0 +1,1 @@
+2026-11-16T17:47:09Z local TACTICS iter 3 net 57ef44d104c0 n 1000 solved 985 (98.5%) first-move 988 (98.8%) worst crushing:12/593 endgame:12/524 long:7/439 queenEndgame:3/13
