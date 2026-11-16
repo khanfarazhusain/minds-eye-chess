@@ -702,7 +702,7 @@ i32 go(double timeMs, i32 maxDepthIn, i32 nodeLim) {
     if (stop) break;
     if (iabs(s) > MATE_BOUND && d > 6) break;
     if (!smpId && !maxDepthIn && host_now() - t0 > (timeMs > 0 ? timeMs : 1000) * SOFTT) break;
-    if (!smpId && nl == 1 && d >= 4) break;
+    if (!smpId && !maxDepthIn && nl == 1 && d >= 4) break;
   }
   r_nodes = nodes; return r_move;
 }
