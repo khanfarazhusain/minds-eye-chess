@@ -10,10 +10,11 @@
   "gate_pairs": 376,
   "promote_elo": 10,
   "helpers": [
-    "umaimamehroz-cmd/fhk-helper-2",
-    "umaimamehrozkhan-lgtm/fhk-helper-3",
+    "fhkyz1/fhk-helper-1",
     "fhkyz132/fhk-helper-4",
-    "fhkyz1/fhk-helper-1"
+    "hardstonex2/fhk-helper-3",
+    "umaimamehroz-cmd/fhk-helper-2",
+    "umaimamehrozkhan-lgtm/fhk-helper-3"
   ],
   "aug": 1
 }
