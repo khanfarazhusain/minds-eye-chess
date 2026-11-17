@@ -47,6 +47,7 @@ budget = min(free, int(float(os.environ.get('FHK_GB', '1000')) * 1e9))
 train, total = [], 0
 for a in sorted(assets[1:], key=lambda a: a['name'], reverse=True):
     if total + a['size'] <= budget: train.append(a); total += a['size']
+if os.environ.get('FHK_NOARCHIVE') == '1': train, total = [], 0  # binpack-only run: skip the old self-play archive
 say('train files', len(train), 'of', len(assets) - 1, 'GB', round(total / 1e9, 2), '(about', round(total / 1e9 * 8), 'crore positions), valid from', valid_src['name'])
 sh(f"curl -sSL --retry 4 {valid_src['browser_download_url']} 2>/dev/null | zcat 2>/dev/null | head -n 1000000 | gzip -1 > valid.gz || true")
 for a in train:
@@ -70,6 +71,10 @@ if BP:
         url = f'https://huggingface.co/datasets/official-stockfish/master-binpacks/resolve/main/{nm}.binpack'
         subprocess.run(f"set +o pipefail; curl -sL --retry 5 {url} | ./binpack_dump /dev/stdin {BPN // len(BP)} {BPS} 8 | split -n r/{np_} -d -a 2 --filter='gzip -1 > $FILE.gz' - bp{i}_", shell=True, executable='/bin/bash')
     extra += sorted(f for f in os.listdir('.') if f.startswith('bp') and f.endswith('.gz'))
+    if os.environ.get('FHK_BPVALID', 'fishpack32'):  # held-out set from a different binpack file, same filters/scale as the training data
+        vn = os.environ.get('FHK_BPVALID', 'fishpack32')
+        subprocess.run(f"set +o pipefail; curl -sL --retry 5 https://huggingface.co/datasets/official-stockfish/master-binpacks/resolve/main/{vn}.binpack | ./binpack_dump /dev/stdin 1500000 {BPS} 8 | head -n 1000000 | gzip -1 > valid.gz", shell=True, executable='/bin/bash')
+        say('valid from binpack', vn, os.path.getsize('valid.gz'), 'bytes')
     say('binpack files', len(extra), 'in', round((time.time() - t) / 60, 1), 'min')
 t = time.time()
 cmd = (f'python -u trainpt2.py {OUT} ' + ' '.join([a['name'] for a in train] + extra) + f' --valid valid.gz --epochs {EPOCHS} --kb {KB} --h {H} --lr {LR}'
