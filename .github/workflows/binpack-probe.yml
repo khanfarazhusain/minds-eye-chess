@@ -1,0 +1,40 @@
+name: binpack probe
+on:
+  push:
+    paths: ['.github/workflows/binpack-probe.yml']
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: list dataset
+        run: |
+          curl -s "https://huggingface.co/api/datasets/official-stockfish/master-binpacks?blobs=true" | python3 -c "
+          import sys,json
+          d=json.load(sys.stdin)
+          print({k:d.get(k) for k in ['id','downloads','gated','private','license']})
+          fs=d.get('siblings',[])
+          print(len(fs),'files')
+          tot=0
+          for f in fs:
+            tot+=f.get('size') or 0
+            print(f['rfilename'], f.get('size'))
+          print('total GB', tot/1e9)
+          " | tee list.txt | head -80
+      - name: sample
+        run: |
+          f=$(python3 - <<'PY'
+          import json,urllib.request
+          d=json.load(urllib.request.urlopen("https://huggingface.co/api/datasets/official-stockfish/master-binpacks?blobs=true"))
+          fs=[s for s in d['siblings'] if s['rfilename'].endswith('.binpack')]
+          fs.sort(key=lambda s:s.get('size') or 1e18)
+          print(fs[0]['rfilename'] if fs else '')
+          PY
+          )
+          echo "smallest: $f"
+          [ -n "$f" ] && curl -sL -r 0-4194303 -o sample.binpack "https://huggingface.co/datasets/official-stockfish/master-binpacks/resolve/main/$f" && ls -l sample.binpack && xxd sample.binpack | head -12
+      - uses: actions/upload-artifact@v4
+        with:
+          name: binpack-sample
+          path: |
+            list.txt
+            sample.binpack
