@@ -241,7 +241,13 @@ static inline void vsub2(i16 *a, i16 *b, const i16 *w, const i16 *v) { for (int 
 #endif
 #if defined(NNKB)
 // Native and wasm path (wasm via generic vectors): one fused pass per side, and a per-thread "Finny" cache so a king-bucket change only re-adds the pieces that differ.
+#ifdef V512
+#define VN 32
+typedef i16 vs16 __attribute__((vector_size(64), aligned(2), may_alias));
+#else
+#define VN 16
 typedef i16 vs16 __attribute__((vector_size(32), aligned(2), may_alias));
+#endif
 #define VL(p) (*(const vs16 *)(p))
 #define VS(p, x) (*(vs16 *)(p) = (x))
 typedef struct { i16 acc[NNH]; u64 bb[16]; i32 key; } Finny;
@@ -257,7 +263,7 @@ static void nnRefreshSide(i32 L, i32 P, i32 ks) {
     for (u64 x = old & ~cur; x; x &= x - 1) { i32 s = SQ120[__builtin_ctzll(x)]; if (ns < 40) sb[ns++] = &NW1[fIdx(P, nnF(s, p), ks) * NNH]; }
     e->bb[p] = cur; }
   i16 *a = e->acc;
-  for (int j = 0; j < NNH; j += 16) { vs16 x = VL(a + j); for (int i = 0; i < na; i++) x += VL(ad[i] + j); for (int i = 0; i < ns; i++) x -= VL(sb[i] + j); VS(a + j, x); VS(nnAcc[L][P] + j, x); } }
+  for (int j = 0; j < NNH; j += VN) { vs16 x = VL(a + j); for (int i = 0; i < na; i++) x += VL(ad[i] + j); for (int i = 0; i < ns; i++) x -= VL(sb[i] + j); VS(a + j, x); VS(nnAcc[L][P] + j, x); } }
 static void nnFull(i32 L) { nnKS[L][0] = ksOf(0); nnKS[L][1] = ksOf(1); nnRefreshSide(L, 0, nnKS[L][0]); nnRefreshSide(L, 1, nnKS[L][1]); nnOk[L] = 1; }
 static void nnUpdate(i32 L) {
   i32 k = L; while (!nnOk[k]) k--;
@@ -270,7 +276,7 @@ static void nnUpdate(i32 L) {
     const i16 *ad[64], *sb[64]; i32 na = 0, ns = 0;
     for (i32 l = k + 1; l <= L; l++) { for (int i = 0; i < nnNA[l] && na < 64; i++) ad[na++] = &NW1[fIdx(P, nnAdd[l][i], ks) * NNH]; for (int i = 0; i < nnNS[l] && ns < 64; i++) sb[ns++] = &NW1[fIdx(P, nnSub[l][i], ks) * NNH]; }
     const i16 *src = nnAcc[k][P]; i16 *dst = nnAcc[L][P];
-    for (int j = 0; j < NNH; j += 16) { vs16 x = VL(src + j); for (int i = 0; i < na; i++) x += VL(ad[i] + j); for (int i = 0; i < ns; i++) x -= VL(sb[i] + j); VS(dst + j, x); } }
+    for (int j = 0; j < NNH; j += VN) { vs16 x = VL(src + j); for (int i = 0; i < na; i++) x += VL(ad[i] + j); for (int i = 0; i < ns; i++) x -= VL(sb[i] + j); VS(dst + j, x); } }
   nnOk[L] = 1; }
 #else
 static void nnFull(i32 L) { i16 *a = nnAcc[L][0], *b = nnAcc[L][1]; for (int j = 0; j < NNH; j++) { a[j] = NB1[j]; b[j] = NB1[j]; }
