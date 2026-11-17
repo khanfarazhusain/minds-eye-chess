@@ -1,0 +1,1 @@
+{"file":"fhk_kb16_1536_20261116_2138.bin.gz","wasm":"k16.wasm","base":"c1.wasm:nets/current.bin","pairs":376,"ms":200,"note":"Kaggle run 1: KB16 H1536, 2 epochs on 94 crore pos, valid 0.00446"}

@@ -1,0 +1,54 @@
+name: fhk-knet-gate
+# Gates a net trained on Kaggle (stored gzipped on branch kaggle-nets) vs the current baseline (c1.wasm + nets/current.bin).
+on:
+  push:
+    branches: [engine-lab]
+    paths: [tools/lab/knet.json]
+  workflow_dispatch:
+concurrency:
+  group: fhk-knet
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  gate:
+    if: github.repository == 'khanfarazhusain/minds-eye-chess'
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: net
+        run: |
+          K=tools/lab/knet.json
+          curl -fsSL --retry 4 "https://github.com/${{ github.repository }}/raw/kaggle-nets/$(jq -r .file $K)" | zcat > tools/lab/knet.bin
+          ls -la tools/lab/knet.bin
+      - name: match
+        run: |
+          cd tools/lab; K=knet.json
+          for p in 0 1 2 3; do node wsp.js $(jq -r .wasm $K):knet.bin $(jq -r .base $K) $(jq -r .pairs $K) $(jq -r .ms $K) $(( ${{ matrix.shard }}*4 + p )) 40 g_${{ matrix.shard }}_$p.json > /dev/null 2>&1 & done; wait
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kgate-${{ matrix.shard }}
+          path: tools/lab/g_*.json
+          retention-days: 7
+  sum:
+    needs: gate
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: kgate-*
+          path: g
+          merge-multiple: true
+      - run: node -e "const fs=require('fs');let a=[];for(const f of fs.readdirSync('g'))a.push(...JSON.parse(fs.readFileSync('g/'+f)));const s=a.reduce((x,y)=>x+y,0)/a.length;console.log('RESULT knet vs base games',a.length,'score',(100*s).toFixed(1),'elo',Math.round(-400*Math.log10(1/s-1)))" | tee -a $GITHUB_STEP_SUMMARY
