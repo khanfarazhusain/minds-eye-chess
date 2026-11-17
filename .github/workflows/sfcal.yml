@@ -1,0 +1,33 @@
+name: sf-calibrate
+# FHK (native, current net) vs Stockfish UCI_Elo levels, fixed movetime. Trigger: edit tools/lab/sfcal.txt (line: movetime_ms games_per_level)
+on:
+  push:
+    branches: [engine-lab]
+    paths: [tools/lab/sfcal.txt]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        level: [2200, 2500, 2800, 3100]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+      - run: sudo apt-get update -q && sudo apt-get install -y -q stockfish && pip install -q chess
+      - name: build
+        run: |
+          cd tools/lab/gen; gcc -O3 -march=native -DNATIVE -pthread $(jq -r .flags ../loop.json) uci.c -o ../fhk_cal -lm
+      - name: match
+        run: |
+          cd tools/lab; read MS G < sfcal.txt; /usr/games/stockfish </dev/null | head -1 || true; export PATH=$PATH:/usr/games
+          python3 sfcal.py ./fhk_cal nets/current.bin ${{ matrix.level }} $G $MS 4 cal_${{ matrix.level }}.json | tee -a $GITHUB_STEP_SUMMARY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cal-${{ matrix.level }}
+          path: tools/lab/cal_*.json
