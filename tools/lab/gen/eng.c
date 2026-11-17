@@ -254,6 +254,14 @@ typedef struct { i16 acc[NNH]; u64 bb[16]; i32 key; } Finny;
 i32 nnGen = 1; // bump after loading a new net so cached accumulators are rebuilt
 static TL Finny fin[2][NNKB * 2];
 static inline i32 fIdx(i32 P, i32 f, i32 ks) { return P ? (ks & 0xffffff) + (nnFlip(f) ^ (ks >> 24)) : (ks & 0xffffff) + (f ^ (ks >> 24)); }
+static inline __attribute__((always_inline)) void nnApply(i16 *dst, i16 *dst2, const i16 *src, const i16 *const *ad, const i16 *const *sb, int na, int ns) {
+  for (int j = 0; j < NNH; j += VN) { vs16 x = VL(src + j); for (int i = 0; i < na; i++) x += VL(ad[i] + j); for (int i = 0; i < ns; i++) x -= VL(sb[i] + j); VS(dst + j, x); if (dst2) VS(dst2 + j, x); } }
+#ifndef NOSPEC
+#define NNCASE(A, S) case (A) * 64 + (S): nnApply(dst, dst2, src, ad, sb, A, S); break;
+#define NNSPEC(dst, dst2, src, ad, sb, na, ns) switch ((na) * 64 + (ns)) { NNCASE(0, 1) NNCASE(1, 0) NNCASE(1, 1) NNCASE(1, 2) NNCASE(2, 1) NNCASE(2, 2) NNCASE(1, 3) NNCASE(3, 1) NNCASE(2, 3) NNCASE(3, 2) NNCASE(3, 3) NNCASE(2, 0) NNCASE(0, 2) default: nnApply(dst, dst2, src, ad, sb, na, ns); }
+#else
+#define NNSPEC(dst, dst2, src, ad, sb, na, ns) nnApply(dst, dst2, src, ad, sb, na, ns);
+#endif
 static void nnRefreshSide(i32 L, i32 P, i32 ks) {
   Finny *e = &fin[P][(ks & 0xffffff) / 768 * 2 + ((ks >> 24) ? 1 : 0)];
   if (e->key != ks + 1 + (nnGen << 27)) { for (int j = 0; j < NNH; j++) e->acc[j] = NB1[j]; for (int p = 0; p < 16; p++) e->bb[p] = 0; e->key = ks + 1 + (nnGen << 27); }
@@ -262,8 +270,7 @@ static void nnRefreshSide(i32 L, i32 P, i32 ks) {
     for (u64 x = cur & ~old; x; x &= x - 1) { i32 s = SQ120[__builtin_ctzll(x)]; if (na < 40) ad[na++] = &NW1[fIdx(P, nnF(s, p), ks) * NNH]; }
     for (u64 x = old & ~cur; x; x &= x - 1) { i32 s = SQ120[__builtin_ctzll(x)]; if (ns < 40) sb[ns++] = &NW1[fIdx(P, nnF(s, p), ks) * NNH]; }
     e->bb[p] = cur; }
-  i16 *a = e->acc;
-  for (int j = 0; j < NNH; j += VN) { vs16 x = VL(a + j); for (int i = 0; i < na; i++) x += VL(ad[i] + j); for (int i = 0; i < ns; i++) x -= VL(sb[i] + j); VS(a + j, x); VS(nnAcc[L][P] + j, x); } }
+  { i16 *dst = e->acc, *dst2 = nnAcc[L][P]; const i16 *src = e->acc; NNSPEC(dst, dst2, src, ad, sb, na, ns) } }
 static void nnFull(i32 L) { nnKS[L][0] = ksOf(0); nnKS[L][1] = ksOf(1); nnRefreshSide(L, 0, nnKS[L][0]); nnRefreshSide(L, 1, nnKS[L][1]); nnOk[L] = 1; }
 static void nnUpdate(i32 L) {
   i32 k = L; while (!nnOk[k]) k--;
@@ -276,7 +283,7 @@ static void nnUpdate(i32 L) {
     const i16 *ad[64], *sb[64]; i32 na = 0, ns = 0;
     for (i32 l = k + 1; l <= L; l++) { for (int i = 0; i < nnNA[l] && na < 64; i++) ad[na++] = &NW1[fIdx(P, nnAdd[l][i], ks) * NNH]; for (int i = 0; i < nnNS[l] && ns < 64; i++) sb[ns++] = &NW1[fIdx(P, nnSub[l][i], ks) * NNH]; }
     const i16 *src = nnAcc[k][P]; i16 *dst = nnAcc[L][P];
-    for (int j = 0; j < NNH; j += VN) { vs16 x = VL(src + j); for (int i = 0; i < na; i++) x += VL(ad[i] + j); for (int i = 0; i < ns; i++) x -= VL(sb[i] + j); VS(dst + j, x); } }
+    { i16 *dst2 = 0; NNSPEC(dst, dst2, src, ad, sb, na, ns) } }
   nnOk[L] = 1; }
 #else
 static void nnFull(i32 L) { i16 *a = nnAcc[L][0], *b = nnAcc[L][1]; for (int j = 0; j < NNH; j++) { a[j] = NB1[j]; b[j] = NB1[j]; }
