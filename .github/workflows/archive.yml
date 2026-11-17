@@ -8,6 +8,9 @@ on:
   push:
     branches: [engine-lab]
     paths: [tools/lab/archive_kick.txt]
+  workflow_run:
+    workflows: [fhk-loop, fhk-tactics]
+    types: [completed]
 permissions:
   contents: write
   actions: read
