@@ -89,6 +89,10 @@ table.mt{width:100%;border-collapse:collapse} table.mt td,table.mt th{text-align
 .hidden{display:none}
 .tztb.tzc tr.ply td:first-child{box-shadow:inset 3px 0 0 var(--accent)} .tztb.tzc tr.ply.eng td{background:var(--good-soft)} .gw-meta{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap} .gw-v{border-radius:10px;padding:8px 10px;margin:8px 0;line-height:1.4} .gw-v.ok{background:var(--good-soft)} .gw-v.no{background:var(--bad-soft)} .gw-v.mid{background:var(--warn-soft)} .gw-nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px} .gw-nav .btn{flex:1 1 auto} #gwRange{width:100%;margin:6px 0 0} .gw-sum td,.gw-sum th{padding:4px 6px} .tztb.tzc.calc td:nth-child(3){white-space:normal;font-family:inherit;word-break:break-word}
 
+/* v163: points card button */
+details.tzcard{margin:6px 0 8px} details.tzcard summary{display:inline-block;cursor:pointer;font-size:13px;font-weight:600;padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);list-style:none}
+details.tzcard summary::-webkit-details-marker{display:none} details.tzcard[open] summary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent);margin-bottom:6px}
+details.tzcard tr.hl td{background:var(--warn-soft)} details.tzcard .tztb{font-size:12.5px}
 /* v161: pieces sized to the square, small clean labels, compact text in live/example mode */
 .board{container-type:inline-size}
 @supports (width:1cqw){.sq{font-size:11cqw}.coord{font-size:clamp(7px,2.3cqw,11px)}}
@@ -878,15 +882,24 @@ const lvEngName = () => LV.eng === 'sf' ? `Stockfish L${LV.lvl}` : `FHK L${LV.lv
 const lvUserTurn = () => !LV.watch && ((LV.pos.side === E.WHITE) === LV.userWhite);
 function lvPush(uci, who){ const fen = LV.pos.fen(), m = LV.pos.parseUci(uci), san = LV.pos.san(m);
   const P = { fen, uci, san, who, sq: [E.mFrom(m), E.mTo(m)] }; LV.hist.push(P); LV.pos.make(m); LV.result = gameOver(LV.pos, LV.hashes); lvPly(LV.hist.length - 1).catch(() => {}); return P; }
-async function lvEngineMove(){ const me = LV; const fen = me.pos.fen();
+async function lvEngineMove(){ const me = LV, g = me.gen || 0; const fen = me.pos.fen();
   const uci = me.eng === 'sf' ? await sfPlay(fen, me.lvl) : (await ask({ cmd: 'play', fen, time: 1000, depth: ME_DEPTH[me.lvl] })).uci;
-  if (LV !== me) return; lvPush(uci, 'eng'); }
+  if (LV !== me || (me.gen || 0) !== g || me.pos.fen() !== fen) return false; lvPush(uci, 'eng'); return true; }
+// Undo: aapki aakhri chaal (aur uske baad engine ka jawab) wapas, wahi position phir se steps ke saath
+const lvCanUndo = () => LV && !LV.watch && LV.hist.some(P => P.who === 'user');
+function lvUndo(){ if (!lvCanUndo()) return; LV.gen = (LV.gen || 0) + 1;
+  while (LV.hist.length && LV.hist[LV.hist.length - 1].who !== 'user') LV.hist.pop();
+  LV.hist.pop(); LV.pos = new E.Position(); LV.hashes = {}; LV.result = null;
+  for (const P of LV.hist) { LV.pos.make(LV.pos.parseUci(P.uci)); LV.result = gameOver(LV.pos, LV.hashes); }
+  LV.st = null; ask({ cmd: 'newgame', fen: LV.pos.fen() }).catch(() => {});
+  lvNext(); window.scrollTo(0, 0); }
+const lvUndoBtn = () => lvCanUndo() ? '<button class="btn" id="lvUndo">↩️ Meri chaal wapas lo</button>' : '';
 // LV.k = jo card dikh raha hai: 0..hist.length-1 = chaal samjhana, hist.length = aage ki baari
 async function lvNext(){ const me = LV; LV.k = LV.hist.length;
   if (LV.result) return lvDraw();
   if (lvUserTurn() || LV.watch) return lvDraw();
-  lvDraw(); try { await lvEngineMove(); } catch (e) { panel.innerHTML = `<div class="card bad">Engine error: ${esc(e.message)}</div>`; return; }
-  if (LV !== me) return; LV.k = LV.hist.length - 1; lvDraw(); }
+  lvDraw(); let ok; try { ok = await lvEngineMove(); } catch (e) { if (LV === me) panel.innerHTML = `<div class="card bad">Engine error: ${esc(e.message)}</div>`; return; }
+  if (LV !== me || !ok) return; LV.k = LV.hist.length - 1; lvDraw(); }
 function lvUserMove(m){ if (!LV || LV.k !== LV.hist.length || !lvUserTurn()) return; const P = lvPush(LV.pos.uci(m), 'user'); LV.k = LV.hist.length - 1; T.step = 0; lvDraw(); }
 function lvRows(P){ const M = lvM(), d = P.d, pos = new E.Position(P.fen), g = P.good, h = [];
   const mark = u => `${g.has(u) ? ' ★' : ''}`, me = u => u === P.uci ? `<br><b>${P.who === 'user' ? '👤 Aapki chaal' : '🤖 Engine ki chaal'}</b>` : '';
@@ -941,6 +954,10 @@ const TZG = [
   { t: 'Castling, trade, pyaada aage', k: ['castle', 'trade', 'pawnAdv'], tip: 'Castling +9. Barabar len-den +7. Pyaada 5th/6th/7th line par +6/+12/+18.' },
   { t: 'Galtiyaan (minus points)', k: ['allowMate', 'qLose', 'allowFork', 'loseCastle', 'samePieceTwice', 'kCtr', 'allowChecks'], bad: 1, tip: 'Ab ulta dekho: kaunsi chaal se aapka mohra jaata hai, unko fork ya check milta hai, ya castling ka mauka jaata hai? Inke points kato.' },
   { t: 'Behtar ghar', k: ['pstDelta'], tip: 'Mohra kharab ghar se achhe ghar par gaya to +1 se +3 (jaise ghoda kinare se center).' }];
+// v163: Step 2 mein chhota button: poora Points card (band rehta hai, tap karke khulta hai)
+function tezCardBox(g){ const nm = k => TZ_WHY[TEZ_N[k]] || TEZ_N[k] || k, on = k => g && g.k.includes(k);
+  const rows = [['qWin', 'har pyaade ke barabar mohra jeeto: +10 (ghoda/oont +30, haathi +50, wazir +90)', null], ['mate', '', 1000], ...MERules.TEZ_CARD.filter(([k]) => k !== 'mate').map(([k, w, byV]) => [k, byV ? `${ptsS(w)} har ek par` : '', w]), ['pstDelta', 'achhe ghar par gaya: +1 se +3', null]];
+  return `<details class="tzcard"><summary>📋 Points card kholo</summary><table class="tztb"><tbody>${rows.map(([k, t, w]) => `<tr${on(k) ? ' class="hl"' : ''}><td>${esc(nm(k))}${t && w !== null ? ` <small class="muted">(${esc(t)})</small>` : ''}${w === null ? `<br><small class="muted">${esc(t)}</small>` : ''}</td><td style="text-align:right;white-space:nowrap"><b style="color:${w !== null && w < 0 ? 'var(--bad)' : 'var(--good)'}">${w === null ? '' : ptsS(w)}</b></td></tr>`).join('')}</tbody></table><p class="small muted" style="margin:4px 0 0">Peeli line = is step mein yahi dekh rahe hain.</p></details>`; }
 function tezSteps(pos){ const F = MERules.fastCands(pos, null, 0), L = pos.legalMoves(), V = [0, 1, 3, 3, 5, 9, 0], S = [];
   const caps = L.filter(m => E.mFlag(m) & E.F_CAP).map(m => ({ m, san: pos.san(m), pc: pos.b[E.mFrom(m)] & 7, cap: (pos.b[E.mTo(m)] & 7) || 1, see: E.see(pos, m) }));
   const shik = caps.filter(c => c.see >= 0).sort((a, b) => V[b.cap] - V[a.cap] || V[a.pc] - V[b.pc]), pick = shik[0];
@@ -954,7 +971,7 @@ function tezSteps(pos){ const F = MERules.fastCands(pos, null, 0), L = pos.legal
     hits.sort((a, b) => Math.abs(b.v.reduce((s, [, v]) => s + v, 0)) - Math.abs(a.v.reduce((s, [, v]) => s + v, 0)));
     const show = hits.slice(0, g.k[0] === 'pstDelta' ? 6 : 8);
     S.push({ t: `⚡ Tez Step 2: Points card · ${g.t}`, a: show.map(({ x, v }) => arw(pos, x.m, g.bad || v.some(([, n]) => n < 0) ? AR.bad : AR.good)),
-      h: `<p>${esc(g.tip)}</p>${none.length ? `<p class="small muted">Is position mein nahi mila: ${esc(none.join(', '))}.</p>` : ''}<table class="tztb tzc calc"><tbody>${show.map(({ x, v }) => `<tr><td><b>${esc(pos.san(x.m))}</b></td><td><small>${v.map(([k, n]) => `${esc(TZ_WHY[TEZ_N[k]] || TEZ_N[k] || k)} <b style="color:${n < 0 ? 'var(--bad)' : 'var(--good)'}">${ptsS(n)}</b>`).join('<br>')}</small></td></tr>`).join('')}</tbody></table>${hits.length > show.length ? `<p class="small muted">Aur ${hits.length - show.length} chaalein bhi.</p>` : ''}` });
+      h: `<p>${esc(g.tip)}</p>${tezCardBox(g)}${none.length ? `<p class="small muted">Is position mein nahi mila: ${esc(none.join(', '))}.</p>` : ''}<table class="tztb tzc calc"><tbody>${show.map(({ x, v }) => `<tr><td><b>${esc(pos.san(x.m))}</b></td><td><small>${v.map(([k, n]) => `${esc(TZ_WHY[TEZ_N[k]] || TEZ_N[k] || k)} <b style="color:${n < 0 ? 'var(--bad)' : 'var(--good)'}">${ptsS(n)}</b>`).join('<br>')}</small></td></tr>`).join('')}</tbody></table>${hits.length > show.length ? `<p class="small muted">Aur ${hits.length - show.length} chaalein bhi.</p>` : ''}` });
     none.length = 0; }
   const top = F.slice(0, 5);
   S.push({ t: '⚡ Tez Step 3: Points jodo, 5 chaalein chuno', a: top.map((x, i) => arw(pos, x.m, i ? AR.blue : AR.pick, { n: i + 1 })),
@@ -1017,13 +1034,13 @@ async function lvStepsDraw(head){ const me = LV, fen = LV.pos.fen();
   const end = last ? (user ? `<div class="gw-v ok"><b>Ab aapki baari:</b> in steps ke hisaab se apni chaal <b>board par chalo</b>. Chaal ke baad engine check karega.</div>` : `<button class="btn pri" id="lvEngGo">🤖 ${lvEngName()} ki chaal dekho ▶</button>`) : '';
   panel.innerHTML = `<div class="card">${head}<div class="steps">${S.map((x, i) => `<span class="${i < st.i ? 'done' : i === st.i ? 'cur' : ''}"></span>`).join('')}</div><p class="small muted" style="margin:0">Step ${st.i + 1} / ${S.length}</p><h2>${esc(s.t)}</h2>${s.h}${end}
     <div class="gw-nav"><button class="btn" id="stPrev" ${st.i ? '' : 'disabled'}>◀ Peeche</button>${last ? '' : `<button class="btn pri" id="stNext">Aage ▶</button>`}</div>
-    <div class="gw-nav">${LV.hist.length ? '<button class="btn" id="lvPrev">↩ Pichhli chaal</button>' : ''}<button class="btn" id="lvNew">↻ Naya game</button><button class="btn" id="lvQuit">Training par wapas</button></div></div>`;
+    <div class="gw-nav">${lvUndoBtn()}${LV.hist.length ? '<button class="btn" id="lvPrev">◀ Pichhli chaal dekho</button>' : ''}</div><div class="gw-nav"><button class="btn" id="lvNew">↻ Naya game</button><button class="btn" id="lvQuit">Training par wapas</button></div></div>`;
   lvWire(); const on = (id, f) => { const b = panel.querySelector(id); if (b) b.onclick = f; };
   on('#stPrev', () => { st.i--; lvDraw(); }); on('#stNext', () => { st.i++; lvDraw(); window.scrollTo(0, 0); });
   on('#lvEngGo', async () => { const b = panel.querySelector('#lvEngGo'); b.disabled = true; b.innerHTML = '<span class="spinner"></span>soch raha hai…';
-    try { await lvEngineMove(); } catch (e) { return; } if (LV !== me) return; LV.k = LV.hist.length - 1; lvDraw(); }); }
+    let ok; try { ok = await lvEngineMove(); } catch (e) { return; } if (LV !== me || !ok) return; LV.k = LV.hist.length - 1; lvDraw(); }); }
 async function lvDraw(){ const me = LV, k = LV.k, N = LV.hist.length, M = lvM();
-  const nav = (next) => `<div class="gw-nav"><button class="btn" id="lvPrev" ${k ? '' : 'disabled'}>◀ Peeche</button>${next}</div><div class="gw-nav"><button class="btn" id="lvNew">↻ Naya game</button><button class="btn" id="lvQuit">Training par wapas</button></div>`;
+  const nav = (next) => `<div class="gw-nav"><button class="btn" id="lvPrev" ${k ? '' : 'disabled'}>◀ Peeche</button>${next}</div>${lvCanUndo() ? `<div class="gw-nav">${lvUndoBtn()}</div>` : ''}<div class="gw-nav"><button class="btn" id="lvNew">↻ Naya game</button><button class="btn" id="lvQuit">Training par wapas</button></div>`;
   const how = LV.how === 'tez' || M.g === 0 && LV.how === 'tez' ? 'Tez tarika' : M.g === 0 ? 'Purana tareeka + Tez' : M.name;
   const head = `<div class="gw-meta"><span class="small muted">${LV.watch ? `${lvEngName()} dono taraf` : `Aap ${LV.userWhite ? 'White' : 'Black'} · ${lvEngName()}`}</span><span class="small muted">${esc(how)}</span></div>${N ? `<input type="range" id="gwRange" min="1" max="${N + (LV.result ? 0 : 1)}" value="${k + 1}">` : ''}`;
   let h;
@@ -1045,7 +1062,7 @@ async function lvDraw(){ const me = LV, k = LV.k, N = LV.hist.length, M = lvM();
       ${nav(`<button class="btn pri" id="lvNext">${last ? (LV.result ? 'Nateeja ▶' : lvUserTurn() ? 'Aapki baari ▶' : `${lvEngName()} ki chaal ▶`) : 'Aage ▶'}</button>`)}</div>`; }
   panel.innerHTML = h; lvWire(); }
 function lvWire(){ const q = id => panel.querySelector(id), on = (id, f) => { const b = q(id); if (b) b.onclick = f; };
-  on('#lvPrev', () => { LV.k--; lvDraw(); }); on('#lvNew', () => lvSetup()); on('#lvQuit', () => { const me = LV; LV = null; T = null; applyModeLayout(); nextPosition(); });
+  on('#lvPrev', () => { LV.k--; lvDraw(); }); on('#lvUndo', lvUndo); on('#lvNew', () => lvSetup()); on('#lvQuit', () => { const me = LV; LV = null; T = null; applyModeLayout(); nextPosition(); });
   on('#lvNext', () => { if (LV.k < LV.hist.length - 1) { LV.k++; lvDraw(); } else lvNext(); });
   on('#lvHint', async () => { const o = q('#lvHintOut'); o.innerHTML = '<span class="spinner"></span>'; const fen = LV.pos.fen(); const d = await lvModeData(fen); if (LV.pos.fen() !== fen) return;
     const P = { fen, d, uci: '', who: 'user', good: new Set() }; if (LV.how === 'mode' && lvM().g === 0) P.rep = await ask({ cmd: 'analyze', fen, time: 1500 });
