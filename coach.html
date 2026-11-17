@@ -878,15 +878,24 @@ const lvEngName = () => LV.eng === 'sf' ? `Stockfish L${LV.lvl}` : `FHK L${LV.lv
 const lvUserTurn = () => !LV.watch && ((LV.pos.side === E.WHITE) === LV.userWhite);
 function lvPush(uci, who){ const fen = LV.pos.fen(), m = LV.pos.parseUci(uci), san = LV.pos.san(m);
   const P = { fen, uci, san, who, sq: [E.mFrom(m), E.mTo(m)] }; LV.hist.push(P); LV.pos.make(m); LV.result = gameOver(LV.pos, LV.hashes); lvPly(LV.hist.length - 1).catch(() => {}); return P; }
-async function lvEngineMove(){ const me = LV; const fen = me.pos.fen();
+async function lvEngineMove(){ const me = LV, g = me.gen || 0; const fen = me.pos.fen();
   const uci = me.eng === 'sf' ? await sfPlay(fen, me.lvl) : (await ask({ cmd: 'play', fen, time: 1000, depth: ME_DEPTH[me.lvl] })).uci;
-  if (LV !== me) return; lvPush(uci, 'eng'); }
+  if (LV !== me || (me.gen || 0) !== g || me.pos.fen() !== fen) return false; lvPush(uci, 'eng'); return true; }
+// Undo: aapki aakhri chaal (aur uske baad engine ka jawab) wapas, wahi position phir se steps ke saath
+const lvCanUndo = () => LV && !LV.watch && LV.hist.some(P => P.who === 'user');
+function lvUndo(){ if (!lvCanUndo()) return; LV.gen = (LV.gen || 0) + 1;
+  while (LV.hist.length && LV.hist[LV.hist.length - 1].who !== 'user') LV.hist.pop();
+  LV.hist.pop(); LV.pos = new E.Position(); LV.hashes = {}; LV.result = null;
+  for (const P of LV.hist) { LV.pos.make(LV.pos.parseUci(P.uci)); LV.result = gameOver(LV.pos, LV.hashes); }
+  LV.st = null; ask({ cmd: 'newgame', fen: LV.pos.fen() }).catch(() => {});
+  lvNext(); window.scrollTo(0, 0); }
+const lvUndoBtn = () => lvCanUndo() ? '<button class="btn" id="lvUndo">↩️ Meri chaal wapas lo</button>' : '';
 // LV.k = jo card dikh raha hai: 0..hist.length-1 = chaal samjhana, hist.length = aage ki baari
 async function lvNext(){ const me = LV; LV.k = LV.hist.length;
   if (LV.result) return lvDraw();
   if (lvUserTurn() || LV.watch) return lvDraw();
-  lvDraw(); try { await lvEngineMove(); } catch (e) { panel.innerHTML = `<div class="card bad">Engine error: ${esc(e.message)}</div>`; return; }
-  if (LV !== me) return; LV.k = LV.hist.length - 1; lvDraw(); }
+  lvDraw(); let ok; try { ok = await lvEngineMove(); } catch (e) { if (LV === me) panel.innerHTML = `<div class="card bad">Engine error: ${esc(e.message)}</div>`; return; }
+  if (LV !== me || !ok) return; LV.k = LV.hist.length - 1; lvDraw(); }
 function lvUserMove(m){ if (!LV || LV.k !== LV.hist.length || !lvUserTurn()) return; const P = lvPush(LV.pos.uci(m), 'user'); LV.k = LV.hist.length - 1; T.step = 0; lvDraw(); }
 function lvRows(P){ const M = lvM(), d = P.d, pos = new E.Position(P.fen), g = P.good, h = [];
   const mark = u => `${g.has(u) ? ' ★' : ''}`, me = u => u === P.uci ? `<br><b>${P.who === 'user' ? '👤 Aapki chaal' : '🤖 Engine ki chaal'}</b>` : '';
@@ -1017,13 +1026,13 @@ async function lvStepsDraw(head){ const me = LV, fen = LV.pos.fen();
   const end = last ? (user ? `<div class="gw-v ok"><b>Ab aapki baari:</b> in steps ke hisaab se apni chaal <b>board par chalo</b>. Chaal ke baad engine check karega.</div>` : `<button class="btn pri" id="lvEngGo">🤖 ${lvEngName()} ki chaal dekho ▶</button>`) : '';
   panel.innerHTML = `<div class="card">${head}<div class="steps">${S.map((x, i) => `<span class="${i < st.i ? 'done' : i === st.i ? 'cur' : ''}"></span>`).join('')}</div><p class="small muted" style="margin:0">Step ${st.i + 1} / ${S.length}</p><h2>${esc(s.t)}</h2>${s.h}${end}
     <div class="gw-nav"><button class="btn" id="stPrev" ${st.i ? '' : 'disabled'}>◀ Peeche</button>${last ? '' : `<button class="btn pri" id="stNext">Aage ▶</button>`}</div>
-    <div class="gw-nav">${LV.hist.length ? '<button class="btn" id="lvPrev">↩ Pichhli chaal</button>' : ''}<button class="btn" id="lvNew">↻ Naya game</button><button class="btn" id="lvQuit">Training par wapas</button></div></div>`;
+    <div class="gw-nav">${lvUndoBtn()}${LV.hist.length ? '<button class="btn" id="lvPrev">◀ Pichhli chaal dekho</button>' : ''}</div><div class="gw-nav"><button class="btn" id="lvNew">↻ Naya game</button><button class="btn" id="lvQuit">Training par wapas</button></div></div>`;
   lvWire(); const on = (id, f) => { const b = panel.querySelector(id); if (b) b.onclick = f; };
   on('#stPrev', () => { st.i--; lvDraw(); }); on('#stNext', () => { st.i++; lvDraw(); window.scrollTo(0, 0); });
   on('#lvEngGo', async () => { const b = panel.querySelector('#lvEngGo'); b.disabled = true; b.innerHTML = '<span class="spinner"></span>soch raha hai…';
-    try { await lvEngineMove(); } catch (e) { return; } if (LV !== me) return; LV.k = LV.hist.length - 1; lvDraw(); }); }
+    let ok; try { ok = await lvEngineMove(); } catch (e) { return; } if (LV !== me || !ok) return; LV.k = LV.hist.length - 1; lvDraw(); }); }
 async function lvDraw(){ const me = LV, k = LV.k, N = LV.hist.length, M = lvM();
-  const nav = (next) => `<div class="gw-nav"><button class="btn" id="lvPrev" ${k ? '' : 'disabled'}>◀ Peeche</button>${next}</div><div class="gw-nav"><button class="btn" id="lvNew">↻ Naya game</button><button class="btn" id="lvQuit">Training par wapas</button></div>`;
+  const nav = (next) => `<div class="gw-nav"><button class="btn" id="lvPrev" ${k ? '' : 'disabled'}>◀ Peeche</button>${next}</div>${lvCanUndo() ? `<div class="gw-nav">${lvUndoBtn()}</div>` : ''}<div class="gw-nav"><button class="btn" id="lvNew">↻ Naya game</button><button class="btn" id="lvQuit">Training par wapas</button></div>`;
   const how = LV.how === 'tez' || M.g === 0 && LV.how === 'tez' ? 'Tez tarika' : M.g === 0 ? 'Purana tareeka + Tez' : M.name;
   const head = `<div class="gw-meta"><span class="small muted">${LV.watch ? `${lvEngName()} dono taraf` : `Aap ${LV.userWhite ? 'White' : 'Black'} · ${lvEngName()}`}</span><span class="small muted">${esc(how)}</span></div>${N ? `<input type="range" id="gwRange" min="1" max="${N + (LV.result ? 0 : 1)}" value="${k + 1}">` : ''}`;
   let h;
@@ -1045,7 +1054,7 @@ async function lvDraw(){ const me = LV, k = LV.k, N = LV.hist.length, M = lvM();
       ${nav(`<button class="btn pri" id="lvNext">${last ? (LV.result ? 'Nateeja ▶' : lvUserTurn() ? 'Aapki baari ▶' : `${lvEngName()} ki chaal ▶`) : 'Aage ▶'}</button>`)}</div>`; }
   panel.innerHTML = h; lvWire(); }
 function lvWire(){ const q = id => panel.querySelector(id), on = (id, f) => { const b = q(id); if (b) b.onclick = f; };
-  on('#lvPrev', () => { LV.k--; lvDraw(); }); on('#lvNew', () => lvSetup()); on('#lvQuit', () => { const me = LV; LV = null; T = null; applyModeLayout(); nextPosition(); });
+  on('#lvPrev', () => { LV.k--; lvDraw(); }); on('#lvUndo', lvUndo); on('#lvNew', () => lvSetup()); on('#lvQuit', () => { const me = LV; LV = null; T = null; applyModeLayout(); nextPosition(); });
   on('#lvNext', () => { if (LV.k < LV.hist.length - 1) { LV.k++; lvDraw(); } else lvNext(); });
   on('#lvHint', async () => { const o = q('#lvHintOut'); o.innerHTML = '<span class="spinner"></span>'; const fen = LV.pos.fen(); const d = await lvModeData(fen); if (LV.pos.fen() !== fen) return;
     const P = { fen, d, uci: '', who: 'user', good: new Set() }; if (LV.how === 'mode' && lvM().g === 0) P.rep = await ask({ cmd: 'analyze', fen, time: 1500 });
