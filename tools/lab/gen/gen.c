@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
   // Tactics mix: tools/lab/gen/puz.txt holds Lichess puzzle starts ("FEN|first move", never the tac1000 test set). PUZP % of games start there, with no random moves.
   static char (*pz)[128] = 0; int npz = 0, puzp = getenv("PUZP") ? atoi(getenv("PUZP")) : 25;
   { FILE *fp = fopen(getenv("PUZ") ? getenv("PUZ") : "gen/puz.txt", "r"); if (fp) { pz = malloc(sizeof(*pz) * 300000); while (npz < 300000 && fgets(pz[npz], 128, fp)) { pz[npz][strcspn(pz[npz], "\n")] = 0; npz++; } fclose(fp); } }
-  static char fens[400][90]; static int scs[400];
+  static char fens[400][90], mvs[400][6]; static int scs[400], qts[400];
   for (long g = 0; g < GAMES; g++) {
     tt_clear(); int fromPz = npz && (int)(rr() % 100) < puzp;
     if (fromPz) { char ln[128]; snprintf(ln, sizeof ln, "%s", pz[rr() % npz]); char *bar = strchr(ln, '|'); if (!bar) continue; *bar = 0; loadFen(ln); if (!applyUci(bar + 1)) continue; }
@@ -49,10 +49,12 @@ int main(int argc, char **argv) {
       if (half >= 100 || isRepetition() || insufficient() || ply > 400) { res = 0.5; break; }
       int m = go(1e9, 0, NODES); int sc = r_score; int wsc = side == WHITE ? sc : -sc;
       if (abs(sc) > 1500) { if (++adj >= 4) { res = wsc > 0 ? 1 : 0; break; } } else adj = 0;
-      if (!inCheck() && !(mFlag(m) & F_CAP) && !mPromo(m) && abs(sc) < 3000 && np < 400) { fen(fens[np]); scs[np] = sc; np++; }
+      if (abs(sc) < 3000 && np < 400) { // every position with the engine's move (field 5) for the rules model; quiet flag 0 = not used by net trainers
+        fen(fens[np]); scs[np] = sc; qts[np] = !inCheck() && !(mFlag(m) & F_CAP) && !mPromo(m);
+        i32 f0 = mFrom(m), t0 = mTo(m); snprintf(mvs[np], 6, "%c%c%c%c%c", 'a' + fileOf(f0), '8' - rowOf(f0), 'a' + fileOf(t0), '8' - rowOf(t0), mPromo(m) ? NM[mPromo(m) & 7] : 0); np++; }
       make(m); ply++; if (sp > (MAXPLY + 900) * 10) { res = 0.5; break; }
     }
-    for (int i = 0; i < np; i++) printf("%s - - 0 1;%.1f;%d;1\n", fens[i], res, scs[i]);
+    for (int i = 0; i < np; i++) printf("%s - - 0 1;%.1f;%d;%d;%s\n", fens[i], res, scs[i], qts[i], mvs[i]);
     fflush(stdout);
   }
   return 0; }
