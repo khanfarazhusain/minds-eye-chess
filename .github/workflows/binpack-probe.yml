@@ -1,33 +1,21 @@
 name: binpack probe
 on:
   push:
-    paths: ['.github/workflows/binpack-probe.yml']
+    paths: ['.github/workflows/binpack-probe.yml', 'tools/lab/train/binpack_dump.cpp']
 jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: fetch sample + official reader
+      - uses: actions/checkout@v4
+      - name: build
+        run: |
+          git clone -q --depth 1 https://github.com/official-stockfish/nnue-pytorch nnp
+          g++ -O2 -std=c++20 -I. tools/lab/train/binpack_dump.cpp -o dump 2>&1 | head -30
+          ls -l dump
+      - name: file test
         run: |
           curl -sL -r 0-33554431 -o sample.binpack "https://huggingface.co/datasets/official-stockfish/master-binpacks/resolve/main/fishpack32.binpack"
-          ls -l sample.binpack
-          git clone -q --depth 1 https://github.com/official-stockfish/nnue-pytorch nnp
-          grep -n 'Reader\|hasNext\|next()' nnp/data_loader/cpp/lib/binpack.h | head -30
-          ls nnp; find nnp -name '*.h' -o -name '*.hpp' -o -name '*.cpp' | head -40; grep -n 'class CompressedTrainingDataEntryReader' -A45 nnp/data_loader/cpp/lib/binpack.h | head -80; grep -n 'struct TrainingDataEntry' -A12 nnp/data_loader/cpp/lib/training_data_entry.h | head -30; grep -n 'namespace' nnp/data_loader/cpp/lib/binpack.h | head
-      - name: build dumper
+          (./dump sample.binpack 2000000 > out1.txt) 2>&1 | tail -3; head -5 out1.txt; wc -l out1.txt
+      - name: stream test (pipe)
         run: |
-          cat > dump.cpp <<'CPP'
-          #include "nnp/data_loader/cpp/lib/binpack.h"
-          #include <cstdio>
-          int main(int argc, char** argv) {
-            binpack::CompressedTrainingDataEntryReader r(argv[1]);
-            long n = 0, lim = atol(argv[2]);
-            while (r.hasNext() && n < lim) {
-              auto e = r.next();
-              printf("%s | %d | %d | %d\n", e.pos.fen().c_str(), (int)e.score, (int)e.result, (int)e.ply);
-              n++;
-            }
-          }
-          CPP
-          g++ -O2 -std=c++20 -I. dump.cpp -o dump 2>&1 | head -40
-          ./dump sample.binpack 40 | head -40
-          ./dump sample.binpack 100000000 | wc -l
+          curl -sL -r 0-33554431 "https://huggingface.co/datasets/official-stockfish/master-binpacks/resolve/main/nodes5000pv2_UHO.binpack" | (./dump /dev/stdin 2000000 > out2.txt) 2>&1 | tail -3; head -5 out2.txt; wc -l out2.txt
