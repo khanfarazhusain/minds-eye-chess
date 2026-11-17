@@ -17,7 +17,8 @@ LOG = open(os.path.join(W, 'train_log.txt'), 'a')
 def say(*x):
     m = ' '.join(str(v) for v in x); print(m, flush=True); LOG.write(m + '\n'); LOG.flush()
 def sh(c): say('$', c); subprocess.run(c, shell=True, check=True)
-PRESETS = {'kb4_512': (4, 512, 'nets/current.bin'), 'kb8_768': (8, 768, None), 'kb16_1536': (16, 1536, None)}
+PRESETS = {'kb4_512': (4, 512, 'nets/current.bin'), 'kb8_768': (8, 768, None), 'kb16_1536': (16, 1536, None),
+           'kb16_1536_more': (16, 1536, 'https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/kaggle-nets/fhk_kb16_1536_20261116_2138.bin.gz')}  # continue Kaggle run 1
 NET = os.environ.get('FHK_NET', 'kb16_1536'); KB, H, INIT = PRESETS[NET]
 EPOCHS = int(os.environ.get('FHK_EPOCHS', '2')); HOURS = float(os.environ.get('FHK_HOURS', '11'))
 LR = os.environ.get('FHK_LR', '5e-4' if INIT else '1e-3')
@@ -28,7 +29,11 @@ say('== FHK Kaggle trainer', NAME, 'kb', KB, 'h', H, 'epochs', EPOCHS, 'lr', LR,
 sh('nvidia-smi --query-gpu=name,memory.total --format=csv || echo "NO GPU! Settings > Accelerator > GPU"')
 for f in ['trainpt2.py', 'fhkfeat.py', 'featpack.c']: urllib.request.urlretrieve(RAW + 'train/' + f, f)
 sh('gcc -O2 -o featpack featpack.c -lm')
-if INIT: urllib.request.urlretrieve(RAW + INIT, 'init.bin'); say('init from', INIT)
+if INIT:
+    src = INIT if INIT.startswith('http') else RAW + INIT
+    if src.endswith('.gz'): sh(f"curl -fsSL --retry 4 '{src}' | zcat > init.bin")
+    else: urllib.request.urlretrieve(src, 'init.bin')
+    say('init from', INIT)
 rel = json.load(urllib.request.urlopen(f'https://api.github.com/repos/{R}/releases/tags/data-archive'))
 assets = sorted([a for a in rel['assets'] if a['name'].endswith('.gz')], key=lambda a: a['size'])
 valid_src = assets[0]  # smallest file is held out completely: only used to measure the net
