@@ -1,0 +1,60 @@
+name: fhk-rules-model
+# Trains the human "rules model" (points card) on Stockfish best moves from the Lichess eval DB and reports top-1/2/3 match.
+# Kick: edit tools/mr/rules.json  {"every": N (take every Nth DB position), "max": positions to train, "hidden": 0}
+on:
+  workflow_dispatch:
+  push:
+    branches: [engine-lab]
+    paths: [tools/mr/rules.json]
+permissions:
+  contents: read
+jobs:
+  sample:
+    if: github.repository == 'khanfarazhusain/minds-eye-chess'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: engine-lab }
+      - run: |
+          N=$(jq -r .every tools/mr/rules.json)
+          curl -sL --retry 5 https://database.lichess.org/lichess_db_eval.jsonl.zst | zstd -dc | python3 tools/mr/lichess_best.py $N | gzip > best.txt.gz
+          zcat best.txt.gz | wc -l
+      - uses: actions/upload-artifact@v4
+        with: { name: best, path: best.txt.gz, retention-days: 7 }
+  feat:
+    needs: sample
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: engine-lab }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: actions/download-artifact@v4
+        with: { name: best }
+      - run: |
+          cd tools/mr; S=${{ matrix.shard }}
+          for p in 0 1 2 3; do zcat ../../best.txt.gz | node rankdump2.js $((S*4+p)) 80 | gzip > ../../f_${S}_$p.gz & done; wait
+          ls -la ../../f_*.gz
+      - uses: actions/upload-artifact@v4
+        with: { name: feat-${{ matrix.shard }}, path: f_*.gz, retention-days: 7 }
+  train:
+    needs: feat
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: engine-lab }
+      - uses: actions/download-artifact@v4
+        with: { pattern: feat-*, path: fe, merge-multiple: true }
+      - run: |
+          pip install -q torch --index-url https://download.pytorch.org/whl/cpu
+          R=tools/mr/rules.json
+          python3 tools/mr/train_rules.py rules_result.json fe/f_0_0.gz fe/f_*.gz --max $(jq -r .max $R) --hidden $(jq -r .hidden $R) | tee -a $GITHUB_STEP_SUMMARY
+      - uses: actions/upload-artifact@v4
+        with: { name: rules-result, path: rules_result.json, retention-days: 30 }
