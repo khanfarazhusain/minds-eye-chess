@@ -182,6 +182,8 @@ table.mt{width:100%;border-collapse:collapse} table.mt td,table.mt th{text-align
 </div>
 
 <script src="engine/me-engine.js"></script>
+<script src="engine/me-explain.js"></script>
+<script src="engine/me-rules.js"></script>
 <script>
 (function(){
 'use strict';
@@ -818,7 +820,7 @@ function sfLabels(fen, ucis){ return sfQ(async () => { await sfStartW();
 function sfPlay(fen, lvl){ return sfQ(async () => { await sfStartW(); await sfCmd('setoption name Skill Level value ' + lvl); await sfCmd('setoption name MultiPV value 1'); await sfCmd('position fen ' + fen);
   const l = await sfCmd('go movetime 800', /^bestmove/); return l.split(' ')[1]; }); }
 const lvM = () => MODES[LV ? LV.mk : MODE];
-function lvModeData(fen){ const M = lvM(); return ask({ cmd: 'mode', fen, rules: M.rules || 0, K: M.K || 5, depth: M.depth || 0, human: M.human || 0 }); }
+function lvModeData(fen){ if (typeof lvMD !== 'undefined' && lvMD.has(fen)) return lvMD.get(fen); const M = lvM(); return ask({ cmd: 'mode', fen, rules: M.rules || 0, K: M.K || 5, depth: M.depth || 0, human: M.human || 0 }); }
 // mode ki list (jo chaalein ye tarika deta hai) + kis order mein
 function lvList(d, how){ const M = lvM();
   if (how === 'tez' || M.g === 0) return (d.fast || []).slice(0, 5).map(m => m.uci);
@@ -868,7 +870,7 @@ async function lvEngineMove(){ const me = LV; const fen = me.pos.fen();
 // LV.k = jo card dikh raha hai: 0..hist.length-1 = chaal samjhana, hist.length = aage ki baari
 async function lvNext(){ const me = LV; LV.k = LV.hist.length;
   if (LV.result) return lvDraw();
-  if (lvUserTurn()) { lvModeData(LV.pos.fen()).catch(() => {}); return lvDraw(); }
+  if (lvUserTurn() || LV.watch) return lvDraw();
   lvDraw(); try { await lvEngineMove(); } catch (e) { panel.innerHTML = `<div class="card bad">Engine error: ${esc(e.message)}</div>`; return; }
   if (LV !== me) return; LV.k = LV.hist.length - 1; lvDraw(); }
 function lvUserMove(m){ if (!LV || LV.k !== LV.hist.length || !lvUserTurn()) return; const P = lvPush(LV.pos.uci(m), 'user'); LV.k = LV.hist.length - 1; T.step = 0; lvDraw(); }
@@ -897,6 +899,115 @@ function lvVerdict(P){ const lst = lvList(P.d, LV.how), M = lvM(), has = lst.som
   h.push(`<div class="gw-v ${ok ? 'ok' : loss !== null && loss >= 100 ? 'no' : 'mid'}">🔍 ${LV.eng === 'sf' ? 'Stockfish' : `FHK (${ENGV})`} check: ${ok ? `${esc(P.san)} achhi chaal ★${P.bestSan !== P.san ? ` (pehli pasand ${esc(P.bestSan)})` : ''}.` : `best chaal <b>${esc(P.bestSan)}</b>.${loss !== null && Math.abs(P.top) < 20000 ? ` Lagbhag <b>${(loss / 100).toFixed(1)} pyaade</b> ka nuksaan${loss >= 100 ? ' (badi galti)' : ''}.` : ''}`}</div>`);
   return h.join(''); }
 function lvStats(){ let u = 0, ug = 0, n = 0, lh = 0; for (const P of LV.hist) { if (!P.ready) continue; n++; if (lvList(P.d, LV.how).some(x => P.good.has(x))) lh++; if (P.who === 'user') { u++; if (P.good.has(P.uci)) ug++; } } return { u, ug, n, lh }; }
+// ---------- v159: haath pakad ke, har chaal par ek-ek step, board par teer (arrows) ke saath ----------
+const AR = { good: '#1F7D4C', bad: '#C2412B', pick: '#C98A0B', blue: '#2F6FB5', purple: '#7B4BB7', grey: '#7d8a83' };
+function drawArrows(board, arrows, marks){ const el = board.el; const old = el.querySelector('svg.arw'); if (old) old.remove();
+  if ((!arrows || !arrows.length) && (!marks || !marks.length)) return;
+  const xy = s => { const f = (s - 21) % 10, r = Math.floor((s - 21) / 10); const c = board.flip ? 7 - f : f, w = board.flip ? 7 - r : r; return [c + .5, w + .5]; };
+  let h = `<svg class="arw" viewBox="0 0 8 8" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2"><defs>`;
+  const cols = [...new Set((arrows || []).map(a => a.c))]; cols.forEach((c, i) => { h += `<marker id="ah${i}" markerWidth="3" markerHeight="3" refX="1.6" refY="1.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L3,1.5 L0,3 z" fill="${c}"/></marker>`; }); h += `</defs>`;
+  for (const m of marks || []) { const [x, y] = xy(m.s); h += `<rect x="${x - .5 + .04}" y="${y - .5 + .04}" width=".92" height=".92" rx=".08" fill="none" stroke="${m.c}" stroke-width=".08"/>`; }
+  for (const a of arrows || []) { const [x1, y1] = xy(a.f), [x2, y2] = xy(a.t), dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy) || 1, sh = .32;
+    const w = a.w || .13; h += `<line x1="${x1}" y1="${y1}" x2="${x2 - dx / L * sh}" y2="${y2 - dy / L * sh}" stroke="${a.c}" stroke-width="${w}" stroke-linecap="round" opacity=".85"${a.dash ? ' stroke-dasharray=".2 .14"' : ''} marker-end="url(#ah${cols.indexOf(a.c)})"/>`;
+    if (a.n) h += `<circle cx="${x2}" cy="${y2 - .32}" r=".2" fill="${a.c}"/><text x="${x2}" y="${y2 - .25}" font-size=".26" text-anchor="middle" fill="#fff" font-weight="700" font-family="sans-serif">${a.n}</text>`; }
+  el.insertAdjacentHTML('beforeend', h + '</svg>'); }
+const PCN = ['', 'pyaada', 'ghoda', 'oont', 'haathi', 'wazir', 'raja'];
+const arw = (pos, m, c, x) => Object.assign({ f: E.mFrom(m), t: E.mTo(m), c }, x || {});
+const arwU = (pos, uci, c, x) => { const m = pos.parseUci(uci); return m ? arw(pos, m, c, x) : null; };
+function sanMove(pos, san){ const s = String(san).replace(/[+#!?]/g, ''); return pos.legalMoves().find(m => pos.san(m).replace(/[+#]/g, '') === s) || null; }
+function otherSide(pos){ const f = pos.fen().split(' '); f[1] = f[1] === 'w' ? 'b' : 'w'; f[3] = '-'; return new E.Position(f.join(' ')); }
+const lvMD = new Map(); function lvModeDataC(fen){ if (!lvMD.has(fen)) lvMD.set(fen, lvModeData(fen)); return lvMD.get(fen); }
+const ptsS = v => (v > 0 ? '+' : '') + v;
+const whyLine = w => (w || []).map(([k, v]) => `${TZ_WHY[TEZ_N[k]] || TEZ_N[k] || k} ${ptsS(v)}`).join(', ');
+const TZG = [
+  { t: 'Material aur mate', k: ['qWin', 'mate', 'stopMate', 'mateThreat'], tip: 'Kaunsi chaal se unka mohra jeette ho (saare captures gin ke), mate karte ho, ya mate rokte ho?' },
+  { t: 'Check', k: ['check'], tip: 'Kaunsi chaalein raja ko check deti hain? Har check +7.' },
+  { t: 'Hamla: fork aur dhamki', k: ['fork', 'threat', 'pawnThreat'], tip: 'Kaunsi chaal unke bade ya bina bachaav wale mohre par hamla karti hai? Ek saath do par hamla = fork.' },
+  { t: 'Apne mohre bachao', k: ['defendAttacked', 'escapeAttack'], tip: 'Aapka koi mohra hamle mein hai? Use hatao (+4) ya use bachaav do (+6).' },
+  { t: 'Castling, trade, pyaada aage', k: ['castle', 'trade', 'pawnAdv'], tip: 'Castling +9. Barabar len-den +7. Pyaada 5th/6th/7th line par +6/+12/+18.' },
+  { t: 'Galtiyaan (minus points)', k: ['allowMate', 'qLose', 'allowFork', 'loseCastle', 'samePieceTwice', 'kCtr', 'allowChecks'], bad: 1, tip: 'Ab ulta dekho: kaunsi chaal se aapka mohra jaata hai, unko fork ya check milta hai, ya castling ka mauka jaata hai? Inke points kato.' },
+  { t: 'Behtar ghar', k: ['pstDelta'], tip: 'Mohra kharab ghar se achhe ghar par gaya to +1 se +3 (jaise ghoda kinare se center).' }];
+function tezSteps(pos){ const F = MERules.fastCands(pos, null, 0), L = pos.legalMoves(), V = [0, 1, 3, 3, 5, 9, 0], S = [];
+  const caps = L.filter(m => E.mFlag(m) & E.F_CAP).map(m => ({ m, san: pos.san(m), pc: pos.b[E.mFrom(m)] & 7, cap: (pos.b[E.mTo(m)] & 7) || 1, see: E.see(pos, m) }));
+  const shik = caps.filter(c => c.see >= 0).sort((a, b) => V[b.cap] - V[a.cap] || V[a.pc] - V[b.pc]), pick = shik[0];
+  S.push({ t: '⚡ Tez Step 1: Shikaar dhoondo', a: caps.map(c => arw(pos, c.m, c === pick ? AR.pick : c.see >= 0 ? AR.good : AR.bad, c === pick ? { w: .2 } : null)),
+    h: `<p>Board par <b>har capture</b> dekho: aap unka kaunsa mohra maar sakte ho?</p><p class="small">Har capture ke liye socho: maarne ke baad wo mera mohra wapas kat jaayega? Agar <b>muft</b> mile ya <b>barabar</b> ka badla ho, to wo <b>shikaar</b> hai. Kai hon to sabse bada mohra lo; barabar ho to apne chhote mohre se maaro.</p>
+      ${caps.length ? `<table class="tztb tzc calc"><tbody>${caps.map(c => `<tr class="${c === pick ? 'eng' : ''}"><td style="color:${c === pick ? AR.pick : c.see >= 0 ? AR.good : AR.bad}">●</td><td><b>${esc(c.san)}</b></td><td><small>${PCN[c.pc]} ne ${PCN[c.cap]} maara. ${c.see > 0 ? `<b>Faayda ${c.see / 100 | 0} pyaade</b> ✓` : c.see === 0 ? 'Barabar ka badla ✓' : `✗ Nuksaan: badle mein ${(-c.see / 100).toFixed(0)} pyaade jaate hain`}${c === pick ? '<br><b>⭐ Ye aapka Shikaar hai</b>' : ''}</small></td></tr>`).join('')}</tbody></table>` : '<p>Board par koi capture nahi hai.</p>'}
+      <div class="gw-v ${pick ? 'ok' : 'mid'}">${pick ? `Shikaar: <b>${esc(pick.san)}</b> (peela teer). Ye aapki list ki pehli chaal hai.` : caps.length ? 'Koi muft ya barabar capture nahi. Shikaar nahi hai, seedha Step 2.' : 'Shikaar nahi hai, seedha Step 2.'}</div>` });
+  const none = [];
+  for (const g of TZG) { const hits = F.filter(x => x.why.some(([k]) => g.k.includes(k))).map(x => ({ x, v: x.why.filter(([k]) => g.k.includes(k)) }));
+    if (!hits.length) { none.push(g.t); continue; }
+    hits.sort((a, b) => Math.abs(b.v.reduce((s, [, v]) => s + v, 0)) - Math.abs(a.v.reduce((s, [, v]) => s + v, 0)));
+    const show = hits.slice(0, g.k[0] === 'pstDelta' ? 6 : 8);
+    S.push({ t: `⚡ Tez Step 2: Points card · ${g.t}`, a: show.map(({ x, v }) => arw(pos, x.m, g.bad || v.some(([, n]) => n < 0) ? AR.bad : AR.good)),
+      h: `<p>${esc(g.tip)}</p>${none.length ? `<p class="small muted">Is position mein nahi mila: ${esc(none.join(', '))}.</p>` : ''}<table class="tztb tzc calc"><tbody>${show.map(({ x, v }) => `<tr><td><b>${esc(pos.san(x.m))}</b></td><td><small>${v.map(([k, n]) => `${esc(TZ_WHY[TEZ_N[k]] || TEZ_N[k] || k)} <b style="color:${n < 0 ? 'var(--bad)' : 'var(--good)'}">${ptsS(n)}</b>`).join('<br>')}</small></td></tr>`).join('')}</tbody></table>${hits.length > show.length ? `<p class="small muted">Aur ${hits.length - show.length} chaalein bhi.</p>` : ''}` });
+    none.length = 0; }
+  const top = F.slice(0, 5);
+  S.push({ t: '⚡ Tez Step 3: Points jodo, 5 chaalein chuno', a: top.map((x, i) => arw(pos, x.m, i ? AR.blue : AR.pick, { n: i + 1 })),
+    h: `<p>Har chaal ke saare plus aur minus jodo. ${pick ? 'Shikaar pehle, phir' : 'Phir'} sabse zyada points wali chaalein lo, jab tak 5 na ho jaayein.</p><table class="tztb tzc"><thead><tr><th>#</th><th>Chaal</th><th>Points</th><th>Kyun</th></tr></thead><tbody>${top.map((x, i) => `<tr><td>${i + 1}</td><td><b>${esc(pos.san(x.m))}</b><br><small class="muted">${esc(FC_G[x.g])}</small></td><td><b>${ptsS(x.pts)}</b></td><td><small>${tzWhy(whyLine(x.why).replace(/<[^>]+>/g, '')) || 'kuch khaas nahi'}</small></td></tr>`).join('')}</tbody></table><p><b>Pehli 3 sabse achhi hain.</b> In par dhyaan se socho.</p>` });
+  return S; }
+function ruleSteps(pos, d){ const M = lvM(), n = M.rules, key = 'p' + n, wk = 'w' + n, S = [];
+  S.push({ t: `Step 1: ${n} rules ka card`, a: [], h: `<p>Is mode mein har chaal ko ${n} rules se points milte hain, phir sabse zyada points wali <b>${M.K}</b> chaalein aapke candidates hain.</p>${cardHTML(n)}<p class="small muted">Ab ek-ek rule board par dekhenge.</p>` });
+  for (const k of CARD_KEYS[n]) { const hits = d.moves.filter(m => (m[wk] || []).some(([kk]) => kk === k)); if (!hits.length) continue;
+    const v = m => m[wk].find(([kk]) => kk === k)[1]; hits.sort((a, b) => Math.abs(v(b)) - Math.abs(v(a))); const show = hits.slice(0, 8);
+    S.push({ t: `Rule: ${RULE_TXT[k] ? RULE_TXT[k][0] : k}`, a: show.map(m => arwU(pos, m.uci, v(m) < 0 ? AR.bad : AR.good)).filter(Boolean),
+      h: `<p class="small">${esc(RULE_TXT[k] ? RULE_TXT[k][1] : '')}</p><p>Board par ye chaalein:</p><table class="tztb tzc calc"><tbody>${show.map(m => `<tr><td><b>${esc(m.san)}</b></td><td><b style="color:${v(m) < 0 ? 'var(--bad)' : 'var(--good)'}">${ptsS(v(m))}</b></td></tr>`).join('')}</tbody></table>${hits.length > show.length ? `<p class="small muted">Aur ${hits.length - show.length} chaalein.</p>` : ''}` }); }
+  const minus = d.moves.filter(m => m[key] < 0);
+  if (minus.length) S.push({ t: 'Minus wali chaalein chhodo', a: minus.slice(-6).map(m => arwU(pos, m.uci, AR.bad)).filter(Boolean), h: `<p><b>${minus.length}</b> chaalon ke points minus hain (zyada tar unme mohra jaata hai). Inhe seedha chhod do.</p><p class="small muted">Board par kuch laal teer: ${minus.slice(-6).map(m => esc(m.san)).join(', ')}.</p>` });
+  const top = d.moves.slice(0, M.K);
+  S.push({ t: `Top ${M.K} candidates chuno`, a: top.slice(0, 8).map((m, i) => arwU(pos, m.uci, i ? AR.blue : AR.pick, { n: i + 1 })).filter(Boolean),
+    h: `<p>Points ke hisaab se upar se ${M.K} lo. Barabar points par: jis chaal se mohra behtar ghar par jaaye, wo pehle.</p><table class="tztb tzc"><thead><tr><th>#</th><th>Chaal</th><th>Points</th><th>Kyun</th></tr></thead><tbody>${top.map((m, i) => `<tr><td>${i + 1}</td><td><b>${esc(m.san)}</b></td><td><b>${fmtPts(m[key])}</b></td><td><small>${esc(whyTxt(m[wk]))}</small></td></tr>`).join('')}</tbody></table>${M.depth || M.human ? '' : '<p><b>Inme se ek chaal chuno.</b> Is mode ka kaam sahi chaal ko list mein laana hai.</p>'}` });
+  return S; }
+function calcSteps(pos, d){ const M = lvM(), S = [], list = d.calc.slice(0, 5);
+  if (!M.rules) S.push({ t: `Step 1: Saari ${d.n} chaalein calculate karo`, a: [], h: `<p>Is mode mein rules nahi: har legal chaal ko <b>${DEPTH_NAME[M.depth]}</b> socho.</p><p class="small">${esc(DEPTH_TXT[M.depth])}</p><p class="small muted">Neeche sabse achhi 5 chaalon ka hisaab ek-ek karke.</p>` });
+  else S.push({ t: `Step 2: Calculation (${DEPTH_NAME[M.depth]})`, a: [], h: `<p>Ab in ${M.K} candidates ko ek-ek karke socho.</p><p class="small">${esc(DEPTH_TXT[M.depth])}</p><p class="small muted">Sabse achhi 5 ka hisaab neeche ek-ek karke.</p>` });
+  list.forEach((c, i) => { const m = pos.parseUci(c.uci), a = [arw(pos, m, AR.pick, { w: .18 })]; const q = new E.Position(pos.fen()); q.make(m); const r = c.line && c.line[1] ? sanMove(q, c.line[1]) : null; if (r) a.push(arw(q, r, AR.bad, { dash: 1 }));
+    S.push({ t: `Hisaab ${i + 1}/${list.length}: ${c.san}`, a, h: `<p><b>${esc(c.san)}</b> khelo (peela teer). Unka sabse achha jawab${r ? ` <b>${esc(c.line[1])}</b> (laal teer)` : ''}.</p><p class="line">${esc(moveLine(c.line, pos))}</p><div class="gw-v mid">Line ke end par score: <b>${fmtSc(c.score)}</b> (pyaade mein, aapki nazar se)</div>` }); });
+  const b = list[0]; if (b) S.push({ t: 'Final: sabse achha score', a: [arwU(pos, b.uci, AR.pick, { w: .2 })], h: `<p>Sabse achha score wali chaal: <b>${esc(b.san)}</b> (${fmtSc(b.score)}).</p><p class="small muted">Top 3: ${list.slice(0, 3).map(c => `${esc(c.san)} ${fmtSc(c.score)}`).join(', ')}</p>` });
+  return S; }
+function humanSteps(pos, d){ const M = lvM(), S = [];
+  S.push({ t: `Step 2: Top ${M.human} par insaani hisaab`, a: [], h: `<p>Card ki pehli ${M.human} chaalein lo. Har ek ko dimaag mein khelo, phir unke jawab socho: har capture, har check, har dhamki, aur 1 achhi shaant chaal. <b>Sabse bura jawab</b> hi us chaal ka score hai.</p>${HBH}` });
+  d.hcalc.forEach((c, i) => { const m = pos.parseUci(c.uci), a = [arw(pos, m, AR.pick, { w: .18 })]; const q = new E.Position(pos.fen()); q.make(m); const r = c.line && c.line[1] ? sanMove(q, c.line[1]) : null; if (r) a.push(arw(q, r, AR.bad, { dash: 1 }));
+    S.push({ t: `Hisaab ${i + 1}/${d.hcalc.length}: ${c.san}`, a, h: `<p><b>${esc(c.san)}</b> khelo (peela teer).${r ? ` Sabse bura jawab: <b>${esc(c.line[1])}</b> (laal teer).` : ''}</p><div class="gw-v mid">${hbTxt(c)}</div>` }); });
+  const b = d.hcalc[0]; if (b) S.push({ t: 'Step 3: Sabse zyada score wali chaal', a: [arwU(pos, b.uci, AR.pick, { w: .2 })], h: `<p>Jis chaal ka score sabse zyada hai: <b>${esc(b.san)}</b>.</p><ol class="small">${d.hcalc.map(c => `<li><b>${esc(c.san)}</b>: ${fmtPts(c.score)}</li>`).join('')}</ol>` });
+  return S; }
+function sochSteps(pos, rep){ const S = [], D = Object.fromEntries(rep.steps.map(s => [s.id, s.data])), t = D.threat, o = otherSide(pos);
+  const tm = t && t.san ? sanMove(o, t.san) : null;
+  S.push({ t: 'Step 1: Khatra', a: tm ? [arw(o, tm, AR.bad, { w: .18 })] : [], h: `<p>Pehle socho: agar main kuch na karoon, to opponent agli chaal mein kya karega?</p><div class="gw-v ${t && (t.kind === 'mate' || t.kind === 'material') ? 'no' : 'mid'}">${esc(t ? t.text : 'Koi khatra nahi.')}${tm ? ' (laal teer)' : ''}</div>` });
+  const hg = D.hanging, mk = [], ha = [];
+  for (const x of hg.mine) { mk.push({ s: E.nameSq(x.sq), c: AR.bad }); if (x.bySq) ha.push({ f: E.nameSq(x.bySq), t: E.nameSq(x.sq), c: AR.bad, dash: 1 }); }
+  for (const x of hg.theirs) { mk.push({ s: E.nameSq(x.sq), c: AR.good }); if (x.bySq) ha.push({ f: E.nameSq(x.bySq), t: E.nameSq(x.sq), c: AR.good, dash: 1 }); }
+  S.push({ t: 'Step 2: Latakte mohre', a: ha, m: mk, h: `<p>Har mohre ko dekho: kaunsa bina bachaav ke hai, ya jitne use maar rahe hain usse kam bacha rahe hain?</p><p>🟥 Mere: ${hg.mine.length ? hg.mine.map(x => `${esc(x.piece)} ${esc(x.sq)}`).join(', ') : 'koi nahi'}</p><p>🟩 Unke: ${hg.theirs.length ? hg.theirs.map(x => `${esc(x.piece)} ${esc(x.sq)}`).join(', ') : 'koi nahi'}</p>` });
+  const fc = D.forcing, fa = [], fl = [];
+  for (const [arr, c, nm] of [[fc.checks, AR.purple, 'Check'], [fc.captures, AR.good, 'Capture'], [fc.threats, AR.blue, 'Dhamki']]) for (const x of (arr || []).slice(0, 5)) { const cc = nm === 'Capture' && x.see < 0 ? AR.bad : c, a = arwU(pos, x.uci, cc); if (a) fa.push(a); fl.push(`<tr><td style="color:${cc}">●</td><td><b>${esc(x.san)}</b></td><td><small>${nm}${x.tags && x.tags.length ? ': ' + esc(x.tags.slice(0, 2).join(', ')) : ''}</small></td></tr>`); }
+  S.push({ t: 'Step 3: Checks, captures, dhamkiyaan', a: fa, h: `<p>Ab saari forcing chaalein dhoondo, is order mein: pehle <b style="color:${AR.purple}">checks</b>, phir <b style="color:${AR.good}">captures</b>, phir <b style="color:${AR.blue}">dhamkiyaan</b>.</p>${fl.length ? `<table class="tztb tzc calc"><tbody>${fl.join('')}</tbody></table>` : '<p class="gw-v mid">Koi forcing chaal nahi.</p>'}` });
+  const cd = D.candidates.cands;
+  S.push({ t: 'Step 4: Candidates', a: cd.map((c, i) => arwU(pos, c.uci, i ? AR.blue : AR.pick, { n: i + 1 })).filter(Boolean), h: `<p>Checklist se 2-3 mazboot chaalein chuno, aur har ek ke baad opponent ka sabse achha jawab socho.</p><table class="tztb tzc calc"><tbody>${cd.map((c, i) => `<tr><td>${i + 1}</td><td><b>${esc(c.san)}</b></td><td><small>${esc(c.ruleText)}<br>Score ${esc(c.scoreText)} · <span class="muted">${esc(c.line.slice(0, 4).join(' '))}</span></small></td></tr>`).join('')}</tbody></table>` });
+  const b = D.best; S.push({ t: 'Step 5: Final chaal', a: [arwU(pos, b.uci, AR.pick, { w: .2 })].filter(Boolean), h: `<p>Jo chaal har jawab ke baad bhi sabse achhi rahe: <b>${esc(b.san)}</b> (${esc(b.scoreText)}).</p><p class="small">${esc(b.reason)}</p>` });
+  return S; }
+async function lvBuildSteps(){ const fen = LV.pos.fen(), pos = new E.Position(fen), M = lvM(); let S;
+  const intro = { t: 'Position dekho', a: [], m: [], h: `<p><b>${pos.side === E.WHITE ? 'White' : 'Black'}</b> ki chaal. Kul <b>${pos.legalMoves().length}</b> legal chaalein.</p><p class="small">Ab ${LV.how === 'tez' ? 'Tez tarika' : `<b>${esc(M.name)}</b> ka tarika`} ek-ek step karke lagayenge. Har step mein board par teer dekho, phir <b>Aage</b> dabao.</p><p class="small muted">Teer: <b style="color:${AR.good}">hara</b> = achha, <b style="color:${AR.bad}">laal</b> = galti/khatra, <b style="color:${AR.pick}">peela</b> = chuni hui chaal, <b style="color:${AR.blue}">neela</b> = baaki candidates.</p>` };
+  if (LV.how === 'tez') S = tezSteps(pos);
+  else if (M.g === 0) S = sochSteps(pos, await ask({ cmd: 'analyze', fen, time: 1500 }));
+  else { const d = await lvModeDataC(fen); S = M.rules ? ruleSteps(pos, d) : [];
+    if (M.human) S = S.concat(humanSteps(pos, d)); else if (M.depth) S = S.concat(calcSteps(pos, d)); }
+  return [intro, ...S]; }
+async function lvStepsDraw(head){ const me = LV, fen = LV.pos.fen();
+  if (!LV.st || LV.st.fen !== fen) { LV.st = { fen, steps: null, i: 0 }; panel.innerHTML = `<div class="card">${head}<p><span class="spinner"></span>Steps taiyaar ho rahe hain…</p></div>`; lvWire();
+    try { LV.st.steps = await lvBuildSteps(); } catch (e) { panel.innerHTML = `<div class="card bad">Error: ${esc(e.message)}</div>`; return; }
+    if (LV !== me || LV.pos.fen() !== fen) return; }
+  const st = LV.st, S = st.steps, s = S[st.i], last = st.i === S.length - 1, user = lvUserTurn(), pos = new E.Position(fen);
+  T.step = user ? 4 : 0; T.busy = false;
+  tBoard.set(pos, LV.hist.length ? LV.hist[LV.hist.length - 1].sq : null); drawArrows(tBoard, s.a, s.m);
+  tStatus.textContent = user ? `👤 Aapki baari: step ${st.i + 1}/${S.length} · chaal kabhi bhi chal sakte ho` : `🤖 ${lvEngName()} ki baari: step ${st.i + 1}/${S.length}`;
+  const end = last ? (user ? `<div class="gw-v ok"><b>Ab aapki baari:</b> in steps ke hisaab se apni chaal <b>board par chalo</b>. Chaal ke baad engine check karega.</div>` : `<button class="btn pri" id="lvEngGo">🤖 ${lvEngName()} ki chaal dekho ▶</button>`) : '';
+  panel.innerHTML = `<div class="card">${head}<div class="steps">${S.map((x, i) => `<span class="${i < st.i ? 'done' : i === st.i ? 'cur' : ''}"></span>`).join('')}</div><p class="small muted" style="margin:0">Step ${st.i + 1} / ${S.length}</p><h2>${esc(s.t)}</h2>${s.h}${end}
+    <div class="gw-nav"><button class="btn" id="stPrev" ${st.i ? '' : 'disabled'}>◀ Peeche</button>${last ? '' : `<button class="btn pri" id="stNext">Aage ▶</button>`}</div>
+    <div class="gw-nav">${LV.hist.length ? '<button class="btn" id="lvPrev">↩ Pichhli chaal</button>' : ''}<button class="btn" id="lvNew">↻ Naya game</button><button class="btn" id="lvQuit">Training par wapas</button></div></div>`;
+  lvWire(); const on = (id, f) => { const b = panel.querySelector(id); if (b) b.onclick = f; };
+  on('#stPrev', () => { st.i--; lvDraw(); }); on('#stNext', () => { st.i++; lvDraw(); window.scrollTo(0, 0); });
+  on('#lvEngGo', async () => { const b = panel.querySelector('#lvEngGo'); b.disabled = true; b.innerHTML = '<span class="spinner"></span>soch raha hai…';
+    try { await lvEngineMove(); } catch (e) { return; } if (LV !== me) return; LV.k = LV.hist.length - 1; lvDraw(); }); }
 async function lvDraw(){ const me = LV, k = LV.k, N = LV.hist.length, M = lvM();
   const nav = (next) => `<div class="gw-nav"><button class="btn" id="lvPrev" ${k ? '' : 'disabled'}>◀ Peeche</button>${next}</div><div class="gw-nav"><button class="btn" id="lvNew">↻ Naya game</button><button class="btn" id="lvQuit">Training par wapas</button></div>`;
   const how = LV.how === 'tez' || M.g === 0 && LV.how === 'tez' ? 'Tez tarika' : M.g === 0 ? 'Purana tareeka + Tez' : M.name;
@@ -908,8 +1019,7 @@ async function lvDraw(){ const me = LV, k = LV.k, N = LV.hist.length, M = lvM();
       tStatus.textContent = `🏁 Game khatam: ${r === '1/2-1/2' ? 'Draw' : r === '1-0' ? 'White jeeta' : 'Black jeeta'}`;
       h = `<div class="card">${head}<h2>🏁 ${r === '1/2-1/2' ? 'Draw' : r === '1-0' ? 'White jeeta' : 'Black jeeta'}</h2><table class="tztb gw-sum"><tbody>
         ${s.u ? `<tr><td>Aapki chaalein engine jaisi (★)</td><td><b>${s.ug}/${s.u}</b></td></tr>` : ''}<tr><td>Tarike ki list mein engine jaisi chaal thi</td><td><b>${s.lh}/${s.n}</b></td></tr></tbody></table>${nav('')}</div>`; }
-    else if (lvUserTurn()) { T.step = 4; T.busy = false; tStatus.textContent = `👤 Aapki baari (${LV.pos.side === E.WHITE ? 'White' : 'Black'}): board par chaal chalo`;
-      h = `<div class="card">${head}<h2>Aapki baari</h2><p>Pehle ${LV.how === 'tez' ? 'Tez tarika' : 'is mode ka tarika'} khud lagao, phir board par chaal chalo. Chaal ke baad poora hisaab dikhega.</p><button class="btn" id="lvHint">💡 Tarika dikhao (list)</button><div id="lvHintOut"></div>${nav('')}</div>`; }
+    else if (lvUserTurn() || LV.watch) return lvStepsDraw(head);
     else { T.step = 0; tStatus.textContent = `🤖 ${lvEngName()} soch raha hai…`; h = `<div class="card">${head}<p><span class="spinner"></span>${lvEngName()} chaal soch raha hai…</p>${nav('')}</div>`; }
   } else {
     T.step = 0; const P = LV.hist[k], no = Math.floor(k / 2) + 1, dot = k % 2 ? '…' : '.';
