@@ -1,1 +1,1 @@
-{"file":"c1_current.bin.gz","wasm":"c1tm.wasm","base":"c1cur.wasm:nets/current.bin","pairs":376,"ms":500,"note":"TMX confirm run at 500 ms (first run +21 at 200 ms)"}
+{"file":"fhk_kb16_1024_20261117_1419.bin.gz","wasm":"k1024.wasm","base":"c1cur.wasm:nets/current.bin","pairs":376,"ms":200,"note":"Kaggle 1024 net (kb16, 2 epochs) vs c1, equal time 200 ms, 752 games"}
