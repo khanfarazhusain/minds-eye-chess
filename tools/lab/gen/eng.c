@@ -508,6 +508,9 @@ TL i32 r_move, r_score, r_depth, r_nodes, r_pvlen; TL i32 r_pv[MAXPLY];
 #ifndef SOFTT
 #define SOFTT 0.55
 #endif
+#ifdef TMX
+static TL i32 rootN[65536];
+#endif
 static TL i32 nodes, nodeLimit, rootPartial; static volatile i32 stop; static TL double deadline; TL i32 smpId = 0;
 TL i32 rootFilter[256]; TL i32 nRootFilter = 0;
 void set_tt_bits(i32 bits) { ttMask = (1 << (bits > TTB ? TTB : bits)) - 1; }
@@ -692,6 +695,9 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
 #ifdef CONTH
     cmPc[ply] = mvPc; cmTo[ply] = mTo(m);
 #endif
+#ifdef TMX
+    i32 rn0 = nodes;
+#endif
     int givesCheck = inCheck(); i32 s;
     i32 ext = (singExt && m == ttM) ? singExt : 0;
     if (legal == 1) s = -search(depth - 1 + ext, -beta, -alpha, ply + 1, 1);
@@ -716,6 +722,9 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
       if (s > alpha && R > 0) s = -search(depth - 1 + ext, -alpha - 1, -alpha, ply + 1, 1);
       if (s > alpha && s < beta) s = -search(depth - 1 + ext, -beta, -alpha, ply + 1, 1); }
     unmake();
+#ifdef TMX
+    if (ply == 0) rootN[m & 0xFFFF] += nodes - rn0;
+#endif
     if (stop) return 0;
     if (s > best) { best = s; bestMove = m;
       if (s > alpha) { alpha = s; i32 o = ply * MAXPLY, o1 = (ply + 1) * MAXPLY; pvTable[o] = m; i32 l = pvLen[ply + 1]; for (i32 j = 0; j < l; j++) pvTable[o + 1 + j] = pvTable[o1 + j]; pvLen[ply] = l + 1;
@@ -770,7 +779,21 @@ i32 go(double timeMs, i32 maxDepthIn, i32 nodeLim) {
     }
     if (stop) break;
     if (iabs(s) > MATE_BOUND && d > 6) break;
+#ifdef TMX
+    if (!smpId && !maxDepthIn) {
+      static TL i32 lastBest, stab, prevS; i32 bm = r_move;
+      if (d <= 6 + (smpId & 1) || bm != lastBest) stab = 0; else stab++;
+      double frac = nodes > 0 ? (double)rootN[bm & 0xFFFF] / (double)nodes : 0.5;
+      double f1 = (1.55 - frac) * 1.45; double f2 = 1.25 - imin(stab, 8) * 0.06;
+      double f3 = d >= 6 ? 1.0 + (prevS - s) / 100.0 : 1.0; if (f3 < 0.8) f3 = 0.8; if (f3 > 1.6) f3 = 1.6;
+      double fct = f1 * f2 * f3; if (fct < 0.4) fct = 0.4; if (fct > 2.0) fct = 2.0;
+      lastBest = bm; prevS = s;
+      memset(rootN, 0, sizeof rootN);
+      if (host_now() - t0 > (timeMs > 0 ? timeMs : 1000) * SOFTT * fct) break;
+    }
+#else
     if (!smpId && !maxDepthIn && host_now() - t0 > (timeMs > 0 ? timeMs : 1000) * SOFTT) break;
+#endif
     if (!smpId && !maxDepthIn && nl == 1 && d >= 4) break;
   }
   r_nodes = nodes; return r_move;

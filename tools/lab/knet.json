@@ -1,1 +1,1 @@
-{"file":"c1_current.bin.gz","wasm":"c1t23.wasm","base":"c1t23.wasm:nets/current.bin","bitsA":23,"bitsB":20,"pairs":240,"ms":3000,"note":"TT test: same engine/net, hash 2^23 entries vs 2^20 (bot today), 3 s/move, 480 games"}
+{"file":"c1_current.bin.gz","wasm":"c1tm.wasm","base":"c1cur.wasm:nets/current.bin","pairs":376,"ms":200,"note":"time mgmt: node-fraction x stability x score-drop soft limit (TMX) vs same engine without"}
