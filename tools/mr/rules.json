@@ -1,1 +1,1 @@
-{"every":300,"max":600000,"hidden":0,"note":"first rules model on SF best moves","v":2}
+{"every":20,"max":600000,"hidden":0,"note":"v3: + Tez tarika, 5-step context, missing rules; castling fix; stop early","v":3}

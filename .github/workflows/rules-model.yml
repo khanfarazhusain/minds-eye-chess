@@ -12,13 +12,13 @@ jobs:
   sample:
     if: github.repository == 'khanfarazhusain/minds-eye-chess'
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 300
     steps:
       - uses: actions/checkout@v4
         with: { ref: engine-lab }
       - run: |
           N=$(jq -r .every tools/mr/rules.json)
-          curl -sL --retry 5 https://database.lichess.org/lichess_db_eval.jsonl.zst | zstd -dc | python3 tools/mr/lichess_best.py $N | gzip > best.txt.gz
+          set +o pipefail; curl -sL --retry 5 https://database.lichess.org/lichess_db_eval.jsonl.zst | zstd -dc | (python3 tools/mr/lichess_best.py $N $(jq -r .max tools/mr/rules.json) || true) | gzip > best.txt.gz
           zcat best.txt.gz | wc -l
       - uses: actions/upload-artifact@v4
         with: { name: best, path: best.txt.gz, retention-days: 7 }
