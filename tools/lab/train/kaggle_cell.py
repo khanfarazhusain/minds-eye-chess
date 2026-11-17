@@ -29,7 +29,7 @@ STAMP = time.strftime('%Y%m%d_%H%M', time.gmtime()); NAME = f'fhk_{NET}_{STAMP}'
 OUT = os.path.join(W, NAME + '.bin'); CK = os.path.join(W, 'checkpoints_' + NAME)
 say('== FHK Kaggle trainer', NAME, 'kb', KB, 'h', H, 'epochs', EPOCHS, 'lr', LR, 'max hours', HOURS)
 sh('nvidia-smi --query-gpu=name,memory.total --format=csv || echo "NO GPU! Settings > Accelerator > GPU"')
-for f in ['trainpt2.py', 'fhkfeat.py', 'featpack.c', '../evconv2.py']: urllib.request.urlretrieve(RAW + 'train/' + f, os.path.basename(f))
+for f in ['trainpt2.py', 'fhkfeat.py', 'featpack.c', '../evconv2.py', 'binpack_dump.cpp']: urllib.request.urlretrieve(RAW + 'train/' + f, os.path.basename(f))
 sh('gcc -O2 -o featpack featpack.c -lm')
 if INIT:
     src = INIT if INIT.startswith('http') else RAW + INIT
@@ -61,6 +61,16 @@ if LN and not any(a['name'].startswith('lichess_eval_') for a in train):  # conv
     subprocess.run(f"set +o pipefail; {os.environ.get('FHK_LICHESS_CMD', 'curl -sL --retry 5 https://database.lichess.org/lichess_db_eval.jsonl.zst')} | {unz} | head -n {LN} | split -n r/{np_} -d -a 2 --filter='{sys.executable} evconv2.py | gzip -1 > $FILE.gz' - lichess_k_", shell=True, executable='/bin/bash')
     extra = sorted(f for f in os.listdir('.') if f.startswith('lichess_k_') and f.endswith('.gz'))
     say('Lichess files', extra, 'GB', round(sum(os.path.getsize(f) for f in extra) / 1e9, 2), 'in', round((time.time() - t) / 60, 1), 'min')
+# Stockfish self-play binpacks (HuggingFace official-stockfish/master-binpacks, public). FHK_BINPACK="nodes5000pv2_UHO,farseerT75" FHK_BPN=3e8 (total positions) FHK_LICHESS=0
+BP = [x.strip() for x in os.environ.get('FHK_BINPACK', '').split(',') if x.strip()]
+if BP:
+    t = time.time(); BPN = int(float(os.environ.get('FHK_BPN', '3e8'))); BPS = os.environ.get('FHK_BPSCALE', '0.5'); np_ = max(os.cpu_count() or 2, 2)
+    sh('rm -rf nnp && git clone -q --depth 1 https://github.com/official-stockfish/nnue-pytorch nnp && g++ -O2 -std=c++20 -I. -o binpack_dump binpack_dump.cpp')
+    for i, nm in enumerate(BP):
+        url = f'https://huggingface.co/datasets/official-stockfish/master-binpacks/resolve/main/{nm}.binpack'
+        subprocess.run(f"set +o pipefail; curl -sL --retry 5 {url} | ./binpack_dump /dev/stdin {BPN // len(BP)} {BPS} 8 | split -n r/{np_} -d -a 2 --filter='gzip -1 > $FILE.gz' - bp{i}_", shell=True, executable='/bin/bash')
+    extra += sorted(f for f in os.listdir('.') if f.startswith('bp') and f.endswith('.gz'))
+    say('binpack files', len(extra), 'in', round((time.time() - t) / 60, 1), 'min')
 t = time.time()
 cmd = (f'python -u trainpt2.py {OUT} ' + ' '.join([a['name'] for a in train] + extra) + f' --valid valid.gz --epochs {EPOCHS} --kb {KB} --h {H} --lr {LR}'
        + f' --ckdir {CK} --max-hours {max(HOURS - (time.time() - T0) / 3600 - 0.3, 0.02):.2f}' + (' --init init.bin' if INIT else '') + (' --lam 0.8 --lam-end 0.4 --fact' if os.environ.get('FHK_V2') == '1' else '') + ' ' + os.environ.get('FHK_EXTRA', ''))
