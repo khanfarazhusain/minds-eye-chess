@@ -22,7 +22,7 @@ PRESETS = {'kb4_512': (4, 512, 'nets/current.bin'), 'kb8_768': (8, 768, None), '
            'kb16_1536_ep1': (16, 1536, 'https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/kaggle-nets/fhk_kb16_1536_more_20261117_0210_ep1.bin.gz'),  # continue Kaggle run 2, best epoch
            'kb16_1536_more': (16, 1536, 'https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/kaggle-nets/fhk_kb16_1536_20261116_2138.bin.gz')}  # continue Kaggle run 1
 NET = os.environ.get('FHK_NET', 'kb16_1536'); KB, H, INIT = PRESETS[NET]
-EPOCHS = int(os.environ.get('FHK_EPOCHS', '1'))  # 17 Nov: valid loss was best after epoch 1, then rose (overfit); HOURS = float(os.environ.get('FHK_HOURS', '11'))
+EPOCHS = int(os.environ.get('FHK_EPOCHS', '1')); HOURS = float(os.environ.get('FHK_HOURS', '11'))  # 17 Nov: default 1 epoch (valid loss was best after epoch 1, then rose)
 LR = os.environ.get('FHK_LR', '5e-4' if INIT else '1e-3')
 if KB == 8: sys.exit('kb8 is not in fhkfeat.py yet; use kb4_512 or kb16_1536')
 STAMP = time.strftime('%Y%m%d_%H%M', time.gmtime()); NAME = f'fhk_{NET}_{STAMP}'
