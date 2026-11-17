@@ -7,6 +7,7 @@
 # Settings (optional, put them before "python k.py", e.g.  FHK_NET=kb16_1536 FHK_EPOCHS=1 python k.py):
 #   FHK_NET    kb16_1536 (default, FARAZ 16 Nov: big net first) | kb4_512 (starts from the loop's current.bin)
 #   FHK_EPOCHS passes over the data (default 2)      FHK_GB    max GB of .gz data to download (default: all that fits)
+#   FHK_LICHESS  Lichess eval DB lines to convert here on Kaggle (default 1e8, 0 = off; GitHub was too slow to do it)
 #   FHK_HOURS  stop and save after this many hours (default 11; Kaggle kills a run at 12)   FHK_LR  learning rate (default 1e-3, 5e-4 with init)
 import os, sys, subprocess, json, urllib.request, urllib.error, time, shutil
 T0 = time.time()
@@ -27,7 +28,7 @@ STAMP = time.strftime('%Y%m%d_%H%M', time.gmtime()); NAME = f'fhk_{NET}_{STAMP}'
 OUT = os.path.join(W, NAME + '.bin'); CK = os.path.join(W, 'checkpoints_' + NAME)
 say('== FHK Kaggle trainer', NAME, 'kb', KB, 'h', H, 'epochs', EPOCHS, 'lr', LR, 'max hours', HOURS)
 sh('nvidia-smi --query-gpu=name,memory.total --format=csv || echo "NO GPU! Settings > Accelerator > GPU"')
-for f in ['trainpt2.py', 'fhkfeat.py', 'featpack.c']: urllib.request.urlretrieve(RAW + 'train/' + f, f)
+for f in ['trainpt2.py', 'fhkfeat.py', 'featpack.c', '../evconv2.py']: urllib.request.urlretrieve(RAW + 'train/' + f, os.path.basename(f))
 sh('gcc -O2 -o featpack featpack.c -lm')
 if INIT:
     src = INIT if INIT.startswith('http') else RAW + INIT
@@ -40,7 +41,7 @@ valid_src = next((a for a in assets if a['name'] == 'run_43665001216.gz'), asset
 assets = [valid_src] + [a for a in assets if a is not valid_src]
 if any(a['name'].startswith('lichess_eval_') for a in assets):  # the full Lichess set replaces the old slice (run_43660933797 had fake 0.5 results)
     assets = [a for a in assets if a['name'] != 'run_43660933797.gz']
-free = shutil.disk_usage(D).free - 3_000_000_000
+free = shutil.disk_usage(D).free - 3_000_000_000 - (5_000_000_000 if float(os.environ.get('FHK_LICHESS', '1e8')) else 0)  # room for Lichess files
 budget = min(free, int(float(os.environ.get('FHK_GB', '1000')) * 1e9))
 train, total = [], 0
 for a in sorted(assets[1:], key=lambda a: a['name'], reverse=True):
@@ -49,8 +50,18 @@ say('train files', len(train), 'of', len(assets) - 1, 'GB', round(total / 1e9, 2
 sh(f"curl -sSL --retry 4 {valid_src['browser_download_url']} 2>/dev/null | zcat 2>/dev/null | head -n 1000000 | gzip -1 > valid.gz || true")
 for a in train:
     if not (os.path.exists(a['name']) and os.path.getsize(a['name']) == a['size']): sh(f"curl -fsSL --retry 4 -o {a['name']} {a['browser_download_url']}")
+LN = int(float(os.environ.get('FHK_LICHESS', '1e8'))); extra = []
+if LN and not any(a['name'].startswith('lichess_eval_') for a in train):  # convert the Lichess eval DB here (fast download on Kaggle)
+    train = [a for a in train if a['name'] != 'run_43660933797.gz']  # old Lichess slice with fake 0.5 results
+    t = time.time(); say('converting', LN, 'Lichess DB lines (Stockfish depth>=20, best move kept)')
+    if subprocess.run('which zstd', shell=True).returncode: subprocess.run([sys.executable, '-m', 'pip', 'install', '-q', 'zstandard'])
+    unz = 'zstd -dc' if not subprocess.run('which zstd', shell=True).returncode else f"{sys.executable} -c 'import sys,zstandard; zstandard.ZstdDecompressor().copy_stream(sys.stdin.buffer, sys.stdout.buffer)'"
+    np_ = max(os.cpu_count() or 2, 2)
+    subprocess.run(f"set +o pipefail; {os.environ.get('FHK_LICHESS_CMD', 'curl -sL --retry 5 https://database.lichess.org/lichess_db_eval.jsonl.zst')} | {unz} | head -n {LN} | split -n r/{np_} -d -a 2 --filter='{sys.executable} evconv2.py | gzip -1 > $FILE.gz' - lichess_k_", shell=True, executable='/bin/bash')
+    extra = sorted(f for f in os.listdir('.') if f.startswith('lichess_k_') and f.endswith('.gz'))
+    say('Lichess files', extra, 'GB', round(sum(os.path.getsize(f) for f in extra) / 1e9, 2), 'in', round((time.time() - t) / 60, 1), 'min')
 t = time.time()
-cmd = (f'python -u trainpt2.py {OUT} ' + ' '.join(a['name'] for a in train) + f' --valid valid.gz --epochs {EPOCHS} --kb {KB} --h {H} --lr {LR}'
+cmd = (f'python -u trainpt2.py {OUT} ' + ' '.join([a['name'] for a in train] + extra) + f' --valid valid.gz --epochs {EPOCHS} --kb {KB} --h {H} --lr {LR}'
        + f' --ckdir {CK} --max-hours {max(HOURS - (time.time() - T0) / 3600 - 0.3, 0.02):.2f}' + (' --init init.bin' if INIT else ''))
 say('$', cmd)
 p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
