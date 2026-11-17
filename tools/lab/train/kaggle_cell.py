@@ -64,7 +64,7 @@ if LN and not any(a['name'].startswith('lichess_eval_') for a in train):  # conv
 # Stockfish self-play binpacks (HuggingFace official-stockfish/master-binpacks, public). FHK_BINPACK="nodes5000pv2_UHO,farseerT75" FHK_BPN=3e8 (total positions) FHK_LICHESS=0
 BP = [x.strip() for x in os.environ.get('FHK_BINPACK', '').split(',') if x.strip()]
 if BP:
-    t = time.time(); BPN = int(float(os.environ.get('FHK_BPN', '3e8'))); BPS = os.environ.get('FHK_BPSCALE', '0.5'); np_ = max(os.cpu_count() or 2, 2)
+    t = time.time(); BPN = int(float(os.environ.get('FHK_BPN', '3e8'))); BPS = os.environ.get('FHK_BPSCALE', '1.0'); np_ = max(os.cpu_count() or 2, 2)
     sh('rm -rf nnp && git clone -q --depth 1 https://github.com/official-stockfish/nnue-pytorch nnp && g++ -O2 -std=c++20 -I. -o binpack_dump binpack_dump.cpp')
     for i, nm in enumerate(BP):
         url = f'https://huggingface.co/datasets/official-stockfish/master-binpacks/resolve/main/{nm}.binpack'
