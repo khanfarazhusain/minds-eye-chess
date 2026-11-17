@@ -1,0 +1,421 @@
+== FHK Kaggle trainer fhk_kb16_1536_more_20261117_0210 kb 16 h 1536 epochs 3 lr 5e-4 max hours 11.0
+$ nvidia-smi --query-gpu=name,memory.total --format=csv || echo "NO GPU! Settings > Accelerator > GPU"
+$ gcc -O2 -o featpack featpack.c -lm
+$ curl -fsSL --retry 4 'https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/kaggle-nets/fhk_kb16_1536_20261116_2138.bin.gz' | zcat > init.bin
+init from https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/kaggle-nets/fhk_kb16_1536_20261116_2138.bin.gz
+train files 18 of 18 GB 8.82 (about 71 crore positions), valid from run_43665001216.gz
+$ curl -sSL --retry 4 https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43665001216.gz 2>/dev/null | zcat 2>/dev/null | head -n 1000000 | gzip -1 > valid.gz || true
+$ curl -fsSL --retry 4 -o run_43937160717.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43937160717.gz
+$ curl -fsSL --retry 4 -o run_43892196967.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43892196967.gz
+$ curl -fsSL --retry 4 -o run_43848316410.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43848316410.gz
+$ curl -fsSL --retry 4 -o run_43812207859.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43812207859.gz
+$ curl -fsSL --retry 4 -o run_43798538292.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43798538292.gz
+$ curl -fsSL --retry 4 -o run_43782919715.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43782919715.gz
+$ curl -fsSL --retry 4 -o run_43767020314.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43767020314.gz
+$ curl -fsSL --retry 4 -o run_43752876286.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43752876286.gz
+$ curl -fsSL --retry 4 -o run_43740032546.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43740032546.gz
+$ curl -fsSL --retry 4 -o run_43727216804.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43727216804.gz
+$ curl -fsSL --retry 4 -o run_43715125800.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43715125800.gz
+$ curl -fsSL --retry 4 -o run_43705557722.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43705557722.gz
+$ curl -fsSL --retry 4 -o run_43696352478.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43696352478.gz
+$ curl -fsSL --retry 4 -o run_43686997759.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43686997759.gz
+$ curl -fsSL --retry 4 -o run_43660933797.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/run_43660933797.gz
+$ curl -fsSL --retry 4 -o helper_fhkyz1_43902316419.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/helper_fhkyz1_43902316419.gz
+$ curl -fsSL --retry 4 -o helper_fhkyz132_43819273388.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/helper_fhkyz132_43819273388.gz
+$ curl -fsSL --retry 4 -o helper_fhkyz132_43774689224.gz https://github.com/khanfarazhusain/minds-eye-chess/releases/download/data-archive/helper_fhkyz132_43774689224.gz
+$ python -u trainpt2.py /kaggle/working/fhk_kb16_1536_more_20261117_0210.bin run_43937160717.gz run_43892196967.gz run_43848316410.gz run_43812207859.gz run_43798538292.gz run_43782919715.gz run_43767020314.gz run_43752876286.gz run_43740032546.gz run_43727216804.gz run_43715125800.gz run_43705557722.gz run_43696352478.gz run_43686997759.gz run_43660933797.gz helper_fhkyz1_43902316419.gz helper_fhkyz132_43819273388.gz helper_fhkyz132_43774689224.gz --valid valid.gz --epochs 3 --kb 16 --h 1536 --lr 5e-4 --ckdir /kaggle/working/checkpoints_fhk_kb16_1536_more_20261117_0210 --max-hours 10.61 --init init.bin
+device cuda
+init v2 init.bin
+featpack: 1000000 positions
+valid positions 1000000
+valid at start 0.004462
+  ep 0 run_43705557722.gz +8000000 total 8000000 train 0.002858 74s 95k pos/s
+  ep 0 run_43705557722.gz +8000000 total 16000000 train 0.002851 152s 99k pos/s
+featpack: 18003589 positions
+  ep 0 run_43705557722.gz +2003589 total 18003589 train 0.002851 172s 99k pos/s
+  ep 0 run_43727216804.gz +8000000 total 26003589 train 0.002914 251s 100k pos/s
+  ep 0 run_43727216804.gz +8000000 total 34003589 train 0.002940 331s 100k pos/s
+  ep 0 run_43727216804.gz +8000000 total 42003589 train 0.002955 410s 100k pos/s
+featpack: 31286093 positions
+  ep 0 run_43727216804.gz +7286093 total 49289682 train 0.002964 482s 100k pos/s
+  ep 0 run_43937160717.gz +8000000 total 57289682 train 0.003205 562s 100k pos/s
+  ep 0 run_43937160717.gz +8000000 total 65289682 train 0.003375 641s 100k pos/s
+  ep 0 run_43937160717.gz +8000000 total 73289682 train 0.003504 720s 100k pos/s
+  ep 0 run_43937160717.gz +8000000 total 81289682 train 0.003606 799s 101k pos/s
+featpack: 36695668 positions
+  ep 0 run_43937160717.gz +4695668 total 85985350 train 0.003653 845s 101k pos/s
+  ep 0 helper_fhkyz132_43819273388.gz +8000000 total 93985350 train 0.003659 924s 101k pos/s
+  ep 0 helper_fhkyz132_43819273388.gz +8000000 total 101985350 train 0.003644 1003s 101k pos/s
+  ep 0 helper_fhkyz132_43819273388.gz +8000000 total 109985350 train 0.003600 1082s 101k pos/s
+  ep 0 helper_fhkyz132_43819273388.gz +8000000 total 117985350 train 0.003607 1161s 101k pos/s
+  ep 0 helper_fhkyz132_43819273388.gz +8000000 total 125985350 train 0.003572 1240s 101k pos/s
+  ep 0 helper_fhkyz132_43819273388.gz +8000000 total 133985350 train 0.003577 1319s 101k pos/s
+  ep 0 helper_fhkyz132_43819273388.gz +8000000 total 141985350 train 0.003551 1398s 101k pos/s
+  ep 0 helper_fhkyz132_43819273388.gz +8000000 total 149985350 train 0.003538 1477s 101k pos/s
+  ep 0 helper_fhkyz132_43819273388.gz +8000000 total 157985350 train 0.003543 1556s 101k pos/s
+  ep 0 helper_fhkyz132_43819273388.gz +8000000 total 165985350 train 0.003507 1636s 101k pos/s
+  ep 0 helper_fhkyz132_43819273388.gz +8000000 total 173985350 train 0.003491 1715s 101k pos/s
+  ep 0 helper_fhkyz132_43819273388.gz +8000000 total 181985350 train 0.003468 1794s 101k pos/s
+featpack: 103432910 positions
+  ep 0 helper_fhkyz132_43819273388.gz +7432910 total 189418260 train 0.003471 1867s 101k pos/s
+  ep 0 run_43848316410.gz +8000000 total 197418260 train 0.003470 1947s 101k pos/s
+  ep 0 run_43848316410.gz +8000000 total 205418260 train 0.003469 2026s 101k pos/s
+  ep 0 run_43848316410.gz +8000000 total 213418260 train 0.003467 2105s 101k pos/s
+  ep 0 run_43848316410.gz +8000000 total 221418260 train 0.003465 2184s 101k pos/s
+featpack: 34652685 positions
+  ep 0 run_43848316410.gz +2652685 total 224070945 train 0.003463 2210s 101k pos/s
+  ep 0 helper_fhkyz1_43902316419.gz +8000000 total 232070945 train 0.003487 2289s 101k pos/s
+  ep 0 helper_fhkyz1_43902316419.gz +8000000 total 240070945 train 0.003484 2369s 101k pos/s
+  ep 0 helper_fhkyz1_43902316419.gz +8000000 total 248070945 train 0.003475 2448s 101k pos/s
+  ep 0 helper_fhkyz1_43902316419.gz +8000000 total 256070945 train 0.003493 2527s 101k pos/s
+  ep 0 helper_fhkyz1_43902316419.gz +8000000 total 264070945 train 0.003506 2606s 101k pos/s
+  ep 0 helper_fhkyz1_43902316419.gz +8000000 total 272070945 train 0.003524 2685s 101k pos/s
+  ep 0 helper_fhkyz1_43902316419.gz +8000000 total 280070945 train 0.003542 2764s 101k pos/s
+  ep 0 helper_fhkyz1_43902316419.gz +8000000 total 288070945 train 0.003548 2843s 101k pos/s
+  ep 0 helper_fhkyz1_43902316419.gz +8000000 total 296070945 train 0.003560 2922s 101k pos/s
+  ep 0 helper_fhkyz1_43902316419.gz +8000000 total 304070945 train 0.003576 3001s 101k pos/s
+  ep 0 helper_fhkyz1_43902316419.gz +8000000 total 312070945 train 0.003589 3080s 101k pos/s
+  ep 0 helper_fhkyz1_43902316419.gz +8000000 total 320070945 train 0.003585 3159s 101k pos/s
+featpack: 98149826 positions
+  ep 0 helper_fhkyz1_43902316419.gz +2149826 total 322220771 train 0.003590 3180s 101k pos/s
+  ep 0 run_43715125800.gz +8000000 total 330220771 train 0.003584 3259s 101k pos/s
+  ep 0 run_43715125800.gz +8000000 total 338220771 train 0.003575 3338s 101k pos/s
+  ep 0 run_43715125800.gz +8000000 total 346220771 train 0.003565 3417s 101k pos/s
+featpack: 31174247 positions
+  ep 0 run_43715125800.gz +7174247 total 353395018 train 0.003557 3488s 101k pos/s
+  ep 0 run_43812207859.gz +8000000 total 361395018 train 0.003554 3568s 101k pos/s
+  ep 0 run_43812207859.gz +8000000 total 369395018 train 0.003550 3646s 101k pos/s
+  ep 0 run_43812207859.gz +8000000 total 377395018 train 0.003547 3726s 101k pos/s
+  ep 0 run_43812207859.gz +8000000 total 385395018 train 0.003543 3805s 101k pos/s
+featpack: 34890145 positions
+  ep 0 run_43812207859.gz +2890145 total 388285163 train 0.003542 3833s 101k pos/s
+  ep 0 run_43782919715.gz +8000000 total 396285163 train 0.003535 3912s 101k pos/s
+  ep 0 run_43782919715.gz +8000000 total 404285163 train 0.003528 3991s 101k pos/s
+  ep 0 run_43782919715.gz +8000000 total 412285163 train 0.003521 4070s 101k pos/s
+  ep 0 run_43782919715.gz +8000000 total 420285163 train 0.003514 4149s 101k pos/s
+featpack: 32893413 positions
+  ep 0 run_43782919715.gz +893413 total 421178576 train 0.003514 4158s 101k pos/s
+  ep 0 helper_fhkyz132_43774689224.gz +8000000 total 429178576 train 0.003500 4238s 101k pos/s
+  ep 0 helper_fhkyz132_43774689224.gz +8000000 total 437178576 train 0.003486 4317s 101k pos/s
+  ep 0 helper_fhkyz132_43774689224.gz +8000000 total 445178576 train 0.003477 4396s 101k pos/s
+  ep 0 helper_fhkyz132_43774689224.gz +8000000 total 453178576 train 0.003463 4475s 101k pos/s
+  ep 0 helper_fhkyz132_43774689224.gz +8000000 total 461178576 train 0.003457 4554s 101k pos/s
+  ep 0 helper_fhkyz132_43774689224.gz +8000000 total 469178576 train 0.003447 4633s 101k pos/s
+  ep 0 helper_fhkyz132_43774689224.gz +8000000 total 477178576 train 0.003440 4713s 101k pos/s
+  ep 0 helper_fhkyz132_43774689224.gz +8000000 total 485178576 train 0.003426 4792s 101k pos/s
+  ep 0 helper_fhkyz132_43774689224.gz +8000000 total 493178576 train 0.003421 4871s 101k pos/s
+  ep 0 helper_fhkyz132_43774689224.gz +8000000 total 501178576 train 0.003412 4950s 101k pos/s
+  ep 0 helper_fhkyz132_43774689224.gz +8000000 total 509178576 train 0.003408 5029s 101k pos/s
+  ep 0 helper_fhkyz132_43774689224.gz +8000000 total 517178576 train 0.003399 5108s 101k pos/s
+  ep 0 helper_fhkyz132_43774689224.gz +8000000 total 525178576 train 0.003392 5187s 101k pos/s
+featpack: 104103301 positions
+  ep 0 helper_fhkyz132_43774689224.gz +103301 total 525281877 train 0.003392 5188s 101k pos/s
+  ep 0 run_43660933797.gz +8000000 total 533281877 train 0.003443 5270s 101k pos/s
+  ep 0 run_43660933797.gz +8000000 total 541281877 train 0.003493 5352s 101k pos/s
+  ep 0 run_43660933797.gz +8000000 total 549281877 train 0.003541 5433s 101k pos/s
+  ep 0 run_43660933797.gz +8000000 total 557281877 train 0.003588 5515s 101k pos/s
+  ep 0 run_43660933797.gz +8000000 total 565281877 train 0.003633 5596s 101k pos/s
+  ep 0 run_43660933797.gz +8000000 total 573281877 train 0.003676 5678s 101k pos/s
+  ep 0 run_43660933797.gz +8000000 total 581281877 train 0.003718 5759s 101k pos/s
+featpack: 58190763 positions
+  ep 0 run_43660933797.gz +2190763 total 583472640 train 0.003730 5781s 101k pos/s
+  ep 0 run_43767020314.gz +8000000 total 591472640 train 0.003728 5860s 101k pos/s
+  ep 0 run_43767020314.gz +8000000 total 599472640 train 0.003722 5939s 101k pos/s
+  ep 0 run_43767020314.gz +8000000 total 607472640 train 0.003715 6018s 101k pos/s
+  ep 0 run_43767020314.gz +8000000 total 615472640 train 0.003707 6097s 101k pos/s
+featpack: 32457736 positions
+  ep 0 run_43767020314.gz +457736 total 615930376 train 0.003707 6102s 101k pos/s
+  ep 0 run_43752876286.gz +8000000 total 623930376 train 0.003703 6181s 101k pos/s
+  ep 0 run_43752876286.gz +8000000 total 631930376 train 0.003697 6260s 101k pos/s
+  ep 0 run_43752876286.gz +8000000 total 639930376 train 0.003693 6339s 101k pos/s
+  ep 0 run_43752876286.gz +8000000 total 647930376 train 0.003688 6418s 101k pos/s
+featpack: 34096096 positions
+  ep 0 run_43752876286.gz +2096096 total 650026472 train 0.003686 6439s 101k pos/s
+  ep 0 run_43740032546.gz +8000000 total 658026472 train 0.003681 6518s 101k pos/s
+  ep 0 run_43740032546.gz +8000000 total 666026472 train 0.003675 6597s 101k pos/s
+  ep 0 run_43740032546.gz +8000000 total 674026472 train 0.003669 6676s 101k pos/s
+  ep 0 run_43740032546.gz +8000000 total 682026472 train 0.003663 6755s 101k pos/s
+featpack: 35916170 positions
+  ep 0 run_43740032546.gz +3916170 total 685942642 train 0.003660 6794s 101k pos/s
+  ep 0 run_43798538292.gz +8000000 total 693942642 train 0.003657 6873s 101k pos/s
+  ep 0 run_43798538292.gz +8000000 total 701942642 train 0.003653 6952s 101k pos/s
+  ep 0 run_43798538292.gz +8000000 total 709942642 train 0.003650 7031s 101k pos/s
+featpack: 29822728 positions
+  ep 0 run_43798538292.gz +5822728 total 715765370 train 0.003648 7089s 101k pos/s
+  ep 0 run_43892196967.gz +8000000 total 723765370 train 0.003647 7168s 101k pos/s
+  ep 0 run_43892196967.gz +8000000 total 731765370 train 0.003647 7247s 101k pos/s
+  ep 0 run_43892196967.gz +8000000 total 739765370 train 0.003646 7327s 101k pos/s
+  ep 0 run_43892196967.gz +8000000 total 747765370 train 0.003646 7406s 101k pos/s
+featpack: 34995527 positions
+  ep 0 run_43892196967.gz +2995527 total 750760897 train 0.003646 7435s 101k pos/s
+  ep 0 run_43686997759.gz +8000000 total 758760897 train 0.003642 7514s 101k pos/s
+  ep 0 run_43686997759.gz +8000000 total 766760897 train 0.003637 7593s 101k pos/s
+featpack: 16692258 positions
+  ep 0 run_43686997759.gz +692258 total 767453155 train 0.003637 7600s 101k pos/s
+  ep 0 run_43696352478.gz +8000000 total 775453155 train 0.003632 7680s 101k pos/s
+  ep 0 run_43696352478.gz +8000000 total 783453155 train 0.003628 7759s 101k pos/s
+featpack: 16227375 positions
+  ep 0 run_43696352478.gz +227375 total 783680530 train 0.003628 7761s 101k pos/s
+epoch 0 train 0.003628 valid 0.003936 lr 0.0005 7764s
+checkpoint /kaggle/working/checkpoints_fhk_kb16_1536_more_20261117_0210/ep1.bin
+  ep 1 run_43715125800.gz +8000000 total 791680530 train 0.003267 79s 101k pos/s
+  ep 1 run_43715125800.gz +8000000 total 799680530 train 0.003235 158s 101k pos/s
+  ep 1 run_43715125800.gz +8000000 total 807680530 train 0.003215 237s 101k pos/s
+featpack: 31174247 positions
+  ep 1 run_43715125800.gz +7174247 total 814854777 train 0.003201 308s 101k pos/s
+  ep 1 run_43782919715.gz +8000000 total 822854777 train 0.003201 387s 101k pos/s
+  ep 1 run_43782919715.gz +8000000 total 830854777 train 0.003195 466s 101k pos/s
+  ep 1 run_43782919715.gz +8000000 total 838854777 train 0.003186 545s 101k pos/s
+  ep 1 run_43782919715.gz +8000000 total 846854777 train 0.003177 624s 101k pos/s
+featpack: 32893413 positions
+  ep 1 run_43782919715.gz +893413 total 847748190 train 0.003175 633s 101k pos/s
+  ep 1 helper_fhkyz132_43819273388.gz +8000000 total 855748190 train 0.003225 713s 101k pos/s
+  ep 1 helper_fhkyz132_43819273388.gz +8000000 total 863748190 train 0.003245 792s 101k pos/s
+  ep 1 helper_fhkyz132_43819273388.gz +8000000 total 871748190 train 0.003238 871s 101k pos/s
+  ep 1 helper_fhkyz132_43819273388.gz +8000000 total 879748190 train 0.003267 950s 101k pos/s
+  ep 1 helper_fhkyz132_43819273388.gz +8000000 total 887748190 train 0.003266 1029s 101k pos/s
+  ep 1 helper_fhkyz132_43819273388.gz +8000000 total 895748190 train 0.003285 1108s 101k pos/s
+  ep 1 helper_fhkyz132_43819273388.gz +8000000 total 903748190 train 0.003279 1187s 101k pos/s
+  ep 1 helper_fhkyz132_43819273388.gz +8000000 total 911748190 train 0.003284 1266s 101k pos/s
+  ep 1 helper_fhkyz132_43819273388.gz +8000000 total 919748190 train 0.003297 1346s 101k pos/s
+  ep 1 helper_fhkyz132_43819273388.gz +8000000 total 927748190 train 0.003282 1425s 101k pos/s
+  ep 1 helper_fhkyz132_43819273388.gz +8000000 total 935748190 train 0.003279 1504s 101k pos/s
+  ep 1 helper_fhkyz132_43819273388.gz +8000000 total 943748190 train 0.003270 1583s 101k pos/s
+featpack: 103432910 positions
+  ep 1 helper_fhkyz132_43819273388.gz +7432910 total 951181100 train 0.003280 1657s 101k pos/s
+  ep 1 helper_fhkyz132_43774689224.gz +8000000 total 959181100 train 0.003260 1737s 101k pos/s
+  ep 1 helper_fhkyz132_43774689224.gz +8000000 total 967181100 train 0.003236 1816s 101k pos/s
+  ep 1 helper_fhkyz132_43774689224.gz +8000000 total 975181100 train 0.003225 1895s 101k pos/s
+  ep 1 helper_fhkyz132_43774689224.gz +8000000 total 983181100 train 0.003207 1974s 101k pos/s
+  ep 1 helper_fhkyz132_43774689224.gz +8000000 total 991181100 train 0.003200 2053s 101k pos/s
+  ep 1 helper_fhkyz132_43774689224.gz +8000000 total 999181100 train 0.003188 2132s 101k pos/s
+  ep 1 helper_fhkyz132_43774689224.gz +8000000 total 1007181100 train 0.003180 2211s 101k pos/s
+  ep 1 helper_fhkyz132_43774689224.gz +8000000 total 1015181100 train 0.003160 2290s 101k pos/s
+  ep 1 helper_fhkyz132_43774689224.gz +8000000 total 1023181100 train 0.003155 2369s 101k pos/s
+  ep 1 helper_fhkyz132_43774689224.gz +8000000 total 1031181100 train 0.003145 2448s 101k pos/s
+  ep 1 helper_fhkyz132_43774689224.gz +8000000 total 1039181100 train 0.003142 2527s 101k pos/s
+  ep 1 helper_fhkyz132_43774689224.gz +8000000 total 1047181100 train 0.003133 2607s 101k pos/s
+  ep 1 helper_fhkyz132_43774689224.gz +8000000 total 1055181100 train 0.003124 2686s 101k pos/s
+featpack: 104103301 positions
+  ep 1 helper_fhkyz132_43774689224.gz +103301 total 1055284401 train 0.003124 2687s 101k pos/s
+  ep 1 run_43727216804.gz +8000000 total 1063284401 train 0.003128 2766s 101k pos/s
+  ep 1 run_43727216804.gz +8000000 total 1071284401 train 0.003131 2845s 101k pos/s
+  ep 1 run_43727216804.gz +8000000 total 1079284401 train 0.003134 2924s 101k pos/s
+featpack: 31286093 positions
+  ep 1 run_43727216804.gz +7286093 total 1086570494 train 0.003136 2996s 101k pos/s
+  ep 1 run_43937160717.gz +8000000 total 1094570494 train 0.003169 3075s 101k pos/s
+  ep 1 run_43937160717.gz +8000000 total 1102570494 train 0.003199 3154s 101k pos/s
+  ep 1 run_43937160717.gz +8000000 total 1110570494 train 0.003227 3233s 101k pos/s
+  ep 1 run_43937160717.gz +8000000 total 1118570494 train 0.003254 3312s 101k pos/s
+featpack: 36695668 positions
+  ep 1 run_43937160717.gz +4695668 total 1123266162 train 0.003268 3358s 101k pos/s
+  ep 1 helper_fhkyz1_43902316419.gz +8000000 total 1131266162 train 0.003284 3437s 101k pos/s
+  ep 1 helper_fhkyz1_43902316419.gz +8000000 total 1139266162 train 0.003286 3517s 101k pos/s
+  ep 1 helper_fhkyz1_43902316419.gz +8000000 total 1147266162 train 0.003285 3596s 101k pos/s
+  ep 1 helper_fhkyz1_43902316419.gz +8000000 total 1155266162 train 0.003299 3675s 101k pos/s
+  ep 1 helper_fhkyz1_43902316419.gz +8000000 total 1163266162 train 0.003309 3754s 101k pos/s
+  ep 1 helper_fhkyz1_43902316419.gz +8000000 total 1171266162 train 0.003322 3833s 101k pos/s
+  ep 1 helper_fhkyz1_43902316419.gz +8000000 total 1179266162 train 0.003335 3912s 101k pos/s
+  ep 1 helper_fhkyz1_43902316419.gz +8000000 total 1187266162 train 0.003340 3991s 101k pos/s
+  ep 1 helper_fhkyz1_43902316419.gz +8000000 total 1195266162 train 0.003350 4070s 101k pos/s
+  ep 1 helper_fhkyz1_43902316419.gz +8000000 total 1203266162 train 0.003362 4149s 101k pos/s
+  ep 1 helper_fhkyz1_43902316419.gz +8000000 total 1211266162 train 0.003371 4228s 101k pos/s
+  ep 1 helper_fhkyz1_43902316419.gz +8000000 total 1219266162 train 0.003375 4307s 101k pos/s
+featpack: 98149826 positions
+  ep 1 helper_fhkyz1_43902316419.gz +2149826 total 1221415988 train 0.003379 4328s 101k pos/s
+  ep 1 run_43660933797.gz +8000000 total 1229415988 train 0.003442 4410s 101k pos/s
+  ep 1 run_43660933797.gz +8000000 total 1237415988 train 0.003499 4491s 101k pos/s
+  ep 1 run_43660933797.gz +8000000 total 1245415988 train 0.003553 4573s 101k pos/s
+  ep 1 run_43660933797.gz +8000000 total 1253415988 train 0.003605 4654s 101k pos/s
+  ep 1 run_43660933797.gz +8000000 total 1261415988 train 0.003655 4736s 101k pos/s
+  ep 1 run_43660933797.gz +8000000 total 1269415988 train 0.003702 4817s 101k pos/s
+  ep 1 run_43660933797.gz +8000000 total 1277415988 train 0.003748 4899s 101k pos/s
+featpack: 58190763 positions
+  ep 1 run_43660933797.gz +2190763 total 1279606751 train 0.003761 4921s 101k pos/s
+  ep 1 run_43812207859.gz +8000000 total 1287606751 train 0.003763 5000s 101k pos/s
+  ep 1 run_43812207859.gz +8000000 total 1295606751 train 0.003758 5079s 101k pos/s
+  ep 1 run_43812207859.gz +8000000 total 1303606751 train 0.003753 5159s 101k pos/s
+  ep 1 run_43812207859.gz +8000000 total 1311606751 train 0.003747 5238s 101k pos/s
+featpack: 34890145 positions
+  ep 1 run_43812207859.gz +2890145 total 1314496896 train 0.003744 5266s 101k pos/s
+  ep 1 run_43767020314.gz +8000000 total 1322496896 train 0.003735 5346s 101k pos/s
+  ep 1 run_43767020314.gz +8000000 total 1330496896 train 0.003724 5425s 101k pos/s
+  ep 1 run_43767020314.gz +8000000 total 1338496896 train 0.003713 5504s 101k pos/s
+  ep 1 run_43767020314.gz +8000000 total 1346496896 train 0.003703 5583s 101k pos/s
+featpack: 32457736 positions
+  ep 1 run_43767020314.gz +457736 total 1346954632 train 0.003702 5587s 101k pos/s
+  ep 1 run_43705557722.gz +8000000 total 1354954632 train 0.003695 5667s 101k pos/s
+  ep 1 run_43705557722.gz +8000000 total 1362954632 train 0.003688 5746s 101k pos/s
+featpack: 18003589 positions
+  ep 1 run_43705557722.gz +2003589 total 1364958221 train 0.003687 5766s 101k pos/s
+  ep 1 run_43686997759.gz +8000000 total 1372958221 train 0.003677 5845s 101k pos/s
+  ep 1 run_43686997759.gz +8000000 total 1380958221 train 0.003667 5925s 101k pos/s
+featpack: 16692258 positions
+  ep 1 run_43686997759.gz +692258 total 1381650479 train 0.003666 5931s 101k pos/s
+  ep 1 run_43696352478.gz +8000000 total 1389650479 train 0.003656 6011s 101k pos/s
+  ep 1 run_43696352478.gz +8000000 total 1397650479 train 0.003647 6090s 101k pos/s
+featpack: 16227375 positions
+  ep 1 run_43696352478.gz +227375 total 1397877854 train 0.003646 6092s 101k pos/s
+  ep 1 run_43752876286.gz +8000000 total 1405877854 train 0.003640 6172s 101k pos/s
+  ep 1 run_43752876286.gz +8000000 total 1413877854 train 0.003633 6251s 101k pos/s
+  ep 1 run_43752876286.gz +8000000 total 1421877854 train 0.003626 6330s 101k pos/s
+  ep 1 run_43752876286.gz +8000000 total 1429877854 train 0.003619 6409s 101k pos/s
+featpack: 34096096 positions
+  ep 1 run_43752876286.gz +2096096 total 1431973950 train 0.003617 6430s 101k pos/s
+  ep 1 run_43892196967.gz +8000000 total 1439973950 train 0.003614 6509s 101k pos/s
+  ep 1 run_43892196967.gz +8000000 total 1447973950 train 0.003610 6588s 101k pos/s
+  ep 1 run_43892196967.gz +8000000 total 1455973950 train 0.003606 6668s 101k pos/s
+  ep 1 run_43892196967.gz +8000000 total 1463973950 train 0.003602 6747s 101k pos/s
+featpack: 34995527 positions
+  ep 1 run_43892196967.gz +2995527 total 1466969477 train 0.003601 6776s 101k pos/s
+  ep 1 run_43740032546.gz +8000000 total 1474969477 train 0.003595 6856s 101k pos/s
+  ep 1 run_43740032546.gz +8000000 total 1482969477 train 0.003588 6935s 101k pos/s
+  ep 1 run_43740032546.gz +8000000 total 1490969477 train 0.003581 7014s 101k pos/s
+  ep 1 run_43740032546.gz +8000000 total 1498969477 train 0.003574 7093s 101k pos/s
+featpack: 35916170 positions
+  ep 1 run_43740032546.gz +3916170 total 1502885647 train 0.003571 7132s 101k pos/s
+  ep 1 run_43848316410.gz +8000000 total 1510885647 train 0.003569 7211s 101k pos/s
+  ep 1 run_43848316410.gz +8000000 total 1518885647 train 0.003567 7290s 101k pos/s
+  ep 1 run_43848316410.gz +8000000 total 1526885647 train 0.003565 7370s 101k pos/s
+  ep 1 run_43848316410.gz +8000000 total 1534885647 train 0.003563 7449s 101k pos/s
+featpack: 34652685 positions
+  ep 1 run_43848316410.gz +2652685 total 1537538332 train 0.003563 7475s 101k pos/s
+  ep 1 run_43798538292.gz +8000000 total 1545538332 train 0.003558 7555s 101k pos/s
+  ep 1 run_43798538292.gz +8000000 total 1553538332 train 0.003553 7634s 101k pos/s
+  ep 1 run_43798538292.gz +8000000 total 1561538332 train 0.003549 7713s 101k pos/s
+featpack: 29822728 positions
+  ep 1 run_43798538292.gz +5822728 total 1567361060 train 0.003545 7771s 101k pos/s
+epoch 1 train 0.003545 valid 0.004240 lr 0.00015 7774s
+checkpoint /kaggle/working/checkpoints_fhk_kb16_1536_more_20261117_0210/ep2.bin
+  ep 2 run_43660933797.gz +8000000 total 1575361060 train 0.007049 81s 101k pos/s
+  ep 2 run_43660933797.gz +8000000 total 1583361060 train 0.006894 163s 101k pos/s
+  ep 2 run_43660933797.gz +8000000 total 1591361060 train 0.006810 244s 101k pos/s
+  ep 2 run_43660933797.gz +8000000 total 1599361060 train 0.006762 326s 101k pos/s
+  ep 2 run_43660933797.gz +8000000 total 1607361060 train 0.006727 407s 101k pos/s
+  ep 2 run_43660933797.gz +8000000 total 1615361060 train 0.006693 488s 101k pos/s
+  ep 2 run_43660933797.gz +8000000 total 1623361060 train 0.006671 570s 101k pos/s
+featpack: 58190763 positions
+  ep 2 run_43660933797.gz +2190763 total 1625551823 train 0.006667 592s 101k pos/s
+  ep 2 run_43696352478.gz +8000000 total 1633551823 train 0.006273 671s 101k pos/s
+  ep 2 run_43696352478.gz +8000000 total 1641551823 train 0.005916 750s 101k pos/s
+featpack: 16227375 positions
+  ep 2 run_43696352478.gz +227375 total 1641779198 train 0.005907 752s 101k pos/s
+  ep 2 run_43752876286.gz +8000000 total 1649779198 train 0.005633 832s 101k pos/s
+  ep 2 run_43752876286.gz +8000000 total 1657779198 train 0.005399 911s 101k pos/s
+  ep 2 run_43752876286.gz +8000000 total 1665779198 train 0.005201 990s 101k pos/s
+  ep 2 run_43752876286.gz +8000000 total 1673779198 train 0.005032 1069s 101k pos/s
+featpack: 34096096 positions
+  ep 2 run_43752876286.gz +2096096 total 1675875294 train 0.004992 1090s 101k pos/s
+  ep 2 helper_fhkyz132_43774689224.gz +8000000 total 1683875294 train 0.004841 1169s 101k pos/s
+  ep 2 helper_fhkyz132_43774689224.gz +8000000 total 1691875294 train 0.004701 1248s 101k pos/s
+  ep 2 helper_fhkyz132_43774689224.gz +8000000 total 1699875294 train 0.004595 1328s 101k pos/s
+  ep 2 helper_fhkyz132_43774689224.gz +8000000 total 1707875294 train 0.004495 1407s 101k pos/s
+  ep 2 helper_fhkyz132_43774689224.gz +8000000 total 1715875294 train 0.004413 1486s 101k pos/s
+  ep 2 helper_fhkyz132_43774689224.gz +8000000 total 1723875294 train 0.004335 1565s 101k pos/s
+  ep 2 helper_fhkyz132_43774689224.gz +8000000 total 1731875294 train 0.004268 1644s 101k pos/s
+  ep 2 helper_fhkyz132_43774689224.gz +8000000 total 1739875294 train 0.004193 1723s 101k pos/s
+  ep 2 helper_fhkyz132_43774689224.gz +8000000 total 1747875294 train 0.004138 1802s 101k pos/s
+  ep 2 helper_fhkyz132_43774689224.gz +8000000 total 1755875294 train 0.004085 1881s 101k pos/s
+  ep 2 helper_fhkyz132_43774689224.gz +8000000 total 1763875294 train 0.004042 1960s 101k pos/s
+  ep 2 helper_fhkyz132_43774689224.gz +8000000 total 1771875294 train 0.003996 2039s 101k pos/s
+  ep 2 helper_fhkyz132_43774689224.gz +8000000 total 1779875294 train 0.003951 2118s 101k pos/s
+featpack: 104103301 positions
+  ep 2 helper_fhkyz132_43774689224.gz +103301 total 1779978595 train 0.003951 2119s 101k pos/s
+  ep 2 run_43767020314.gz +8000000 total 1787978595 train 0.003915 2199s 101k pos/s
+  ep 2 run_43767020314.gz +8000000 total 1795978595 train 0.003880 2278s 101k pos/s
+  ep 2 run_43767020314.gz +8000000 total 1803978595 train 0.003847 2357s 101k pos/s
+  ep 2 run_43767020314.gz +8000000 total 1811978595 train 0.003814 2436s 101k pos/s
+featpack: 32457736 positions
+  ep 2 run_43767020314.gz +457736 total 1812436331 train 0.003813 2440s 101k pos/s
+  ep 2 run_43937160717.gz +8000000 total 1820436331 train 0.003827 2520s 101k pos/s
+  ep 2 run_43937160717.gz +8000000 total 1828436331 train 0.003838 2599s 101k pos/s
+  ep 2 run_43937160717.gz +8000000 total 1836436331 train 0.003848 2678s 101k pos/s
+  ep 2 run_43937160717.gz +8000000 total 1844436331 train 0.003858 2756s 101k pos/s
+featpack: 36695668 positions
+  ep 2 run_43937160717.gz +4695668 total 1849131999 train 0.003863 2803s 101k pos/s
+  ep 2 run_43740032546.gz +8000000 total 1857131999 train 0.003838 2882s 101k pos/s
+  ep 2 run_43740032546.gz +8000000 total 1865131999 train 0.003813 2961s 101k pos/s
+  ep 2 run_43740032546.gz +8000000 total 1873131999 train 0.003788 3040s 101k pos/s
+  ep 2 run_43740032546.gz +8000000 total 1881131999 train 0.003763 3119s 101k pos/s
+featpack: 35916170 positions
+  ep 2 run_43740032546.gz +3916170 total 1885048169 train 0.003752 3157s 101k pos/s
+  ep 2 run_43812207859.gz +8000000 total 1893048169 train 0.003739 3237s 101k pos/s
+  ep 2 run_43812207859.gz +8000000 total 1901048169 train 0.003727 3316s 101k pos/s
+  ep 2 run_43812207859.gz +8000000 total 1909048169 train 0.003716 3395s 101k pos/s
+  ep 2 run_43812207859.gz +8000000 total 1917048169 train 0.003704 3474s 101k pos/s
+featpack: 34890145 positions
+  ep 2 run_43812207859.gz +2890145 total 1919938314 train 0.003700 3502s 101k pos/s
+  ep 2 run_43727216804.gz +8000000 total 1927938314 train 0.003689 3582s 101k pos/s
+  ep 2 run_43727216804.gz +8000000 total 1935938314 train 0.003677 3660s 101k pos/s
+  ep 2 run_43727216804.gz +8000000 total 1943938314 train 0.003666 3739s 101k pos/s
+featpack: 31286093 positions
+  ep 2 run_43727216804.gz +7286093 total 1951224407 train 0.003656 3811s 101k pos/s
+  ep 2 run_43798538292.gz +8000000 total 1959224407 train 0.003642 3891s 101k pos/s
+  ep 2 run_43798538292.gz +8000000 total 1967224407 train 0.003627 3970s 101k pos/s
+  ep 2 run_43798538292.gz +8000000 total 1975224407 train 0.003614 4049s 101k pos/s
+featpack: 29822728 positions
+  ep 2 run_43798538292.gz +5822728 total 1981047135 train 0.003604 4107s 101k pos/s
+  ep 2 run_43715125800.gz +8000000 total 1989047135 train 0.003596 4186s 101k pos/s
+  ep 2 run_43715125800.gz +8000000 total 1997047135 train 0.003587 4265s 101k pos/s
+  ep 2 run_43715125800.gz +8000000 total 2005047135 train 0.003578 4344s 101k pos/s
+featpack: 31174247 positions
+  ep 2 run_43715125800.gz +7174247 total 2012221382 train 0.003570 4415s 101k pos/s
+  ep 2 run_43705557722.gz +8000000 total 2020221382 train 0.003561 4494s 101k pos/s
+  ep 2 run_43705557722.gz +8000000 total 2028221382 train 0.003553 4573s 101k pos/s
+featpack: 18003589 positions
+  ep 2 run_43705557722.gz +2003589 total 2030224971 train 0.003551 4593s 101k pos/s
+  ep 2 helper_fhkyz1_43902316419.gz +8000000 total 2038224971 train 0.003558 4672s 101k pos/s
+  ep 2 helper_fhkyz1_43902316419.gz +8000000 total 2046224971 train 0.003553 4752s 101k pos/s
+  ep 2 helper_fhkyz1_43902316419.gz +8000000 total 2054224971 train 0.003548 4831s 101k pos/s
+  ep 2 helper_fhkyz1_43902316419.gz +8000000 total 2062224971 train 0.003553 4910s 101k pos/s
+  ep 2 helper_fhkyz1_43902316419.gz +8000000 total 2070224971 train 0.003555 4989s 101k pos/s
+  ep 2 helper_fhkyz1_43902316419.gz +8000000 total 2078224971 train 0.003560 5069s 101k pos/s
+  ep 2 helper_fhkyz1_43902316419.gz +8000000 total 2086224971 train 0.003564 5148s 101k pos/s
+  ep 2 helper_fhkyz1_43902316419.gz +8000000 total 2094224971 train 0.003564 5227s 101k pos/s
+  ep 2 helper_fhkyz1_43902316419.gz +8000000 total 2102224971 train 0.003567 5306s 101k pos/s
+  ep 2 helper_fhkyz1_43902316419.gz +8000000 total 2110224971 train 0.003571 5385s 101k pos/s
+  ep 2 helper_fhkyz1_43902316419.gz +8000000 total 2118224971 train 0.003574 5464s 101k pos/s
+  ep 2 helper_fhkyz1_43902316419.gz +8000000 total 2126224971 train 0.003574 5543s 101k pos/s
+featpack: 98149826 positions
+  ep 2 helper_fhkyz1_43902316419.gz +2149826 total 2128374797 train 0.003576 5564s 101k pos/s
+  ep 2 run_43686997759.gz +8000000 total 2136374797 train 0.003570 5644s 101k pos/s
+  ep 2 run_43686997759.gz +8000000 total 2144374797 train 0.003562 5723s 101k pos/s
+featpack: 16692258 positions
+  ep 2 run_43686997759.gz +692258 total 2145067055 train 0.003561 5730s 101k pos/s
+  ep 2 run_43782919715.gz +8000000 total 2153067055 train 0.003555 5809s 101k pos/s
+  ep 2 run_43782919715.gz +8000000 total 2161067055 train 0.003549 5888s 101k pos/s
+  ep 2 run_43782919715.gz +8000000 total 2169067055 train 0.003542 5967s 101k pos/s
+  ep 2 run_43782919715.gz +8000000 total 2177067055 train 0.003536 6046s 101k pos/s
+featpack: 32893413 positions
+  ep 2 run_43782919715.gz +893413 total 2177960468 train 0.003535 6055s 101k pos/s
+  ep 2 helper_fhkyz132_43819273388.gz +8000000 total 2185960468 train 0.003535 6135s 101k pos/s
+  ep 2 helper_fhkyz132_43819273388.gz +8000000 total 2193960468 train 0.003532 6214s 101k pos/s
+  ep 2 helper_fhkyz132_43819273388.gz +8000000 total 2201960468 train 0.003527 6293s 101k pos/s
+  ep 2 helper_fhkyz132_43819273388.gz +8000000 total 2209960468 train 0.003526 6372s 101k pos/s
+  ep 2 helper_fhkyz132_43819273388.gz +8000000 total 2217960468 train 0.003522 6452s 101k pos/s
+  ep 2 helper_fhkyz132_43819273388.gz +8000000 total 2225960468 train 0.003521 6531s 101k pos/s
+  ep 2 helper_fhkyz132_43819273388.gz +8000000 total 2233960468 train 0.003516 6610s 101k pos/s
+  ep 2 helper_fhkyz132_43819273388.gz +8000000 total 2241960468 train 0.003513 6689s 101k pos/s
+  ep 2 helper_fhkyz132_43819273388.gz +8000000 total 2249960468 train 0.003512 6768s 101k pos/s
+  ep 2 helper_fhkyz132_43819273388.gz +8000000 total 2257960468 train 0.003506 6847s 101k pos/s
+  ep 2 helper_fhkyz132_43819273388.gz +8000000 total 2265960468 train 0.003502 6927s 101k pos/s
+  ep 2 helper_fhkyz132_43819273388.gz +8000000 total 2273960468 train 0.003497 7006s 101k pos/s
+featpack: 103432910 positions
+  ep 2 helper_fhkyz132_43819273388.gz +7432910 total 2281393378 train 0.003497 7080s 101k pos/s
+  ep 2 run_43848316410.gz +8000000 total 2289393378 train 0.003493 7159s 101k pos/s
+  ep 2 run_43848316410.gz +8000000 total 2297393378 train 0.003490 7238s 101k pos/s
+  ep 2 run_43848316410.gz +8000000 total 2305393378 train 0.003487 7318s 101k pos/s
+  ep 2 run_43848316410.gz +8000000 total 2313393378 train 0.003485 7397s 101k pos/s
+featpack: 34652685 positions
+  ep 2 run_43848316410.gz +2652685 total 2316046063 train 0.003484 7423s 101k pos/s
+  ep 2 run_43892196967.gz +8000000 total 2324046063 train 0.003481 7502s 101k pos/s
+  ep 2 run_43892196967.gz +8000000 total 2332046063 train 0.003478 7582s 101k pos/s
+  ep 2 run_43892196967.gz +8000000 total 2340046063 train 0.003475 7661s 101k pos/s
+  ep 2 run_43892196967.gz +8000000 total 2348046063 train 0.003473 7740s 101k pos/s
+featpack: 34995527 positions
+  ep 2 run_43892196967.gz +2995527 total 2351041590 train 0.003472 7770s 101k pos/s
+epoch 2 train 0.003472 valid 0.004499 lr 4.5e-05 7773s
+checkpoint /kaggle/working/checkpoints_fhk_kb16_1536_more_20261117_0210/ep3.bin
+trainer exit 0 after 6.48 hours
+no GH_TOKEN secret, skipping upload: BackendError
+DONE. Net: /kaggle/working/fhk_kb16_1536_more_20261117_0210.bin | checkpoints: /kaggle/working/checkpoints_fhk_kb16_1536_more_20261117_0210 | log: train_log.txt (all in the Output tab)
