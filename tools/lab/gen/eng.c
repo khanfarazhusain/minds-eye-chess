@@ -261,6 +261,10 @@ static void nnRefreshSide(i32 L, i32 P, i32 ks) {
 static void nnFull(i32 L) { nnKS[L][0] = ksOf(0); nnKS[L][1] = ksOf(1); nnRefreshSide(L, 0, nnKS[L][0]); nnRefreshSide(L, 1, nnKS[L][1]); nnOk[L] = 1; }
 static void nnUpdate(i32 L) {
   i32 k = L; while (!nnOk[k]) k--;
+#ifndef NOPARENT
+  if (L - k >= 2) { i32 ok = 1; for (i32 l = k + 1; l < L && ok; l++) ok = nnKS[l][0] == nnKS[k][0] && nnKS[l][1] == nnKS[k][1];
+    if (ok) { nnUpdate(L - 1); k = L - 1; } } // also store the parent (pure diff chain only), so the next sibling needs one step instead of the whole chain
+#endif
   for (i32 P = 0; P < 2; P++) { i32 ks = nnKS[k][P], same = 1; for (i32 l = k + 1; l <= L; l++) if (nnKS[l][P] != ks) { same = 0; break; }
     if (!same) { nnRefreshSide(L, P, nnKS[L][P]); continue; }
     const i16 *ad[64], *sb[64]; i32 na = 0, ns = 0;
@@ -416,7 +420,13 @@ static i32 kdist(i32 a, i32 c) { return imax(iabs(fileOf(a) - fileOf(c)), iabs(r
 #define ECB 16
 static TL i32 ecKey[1 << ECB], ecKey2[1 << ECB], ecVal[1 << ECB];
 static i32 evaluate0(void);
-static i32 evalRaw(void) { i32 i = hl & ((1 << ECB) - 1); if (ecKey[i] == hh && ecKey2[i] == hl) return ecVal[i]; i32 v = useNN ? nnEval() : evaluate0(); ecKey[i] = hh; ecKey2[i] = hl; ecVal[i] = v; return v; }
+#ifdef LAZYE
+// LAZYE=T: when the cheap material+PST score is already lopsided by more than T cp, skip the (expensive) net and use the full hand-made eval.
+static inline i32 lazyOk(void) { i32 ph = phase < 24 ? phase : 24, sc = (mg * ph + eg * (24 - ph)) / 24; return sc > LAZYE || sc < -LAZYE; }
+#else
+#define lazyOk() 0
+#endif
+static i32 evalRaw(void) { i32 i = hl & ((1 << ECB) - 1); if (ecKey[i] == hh && ecKey2[i] == hl) return ecVal[i]; i32 v = useNN && !lazyOk() ? nnEval() : evaluate0(); ecKey[i] = hh; ecKey2[i] = hl; ecVal[i] = v; return v; }
 #ifdef FIFTY
 i32 evaluate(void) { i32 v = evalRaw(); return half > 8 ? v * (200 - half) / 200 : v; }
 #else
