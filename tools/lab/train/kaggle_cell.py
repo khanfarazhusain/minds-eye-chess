@@ -63,7 +63,7 @@ if LN and not any(a['name'].startswith('lichess_eval_') for a in train):  # conv
     say('Lichess files', extra, 'GB', round(sum(os.path.getsize(f) for f in extra) / 1e9, 2), 'in', round((time.time() - t) / 60, 1), 'min')
 t = time.time()
 cmd = (f'python -u trainpt2.py {OUT} ' + ' '.join([a['name'] for a in train] + extra) + f' --valid valid.gz --epochs {EPOCHS} --kb {KB} --h {H} --lr {LR}'
-       + f' --ckdir {CK} --max-hours {max(HOURS - (time.time() - T0) / 3600 - 0.3, 0.02):.2f}' + (' --init init.bin' if INIT else ''))
+       + f' --ckdir {CK} --max-hours {max(HOURS - (time.time() - T0) / 3600 - 0.3, 0.02):.2f}' + (' --init init.bin' if INIT else '') + (' --lam 0.8 --lam-end 0.4 --fact' if os.environ.get('FHK_V2') == '1' else '') + ' ' + os.environ.get('FHK_EXTRA', ''))
 say('$', cmd)
 p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
 for line in p.stdout: print(line, end='', flush=True); LOG.write(line); LOG.flush()
