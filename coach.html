@@ -89,6 +89,10 @@ table.mt{width:100%;border-collapse:collapse} table.mt td,table.mt th{text-align
 .hidden{display:none}
 .tztb.tzc tr.ply td:first-child{box-shadow:inset 3px 0 0 var(--accent)} .tztb.tzc tr.ply.eng td{background:var(--good-soft)} .gw-meta{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap} .gw-v{border-radius:10px;padding:8px 10px;margin:8px 0;line-height:1.4} .gw-v.ok{background:var(--good-soft)} .gw-v.no{background:var(--bad-soft)} .gw-v.mid{background:var(--warn-soft)} .gw-nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px} .gw-nav .btn{flex:1 1 auto} #gwRange{width:100%;margin:6px 0 0} .gw-sum td,.gw-sum th{padding:4px 6px} .tztb.tzc.calc td:nth-child(3){white-space:normal;font-family:inherit;word-break:break-word}
 
+/* v163: points card button */
+details.tzcard{margin:6px 0 8px} details.tzcard summary{display:inline-block;cursor:pointer;font-size:13px;font-weight:600;padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);list-style:none}
+details.tzcard summary::-webkit-details-marker{display:none} details.tzcard[open] summary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent);margin-bottom:6px}
+details.tzcard tr.hl td{background:var(--warn-soft)} details.tzcard .tztb{font-size:12.5px}
 /* v161: pieces sized to the square, small clean labels, compact text in live/example mode */
 .board{container-type:inline-size}
 @supports (width:1cqw){.sq{font-size:11cqw}.coord{font-size:clamp(7px,2.3cqw,11px)}}
@@ -950,6 +954,10 @@ const TZG = [
   { t: 'Castling, trade, pyaada aage', k: ['castle', 'trade', 'pawnAdv'], tip: 'Castling +9. Barabar len-den +7. Pyaada 5th/6th/7th line par +6/+12/+18.' },
   { t: 'Galtiyaan (minus points)', k: ['allowMate', 'qLose', 'allowFork', 'loseCastle', 'samePieceTwice', 'kCtr', 'allowChecks'], bad: 1, tip: 'Ab ulta dekho: kaunsi chaal se aapka mohra jaata hai, unko fork ya check milta hai, ya castling ka mauka jaata hai? Inke points kato.' },
   { t: 'Behtar ghar', k: ['pstDelta'], tip: 'Mohra kharab ghar se achhe ghar par gaya to +1 se +3 (jaise ghoda kinare se center).' }];
+// v163: Step 2 mein chhota button: poora Points card (band rehta hai, tap karke khulta hai)
+function tezCardBox(g){ const nm = k => TZ_WHY[TEZ_N[k]] || TEZ_N[k] || k, on = k => g && g.k.includes(k);
+  const rows = [['qWin', 'har pyaade ke barabar mohra jeeto: +10 (ghoda/oont +30, haathi +50, wazir +90)', null], ['mate', '', 1000], ...MERules.TEZ_CARD.filter(([k]) => k !== 'mate').map(([k, w, byV]) => [k, byV ? `${ptsS(w)} har ek par` : '', w]), ['pstDelta', 'achhe ghar par gaya: +1 se +3', null]];
+  return `<details class="tzcard"><summary>📋 Points card kholo</summary><table class="tztb"><tbody>${rows.map(([k, t, w]) => `<tr${on(k) ? ' class="hl"' : ''}><td>${esc(nm(k))}${t && w !== null ? ` <small class="muted">(${esc(t)})</small>` : ''}${w === null ? `<br><small class="muted">${esc(t)}</small>` : ''}</td><td style="text-align:right;white-space:nowrap"><b style="color:${w !== null && w < 0 ? 'var(--bad)' : 'var(--good)'}">${w === null ? '' : ptsS(w)}</b></td></tr>`).join('')}</tbody></table><p class="small muted" style="margin:4px 0 0">Peeli line = is step mein yahi dekh rahe hain.</p></details>`; }
 function tezSteps(pos){ const F = MERules.fastCands(pos, null, 0), L = pos.legalMoves(), V = [0, 1, 3, 3, 5, 9, 0], S = [];
   const caps = L.filter(m => E.mFlag(m) & E.F_CAP).map(m => ({ m, san: pos.san(m), pc: pos.b[E.mFrom(m)] & 7, cap: (pos.b[E.mTo(m)] & 7) || 1, see: E.see(pos, m) }));
   const shik = caps.filter(c => c.see >= 0).sort((a, b) => V[b.cap] - V[a.cap] || V[a.pc] - V[b.pc]), pick = shik[0];
@@ -963,7 +971,7 @@ function tezSteps(pos){ const F = MERules.fastCands(pos, null, 0), L = pos.legal
     hits.sort((a, b) => Math.abs(b.v.reduce((s, [, v]) => s + v, 0)) - Math.abs(a.v.reduce((s, [, v]) => s + v, 0)));
     const show = hits.slice(0, g.k[0] === 'pstDelta' ? 6 : 8);
     S.push({ t: `⚡ Tez Step 2: Points card · ${g.t}`, a: show.map(({ x, v }) => arw(pos, x.m, g.bad || v.some(([, n]) => n < 0) ? AR.bad : AR.good)),
-      h: `<p>${esc(g.tip)}</p>${none.length ? `<p class="small muted">Is position mein nahi mila: ${esc(none.join(', '))}.</p>` : ''}<table class="tztb tzc calc"><tbody>${show.map(({ x, v }) => `<tr><td><b>${esc(pos.san(x.m))}</b></td><td><small>${v.map(([k, n]) => `${esc(TZ_WHY[TEZ_N[k]] || TEZ_N[k] || k)} <b style="color:${n < 0 ? 'var(--bad)' : 'var(--good)'}">${ptsS(n)}</b>`).join('<br>')}</small></td></tr>`).join('')}</tbody></table>${hits.length > show.length ? `<p class="small muted">Aur ${hits.length - show.length} chaalein bhi.</p>` : ''}` });
+      h: `<p>${esc(g.tip)}</p>${tezCardBox(g)}${none.length ? `<p class="small muted">Is position mein nahi mila: ${esc(none.join(', '))}.</p>` : ''}<table class="tztb tzc calc"><tbody>${show.map(({ x, v }) => `<tr><td><b>${esc(pos.san(x.m))}</b></td><td><small>${v.map(([k, n]) => `${esc(TZ_WHY[TEZ_N[k]] || TEZ_N[k] || k)} <b style="color:${n < 0 ? 'var(--bad)' : 'var(--good)'}">${ptsS(n)}</b>`).join('<br>')}</small></td></tr>`).join('')}</tbody></table>${hits.length > show.length ? `<p class="small muted">Aur ${hits.length - show.length} chaalein bhi.</p>` : ''}` });
     none.length = 0; }
   const top = F.slice(0, 5);
   S.push({ t: '⚡ Tez Step 3: Points jodo, 5 chaalein chuno', a: top.map((x, i) => arw(pos, x.m, i ? AR.blue : AR.pick, { n: i + 1 })),
