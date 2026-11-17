@@ -42,7 +42,10 @@ jobs:
           for p in 0 1 2 3; do zcat ../../best.txt.gz | node rankdump2.js $((S*4+p)) 80 | gzip > ../../f_${S}_$p.gz & done; wait
           ls -la ../../f_*.gz
       - uses: actions/upload-artifact@v4
-        with: { name: feat-${{ matrix.shard }}, path: f_*.gz, retention-days: 7 }
+        with:
+          name: feat-${{ matrix.shard }}
+          path: f_*.gz
+          retention-days: 7
   train:
     needs: feat
     runs-on: ubuntu-latest
