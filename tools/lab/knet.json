@@ -1,1 +1,1 @@
-{"file":"c1_current.bin.gz","wasm":"c1tm.wasm","base":"c1cur.wasm:nets/current.bin","pairs":376,"ms":200,"note":"time mgmt: node-fraction x stability x score-drop soft limit (TMX) vs same engine without"}
+{"file":"c1_current.bin.gz","wasm":"c1tm.wasm","base":"c1cur.wasm:nets/current.bin","pairs":376,"ms":500,"note":"TMX confirm run at 500 ms (first run +21 at 200 ms)"}
