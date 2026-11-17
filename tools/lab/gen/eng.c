@@ -214,6 +214,17 @@ i32 nn_h(void) { return NNH; }
 #ifdef NNKB
 #define NNOB 8
 i32 useNN = 0; i16 NW1[NNKB * 768 * NNH], NB1[NNH], NW2[NNOB * 2 * NNH]; i32 NB2 = 0, NB2v[NNOB], nnOutMul = 400, nnOutDiv = 255 * 64;
+#ifdef NNDEEP // deep head (1 Dec design): FT (pairwise product of both halves, clipped 0..255, >>9 -> 0..127) -> L1 (int16 weights x512) -> clip -> L2 (float) -> clip -> L3 (float), one set per output bucket
+#ifndef NNL1
+#define NNL1 16
+#endif
+#ifndef NNL2
+#define NNL2 32
+#endif
+i16 ND1[NNOB * NNL1 * NNH]; float DB1[NNOB * NNL1], D2[NNOB * NNL2 * NNL1], DB2[NNOB * NNL2], D3[NNOB * NNL2], DB3[NNOB];
+i32 nn_l1(void) { return NNL1; } i32 nn_l2(void) { return NNL2; }
+i16 *ptr_nd1(void) { return ND1; } float *ptr_db1(void) { return DB1; } float *ptr_d2(void) { return D2; } float *ptr_db2(void) { return DB2; } float *ptr_d3(void) { return D3; } float *ptr_db3(void) { return DB3; }
+#endif
 static TL i32 nnKS[NNLV][2];
 #if NNKB == 16
 static const unsigned char KBM16[32] = {0,1,2,3, 4,5,6,7, 8,8,9,9, 10,10,11,11, 12,12,13,13, 12,12,13,13, 14,14,15,15, 14,14,15,15};
@@ -313,10 +324,44 @@ static void nnUpdate(i32 L) { // make level L valid from earlier levels
 #endif
     nnOk[l] = 1; } }
 #endif
+#ifdef NNDEEP
+static inline i32 nnDot16(const i16 *x, const i16 *w, int n) {
+#ifdef __wasm_simd128__
+  v128_t acc = wasm_i32x4_splat(0); for (int j = 0; j < n; j += 8) acc = wasm_i32x4_add(acc, wasm_i32x4_dot_i16x8(wasm_v128_load(x + j), wasm_v128_load(w + j)));
+  return wasm_i32x4_extract_lane(acc, 0) + wasm_i32x4_extract_lane(acc, 1) + wasm_i32x4_extract_lane(acc, 2) + wasm_i32x4_extract_lane(acc, 3);
+#elif defined(__AVX2__)
+  __m256i acc = _mm256_setzero_si256(); for (int j = 0; j < n; j += 16) acc = _mm256_add_epi32(acc, _mm256_madd_epi16(_mm256_loadu_si256((const __m256i *)(x + j)), _mm256_loadu_si256((const __m256i *)(w + j))));
+  __m128i s4 = _mm_add_epi32(_mm256_castsi256_si128(acc), _mm256_extracti128_si256(acc, 1)); s4 = _mm_add_epi32(s4, _mm_shuffle_epi32(s4, 0x4e)); s4 = _mm_add_epi32(s4, _mm_shuffle_epi32(s4, 0xb1)); return _mm_cvtsi128_si32(s4);
+#else
+  i32 sum = 0; for (int j = 0; j < n; j++) sum += (i32)x[j] * w[j]; return sum;
+#endif
+}
+static i32 nnEvalDeep(const i16 *u, const i16 *t, i32 ob) {
+  i16 p[NNH] __attribute__((aligned(32))); const i32 HH = NNH / 2; const i16 *src[2] = {u, t};
+  for (int sd = 0; sd < 2; sd++) { const i16 *a = src[sd]; i16 *o = p + sd * HH;
+#ifdef __wasm_simd128__
+    v128_t z = wasm_i16x8_splat(0), c = wasm_i16x8_splat(255);
+    for (int j = 0; j < HH; j += 8) { v128_t x = wasm_i16x8_min(wasm_i16x8_max(wasm_v128_load(a + j), z), c), y = wasm_i16x8_min(wasm_i16x8_max(wasm_v128_load(a + j + HH), z), c); wasm_v128_store(o + j, wasm_u16x8_shr(wasm_i16x8_mul(x, y), 9)); }
+#elif defined(__AVX2__)
+    __m256i z = _mm256_setzero_si256(), c = _mm256_set1_epi16(255);
+    for (int j = 0; j < HH; j += 16) { __m256i x = _mm256_min_epi16(_mm256_max_epi16(_mm256_loadu_si256((const __m256i *)(a + j)), z), c), y = _mm256_min_epi16(_mm256_max_epi16(_mm256_loadu_si256((const __m256i *)(a + j + HH)), z), c); _mm256_storeu_si256((__m256i *)(o + j), _mm256_srli_epi16(_mm256_mullo_epi16(x, y), 9)); }
+#else
+    for (int j = 0; j < HH; j++) { i32 x = a[j], y = a[j + HH]; x = x < 0 ? 0 : x > 255 ? 255 : x; y = y < 0 ? 0 : y > 255 ? 255 : y; o[j] = (i16)((x * y) >> 9); }
+#endif
+  }
+  float h1[NNL1], h2[NNL2]; const i16 *w = ND1 + (size_t)ob * NNL1 * NNH;
+  for (int l = 0; l < NNL1; l++) { float v = (float)nnDot16(p, w + (size_t)l * NNH, NNH) * (1.0f / (127.0f * 512.0f)) + DB1[ob * NNL1 + l]; h1[l] = v < 0 ? 0 : v > 1 ? 1 : v; }
+  for (int m = 0; m < NNL2; m++) { const float *r = D2 + (ob * NNL2 + m) * NNL1; float v = DB2[ob * NNL2 + m]; for (int l = 0; l < NNL1; l++) v += r[l] * h1[l]; h2[m] = v < 0 ? 0 : v > 1 ? 1 : v; }
+  float o = DB3[ob]; for (int m = 0; m < NNL2; m++) o += D3[ob * NNL2 + m] * h2[m];
+  o *= 400.0f; return (i32)(o < 0 ? o - 0.5f : o + 0.5f); }
+#endif
 static i32 nnEval(void) { i32 L = sp / 10; if (!nnOk[L]) nnUpdate(L);
   const i16 *u = nnAcc[L][side >> 3], *t = nnAcc[L][(side >> 3) ^ 1]; i32 sum = 0;
 #ifdef NNKB
   i32 ob = (__builtin_popcountll(occ[0] | occ[1]) - 2) / 4; ob = ob < 0 ? 0 : ob > 7 ? 7 : ob; const i16 *W2 = NW2 + ob * 2 * NNH; i32 B2 = NB2v[ob];
+#ifdef NNDEEP
+  return nnEvalDeep(u, t, ob);
+#endif
 #else
   const i16 *W2 = NW2; i32 B2 = NB2;
 #endif

@@ -11,6 +11,8 @@ ap.add_argument('--lam', type=float, default=0.8); ap.add_argument('--aug', acti
 ap.add_argument('--sched', choices=['cos', 'step'], default='cos', help='cos: per-step warmup + cosine decay by progress (default); step: old x0.3 at 60%%/85%% of the epochs')
 ap.add_argument('--lr-final', type=float, default=0.02, help='cos: final LR as a fraction of --lr'); ap.add_argument('--warm', type=int, default=1000, help='warmup steps')
 ap.add_argument('--wd', type=float, default=0.0, help='AdamW weight decay'); ap.add_argument('--lam-end', type=float, default=None, help='ramp lambda (score share) linearly from --lam to this over the run, per file')
+ap.add_argument('--selftest', type=int, default=0, help='write N random-position FENs + this net\'s float output (x400 = cp) to <out>.fen / <out>.ref and exit (compare with the engine\'s nneval)')
+ap.add_argument('--deep', default='', help='deep head L1,L2 (e.g. 16,32): FT -> pairwise product (halves multiplied) -> L1 -> clip -> L2 -> clip -> L3, one set per output bucket; engine needs -DNNDEEP -DNNL1 -DNNL2')
 ap.add_argument('--fact', action='store_true', help='factoriser: one shared 768xH weight set added to every king bucket (folded into W1 on save)')
 ap.add_argument('--ckdir', help='copy the net here after every epoch as ep<N>.bin'); ap.add_argument('--max-hours', type=float, default=0, help='stop cleanly (save) after this many hours')
 a = ap.parse_args(); T_START = time.time()
@@ -39,6 +41,14 @@ if a.init:  # same rules as train3.c: v1 net is copied into every bucket; v2 mus
         W2[:] = torch.from_numpy(v[o:o + OB * 2 * H].reshape(OB, 2 * H).copy()); o += OB * 2 * H; B2[:] = torch.from_numpy(v[o:o + OB].copy()); print('init v2', a.init)
     else: print('init skipped: size differs (starting fresh)', hh)
 P = [torch.nn.Parameter(x.to(dev)) for x in (W1, B1, W2, B2)]; W1, B1, W2, B2 = P
+DEEP = [int(x) for x in a.deep.split(',')] if a.deep else None
+if DEEP:
+    L1, L2 = DEEP; assert H % 2 == 0
+    def U(*sh, k): return ((torch.rand(*sh) * 2 - 1) * k).to(dev)
+    D1 = torch.nn.Parameter(U(OB * L1, H, k=(3 / H) ** .5 * 2)); DB1 = torch.nn.Parameter(torch.full((OB * L1,), 0.1, device=dev))
+    D2 = torch.nn.Parameter(U(OB * L2, L1, k=(3 / L1) ** .5)); DB2 = torch.nn.Parameter(torch.full((OB * L2,), 0.1, device=dev))
+    D3 = torch.nn.Parameter(U(OB, L2, k=(3 / L2) ** .5 * 0.3)); DB3 = torch.nn.Parameter(torch.zeros(OB, device=dev))
+    P = [x for x in P if x is not W2 and x is not B2] + [D1, DB1, D2, DB2, D3, DB3]
 FACT = torch.nn.Parameter(torch.zeros(769, H, device=dev)) if a.fact else None  # row 768 = padding (always zero)
 if FACT is not None: P.append(FACT)
 with torch.no_grad(): W1[NF].zero_()
@@ -49,14 +59,37 @@ def fwd(b32, stm, mirror=None):
     if FACT is not None:  # same feature in every king bucket shares FACT[feature]; the padding index maps to the zero row 768
         ew = ew + torch.nn.functional.embedding_bag(torch.where(F >= NF, 768, F % 768), FACT, mode='sum'); eb = eb + torch.nn.functional.embedding_bag(torch.where(G >= NF, 768, G % 768), FACT, mode='sum')
     s = stm.unsqueeze(1); u = torch.where(s, eb, ew).clamp(0, 1); t = torch.where(s, ew, eb).clamp(0, 1)
+    if DEEP:
+        x = torch.cat([u[:, :H // 2] * u[:, H // 2:], t[:, :H // 2] * t[:, H // 2:]], 1); ar = torch.arange(x.shape[0], device=x.device)
+        h1 = (x @ D1.T + DB1).view(-1, OB, L1)[ar, ob].clamp(0, 1); h2 = (h1 @ D2.T + DB2).view(-1, OB, L2)[ar, ob].clamp(0, 1)
+        return (h2 * D3[ob]).sum(1) + DB3[ob]
     w2 = W2[ob]; return (u * w2[:, :H]).sum(1) + (t * w2[:, H:]).sum(1) + B2[ob]
 def to_dev(c): return torch.from_numpy(np.ascontiguousarray(c['b'])).to(dev), torch.from_numpy(c['stm'].astype(bool)).to(dev), torch.from_numpy(c['t'].copy()).to(dev)
 def save(path=None):
     path = path or a.out
     with torch.no_grad():
         w1 = W1[:NF] + (FACT[:768].repeat(KB, 1) if FACT is not None else 0)
-        out = struct.pack('<ii', -H, KB) + b''.join(x.detach().cpu().numpy().astype('<f4').tobytes() for x in (w1, B1, W2, B2))
+        if DEEP: out = struct.pack('<iiii', -(H + 1000000), KB, L1, L2) + b''.join(x.detach().cpu().numpy().astype('<f4').tobytes() for x in (w1, B1, D1, DB1, D2, DB2, D3, DB3))
+        else:
+            out = struct.pack('<ii', -H, KB) + b''.join(x.detach().cpu().numpy().astype('<f4').tobytes() for x in (w1, B1, W2, B2))
     open(path + '.tmp', 'wb').write(out); os.replace(path + '.tmp', path)
+if a.selftest:
+    import chess, random
+    if DEEP:
+        with torch.no_grad(): D3.mul_(6); W1.mul_(2); D1.mul_(2)
+    random.seed(7); fens, bs, sts = [], [], []; pcs = {'P': 1, 'N': 2, 'B': 3, 'R': 4, 'Q': 5, 'K': 6}
+    while len(fens) < a.selftest:
+        bd = chess.Board()
+        for _ in range(random.randint(0, 90)):
+            mv = list(bd.legal_moves)
+            if not mv: break
+            bd.push(random.choice(mv))
+        if bd.is_game_over() or bd.is_check(): continue
+        v = np.zeros(64, np.uint8)
+        for sq, pc in bd.piece_map().items(): v[sq] = pcs[pc.symbol().upper()] + (0 if pc.color else 6)
+        bs.append(v[0::2] | (v[1::2] << 4)); sts.append(bd.turn == chess.BLACK); fens.append(bd.fen())
+    with torch.no_grad(): o = fwd(torch.from_numpy(np.stack(bs)).to(dev), torch.tensor(sts, device=dev)).cpu().numpy() * 400
+    open(a.out + '.fen', 'w').write('\n'.join(fens) + '\n'); open(a.out + '.ref', 'w').write('\n'.join('%.2f' % x for x in o) + '\n'); save(); print('selftest written', a.out); raise SystemExit(0)
 VAL = np.concatenate(list(stream(a.valid)))[:1_000_000]; print('valid positions', len(VAL), flush=True)
 def valid():
     with torch.no_grad():

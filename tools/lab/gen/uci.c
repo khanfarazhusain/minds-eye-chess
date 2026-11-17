@@ -55,7 +55,20 @@ static void position(char *p) {
   if (mv) { char *q = mv + 7; while (*q) { while (*q == ' ') q++; if (!*q) break; char t[8]; int k = 0; while (*q && *q != ' ' && k < 7) t[k++] = *q++; t[k] = 0; while (*q && *q != ' ') q++; playMove(t); } } }
 static int nThreads = 1; typedef struct { int id; double hard; } HArg;
 static void *helperMain(void *a) { HArg *h = a; smpId = h->id; char pp[1 << 16]; snprintf(pp, sizeof pp, "%s", lastPos); position(pp); go(h->hard, 0, 0); return 0; }
-#ifdef NNKB
+#if defined(NNKB) && defined(NNDEEP)
+static int loadNet(const char *path) {
+  FILE *nf = fopen(path, "rb"); if (!nf) return 0; int hd[4]; if (fread(hd, 4, 4, nf) != 4 || hd[0] != -(NNH + 1000000) || hd[1] != NNKB || hd[2] != NNL1 || hd[3] != NNL2) { fclose(nf); return 0; }
+  size_t n1 = (size_t)NNOB * NNL1 * NNH, nb1 = (size_t)NNOB * NNL1, n2 = (size_t)NNOB * NNL2 * NNL1, nb2 = (size_t)NNOB * NNL2, n3 = (size_t)NNOB * NNL2, nb3 = NNOB;
+  size_t N = (size_t)NNKB * 768 * NNH + NNH + n1 + nb1 + n2 + nb2 + n3 + nb3; float *f = malloc(N * 4); if (fread(f, 4, N, nf) != N) { fclose(nf); free(f); return 0; } fclose(nf); size_t o = 0;
+  #define QZ(v, sc) ({ double _x = (v) * (sc); _x = _x > 32767 ? 32767 : _x < -32767 ? -32767 : _x; (i16)(_x < 0 ? -(int)(-_x + 0.5) : (int)(_x + 0.5)); })
+  for (size_t i = 0; i < (size_t)NNKB * 768 * NNH; i++) NW1[i] = QZ(f[o++], 255); for (int i = 0; i < NNH; i++) NB1[i] = QZ(f[o++], 255);
+  for (size_t i = 0; i < n1; i++) ND1[i] = QZ(f[o++], 512);
+  for (size_t i = 0; i < nb1; i++) DB1[i] = f[o++]; for (size_t i = 0; i < n2; i++) D2[i] = f[o++]; for (size_t i = 0; i < nb2; i++) DB2[i] = f[o++]; for (size_t i = 0; i < n3; i++) D3[i] = f[o++]; for (size_t i = 0; i < nb3; i++) DB3[i] = f[o++]; free(f);
+#ifndef __wasm_simd128__
+  { extern i32 nnGen; nnGen++; }
+#endif
+  set_nn(1, 0); return 1; }
+#elif defined(NNKB)
 static int loadNet(const char *path) {
   FILE *nf = fopen(path, "rb"); if (!nf) return 0; int hd[2]; if (fread(hd, 4, 2, nf) != 2 || hd[0] != -NNH || hd[1] != NNKB) { fclose(nf); return 0; }
   size_t N = (size_t)NNKB * 768 * NNH + NNH + NNOB * 2 * NNH + NNOB; float *f = malloc(N * 4); if (fread(f, 4, N, nf) != N) { fclose(nf); free(f); return 0; } fclose(nf); size_t o = 0;

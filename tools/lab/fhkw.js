@@ -18,6 +18,15 @@ function create(E, wasmPath, ttBits) {
   return {
     X, load,
     loadNet(file) { const buf0 = fs.readFileSync(file); const buf = Buffer.from(buf0);
+      if (buf.readInt32LE(0) < -1000000) { // deep head: -(H+1e6), KB, L1, L2, then FT (w1,b1) + per-bucket L1 (int16 x512), float biases/L2/L3
+        const Hn = -buf.readInt32LE(0) - 1000000, KB = buf.readInt32LE(4), L1 = buf.readInt32LE(8), L2 = buf.readInt32LE(12); const f = new Float32Array(buf.buffer, buf.byteOffset + 16, (buf.length - 16) / 4);
+        if (Hn !== X.nn_h() || !X.ptr_nd1 || X.nn_l1() !== L1 || X.nn_l2() !== L2) throw new Error('deep net needs matching NNDEEP wasm');
+        const q = (v, sc) => Math.max(-32767, Math.min(32767, Math.round(v * sc))); let o = 0;
+        const w1 = new Int16Array(mem(), X.ptr_nw1(), KB * 768 * Hn), b1 = new Int16Array(mem(), X.ptr_nb1(), Hn);
+        for (let i = 0; i < KB * 768 * Hn; i++) w1[i] = q(f[o++], 255); for (let i = 0; i < Hn; i++) b1[i] = q(f[o++], 255);
+        const d1 = new Int16Array(mem(), X.ptr_nd1(), 8 * L1 * Hn); for (let i = 0; i < 8 * L1 * Hn; i++) d1[i] = q(f[o++], 512);
+        for (const [ptr, n] of [[X.ptr_db1, 8 * L1], [X.ptr_d2, 8 * L2 * L1], [X.ptr_db2, 8 * L2], [X.ptr_d3, 8 * L2], [X.ptr_db3, 8]]) { const dst = new Float32Array(mem(), ptr(), n); for (let i = 0; i < n; i++) dst[i] = f[o++]; }
+        X.set_nn(1, 0); X.tt_clear(); return; }
       if (buf.readInt32LE(0) < 0) { const Hn = -buf.readInt32LE(0), KB = buf.readInt32LE(4); const f = new Float32Array(buf.buffer, buf.byteOffset + 8, (buf.length - 8) / 4);
         if (Hn !== X.nn_h() || !X.ptr_nb2v) throw new Error('v2 net needs NNKB wasm');
         const w1 = new Int16Array(mem(), X.ptr_nw1(), KB * 768 * Hn), b1 = new Int16Array(mem(), X.ptr_nb1(), Hn), w2 = new Int16Array(mem(), X.ptr_nw2(), 16 * Hn), b2 = new Int32Array(mem(), X.ptr_nb2v(), 8); let o = 0;
