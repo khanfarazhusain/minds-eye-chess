@@ -35,7 +35,7 @@ jobs:
       - name: match
         run: |
           cd tools/lab; K=knet.json
-          for p in 0 1 2 3; do node wsp.js $(jq -r .wasm $K):knet.bin $(jq -r .base $K) $(jq -r .pairs $K) $(jq -r .ms $K) $(( ${{ matrix.shard }}*4 + p )) 40 g_${{ matrix.shard }}_$p.json > /dev/null 2>&1 & done; wait
+          for p in 0 1 2 3; do node wsp.js $(jq -r .wasm $K):knet.bin:$(jq -r '.bitsA // 18' $K) $(jq -r .base $K):$(jq -r '.bitsB // 18' $K) $(jq -r .pairs $K) $(jq -r .ms $K) $(( ${{ matrix.shard }}*4 + p )) 40 g_${{ matrix.shard }}_$p.json > /dev/null 2>&1 & done; wait
       - uses: actions/upload-artifact@v4
         with:
           name: kgate-${{ matrix.shard }}

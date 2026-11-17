@@ -1,7 +1,7 @@
 // node wsp.js A.cfg B.cfg nPairs ms part np out.json ; cfg = "wasmfile[:netfile]" (net 'hce' = none)
 const fs=require('fs');const [Ac,Bc,NP,MS,part,np,out]=process.argv.slice(2);
 const E=require(__dirname+'/s6z.js'),W=require(__dirname+'/fhkw.js');const OP=require(__dirname+'/openings.json');
-function mk(c){const [wf,net]=c.split(':');const w=W.create(E,wf,18);if(net&&net!=='hce')w.loadNet(net);return {w,net}}
+function mk(c){const [wf,net,bits]=c.split(':');const w=W.create(E,wf,+(bits||18));if(net&&net!=='hce')w.loadNet(net);return {w,net}}
 const A=mk(Ac),B=mk(Bc);const res=[];
 function reset(x){x.w.clear();}
 for(let i=0;i<+NP;i++){if(i%+np!==+part)continue;const fen=OP[i%OP.length];
