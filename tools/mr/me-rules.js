@@ -194,8 +194,36 @@ function qMat(pos, alpha, beta, depth, side, T) { // returns material from `side
   for (const [, m] of caps) { if (!pos.make(m)) continue; if (pos.legalMoves().length === 0 && pos.inCheck()) { pos.unmake(); return 30000; } const v = -qMat(pos, -beta, -alpha, depth - 1, side, T); pos.unmake(); if (v >= beta) return v; if (v > alpha) alpha = v; }
   return alpha;
 }
+
+// ---- Static eval terms (the textbook ideas behind hand-crafted evals: bishop pair, pawn structure, mobility, rook files, king shield).
+// All counted mine - his from `me`'s view, no search. A move's feature = value after the move - value before (what the move changes).
+function evalTerms(pos, me) {
+  const T = { eBpair: 0, eIsl: 0, ePhal: 0, eDbl: 0, eIso: 0, eProt: 0, eThr: 0, eMobN: 0, eMobB: 0, eMobR: 0, eMobQ: 0, eRopen: 0, eRsemi: 0, eBad: 0, eShield: 0 };
+  const pf = [new Array(8).fill(0), new Array(8).fill(0)], pawns = [[], []], bish = [0, 0], bishSq = [[], []], rooks = [[], []], kings = [0, 0], pawnAtt = [new Set(), new Set()];
+  for (let s = 21; s < 99; s++) { const p = pos.b[s]; if (!p || p === OFF) continue; const c = (p & 8) === me ? 0 : 1, t = p & 7;
+    if (t === PAWN) { pf[c][E.fileOf(s)]++; pawns[c].push(s); const fw = (p & 8) === WHITE ? -10 : 10; for (const x of [s + fw - 1, s + fw + 1]) if (pos.b[x] !== OFF) pawnAtt[c].add(x); }
+    else if (t === BISHOP) { bish[c]++; bishSq[c].push(s); } else if (t === ROOK) rooks[c].push(s); else if (t === KING) kings[c] = s; }
+  const sg = [1, -1];
+  for (let c = 0; c < 2; c++) { const w = sg[c];
+    T.eBpair += w * (bish[c] >= 2 ? 1 : 0);
+    let isl = 0, prev = false; for (let f = 0; f < 8; f++) { const has = pf[c][f] > 0; if (has && !prev) isl++; prev = has; } T.eIsl += w * isl;
+    for (let f = 0; f < 8; f++) { if (pf[c][f] > 1) T.eDbl += w * (pf[c][f] - 1); if (pf[c][f] > 0 && !(f > 0 && pf[c][f - 1]) && !(f < 7 && pf[c][f + 1])) T.eIso += w * pf[c][f]; }
+    for (const s of pawns[c]) { const o = pos.b[s + 1], o2 = pos.b[s - 1]; if (o !== OFF && o && (o & 7) === PAWN && (o & 8) === (pos.b[s] & 8)) T.ePhal += w * 0.5; if (o2 !== OFF && o2 && (o2 & 7) === PAWN && (o2 & 8) === (pos.b[s] & 8)) T.ePhal += w * 0.5; }
+    const own = c === 0 ? me : (me ^ 8);
+    for (const bs of bishSq[c]) { const col = (E.fileOf(bs) + E.rowOf(bs)) & 1; for (const ps of pawns[c]) if (((E.fileOf(ps) + E.rowOf(ps)) & 1) === col) T.eBad += w; }
+    for (const rs of rooks[c]) { const f = E.fileOf(rs); if (!pf[c][f] && !pf[1 - c][f]) T.eRopen += w; else if (!pf[c][f]) T.eRsemi += w; }
+    for (let s = 21; s < 99; s++) { const p = pos.b[s]; if (!p || p === OFF || (p & 8) !== own) continue; const t = p & 7;
+      if (t >= KNIGHT && t <= QUEEN) { if (pawnAtt[c].has(s)) T.eProt += w; const att = attacksSq(pos, s); let m = 0; for (const x of att) { const q = pos.b[x]; if (!q || (q & 8) !== own) m++; }
+        if (t === KNIGHT) T.eMobN += w * m; else if (t === BISHOP) T.eMobB += w * m; else if (t === ROOK) T.eMobR += w * m; else T.eMobQ += w * m; } }
+    // enemy minor/major pieces attacked by my pawns
+    for (let s = 21; s < 99; s++) { const p = pos.b[s]; if (!p || p === OFF || (p & 8) === own) continue; const t = p & 7; if (t >= KNIGHT && t <= QUEEN && pawnAtt[c].has(s)) T.eThr += w; }
+    const k = kings[c]; if (k) { const fw = own === WHITE ? -10 : 10; for (const d of [-1, 0, 1]) { const x = pos.b[k + fw + d]; if (x && x !== OFF && (x & 7) === PAWN && (x & 8) === own) T.eShield += w; } }
+  }
+  return T;
+}
+const EVTERMS = typeof process !== 'undefined' && process.env && process.env.EVTERMS === '1'; // v4 rules-model inputs (off in the app)
 function features3(pos, lastTo) {
-  const F = features2(pos, lastTo); const us = pos.side; const before = matOf(pos, us);
+  const F = features2(pos, lastTo); const us = pos.side; const before = matOf(pos, us); const t0 = EVTERMS ? evalTerms(pos, us) : null;
   // opponent's capture threats if we pass (to know what we must fix)
   for (const x of F) {
     pos.make(x.move);
@@ -208,6 +236,7 @@ function features3(pos, lastTo) {
     x.f.sqL = sqMove(pos, x.move);
     const b0 = posVals(pos, us); pos.make(x.move); const b1 = posVals(pos, us); pos.unmake();
     x.f.pawnAdv = b1.pawn - b0.pawn; x.f.kCtr = b1.kc - b0.kc;
+    if (EVTERMS) { pos.make(x.move); const t1 = evalTerms(pos, us); pos.unmake(); for (const k in t1) { const d = t1[k] - t0[k]; if (d) x.f[k] = Math.round(d * 100) / 100; } }
   }
   return F;
 }
@@ -336,7 +365,7 @@ function modeData(pos, S, opts) {
   const strip = mv => ({ uci: mv.uci, san: mv.san, p4: mv.p4, w4: mv.w4, p8: mv.p8, w8: mv.w8, p6: mv.p6, w6: mv.w6, q: mv.q, lab: mv.lab, good: mv.good, rank: mv.rank, sq: mv.sq });
   return { best, bestSan: moves.find(m => m.uci === best).san, moves: ranked.map(strip), calc, hcalc, fast, n: moves.length };
 }
-const api = { fastCands, FC_GROUPS, TEZ_CARD, tezPts, features2, features3, Q, CARDS, modeData, simplePts, sqPts, sqLevel, sqMove, humanCalc };
+const api = { evalTerms, fastCands, FC_GROUPS, TEZ_CARD, tezPts, features2, features3, Q, CARDS, modeData, simplePts, sqPts, sqLevel, sqMove, humanCalc };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 root.MERules = api;
 })(typeof self !== 'undefined' ? self : this);
