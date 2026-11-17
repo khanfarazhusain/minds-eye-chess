@@ -1,1 +1,1 @@
-{"file":"fhk_kb16_1536_20261116_2138.bin.gz","wasm":"k16p.wasm","base":"c1.wasm:nets/current.bin","pairs":376,"ms":200,"note":"k16p (+parent store, +44% vs k16); k16 -139, k16f -128"}
+{"file":"fhk_kb16_1536_20261116_2138_s085.bin.gz","wasm":"k16p.wasm","base":"c1.wasm:nets/current.bin","pairs":376,"ms":200,"note":"k16p + output x0.85 (eval scale matched to c1; unscaled -138)"}
