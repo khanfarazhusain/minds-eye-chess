@@ -239,8 +239,8 @@ static inline void vsub2(i16 *a, i16 *b, const i16 *w, const i16 *v) { for (int 
 static inline void vadd2(i16 *a, i16 *b, const i16 *w, const i16 *v) { for (int j = 0; j < NNH; j++) { a[j] += w[j]; b[j] += v[j]; } }
 static inline void vsub2(i16 *a, i16 *b, const i16 *w, const i16 *v) { for (int j = 0; j < NNH; j++) { a[j] -= w[j]; b[j] -= v[j]; } }
 #endif
-#if defined(NNKB) && !defined(__wasm_simd128__)
-// Native (bot exe / gen) path: one fused pass per side, and a per-thread "Finny" cache so a king-bucket change only re-adds the pieces that differ.
+#if defined(NNKB)
+// Native and wasm path (wasm via generic vectors): one fused pass per side, and a per-thread "Finny" cache so a king-bucket change only re-adds the pieces that differ.
 typedef i16 vs16 __attribute__((vector_size(32), aligned(2), may_alias));
 #define VL(p) (*(const vs16 *)(p))
 #define VS(p, x) (*(vs16 *)(p) = (x))
@@ -759,7 +759,7 @@ i8 *ptr_board(void) { return B; } i16 *ptr_nw1(void) { return NW1; } i16 *ptr_nb
     while (tries++ < 20) { if (make(buf[r % n])) { ok = 1; break; } r ^= r << 13; r ^= r >> 17; r ^= r << 5; } if (!ok) break; made++;
     if ((r & 3) == 0 && made > 1) { unmake(); made--; }
     i32 L = sp / 10; if (!nnOk[L]) nnUpdate(L); i32 a = nnEval();
-#if defined(NNKB) && !defined(__wasm_simd128__)
+#if defined(NNKB)
     for (i32 P = 0; P < 2; P++) { i32 ks = ksOf(P); static i16 ref[NNH]; for (int j = 0; j < NNH; j++) ref[j] = NB1[j];
       FOR_OCC(occ[0] | occ[1], s2) { const i16 *w = &NW1[fIdx(P, nnF(s2, B[s2]), ks) * NNH]; for (int j = 0; j < NNH; j++) ref[j] += w[j]; }
       for (int j = 0; j < NNH; j++) if (ref[j] != nnAcc[L][P][j]) { bad++; break; } }
