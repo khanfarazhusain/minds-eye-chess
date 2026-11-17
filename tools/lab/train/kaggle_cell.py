@@ -36,7 +36,10 @@ if INIT:
     say('init from', INIT)
 rel = json.load(urllib.request.urlopen(f'https://api.github.com/repos/{R}/releases/tags/data-archive'))
 assets = sorted([a for a in rel['assets'] if a['name'].endswith('.gz')], key=lambda a: a['size'])
-valid_src = assets[0]  # smallest file is held out completely: only used to measure the net
+valid_src = next((a for a in assets if a['name'] == 'run_43665001216.gz'), assets[0])  # held out completely (same file every run, so runs compare)
+assets = [valid_src] + [a for a in assets if a is not valid_src]
+if any(a['name'].startswith('lichess_eval_') for a in assets):  # the full Lichess set replaces the old slice (run_43660933797 had fake 0.5 results)
+    assets = [a for a in assets if a['name'] != 'run_43660933797.gz']
 free = shutil.disk_usage(D).free - 3_000_000_000
 budget = min(free, int(float(os.environ.get('FHK_GB', '1000')) * 1e9))
 train, total = [], 0

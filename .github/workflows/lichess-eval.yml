@@ -1,0 +1,33 @@
+name: fhk-lichess-eval
+# Converts the WHOLE Lichess eval database (CC0, Stockfish evals) into training data and adds it to release "data-archive"
+# as lichess_eval_part00..05.gz (6 parts). Kick: edit tools/lab/lichess_eval.json.
+on:
+  workflow_dispatch:
+  push:
+    branches: [engine-lab]
+    paths: [tools/lab/lichess_eval.json]
+permissions:
+  contents: write
+jobs:
+  build:
+    if: github.repository == 'khanfarazhusain/minds-eye-chess'
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+      - name: free disk
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL || true; df -h .
+      - name: convert
+        run: |
+          pip install -q orjson; mkdir -p out
+          curl -sL --retry 5 https://database.lichess.org/lichess_db_eval.jsonl.zst | zstd -dc \
+            | split -n r/6 -d -a 2 --filter='python3 tools/lab/evconv2.py | gzip -4 > $FILE.gz' - out/lichess_eval_part
+          ls -la out; df -h .; for f in out/*.gz; do [ $(stat -c %s $f) -lt 2000000000 ] || { echo "$f too big for a release asset"; exit 1; }; done
+      - name: count
+        run: for f in out/*.gz; do echo "$f $(zcat $f | wc -l)"; done | tee -a $GITHUB_STEP_SUMMARY
+      - name: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload data-archive -R ${{ github.repository }} out/lichess_eval_part*.gz --clobber
