@@ -11,6 +11,7 @@ jobs:
           curl -sL -r 0-33554431 -o sample.binpack "https://huggingface.co/datasets/official-stockfish/master-binpacks/resolve/main/fishpack32.binpack"
           ls -l sample.binpack
           git clone -q --depth 1 https://github.com/official-stockfish/nnue-pytorch nnp
+          grep -n 'Reader\|hasNext\|next()' nnp/data_loader/cpp/lib/binpack.h | head -30
           ls nnp; find nnp -name '*.h' -o -name '*.hpp' -o -name '*.cpp' | head -40; grep -n 'class CompressedTrainingDataEntryReader' -A45 nnp/data_loader/cpp/lib/binpack.h | head -80; grep -n 'struct TrainingDataEntry' -A12 nnp/data_loader/cpp/lib/training_data_entry.h | head -30; grep -n 'namespace' nnp/data_loader/cpp/lib/binpack.h | head
       - name: build dumper
         run: |
@@ -27,6 +28,6 @@ jobs:
             }
           }
           CPP
-          g++ -O2 -std=c++17 -I. dump.cpp -o dump 2>&1 | head -40
+          g++ -O2 -std=c++20 -I. dump.cpp -o dump 2>&1 | head -40
           ./dump sample.binpack 40 | head -40
           ./dump sample.binpack 100000000 | wc -l
