@@ -1,1 +1,1 @@
-{"file":"fhk_kb16_1536_20261116_2138_s085.bin.gz","wasm":"k16p.wasm","base":"c1.wasm:nets/current.bin","pairs":376,"ms":200,"note":"k16p + output x0.85 (eval scale matched to c1; unscaled -138)"}
+{"file":"fhk_kb16_1536_more_20261117_0210_ep1.bin.gz","wasm":"k16p.wasm","base":"c1.wasm:nets/current.bin","pairs":376,"ms":200,"note":"Kaggle run 2 epoch 1 (valid .00394 vs run1 .00446), unscaled"}
