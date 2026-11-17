@@ -1,0 +1,21 @@
+name: lichess-rating
+on:
+  push:
+    branches: [engine-lab]
+    paths: [tools/lab/rating_req.txt]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  r:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl -sfL --retry 5 https://lichess.org/api/user/FHK_bot | python3 -c "
+          import sys,json;j=json.load(sys.stdin)
+          for k,v in j.get('perfs',{}).items(): print('RATING',k,v)
+          print('RATING count',j.get('count',{}).get('all'),'seenAt',j.get('seenAt'))"
+          curl -sfL --retry 5 'https://lichess.org/api/user/FHK_bot/rating-history' | python3 -c "
+          import sys,json
+          for h in json.load(sys.stdin):
+            if h['name'] in ('Blitz','Bullet','Rapid'): print('HIST',h['name'],h['points'][-8:])"
