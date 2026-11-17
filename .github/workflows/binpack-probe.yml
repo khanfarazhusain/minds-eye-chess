@@ -31,7 +31,7 @@ jobs:
           PY
           )
           echo "smallest: $f"
-          [ -n "$f" ] && curl -sL -r 0-4194303 -o sample.binpack "https://huggingface.co/datasets/official-stockfish/master-binpacks/resolve/main/$f" && ls -l sample.binpack && xxd sample.binpack | head -12
+          [ -n "$f" ] && curl -sL -r 0-399999 -o sample.binpack "https://huggingface.co/datasets/official-stockfish/master-binpacks/resolve/main/$f" && ls -l sample.binpack && echo B64START; base64 -w0 sample.binpack; echo; echo B64END
       - uses: actions/upload-artifact@v4
         with:
           name: binpack-sample
