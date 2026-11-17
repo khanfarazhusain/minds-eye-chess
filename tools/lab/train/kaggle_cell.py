@@ -17,7 +17,7 @@ LOG = open(os.path.join(W, 'train_log.txt'), 'a')
 def say(*x):
     m = ' '.join(str(v) for v in x); print(m, flush=True); LOG.write(m + '\n'); LOG.flush()
 def sh(c): say('$', c); subprocess.run(c, shell=True, check=True)
-PRESETS = {'kb4_512': (4, 512, 'nets/current.bin'), 'kb8_768': (8, 768, None), 'kb16_1536': (16, 1536, None),
+PRESETS = {'kb4_512': (4, 512, 'nets/current.bin'), 'kb8_768': (8, 768, None), 'kb16_1536': (16, 1536, None), 'kb16_1024': (16, 1024, None), 'kb16_768': (16, 768, None),
            'kb16_1536_more': (16, 1536, 'https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/kaggle-nets/fhk_kb16_1536_20261116_2138.bin.gz')}  # continue Kaggle run 1
 NET = os.environ.get('FHK_NET', 'kb16_1536'); KB, H, INIT = PRESETS[NET]
 EPOCHS = int(os.environ.get('FHK_EPOCHS', '2')); HOURS = float(os.environ.get('FHK_HOURS', '11'))
