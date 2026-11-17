@@ -6,7 +6,7 @@
 # GH_TOKEN is attached, uploads them to the GitHub release "kaggle-nets" so they reach the repo without any manual download.
 # Settings (optional, put them before "python k.py", e.g.  FHK_NET=kb16_1536 FHK_EPOCHS=1 python k.py):
 #   FHK_NET    kb16_1536 (default, FARAZ 16 Nov: big net first) | kb4_512 (starts from the loop's current.bin)
-#   FHK_EPOCHS passes over the data (default 2)      FHK_GB    max GB of .gz data to download (default: all that fits)
+#   FHK_EPOCHS passes over the data (default 1)      FHK_GB    max GB of .gz data to download (default: all that fits)
 #   FHK_LICHESS  Lichess eval DB lines to convert here on Kaggle (default 1e8, 0 = off; GitHub was too slow to do it)
 #   FHK_HOURS  stop and save after this many hours (default 11; Kaggle kills a run at 12)   FHK_LR  learning rate (default 1e-3, 5e-4 with init)
 import os, sys, subprocess, json, urllib.request, urllib.error, time, shutil
@@ -21,7 +21,7 @@ def sh(c): say('$', c); subprocess.run(c, shell=True, check=True)
 PRESETS = {'kb4_512': (4, 512, 'nets/current.bin'), 'kb8_768': (8, 768, None), 'kb16_1536': (16, 1536, None), 'kb16_1024': (16, 1024, None), 'kb16_768': (16, 768, None),
            'kb16_1536_more': (16, 1536, 'https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/kaggle-nets/fhk_kb16_1536_20261116_2138.bin.gz')}  # continue Kaggle run 1
 NET = os.environ.get('FHK_NET', 'kb16_1536'); KB, H, INIT = PRESETS[NET]
-EPOCHS = int(os.environ.get('FHK_EPOCHS', '2')); HOURS = float(os.environ.get('FHK_HOURS', '11'))
+EPOCHS = int(os.environ.get('FHK_EPOCHS', '1'))  # 17 Nov: valid loss was best after epoch 1, then rose (overfit); HOURS = float(os.environ.get('FHK_HOURS', '11'))
 LR = os.environ.get('FHK_LR', '5e-4' if INIT else '1e-3')
 if KB == 8: sys.exit('kb8 is not in fhkfeat.py yet; use kb4_512 or kb16_1536')
 STAMP = time.strftime('%Y%m%d_%H%M', time.gmtime()); NAME = f'fhk_{NET}_{STAMP}'
