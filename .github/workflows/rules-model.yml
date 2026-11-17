@@ -56,7 +56,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with: { pattern: feat-*, path: fe, merge-multiple: true }
       - run: |
-          pip install -q torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -q numpy torch --index-url https://download.pytorch.org/whl/cpu
           R=tools/mr/rules.json
           python3 tools/mr/train_rules.py rules_result.json fe/f_0_0.gz fe/f_*.gz --max $(jq -r .max $R) --hidden $(jq -r .hidden $R) | tee -a $GITHUB_STEP_SUMMARY
       - uses: actions/upload-artifact@v4
