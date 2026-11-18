@@ -1,1 +1,1 @@
-{"file":"fhk_kb16_1024_ep0best_20261117.bin.gz","wasm":"k1024.wasm","base":"c1cur.wasm:nets/current.bin","pairs":376,"ms":200,"note":"Kaggle 1024 net, epoch-0 checkpoint (valid 0.004107, better than final 0.004717) vs c1, 200 ms"}
+{"file":"fhk_kb4_512_20261118_0529.bin.gz","wasm":"kb4.wasm","base":"c1.wasm:nets/current.bin","pairs":376,"ms":200,"note":"Kaggle kb4_512 net (c1 init, 40cr binpack + 31cr archive, 1 epoch) vs c1, 200 ms"}
