@@ -19,10 +19,8 @@ jobs:
       - name: run kaggle_cell.py (tiny)
         env:
           FHK_RAW: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/tools/lab/
-          FHK_NET: kb4_512
-          FHK_BINPACK: auto
-          FHK_RUN: "1"
-          FHK_NRUNS: "3"
+          FHK_PLAN: "1"
+          FHK_SMOKE: "1"
           FHK_HOURS: "0.45"
           FHK_GB: "1"
           FHK_LICHESS: "2e6"

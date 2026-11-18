@@ -12,6 +12,15 @@
 #   FHK_HOURS  stop and save after this many hours (default 11; Kaggle kills a run at 12)   FHK_LR  learning rate (default 1e-3, 5e-4 with init)
 import os, sys, subprocess, json, urllib.request, urllib.error, time, shutil
 T0 = time.time()
+# FHK_PLAN=1|2|3: the whole 3-run plan in one setting (nothing else to type). Plan values override other FHK_* settings on purpose.
+PLANS = {'1': dict(FHK_RUN='1', FHK_LR='5e-4', FHK_GB='6', FHK_LICHESS='6e7'),  # run 1: c1 net + newest ~6 GB (50 crore) of the self-play archive + 1e8 Lichess lines + this run's binpacks
+         '2': dict(FHK_RUN='2', FHK_LR='3e-4', FHK_NOARCHIVE='1', FHK_LICHESS='0', FHK_AUTOINIT='1'),  # runs 2, 3: binpack only, continue from the newest net in the release
+         '3': dict(FHK_RUN='3', FHK_LR='2e-4', FHK_NOARCHIVE='1', FHK_LICHESS='0', FHK_AUTOINIT='1')}
+if os.environ.get('FHK_PLAN'):
+    assert os.environ['FHK_PLAN'] in PLANS, 'FHK_PLAN must be 1, 2 or 3'
+    keep = {k: os.environ[k] for k in ('FHK_HOURS', 'FHK_GB', 'FHK_LICHESS', 'FHK_NSRC') if k in os.environ} if os.environ.get('FHK_SMOKE') == '1' else {}  # smoke test (GitHub runner) shrinks the plan
+    os.environ.update(dict(FHK_NET='kb4_512', FHK_BINPACK='auto', FHK_NRUNS='3', FHK_HOURS='9', FHK_EPOCHS='3', FHK_NSRC='4', **PLANS[os.environ['FHK_PLAN']])); os.environ.update(keep)
+API = os.environ.get('FHK_API', 'https://api.github.com')
 R = 'khanfarazhusain/minds-eye-chess'; RAW = os.environ.get('FHK_RAW', f'https://raw.githubusercontent.com/{R}/engine-lab/tools/lab/')
 W = '/kaggle/working' if os.path.isdir('/kaggle/working') else os.path.abspath('out'); D = '/tmp/fhk'
 os.makedirs(W, exist_ok=True); os.makedirs(D, exist_ok=True); os.chdir(D)
@@ -23,6 +32,12 @@ PRESETS = {'kb4_512': (4, 512, 'nets/current.bin'), 'kb8_768': (8, 768, None), '
            'kb16_1536_ep1': (16, 1536, 'https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/kaggle-nets/fhk_kb16_1536_more_20261117_0210_ep1.bin.gz'),  # continue Kaggle run 2, best epoch
            'kb16_1536_more': (16, 1536, 'https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/kaggle-nets/fhk_kb16_1536_20261116_2138.bin.gz')}  # continue Kaggle run 1
 NET = os.environ.get('FHK_NET', 'kb16_1536'); KB, H, INIT = PRESETS[NET]
+if os.environ.get('FHK_AUTOINIT') and not os.environ.get('FHK_INIT'):  # newest net (final or hourly checkpoint) that an earlier run uploaded to the public release
+    import re
+    rl0 = json.load(urllib.request.urlopen(f'{API}/repos/{R}/releases/tags/kaggle-nets'))
+    cand = sorted([x for x in rl0['assets'] if re.fullmatch(r'fhk_kb4_512_\d{8}_\d{4}(_latest)?\.bin', x['name']) and x['size'] == 6326312], key=lambda x: x['updated_at'])
+    assert cand, 'FHK_PLAN 2/3 needs a net from the previous run in the kaggle-nets release (none found) - do not continue, tell Claude'
+    os.environ['FHK_INIT'] = cand[-1]['browser_download_url']; print('AUTOINIT picked', cand[-1]['name'], cand[-1]['updated_at'], flush=True)
 if os.environ.get('FHK_INIT'): INIT = os.environ['FHK_INIT']  # resume: URL (.bin or .bin.gz), /kaggle/input/... path or repo path of the net from the previous run
 EPOCHS = int(os.environ.get('FHK_EPOCHS', '1')); HOURS = float(os.environ.get('FHK_HOURS', '11'))  # 17 Nov: default 1 epoch (valid loss was best after epoch 1, then rose)
 LR = os.environ.get('FHK_LR', '5e-4' if INIT else '1e-3')
@@ -40,7 +55,7 @@ if INIT:
     else: urllib.request.urlretrieve(src, 'init.bin')
     assert os.path.getsize('init.bin') > 1000, 'init net is empty'
     say('init from', INIT)
-rel = json.load(urllib.request.urlopen(f'https://api.github.com/repos/{R}/releases/tags/data-archive'))
+rel = json.load(urllib.request.urlopen(f'{API}/repos/{R}/releases/tags/data-archive'))
 assets = sorted([a for a in rel['assets'] if a['name'].endswith('.gz')], key=lambda a: a['size'])
 valid_src = next((a for a in assets if a['name'] == 'run_43665001216.gz'), assets[0])  # held out completely (same file every run, so runs compare)
 assets = [valid_src] + [a for a in assets if a is not valid_src]
@@ -111,9 +126,9 @@ def api(url, data=None, method='GET', ctype='application/json'):
     rq = urllib.request.Request(url, data=data, method=method, headers={'Authorization': 'Bearer ' + tok, 'Accept': 'application/vnd.github+json', 'Content-Type': ctype})
     with urllib.request.urlopen(rq) as r: return json.loads(r.read() or b'{}')
 def gh_upload(pairs):  # [(local file, asset name)]; replaces an asset of the same name
-    try: rl = api(f'https://api.github.com/repos/{R}/releases/tags/kaggle-nets')
+    try: rl = api(f'{API}/repos/{R}/releases/tags/kaggle-nets')
     except urllib.error.HTTPError:
-        rl = api(f'https://api.github.com/repos/{R}/releases', json.dumps({'tag_name': 'kaggle-nets', 'target_commitish': 'engine-lab', 'name': 'Nets trained on Kaggle', 'body': 'Uploaded by tools/lab/train/kaggle_cell.py'}).encode(), 'POST')
+        rl = api(f'{API}/repos/{R}/releases', json.dumps({'tag_name': 'kaggle-nets', 'target_commitish': 'engine-lab', 'name': 'Nets trained on Kaggle', 'body': 'Uploaded by tools/lab/train/kaggle_cell.py'}).encode(), 'POST')
     up = rl['upload_url'].split('{')[0]
     for f, nm in pairs:
         for x in rl.get('assets', []):
