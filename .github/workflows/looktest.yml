@@ -1,0 +1,37 @@
+name: looktest
+# Measures our engine's ranking of every root move at 2/3/4/6/8 plies against Stockfish's played move (binpack test positions). Trigger: edit tools/mr/looktest.txt ("<positions per shard>")
+on:
+  push:
+    branches: [engine-lab]
+    paths: [tools/mr/looktest.txt]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  look:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+      - run: |
+          pip install -q chess
+          git clone -q --depth 1 https://github.com/official-stockfish/nnue-pytorch nnp
+          g++ -O2 -std=c++20 -I. -o binpack_dump tools/lab/train/binpack_dump.cpp
+          cd tools/lab/gen && gcc -O3 -march=native -DNATIVE -pthread $(jq -r .flags ../loop.json) uci.c -o ../../../fhk_look -lm
+      - name: test positions, held out far into the file, every 1000th
+        run: |
+          read N _ < tools/mr/looktest.txt
+          S=$(( 300000000 + ${{ matrix.shard }} * 3000000 ))
+          curl -sL --retry 5 https://huggingface.co/datasets/official-stockfish/master-binpacks/resolve/main/nodes5000pv2_UHO.binpack | ./binpack_dump /dev/stdin 3000000 1.0 12 guru $S | awk 'NR%1000==0' | head -n $N > pos.txt
+          wc -l pos.txt
+      - run: python3 tools/mr/looktest.py ./fhk_look tools/lab/nets/current.bin pos.txt 2,3,4,6,8 4 look_${{ matrix.shard }}.json | tee -a $GITHUB_STEP_SUMMARY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: look-${{ matrix.shard }}
+          path: look_*.json
