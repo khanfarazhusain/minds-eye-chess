@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: engine-lab
-      - run: pip install -q zstandard chess numpy
+      - run: pip install -q zstandard chess numpy && pip install -q torch --index-url https://download.pytorch.org/whl/cpu
       - name: pack
         run: |
           mkdir -p out; export GURU_DIR=$PWD/out GURU_SHARD=${{ matrix.shard }}/5 GURU_POS=$(python3 -c "print(int(float(open('tools/mr/guru_pack.txt').read().split()[0])))")
