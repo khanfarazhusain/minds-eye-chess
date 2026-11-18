@@ -1,0 +1,51 @@
+name: optgate
+# Validates tuned search constants vs defaults (same net). Trigger: edit tools/lab/optgate.txt ("<spsa run id> <pairs per shard> <movetime ms>")
+on:
+  push:
+    branches: [engine-lab]
+    paths: [tools/lab/optgate.txt]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+      - run: |
+          pip install -q chess
+          cd tools/lab/gen && gcc -O3 -march=native -DNATIVE -pthread $(jq -r .flags ../loop.json) uci.c -o ../../../fhk_tune -lm
+      - name: theta
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          read RUN _ < tools/lab/optgate.txt
+          gh run download $RUN -R ${{ github.repository }} -n spsa-avg -D th
+          cat th/theta_avg.json
+      - run: |
+          read RUN P MS _ < tools/lab/optgate.txt
+          python3 tools/lab/optgate.py ./fhk_tune tools/lab/nets/current.bin th/theta_avg.json $P $MS 2 og_${{ matrix.shard }}.json ${{ matrix.shard }} 20
+      - uses: actions/upload-artifact@v4
+        with:
+          name: og-${{ matrix.shard }}
+          path: og_*.json
+  sum:
+    needs: gate
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: og-*
+          path: g
+          merge-multiple: true
+      - run: node -e "const fs=require('fs');let a=[];for(const f of fs.readdirSync('g'))a.push(...JSON.parse(fs.readFileSync('g/'+f)));const s=a.reduce((x,y)=>x+y,0)/a.length;console.log('RESULT tuned vs default games',a.length,'score',(100*s).toFixed(1),'elo',Math.round(-400*Math.log10(1/s-1)))" | tee -a $GITHUB_STEP_SUMMARY

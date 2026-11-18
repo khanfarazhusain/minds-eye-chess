@@ -1,0 +1,60 @@
+name: spsa
+# SPSA tuning of the search constants (eng.c TPT table). 20 independent runs (different seeds), final thetas are averaged.
+# Trigger: edit tools/lab/spsa.txt  ("<minutes per shard> <nodes per move>", e.g. "240 10000").  Then optgate.txt validates the averaged theta.
+on:
+  push:
+    branches: [engine-lab]
+    paths: [tools/lab/spsa.txt]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tune:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+      - run: |
+          pip install -q chess
+          cd tools/lab/gen && gcc -O3 -march=native -DNATIVE -pthread $(jq -r .flags ../loop.json) uci.c -o ../../../fhk_tune -lm
+      - run: |
+          read M N _ < tools/lab/spsa.txt
+          python3 tools/lab/spsa.py ./fhk_tune tools/lab/nets/current.bin spsa_${{ matrix.shard }}.json $M ${{ matrix.shard }} $N 4 > spsa_log_${{ matrix.shard }}.txt || true
+          tail -n 2 spsa_log_${{ matrix.shard }}.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: spsa-${{ matrix.shard }}
+          path: |
+            spsa_${{ matrix.shard }}.json
+            spsa_log_${{ matrix.shard }}.txt
+  avg:
+    needs: tune
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: spsa-*
+          path: s
+          merge-multiple: true
+      - run: |
+          python3 - <<'PY' | tee -a $GITHUB_STEP_SUMMARY
+          import json, glob
+          R = [json.load(open(f)) for f in sorted(glob.glob('s/spsa_[0-9]*.json'))]
+          names = list(R[0]['theta']); avg = {n: round(sum(r['theta'][n] for r in R) / len(R), 2) for n in names}
+          print('runs', len(R), 'iterations each', [r['iter'] for r in R])
+          print('defaults', R[0]['defaults']); print('AVERAGED', json.dumps(avg))
+          json.dump({'theta': avg}, open('s/theta_avg.json', 'w'))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: spsa-avg
+          path: s/theta_avg.json

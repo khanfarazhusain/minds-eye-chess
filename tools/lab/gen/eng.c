@@ -548,6 +548,16 @@ static i32 ttKey[TTS], ttMove[TTS]; static i16 ttScore[TTS]; static i8 ttDepth[T
 static i16 ttEv[TTS];
 #endif
 static TL i32 moveBuf[MAXPLY * 256], scoreBuf[MAXPLY * 256], quietBuf[MAXPLY * 256], killers[MAXPLY * 2], history[16 * 120], pvLen[MAXPLY];
+#ifdef RAZOR
+#define RAZ0 RAZOR
+#else
+#define RAZ0 250
+#endif
+// Tunable search constants (SPSA). Defaults reproduce the previous hardcoded values exactly; set at runtime with UCI setoption.
+static i32 T_RFP = 85, T_NR0 = 3, T_NRD = 4, T_NRE = 200, T_FUT1 = 120, T_FUT0 = 60, T_LMP0 = 4, T_LMP1 = 2, T_SEEC = 80, T_ASP = 30, T_RAZ = RAZ0, T_LMRB = 75, T_LMRD = 225;
+static const struct { const char *n; i32 *p; i32 lo, hi; } TPT[] = { {"RFP", &T_RFP, 30, 200}, {"NR0", &T_NR0, 1, 6}, {"NRD", &T_NRD, 2, 8}, {"NRE", &T_NRE, 80, 500}, {"FUT1", &T_FUT1, 40, 250}, {"FUT0", &T_FUT0, 0, 200},
+  {"LMP0", &T_LMP0, 1, 12}, {"LMP1", &T_LMP1, 1, 6}, {"SEEC", &T_SEEC, 20, 200}, {"ASP", &T_ASP, 10, 80}, {"RAZ", &T_RAZ, 100, 600}, {"LMRB", &T_LMRB, 30, 150}, {"LMRD", &T_LMRD, 150, 350} };
+#define NTP ((int)(sizeof TPT / sizeof TPT[0]))
 TL i32 pvTable[MAXPLY * MAXPLY]; static i8 lmrT[64][64];
 TL i32 r_move, r_score, r_depth, r_nodes, r_pvlen; TL i32 r_pv[MAXPLY];
 #ifndef SOFTT
@@ -559,7 +569,7 @@ static TL i32 rootN[65536];
 static TL i32 nodes, nodeLimit, rootPartial; static volatile i32 stop; static TL double deadline; TL i32 smpId = 0;
 TL i32 rootFilter[256]; TL i32 nRootFilter = 0;
 void set_tt_bits(i32 bits) { ttMask = (1 << (bits > TTB ? TTB : bits)) - 1; }
-void lmr_init(void) { for (int d = 0; d < 64; d++) for (int m = 0; m < 64; m++) { double v = (d && m) ? 0.75 + logd(d) * logd(m) / 2.25 : 0; i32 iv = (i32)v; if (v < 0 && iv != v) iv--; lmrT[d][m] = (d && m) ? iv : 0; } }
+void lmr_init(void) { for (int d = 0; d < 64; d++) for (int m = 0; m < 64; m++) { double v = (d && m) ? T_LMRB / 100.0 + logd(d) * logd(m) / (T_LMRD / 100.0) : 0; i32 iv = (i32)v; if (v < 0 && iv != v) iv--; lmrT[d][m] = (d && m) ? iv : 0; } }
 i32 lmr_get(i32 d, i32 m) { return lmrT[d][m]; }
 void tt_clear(void) { for (int i = 0; i < TTS; i++) { ttKey[i] = 0; ttMove[i] = 0; ttDepth[i] = 0; ttFlag[i] = 0; } for (int i = 0; i < 16 * 120; i++) history[i] = 0; for (int i = 0; i < MAXPLY * 2; i++) killers[i] = 0; }
 static int inRoot(i32 m) { for (int i = 0; i < nRootFilter; i++) if (rootFilter[i] == m) return 1; return 0; }
@@ -680,14 +690,14 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
   int improving = !inChk && ply >= 2 && evs[ply - 2] != -INF && staticEval > evs[ply - 2];
   if (!pvNode && !inChk && ply > 0 && !ex) {
 #ifdef RAZOR
-    if (depth <= 3 && staticEval + RAZOR * depth <= alpha) { i32 v = qsearch(alpha, alpha + 1, ply); if (stop) return 0; if (v <= alpha) return v; }
+    if (depth <= 3 && staticEval + T_RAZ * depth <= alpha) { i32 v = qsearch(alpha, alpha + 1, ply); if (stop) return 0; if (v <= alpha) return v; }
 #endif
     #ifdef IMPR1
-    if (depth <= 6 && staticEval - 85 * (depth - improving) >= beta && iabs(beta) < MATE_BOUND) return staticEval - 85 * (depth - improving);
+    if (depth <= 6 && staticEval - T_RFP * (depth - improving) >= beta && iabs(beta) < MATE_BOUND) return staticEval - T_RFP * (depth - improving);
 #endif
-    if (depth <= 6 && staticEval - 85 * depth >= beta && iabs(beta) < MATE_BOUND) return staticEval - 85 * depth;
+    if (depth <= 6 && staticEval - T_RFP * depth >= beta && iabs(beta) < MATE_BOUND) return staticEval - T_RFP * depth;
     if (allowNull && depth >= 3 && staticEval >= beta && nonPawnMat(side)) {
-      i32 R = 3 + depth / 4 + imin(3, (staticEval - beta) / 200);
+      i32 R = T_NR0 + depth / T_NRD + imin(3, (staticEval - beta) / T_NRE);
 #ifdef CONTH
       cmPc[ply] = 0;
 #endif
@@ -721,17 +731,17 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
   scoreMoves(base, n, ttM, ply);
   if (ply == 0 && nRootFilter) { for (i32 i = base; i < base + n; i++) if (!inRoot(moveBuf[i])) scoreBuf[i] = -1000000000; }
   i32 legal = 0, best = -INF, bestMove = 0, origAlpha = alpha;
-  int futile = !pvNode && !inChk && depth <= 3 && staticEval + 120 * depth + 60 <= alpha;
+  int futile = !pvNode && !inChk && depth <= 3 && staticEval + T_FUT1 * depth + T_FUT0 <= alpha;
   i32 qb = ply * 256, nq = 0;
   for (i32 i = base; i < base + n; i++) { i32 m = pick(i, base + n);
     if (ply == 0 && nRootFilter && !inRoot(m)) continue;
     if (m == ex) continue;
     int isCap = (mFlag(m) & F_CAP) != 0, isQuiet = !isCap && !mPromo(m);
-    if (legal > 0 && isQuiet && !inChk && best > -MATE_BOUND) { if (futile) continue; if (!pvNode && depth <= 4 && legal >= 4 + depth * depth * 2) continue; }
+    if (legal > 0 && isQuiet && !inChk && best > -MATE_BOUND) { if (futile) continue; if (!pvNode && depth <= 4 && legal >= T_LMP0 + depth * depth * T_LMP1) continue; }
 #ifdef HPRUNE
     if (legal > 0 && isQuiet && !pvNode && !inChk && depth <= 3 && best > -MATE_BOUND && history[B[mFrom(m)] * 120 + mTo(m)] < -HPRUNE * depth) continue;
 #endif
-    if (legal > 0 && !pvNode && isCap && depth <= 4 && scoreBuf[i] < 900000 && see(m) < -80 * depth) continue;
+    if (legal > 0 && !pvNode && isCap && depth <= 4 && scoreBuf[i] < 900000 && see(m) < -T_SEEC * depth) continue;
 #ifdef CONTH
     i32 mvPc = B[mFrom(m)];
 #endif
@@ -810,7 +820,7 @@ i32 go(double timeMs, i32 maxDepthIn, i32 nodeLim) {
   if (!nl) { r_move = 0; r_score = inCheck() ? -MATE : 0; r_depth = 0; r_pvlen = 0; r_nodes = 0; return 0; }
   int have = 0; i32 prev = 0;
   for (i32 d = 1 + (smpId & 1); d <= maxDepth; d++) {
-    i32 window = 30, alpha = -INF, beta = INF, s;
+    i32 window = T_ASP, alpha = -INF, beta = INF, s;
     if (d >= 5) { alpha = prev - window; beta = prev + window; }
     while (1) { s = search(d, alpha, beta, 0, 0); if (stop) break;
       if (s <= alpha) { alpha = imax(-INF, alpha - window); window *= 2; } else if (s >= beta) { beta = imin(INF, beta + window); window *= 2; } else break;

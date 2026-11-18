@@ -117,7 +117,8 @@ int main(int argc, char **argv) {
   setvbuf(stdout, NULL, _IONBF, 0);
   while (fgets(line, sizeof line, stdin)) {
     line[strcspn(line, "\r\n")] = 0;
-    if (!strcmp(line, "uci")) { printf("id name FHK\nid author FARAZ & Claude\noption name Hash type spin default 16 min 1 max 16\noption name Threads type spin default 1 min 1 max 64\nuciok\n"); }
+    if (!strcmp(line, "uci")) { printf("id name FHK\nid author FARAZ & Claude\noption name Hash type spin default 16 min 1 max 16\noption name Threads type spin default 1 min 1 max 64\n"); for (int q = 0; q < NTP; q++) printf("option name %s type spin default %d min %d max %d\n", TPT[q].n, *TPT[q].p, TPT[q].lo, TPT[q].hi); printf("uciok\n"); }
+    else if (!strncmp(line, "setoption name ", 15) && strstr(line, " value ") && !strstr(line, "name Threads") && !strstr(line, "name Hash")) { char nm[32] = {0}; int v = 0; sscanf(line + 15, "%31s value %d", nm, &v); for (int q = 0; q < NTP; q++) if (!strcmp(nm, TPT[q].n)) { *TPT[q].p = v < TPT[q].lo ? TPT[q].lo : v > TPT[q].hi ? TPT[q].hi : v; lmr_init(); } }
     else if (!strncmp(line, "setoption name Threads value ", 29)) { nThreads = atoi(line + 29); if (nThreads < 1) nThreads = 1; if (nThreads > 64) nThreads = 64; }
     else if (!strcmp(line, "isready")) printf("readyok\n");
     else if (!strcmp(line, "ucinewgame")) tt_clear();
