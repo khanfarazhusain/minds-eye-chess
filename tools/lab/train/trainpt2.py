@@ -14,12 +14,22 @@ ap.add_argument('--wd', type=float, default=0.0, help='AdamW weight decay'); ap.
 ap.add_argument('--selftest', type=int, default=0, help='write N random-position FENs + this net\'s float output (x400 = cp) to <out>.fen / <out>.ref and exit (compare with the engine\'s nneval)')
 ap.add_argument('--deep', default='', help='deep head L1,L2 (e.g. 16,32): FT -> pairwise product (halves multiplied) -> L1 -> clip -> L2 -> clip -> L3, one set per output bucket; engine needs -DNNDEEP -DNNL1 -DNNL2')
 ap.add_argument('--fact', action='store_true', help='factoriser: one shared 768xH weight set added to every king bucket (folded into W1 on save)')
+ap.add_argument('--nsrc', type=int, default=4, help='pipe: sources open at once'); ap.add_argument('--ck-min', type=float, default=0, help='also save out + ckdir/latest.bin every N minutes (resume safety)'); ap.add_argument('--planned-pos', type=float, default=0, help='positions this run will see (progress for pipe: sources)')
 ap.add_argument('--ckdir', help='copy the net here after every epoch as ep<N>.bin'); ap.add_argument('--max-hours', type=float, default=0, help='stop cleanly (save) after this many hours')
 a = ap.parse_args(); T_START = time.time()
 KB, H, OB = a.kb, a.h, 8; NF = KB * 768; CS = 0.98 * 2.302585; dev = 'cuda' if torch.cuda.is_available() else 'cpu'; print('device', dev, flush=True)
 REC = np.dtype([('b', 'u1', 32), ('stm', 'u1'), ('t', '<f4')])
-def stream(path, lam=None):  # yields numpy chunks of packed positions
-    p = subprocess.Popen(f"{'zcat' if path.endswith('.gz') or 'part_' in path else 'cat'} '{path}' | {a.featpack} {a.lam if lam is None else lam}", shell=True, stdout=subprocess.PIPE, bufsize=1 << 24)
+def stream(path, lam=None):  # yields numpy chunks of packed positions. 'MIX' = all 'pipe:<cmd>' sources, one chunk from each in turn (mixed batches)
+    if path == 'MIX':  # up to --nsrc pipes are open at once (one chunk from each in turn); when one ends the next waiting one starts
+        wait = [f for f in a.files if f.startswith('pipe:')]; gens = []
+        while gens or wait:
+            while wait and len(gens) < a.nsrc: gens.append(stream(wait.pop(0), lam))
+            for g in gens[:]:
+                try: yield next(g)
+                except StopIteration: gens.remove(g)
+        return
+    src = path[5:] if path.startswith('pipe:') else f"{'zcat' if path.endswith('.gz') or 'part_' in path else 'cat'} '{path}'"
+    p = subprocess.Popen(f"set -o pipefail; {src} | {a.featpack} {a.lam if lam is None else lam}", shell=True, executable='/bin/bash', stdout=subprocess.PIPE, bufsize=1 << 24)
     while True:
         raw = p.stdout.read(a.chunk * REC.itemsize)
         if not raw: break
@@ -98,19 +108,21 @@ def valid():
             b, st, tg = to_dev(VAL[i:i + 65536]); s += ((torch.sigmoid(fwd(b, st) * CS) - tg) ** 2).sum().item()
         return s / len(VAL)
 print('valid at start', round(valid(), 6), flush=True); seen = 0; step = 0
-sizes = {f: os.path.getsize(f) for f in a.files}; total_bytes = sum(sizes.values()) * a.epochs; done_bytes = 0; ppb = 0.06  # positions per compressed byte (re-measured after each file)
+PIPES = any(f.startswith('pipe:') for f in a.files)
+sizes = {f: (os.path.getsize(f) if os.path.exists(f) else 1) for f in a.files}; total_bytes = sum(sizes.values()) * a.epochs; done_bytes = 0; ppb = 0.06  # positions per compressed byte (re-measured after each file)
 def progress():  # 0..1 of the run: by data seen, and by time when --max-hours is set
-    pr = seen / max(total_bytes * ppb, 1)
+    pr = seen / a.planned_pos if a.planned_pos else seen / max(total_bytes * ppb, 1)
     if a.max_hours: pr = max(pr, (time.time() - T_START) / (a.max_hours * 3600))
     return min(pr, 1.0)
 def set_lr():
     if a.sched == 'step': return
     pr = progress(); lr = a.lr * min(1.0, (step + 1) / max(a.warm, 1)) * (a.lr_final + (1 - a.lr_final) * 0.5 * (1 + math.cos(math.pi * pr)))
     for g in opt.param_groups: g['lr'] = lr
+LASTCK = time.time()
 for ep in range(a.epochs):
     if a.sched == 'step' and (ep == int(a.epochs * 0.6) or ep == int(a.epochs * 0.85)):
         for g in opt.param_groups: g['lr'] *= 0.3
-    files = a.files[:]; random.Random(ep).shuffle(files); t0 = time.time(); tl = 0.0; nn = 0
+    files = [f for f in a.files if not f.startswith('pipe:')] + (['MIX'] if PIPES else []); random.Random(ep).shuffle(files); t0 = time.time(); tl = 0.0; nn = 0
     for path in files:
         lam = None if a.lam_end is None else a.lam + (a.lam_end - a.lam) * progress()
         for c in stream(path, lam):
@@ -130,10 +142,15 @@ for ep in range(a.epochs):
                     if FACT is not None: FACT[768].zero_()
                 tl += loss.item() * len(tg); nn += len(tg)
             seen += len(c)
+            if not math.isfinite(tl): print('LOSS IS NaN/inf: stopping WITHOUT saving over the last good net', flush=True); raise SystemExit(3)
+            if a.ck_min and time.time() - LASTCK > a.ck_min * 60:
+                LASTCK = time.time(); save()
+                if a.ckdir: os.makedirs(a.ckdir, exist_ok=True); save(os.path.join(a.ckdir, 'latest.bin'))
+                print(f'periodic checkpoint at {seen} positions, valid {valid():.6f}', flush=True)
             if a.max_hours and time.time() - T_START > a.max_hours * 3600:
                 save(); print(f'TIME LIMIT {a.max_hours}h reached in epoch {ep}: saved {a.out}, valid {valid():.6f}', flush=True); raise SystemExit(0)
             print(f'  ep {ep} {os.path.basename(path)} +{len(c)} total {seen} train {tl / max(nn, 1):.6f} {time.time() - t0:.0f}s {seen / max(time.time() - T_START, 1) / 1000:.0f}k pos/s', flush=True)
-        done_bytes += sizes[path]; ppb = max(seen / max(done_bytes, 1), 1e-3)
+        done_bytes += sizes.get(path, 1); ppb = max(seen / max(done_bytes, 1), 1e-3)
         save()
     print(f'epoch {ep} train {tl / max(nn, 1):.6f} valid {valid():.6f} lr {opt.param_groups[0]["lr"]:g} {time.time() - t0:.0f}s', flush=True); save()
     if a.ckdir: os.makedirs(a.ckdir, exist_ok=True); save(os.path.join(a.ckdir, f'ep{ep + 1}.bin')); print('checkpoint', os.path.join(a.ckdir, f'ep{ep + 1}.bin'), flush=True)

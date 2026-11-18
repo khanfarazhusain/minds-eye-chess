@@ -1,0 +1,50 @@
+name: ksmoke
+# Smoke test of the Kaggle trainer on a CPU runner (real HF stream, archive+Lichess mix, net format, engine loads the net). Trigger: edit tools/lab/ksmoke.txt
+on:
+  push:
+    branches: [engine-lab]
+    paths: [tools/lab/ksmoke.txt]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+      - run: pip install -q torch --index-url https://download.pytorch.org/whl/cpu && pip install -q chess numpy
+      - name: run kaggle_cell.py (tiny)
+        env:
+          FHK_RAW: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/tools/lab/
+          FHK_NET: kb4_512
+          FHK_BINPACK: auto
+          FHK_RUN: "1"
+          FHK_NRUNS: "3"
+          FHK_HOURS: "0.45"
+          FHK_GB: "1"
+          FHK_LICHESS: "2e6"
+          FHK_NSRC: "3"
+        run: |
+          python3 tools/lab/train/kaggle_cell.py 2>&1 | tee smoke.log | tail -80
+      - name: check net
+        run: |
+          ls -la out/*.bin
+          F=$(ls out/fhk_kb4_512_*.bin | head -1)
+          python3 - "$F" <<'P'
+          import sys,struct,os
+          b=open(sys.argv[1],'rb').read(); print(len(b), struct.unpack('<ii',b[:8]))
+          assert len(b)==6326312 and struct.unpack('<ii',b[:8])==(-512,4), 'bad net format'
+          print('NET FORMAT OK')
+          P
+          cd tools/lab/gen && gcc -O3 -march=native -DNATIVE -pthread $(jq -r .flags ../loop.json) uci.c -o ../../../fhk_smoke -lm && cd ../../..
+          printf 'uci\nposition startpos\ngo depth 8\nquit\n' | ./fhk_smoke "$F" 2>&1 | tail -3 || true
+          grep -n "valid at start\|valid \|train files\|binpack\|HF \|uses\|Lichess files\|periodic\|pos/s" smoke.log | head -40
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ksmoke
+          path: |
+            smoke.log
+            out/

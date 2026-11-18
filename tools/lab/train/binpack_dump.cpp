@@ -16,6 +16,7 @@ int main(int argc, char** argv) {
   std::vector<std::pair<int,double>> fit; long n = 0, kept = 0, sPos = 0, sNeg = 0, agree = 0, disagree = 0;
   while (r.hasNext() && n < lim + skipN) {
     auto e = r.next(); n++;
+    if (n % 100000000 == 0) fprintf(stderr, "progress raw %ld kept %ld\n", n, kept);
     if (n <= skipN) continue;   // argv[6]: skip the first N positions (next batch of a long pack)
     int sc = e.score; int res = e.result;               // result: -1/0/1 from the side to move
     if (e.ply < minPly) continue;

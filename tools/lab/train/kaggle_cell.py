@@ -6,6 +6,7 @@
 # GH_TOKEN is attached, uploads them to the GitHub release "kaggle-nets" so they reach the repo without any manual download.
 # Settings (optional, put them before "python k.py", e.g.  FHK_NET=kb16_1536 FHK_EPOCHS=1 python k.py):
 #   FHK_NET    kb16_1536 (default, FARAZ 16 Nov: big net first) | kb4_512 (starts from the loop's current.bin)
+#   NEW (18 Nov): FHK_BINPACK=auto streams every Stockfish binpack, FHK_RUN=1..3 + FHK_NRUNS=3 split the files over the runs; FHK_BPSCALE default 0.75; FHK_INIT=<url|path> resume from a previous net; FHK_BPOFF=<raw positions to skip per file>; FHK_NSRC=4 sources mixed at once; archive+Lichess are one more mixed source; checkpoint every 20 min, GitHub upload hourly (GH_TOKEN secret)
 #   FHK_EPOCHS passes over the data (default 1)      FHK_GB    max GB of .gz data to download (default: all that fits)
 #   FHK_LICHESS  Lichess eval DB lines to convert here on Kaggle (default 1e8, 0 = off; GitHub was too slow to do it)
 #   FHK_HOURS  stop and save after this many hours (default 11; Kaggle kills a run at 12)   FHK_LR  learning rate (default 1e-3, 5e-4 with init)
@@ -22,6 +23,7 @@ PRESETS = {'kb4_512': (4, 512, 'nets/current.bin'), 'kb8_768': (8, 768, None), '
            'kb16_1536_ep1': (16, 1536, 'https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/kaggle-nets/fhk_kb16_1536_more_20261117_0210_ep1.bin.gz'),  # continue Kaggle run 2, best epoch
            'kb16_1536_more': (16, 1536, 'https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/kaggle-nets/fhk_kb16_1536_20261116_2138.bin.gz')}  # continue Kaggle run 1
 NET = os.environ.get('FHK_NET', 'kb16_1536'); KB, H, INIT = PRESETS[NET]
+if os.environ.get('FHK_INIT'): INIT = os.environ['FHK_INIT']  # resume: URL (.bin or .bin.gz), /kaggle/input/... path or repo path of the net from the previous run
 EPOCHS = int(os.environ.get('FHK_EPOCHS', '1')); HOURS = float(os.environ.get('FHK_HOURS', '11'))  # 17 Nov: default 1 epoch (valid loss was best after epoch 1, then rose)
 LR = os.environ.get('FHK_LR', '5e-4' if INIT else '1e-3')
 if KB == 8: sys.exit('kb8 is not in fhkfeat.py yet; use kb4_512 or kb16_1536')
@@ -33,8 +35,10 @@ for f in ['trainpt2.py', 'fhkfeat.py', 'featpack.c', '../evconv2.py', 'binpack_d
 sh('gcc -O2 -o featpack featpack.c -lm')
 if INIT:
     src = INIT if INIT.startswith('http') else RAW + INIT
-    if src.endswith('.gz'): sh(f"curl -fsSL --retry 4 '{src}' | zcat > init.bin")
+    if src.startswith('/'): sh(f"(zcat -f '{src}') > init.bin")
+    elif src.endswith('.gz'): sh(f"curl -fsSL --retry 4 '{src}' | zcat > init.bin")
     else: urllib.request.urlretrieve(src, 'init.bin')
+    assert os.path.getsize('init.bin') > 1000, 'init net is empty'
     say('init from', INIT)
 rel = json.load(urllib.request.urlopen(f'https://api.github.com/repos/{R}/releases/tags/data-archive'))
 assets = sorted([a for a in rel['assets'] if a['name'].endswith('.gz')], key=lambda a: a['size'])
@@ -64,44 +68,80 @@ if LN and not any(a['name'].startswith('lichess_eval_') for a in train):  # conv
     say('Lichess files', extra, 'GB', round(sum(os.path.getsize(f) for f in extra) / 1e9, 2), 'in', round((time.time() - t) / 60, 1), 'min')
 # Stockfish self-play binpacks (HuggingFace official-stockfish/master-binpacks, public). FHK_BINPACK="nodes5000pv2_UHO,farseerT75" FHK_BPN=3e8 (total positions) FHK_LICHESS=0
 BP = [x.strip() for x in os.environ.get('FHK_BINPACK', '').split(',') if x.strip()]
-if BP:
-    t = time.time(); BPN = int(float(os.environ.get('FHK_BPN', '3e8'))); BPS = os.environ.get('FHK_BPSCALE', '1.5'); np_ = max(os.cpu_count() or 2, 2)
+BPS = os.environ.get('FHK_BPSCALE', '0.75')  # 0.75 = binpack cp -> FHK cp (FHK/Stockfish eval ratio; 1.5 made the net 1.95x too big vs the search margins)
+STREAM = os.environ.get('FHK_STREAM', '1') == '1'  # stream binpacks straight into the trainer: no disk, any amount of data, mixed with the other sources
+HFB = 'https://huggingface.co/datasets/official-stockfish/master-binpacks/'
+pipes = []
+if BP and STREAM:
+    vn = os.environ.get('FHK_BPVALID', 'fishpack32'); RUN = int(os.environ.get('FHK_RUN', '1')); NRUNS = int(os.environ.get('FHK_NRUNS', '3')); OFF = int(float(os.environ.get('FHK_BPOFF', '0')))
+    if BP == ['auto']:  # every binpack of the dataset, split over the runs so no run reads another run's files (no skipping through data)
+        try:
+            tr = json.load(urllib.request.urlopen(HFB.replace('/datasets/', '/api/datasets/') + 'tree/main?recursive=true'))
+            names = sorted(x['path'][:-8] for x in tr if x['path'].endswith('.binpack') and x['path'][:-8] != vn)
+            say('HF binpack files', len(names), 'GB', round(sum(x.get('size', 0) for x in tr if x['path'].endswith('.binpack')) / 1e9))
+        except Exception as e:
+            names = ['nodes5000pv2_UHO', 'farseerT75', 'fishpack32'][:2]; say('HF listing failed, using', names, e)
+        BP = names[RUN - 1::NRUNS]; say('run', RUN, 'of', NRUNS, 'uses', len(BP), 'binpack files:', BP)
+    sh('rm -rf nnp && git clone -q --depth 1 https://github.com/official-stockfish/nnue-pytorch nnp && g++ -O2 -std=c++20 -I. -o binpack_dump binpack_dump.cpp')
+    for nm in BP: pipes.append(f"pipe:curl -sL --retry 5 {HFB}resolve/main/{nm}.binpack | ./binpack_dump /dev/stdin 100000000000 {BPS} 8 {OFF} 2>> bp_progress.log")
+    if os.environ.get('FHK_BPVALID', 'fishpack32'):
+        subprocess.run(f"set +o pipefail; curl -sL --retry 5 {HFB}resolve/main/{vn}.binpack | ./binpack_dump /dev/stdin 1500000 {BPS} 8 | head -n 1000000 | gzip -1 > valid.gz", shell=True, executable='/bin/bash')
+        say('valid from binpack', vn, os.path.getsize('valid.gz'), 'bytes')
+elif BP:
+    t = time.time(); BPN = int(float(os.environ.get('FHK_BPN', '3e8'))); np_ = max(os.cpu_count() or 2, 2)
     sh('rm -rf nnp && git clone -q --depth 1 https://github.com/official-stockfish/nnue-pytorch nnp && g++ -O2 -std=c++20 -I. -o binpack_dump binpack_dump.cpp')
     for i, nm in enumerate(BP):
-        url = f'https://huggingface.co/datasets/official-stockfish/master-binpacks/resolve/main/{nm}.binpack'
+        url = f'{HFB}resolve/main/{nm}.binpack'
         subprocess.run(f"set +o pipefail; curl -sL --retry 5 {url} | ./binpack_dump /dev/stdin {BPN // len(BP)} {BPS} 8 | split -n r/{np_} -d -a 2 --filter='gzip -1 > $FILE.gz' - bp{i}_", shell=True, executable='/bin/bash')
     extra += sorted(f for f in os.listdir('.') if f.startswith('bp') and f.endswith('.gz'))
-    if os.environ.get('FHK_BPVALID', 'fishpack32'):  # held-out set from a different binpack file, same filters/scale as the training data
+    if os.environ.get('FHK_BPVALID', 'fishpack32'):
         vn = os.environ.get('FHK_BPVALID', 'fishpack32')
-        subprocess.run(f"set +o pipefail; curl -sL --retry 5 https://huggingface.co/datasets/official-stockfish/master-binpacks/resolve/main/{vn}.binpack | ./binpack_dump /dev/stdin 1500000 {BPS} 8 | head -n 1000000 | gzip -1 > valid.gz", shell=True, executable='/bin/bash')
+        subprocess.run(f"set +o pipefail; curl -sL --retry 5 {HFB}resolve/main/{vn}.binpack | ./binpack_dump /dev/stdin 1500000 {BPS} 8 | head -n 1000000 | gzip -1 > valid.gz", shell=True, executable='/bin/bash')
         say('valid from binpack', vn, os.path.getsize('valid.gz'), 'bytes')
     say('binpack files', len(extra), 'in', round((time.time() - t) / 60, 1), 'min')
+if pipes:  # archive + Lichess text files become ONE more mixed source (zcat of all of them), so every batch mixes binpack, self-play and Lichess
+    loc = [a['name'] for a in train] + extra
+    if loc: pipes.append('pipe:zcat ' + ' '.join(loc)); train, extra = [], []
+# GitHub upload (release "kaggle-nets"). Needs a Kaggle Secret GH_TOKEN (Add-ons > Secrets, attached to this notebook). Without it the nets stay in the Output tab only.
+tok = None
+try:
+    from kaggle_secrets import UserSecretsClient; tok = UserSecretsClient().get_secret('GH_TOKEN')
+except Exception as e: say('no GH_TOKEN secret, skipping upload:', type(e).__name__)
+def api(url, data=None, method='GET', ctype='application/json'):
+    rq = urllib.request.Request(url, data=data, method=method, headers={'Authorization': 'Bearer ' + tok, 'Accept': 'application/vnd.github+json', 'Content-Type': ctype})
+    with urllib.request.urlopen(rq) as r: return json.loads(r.read() or b'{}')
+def gh_upload(pairs):  # [(local file, asset name)]; replaces an asset of the same name
+    try: rl = api(f'https://api.github.com/repos/{R}/releases/tags/kaggle-nets')
+    except urllib.error.HTTPError:
+        rl = api(f'https://api.github.com/repos/{R}/releases', json.dumps({'tag_name': 'kaggle-nets', 'target_commitish': 'engine-lab', 'name': 'Nets trained on Kaggle', 'body': 'Uploaded by tools/lab/train/kaggle_cell.py'}).encode(), 'POST')
+    up = rl['upload_url'].split('{')[0]
+    for f, nm in pairs:
+        for x in rl.get('assets', []):
+            if x['name'] == nm: api(x['url'], method='DELETE')
+        api(f'{up}?name={nm}', open(f, 'rb').read(), 'POST', 'application/octet-stream'); say('uploaded', nm)
+if tok:
+    import threading
+    def bg():  # every hour: latest checkpoint + log to GitHub, so a dead session loses at most ~1 h
+        while True:
+            time.sleep(3600)
+            try:
+                lt = os.path.join(CK, 'latest.bin')
+                if os.path.exists(lt): gh_upload([(lt, NAME + '_latest.bin'), (LOG.name, NAME + '_log.txt')])
+            except Exception as e: say('periodic upload failed:', e)
+    threading.Thread(target=bg, daemon=True).start()
 t = time.time()
-cmd = (f'python -u trainpt2.py {OUT} ' + ' '.join([a['name'] for a in train] + extra) + f' --valid valid.gz --epochs {EPOCHS} --kb {KB} --h {H} --lr {LR}'
+cmd = (f'python -u trainpt2.py {OUT} ' + ' '.join([a['name'] for a in train] + extra + ["'" + p + "'" for p in pipes]) + f' --nsrc {int(os.environ.get("FHK_NSRC", "4"))} --ck-min 20 --planned-pos {HOURS * 3600 * 4e5:.0f} --valid valid.gz --epochs {EPOCHS} --kb {KB} --h {H} --lr {LR}'
        + f' --ckdir {CK} --max-hours {max(HOURS - (time.time() - T0) / 3600 - 0.3, 0.02):.2f}' + (' --init init.bin' if INIT else '') + (' --lam 0.8 --lam-end 0.4 --fact' if os.environ.get('FHK_V2') == '1' else '') + ' ' + os.environ.get('FHK_EXTRA', ''))
 say('$', cmd)
 p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
 for line in p.stdout: print(line, end='', flush=True); LOG.write(line); LOG.flush()
 rc = p.wait(); say('trainer exit', rc, 'after', round((time.time() - t) / 3600, 2), 'hours')
 if not os.path.exists(OUT): sys.exit('no net was written, see train_log.txt')
-# Optional: send the result to GitHub (release "kaggle-nets"). Needs a Kaggle Secret GH_TOKEN (Add-ons > Secrets, attached to this notebook).
-tok = None
-try:
-    from kaggle_secrets import UserSecretsClient; tok = UserSecretsClient().get_secret('GH_TOKEN')
-except Exception as e: say('no GH_TOKEN secret, skipping upload:', type(e).__name__)
+for pf in ['bp_progress.log']:
+    if os.path.exists(pf): say('binpack raw positions read per source (last progress lines; use as FHK_BPOFF to continue the same files):', open(pf).read().strip().split('\n')[-4:])
 if tok:
-    def api(url, data=None, method='GET', ctype='application/json'):
-        rq = urllib.request.Request(url, data=data, method=method, headers={'Authorization': 'Bearer ' + tok, 'Accept': 'application/vnd.github+json', 'Content-Type': ctype})
-        with urllib.request.urlopen(rq) as r: return json.loads(r.read() or b'{}')
     try:
-        try: rl = api(f'https://api.github.com/repos/{R}/releases/tags/kaggle-nets')
-        except urllib.error.HTTPError:
-            rl = api(f'https://api.github.com/repos/{R}/releases', json.dumps({'tag_name': 'kaggle-nets', 'target_commitish': 'engine-lab', 'name': 'Nets trained on Kaggle', 'body': 'Uploaded by tools/lab/train/kaggle_cell.py'}).encode(), 'POST')
-        up = rl['upload_url'].split('{')[0]
-        files = [OUT, LOG.name] + ([os.path.join(CK, f) for f in sorted(os.listdir(CK))] if os.path.isdir(CK) else [])
-        for f in files:
-            nm = NAME + '.bin' if f == OUT else (NAME + '_log.txt' if f == LOG.name else NAME + '_' + os.path.basename(f))
-            api(f'{up}?name={nm}', open(f, 'rb').read(), 'POST', 'application/octet-stream'); say('uploaded', nm)
-        say('GitHub: https://github.com/' + R + '/releases/tag/kaggle-nets')
+        files = [(OUT, NAME + '.bin'), (LOG.name, NAME + '_log.txt')] + [(os.path.join(CK, f), NAME + '_' + f) for f in sorted(os.listdir(CK))] if os.path.isdir(CK) else [(OUT, NAME + '.bin'), (LOG.name, NAME + '_log.txt')]
+        gh_upload(files); say('GitHub: https://github.com/' + R + '/releases/tag/kaggle-nets')
     except Exception as e: say('upload failed (net is still in the Output tab):', e)
 say('DONE. Net:', OUT, '| checkpoints:', CK, '| log: train_log.txt (all in the Output tab)')
