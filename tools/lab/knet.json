@@ -1,1 +1,1 @@
-{"file":"fhk_kb4_512_20261118_0529.bin.gz","wasm":"kb4.wasm","base":"c1.wasm:nets/current.bin","pairs":376,"ms":200,"note":"Kaggle kb4_512 net (c1 init, 40cr binpack + 31cr archive, 1 epoch) vs c1, 200 ms"}
+{"file":"fhk_kb4_512_20261118_0529_s049.bin.gz","wasm":"kb4.wasm","base":"c1.wasm:nets/current.bin","pairs":376,"ms":200,"note":"kb4_512 binpack net, output rescaled x0.494 to match c1 eval scale, vs c1, 200 ms"}
