@@ -19,3 +19,10 @@ jobs:
           import sys,json
           for h in json.load(sys.stdin):
             if h['name'] in ('Blitz','Bullet','Rapid'): print('HIST',h['name'],h['points'][-8:])"
+      - run: |
+          curl -sfL --retry 5 -H 'Accept: application/x-ndjson' 'https://lichess.org/api/games/user/FHK_bot?max=40&rated=true&moves=false&pgnInJson=false' | python3 -c "
+          import sys,json
+          for l in sys.stdin:
+            g=json.loads(l); w=g['players']['white']; b=g['players']['black']; me='white' if w.get('user',{}).get('name')=='FHK_bot' else 'black'
+            o=b if me=='white' else w; m=w if me=='white' else b
+            print('GAME',g['speed'],g['clock']['initial'],'+',g['clock']['increment'],'me',m.get('rating'),'opp',o.get('user',{}).get('name'),o.get('rating'),'res',g.get('winner','draw'),'as',me,g.get('status'))"
