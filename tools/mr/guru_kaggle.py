@@ -6,6 +6,7 @@
 #   GURU_HOURS (default 11)   GURU_EPOCHS (default 3)   GURU_BS (default 1024)   GURU_LR (default 1e-3)
 #   GURU_MAXCP drop positions with |eval| >= this (default 3000: mates/decided)   GURU_VW weight of the value-head aux loss (default 0.3)
 #   GURU_SHARD=i/n  pack only shard i of n (every n-th 20k-line chunk) to guru_pos_<i>of<n>.bin.zst (+ guru_valid.txt for shard 0) and exit (CPU, Actions).
+#   GURU_BATCH=b  (binpack mode) which consecutive block of the binpack streams to pack: batch b skips b x (positions per file) first.
 #   GURU_PACKED=url1,url2,.. GURU_VALIDURL=url  train from those packed shards instead of packing (saves the 2 h packing on the GPU).
 #   GURU_SKIP=k  (with GURU_SHARD) skip the first k 20000-line chunks, so a second batch uses NEW positions; the packer prints 'chunks used'.
 #   GURU_INIT=url-or-path to a guru_*.pt: continue training from those weights (use lr 3e-4 and a fresh GURU_SKIP batch).
@@ -102,8 +103,8 @@ def fetch_packed():
 def pack():
     if os.environ.get('GURU_PACKED'): return fetch_packed()
     out = os.path.join(D, 'pos.bin'); vf = os.path.join(D, 'valid.txt')
-    SKIPC = int(os.environ.get('GURU_SKIP', '0')); shard = os.environ.get('GURU_SHARD'); si, sn = (int(x) for x in shard.split('/')) if shard else (0, 1); NP = NPOS // sn
-    if shard: out = os.path.join(D, f'guru_pos_{si}of{sn}.bin'); vf = os.path.join(W, f'guru_valid_of{sn}.txt' if si == 0 else f'guru_valid_{si}of{sn}.txt')
+    SKIPC = int(os.environ.get('GURU_SKIP', '0')); BATCH = int(os.environ.get('GURU_BATCH', '0')); shard = os.environ.get('GURU_SHARD'); si, sn = (int(x) for x in shard.split('/')) if shard else (0, 1); NP = NPOS // sn
+    if shard: out = os.path.join(D, f'guru_pos_b{BATCH}_{si}of{sn}.bin'); vf = os.path.join(W, f'guru_valid_b{BATCH}_of{sn}.txt' if si == 0 else f'guru_valid_b{BATCH}_{si}of{sn}.txt')
     if os.path.exists(out) and os.path.getsize(out) >= REC * min(NPOS, 1000): say('reuse', out); return out, vf
     say('packing', NPOS, 'positions from', SRC)
     if os.environ.get('GURU_BINPACK'):  # Stockfish self-play binpacks: positions + the move the search chose (billions available)
@@ -111,7 +112,7 @@ def pack():
         for cmd in ('rm -rf nnp && git clone -q --depth 1 https://github.com/official-stockfish/nnue-pytorch nnp', f'g++ -O2 -std=c++20 -I. -o binpack_dump {os.path.join(os.path.dirname(os.path.abspath(__file__)), "../lab/train/binpack_dump.cpp") if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../lab/train/binpack_dump.cpp")) else "binpack_dump.cpp"}'):
             subprocess.run(cmd, shell=True, check=True)
         urls = ' '.join(f'https://huggingface.co/datasets/official-stockfish/master-binpacks/resolve/main/{n}.binpack' for n in names)
-        shcmd = f"for u in {urls}; do curl -sL --retry 5 $u | ./binpack_dump /dev/stdin {per} 1.0 8 guru; done"
+        shcmd = f"for u in {urls}; do curl -sL --retry 5 $u | ./binpack_dump /dev/stdin {per} 1.0 8 guru {BATCH * per}; done"
         pr = subprocess.Popen(shcmd, shell=True, stdout=subprocess.PIPE, executable='/bin/bash'); txt = io.TextIOWrapper(pr.stdout, encoding='utf-8', errors='ignore')
     else:
         rq = urllib.request.urlopen(SRC) if SRC.startswith('http') else open(SRC, 'rb')

@@ -12,10 +12,11 @@
 #include <string>
 int main(int argc, char** argv) {
   binpack::CompressedTrainingDataEntryReader r(argv[1]);
-  long lim = argc > 2 ? atol(argv[2]) : 1L << 60; double scale = argc > 3 ? atof(argv[3]) : 1.0; int minPly = argc > 4 ? atoi(argv[4]) : 8;
+  long skipN = argc > 6 ? atol(argv[6]) : 0; long lim = argc > 2 ? atol(argv[2]) : 1L << 60; double scale = argc > 3 ? atof(argv[3]) : 1.0; int minPly = argc > 4 ? atoi(argv[4]) : 8;
   std::vector<std::pair<int,double>> fit; long n = 0, kept = 0, sPos = 0, sNeg = 0, agree = 0, disagree = 0;
-  while (r.hasNext() && n < lim) {
+  while (r.hasNext() && n < lim + skipN) {
     auto e = r.next(); n++;
+    if (n <= skipN) continue;   // argv[6]: skip the first N positions (next batch of a long pack)
     int sc = e.score; int res = e.result;               // result: -1/0/1 from the side to move
     if (e.ply < minPly) continue;
     if (std::abs(sc) > 3000) continue;

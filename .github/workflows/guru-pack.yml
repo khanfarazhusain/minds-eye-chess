@@ -1,5 +1,5 @@
 name: guru-pack
-# guru_pack.txt = "<total positions> <number of shards, max 20> [bp]", e.g. "3.2e8 20" (Lichess eval DB) or "6e8 20 bp" (Stockfish self-play binpacks). Shards are random interleaved samples, so any group of shards is an unbiased batch.
+# guru_pack.txt = "<total positions> <number of shards, max 20> [bp]", e.g. "3.2e8 20" (Lichess eval DB) or "3.2e8 20 bp 0" (Stockfish self-play binpacks, batch 0; batch 1 = the next 3.2e8 positions, and so on). Shards are random interleaved samples, so any group of shards is an unbiased batch.
 # Packs the Lichess eval DB into guru training records on CPU (5 shards in parallel) and uploads them to release "guru-data",
 # so the Kaggle GPU run starts training at once. Trigger: edit tools/mr/guru_pack.txt (one line: total positions, e.g. 8e7).
 on:
@@ -25,7 +25,8 @@ jobs:
       - name: shard in range?
         id: chk
         run: |
-          read T N MODE _ < tools/mr/guru_pack.txt
+          read T N MODE B _ < tools/mr/guru_pack.txt
+          echo "GURU_BATCH=${B:-0}" >> $GITHUB_ENV
           if [ "$MODE" = bp ]; then echo "GURU_BINPACK=nodes5000pv2_UHO,data_pv-2_diff-100_nodes-5000,farseerT75" >> $GITHUB_ENV; fi
           if [ ${{ matrix.shard }} -lt $N ]; then echo "go=1" >> $GITHUB_OUTPUT; fi
           echo "N=$N" >> $GITHUB_ENV
@@ -49,4 +50,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release view guru-data >/dev/null 2>&1 || gh release create guru-data --title guru-data --notes "packed guru shards" || true
-          for f in guru_out/guru_pos_*.zst guru_out/guru_valid_of*.txt; do [ -f "$f" ] && gh release upload guru-data "$f" --clobber; done
+          for f in guru_out/guru_pos_*.zst guru_out/guru_valid_b*.txt; do [ -f "$f" ] && gh release upload guru-data "$f" --clobber; done
