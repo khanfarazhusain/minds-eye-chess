@@ -555,9 +555,9 @@ static TL i32 moveBuf[MAXPLY * 256], scoreBuf[MAXPLY * 256], quietBuf[MAXPLY * 2
 #endif
 // Tunable search constants (SPSA). Defaults reproduce the previous hardcoded values exactly; set at runtime with UCI setoption.
 // SPSA-tuned 18 Nov 2026 (20 runs averaged, +13 Elo vs old defaults over 3200 games at 200/400 ms). Old defaults: RFP 85 NR0 3 NRD 4 NRE 200 FUT1 120 FUT0 60 LMP0 4 LMP1 2 SEEC 80 ASP 30 RAZ 250 LMRB 75 LMRD 225.
-static i32 T_RFP = 70, T_NR0 = 3, T_NRD = 4, T_NRE = 199, T_FUT1 = 103, T_FUT0 = 56, T_LMP0 = 4, T_LMP1 = 1, T_SEEC = 85, T_ASP = 23, T_RAZ = 258, T_LMRB = 73, T_LMRD = 225;
+static i32 T_RFP = 70, T_NR0 = 3, T_NRD = 4, T_NRE = 199, T_FUT1 = 103, T_FUT0 = 56, T_LMP0 = 4, T_LMP1 = 1, T_SEEC = 85, T_ASP = 23, T_RAZ = 258, T_LMRB = 73, T_LMRD = 225, T_PPX = 0;
 static const struct { const char *n; i32 *p; i32 lo, hi; } TPT[] = { {"RFP", &T_RFP, 30, 200}, {"NR0", &T_NR0, 1, 6}, {"NRD", &T_NRD, 2, 8}, {"NRE", &T_NRE, 80, 500}, {"FUT1", &T_FUT1, 40, 250}, {"FUT0", &T_FUT0, 0, 200},
-  {"LMP0", &T_LMP0, 1, 12}, {"LMP1", &T_LMP1, 1, 6}, {"SEEC", &T_SEEC, 20, 200}, {"ASP", &T_ASP, 10, 80}, {"RAZ", &T_RAZ, 100, 600}, {"LMRB", &T_LMRB, 30, 150}, {"LMRD", &T_LMRD, 150, 350} };
+  {"LMP0", &T_LMP0, 1, 12}, {"LMP1", &T_LMP1, 1, 6}, {"SEEC", &T_SEEC, 20, 200}, {"ASP", &T_ASP, 10, 80}, {"RAZ", &T_RAZ, 100, 600}, {"LMRB", &T_LMRB, 30, 150}, {"LMRD", &T_LMRD, 150, 350}, {"PPX", &T_PPX, 0, 2} };
 #define NTP ((int)(sizeof TPT / sizeof TPT[0]))
 TL i32 pvTable[MAXPLY * MAXPLY]; static i8 lmrT[64][64];
 TL i32 r_move, r_score, r_depth, r_nodes, r_pvlen; TL i32 r_pv[MAXPLY];
@@ -746,6 +746,10 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
 #ifdef CONTH
     i32 mvPc = B[mFrom(m)];
 #endif
+    int ppush = 0;  // PPX (UCI option, 0 = off): extend a push of a passed pawn to its 6th/7th rank by 1 ply (PPX 2 = also the 5th rank)
+    if (T_PPX && (B[mFrom(m)] & 7) == PAWN && !isCap) { i32 tq = SQ64[mTo(m)], f = tq & 7, r = tq >> 3, rel = side == WHITE ? r : 7 - r;
+      if (rel >= (T_PPX >= 2 ? 4 : 5)) { u64 fm = 0x0101010101010101ULL, mk = (fm << f) | (f > 0 ? fm << (f - 1) : 0) | (f < 7 ? fm << (f + 1) : 0);
+        mk &= side == WHITE ? ~((1ULL << ((r + 1) * 8)) - 1) : ((1ULL << (r * 8)) - 1); if (!(mk & pbb[PAWN | (side ^ 8)])) ppush = 1; } }
     if (!make(m)) continue;
     legal++;
 #ifdef CONTH
@@ -755,7 +759,7 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
     i32 rn0 = nodes;
 #endif
     int givesCheck = inCheck(); i32 s;
-    i32 ext = (singExt && m == ttM) ? singExt : 0;
+    i32 ext = (singExt && m == ttM) ? singExt : 0; if (ppush && ext < 1) ext = 1;
     if (legal == 1) s = -search(depth - 1 + ext, -beta, -alpha, ply + 1, 1);
     else { i32 R = 0;
       if (depth >= 3 && isQuiet && !inChk && !givesCheck) { R = lmrT[imin(depth, 63)][imin(legal, 63)]; if (pvNode) R--;

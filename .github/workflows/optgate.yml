@@ -25,11 +25,13 @@ jobs:
           pip install -q chess
           cd tools/lab/gen && gcc -O3 -march=native -DNATIVE -pthread $(jq -r .flags ../loop.json) uci.c -o ../../../fhk_tune -lm
       - name: theta
+        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           read RUN _ < tools/lab/optgate.txt
-          gh run download $RUN -R ${{ github.repository }} -n spsa-avg -D th
+          if [[ $RUN == file:* ]]; then mkdir -p th && cp tools/lab/${RUN#file:} th/theta_avg.json; else
+          gh run download $RUN -R ${{ github.repository }} -n spsa-avg -D th; fi
           cat th/theta_avg.json
       - run: |
           read RUN P MS _ < tools/lab/optgate.txt
