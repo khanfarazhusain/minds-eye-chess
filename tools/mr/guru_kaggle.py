@@ -68,7 +68,25 @@ def enc(line):
         else: g = 65535
         b[70:72] = g.to_bytes(2, 'little'); return bytes(b), j['fen'] + ' 0 1'
     except Exception: return None
-def enc_chunk(lines): return [x for x in map(enc, lines) if x]
+def enc_bp(line):  # "fen;score_stm;uci" from binpack_dump guru mode (move = Stockfish self-play search choice)
+    try:
+        fen_s, sc, mu = line.strip().split(';'); sc = int(sc); fen = fen_s.split(); flip = fen[1] == 'b'; b = bytearray(REC); r = 7
+        for row in fen[0].split('/'):
+            f = 0
+            for c in row:
+                if c.isdigit(): f += int(c); continue
+                own = c.isupper() != flip; rr = 7 - r if flip else r
+                b[rr * 8 + f] = PC[c.upper()] + (0 if own else 6); f += 1
+            r -= 1
+        cs = fen[2]; mk, mq, tk, tq = ('kq' if flip else 'KQ') + ('KQ' if flip else 'kq')
+        b[64] = (mk in cs) | (mq in cs) << 1 | (tk in cs) << 2 | (tq in cs) << 3
+        b[65] = 0 if fen[3] == '-' else ord(fen[3][0]) - 96
+        m = mv(mu, flip); f, t = m >> 6, m & 63
+        if b[f] == 6 and b[t] == 4 and f >> 3 == t >> 3: m = f * 64 + (f & 56) + (6 if t > f else 2)
+        b[66:68] = m.to_bytes(2, 'little'); b[68:70] = (0).to_bytes(2, 'little'); b[70:72] = (65535).to_bytes(2, 'little')
+        b[72:74] = int(sc).to_bytes(2, 'little', signed=True); return bytes(b), fen_s + ' 0 1'
+    except Exception: return None
+def enc_chunk(lines): return [x for x in map(enc_bp if os.environ.get('GURU_BINPACK') else enc, lines) if x]
 
 def fetch_packed():
     out = os.path.join(D, 'pos.bin'); vf = os.path.join(D, 'valid.txt')
@@ -88,8 +106,16 @@ def pack():
     if shard: out = os.path.join(D, f'guru_pos_{si}of{sn}.bin'); vf = os.path.join(W, f'guru_valid_of{sn}.txt' if si == 0 else f'guru_valid_{si}of{sn}.txt')
     if os.path.exists(out) and os.path.getsize(out) >= REC * min(NPOS, 1000): say('reuse', out); return out, vf
     say('packing', NPOS, 'positions from', SRC)
-    rq = urllib.request.urlopen(SRC) if SRC.startswith('http') else open(SRC, 'rb')
-    txt = io.TextIOWrapper(zstandard.ZstdDecompressor().stream_reader(rq, read_size=1 << 22), encoding='utf-8', errors='ignore')
+    if os.environ.get('GURU_BINPACK'):  # Stockfish self-play binpacks: positions + the move the search chose (billions available)
+        names = [x.strip() for x in os.environ['GURU_BINPACK'].split(',') if x.strip()]; per = int(NPOS / len(names) * 1.12)  # every shard re-reads the whole stream (own chunks only); files in sequence, so each gets an equal share
+        for cmd in ('rm -rf nnp && git clone -q --depth 1 https://github.com/official-stockfish/nnue-pytorch nnp', f'g++ -O2 -std=c++20 -I. -o binpack_dump {os.path.join(os.path.dirname(os.path.abspath(__file__)), "../lab/train/binpack_dump.cpp") if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../lab/train/binpack_dump.cpp")) else "binpack_dump.cpp"}'):
+            subprocess.run(cmd, shell=True, check=True)
+        urls = ' '.join(f'https://huggingface.co/datasets/official-stockfish/master-binpacks/resolve/main/{n}.binpack' for n in names)
+        shcmd = f"for u in {urls}; do curl -sL --retry 5 $u | ./binpack_dump /dev/stdin {per} 1.0 8 guru; done"
+        pr = subprocess.Popen(shcmd, shell=True, stdout=subprocess.PIPE, executable='/bin/bash'); txt = io.TextIOWrapper(pr.stdout, encoding='utf-8', errors='ignore')
+    else:
+        rq = urllib.request.urlopen(SRC) if SRC.startswith('http') else open(SRC, 'rb')
+        txt = io.TextIOWrapper(zstandard.ZstdDecompressor().stream_reader(rq, read_size=1 << 22), encoding='utf-8', errors='ignore')
     def chunks():
         buf = []; ci = 0
         try:
