@@ -42,6 +42,7 @@ jobs:
           s=s.replace("W = '/kaggle/working' if os.path.isdir('/kaggle/working') else os.path.abspath('guru_out')","W = os.path.abspath('guru_out')")
           open('guru_pack_run.py','w').write(s)
           P
+          cp tools/lab/train/binpack_dump.cpp .
           python3 guru_pack_run.py
           ls -la guru_out
       - name: release
