@@ -85,7 +85,7 @@ def pack():
     if os.environ.get('GURU_PACKED'): return fetch_packed()
     out = os.path.join(D, 'pos.bin'); vf = os.path.join(D, 'valid.txt')
     SKIPC = int(os.environ.get('GURU_SKIP', '0')); shard = os.environ.get('GURU_SHARD'); si, sn = (int(x) for x in shard.split('/')) if shard else (0, 1); NP = NPOS // sn
-    if shard: out = os.path.join(D, f'guru_pos_{si}of{sn}.bin'); vf = os.path.join(W, 'guru_valid.txt' if si == 0 else f'guru_valid_{si}.txt')
+    if shard: out = os.path.join(D, f'guru_pos_{si}of{sn}.bin'); vf = os.path.join(W, f'guru_valid_of{sn}.txt' if si == 0 else f'guru_valid_{si}of{sn}.txt')
     if os.path.exists(out) and os.path.getsize(out) >= REC * min(NPOS, 1000): say('reuse', out); return out, vf
     say('packing', NPOS, 'positions from', SRC)
     rq = urllib.request.urlopen(SRC) if SRC.startswith('http') else open(SRC, 'rb')
