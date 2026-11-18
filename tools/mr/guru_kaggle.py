@@ -7,6 +7,8 @@
 #   GURU_MAXCP drop positions with |eval| >= this (default 3000: mates/decided)   GURU_VW weight of the value-head aux loss (default 0.3)
 #   GURU_SHARD=i/n  pack only shard i of n (every n-th 20k-line chunk) to guru_pos_<i>of<n>.bin.zst (+ guru_valid.txt for shard 0) and exit (CPU, Actions).
 #   GURU_PACKED=url1,url2,.. GURU_VALIDURL=url  train from those packed shards instead of packing (saves the 2 h packing on the GPU).
+#   GURU_SKIP=k  (with GURU_SHARD) skip the first k 20000-line chunks, so a second batch uses NEW positions; the packer prints 'chunks used'.
+#   GURU_INIT=url-or-path to a guru_*.pt: continue training from those weights (use lr 3e-4 and a fresh GURU_SKIP batch).
 # Extras: 15 attack/hanging/check input planes computed on the GPU, pseudo-legal move mask inside the loss (illegal moves never compete),
 #   value-head aux loss, soft 2nd-best target when the top two moves are within 30 cp, final 1-ply 'veto' report. GURU_TEST=1 runs geometry self-tests.
 # Output (Output tab): guru_<size>_<stamp>.pt (+ one per epoch), guru_log.txt with held-out top-1/2/3 and "good move" rate.
@@ -82,7 +84,7 @@ def fetch_packed():
 def pack():
     if os.environ.get('GURU_PACKED'): return fetch_packed()
     out = os.path.join(D, 'pos.bin'); vf = os.path.join(D, 'valid.txt')
-    shard = os.environ.get('GURU_SHARD'); si, sn = (int(x) for x in shard.split('/')) if shard else (0, 1); NP = NPOS // sn
+    SKIPC = int(os.environ.get('GURU_SKIP', '0')); shard = os.environ.get('GURU_SHARD'); si, sn = (int(x) for x in shard.split('/')) if shard else (0, 1); NP = NPOS // sn
     if shard: out = os.path.join(D, f'guru_pos_{si}of{sn}.bin'); vf = os.path.join(W, 'guru_valid.txt' if si == 0 else f'guru_valid_{si}.txt')
     if os.path.exists(out) and os.path.getsize(out) >= REC * min(NPOS, 1000): say('reuse', out); return out, vf
     say('packing', NPOS, 'positions from', SRC)
@@ -94,10 +96,11 @@ def pack():
             for l in txt:
                 buf.append(l)
                 if len(buf) == 20000:
-                    if ci % sn == si: yield buf
+                    if ci >= SKIPC and ci % sn == si: yield buf
                     ci += 1; buf = []
         except Exception as e: say('stream ended:', type(e).__name__)
-        if buf and ci % sn == si: yield buf
+        if buf and ci >= SKIPC and ci % sn == si: yield buf
+        say('chunks used', ci)
     n = 0; t = time.time()
     with open(out, 'wb') as fo, open(vf, 'w') as fv, Pool(max(os.cpu_count() - 1, 1)) as pool:
         for res in pool.imap(enc_chunk, chunks(), chunksize=1):
@@ -269,6 +272,11 @@ def main():
     pf, vf = pack(); data = np.fromfile(pf, dtype=np.uint8).reshape(-1, REC); N = len(data); nv = min(VALN, N // 10)
     say('positions', N, '(held out', nv, ')'); vmask = torch.from_numpy(legal_masks(vf, nv)).to(dev); vd = torch.from_numpy(data[:nv]).to(dev)
     net = Guru(NB, CH).to(dev).to(memory_format=torch.channels_last); say('params', round(sum(p.numel() for p in net.parameters()) / 1e6, 2), 'M')
+    if os.environ.get('GURU_INIT'):
+        src = os.environ['GURU_INIT']; pth = os.path.join(D, 'init.pt')
+        if src.startswith('http'): urllib.request.urlretrieve(src, pth)
+        else: pth = src
+        ck = torch.load(pth, map_location=dev); net.load_state_dict(ck['state']); say('init from', src, ck.get('valid'))
     opt = torch.optim.AdamW(net.parameters(), lr=LR, weight_decay=1e-4); scaler = torch.amp.GradScaler(enabled=dev == 'cuda')
     tr = np.arange(nv, N); steps_ep = len(tr) // BS; total = EPOCHS * steps_ep; step = 0; budget = HOURS * 3600 - (time.time() - T0) - 900
     def evaluate():
