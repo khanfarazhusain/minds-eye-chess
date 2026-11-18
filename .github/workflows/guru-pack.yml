@@ -1,0 +1,41 @@
+name: guru-pack
+# Packs the Lichess eval DB into guru training records on CPU (5 shards in parallel) and uploads them to release "guru-data",
+# so the Kaggle GPU run starts training at once. Trigger: edit tools/mr/guru_pack.txt (one line: total positions, e.g. 8e7).
+on:
+  push:
+    branches: [engine-lab]
+    paths: [tools/mr/guru_pack.txt]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  pack:
+    if: github.repository == 'khanfarazhusain/minds-eye-chess'
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: engine-lab
+      - run: pip install -q zstandard chess numpy
+      - name: pack
+        run: |
+          mkdir -p out; export GURU_DIR=$PWD/out GURU_SHARD=${{ matrix.shard }}/5 GURU_POS=$(python3 -c "print(int(float(open('tools/mr/guru_pack.txt').read().split()[0])))")
+          python3 - <<'P'
+          import re
+          s=open('tools/mr/guru_kaggle.py').read()
+          s=s.replace("W = '/kaggle/working' if os.path.isdir('/kaggle/working') else os.path.abspath('guru_out')","W = os.path.abspath('guru_out')")
+          open('guru_pack_run.py','w').write(s)
+          P
+          python3 guru_pack_run.py
+          ls -la guru_out
+      - name: release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view guru-data >/dev/null 2>&1 || gh release create guru-data --title guru-data --notes "packed guru shards" || true
+          for f in guru_out/guru_pos_*.zst guru_out/guru_valid.txt; do [ -f "$f" ] && gh release upload guru-data "$f" --clobber; done

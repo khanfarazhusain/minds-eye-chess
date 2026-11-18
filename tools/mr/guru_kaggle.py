@@ -5,6 +5,8 @@
 # Settings (before "python g.py"): GURU_SIZE s|m|l|xl (default l = 15 blocks x 192)   GURU_POS positions to pack (default 8 crore)
 #   GURU_HOURS (default 11)   GURU_EPOCHS (default 3)   GURU_BS (default 1024)   GURU_LR (default 1e-3)
 #   GURU_MAXCP drop positions with |eval| >= this (default 3000: mates/decided)   GURU_VW weight of the value-head aux loss (default 0.3)
+#   GURU_SHARD=i/n  pack only shard i of n (every n-th 20k-line chunk) to guru_pos_<i>of<n>.bin.zst (+ guru_valid.txt for shard 0) and exit (CPU, Actions).
+#   GURU_PACKED=url1,url2,.. GURU_VALIDURL=url  train from those packed shards instead of packing (saves the 2 h packing on the GPU).
 # Extras: 15 attack/hanging/check input planes computed on the GPU, pseudo-legal move mask inside the loss (illegal moves never compete),
 #   value-head aux loss, soft 2nd-best target when the top two moves are within 30 cp, final 1-ply 'veto' report. GURU_TEST=1 runs geometry self-tests.
 # Output (Output tab): guru_<size>_<stamp>.pt (+ one per epoch), guru_log.txt with held-out top-1/2/3 and "good move" rate.
@@ -66,31 +68,51 @@ def enc(line):
     except Exception: return None
 def enc_chunk(lines): return [x for x in map(enc, lines) if x]
 
-def pack():
+def fetch_packed():
     out = os.path.join(D, 'pos.bin'); vf = os.path.join(D, 'valid.txt')
+    if os.path.exists(out) and os.path.exists(vf): say('reuse', out); return out, vf
+    urllib.request.urlretrieve(os.environ['GURU_VALIDURL'], vf)
+    with open(out, 'wb') as fo:
+        for u in os.environ['GURU_PACKED'].split(','):
+            say('download', u); p = os.path.join(D, 'part.zst'); urllib.request.urlretrieve(u.strip(), p)
+            with open(p, 'rb') as fi: zstandard.ZstdDecompressor().copy_stream(fi, fo)
+            os.remove(p)
+    say('packed file', os.path.getsize(out) // REC, 'positions'); return out, vf
+
+def pack():
+    if os.environ.get('GURU_PACKED'): return fetch_packed()
+    out = os.path.join(D, 'pos.bin'); vf = os.path.join(D, 'valid.txt')
+    shard = os.environ.get('GURU_SHARD'); si, sn = (int(x) for x in shard.split('/')) if shard else (0, 1); NP = NPOS // sn
+    if shard: out = os.path.join(D, f'guru_pos_{si}of{sn}.bin'); vf = os.path.join(W, 'guru_valid.txt' if si == 0 else f'guru_valid_{si}.txt')
     if os.path.exists(out) and os.path.getsize(out) >= REC * min(NPOS, 1000): say('reuse', out); return out, vf
     say('packing', NPOS, 'positions from', SRC)
     rq = urllib.request.urlopen(SRC) if SRC.startswith('http') else open(SRC, 'rb')
     txt = io.TextIOWrapper(zstandard.ZstdDecompressor().stream_reader(rq, read_size=1 << 22), encoding='utf-8', errors='ignore')
     def chunks():
-        buf = []
+        buf = []; ci = 0
         try:
             for l in txt:
                 buf.append(l)
-                if len(buf) == 20000: yield buf; buf = []
+                if len(buf) == 20000:
+                    if ci % sn == si: yield buf
+                    ci += 1; buf = []
         except Exception as e: say('stream ended:', type(e).__name__)
-        if buf: yield buf
+        if buf and ci % sn == si: yield buf
     n = 0; t = time.time()
     with open(out, 'wb') as fo, open(vf, 'w') as fv, Pool(max(os.cpu_count() - 1, 1)) as pool:
         for res in pool.imap(enc_chunk, chunks(), chunksize=1):
             for rec, fen in res:
                 if n < VALN: fv.write(fen + '\n')
                 fo.write(rec); n += 1
-                if n >= NPOS: break
-            if n >= NPOS: break
+                if n >= NP: break
+            if n >= NP: break
             if n % 2000000 < 20000: say(f'  packed {n/1e7:.2f} crore, {n/(time.time()-t)/1e3:.0f}k/s')
         pool.terminate()
-    say('packed', n, 'positions in', round((time.time() - t) / 60, 1), 'min'); return out, vf
+    say('packed', n, 'positions in', round((time.time() - t) / 60, 1), 'min')
+    if shard:
+        with open(out, 'rb') as fi, open(os.path.join(W, os.path.basename(out) + '.zst'), 'wb') as fo: zstandard.ZstdCompressor(level=6, threads=2).copy_stream(fi, fo)
+        say('shard written', os.path.basename(out) + '.zst'); sys.exit(0)
+    return out, vf
 
 # ---- model: residual conv net; policy head = 64 "to" channels at each "from" square -> 4096 logits ----
 class Block(nn.Module):
