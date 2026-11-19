@@ -19,7 +19,7 @@ PLANS = {'1': dict(FHK_RUN='1', FHK_LR='5e-4', FHK_NOARCHIVE='1', FHK_LICHESS='0
 if os.environ.get('FHK_PLAN'):
     assert os.environ['FHK_PLAN'] in PLANS, 'FHK_PLAN must be 1, 2 or 3'
     keep = {k: os.environ[k] for k in ('FHK_HOURS', 'FHK_GB', 'FHK_LICHESS', 'FHK_NSRC') if k in os.environ} if os.environ.get('FHK_SMOKE') == '1' else {}  # smoke test (GitHub runner) shrinks the plan
-    os.environ.update(dict(FHK_NET='kb4_512', FHK_BINPACK='auto', FHK_NRUNS='3', FHK_HOURS='9', FHK_EPOCHS='3', FHK_NSRC='4', **PLANS[os.environ['FHK_PLAN']])); os.environ.update(keep)
+    os.environ.update(dict(FHK_NET='kb4_512', FHK_BINPACK='auto', FHK_NRUNS='3', FHK_HOURS=os.environ.get('FHK_HOURS', '3.3'), FHK_EPOCHS='3', FHK_NSRC='4', **PLANS[os.environ['FHK_PLAN']])); os.environ.update(keep)
 API = os.environ.get('FHK_API', 'https://api.github.com')
 R = 'khanfarazhusain/minds-eye-chess'; RAW = os.environ.get('FHK_RAW', f'https://raw.githubusercontent.com/{R}/engine-lab/tools/lab/')
 W = '/kaggle/working' if os.path.isdir('/kaggle/working') else os.path.abspath('out'); D = '/tmp/fhk'
