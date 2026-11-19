@@ -27,6 +27,12 @@ os.makedirs(W, exist_ok=True); os.makedirs(D, exist_ok=True)
 LOG = open(os.path.join(W, 'guru_log.txt'), 'a')
 def say(*x):
     m = ' '.join(str(v) for v in x); print(m, flush=True); LOG.write(m + '\n'); LOG.flush()
+# GURU_SHARDS=lo-hi (e.g. 0-4): packed shards of the release guru-data are named here, so no long URL has to be typed or pasted (a pasted URL got shortened to "github.com/.../x" once)
+if os.environ.get('GURU_SHARDS') and not os.environ.get('GURU_PACKED'):
+    _lo, _hi = [int(x) for x in os.environ['GURU_SHARDS'].split('-')]; _b = 'https://github.com/khanfarazhusain/minds-eye-chess/releases/download/guru-data'
+    os.environ['GURU_PACKED'] = ','.join(f'{_b}/guru_pos_b0_{i}of20.bin.zst' for i in range(_lo, _hi + 1)); os.environ.setdefault('GURU_VALIDURL', f'{_b}/guru_valid_b0_of20.txt')
+for _u in (os.environ.get('GURU_PACKED', '').split(',') if os.environ.get('GURU_PACKED') else []) + ([os.environ['GURU_VALIDURL']] if os.environ.get('GURU_VALIDURL') else []):
+    assert _u.strip().startswith('https://') and '\u2026' not in _u and '...' not in _u, f'bad URL (shortened by copy-paste?): {_u!r}'
 SIZES = {'s': (6, 64), 'm': (10, 128), 'l': (15, 192), 'xl': (20, 256)}
 SIZE = os.environ.get('GURU_SIZE', 'l'); NB, CH = SIZES[SIZE]
 NPOS = int(float(os.environ.get('GURU_POS', '8e7'))); HOURS = float(os.environ.get('GURU_HOURS', '11'))
