@@ -2,7 +2,7 @@
 # Features are built on the GPU from packed boards (fhkfeat.py, verified identical to train3.c). Output: the same v2 .bin as train3.c.
 #   gcc -O2 -o featpack featpack.c -lm
 #   python trainpt2.py out.bin data_part_* --valid valid.gz --epochs 3 --kb 16 --h 1536 --lr 1e-3 [--init old.bin] [--aug]
-import argparse, math, struct, subprocess, time, random, os, numpy as np, torch
+import select, argparse, math, struct, subprocess, time, random, os, numpy as np, torch
 from fhkfeat import feats
 ap = argparse.ArgumentParser(); ap.add_argument('out'); ap.add_argument('files', nargs='+'); ap.add_argument('--valid', required=True)
 ap.add_argument('--epochs', type=int, default=3); ap.add_argument('--lr', type=float, default=1e-3); ap.add_argument('--kb', type=int, default=16)
@@ -14,7 +14,7 @@ ap.add_argument('--wd', type=float, default=0.0, help='AdamW weight decay'); ap.
 ap.add_argument('--selftest', type=int, default=0, help='write N random-position FENs + this net\'s float output (x400 = cp) to <out>.fen / <out>.ref and exit (compare with the engine\'s nneval)')
 ap.add_argument('--deep', default='', help='deep head L1,L2 (e.g. 16,32): FT -> pairwise product (halves multiplied) -> L1 -> clip -> L2 -> clip -> L3, one set per output bucket; engine needs -DNNDEEP -DNNL1 -DNNL2')
 ap.add_argument('--fact', action='store_true', help='factoriser: one shared 768xH weight set added to every king bucket (folded into W1 on save)')
-ap.add_argument('--nsrc', type=int, default=4, help='pipe: sources open at once'); ap.add_argument('--ck-min', type=float, default=0, help='also save out + ckdir/latest.bin every N minutes (resume safety)'); ap.add_argument('--planned-pos', type=float, default=0, help='positions this run will see (progress for pipe: sources)')
+ap.add_argument('--stall', type=float, default=900, help='seconds without data before a source is killed and dropped'); ap.add_argument('--nsrc', type=int, default=4, help='pipe: sources open at once'); ap.add_argument('--ck-min', type=float, default=0, help='also save out + ckdir/latest.bin every N minutes (resume safety)'); ap.add_argument('--planned-pos', type=float, default=0, help='positions this run will see (progress for pipe: sources)')
 ap.add_argument('--ckdir', help='copy the net here after every epoch as ep<N>.bin'); ap.add_argument('--max-hours', type=float, default=0, help='stop cleanly (save) after this many hours')
 a = ap.parse_args(); T_START = time.time()
 KB, H, OB = a.kb, a.h, 8; NF = KB * 768; CS = 0.98 * 2.302585; dev = 'cuda' if torch.cuda.is_available() else 'cpu'; print('device', dev, flush=True)
@@ -29,12 +29,23 @@ def stream(path, lam=None):  # yields numpy chunks of packed positions. 'MIX' = 
                 except StopIteration: gens.remove(g)
         return
     src = path[5:] if path.startswith('pipe:') else f"{'zcat' if path.endswith('.gz') or 'part_' in path else 'cat'} '{path}'"
-    p = subprocess.Popen(f"set -o pipefail; {src} | {a.featpack} {a.lam if lam is None else lam}", shell=True, executable='/bin/bash', stdout=subprocess.PIPE, bufsize=1 << 24)
-    while True:
-        raw = p.stdout.read(a.chunk * REC.itemsize)
-        if not raw: break
-        yield np.frombuffer(raw[:len(raw) // REC.itemsize * REC.itemsize], REC)
-    p.wait()
+    p = subprocess.Popen(f"set -o pipefail; {src} | {a.featpack} {a.lam if lam is None else lam}", shell=True, executable='/bin/bash', stdout=subprocess.PIPE, bufsize=0, start_new_session=True)
+    fd = p.stdout.fileno(); need = a.chunk * REC.itemsize; buf = bytearray(); eof = False
+    def kill():
+        try: os.killpg(p.pid, 9)
+        except Exception: pass
+    while not eof:
+        while len(buf) < need:  # watchdog: a source that gives no data for --stall seconds is killed and dropped (a hung HuggingFace stream must not freeze the whole run)
+            r, _, _ = select.select([fd], [], [], a.stall)
+            if not r: print(f'SOURCE STALLED {a.stall}s (no data): dropping {src[:90]}', flush=True); kill(); p.wait(); return
+            d = os.read(fd, 1 << 22)
+            if not d: eof = True; break
+            buf += d
+        n = (min(len(buf), need) if not eof else len(buf)) // REC.itemsize * REC.itemsize
+        if n == 0: break
+        yield np.frombuffer(bytes(buf[:n]), REC); del buf[:n]
+        if eof and len(buf) < REC.itemsize: break
+    print(f'SOURCE ENDED (stream finished or connection closed): {src[:90]}', flush=True); kill(); p.wait()
 rng = np.random.default_rng(12345)
 W1 = torch.zeros(NF + 1, H); B1 = torch.zeros(H); W2 = torch.zeros(OB, 2 * H); B2 = torch.zeros(OB)
 W1[:NF] = torch.from_numpy(((rng.random((NF, H)) - 0.5) * 0.2).astype(np.float32)); B1[:] = torch.from_numpy((0.1 + (rng.random(H) - 0.5) * 0.05).astype(np.float32))
