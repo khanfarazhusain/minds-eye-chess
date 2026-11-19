@@ -13,7 +13,7 @@
 import os, sys, subprocess, json, urllib.request, urllib.error, time, shutil
 T0 = time.time()
 # FHK_PLAN=1|2|3: the whole 3-run plan in one setting (nothing else to type). Plan values override other FHK_* settings on purpose.
-PLANS = {'1': dict(FHK_RUN='1', FHK_LR='5e-4', FHK_GB='6', FHK_LICHESS='6e7'),  # run 1: c1 net + newest ~6 GB (50 crore) of the self-play archive + 1e8 Lichess lines + this run's binpacks
+PLANS = {'1': dict(FHK_RUN='1', FHK_LR='5e-4', FHK_NOARCHIVE='1', FHK_LICHESS='0'),  # run 1: c1 net + this run's binpacks ONLY (FARAZ 19 Nov: binpack only for now)
          '2': dict(FHK_RUN='2', FHK_LR='3e-4', FHK_NOARCHIVE='1', FHK_LICHESS='0', FHK_AUTOINIT='1'),  # runs 2, 3: binpack only, continue from the newest net in the release
          '3': dict(FHK_RUN='3', FHK_LR='2e-4', FHK_NOARCHIVE='1', FHK_LICHESS='0', FHK_AUTOINIT='1')}
 if os.environ.get('FHK_PLAN'):
