@@ -822,7 +822,14 @@ function drawExample(){
 // Har mode mein 2 option: (1) poore mode ka sequence, (2) Tez tarika. Engine check usi engine se jo user ne chuna:
 // FHK = 'mode' cmd ke labels (har chaal depth 6, best se 0.3 pyaada = ★); Stockfish = sf-worker (Skill 20, depth 10, MultiPV).
 let LV = null; const LVK = STORE + '.live';
-let lvPref = { eng: 'fhk', lvl: 4, col: 'r', how: 'mode', watch: 0 }; try { Object.assign(lvPref, JSON.parse(localStorage.getItem(LVK) || '{}')); } catch (e) {}
+let lvPref = { eng: 'fhk', lvl: 4, col: 'r', how: 'mode', watch: 0, me: 'self', meLvl: 4 }; try { Object.assign(lvPref, JSON.parse(localStorage.getItem(LVK) || '{}')); } catch (e) {}
+// v164: do alag engine. Coach engine (eng/lvl) = saamne wale ki chaal; Hamara engine (me/meLvl) = hamari taraf ki chaal ('self' = main khud board par).
+if (lvPref.watch && lvPref.me === 'self') { lvPref.me = lvPref.eng; lvPref.meLvl = lvPref.lvl; } lvPref.watch = lvPref.me !== 'self' ? 1 : 0;
+const LV_ENG = [['fhk', `FHK Engine (${ENGV}, net)`], ['sf', 'Stockfish'], ['js', 'ME JS engine (purana, bina net)']];
+const lvLevels = e => e === 'sf' ? SF_LEVELS : e === 'js' ? ME_LEVELS.map(([v, l]) => [v, v === 8 ? 'Level 8 (poori taakat, time 1 sec)' : l]) : ME_LEVELS;
+const lvDefLvl = e => e === 'sf' ? 3 : 4;
+const lvName = (e, l) => `${e === 'sf' ? 'Stockfish' : e === 'js' ? 'ME JS' : 'FHK'} L${l}`;
+async function lvPlayBy(e, l, fen){ if (e === 'sf') return sfPlay(fen, l); return (await ask(Object.assign({ cmd: 'play', fen, time: 1000, depth: ME_DEPTH[l] }, e === 'js' ? { js: 1 } : {}))).uci; }
 let sfLock = Promise.resolve(); const sfQ = f => (sfLock = sfLock.then(f, f));
 function sfAll(cmd){ return new Promise(res => { sfLog = []; sfWaiter = { re: /^bestmove/, res: () => { const l = sfLog; sfLog = null; res(l); } }; sfw.postMessage(cmd); }); }
 function sfParse(lines){ const sc = {}; for (const l of lines) { const m = l.match(/ multipv (\d+) .*score (cp|mate) (-?\d+).* pv (\S+)/) || l.match(/ score (cp|mate) (-?\d+).* pv (\S+)/);
@@ -860,31 +867,39 @@ function lvSetup(){
   document.getElementById('stepBar').classList.add('hidden'); document.getElementById('methodCard').classList.add('hidden');
   tBoard.flip = false; tBoard.set(new E.Position(), null); const M = MODES[MODE];
   tStatus.textContent = `🎮 Live game · Mode: ${M.name}`;
-  const lv = lvPref.eng === 'sf' ? SF_LEVELS : ME_LEVELS;
+  const engOpt = (sel, self) => (self ? [['self', 'Main khud (board par chalunga)']] : []).concat(LV_ENG).map(([v, l]) => `<option value="${v}"${v === sel ? ' selected' : ''}>${esc(l)}</option>`).join('');
+  const lvlOpt = (e, sel) => lvLevels(e).map(([v, l]) => `<option value="${v}"${v === sel ? ' selected' : ''}>${l}</option>`).join('');
   panel.innerHTML = `<div class="card"><h2>🎮 Live game</h2><p class="small muted">Mode: <b>${esc(M.name)}</b>. Har baar naya game, kyunki engine abhi khelega.</p>
     <div class="stack" style="gap:8px">
-    <label>Engine <select id="lvEng"><option value="fhk"${lvPref.eng === 'fhk' ? ' selected' : ''}>FHK Engine (${ENGV})</option><option value="sf"${lvPref.eng === 'sf' ? ' selected' : ''}>Stockfish</option></select></label>
-    <label>Level <select id="lvLvl">${lv.map(([v, l]) => `<option value="${v}"${v === lvPref.lvl ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
-    <label>Aapka rang <select id="lvCol"><option value="w"${lvPref.col === 'w' ? ' selected' : ''}>White</option><option value="b"${lvPref.col === 'b' ? ' selected' : ''}>Black</option><option value="r"${lvPref.col === 'r' ? ' selected' : ''}>Random</option></select></label>
+    <label>🤖 Coach ka engine (saamne wale ki chaal) <select id="lvEng">${engOpt(lvPref.eng)}</select></label>
+    <label>Coach ka level <select id="lvLvl">${lvlOpt(lvPref.eng, lvPref.lvl)}</select></label>
+    <label>👤 Hamari chaal kaun chalega? <select id="lvMe">${engOpt(lvPref.me, 1)}</select></label>
+    ${lvPref.me === 'self' ? '' : `<label>Hamare engine ka level <select id="lvMeLvl">${lvlOpt(lvPref.me, lvPref.meLvl)}</select></label>`}
+    <label>Hamara rang <select id="lvCol"><option value="w"${lvPref.col === 'w' ? ' selected' : ''}>White</option><option value="b"${lvPref.col === 'b' ? ' selected' : ''}>Black</option><option value="r"${lvPref.col === 'r' ? ' selected' : ''}>Random</option></select></label>
     <label>Har chaal kaise samjhaun? <select id="lvHow"><option value="mode"${lvPref.how === 'mode' ? ' selected' : ''}>Poore mode ka sequence</option><option value="tez"${lvPref.how === 'tez' ? ' selected' : ''}>Tez tarika (5 chaalein)</option></select></label>
-    <label class="small"><input type="checkbox" id="lvWatch"${lvPref.watch ? ' checked' : ''}> Main sirf dekhunga (engine dono taraf se khelega)</label></div>
+    <p class="small muted" style="margin:0">Hamara engine chuna to aap sirf dekhoge: hamari taraf hamara engine, saamne coach ka engine. ★ check coach ke engine se hota hai.</p></div>
     <div class="gw-nav"><button class="btn pri" id="lvGo">▶ Game shuru karo</button><button class="btn" id="lvQuit">Training par wapas</button></div></div>`;
   const q = id => panel.querySelector(id);
-  q('#lvEng').onchange = () => { lvPref.eng = q('#lvEng').value; lvPref.lvl = lvPref.eng === 'sf' ? 3 : 4; lvSetup(); };
+  const keep = () => Object.assign(lvPref, { lvl: +q('#lvLvl').value, col: q('#lvCol').value, how: q('#lvHow').value, meLvl: q('#lvMeLvl') ? +q('#lvMeLvl').value : lvPref.meLvl });
+  q('#lvEng').onchange = () => { keep(); lvPref.eng = q('#lvEng').value; lvPref.lvl = lvDefLvl(lvPref.eng); lvSetup(); };
+  q('#lvMe').onchange = () => { keep(); lvPref.me = q('#lvMe').value; if (lvPref.me !== 'self') lvPref.meLvl = lvDefLvl(lvPref.me); lvSetup(); };
   q('#lvQuit').onclick = () => { T = null; applyModeLayout(); nextPosition(); };
-  q('#lvGo').onclick = () => { Object.assign(lvPref, { lvl: +q('#lvLvl').value, col: q('#lvCol').value, how: q('#lvHow').value, watch: q('#lvWatch').checked ? 1 : 0 });
+  q('#lvGo').onclick = () => { keep(); lvPref.watch = lvPref.me !== 'self' ? 1 : 0;
     try { localStorage.setItem(LVK, JSON.stringify(lvPref)); } catch (e) {} lvStart(); };
 }
 function lvStart(){ const p = lvPref, uw = p.col === 'w' ? true : p.col === 'b' ? false : Math.random() < 0.5;
-  LV = { mk: MODE, eng: p.eng, lvl: p.lvl, how: p.how, watch: !!p.watch, userWhite: uw, pos: new E.Position(), hist: [], hashes: {}, result: null, k: 0, n: 0 };
-  ask({ cmd: 'newgame', fen: LV.pos.fen() }).catch(() => {}); tBoard.flip = !uw && !LV.watch; lvNext(); }
-const lvEngName = () => LV.eng === 'sf' ? `Stockfish L${LV.lvl}` : `FHK L${LV.lvl}`;
+  LV = { mk: MODE, eng: p.eng, lvl: p.lvl, me: p.me, meLvl: p.meLvl, how: p.how, watch: p.me !== 'self', userWhite: uw, pos: new E.Position(), hist: [], hashes: {}, result: null, k: 0, n: 0 };
+  ask({ cmd: 'newgame', fen: LV.pos.fen() }).catch(() => {}); tBoard.flip = !uw; lvNext(); }
+const lvOurTurn = () => (LV.pos.side === E.WHITE) === LV.userWhite;
+const lvCoachName = () => lvName(LV.eng, LV.lvl), lvMeName = () => lvName(LV.me, LV.meLvl);
+const lvEngName = () => LV.watch && lvOurTurn() ? lvMeName() : lvCoachName(); // jiski baari hai
+const lvWhoName = P => P.who === 'ours' ? lvMeName() : lvCoachName();
 const lvUserTurn = () => !LV.watch && ((LV.pos.side === E.WHITE) === LV.userWhite);
 function lvPush(uci, who){ const fen = LV.pos.fen(), m = LV.pos.parseUci(uci), san = LV.pos.san(m);
   const P = { fen, uci, san, who, sq: [E.mFrom(m), E.mTo(m)] }; LV.hist.push(P); LV.pos.make(m); LV.result = gameOver(LV.pos, LV.hashes); lvPly(LV.hist.length - 1).catch(() => {}); return P; }
 async function lvEngineMove(){ const me = LV, g = me.gen || 0; const fen = me.pos.fen();
-  const uci = me.eng === 'sf' ? await sfPlay(fen, me.lvl) : (await ask({ cmd: 'play', fen, time: 1000, depth: ME_DEPTH[me.lvl] })).uci;
-  if (LV !== me || (me.gen || 0) !== g || me.pos.fen() !== fen) return false; lvPush(uci, 'eng'); return true; }
+  const ours = me.watch && lvOurTurn(), uci = ours ? await lvPlayBy(me.me, me.meLvl, fen) : await lvPlayBy(me.eng, me.lvl, fen);
+  if (LV !== me || (me.gen || 0) !== g || me.pos.fen() !== fen) return false; lvPush(uci, ours ? 'ours' : 'eng'); return true; }
 // Undo: aapki aakhri chaal (aur uske baad engine ka jawab) wapas, wahi position phir se steps ke saath
 const lvCanUndo = () => LV && !LV.watch && LV.hist.some(P => P.who === 'user');
 function lvUndo(){ if (!lvCanUndo()) return; LV.gen = (LV.gen || 0) + 1;
@@ -902,7 +917,7 @@ async function lvNext(){ const me = LV; LV.k = LV.hist.length;
   if (LV !== me || !ok) return; LV.k = LV.hist.length - 1; lvDraw(); }
 function lvUserMove(m){ if (!LV || LV.k !== LV.hist.length || !lvUserTurn()) return; const P = lvPush(LV.pos.uci(m), 'user'); LV.k = LV.hist.length - 1; T.step = 0; lvDraw(); }
 function lvRows(P){ const M = lvM(), d = P.d, pos = new E.Position(P.fen), g = P.good, h = [];
-  const mark = u => `${g.has(u) ? ' ★' : ''}`, me = u => u === P.uci ? `<br><b>${P.who === 'user' ? '👤 Aapki chaal' : '🤖 Engine ki chaal'}</b>` : '';
+  const mark = u => `${g.has(u) ? ' ★' : ''}`, me = u => u === P.uci ? `<br><b>${P.who === 'user' ? '👤 Aapki chaal' : P.who === 'ours' ? `🤖 Hamare engine (${lvWhoName(P)}) ki chaal` : `🤖 Coach (${lvWhoName(P)}) ki chaal`}</b>` : '';
   const cls = u => `${g.has(u) ? 'eng' : ''}${u === P.uci ? ' ply' : ''}`;
   if (LV.how === 'tez' || M.g === 0) {
     if (LV.how === 'mode' && P.rep) h.push(`<details class="small"><summary><b>Purana tareeka: engine ke 5 steps</b> (tap)</summary>${thinkingHTML(P.rep, pos).replace(/<button[^>]*data-play[^>]*>.*?<\/button>/g, '')}</details>`);
@@ -916,7 +931,7 @@ function lvRows(P){ const M = lvM(), d = P.d, pos = new E.Position(P.fen), g = P
   return h.join(''); }
 function lvVerdict(P){ const lst = lvList(P.d, LV.how), M = lvM(), has = lst.some(u => P.good.has(u)), r = lst.indexOf(P.uci) + 1;
   const pick = (LV.how === 'mode' && M.g >= 2) ? lst[0] : null, pickSan = pick ? new E.Position(P.fen).san(new E.Position(P.fen).parseUci(pick)) : '';
-  const loss = P.sc[P.uci] !== undefined ? P.top - P.sc[P.uci] : null, ok = P.good.has(P.uci), who = P.who === 'user' ? 'Aapne' : 'Engine ne';
+  const loss = P.sc[P.uci] !== undefined ? P.top - P.sc[P.uci] : null, ok = P.good.has(P.uci), who = P.who === 'user' ? 'Aapne' : P.who === 'ours' ? `Hamare engine (${lvWhoName(P)}) ne` : `Coach (${lvWhoName(P)}) ne`;
   const h = [];
   if (pick) h.push(`<div class="gw-v ${P.good.has(pick) ? 'ok' : 'no'}">Is tarike ka jawab: <b>${esc(pickSan)}</b>. ${P.good.has(pick) ? '✓ Engine jaisi chaal.' : '✗ Engine jaisi nahi.'}</div>`);
   else h.push(`<div class="gw-v ${has ? 'ok' : 'no'}">${has ? '✓ Is list mein engine jaisi chaal thi.' : `✗ Is list mein engine jaisi chaal nahi thi.`}</div>`);
@@ -1042,7 +1057,7 @@ async function lvStepsDraw(head){ const me = LV, fen = LV.pos.fen();
 async function lvDraw(){ const me = LV, k = LV.k, N = LV.hist.length, M = lvM();
   const nav = (next) => `<div class="gw-nav"><button class="btn" id="lvPrev" ${k ? '' : 'disabled'}>◀ Peeche</button>${next}</div>${lvCanUndo() ? `<div class="gw-nav">${lvUndoBtn()}</div>` : ''}<div class="gw-nav"><button class="btn" id="lvNew">↻ Naya game</button><button class="btn" id="lvQuit">Training par wapas</button></div>`;
   const how = LV.how === 'tez' || M.g === 0 && LV.how === 'tez' ? 'Tez tarika' : M.g === 0 ? 'Purana tareeka + Tez' : M.name;
-  const head = `<div class="gw-meta"><span class="small muted">${LV.watch ? `${lvEngName()} dono taraf` : `Aap ${LV.userWhite ? 'White' : 'Black'} · ${lvEngName()}`}</span><span class="small muted">${esc(how)}</span></div>${N ? `<input type="range" id="gwRange" min="1" max="${N + (LV.result ? 0 : 1)}" value="${k + 1}">` : ''}`;
+  const head = `<div class="gw-meta"><span class="small muted">${LV.watch ? `Hamara ${lvMeName()} (${LV.userWhite ? 'White' : 'Black'}) · Coach ${lvCoachName()}` : `Aap ${LV.userWhite ? 'White' : 'Black'} · Coach ${lvCoachName()}`}</span><span class="small muted">${esc(how)}</span></div>${N ? `<input type="range" id="gwRange" min="1" max="${N + (LV.result ? 0 : 1)}" value="${k + 1}">` : ''}`;
   let h;
   if (k >= N) {
     tBoard.set(LV.pos, N ? LV.hist[N - 1].sq : null);
@@ -1054,11 +1069,11 @@ async function lvDraw(){ const me = LV, k = LV.k, N = LV.hist.length, M = lvM();
     else { T.step = 0; tStatus.textContent = `🤖 ${lvEngName()} soch raha hai…`; h = `<div class="card">${head}<p><span class="spinner"></span>${lvEngName()} chaal soch raha hai…</p>${nav('')}</div>`; }
   } else {
     T.step = 0; const P = LV.hist[k], no = Math.floor(k / 2) + 1, dot = k % 2 ? '…' : '.';
-    tBoard.set(new E.Position(P.fen), P.sq); tStatus.textContent = `Chaal ${no}${dot} ${P.san} · peele ghar = ${P.who === 'user' ? 'aapki' : 'engine ki'} chaal`;
+    tBoard.set(new E.Position(P.fen), P.sq); tStatus.textContent = `Chaal ${no}${dot} ${P.san} · peele ghar = ${P.who === 'user' ? 'aapki' : P.who === 'ours' ? 'hamare engine ki' : 'coach ki'} chaal`;
     panel.innerHTML = `<div class="card">${head}<h2>${no}${dot} ${esc(P.san)}</h2><p><span class="spinner"></span>${LV.eng === 'sf' ? 'Stockfish' : 'FHK'} is chaal ko check kar raha hai…</p></div>`;
     lvWire(); await lvPly(k); if (LV !== me || LV.k !== k) return;
     const last = k === N - 1;
-    h = `<div class="card">${head}<h2>${no}${dot} ${esc(P.san)} <span class="small muted">(${P.who === 'user' ? 'aapki chaal' : lvEngName()})</span></h2>${lvRows(P)}<p class="small muted" style="margin:4px 0 0">★ = engine ke hisaab se achhi chaal (best se 0.3 pyaade ke andar).</p>${lvVerdict(P)}
+    h = `<div class="card">${head}<h2>${no}${dot} ${esc(P.san)} <span class="small muted">(${P.who === 'user' ? 'aapki chaal' : P.who === 'ours' ? `hamara ${lvWhoName(P)}` : `coach ${lvWhoName(P)}`})</span></h2>${lvRows(P)}<p class="small muted" style="margin:4px 0 0">★ = engine ke hisaab se achhi chaal (best se 0.3 pyaade ke andar).</p>${lvVerdict(P)}
       ${nav(`<button class="btn pri" id="lvNext">${last ? (LV.result ? 'Nateeja ▶' : lvUserTurn() ? 'Aapki baari ▶' : `${lvEngName()} ki chaal ▶`) : 'Aage ▶'}</button>`)}</div>`; }
   panel.innerHTML = h; lvWire(); }
 function lvWire(){ const q = id => panel.querySelector(id), on = (id, f) => { const b = q(id); if (b) b.onclick = f; };
