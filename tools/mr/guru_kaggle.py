@@ -32,7 +32,7 @@ if os.environ.get('GURU_SHARDS') and not os.environ.get('GURU_PACKED'):
     _lo, _hi = [int(x) for x in os.environ['GURU_SHARDS'].split('-')]; _b = 'https://github.com/khanfarazhusain/minds-eye-chess/releases/download/guru-data'
     os.environ['GURU_PACKED'] = ','.join(f'{_b}/guru_pos_b0_{i}of20.bin.zst' for i in range(_lo, _hi + 1)); os.environ.setdefault('GURU_VALIDURL', f'{_b}/guru_valid_b0_of20.txt')
 for _u in (os.environ.get('GURU_PACKED', '').split(',') if os.environ.get('GURU_PACKED') else []) + ([os.environ['GURU_VALIDURL']] if os.environ.get('GURU_VALIDURL') else []):
-    assert _u.strip().startswith('https://') and '\u2026' not in _u and '...' not in _u, f'bad URL (shortened by copy-paste?): {_u!r}'
+    assert _u.strip().startswith(('https://', 'http://127.0.0.1')) and '\u2026' not in _u and '...' not in _u, f'bad URL (shortened by copy-paste?): {_u!r}'
 SIZES = {'s': (6, 64), 'm': (10, 128), 'l': (15, 192), 'xl': (20, 256)}
 SIZE = os.environ.get('GURU_SIZE', 'l'); NB, CH = SIZES[SIZE]
 NPOS = int(float(os.environ.get('GURU_POS', '8e7'))); HOURS = float(os.environ.get('GURU_HOURS', '11'))
@@ -269,7 +269,7 @@ def selftest():
 def legal_masks(vf, n):
     masks = np.zeros((n, 4096), dtype=bool)
     for i, fen in enumerate(open(vf).read().split('\n')[:n]):
-        bd = chess.Board(fen); flip = bd.turn == chess.BLACK
+        bd = chess.Board(' '.join(fen.split()[:6])); flip = bd.turn == chess.BLACK  # binpack fens already carry the move counters
         for m in bd.legal_moves:
             f, t = m.from_square, m.to_square
             if flip: f, t = f ^ 56, t ^ 56
@@ -284,7 +284,7 @@ def veto_report(net, vd, vmask, vf, dev, n=20000):
             r = vd[i:i + 2048][:n - i]; lg = net(planes(r).to(memory_format=torch.channels_last))[0].float().masked_fill(~vmask[i:i + len(r)], -1e9)
             top = lg.topk(6, 1).indices.cpu().numpy(); best = u16(r, 66).cpu().numpy()
             for j in range(len(r)):
-                bd = chess.Board(fens[i + j]); flip = bd.turn == chess.BLACK; keep = []
+                bd = chess.Board(' '.join(fens[i + j].split()[:6])); flip = bd.turn == chess.BLACK; keep = []
                 for c in top[j]:
                     f, t = int(c) >> 6, int(c) & 63
                     if flip: f, t = f ^ 56, t ^ 56
