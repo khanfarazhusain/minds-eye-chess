@@ -100,6 +100,17 @@ def fetch_packed():
     if os.path.exists(out) and os.path.exists(vf): say('reuse', out); return out, vf
     urllib.request.urlretrieve(os.environ['GURU_VALIDURL'], vf)
     with open(out, 'wb') as fo:
+        # the valid fens belong to the FIRST VALN positions of shard 0 only. If shard 0 is not in this run, put exactly those positions at the front
+        # of the file (they are the held-out set: never trained on) so records and fens line up. Without this, shards 5-9 were scored against shard-0 fens (top1 ~2%).
+        first = os.environ['GURU_PACKED'].split(',')[0].strip()
+        if not first.endswith('_0of20.bin.zst'):
+            z0 = os.environ['GURU_VALIDURL'].replace('guru_valid_b0_of20.txt', 'guru_pos_b0_0of20.bin.zst'); say('held-out positions from', z0)
+            rd = zstandard.ZstdDecompressor().stream_reader(urllib.request.urlopen(z0), read_size=1 << 20); need = VALN * REC; got = 0
+            while got < need:
+                b = rd.read(min(1 << 20, need - got))
+                if not b: raise SystemExit('shard 0 ended before ' + str(VALN) + ' held-out positions')
+                fo.write(b); got += len(b)
+            rd.close()
         for u in os.environ['GURU_PACKED'].split(','):
             say('download', u); p = os.path.join(D, 'part.zst'); urllib.request.urlretrieve(u.strip(), p)
             with open(p, 'rb') as fi: zstandard.ZstdDecompressor().copy_stream(fi, fo)
