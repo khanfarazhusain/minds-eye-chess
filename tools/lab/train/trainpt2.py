@@ -15,6 +15,7 @@ ap.add_argument('--selftest', type=int, default=0, help='write N random-position
 ap.add_argument('--deep', default='', help='deep head L1,L2 (e.g. 16,32): FT -> pairwise product (halves multiplied) -> L1 -> clip -> L2 -> clip -> L3, one set per output bucket; engine needs -DNNDEEP -DNNL1 -DNNL2')
 ap.add_argument('--fact', action='store_true', help='factoriser: one shared 768xH weight set added to every king bucket (folded into W1 on save)')
 ap.add_argument('--stall', type=float, default=900, help='seconds without data before a source is killed and dropped'); ap.add_argument('--nsrc', type=int, default=4, help='pipe: sources open at once'); ap.add_argument('--ck-min', type=float, default=0, help='also save out + ckdir/latest.bin every N minutes (resume safety)'); ap.add_argument('--planned-pos', type=float, default=0, help='positions this run will see (progress for pipe: sources)')
+ap.add_argument('--require-init', action='store_true', help='exit 5 if --init was given but not loaded (size mismatch)'); ap.add_argument('--start-max', type=float, default=0, help='exit 4 if the validation loss at start is above this (init not loaded / wrong data)')
 ap.add_argument('--ckdir', help='copy the net here after every epoch as ep<N>.bin'); ap.add_argument('--max-hours', type=float, default=0, help='stop cleanly (save) after this many hours')
 a = ap.parse_args(); T_START = time.time()
 KB, H, OB = a.kb, a.h, 8; NF = KB * 768; CS = 0.98 * 2.302585; dev = 'cuda' if torch.cuda.is_available() else 'cpu'; print('device', dev, flush=True)
@@ -60,7 +61,9 @@ if a.init:  # same rules as train3.c: v1 net is copied into every bucket; v2 mus
         assert struct.unpack('<i', b[4:8])[0] == KB, 'KB mismatch'; v = np.frombuffer(b, '<f4', offset=8); o = NF * H
         W1[:NF] = torch.from_numpy(v[:o].reshape(NF, H).copy()); B1[:] = torch.from_numpy(v[o:o + H].copy()); o += H
         W2[:] = torch.from_numpy(v[o:o + OB * 2 * H].reshape(OB, 2 * H).copy()); o += OB * 2 * H; B2[:] = torch.from_numpy(v[o:o + OB].copy()); print('init v2', a.init)
-    else: print('init skipped: size differs (starting fresh)', hh)
+    else:
+        print('init skipped: size differs (starting fresh)', hh, flush=True)
+        if a.require_init: raise SystemExit(5)
 P = [torch.nn.Parameter(x.to(dev)) for x in (W1, B1, W2, B2)]; W1, B1, W2, B2 = P
 DEEP = [int(x) for x in a.deep.split(',')] if a.deep else None
 if DEEP:
@@ -118,7 +121,8 @@ def valid():
         for i in range(0, len(VAL), 65536):
             b, st, tg = to_dev(VAL[i:i + 65536]); s += ((torch.sigmoid(fwd(b, st) * CS) - tg) ** 2).sum().item()
         return s / len(VAL)
-print('valid at start', round(valid(), 6), flush=True); seen = 0; step = 0
+v0 = valid(); print('valid at start', round(v0, 6), flush=True); seen = 0; step = 0
+if a.start_max and not v0 < a.start_max: print(f'STOP: valid at start {v0} is not below --start-max {a.start_max}', flush=True); raise SystemExit(4)
 PIPES = any(f.startswith('pipe:') for f in a.files)
 sizes = {f: (os.path.getsize(f) if os.path.exists(f) else 1) for f in a.files}; total_bytes = sum(sizes.values()) * a.epochs; done_bytes = 0; ppb = 0.06  # positions per compressed byte (re-measured after each file)
 def progress():  # 0..1 of the run: by data seen, and by time when --max-hours is set

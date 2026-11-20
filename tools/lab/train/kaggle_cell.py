@@ -16,8 +16,12 @@ T0 = time.time()
 PLANS = {'1': dict(FHK_RUN='1', FHK_LR='5e-4', FHK_NOARCHIVE='1', FHK_LICHESS='0'),  # run 1: c1 net + this run's binpacks ONLY (FARAZ 19 Nov: binpack only for now)
          '2': dict(FHK_RUN='2', FHK_LR='3e-4', FHK_NOARCHIVE='1', FHK_LICHESS='0', FHK_AUTOINIT='1'),  # runs 2, 3: binpack only, continue from the newest net in the release
          '3': dict(FHK_RUN='3', FHK_LR='2e-4', FHK_NOARCHIVE='1', FHK_LICHESS='0', FHK_AUTOINIT='1')}
+UNUSED = {'U1': dict(FHK_RUN='1', FHK_LR='3e-4'), 'U2': dict(FHK_RUN='2', FHK_LR='2e-4')}  # 20 Nov: the self-play archive files no training has used yet, split over 2 runs (FHK_PLAN=U1|U2)
+if os.environ.get('FHK_PLAN') in UNUSED:
+    os.environ.update(dict(FHK_NET='kb4_512', FHK_NRUNS='2', FHK_UNUSED='1', FHK_NOARCHIVE='1', FHK_LICHESS='0', FHK_EPOCHS='1', FHK_NSRC='4', FHK_HOURS=os.environ.get('FHK_HOURS', '3.4'), **UNUSED[os.environ['FHK_PLAN']]))
+    os.environ.pop('FHK_PLAN')
 if os.environ.get('FHK_PLAN'):
-    assert os.environ['FHK_PLAN'] in PLANS, 'FHK_PLAN must be 1, 2 or 3'
+    assert os.environ['FHK_PLAN'] in PLANS, 'FHK_PLAN must be 1, 2, 3, U1 or U2'
     keep = {k: os.environ[k] for k in ('FHK_HOURS', 'FHK_GB', 'FHK_LICHESS', 'FHK_NSRC') if k in os.environ} if os.environ.get('FHK_SMOKE') == '1' else {}  # smoke test (GitHub runner) shrinks the plan
     os.environ.update(dict(FHK_NET='kb4_512', FHK_BINPACK='auto', FHK_NRUNS='3', FHK_HOURS=os.environ.get('FHK_HOURS', '3.3'), FHK_EPOCHS='3', FHK_NSRC='4', **PLANS[os.environ['FHK_PLAN']])); os.environ.update(keep)
 API = os.environ.get('FHK_API', 'https://api.github.com')
@@ -32,6 +36,7 @@ PRESETS = {'kb4_512': (4, 512, 'nets/current.bin'), 'kb8_768': (8, 768, None), '
            'kb16_1536_ep1': (16, 1536, 'https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/kaggle-nets/fhk_kb16_1536_more_20261117_0210_ep1.bin.gz'),  # continue Kaggle run 2, best epoch
            'kb16_1536_more': (16, 1536, 'https://raw.githubusercontent.com/khanfarazhusain/minds-eye-chess/kaggle-nets/fhk_kb16_1536_20261116_2138.bin.gz')}  # continue Kaggle run 1
 NET = os.environ.get('FHK_NET', 'kb16_1536'); KB, H, INIT = PRESETS[NET]
+if os.environ.get('FHK_UNUSED') == '1' and os.environ.get('FHK_RUN') == '2': assert os.environ.get('FHK_INIT'), 'FHK_PLAN=U2 needs FHK_INIT=<net written by run U1> (no auto-pick: the release also holds the older binpack net)'
 if os.environ.get('FHK_AUTOINIT') and not os.environ.get('FHK_INIT'):  # newest net (final or hourly checkpoint) that an earlier run uploaded to the public release
     import re
     rl0 = json.load(urllib.request.urlopen(f'{API}/repos/{R}/releases/tags/kaggle-nets'))
@@ -67,6 +72,14 @@ train, total = [], 0
 for a in sorted(assets[1:], key=lambda a: a['name'], reverse=True):
     if total + a['size'] <= budget: train.append(a); total += a['size']
 if os.environ.get('FHK_NOARCHIVE') == '1': train, total = [], 0  # binpack-only run: skip the old self-play archive
+UNUSED_PIPES = []
+if os.environ.get('FHK_UNUSED') == '1':  # only archive files newer than what the loop trained on; streamed (no disk), split over the runs by size so the runs never overlap
+    CUT = os.environ.get('FHK_UNUSED_AFTER', '2026-11-17T09:21'); NR = int(os.environ.get('FHK_NRUNS', '2')); RN = int(os.environ.get('FHK_RUN', '1'))
+    cand = sorted([a for a in rel['assets'] if (a['name'].endswith('.gz') or a['name'].endswith('_part_00')) and a['name'] != valid_src['name'] and a['created_at'] >= CUT], key=lambda a: a['name'])
+    bins = [[] for _ in range(NR)]; sizes = [0] * NR
+    for a in sorted(cand, key=lambda a: -a['size']): i = sizes.index(min(sizes)); bins[i].append(a); sizes[i] += a['size']
+    mine = sorted(bins[RN - 1], key=lambda a: a['name']); say('unused archive: ', len(cand), 'files', round(sum(a['size'] for a in cand) / 1e9, 1), 'GB; this run', RN, 'of', NR, ':', len(mine), 'files', round(sizes[RN - 1] / 1e9, 1), 'GB (about', round(sizes[RN - 1] / 1e9 * 7.6), 'crore positions)')
+    UNUSED_PIPES = [f"pipe:curl -sL --retry 5 {a['browser_download_url']} | zcat" for a in mine]; assert UNUSED_PIPES, 'no unused files selected'
 say('train files', len(train), 'of', len(assets) - 1, 'GB', round(total / 1e9, 2), '(about', round(total / 1e9 * 8), 'crore positions), valid from', valid_src['name'])
 sh(f"curl -sSL --retry 4 {valid_src['browser_download_url']} 2>/dev/null | zcat 2>/dev/null | head -n 1000000 | gzip -1 > valid.gz || true")
 for a in train:
@@ -86,7 +99,7 @@ BP = [x.strip() for x in os.environ.get('FHK_BINPACK', '').split(',') if x.strip
 BPS = os.environ.get('FHK_BPSCALE', '0.75')  # 0.75 = binpack cp -> FHK cp (FHK/Stockfish eval ratio; 1.5 made the net 1.95x too big vs the search margins)
 STREAM = os.environ.get('FHK_STREAM', '1') == '1'  # stream binpacks straight into the trainer: no disk, any amount of data, mixed with the other sources
 HFB = 'https://huggingface.co/datasets/official-stockfish/master-binpacks/'
-pipes = []
+pipes = list(UNUSED_PIPES)
 if BP and STREAM:
     vn = os.environ.get('FHK_BPVALID', 'fishpack32'); RUN = int(os.environ.get('FHK_RUN', '1')); NRUNS = int(os.environ.get('FHK_NRUNS', '3')); OFF = int(float(os.environ.get('FHK_BPOFF', '0')))
     if BP == ['auto']:  # every binpack of the dataset, split over the runs so no run reads another run's files (no skipping through data)
@@ -146,7 +159,7 @@ if tok:
     threading.Thread(target=bg, daemon=True).start()
 t = time.time()
 cmd = (f'python -u trainpt2.py {OUT} ' + ' '.join([a['name'] for a in train] + extra + ["'" + p + "'" for p in pipes]) + f' --nsrc {int(os.environ.get("FHK_NSRC", "4"))} --ck-min 20 --planned-pos {HOURS * 3600 * 4e5:.0f} --valid valid.gz --epochs {EPOCHS} --kb {KB} --h {H} --lr {LR}'
-       + f' --ckdir {CK} --max-hours {max(HOURS - (time.time() - T0) / 3600 - 0.3, 0.02):.2f}' + (' --init init.bin' if INIT else '') + (' --lam 0.8 --lam-end 0.4 --fact' if os.environ.get('FHK_V2') == '1' else '') + ' ' + os.environ.get('FHK_EXTRA', ''))
+       + f' --ckdir {CK} --max-hours {max(HOURS - (time.time() - T0) / 3600 - 0.3, 0.02):.2f}' + (' --init init.bin --require-init' if INIT else '') + (f" --start-max {os.environ['FHK_STARTMAX']}" if os.environ.get('FHK_STARTMAX') else '') + (' --lam 0.8 --lam-end 0.4 --fact' if os.environ.get('FHK_V2') == '1' else '') + ' ' + os.environ.get('FHK_EXTRA', ''))
 say('$', cmd)
 p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
 for line in p.stdout: print(line, end='', flush=True); LOG.write(line); LOG.flush()
