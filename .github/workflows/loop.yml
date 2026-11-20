@@ -1,11 +1,10 @@
 name: fhk-loop
 on:
-  schedule:
-    - cron: "5 */3 * * *"
+  # PAUSED 20 Nov 2026 (FARAZ asked to stop it): no schedule and no workflow_dispatch, so the 'next' job cannot start another iteration.
+  # To resume: restore the schedule + workflow_dispatch lines (git show HEAD~1:.github/workflows/loop.yml).
   push:
     branches: [engine-lab]
     paths: [tools/lab/loop_kick.txt]
-  workflow_dispatch:
 concurrency:
   group: fhk-loop
   cancel-in-progress: false
