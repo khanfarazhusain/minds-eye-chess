@@ -555,9 +555,9 @@ static TL i32 moveBuf[MAXPLY * 256], scoreBuf[MAXPLY * 256], quietBuf[MAXPLY * 2
 #endif
 // Tunable search constants (SPSA). Defaults reproduce the previous hardcoded values exactly; set at runtime with UCI setoption.
 // SPSA-tuned 18 Nov 2026 (20 runs averaged, +13 Elo vs old defaults over 3200 games at 200/400 ms). Old defaults: RFP 85 NR0 3 NRD 4 NRE 200 FUT1 120 FUT0 60 LMP0 4 LMP1 2 SEEC 80 ASP 30 RAZ 250 LMRB 75 LMRD 225.
-static i32 T_RFP = 70, T_NR0 = 3, T_NRD = 4, T_NRE = 199, T_FUT1 = 103, T_FUT0 = 56, T_LMP0 = 4, T_LMP1 = 1, T_SEEC = 85, T_ASP = 23, T_RAZ = 258, T_LMRB = 73, T_LMRD = 225, T_PPX = 0;
+static i32 T_RFP = 70, T_NR0 = 3, T_NRD = 4, T_NRE = 199, T_FUT1 = 103, T_FUT0 = 56, T_LMP0 = 4, T_LMP1 = 1, T_SEEC = 85, T_ASP = 23, T_RAZ = 258, T_LMRB = 73, T_LMRD = 225, T_PPX = 0, T_CON = 0;
 static const struct { const char *n; i32 *p; i32 lo, hi; } TPT[] = { {"RFP", &T_RFP, 30, 200}, {"NR0", &T_NR0, 1, 6}, {"NRD", &T_NRD, 2, 8}, {"NRE", &T_NRE, 80, 500}, {"FUT1", &T_FUT1, 40, 250}, {"FUT0", &T_FUT0, 0, 200},
-  {"LMP0", &T_LMP0, 1, 12}, {"LMP1", &T_LMP1, 1, 6}, {"SEEC", &T_SEEC, 20, 200}, {"ASP", &T_ASP, 10, 80}, {"RAZ", &T_RAZ, 100, 600}, {"LMRB", &T_LMRB, 30, 150}, {"LMRD", &T_LMRD, 150, 350}, {"PPX", &T_PPX, 0, 2} };
+  {"LMP0", &T_LMP0, 1, 12}, {"LMP1", &T_LMP1, 1, 6}, {"SEEC", &T_SEEC, 20, 200}, {"ASP", &T_ASP, 10, 80}, {"RAZ", &T_RAZ, 100, 600}, {"LMRB", &T_LMRB, 30, 150}, {"LMRD", &T_LMRD, 150, 350}, {"PPX", &T_PPX, 0, 2}, {"Contempt", &T_CON, 0, 100} };
 #define NTP ((int)(sizeof TPT / sizeof TPT[0]))
 TL i32 pvTable[MAXPLY * MAXPLY]; static i8 lmrT[64][64];
 TL i32 r_move, r_score, r_depth, r_nodes, r_pvlen; TL i32 r_pv[MAXPLY];
@@ -671,7 +671,7 @@ static i32 search(i32 depth, i32 alpha, i32 beta, i32 ply, int allowNull) {
   int inChk = inCheck(); if (inChk) depth++;
   if (depth <= 0) return qsearch(alpha, beta, ply);
   nodes++; checkTime(); if (stop) return 0;
-  if (ply > 0) { if (half >= 100 || isRepetition() || insufficient()) return 0; alpha = imax(alpha, -MATE + ply); beta = imin(beta, MATE - ply - 1); if (alpha >= beta) return alpha; }
+  if (ply > 0) { if (half >= 100 || insufficient()) return 0; if (isRepetition()) return (ply & 1) ? T_CON : -T_CON; alpha = imax(alpha, -MATE + ply); beta = imin(beta, MATE - ply - 1); if (alpha >= beta) return alpha; }
   if (ply >= MAXPLY - 1) return evaluate();
   i32 ttM = 0; i32 ti = ttProbe();
   if (ti >= 0) { ttM = ttMove[ti]; if (!ex && !pvNode && ply > 0 && ttDepth[ti] >= depth) { i32 s = ttScore[ti]; if (s > MATE_BOUND) s -= ply; else if (s < -MATE_BOUND) s += ply; i32 f = ttFlag[ti];
