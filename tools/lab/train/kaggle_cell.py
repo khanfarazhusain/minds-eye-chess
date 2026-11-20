@@ -18,7 +18,7 @@ PLANS = {'1': dict(FHK_RUN='1', FHK_LR='5e-4', FHK_NOARCHIVE='1', FHK_LICHESS='0
          '3': dict(FHK_RUN='3', FHK_LR='2e-4', FHK_NOARCHIVE='1', FHK_LICHESS='0', FHK_AUTOINIT='1')}
 UNUSED = {'U1': dict(FHK_RUN='1', FHK_LR='3e-4'), 'U2': dict(FHK_RUN='2', FHK_LR='2e-4')}  # 20 Nov: the self-play archive files no training has used yet, split over 2 runs (FHK_PLAN=U1|U2)
 if os.environ.get('FHK_PLAN') in UNUSED:
-    os.environ.update(dict(FHK_NET='kb4_512', FHK_NRUNS='2', FHK_UNUSED='1', FHK_NOARCHIVE='1', FHK_LICHESS='0', FHK_EPOCHS='1', FHK_NSRC='4', FHK_HOURS=os.environ.get('FHK_HOURS', '3.4'), **UNUSED[os.environ['FHK_PLAN']]))
+    os.environ.update(dict(FHK_NET='kb4_512', FHK_NRUNS='2', FHK_UNUSED='1', FHK_NOARCHIVE='1', FHK_LICHESS='0', FHK_EPOCHS='1', FHK_NSRC='4', FHK_HOURS=os.environ.get('FHK_HOURS', '3.4'), FHK_PPS='1.5e5', **UNUSED[os.environ['FHK_PLAN']]))
     os.environ.pop('FHK_PLAN')
 if os.environ.get('FHK_PLAN'):
     assert os.environ['FHK_PLAN'] in PLANS, 'FHK_PLAN must be 1, 2, 3, U1 or U2'
@@ -158,7 +158,7 @@ if tok:
             except Exception as e: say('periodic upload failed:', e)
     threading.Thread(target=bg, daemon=True).start()
 t = time.time()
-cmd = (f'python -u trainpt2.py {OUT} ' + ' '.join([a['name'] for a in train] + extra + ["'" + p + "'" for p in pipes]) + f' --nsrc {int(os.environ.get("FHK_NSRC", "4"))} --ck-min 20 --planned-pos {HOURS * 3600 * 4e5:.0f} --valid valid.gz --epochs {EPOCHS} --kb {KB} --h {H} --lr {LR}'
+cmd = (f'python -u trainpt2.py {OUT} ' + ' '.join([a['name'] for a in train] + extra + ["'" + p + "'" for p in pipes]) + f' --nsrc {int(os.environ.get("FHK_NSRC", "4"))} --ck-min 20 --planned-pos {HOURS * 3600 * float(os.environ.get('FHK_PPS', '4e5')):.0f} --valid valid.gz --epochs {EPOCHS} --kb {KB} --h {H} --lr {LR}'
        + f' --ckdir {CK} --max-hours {max(HOURS - (time.time() - T0) / 3600 - 0.3, 0.02):.2f}' + (' --init init.bin --require-init' if INIT else '') + (f" --start-max {os.environ['FHK_STARTMAX']}" if os.environ.get('FHK_STARTMAX') else '') + (' --lam 0.8 --lam-end 0.4 --fact' if os.environ.get('FHK_V2') == '1' else '') + ' ' + os.environ.get('FHK_EXTRA', ''))
 say('$', cmd)
 p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
