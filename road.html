@@ -1649,12 +1649,25 @@ ROAD_LEVELS.forEach(L=>{L.lessons=L.lessons.map(p=>{if(NEWLES[p])return p;const[
 
 /* ---------- din ka hisaab ---------- */
 function sday(){const t=today();if(SP.day.d!==t){SP.day={d:t,flash:0,puz:0,quiz:0,end:0,open:0,calc:0,lesson:0,extra:0,review:0,flashNone:false};ssave()}return SP.day}
-const QUOTA_KEYS=[['flash','Mistake Flashcards','🔁'],['puz','Tactics Puzzles','🧩'],['lesson','Today\'s Lesson','📘'],['quiz','Review Quiz','❓'],['end','Endgame Drill','♔'],['open','Opening Drill','📖'],['calc','Calculation & Defence','🧠'],['game','Rated Game (Lichess)','♟'],['review','Game Review','🔍']];
-function need(k){const q=CUR().quota;if(k==='review')return(unreviewed().length||sday().review)?1:0;return k==='lesson'?1:k==='game'?1:(q[k]||0)}
+const QUOTA_KEYS=[['lesson','Today\'s Lesson','📘'],['puz','Tactics Puzzles','🧩'],['quiz','Review Quiz','❓'],['flash','Mistake Flashcards','🔁'],['end','Endgame Drill','♔'],['open','Opening Drill','📖'],['calc','Calculation & Defence','🧠'],['game','Rated Game (Lichess)','♟'],['review','Game Review','🔍']];
+/* Pehle seekho, phir practice: puzzles sirf un themes ke jo lessons mein seekh liye (pichhle levels ke saare + is level ke kiye hue) */
+const LES_TH={'l1.values':['hanging'],'l2b.safety':['hanging'],'l2b.captures':['hanging'],'l1b.mate':['mate1','kingatk'],'l2.kqk':['mate1'],'l2.krk':['mate1'],'l2.ladder':['mate1'],
+ 'l2b.traps1':['hanging','trapped'],'l3.fork':['fork'],'l3.pin':['pin'],'l3.skewer':['skewer'],'lm.mates':['mate1','mate2'],'lm.backrank':['backrank'],
+ 'l3.disc':['disc','dblchk'],'l3.remove':['remdef'],'lm.smother':['matepat','mate2'],'lm.patterns1':['matepat','mate2'],'lm.patterns2':['matepat','mate3'],
+ 'l5.egthemes':['endgame'],'l5.kp':['pawnend'],'l5.square':['pawnend'],'l3b.deflect':['deflect','attract'],'l3b.more':['trapped','xray','interfere','clearance'],
+ 'l3b.golden':['quiet','defence'],'l3b.calc':['long','zwischen'],'l5.bb':['minorend'],'l5b.pawnend':['pawnend'],'l6.pawns':['pawnadv','promotion'],'l6.pawns2':['pawnadv','promotion'],
+ 'l5b.rook':['rookend'],'l5b.minor':['minorend'],'l6b.sacs':['sac','kingatk'],'l6b.prophy':['defence','quiet'],'l7.calc2':['long','zwischen'],'l6b.files':['kingatk']};
+const ENDT=['endgame','rookend','pawnend','queenend','minorend'],CALCT=['defence','quiet','long','zwischen'];
+function learnedTh(){const o=new Set();for(const L of ROAD_LEVELS)for(const k of L.lessons)if(L.n<SP.lvl||isDone(k))(LES_TH[k]||[]).forEach(t=>o.add(t));return[...o]}
+function poolOf(k){const l=learnedTh();if(k==='puz')return l.filter(t=>!ENDT.includes(t));if(k==='end')return l.filter(t=>ENDT.includes(t));if(k==='calc')return l.filter(t=>CALCT.includes(t));return null}
+function need(k){const q=CUR().quota;if(k==='review')return(unreviewed().length||sday().review)?1:0;if(k==='lesson'||k==='game')return 1;
+  if(!PREVIEW&&(k==='puz'||k==='end'||k==='calc')&&!poolOf(k).length)return 0;
+  if(k==='flash')return Math.min(q.flash||0,flashDue());return q[k]||0}
 const flashDue=()=>dueCards().length+dueGm().length;
 function have(k){const D=sday();if(k==='game')return SP.games.d===today()?Math.min(1,SP.games.n):0;if(k==='flash'&&(D.flashNone||!flashDue()))return need('flash');if(k==='lesson'&&!nextLes())return 1;return D[k]||0}
 const partDone=k=>need(k)===0||have(k)>=need(k);
-const warmDone=()=>partDone('flash')&&partDone('puz');
+/* aaj ki practice (lesson, game, review ke alawa sab) */
+const practiceDone=()=>QUOTA_KEYS.every(([k])=>k==='lesson'||k==='game'||k==='review'||partDone(k));
 const dayDone=()=>QUOTA_KEYS.every(([k])=>partDone(k));
 
 /* ---------- Lichess rating (public API, login nahi) ---------- */
@@ -1693,10 +1706,11 @@ async function getPuzzle(o){const I=await pidx();const L=CUR();const pr=SP.pr||L
   const [a,b]=around(false),[c,d]=around(true);
   if(o.theme){tries.push(mk(Math.max(a,center-150),Math.min(b,center+150),[o.theme]),mk(c,d,[o.theme]),mk(c,d,NEAR[o.theme]||[]))}
   else if(o.any){tries.push(mk(Math.max(a,center-150),Math.min(b,center+150),o.any),mk(c,d,o.any))}
-  tries.push(mk(Math.max(a,center-200),Math.min(b,center+200),null),mk(a,b,null),mk(c,d,null));
+  const ok=o.strict?(()=>{const al=new Set(learnedTh().concat(GENERIC));return tg=>tg.split(',').every(x=>!x||al.has(x))})():()=>true;
+  if(!o.strict)tries.push(mk(Math.max(a,center-200),Math.min(b,center+200),null),mk(a,b,null),mk(c,d,null));
   for(const t of tries){if(t.th&&!t.th.length)continue;const bs=shuffle(bandsFor(t.lo,t.hi));
     for(const bnd of bs){const nCh=(I.bands||{})[bnd]||0;for(let k=0;k<nCh;k++){if(!LOADED[bnd+'_'+k])await loadChunk(bnd,k);
-        const hit=(BANK[bnd]||[]).find(p=>!SEEN.has(p[0])&&p[3]>=t.lo&&p[3]<t.hi&&(!t.th||t.th.some(x=>p[4].split(',').includes(x))));
+        const hit=(BANK[bnd]||[]).find(p=>!SEEN.has(p[0])&&p[3]>=t.lo&&p[3]<t.hi&&(!t.th||t.th.some(x=>p[4].split(',').includes(x)))&&ok(p[4]));
         if(hit)return hit;}}}
   return null}
 function puzStep(p,o){const th=p[4].split(',').filter(Boolean);const mate=th.find(x=>/^mate\d/.test(x));
@@ -1723,12 +1737,12 @@ function vPuzzleRun(kind,arg){const app=$('#app');sday();
     let p=null,theme=null;
     if(cfg.flash){const gd=dueGm();if(gd.length){return gmNext(gd[0])}const due=dueCards();if(!due.length){if(!D.flash){D.flashNone=true;ssave()}return finish()}theme=due[0];p=await getPuzzle({theme})}
     else if(cfg.weak){const ws=Object.entries(SP.cards).sort((a,b)=>(b[1].miss||0)-(a[1].miss||0)).map(x=>x[0]);theme=ws[n%Math.max(1,ws.length)];p=await getPuzzle(theme?{theme}:{})}
-    else p=await getPuzzle(cfg.any?{any:cfg.any}:{});
+    else{const pool=PREVIEW||kind==='extra'||kind==='th'?null:poolOf(kind);p=await getPuzzle(pool&&pool.length?{any:pool,strict:true}:cfg.any?{any:cfg.any}:{})}
     if(!p){stage.innerHTML='<div class="card"><p>Is waqt naya puzzle nahi mila (shayad internet band hai). Thodi der baad try karo.</p></div>';return}
     cur={p,theme};const s=puzStep(p,{q:theme?`Galti wala pattern: **${TNAME[theme]||theme}**. Naya puzzle, sahi chaal dhundo.`:''});
     stage.innerHTML='';stage.appendChild(renderStep(s,{test:false,lessonTitle:cfg.title,where:cfg.title,done:res=>{
       SEEN.add(p[0]);seenSave();rate(p[3],!!res);n++;if(res)ok++;
-      const th=cur.theme||mainTheme(p[4]);if(cur.theme)cardResult(cur.theme,!!res);else if(!res)cardResult(th,false);
+      const lt=learnedTh();const th=cur.theme||p[4].split(',').find(x=>lt.includes(x))||mainTheme(p[4]);if(cur.theme)cardResult(cur.theme,!!res);else if(!res)cardResult(th,false);
       if(kind==='flash'||kind==='puz'||kind==='end'||kind==='calc')D[kind]=(D[kind]||0)+1;else D.extra=(D.extra||0)+1;
       ssave();nb.disabled=false;bar();
       if(goal()&&have(kind)>=goal()&&kind!=='flash')nb.textContent='Ho gaya ✓';else if(kind==='flash'&&!flashDue())nb.textContent='Ho gaya ✓'}}));
@@ -1742,14 +1756,15 @@ function vPuzzleRun(kind,arg){const app=$('#app');sday();
 /* ---------- lesson, quiz, opening drill ---------- */
 function nextLes(){const L=CUR();return L.lessons.find(k=>!isDone(k))||null}
 function canLesson(){if(PREVIEW)return{ok:true};if(ratingLocked())return{ok:false,why:`Lichess rating ${SP.lich.rating} hai, Level ${SP.lvl} ka darwaza ${CUR().lo}. Jab tak rating wapas nahi aati, naye lessons band. Sirf practice aur games.`};
-  if(!warmDone())return{ok:false,why:'Pehle aaj ke flashcards aur tactics puzzles poore karo, phir lesson khulega.'};
-  if(sday().lesson>=1&&!dayDone())return{ok:false,why:'Aaj ka ek lesson ho gaya. Doosra lesson tab, jab aaj ka poora kaam (games samet) ho jaye.'};return{ok:true}}
+  if(SP.owe&&practiceDone()){SP.owe=0;ssave()}
+  if(SP.owe)return{ok:false,why:'Pichhle lesson ki practice (puzzles, quiz, drills) poori karo, phir agla lesson khulega.'};
+  if(sday().lesson>=1&&!dayDone())return{ok:false,why:'Aaj ka lesson ho gaya. Agla lesson tab, jab aaj ka poora kaam (practice aur game) ho jaye.'};return{ok:true}}
 function runLesson(k,back){const les=lesOf(k),app=$('#app');if(!les)return go('#/');
   player(app,les.steps,{back:back||'#/',title:()=>les.title,where:'Lesson',finish:()=>{const qz=lessonQuiz(les);if(!qz.length)return lesFinish(k,null);
     app.innerHTML=`<div class="stack center"><div class="big">🎯</div><h1>Lesson Quiz</h1><p>${esc(les.title)}</p><div class="card tut">${md(`**${qz.length} sawaal**, zyadatar board par. **80%** sahi karo to lesson poora.`)}</div><button class="btn primary block" id="qgo">Start Quiz ›</button></div>`;
     $('#qgo').onclick=()=>{app.innerHTML='';player(app,qz,{test:true,back:back||'#/',title:()=>les.title+' · quiz',head:()=>'Quiz · '+les.title,where:'Lesson quiz',finish:res=>{const okn=res.filter(Boolean).length,pct=Math.round(okn/qz.length*100);
       if(pct>=80)lesFinish(k,pct);else app.innerHTML=`<div class="stack center"><div class="big">📘</div><h1>${pct}%</h1><p>80% chahiye. Galat sawaal review mein chale gaye.</p><button class="btn primary block" data-go="#/les/${k}" data-re="1">Redo Lesson</button><button class="btn block" data-go="#/">Today's Work</button></div>`}})}}})}
-function lesFinish(k,pct){const first=!PR.done[k];PR.done[k]=1;save();if(first){sday().lesson++;ssave();addXP(25)}
+function lesFinish(k,pct){const first=!PR.done[k];PR.done[k]=1;save();if(first){sday().lesson++;SP.owe=1;ssave();addXP(25)}
   const app=$('#app'),les=lesOf(k);const old=!NEWLES[k];
   app.innerHTML=`<div class="stack center"><div class="big">🎉</div><h1>Lesson poora!</h1><p>${esc(les.title)}</p>${pct!=null?`<p class="muted">Quiz: ${pct}%</p>`:''}
    ${old&&NOTEPATH[k]?`<a class="btn block" style="text-decoration:none" href="notes.html#${NOTEPATH[k]}">📝 Lesson Notes</a>`:''}<button class="btn primary block" data-go="#/">Today's Work ›</button></div>`}
@@ -1807,6 +1822,8 @@ function quotaRow(k,label,icon){const n=need(k),hv=have(k),done=partDone(k);
   if(k==='lesson'){const nx=nextLes(),c=canLesson();if(!nx){note='Is level ke saare lessons ho gaye'}else{note=esc(lesOf(nx).title);act=c.ok?`<button class="btn small primary" data-go="#/les/${nx}">Start</button>`:`<span class="muted small">🔒</span>`;if(!c.ok)note+=`<br><small class="muted">${esc(c.why)}</small>`}}
   else if(k==='game'){note=SP.user?`Aaj: ${SP.games.d===today()?SP.games.n:0} game · Is hafte: ${SP.games.wn||0}`:'Pehle neeche Lichess Connect karo';act=`<a class="btn small primary" style="text-decoration:none" href="lichess.html#/road">Play</a>`+(SP.user?`<button class="btn small" data-act="sync">Check</button>`:'')}
   else if(k==='review'){const u=unreviewed();note=u.length?`${u.length} game ka review baaki · galtiyan drills ban jayengi`:hv?'Aaj ka review ho gaya':'Koi naya game nahi';act=u.length?`<button class="btn small primary" data-go="#/game/${u[0].id}">Review</button>`:`<button class="btn small" data-go="#/games">My Games</button>`}
+  else if(k==='flash'&&n===0){note='Abhi koi galti nahi. Puzzle ya game mein jo galti hogi, wahi yahan wapas aayegi.'}
+  else if(n===0&&(CUR().quota[k]||0)>0){note='Lesson ke baad khulega: jo seekha hi nahi, uska puzzle nahi aayega.'}
   else if(n===0){note='Is level mein nahi'}
   else{act=done?'':`<button class="btn small primary" data-go="#/${k==='quiz'?'quiz':k==='open'?'open':'run/'+k}">Start</button>`;note=`${Math.min(hv,n)}/${n}`;if(k==='flash'){const d=dueCards().length,gd=dueGm().length;note+=(d?` · ${d} galti-pattern due`:'')+(gd?` · ${gd} apne game ki galtiyan`:'')}}
   return`<div class="qrow${done?' done':''}"><span class="qi">${done?'✅':icon}</span><div class="qt"><b>${label}</b><div class="muted small">${note}</div></div>${act}</div>`}
