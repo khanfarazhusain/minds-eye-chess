@@ -70,7 +70,7 @@ function gmStep(k){const c=SP.gm[k];const n=Math.floor(c.ply/2)+1;
 function gameRow(g){const r=g.res==='win'?'🟢':g.res==='loss'?'🔴':'⚪';const a=g.an;
   return`<div class="qrow"><span class="qi">${r}</span><div class="qt"><b>vs ${esc(g.opp)} (${g.oppR})</b><div class="muted small">${esc(RESN[g.res]||g.res)}${g.diff?' '+(g.diff>0?'+':'')+g.diff:''} · ${g.color==='w'?'White':'Black'} · ${esc(g.open||g.speed||'')}${a?` · Accuracy ${a.acc}% · ${a.cnt.blund}?? ${a.cnt.mist}? ${a.cnt.inacc}?!`:' · Review baaki'}</div></div><button class="btn small ${a?'':'primary'}" data-go="#/game/${g.id}">${a?'Open':'Review'}</button></div>`}
 async function vGames(){const app=$('#app');const L=gameList();
-  app.innerHTML=`<div class="stack"><button class="btn small" data-go="#/">‹ Today's Work</button><h1>My Games</h1>
+  app.innerHTML=`<div class="stack"><button class="btn small backbtn" data-go="#/">‹ Today's Work</button><h1>My Games</h1>
    <p class="muted small">Aapke rated Lichess games (rapid/classical). Har game ki chaalein PGN mein save hoti hain. Review mein Stockfish batata hai kahan galti hui aur kya khelna chahiye tha (sirf game ke baad). Galtiyan "Mistake Flashcards" mein wapas aati rahengi.</p>
    <div class="row"><button class="btn" data-act="gsync">Lichess se laao</button>${L.length?'<button class="btn" data-act="gpgn">Download PGN</button>':''}</div><p class="small" id="gmsg"></p>
    ${L.length?`<div class="qlist">${L.map(gameRow).join('')}</div>`:'<div class="card">Abhi koi game nahi. Lichess par rated rapid game khelo, phir "Lichess se laao" dabao.</div>'}</div>`}
@@ -79,7 +79,7 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
   const sans=g.moves.split(' ').filter(Boolean);const pos=[parseFEN(g.fen||START_FEN)],last=[null];
   for(const x of sans){const st=pos[pos.length-1];const m=findMove(st,x);if(!m)break;last.push([sn(m.f),sn(m.t)]);pos.push(make(st,m))}
   let cur=pos.length-1;const a=g.an;const misBy={};(a?a.mis:[]).forEach(x=>misBy[x.ply]=x);
-  app.innerHTML=`<div class="stack"><button class="btn small" data-go="#/games">‹ My Games</button>
+  app.innerHTML=`<div class="stack"><button class="btn small backbtn" data-go="#/games">‹ My Games</button>
    <p class="eyebrow">${esc(RESN[g.res]||g.res)} · ${g.color==='w'?'White':'Black'} · ${esc(g.speed||'')} ${g.rated?'Rated':''}</p><h2 style="margin:0">vs ${esc(g.opp)} (${g.oppR})</h2><p class="small muted">${esc(g.open)}</p>
    <div id="gbd"></div><div class="row" style="justify-content:center"><button class="btn small" data-nav="0">⏮</button><button class="btn small" data-nav="-1">◀</button><span class="small" id="gply"></span><button class="btn small" data-nav="1">▶</button><button class="btn small" data-nav="9999">⏭</button></div>
    <div id="gnote"></div><div id="gxp"></div><div class="moves" id="gmv"></div>

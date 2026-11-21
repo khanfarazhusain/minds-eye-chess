@@ -3,10 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>FHK Engine Coach</title>
+<title>Engine Coach · 64 Squares</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1F5C3E">
 <link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap">
 <style>
 :root{
   --bg:#EDF1EC; --surface:#FFFFFF; --surface2:#E1E8E1; --fg:#17211B; --muted:#56655B; --line:#C9D4CB;
@@ -30,9 +32,9 @@ button:focus-visible{outline:3px solid var(--hl);outline-offset:2px}
 header{display:flex;align-items:center;gap:10px;padding-top:max(8px,env(safe-area-inset-top))}
 header a{color:var(--accent);text-decoration:none;font-weight:700;padding:6px 0}
 header h1{font-size:20px;margin:0;flex:1}
-.tabs{display:flex;gap:6px;margin:10px 0 12px;background:var(--surface2);padding:4px;border-radius:12px}
-.tabs button{flex:1;border:0;background:transparent;padding:9px 4px;border-radius:9px;font-weight:600;font-size:14px;color:var(--muted)}
-.tabs button.on{background:var(--surface);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.ctabs{display:flex;gap:6px;margin:10px 0 12px;background:var(--surface2);padding:4px;border-radius:12px}
+.ctabs button{flex:1;border:0;background:transparent;padding:9px 4px;border-radius:9px;font-weight:600;font-size:14px;color:var(--muted)}
+.ctabs button.on{background:var(--surface);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:10px 0}
 .tez summary{cursor:pointer;padding:4px 0} .tez-steps{margin:6px 0 8px;padding-left:20px} .tez-steps li{margin:4px 0;line-height:1.45} .tez-card{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:6px 0} .tez-card>div{display:flex;gap:10px;padding:5px 10px;border-top:1px solid var(--line);line-height:1.35} .tez-card>div:first-child{border-top:0} .tez-card span{flex:0 0 88px;font-weight:700;font-family:ui-monospace,Menlo,monospace} .tez-h{font-weight:700;letter-spacing:.05em} .tez-h.good{background:var(--good-soft)} .tez-h.bad{background:var(--bad-soft)}
 .muted{color:var(--muted)} .small{font-size:13px}
@@ -107,11 +109,15 @@ body.exmode #trainPanel .tztb{font-size:13px}
 body.exmode #trainPanel h2{font-size:15px} body.exmode #trainPanel h3{font-size:14px}
 body.exmode #trainPanel .small{font-size:12px}
 </style>
+<link rel="stylesheet" href="ui.css?v=165">
 </head>
-<body>
+<body class="pg-coach">
+<header class="top"><div class="wrap"><a class="brand" href="index.html#tab=practice"><i class="b64">64</i><span class="bname">Engine Coach<small>64 Squares · FHK engine</small></span></a><div class="chips"><span class="chip" id="eloTag"></span></div></div></header>
 <div class="wrap">
-<header><a href="index.html">‹ App</a><h1>FHK Engine Coach</h1><span class="small muted" id="eloTag"></span></header>
-<div class="tabs" role="tablist">
+<a class="back" href="index.html#tab=practice">‹ Practice</a>
+<h1 class="cohead">Engine ki tarah socho</h1>
+<p class="muted cosub">Step by step best move dhoondna seekho, phir engine ko Stockfish se khelte dekho.</p>
+<div class="ctabs" role="tablist">
   <button class="on" data-tab="train">Follow karo</button>
   <button data-tab="think">Engine ki soch</button>
   <button data-tab="watch">vs Stockfish</button>
@@ -306,8 +312,8 @@ function playLine(board, fen, uciLine, done){
 function sanToUci(fen, sans){ const p = new E.Position(fen), out = []; for (const s of sans) { const m = p.parseSan(s); if (!m) break; out.push(p.uci(m)); p.make(m); } return out; }
 
 // ---------- tabs ----------
-document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
-  document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b));
+document.querySelectorAll('.ctabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.ctabs button').forEach(x => x.classList.toggle('on', x === b));
   for (const t of ['train', 'think', 'watch', 'stats']) document.getElementById('tab-' + t).classList.toggle('hidden', b.dataset.tab !== t);
   if (b.dataset.tab === 'stats') renderStats();
   if (b.dataset.tab === 'watch') loadTestGames();
@@ -1254,5 +1260,13 @@ fetch('engine/positions.json').then(r => r.json()).then(j => { POS = j.positions
 updThinkStatus();
 })();
 </script>
+<nav class="tabs"><div class="wrap">
+<a href="index.html#tab=home"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 4l8.5 6.5V20a1 1 0 0 1-1 1h-5v-6h-5v6h-5a1 1 0 0 1-1-1z"/></svg></span>Home</a>
+<a href="index.html#tab=learn"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 12 4l9.5 4.5L12 13z"/><path d="M6.5 10.5V16c0 1.4 2.5 3 5.5 3s5.5-1.6 5.5-3v-5.5"/><path d="M21.5 8.5v5"/></svg></span>Learn</a>
+<a href="index.html#tab=practice" class="on"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>Practice</a>
+<a href="index.html#tab=playhub"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20h9"/><path d="M9 20c0-3 1.5-5 3-6.5-2.2.4-4 .1-5-1l3.5-6.5c3.5-.5 7 2 7 7.5V20"/><circle cx="12.6" cy="8.6" r=".7" fill="currentColor"/></svg></span>Play</a>
+<a href="index.html#tab=me"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M4.2 7.4l2 1.2M17.8 15.4l2 1.2M4.2 16.6l2-1.2M17.8 8.6l2-1.2"/><path d="M12 5.2a6.8 6.8 0 1 1 0 13.6 6.8 6.8 0 0 1 0-13.6z"/></svg></span>Settings</a>
+</div></nav>
+<script src="ui.js?v=165"></script>
 </body>
 </html>

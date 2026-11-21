@@ -37,6 +37,7 @@ nav.tabs button svg{display:block;transition:transform .2s}
 body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!important}
 `;
 const nav=(items)=>`<nav class="tabs"><div class="wrap">\n${items.map(([ic,label,act,on])=>`<button ${act}${on?' class="on"':''}><span>${IC[ic]}</span>${label}</button>`).join('\n')}\n</div></nav>`;
+const UIV='165'; /* ui.css / ui.js version: bump with the app version */
 const BUILD=new Date().toISOString().slice(0,16).replace('T',' ')+' UTC';
 const css=`
 /* ---- Road to 3000 ---- */
@@ -73,9 +74,10 @@ ol.xsteps{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:c
 let html=head.replace(/<title>[^<]*<\/title>/,'<title>Road to 3000 · 64 Squares</title>')
  .replace(/<meta name="description"[^>]*>/,'<meta name="description" content="Zero se Lichess 3000 tak: roz ka quota, unlimited puzzles, Lichess rating se level.">')
  +css+bcss+navCSS+`</style>
+<link rel="stylesheet" href="ui.css?v=${UIV}">
 </head>
 <body>
-<header class="top"><div class="wrap"><a class="brand" href="#/" style="color:inherit;text-decoration:none"><i style="font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.04em">64</i> Road to 3000</a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span></div></div></header>
+<header class="top"><div class="wrap"><a class="brand" href="#/"><i class="b64">64</i><span class="bname">Road to 3000<small>64 Squares</small></span></a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span></div></div></header>
 <main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version ${BUILD}</p></main>
 ${nav([['today','Today','data-go="#/"',1],['practice','Practice','data-go="#/run/extra"'],['games','My Games','data-go="#/games"'],['course','Course',"onclick=\"location.href='course.html'\""],['trainer','Home',"onclick=\"location.href='index.html'\""]])}
 <script>
@@ -88,6 +90,7 @@ ${explain}
 ${games}
 ${app}
 </script>
+<script src="ui.js?v=${UIV}"></script>
 </body>
 </html>
 `;
@@ -98,9 +101,10 @@ const pcss=fs.readFileSync(path.join(__dirname,'play.css'),'utf8');
 const phtml=head.replace(/<title>[^<]*<\/title>/,'<title>Lichess Play · 64 Squares</title>')
  .replace(/<meta name="description"[^>]*>/,'<meta name="description" content="Lichess par khelo: quick pairing, custom game, dost ko challenge, Lichess computer.">')
  +css+bcss+pcss+navCSS+`</style>
+<link rel="stylesheet" href="ui.css?v=${UIV}">
 </head>
 <body>
-<header class="top"><div class="wrap"><a class="brand" href="#/" style="color:inherit;text-decoration:none"><i style="font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.04em">64</i> Lichess Play</a><div class="chips"><span class="chip" id="luser"></span></div></div></header>
+<header class="top"><div class="wrap"><a class="brand" href="#/"><i class="b64">64</i><span class="bname">Lichess Play<small>64 Squares</small></span></a><div class="chips"><span class="chip" id="luser"></span></div></div></header>
 <main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version ${BUILD}</p></main>
 ${nav([['lobby','Lobby','data-go="#/"',1],['games','Rated','data-go="#/road"'],['road','Road',"onclick=\"location.href='road.html'\""],['course','Course',"onclick=\"location.href='course.html'\""],['trainer','Home',"onclick=\"location.href='index.html'\""]])}
 <script>
@@ -109,6 +113,7 @@ ${skin}
 ${auth}
 ${play}
 </script>
+<script src="ui.js?v=${UIV}"></script>
 </body>
 </html>
 `;
