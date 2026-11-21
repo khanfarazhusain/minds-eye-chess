@@ -13,7 +13,11 @@ SRC = sys.argv[1] if len(sys.argv) > 1 else 'lichess_db_puzzle.csv'
 OUT = sys.argv[2] if len(sys.argv) > 2 else 'packs/road'
 PER = int(os.environ.get('PER', '1000'))
 CHUNKS = int(os.environ.get('CHUNKS', '4'))
-LO, HI, STEP = 400, 3100, 100
+LO, HI, STEP = 400, 3300, 100
+# 2800+ par Lichess DB mein kam puzzles hain; wahan filter thoda dheela (phir bhi Lichess ke apne rated puzzles)
+HIGH = 2800
+# MIN_BAND=2800 diya ho to sirf us band se upar dobara banao, neeche wale files aur index waise hi rahein
+MIN_BAND = int(os.environ.get('MIN_BAND', '0'))
 
 TH = {
     'fork': 'fork', 'pin': 'pin', 'skewer': 'skewer', 'discoveredAttack': 'disc', 'doubleCheck': 'disc',
@@ -45,9 +49,12 @@ def main():
                 pop = int(row[ix['Popularity']]); plays = int(row[ix['NbPlays']])
             except Exception:
                 continue
-            if r < LO or r >= HI or dev > 90 or pop < 85:
+            if r < max(LO, MIN_BAND) or r >= HI:
                 continue
-            if plays < (500 if r < 2300 else 150):
+            if r >= HIGH:
+                if dev > 105 or pop < 60 or plays < 30:
+                    continue
+            elif dev > 90 or pop < 85 or plays < (500 if r < 2300 else 150):
                 continue
             b = (r // STEP) * STEP
             seen[b] += 1
@@ -60,8 +67,15 @@ def main():
                     pool[j] = row
     os.makedirs(OUT, exist_ok=True)
     index = {'v': int(time.time()), 'per': PER, 'bands': {}, 'eligible': {}, 'src': 'Lichess open puzzle database (CC0)'}
+    if MIN_BAND:
+        with open(os.path.join(OUT, 'index.json')) as fi:
+            old = json.load(fi)
+        for k in ('bands', 'eligible'):
+            index[k] = {b: v for b, v in old[k].items() if int(b) < MIN_BAND}
     total = 0
     for b in bands:
+        if b < MIN_BAND:
+            continue
         out = []
         for row in res[b]:
             mv = row[ix['Moves']].split()
@@ -91,6 +105,8 @@ def main():
         index['eligible'][str(b)] = seen[b]
         total += len(out)
         print(b, len(out), 'eligible', seen[b])
+    if MIN_BAND:
+        total += sum(min(old['eligible'][b], CHUNKS * PER) for b in old['bands'] if int(b) < MIN_BAND)
     index['total'] = total
     with open(os.path.join(OUT, 'index.json'), 'w') as fo:
         json.dump(index, fo, separators=(',', ':'))
