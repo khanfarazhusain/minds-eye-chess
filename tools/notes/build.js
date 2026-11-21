@@ -120,7 +120,7 @@ COURSE.forEach((Lv,li)=>{
   body+=`</section>`});
 
 const css=fs.readFileSync(__dirname+'/notes.css','utf8');
-const UIV='165'; /* ui.css / ui.js version: bump with the app version */
+const UIV='166'; /* ui.css / ui.js version: bump with the app version */
 const html=`<!doctype html>
 <html lang="hi-Latn">
 <head>

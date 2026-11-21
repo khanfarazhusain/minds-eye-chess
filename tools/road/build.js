@@ -37,7 +37,7 @@ nav.tabs button svg{display:block;transition:transform .2s}
 body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!important}
 `;
 const nav=(items)=>`<nav class="tabs"><div class="wrap">\n${items.map(([ic,label,act,on])=>`<button ${act}${on?' class="on"':''}><span>${IC[ic]}</span>${label}</button>`).join('\n')}\n</div></nav>`;
-const UIV='165'; /* ui.css / ui.js version: bump with the app version */
+const UIV='166'; /* ui.css / ui.js version: bump with the app version */
 const BUILD=new Date().toISOString().slice(0,16).replace('T',' ')+' UTC';
 const css=`
 /* ---- Road to 3000 ---- */
