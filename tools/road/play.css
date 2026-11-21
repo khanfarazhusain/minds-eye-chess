@@ -1,0 +1,23 @@
+/* ---- Lichess Play ---- */
+.qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.lvgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+.qp{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 4px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:inherit;cursor:pointer}
+.qp b{font-family:var(--f-display);font-size:19px}.qp small{font-size:11px;color:var(--muted)}
+.qp.on{border-color:var(--accent);background:var(--surface2)}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--muted)}
+.form select,.form input,#chatin{font:inherit;font-size:15px;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg);min-width:0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#fuser,#chatin{flex:1}
+.seg{width:100%}.seg button{flex:1}
+.tog{display:flex;gap:6px;align-items:center;font-weight:600}
+.gamev{gap:6px}
+.pl{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:14px;gap:8px}
+.pl span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.clock{font-family:var(--f-mono);font-size:20px;padding:3px 10px;border-radius:8px;background:var(--surface2);font-variant-numeric:tabular-nums}
+.clock.run{background:var(--accent);color:var(--accent-fg)}.clock.low.run{background:var(--bad);color:#fff}
+.moves{font-family:var(--f-mono);font-size:13px;max-height:84px;overflow:auto;line-height:1.6;word-break:break-word}
+.moves .mn{color:var(--muted)}
+.wrapr{flex-wrap:wrap;gap:6px}
+.offer{display:flex;align-items:center;gap:6px;font-weight:600;width:100%;flex-wrap:wrap}
+.chatlog{max-height:140px;overflow:auto;margin:6px 0}
+.form .row{flex-wrap:wrap}#fuser{flex:1 1 100%}

@@ -274,6 +274,10 @@ body.emb::before{display:none}
 .lv.on{border-color:var(--accent);background:var(--surface2)}.lv.locked{opacity:.5}
 .card.alert{border-color:var(--bad);background:var(--bad-soft)}.card.okc{border-color:var(--good);background:var(--good-soft)}
 ul.gate{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;font-size:14px}
+#gmv .mvx{cursor:pointer;padding:0 2px;border-radius:4px}#gmv .mvx.on{background:var(--surface2);font-weight:700}#gmv .mvx.blund{color:var(--bad);font-weight:700}#gmv .mvx.mist{color:#d9822b;font-weight:700}#gmv .mvx.inacc{color:var(--brass)}
+.moves{font-family:var(--f-mono);font-size:13px;max-height:120px;overflow:auto;line-height:1.7;word-break:break-word}.moves .mn{color:var(--muted)}
+.bar{height:8px;border-radius:6px;background:var(--surface2);overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}
+.wrapr{flex-wrap:wrap;gap:6px}
 #lu{flex:1;min-width:0;font:inherit;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
 </style>
 </head>
@@ -825,6 +829,54 @@ const ROAD_NEW = [
   {t:'quiz',q:'Opponent ne koi anjaan chaal khel di. Sabse PEHLE kya dekhna chahiye (har chaal se pehle)?',opts:['Uski chaal ne kya dhamki di (tactics)','Opening ka naam yaad karna','Turant queen bahar nikalna'],a:0,why:'Naam yaad hona zaroori nahi. Pehle dekho: kya koi piece latak raha hai, koi check ya capture ki dhamki hai? Phir centre, development, king safety.'},
   {t:'quiz',q:'Checklist ka sahi kram kya hai?',opts:['Centre, Development, King safety, Tactics','Tactics, Queen, Pawns, King','Castle, Queen, Rook, Pawn'],a:0,why:'Centre, Development, King safety, Tactics. Aur tactics ka sawaal har chaal par (dhamki dekhna) sabse zaroori.'},
   {t:'quiz',q:'Opening mein queen jaldi bahar aaye to aksar kya karna chahiye?',opts:['Develop karte hue use attack karo (tempo lo)','Apni queen bhi bahar nikalo','Kuch mat karo'],a:0,why:'Develop karte hue queen par attack = tempo. Jaise Scandinavian mein `Nc3`.'}
+ ]},
+/* ============ Level 9 (Elite) aur Level 10 (Legend) ============ */
+{key:'sf.e9a',title:'Elite 1: Prophylaxis',sub:'Pehle opponent ka plan, phir apni chaal',
+ yaad:['Har chaal se pehle: "Opponent agli chaal mein kya karna chahta hai?"','Uska best plan rok sakte ho aur apna bhi kuch nahi khota? Wahi prophylaxis hai.','Jab koi tactic na ho, sabse kharab piece ko behtar karo ya opponent ke best piece ko rok do.'],
+ steps:[
+  {t:'info',h:'Opponent Ki Soch Pehle',md:'2600+ par farq tactics se kam, **soch ke tareeke** se zyada aata hai. Prophylaxis ka matlab: opponent ka plan uske shuru hone se pehle rok dena.\n\nHar chaal se pehle ye 3 sawal:\n\n1. **Opponent abhi kya dhamki de raha hai?** (checks, captures, threats)\n2. **Agar uski baari dobara ho, to wo kya karega?** (yahi uska plan hai)\n3. **Kya main uska plan rok kar apni position bhi behtar kar sakta hoon?**\n\nTeesra sawal hi asli hunar hai. Petrosian aur Karpov isi ke liye mashhoor the.'},
+  {t:'quiz',q:'Position shaant hai, koi tactic nahi. Sabse pehle kya sochna chahiye?',opts:['Sabse lambi attacking line','Opponent agli chaal mein kya karna chahta hai','Kaunsa pawn sabse aage hai','Queen ko jaldi bahar lao'],a:1,why:'Jab tactic na ho, **opponent ka plan** pehchano. Phir use rokne wali chaal dhundo jo tumhe bhi behtar kare.'},
+  {t:'quiz',q:'Opponent ka knight ek mazboot outpost (jahan pawn se bhagaya nahi ja sakta) par jaane wala hai. Prophylactic jawab kya hai?',opts:['Outpost square ko pehle se control karo ya us knight ko trade karo','Doosri taraf pawn storm','Kuch mat karo, baad mein dekhenge','King ko centre mein lao'],a:0,why:'Outpost par baitha knight saalon tak pareshan karta hai. **Square ko pehle control karo** ya knight ko trade kar do.'},
+  {t:'quiz',q:'Tumhara bishop apne hi pawns ke peeche band hai (bad bishop). Shaant position mein sabse achha plan?',opts:['Use trade karne ya bahar laane ka raasta banao','Use wahin rehne do','Queen trade karo','Pawn ko aage dhakelo chahe kamzori bane'],a:0,why:'**Sabse kharab piece ko behtar karo.** Bad bishop ko bahar laao ya opponent ke achhe piece se trade karo.'},
+  {t:'quiz',q:'Opponent ka plan h-file kholna hai. Kaunsa idea prophylaxis hai?',opts:['Jaldi g/h pawn chal kar file kholne mein madad karna','Rook ko pehle se h-file par lao ya king ko door le jao','Queen ko queenside bhejo','Kuch nahi'],a:1,why:'File khulne se pehle **defender wahan rakh do** ya king ko us file se door le jao.'}
+ ]},
+{key:'sf.e9b',title:'Elite 2: Classic Game (Fischer–Spassky 1972, Game 6)',sub:'Tartakower QGD: hanging pawns aur unka plan',
+ yaad:['Tartakower: ...h6, ...b6, bishop b7/e6. Black ke c5-d5 pawn "hanging pawns" ban jaate hain.','White ka plan: hanging pawns par dabav, phir centre kholna.','Master game ko chaal-dar-chaal khud guess karke padho.'],
+ steps:[
+  {t:'info',h:'Game Ko Guess Karke Padho',md:'Elite level ka sabse achha abhyaas: master game ko **chaal-dar-chaal guess** karna. Board par har chaal se pehle khud socho, phir asli chaal dekho.\n\nYeh game World Championship 1972 ka 6th game hai. Fischer ne pehli baar apne career mein 1.c4 se Queen\'s Gambit structure khela aur Spassky ko positional tareeke se haraya.'},
+  {t:'line',h:'Fischer–Spassky 1972, Game 6',moves:'c4 e6 Nf3 d5 d4 Nf6 Nc3 Be7 Bg5 O-O e3 h6 Bh4 b6 cxd5 Nxd5 Bxe7 Qxe7 Nxd5 exd5 Rc1 Be6 Qa4 c5 Qa3 Rc8 Bb5',drill:'w',notes:{14:'`6...h6 7.Bh4 b6`: **Tartakower Defense**. Black bishop ko fianchetto ya e6 par laata hai.',15:'`8.cxd5 Nxd5`: pieces trade karke White ko simple position chahiye.',20:'`10...exd5`: ab Black ke paas d5 par pawn.',24:'`12...c5`: Black ne c5 aur d5: yahi **hanging pawns** hain. Mazboot bhi, nishana bhi.',27:'`14.Bb5`: Fischer bishop se c6 aur d7 squares ko pareshan karta hai, Black ke pieces ka khelna mushkil.'}},
+  {t:'quiz',q:'Hanging pawns (c5 + d5) ke khilaaf White ka seedha plan kya hota hai?',opts:['Pawns par dabav daal kar unhe aage badhne par majboor karna, phir peeche bane squares ka fayda','Pawns ko kabhi mat chhuo','Kingside pawn storm','Queen trade karke draw'],a:0,why:'Hanging pawns jab tak saath hain mazboot hain. **Dabav do**, taaki ek aage jaye aur peeche kamzor squares bane.'},
+  {t:'quiz',q:'Master game guess karte waqt sabse zaroori kya hai?',opts:['Jaldi-jaldi chaalein dekhna','Har chaal se pehle apni chaal sach mein chun lena, phir milana','Sirf result dekhna','Engine se har chaal check karna'],a:1,why:'Apni chaal **pehle chuno**, phir asli chaal se milao. Farq hi tumhari seekh hai. Engine yahan nahi; game ke baad hi.'}
+ ]},
+{key:'sf.e9c',title:'Elite 3: Opening Preparation Workflow',sub:'Apni repertoire file, apni galtiyon se',
+ yaad:['Repertoire = har jawab ke liye ek tayyar line, jo tum samajhte ho.','Har rated game ke baad: opening kahan tak yaad thi? Jahan bhool hui, wahan line likho.','Ratta nahi: har line ka plan aur pawn structure yaad rakho.'],
+ steps:[
+  {t:'info',h:'Repertoire Kaise Banta Hai',md:'2600+ par opening mein waqt aur position dono milte hain. Tarika:\n\n1. **Ek family chuno** jo tumhare style se mile (tactical ho to Open/Semi-open, positional ho to Closed/Hypermodern).\n2. Har bade jawab ke liye **ek main line** rakho (8-12 chaal), saath mein uska **plan** aur **pawn structure**.\n3. **Har rated game ke baad:** jahan tumhari yaad khatam hui, wahan Lichess Opening Explorer (Masters database) mein dekho ki masters kya khelte hain, aur line apni file mein likho.\n4. Hafte mein ek baar file revise karo (Opening Drill isi ke liye hai).\n\nEngine se opening "ratna" yahan nahi; masters ke games aur plan samajhna hi kaam aata hai.'},
+  {t:'quiz',q:'Rated game ke baad opening mein kya karna hai?',opts:['Kuch nahi, agla game','Jahan meri yaad khatam hui wahan masters ki line dekh kar apni file mein likhna','Puri nayi opening seekhna','Sirf result dekhna'],a:1,why:'Har game se ek nayi line: **jahan bhool hui, wahin se** file badhti hai.'},
+  {t:'quiz',q:'Ek line yaad hai par plan nahi pata. Kya hoga?',opts:['Kuch nahi, line kaafi hai','Line khatam hote hi galat plan khel sakte ho','Hamesha jeet','Opponent bhi bhool jayega'],a:1,why:'Line khatam hone ke baad **plan hi** raasta dikhata hai. Isliye har line ke saath plan likho.'}
+ ]},
+{key:'sf.e10a',title:'Legend 1: Rook Endgame Technique (Lucena & Philidor)',sub:'Sabse zyada aane wale rook endgame, bina galti',
+ yaad:['Lucena (jeetne wala): king pawn ke aage, "bridge" banao: rook 4th rank par.','Philidor (bachane wala): rook 3rd rank par (apni taraf se 6th), jab tak pawn aage na badhe.','Pawn 6th par aaye to rook peeche se check dena shuru karo.'],
+ steps:[
+  {t:'info',h:'Lucena: Bridge Building',fen:'1K1k4/1P6/8/8/8/8/r7/2R5 w - - 0 1',md:'White ka pawn b7 par hai, king b8 par, par king pawn ke aage phansa hai. Jeet ka tareeka **bridge** (pul) banana hai:\n\n1. Rook se check de kar Black king ko door karo.\n2. Rook ko **4th rank** par lao.\n3. King bahar aaye; jab rook check de, apna rook beech mein laakar check rok do.'},
+  {t:'move',fen:'1K1k4/1P6/8/8/8/8/r7/2R5 w - - 0 1',line:['Rd1+','Ke7','Rd4'],q:'White jeeto: pehle check se Black king ko door karo, phir bridge ki taiyari.',why:'`1.Rd1+ Ke7 2.Rd4!`: rook 4th rank par. Ab king bahar aayega aur check aane par `Rb4` se pul ban jaata hai.',hint:'Pehle d-file par check. Phir rook ko 4th rank par.'},
+  {t:'info',h:'Philidor: 3rd-Rank Defence',fen:'4k3/8/8/3KP3/8/8/1R6/7r b - - 0 1',md:'Ab tum bachane wale ho (Black). White king aur pawn 5th rank par hain.\n\n**Philidor ka niyam:** rook ko apni taraf se **6th rank** par rakho (yahan `...Rh6`), taaki White king 6th rank par na aa sake. Jab pawn 6th par aaye, tab king ke paas jagah nahi rehti: rook ko peeche le jao aur peeche se check do.'},
+  {t:'quiz',q:'Philidor defence mein Black rook kahan rakhta hai jab tak White pawn 5th rank par hai?',opts:['Apni taraf se 6th rank par','Pawn ke bilkul saamne','King ke paas, 8th rank par','Kahin bhi'],a:0,why:'Rook **6th rank** par: White king aage nahi badh sakta. Pawn 6th par aaye to rook peeche se check deta hai.'},
+  {t:'quiz',q:'Lucena mein "bridge" ka matlab?',opts:['Pawn ko bacha kar draw','Rook ko 4th rank par laakar check rokna','Rook trade karna','King ko corner mein le jana'],a:1,why:'Rook 4th rank par aata hai taaki checks aane par wo **beech mein aa kar** check rok de. Phir pawn queen banta hai.'}
+ ]},
+{key:'sf.e10b',title:'Legend 2: Carlsbad Structure & Minority Attack',sub:'Ek pawn structure, ek plan, hazaaron games',
+ yaad:['Carlsbad: QGD Exchange ke baad White ke d4 vs Black ke d5, Black ka c6.','White plan: b4-b5 (minority attack): kam pawns se zyada pawns par hamla, Black ke c6 ko kamzor karna.','Black plan: kingside par pieces, ...Ne4, ...f5 ya ...Nf8-g6.'],
+ steps:[
+  {t:'line',h:'QGD Exchange: Carlsbad Structure',moves:'d4 d5 c4 e6 Nc3 Nf6 cxd5 exd5 Bg5 Be7 e3 c6 Bd3 O-O Qc2 Nbd7 Nf3 Re8 O-O Nf8 Rab1',drill:'w',notes:{8:'`4.cxd5 exd5`: Exchange variation. Ab **Carlsbad structure** ban gaya.',12:'`6...c6`: Black ka c6 pawn d5 ko bachata hai. White ka nishana yahi c6 banega.',20:'`10.O-O Nf8`: Black knight ko g6 ki taraf laata hai (kingside defence aur attack).',21:'`11.Rab1`: rook b-file par, plan **b4-b5** (minority attack).'}},
+  {t:'quiz',q:'Carlsbad mein White ka "minority attack" kya hai?',opts:['Kingside par sab pawns aage','Queenside par b4-b5 se Black ke c6 ko kamzor karna','Centre mein e4 turant','Queen ko h5 par lana'],a:1,why:'White ke 2 queenside pawns (a, b) Black ke 3 (a, b, c) par hamla karte hain. `b5xc6` ke baad Black ke paas ek **kamzor pawn** reh jaata hai.'},
+  {t:'quiz',q:'Black ka sahi jawabi plan?',opts:['Queenside par hi bachav','Kingside par pieces laana: ...Ne4, ...Nf8-g6, kabhi ...f5','Draw maangna','Rook ko a-file par'],a:1,why:'Jab White queenside par busy ho, Black **kingside par counterplay** banata hai.'}
+ ]},
+{key:'sf.e10c',title:'Legend 3: Tournament Practice & Time Management',sub:'Clock, thakaan aur galti ke baad ka dimaag',
+ yaad:['Clock: opening jaldi (tayyar line), mushkil position par sabse zyada waqt.','Har chaal se pehle blunder-check: "Kya main kuch latka raha hoon? Uska sabse zabardast jawab kya hai?"','Galti ke baad: ek gehri saans, position ko naya maan kar best chaal.'],
+ steps:[
+  {t:'info',h:'Clock Bhi Ek Piece Hai',md:'2800+ par game aksar **clock** aur **dimaag ki thakaan** se haare jaate hain.\n\n- **Rapid 15+10 budget:** opening 2-3 min, middlegame ka bada faisla 3-5 min, baaki chaalein 20-40 sec.\n- **Critical moment pehchano:** pawn break, piece trade, ya king ki taraf hamla. Yahan waqt lagao.\n- **Blunder-check har chaal par:** 10 second. Checks, captures, threats (dono ke).\n- **Galti ke baad:** ek gehri saans. Position ko naya maano, purani galti ko bhool kar best chaal dhundo.\n\nRoad to 3000 ka roz ka Game Review isi ke liye hai: kahan waqt gaya, kahan galti hui.'},
+  {t:'quiz',q:'Rapid game mein sabse zyada waqt kahan lagana chahiye?',opts:['Opening ki pehli chaal par','Critical moment par: pawn break, bada trade, ya attack ka faisla','Har chaal par barabar','Jab position bilkul simple ho'],a:1,why:'Waqt **critical moments** ke liye bachao. Opening tayyar line se jaldi.'},
+  {t:'quiz',q:'Blunder ke baad sabse achha kya hai?',opts:['Resign','Jaldi-jaldi khelna','Ek saans, position ko naya maan kar best chaal dhundna','Draw offer'],a:2,why:'Ek galti ke baad sabse badi galti **ghabraahat** hai. Position ko naya maano aur ladte raho.'}
  ]}
 ];
 
@@ -846,16 +898,168 @@ const ROAD_LEVELS = [
   lessons:['l7b.masters','l7b.champs1','l7b.champs2']},
  {n:8,name:'Master 2',lo:2400,gate:2600,games:160,hold:21,band:[2300,2750],quota:{flash:30,puz:15,quiz:5,end:3,open:5,calc:3,mins:120},
   lessons:['l7b.qgs1','l7b.qgs2','l7b.quotes']},
- {n:9,name:'Elite',lo:2600,gate:2800,games:200,hold:30,band:[2500,3000],quota:{flash:30,puz:15,quiz:5,end:3,open:5,calc:3,mins:120},lessons:[]},
- {n:10,name:'Legend',lo:2800,gate:3000,games:200,hold:30,band:[2700,3000],quota:{flash:30,puz:15,quiz:5,end:3,open:5,calc:3,mins:120},lessons:[]}
+ {n:9,name:'Elite',lo:2600,gate:2800,games:200,hold:30,band:[2500,3000],quota:{flash:30,puz:15,quiz:5,end:3,open:5,calc:3,mins:120},lessons:['sf.e9a','sf.e9b','sf.e9c']},
+ {n:10,name:'Legend',lo:2800,gate:3000,games:200,hold:30,band:[2700,3000],quota:{flash:30,puz:15,quiz:5,end:3,open:5,calc:3,mins:120},lessons:['sf.e10a','sf.e10b','sf.e10c']}
 ];
+
+/* ---------- Lichess Connect: OAuth PKCE (ek baar login, token is device par save) ----------
+   road.html aur lichess.html dono yahi code aur yahi saved token use karte hain.
+   Lichess ko app register karne ki zaroorat nahi; client_id koi bhi naam ho sakta hai.
+   Password kabhi app mein nahi aata: login Lichess ke apne page par hota hai. */
+const LTOK='mindseye.road.lichess';
+const LCLIENT='64squares.app';
+const LSCOPES=['board:play','challenge:read','challenge:write'];
+let LT=null;try{LT=JSON.parse(localStorage.getItem(LTOK)||'null')}catch(e){}
+const lichScopesOk=()=>!!LT&&LSCOPES.every(x=>(LT.scopes||[]).includes(x));
+const lichToken=()=>LT&&LT.exp>Date.now()&&lichScopesOk()?LT.tok:null;
+const lichNeedsReconnect=()=>!!LT&&!lichToken();
+function ltSave(v){LT=v;try{v?localStorage.setItem(LTOK,JSON.stringify(v)):localStorage.removeItem(LTOK)}catch(e){}}
+const redirectUri=()=>location.origin+location.pathname;
+const b64u=buf=>btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+async function lichConnect(){const ver=b64u(crypto.getRandomValues(new Uint8Array(32)));const state=b64u(crypto.getRandomValues(new Uint8Array(12)));
+  const chal=b64u(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(ver)));
+  try{sessionStorage.setItem('road.pkce',JSON.stringify({ver,state,back:location.hash||'#/'}))}catch(e){}
+  location.href='https://lichess.org/oauth?'+new URLSearchParams({response_type:'code',client_id:LCLIENT,redirect_uri:redirectUri(),code_challenge_method:'S256',code_challenge:chal,scope:LSCOPES.join(' '),state})}
+/* Lichess se wapas aane par (?code=...&state=...) token lo aur save karo. window.__lmsg mein nateeja. */
+async function lichReturn(){const q=new URLSearchParams(location.search);if(!q.get('code')&&!q.get('error'))return null;
+  let pk=null;try{pk=JSON.parse(sessionStorage.getItem('road.pkce')||'null');sessionStorage.removeItem('road.pkce')}catch(e){}
+  history.replaceState(null,'',location.pathname+(pk&&pk.back?pk.back:'#/'));
+  if(q.get('error')||!pk||pk.state!==q.get('state')){window.__lmsg='Lichess se judna poora nahi hua. Dobara "Connect Lichess" dabao.';return null}
+  try{const r=await fetch('https://lichess.org/api/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'authorization_code',code:q.get('code'),code_verifier:pk.ver,redirect_uri:redirectUri(),client_id:LCLIENT})});
+    if(!r.ok)throw new Error('token');const j=await r.json();
+    const a=await (await fetch('https://lichess.org/api/account',{headers:{Authorization:'Bearer '+j.access_token}})).json();
+    ltSave({tok:j.access_token,exp:Date.now()+(j.expires_in||31536000)*1000,user:a.username,scopes:LSCOPES});window.__lmsg='Lichess jud gaya: '+a.username+'. Ab baar-baar login nahi karna padega.';return a.username}
+  catch(e){window.__lmsg='Lichess se token nahi mila. Internet check karke dobara try karo.';return null}}
+async function lichDisconnect(){const t=LT&&LT.tok;ltSave(null);if(t)try{await fetch('https://lichess.org/api/token',{method:'DELETE',headers:{Authorization:'Bearer '+t}})}catch(e){}}
+/* token ke saath API call; 401 par token purana maana jaata hai */
+async function lapi(path,opt){const t=lichToken();if(!t)throw new Error('noauth');opt=Object.assign({},opt||{});opt.headers=Object.assign({Authorization:'Bearer '+t},opt.headers||{});
+  const r=await fetch('https://lichess.org'+path,opt);if(r.status===401){ltSave(Object.assign({},LT,{exp:0}));throw new Error('expired')}return r}
+async function lform(path,data,signal){const r=await lapi(path,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(data||{}),signal});
+  if(!r.ok){let m='';try{const j=await r.json();m=j.error||JSON.stringify(j)}catch(e){}throw new Error(m||('Lichess error '+r.status))}return r}
+/* ndjson stream padho (event stream, game stream, seek) */
+async function lstream(path,onLine,opt){const r=await lapi(path,opt);if(!r.ok){let m='';try{const j=await r.json();m=j.error||JSON.stringify(j)}catch(e){}throw new Error(m||('Lichess error '+r.status))}
+  const rd=r.body.getReader(),dec=new TextDecoder();let buf='';
+  for(;;){const{done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});let i;while((i=buf.indexOf('\n'))>=0){const line=buf.slice(0,i).trim();buf=buf.slice(i+1);if(line)try{onLine(JSON.parse(line))}catch(e){}}}}
+
+/* ---------- UCI <-> app ki chaal (dono pages) ---------- */
+const uciOf=m=>sn(m.f)+sn(m.t)+(m.promo?m.promo.toLowerCase():'');
+function fromUci(st,u){const L=legal(st);let m=L.find(x=>uciOf(x)===u);if(!m&&u.length===4){/* castling as king-takes-rook */const f=si(u.slice(0,2)),t=si(u.slice(2,4));const p=st.b[f];if(p&&p.toUpperCase()==='K')m=L.find(x=>x.f===f&&Math.abs((x.t&7)-(f&7))===2&&((t&7)>(f&7))===((x.t&7)>(f&7)))}return m}
+
+/* ================= My Games: record (PGN), game ke baad review, galtiyon ke drills =================
+   Engine (Stockfish) SIRF game khatam hone ke baad review ke liye. Course ke lessons aur puzzles mein engine nahi. */
+const GK='mindseye.road.games';
+let GAMES=(()=>{try{return JSON.parse(localStorage.getItem(GK)||'{}')||{}}catch(e){return{}}})();
+function gsave(){const ids=Object.keys(GAMES).sort((a,b)=>GAMES[b].at-GAMES[a].at);ids.slice(80).forEach(k=>delete GAMES[k]);try{localStorage.setItem(GK,JSON.stringify(GAMES))}catch(e){}}
+const gameList=()=>Object.values(GAMES).sort((a,b)=>b.at-a.at);
+const RESN={win:'Jeet',loss:'Haar',draw:'Draw'};
+/* Lichess game JSON -> hamara record */
+function gameRec(j,me){const W=j.players.white,B=j.players.black;const wn=(W.user&&W.user.name)||(W.aiLevel?'Lichess AI '+W.aiLevel:'?'),bn=(B.user&&B.user.name)||(B.aiLevel?'Lichess AI '+B.aiLevel:'?');
+  const color=lcs(bn)===lcs(me)?'b':'w';const mine=color==='w'?W:B,opp=color==='w'?B:W;
+  const res=!j.winner?(j.status==='started'?'live':'draw'):(j.winner===(color==='w'?'white':'black')?'win':'loss');
+  return{id:j.id,at:j.createdAt||Date.now(),color,opp:color==='w'?bn:wn,oppR:opp.rating||0,myR:mine.rating||0,diff:mine.ratingDiff||0,res,status:j.status,speed:j.speed,rated:!!j.rated,
+    moves:j.moves||'',fen:j.initialFen||'',open:(j.opening&&j.opening.name)||'',pgn:j.pgn||'',an:(GAMES[j.id]&&GAMES[j.id].an)||null}}
+const lcs=s=>(s||'').toLowerCase();
+function lhead(){const t=lichToken();const h={Accept:'application/x-ndjson'};if(t)h.Authorization='Bearer '+t;return h}
+/* pichhle rated rapid/classical games Lichess se (lichess.org par khele gaye bhi) */
+async function syncGames(){if(!SP.user)return 0;const since=Math.max(0,...gameList().map(g=>g.at))||Date.now()-14*864e5;
+  const r=await fetch(`https://lichess.org/api/games/user/${encodeURIComponent(SP.user)}?since=${since}&max=20&rated=true&perfType=rapid,classical&opening=true&pgnInJson=true&clocks=false&evals=false`,{headers:lhead()});
+  if(!r.ok)return 0;const t=await r.text();let n=0;
+  t.split('\n').filter(x=>x.trim()).forEach(l=>{try{const j=JSON.parse(l);const g=gameRec(j,SP.user);if(g.res!=='live'&&!GAMES[g.id]){GAMES[g.id]=g;n++}}catch(e){}});gsave();return n}
+async function fetchGame(id){const r=await fetch(`https://lichess.org/game/export/${encodeURIComponent(id)}?pgnInJson=true&opening=true&clocks=false&evals=false`,{headers:{Accept:'application/json'}});
+  if(!r.ok)throw new Error('Game nahi mila ('+r.status+')');const g=gameRec(await r.json(),SP.user||(LT&&LT.user)||'');if(g.res!=='live'){GAMES[g.id]=g;gsave()}return g}
+const unreviewed=()=>gameList().filter(g=>!g.an&&g.at>Date.now()-7*864e5);
+
+/* ---------- Stockfish (engine/sf-worker.js, offline, phone par) ---------- */
+const ENG={w:null,ready:null,cb:null};
+function engStart(){if(ENG.ready)return ENG.ready;ENG.ready=new Promise((res,rej)=>{let w;try{w=new Worker('engine/sf-worker.js')}catch(e){rej(new Error('Engine is phone par shuru nahi hua'));return}
+  ENG.w=w;let ok=false;const t=setTimeout(()=>{if(!ok){ENG.ready=null;try{w.terminate()}catch(e){}rej(new Error('Engine shuru hone mein bahut der lagi'))}},90000);
+  w.onmessage=e=>{const l=String(e.data);if(l==='uciok'){w.postMessage('setoption name Hash value 16');w.postMessage('setoption name MultiPV value 2');w.postMessage('isready')}
+    else if(l==='readyok'&&!ok){ok=true;clearTimeout(t);res()}else if(ENG.cb)ENG.cb(l)};
+  w.onerror=e=>{try{e.preventDefault()}catch(x){}clearTimeout(t);ENG.ready=null;rej(new Error('Engine band ho gaya (memory kam?)'))};w.postMessage('uci')});return ENG.ready}
+function engEval(fen,ms){return new Promise(res=>{const lines=[];ENG.cb=l=>{
+  if(l.startsWith('info ')&&l.includes(' pv ')&&!/ (lower|upper)bound/.test(l)){const g=k=>{const m=l.match(new RegExp(' '+k+' (-?\\d+)'));return m?+m[1]:null};
+    const mp=g('multipv')||1,mate=g('mate');lines[mp-1]={cp:mate!=null?null:g('cp'),mate,pv:l.split(' pv ')[1].trim().split(/\s+/)}}
+  else if(l.startsWith('bestmove')){ENG.cb=null;res({lines:lines.filter(Boolean),best:l.split(/\s+/)[1]})}};
+  ENG.w.postMessage('position fen '+fen);ENG.w.postMessage('go movetime '+ms)})}
+/* jeet ka chance (0-100) chaal wale side ke liye, Lichess wala formula */
+const wpCp=cp=>50+50*(2/(1+Math.exp(-0.00368208*cp))-1);
+const wpLine=l=>!l?50:l.mate!=null?(l.mate>0?100:0):wpCp(Math.max(-1500,Math.min(1500,l.cp||0)));
+const sanLine=(st,pv,n)=>{const o=[];for(const u of pv.slice(0,n)){const m=fromUci(st,u);if(!m)break;o.push(sanOf(st,m));st=make(st,m)}return o};
+const evTxt=(l,w)=>{if(!l)return'';if(l.mate!=null){const m=w?l.mate:-l.mate;return(m>0?'+':'-')+'M'+Math.abs(m)}const c=(w?1:-1)*(l.cp||0)/100;return(c>0?'+':'')+c.toFixed(1)};
+const CLS={inacc:['Inaccuracy','?!'],mist:['Mistake','?'],blund:['Blunder','??']};
+async function analyseGame(g,onProg){await engStart();const sans=g.moves.split(' ').filter(Boolean);let st=parseFEN(g.fen||START_FEN);const pos=[st],mv=[];
+  for(const x of sans){const m=findMove(st,x);if(!m)break;mv.push(m);st=make(st,m);pos.push(st)}
+  const ms=pos.length>120?200:300;const ev=[];
+  for(let i=0;i<pos.length;i++){const p=pos[i];if(!legal(p).length){ev.push({wp:inCheck(p)?0:50,lines:[]})}
+    else{const r=await engEval(fenOf(p),ms);ev.push({wp:wpLine(r.lines[0]),lines:r.lines})}onProg&&onProg(i+1,pos.length)}
+  const out=[];let accSum=0,accN=0;const cnt={inacc:0,mist:0,blund:0};
+  for(let i=0;i<mv.length;i++){const p=pos[i];if((p.w?'w':'b')!==g.color)continue;const E=ev[i],best=E.lines[0];
+    const played=uciOf(mv[i]),isBest=!!best&&best.pv[0]===played;const before=E.wp,after=100-ev[i+1].wp;const drop=isBest?0:Math.max(0,before-after);
+    accSum+=Math.max(0,Math.min(100,103.1668*Math.exp(-0.04354*drop)-3.1669));accN++;
+    const cls=drop>=30?'blund':drop>=20?'mist':drop>=10?'inacc':'';if(!cls||!best)continue;cnt[cls]++;
+    const alt=(E.lines[1]&&wpLine(E.lines[1])>=before-5)?E.lines[1].pv[0]:null;
+    out.push({ply:i,fen:fenOf(p),san:sanOf(p,mv[i]),cls,drop:Math.round(drop),before:Math.round(before),after:Math.round(after),best:sanLine(p,best.pv,1)[0],line:sanLine(p,best.pv,6).join(' '),
+      alt:alt?sanLine(p,[alt],1)[0]:null,ev:evTxt(best,p.w)})}
+  g.an={at:Date.now(),acc:accN?Math.round(accSum/accN):100,cnt,mis:out,evs:ev.map((e,i)=>Math.round(pos[i].w?e.wp:100-e.wp))};
+  /* mistake aur blunder -> drill cards (aaj se due) */
+  SP.gm=SP.gm||{};out.filter(x=>x.cls!=='inacc').forEach(x=>{const k=g.id+':'+x.ply;if(!SP.gm[k])SP.gm[k]={fen:x.fen,best:x.best,alt:x.alt,line:x.line,san:x.san,gid:g.id,ply:x.ply,opp:g.opp,due:dayNum(),box:0,ok:0}});
+  GAMES[g.id]=g;gsave();sday().review=(sday().review||0)+1;ssave();return g}
+/* galti-drill: wahi position, sahi chaal dhundo. 1, 3, 7, 21 din; 3 baar sahi = pakka */
+const dueGm=()=>Object.entries(SP.gm||{}).filter(([k,c])=>c.due<=dayNum()).map(([k])=>k);
+function gmResult(k,ok){const c=SP.gm[k];if(!c)return;if(!ok){c.box=0;c.ok=0;c.due=dayNum()+1;return}c.ok++;c.box++;if(c.ok>=3)delete SP.gm[k];else c.due=dayNum()+GAPS[Math.min(c.box,3)]}
+function gmStep(k){const c=SP.gm[k];const n=Math.floor(c.ply/2)+1;
+  return{t:'move',fen:c.fen,line:[c.best],ok:c.alt?[c.alt]:undefined,q:`Aapke game (vs ${c.opp}) ki position, chaal ${n}. Game mein aapne **${c.san}** khela tha. Ab sahi chaal dhundo.`,
+    why:`Behtar tha: **${c.best}**${c.alt?' (ya '+c.alt+')':''}. Line: ${c.line}`,hint:'Pehle checks, captures aur threats dekho. Opponent ki dhamki kya hai?'}}
+
+/* ---------- screens ---------- */
+function gameRow(g){const r=g.res==='win'?'🟢':g.res==='loss'?'🔴':'⚪';const a=g.an;
+  return`<div class="qrow"><span class="qi">${r}</span><div class="qt"><b>vs ${esc(g.opp)} (${g.oppR})</b><div class="muted small">${esc(RESN[g.res]||g.res)}${g.diff?' '+(g.diff>0?'+':'')+g.diff:''} · ${g.color==='w'?'White':'Black'} · ${esc(g.open||g.speed||'')}${a?` · Accuracy ${a.acc}% · ${a.cnt.blund}?? ${a.cnt.mist}? ${a.cnt.inacc}?!`:' · Review baaki'}</div></div><button class="btn small ${a?'':'primary'}" data-go="#/game/${g.id}">${a?'Open':'Review'}</button></div>`}
+async function vGames(){const app=$('#app');const L=gameList();
+  app.innerHTML=`<div class="stack"><button class="btn small" data-go="#/">‹ Today's Work</button><h1>My Games</h1>
+   <p class="muted small">Aapke rated Lichess games (rapid/classical). Har game ki chaalein PGN mein save hoti hain. Review mein Stockfish batata hai kahan galti hui aur kya khelna chahiye tha (sirf game ke baad). Galtiyan "Mistake Flashcards" mein wapas aati rahengi.</p>
+   <div class="row"><button class="btn" data-act="gsync">Lichess se laao</button>${L.length?'<button class="btn" data-act="gpgn">Download PGN</button>':''}</div><p class="small" id="gmsg"></p>
+   ${L.length?`<div class="qlist">${L.map(gameRow).join('')}</div>`:'<div class="card">Abhi koi game nahi. Lichess par rated rapid game khelo, phir "Lichess se laao" dabao.</div>'}</div>`}
+function vGame(id){const app=$('#app');let g=GAMES[id];
+  if(!g){app.innerHTML='<p class="muted">Game la raha hoon…</p>';fetchGame(id).then(()=>{if(location.hash==='#/game/'+id)vGame(id)}).catch(e=>{app.innerHTML=`<div class="card">${esc(e.message)}</div><button class="btn block" data-go="#/games">‹ My Games</button>`});return}
+  const sans=g.moves.split(' ').filter(Boolean);const pos=[parseFEN(g.fen||START_FEN)],last=[null];
+  for(const x of sans){const st=pos[pos.length-1];const m=findMove(st,x);if(!m)break;last.push([sn(m.f),sn(m.t)]);pos.push(make(st,m))}
+  let cur=pos.length-1;const a=g.an;const misBy={};(a?a.mis:[]).forEach(x=>misBy[x.ply]=x);
+  app.innerHTML=`<div class="stack"><button class="btn small" data-go="#/games">‹ My Games</button>
+   <p class="eyebrow">${esc(RESN[g.res]||g.res)} · ${g.color==='w'?'White':'Black'} · ${esc(g.speed||'')} ${g.rated?'Rated':''}</p><h2 style="margin:0">vs ${esc(g.opp)} (${g.oppR})</h2><p class="small muted">${esc(g.open)}</p>
+   <div id="gbd"></div><div class="row" style="justify-content:center"><button class="btn small" data-nav="0">⏮</button><button class="btn small" data-nav="-1">◀</button><span class="small" id="gply"></span><button class="btn small" data-nav="1">▶</button><button class="btn small" data-nav="9999">⏭</button></div>
+   <div id="gnote"></div><div class="moves" id="gmv"></div>
+   <div id="gan">${a?anHTML(g):`<button class="btn primary block" data-act="ganalyse">Review this game (Stockfish)</button><p class="small muted">Phone par 30-60 second lagenge. Engine sirf is review ke liye, course mein nahi.</p>`}</div>
+   <div class="row wrapr"><button class="btn small" data-act="gcopy">Copy PGN</button><a class="btn small" style="text-decoration:none" href="https://lichess.org/${g.id}" target="_blank" rel="noopener">Open on Lichess</a></div></div>`;
+  const B=Board($('#gbd'),{st:pos[cur],persp:g.color});
+  function show(i){cur=Math.max(0,Math.min(pos.length-1,i));const mi=misBy[cur];B.last=last[cur];B.set({st:pos[cur],arr:mi?[]:null});
+    const nx=misBy[cur];$('#gply').textContent=cur?`${Math.ceil(cur/2)}${cur%2?'.':'...'} ${sans[cur-1]}`:'Start';
+    $('#gnote').innerHTML=nx?`<div class="card ${nx.cls==='inacc'?'':'alert'}"><b>${Math.floor(nx.ply/2)+1}${nx.ply%2?'...':'.'} ${esc(nx.san)}${CLS[nx.cls][1]} ${CLS[nx.cls][0]}</b><div class="small">Behtar tha: <b>${esc(nx.best)}</b> (${nx.ev}). Line: ${esc(nx.line)}<br>Jeet ka chance ${nx.before}% → ${nx.after}%</div></div>`:'';
+    if(nx){const m=findMove(pos[cur],nx.best);if(m)B.set({arr:[[sn(m.f),sn(m.t),'g']]})}
+    $('#gmv').innerHTML=sans.map((x,k)=>{const mk=misBy[k];return(k%2===0?`<span class="mn">${k/2+1}.</span> `:'')+`<span class="mvx${k+1===cur?' on':''}${mk?' '+mk.cls:''}" data-nav-to="${k+1}">${esc(x)}${mk?CLS[mk.cls][1]:''}</span>`}).join(' ')}
+  /* galti wali chaal par jao: board us chaal se PEHLE ki position dikhata hai, tir = behtar chaal */
+  app.onclick=e=>{const n=e.target.closest('[data-nav]');if(n){const d=+n.dataset.nav;show(d===0?0:d===9999?pos.length-1:cur+d);return}
+    const t=e.target.closest('[data-nav-to]');if(t){show(+t.dataset.navTo);return}const mm=e.target.closest('[data-mis]');if(mm){show(+mm.dataset.mis);window.scrollTo(0,0)}};
+  show(cur)}
+function anHTML(g){const a=g.an;return`<div class="card stack"><h3>Review: Accuracy ${a.acc}%</h3><p class="small">${a.cnt.blund} Blunder (??) · ${a.cnt.mist} Mistake (?) · ${a.cnt.inacc} Inaccuracy (?!)</p>
+  ${a.mis.length?`<div class="qlist">${a.mis.map(x=>`<button class="qrow" style="text-align:left;font:inherit;color:inherit" data-mis="${x.ply}"><span class="qi">${x.cls==='blund'?'🟥':x.cls==='mist'?'🟧':'🟨'}</span><div class="qt"><b>${Math.floor(x.ply/2)+1}${x.ply%2?'...':'.'} ${esc(x.san)}${CLS[x.cls][1]}</b><div class="small muted">Khelna chahiye tha: <b>${esc(x.best)}</b> · ${x.before}% → ${x.after}%</div></div></button>`).join('')}</div>`:'<p>Koi badi galti nahi. Shabaash!</p>'}
+  ${a.cnt.blund+a.cnt.mist?`<p class="small muted">Mistake aur Blunder wali positions "Mistake Flashcards" mein aa gayi hain. Roz wapas aayengi jab tak 3 baar sahi na ho.</p><button class="btn primary block" data-go="#/run/flash">Drill These Mistakes Now</button>`:''}</div>`}
+async function runAnalyse(){const id=(location.hash.split('/')[2]||'');const g=GAMES[id];if(!g)return;const box=$('#gan');
+  box.innerHTML='<div class="card stack"><b>Stockfish review chal raha hai…</b><div class="bar"><i id="gpb" style="width:0%"></i></div><p class="small muted" id="gpt">Engine shuru ho raha hai</p></div>';
+  try{await analyseGame(g,(i,n)=>{const b=$('#gpb'),t=$('#gpt');if(b)b.style.width=Math.round(i/n*100)+'%';if(t)t.textContent=`Position ${i}/${n}`});if(location.hash==='#/game/'+id)vGame(id)}
+  catch(e){box.innerHTML=`<div class="card alert">${esc(e.message)}. Dobara try karo, ya "Open on Lichess" par analysis dekho.</div><button class="btn block" data-act="ganalyse">Try Again</button>`}}
+function allPgn(){return gameList().map(g=>g.pgn||'').filter(Boolean).join('\n\n')}
+document.addEventListener('click',async e=>{const a=e.target.closest('[data-act]');if(!a)return;const act=a.dataset.act;
+  if(act==='ganalyse')runAnalyse();
+  else if(act==='gsync'){const m=$('#gmsg');m.textContent='Lichess se la raha hoon…';try{const n=await syncGames();m.textContent=n?`${n} naye game aaye.`:'Koi naya game nahi.';if(n)vGames()}catch(x){m.textContent='Lichess tak nahi pahunch paya.'}}
+  else if(act==='gpgn'){const b=new Blob([allPgn()],{type:'application/x-chess-pgn'});const u=URL.createObjectURL(b);const l=document.createElement('a');l.href=u;l.download='my-games.pgn';document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000)}
+  else if(act==='gcopy'){const g=GAMES[location.hash.split('/')[2]];if(g)try{await navigator.clipboard.writeText(g.pgn);a.textContent='Copied'}catch(x){a.textContent='Copy nahi hua'}}});
 
 /* ================= Road to 3000 (rated program) =================
    course.html ka chess code, board aur step player isi page mein (build.js se) aate hain.
    Yahan sirf naya program hai: levels, Lichess rating gates, roz ka quota, puzzle bank, galti-theme repeat. */
 const SK='mindseye.road.v1',SEENK='mindseye.road.seen';
 const PREVIEW=/[?&]preview=1/.test(location.search);
-const SDEF=()=>({v:1,user:'',lich:null,lvl:1,tests:{},pr:0,day:{d:''},cards:{},games:{d:'',n:0,wk:'',wn:0},hist:[]});
+const SDEF=()=>({v:1,user:'',lich:null,lvl:1,tests:{},pr:0,day:{d:''},cards:{},gm:{},games:{d:'',n:0,wk:'',wn:0},hist:[]});
 let SP=(()=>{try{const j=JSON.parse(localStorage.getItem(SK)||'null');if(j&&j.v===1)return Object.assign(SDEF(),j)}catch(e){}return SDEF()})();
 function ssave(){try{localStorage.setItem(SK,JSON.stringify(SP))}catch(e){}}
 let SEEN=new Set();try{(localStorage.getItem(SEENK)||'').split(',').forEach(x=>x&&SEEN.add(x))}catch(e){}
@@ -875,10 +1079,11 @@ COURSE.forEach(C=>C.lessons.forEach(l=>{NOTEPATH[l.key]=C.id+'-'+l.id}));
 ROAD_LEVELS.forEach(L=>{L.lessons=L.lessons.map(p=>{if(NEWLES[p])return p;const[c,l]=p.split('.');const C=COURSE.find(x=>x.id===c);const les=C&&C.lessons.find(x=>x.id===l);return les?les.key:null}).filter(Boolean)});
 
 /* ---------- din ka hisaab ---------- */
-function sday(){const t=today();if(SP.day.d!==t){SP.day={d:t,flash:0,puz:0,quiz:0,end:0,open:0,calc:0,lesson:0,extra:0,flashNone:false};ssave()}return SP.day}
-const QUOTA_KEYS=[['flash','Mistake Flashcards','🔁'],['puz','Tactics Puzzles','🧩'],['lesson','Today\'s Lesson','📘'],['quiz','Review Quiz','❓'],['end','Endgame Drill','♔'],['open','Opening Drill','📖'],['calc','Calculation & Defence','🧠'],['game','Rated Game (Lichess)','♟']];
-function need(k){const q=CUR().quota;return k==='lesson'?1:k==='game'?1:(q[k]||0)}
-function have(k){const D=sday();if(k==='game')return SP.games.d===today()?Math.min(1,SP.games.n):0;if(k==='flash'&&(D.flashNone||!dueCards().length))return need('flash');if(k==='lesson'&&!nextLes())return 1;return D[k]||0}
+function sday(){const t=today();if(SP.day.d!==t){SP.day={d:t,flash:0,puz:0,quiz:0,end:0,open:0,calc:0,lesson:0,extra:0,review:0,flashNone:false};ssave()}return SP.day}
+const QUOTA_KEYS=[['flash','Mistake Flashcards','🔁'],['puz','Tactics Puzzles','🧩'],['lesson','Today\'s Lesson','📘'],['quiz','Review Quiz','❓'],['end','Endgame Drill','♔'],['open','Opening Drill','📖'],['calc','Calculation & Defence','🧠'],['game','Rated Game (Lichess)','♟'],['review','Game Review','🔍']];
+function need(k){const q=CUR().quota;if(k==='review')return(unreviewed().length||sday().review)?1:0;return k==='lesson'?1:k==='game'?1:(q[k]||0)}
+const flashDue=()=>dueCards().length+dueGm().length;
+function have(k){const D=sday();if(k==='game')return SP.games.d===today()?Math.min(1,SP.games.n):0;if(k==='flash'&&(D.flashNone||!flashDue()))return need('flash');if(k==='lesson'&&!nextLes())return 1;return D[k]||0}
 const partDone=k=>need(k)===0||have(k)>=need(k);
 const warmDone=()=>partDone('flash')&&partDone('puz');
 const dayDone=()=>QUOTA_KEYS.every(([k])=>partDone(k));
@@ -947,7 +1152,7 @@ function vPuzzleRun(kind){const app=$('#app');sday();
   async function next(){stage.innerHTML='<p class="muted">Puzzle aa raha hai…</p>';nb.disabled=true;bar();
     if(goal()&&have(kind)>=goal()&&kind!=='flash'){return finish()}
     let p=null,theme=null;
-    if(cfg.flash){const due=dueCards();if(!due.length){if(!D.flash){D.flashNone=true;ssave()}return finish()}theme=due[0];p=await getPuzzle({theme})}
+    if(cfg.flash){const gd=dueGm();if(gd.length){return gmNext(gd[0])}const due=dueCards();if(!due.length){if(!D.flash){D.flashNone=true;ssave()}return finish()}theme=due[0];p=await getPuzzle({theme})}
     else if(cfg.weak){const ws=Object.entries(SP.cards).sort((a,b)=>(b[1].miss||0)-(a[1].miss||0)).map(x=>x[0]);theme=ws[n%Math.max(1,ws.length)];p=await getPuzzle(theme?{theme}:{})}
     else p=await getPuzzle(cfg.any?{any:cfg.any}:{});
     if(!p){stage.innerHTML='<div class="card"><p>Is waqt naya puzzle nahi mila (shayad internet band hai). Thodi der baad try karo.</p></div>';return}
@@ -957,8 +1162,10 @@ function vPuzzleRun(kind){const app=$('#app');sday();
       const th=cur.theme||mainTheme(p[4]);if(cur.theme)cardResult(cur.theme,!!res);else if(!res)cardResult(th,false);
       if(kind==='flash'||kind==='puz'||kind==='end'||kind==='calc')D[kind]=(D[kind]||0)+1;else D.extra=(D.extra||0)+1;
       ssave();nb.disabled=false;bar();
-      if(goal()&&have(kind)>=goal()&&kind!=='flash')nb.textContent='Ho gaya ✓';else if(kind==='flash'&&!dueCards().length)nb.textContent='Ho gaya ✓'}}));
+      if(goal()&&have(kind)>=goal()&&kind!=='flash')nb.textContent='Ho gaya ✓';else if(kind==='flash'&&!flashDue())nb.textContent='Ho gaya ✓'}}));
     window.scrollTo(0,0)}
+  function gmNext(k){const s=gmStep(k);stage.innerHTML='';stage.appendChild(renderStep(s,{test:false,lessonTitle:cfg.title,where:cfg.title,done:res=>{
+      gmResult(k,!!res);n++;if(res)ok++;D.flash=(D.flash||0)+1;ssave();nb.disabled=false;bar();if(!flashDue())nb.textContent='Ho gaya ✓'}}));window.scrollTo(0,0)}
   function finish(){stage.innerHTML=`<div class="stack center"><div class="big">✅</div><h2>${esc(cfg.title)}: aaj ka hissa poora</h2><p>${n?`${ok}/${n} pehli koshish mein sahi.`:''} ${kind==='flash'&&!n?'Aaj koi purani galti due nahi.':''}</p><button class="btn primary block" data-go="#/">Today's Work ›</button><button class="btn block" data-go="#/run/extra">Unlimited Practice ›</button></div>`;foot.remove()}
   nb.onclick=()=>{if(nb.textContent.startsWith('Ho gaya'))return finish();nb.textContent='Agla puzzle ›';next()};
   next()}
@@ -1008,34 +1215,10 @@ async function runTest(){const L=CUR(),app=$('#app');
     app.innerHTML=`<div class="stack center"><div class="big">${pct>=75?'🏅':'📘'}</div><h1>${pct}%</h1><p>${pct>=75?'Test pass! Ab Lichess rating ka darwaza bacha hai.':'Pass ke liye 75% chahiye. Practice karo aur dobara do.'}</p>${gateHTML(L)}<button class="btn primary block" data-go="#/">Today's Work ›</button></div>`}})}
 
 
-/* ---------- Lichess Connect: OAuth PKCE (ek baar login, token is device par save) ----------
-   Lichess ko app register karne ki zaroorat nahi; client_id koi bhi naam ho sakta hai.
-   Password kabhi app mein nahi aata: login Lichess ke apne page par hota hai. */
-const LTOK='mindseye.road.lichess';
-const LCLIENT='road-to-3000.64squares';
-let LT=null;try{LT=JSON.parse(localStorage.getItem(LTOK)||'null')}catch(e){}
-const lichToken=()=>LT&&LT.exp>Date.now()?LT.tok:null;
-function ltSave(v){LT=v;try{v?localStorage.setItem(LTOK,JSON.stringify(v)):localStorage.removeItem(LTOK)}catch(e){}}
-const redirectUri=()=>location.origin+location.pathname;
-const b64u=buf=>btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-async function lichConnect(){const ver=b64u(crypto.getRandomValues(new Uint8Array(32)));const state=b64u(crypto.getRandomValues(new Uint8Array(12)));
-  const chal=b64u(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(ver)));
-  try{sessionStorage.setItem('road.pkce',JSON.stringify({ver,state,back:location.hash||'#/'}))}catch(e){}
-  location.href='https://lichess.org/oauth?'+new URLSearchParams({response_type:'code',client_id:LCLIENT,redirect_uri:redirectUri(),code_challenge_method:'S256',code_challenge:chal,scope:'board:play',state})}
-async function lichReturn(){const q=new URLSearchParams(location.search);if(!q.get('code')&&!q.get('error'))return;
-  let pk=null;try{pk=JSON.parse(sessionStorage.getItem('road.pkce')||'null');sessionStorage.removeItem('road.pkce')}catch(e){}
-  history.replaceState(null,'',location.pathname+(pk&&pk.back?pk.back:'#/'));
-  if(q.get('error')||!pk||pk.state!==q.get('state')){window.__lmsg='Lichess se judna poora nahi hua. Dobara "Connect Lichess" dabao.';return}
-  try{const r=await fetch('https://lichess.org/api/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'authorization_code',code:q.get('code'),code_verifier:pk.ver,redirect_uri:redirectUri(),client_id:LCLIENT})});
-    if(!r.ok)throw new Error('token');const j=await r.json();
-    const a=await (await fetch('https://lichess.org/api/account',{headers:{Authorization:'Bearer '+j.access_token}})).json();
-    ltSave({tok:j.access_token,exp:Date.now()+(j.expires_in||31536000)*1000,user:a.username});SP.user=a.username;SP.lich=null;ssave();window.__lmsg='Lichess jud gaya: '+a.username+'. Ab baar-baar login nahi karna padega.'}
-  catch(e){window.__lmsg='Lichess se token nahi mila. Internet check karke dobara try karo.'}}
-async function lichDisconnect(){const t=lichToken();ltSave(null);if(t)try{await fetch('https://lichess.org/api/token',{method:'DELETE',headers:{Authorization:'Bearer '+t}})}catch(e){}route()}
-function lichCard(){const t=lichToken(),exp=LT&&!t;
+function lichCard(){const t=lichToken(),exp=lichNeedsReconnect();
   return`<div class="card stack"><h3>Lichess Connect</h3>
    ${t?`<p>✅ Connected: <b>${esc(LT.user)}</b>. Login yaad hai, dobara nahi karna.</p><p class="small muted">Rating aur games yahin se aate hain. Games Lichess par khelo: rapid 15+10.</p><div class="row"><button class="btn" data-act="sync">Refresh</button><button class="btn" data-act="lout">Disconnect</button></div>`
-   :`${exp?'<p class="warn">Lichess login purana ho gaya. Ek baar dobara jodo.</p>':''}<p class="small muted">Ek baar jodo, phir app login yaad rakhega. Password Lichess ke apne page par daalna hai, app mein nahi.</p>
+   :`${exp?'<p class="warn">Lichess ko ek baar dobara jodo (login purana ho gaya ya nayi permission chahiye).</p>':''}<p class="small muted">Ek baar jodo, phir app login yaad rakhega. Password Lichess ke apne page par daalna hai, app mein nahi.</p>
    <button class="btn primary block" data-act="lconnect">Connect Lichess</button>
    <a class="btn block" style="text-decoration:none;text-align:center" href="https://lichess.org/signup" target="_blank" rel="noopener">Create a Lichess Account</a>
    <details><summary class="small muted">Ya sirf username daalo (login ke bina)</summary><div class="row" style="margin-top:8px"><input id="lu" placeholder="Lichess username" value="${esc(SP.user||'')}" autocomplete="off" autocapitalize="off"><button class="btn" data-act="saveuser">Save</button></div></details>`}
@@ -1053,9 +1236,10 @@ function gateHTML(L){const s=gateStatus(L),R=SP.lich;const row=(ok,t)=>`<li>${ok
 function quotaRow(k,label,icon){const n=need(k),hv=have(k),done=partDone(k);
   let act='',note='';
   if(k==='lesson'){const nx=nextLes(),c=canLesson();if(!nx){note='Is level ke saare lessons ho gaye'}else{note=esc(lesOf(nx).title);act=c.ok?`<button class="btn small primary" data-go="#/les/${nx}">Start</button>`:`<span class="muted small">🔒</span>`;if(!c.ok)note+=`<br><small class="muted">${esc(c.why)}</small>`}}
-  else if(k==='game'){note=SP.user?`Aaj: ${SP.games.d===today()?SP.games.n:0} game · Is hafte: ${SP.games.wn||0}`:'Pehle neeche Lichess Connect karo';act=SP.user?`<button class="btn small" data-act="sync">Check</button>`:''}
+  else if(k==='game'){note=SP.user?`Aaj: ${SP.games.d===today()?SP.games.n:0} game · Is hafte: ${SP.games.wn||0}`:'Pehle neeche Lichess Connect karo';act=`<a class="btn small primary" style="text-decoration:none" href="lichess.html#/road">Play</a>`+(SP.user?`<button class="btn small" data-act="sync">Check</button>`:'')}
+  else if(k==='review'){const u=unreviewed();note=u.length?`${u.length} game ka review baaki · galtiyan drills ban jayengi`:hv?'Aaj ka review ho gaya':'Koi naya game nahi';act=u.length?`<button class="btn small primary" data-go="#/game/${u[0].id}">Review</button>`:`<button class="btn small" data-go="#/games">My Games</button>`}
   else if(n===0){note='Is level mein nahi'}
-  else{act=done?'':`<button class="btn small primary" data-go="#/${k==='quiz'?'quiz':k==='open'?'open':'run/'+k}">Start</button>`;note=`${Math.min(hv,n)}/${n}`;if(k==='flash'){const d=dueCards().length;note+=d?` · ${d} galti-pattern due`:''}}
+  else{act=done?'':`<button class="btn small primary" data-go="#/${k==='quiz'?'quiz':k==='open'?'open':'run/'+k}">Start</button>`;note=`${Math.min(hv,n)}/${n}`;if(k==='flash'){const d=dueCards().length,gd=dueGm().length;note+=(d?` · ${d} galti-pattern due`:'')+(gd?` · ${gd} apne game ki galtiyan`:'')}}
   return`<div class="qrow${done?' done':''}"><span class="qi">${done?'✅':icon}</span><div class="qt"><b>${label}</b><div class="muted small">${note}</div></div>${act}</div>`}
 function vHome(){const app=$('#app');sday();const L=CUR();const lock=ratingLocked();const adv=tryAdvance();const L2=CUR();
   const done=QUOTA_KEYS.filter(([k])=>partDone(k)).length;
@@ -1066,13 +1250,13 @@ function vHome(){const app=$('#app');sday();const L=CUR();const lock=ratingLocke
    ${lock?`<div class="card alert">${md(`**Rating girne se naye lessons band.** Lichess rapid ${SP.lich.rating}, Level ${L2.n} ka darwaza ${L2.lo}. Jab tak wapas nahi aati: roz ka puzzle quota, apni galtiyon ke drills aur rated games.`)}<button class="btn block" data-go="#/run/weak">Weak Spot Drills ›</button></div>`:''}
    <h2>Today's Work</h2><div class="qlist">${QUOTA_KEYS.map(([k,l,i])=>quotaRow(k,l,i)).join('')}</div>
    ${dayDone()?'<div class="card okc"><b>Aaj ka poora kaam ho gaya. Shabaash!</b> Chaho to aur practice karo.</div>':''}
-   <button class="btn block" data-go="#/run/extra">♾ Unlimited Practice</button>
+   <div class="row"><button class="btn block" data-go="#/run/extra">♾ Unlimited Practice</button><button class="btn block" data-go="#/games">♟ My Games</button></div>
    <h2>Levels</h2><div class="lvls">${ROAD_LEVELS.map(x=>`<button class="lv${x.n===L2.n?' on':''}${x.n>L2.n&&!PREVIEW?' locked':''}" data-go="#/level/${x.n}"><b>${x.n}</b><span>${esc(x.name)}</span><small>${x.lo||0}-${x.gate}</small></button>`).join('')}</div>
    ${lichCard()}
    <p class="small muted">Puzzles: Lichess open puzzle database (CC0). Purane lessons: 64 Squares course.</p></div>`;
   app.innerHTML=o;if(SP.user&&(!SP.lich||Date.now()-SP.lich.at>30*60e3))sync(true)}
 async function sync(quiet){const m=$('#lmsg');if(m)m.textContent='Lichess se la raha hoon…';
-  try{await fetchLichess();if(m)m.textContent='Ho gaya.';if(!quiet||$('#app'))route()}catch(e){if(m)m.textContent=e.message==='expired'?'Lichess login purana ho gaya. Ek baar dobara Connect karo.':e.message==='notfound'?'Yeh username Lichess par nahi mila.':'Lichess tak nahi pahunch paya. Internet check karo.'}}
+  try{await fetchLichess();try{await syncGames()}catch(x){}if(m)m.textContent='Ho gaya.';if(!quiet||$('#app'))route()}catch(e){if(m)m.textContent=e.message==='expired'?'Lichess login purana ho gaya. Ek baar dobara Connect karo.':e.message==='notfound'?'Yeh username Lichess par nahi mila.':'Lichess tak nahi pahunch paya. Internet check karo.'}}
 function vLevelS(n){const L=LV(n),app=$('#app');if(!L)return go('#/');const open=PREVIEW||n<=SP.lvl;
   const items=L.lessons.map(k=>{const l=lesOf(k),d=isDone(k);return`<div class="qrow${d?' done':''}"><span class="qi">${d?'✅':NEWLES[k]?'🆕':'📘'}</span><div class="qt"><b>${esc(l.title)}</b><div class="muted small">${esc(l.sub||'')}</div></div>${open&&(d||PREVIEW)?`<button class="btn small" data-go="#/les/${k}">${d?'Redo':'Open'}</button>`:''}</div>`}).join('');
   app.innerHTML=`<div class="stack"><button class="btn small" data-go="#/">‹ Today's Work</button><p class="eyebrow">Level ${n} / 10</p><h1>${esc(L.name)}</h1><p class="muted">Lichess rapid ${L.lo||'shuru'} se ${L.gate} · Puzzles ${L.band[0]}-${L.band[1]} · Roz ~${L.quota.mins} min</p>
@@ -1084,16 +1268,16 @@ function vLevelS(n){const L=LV(n),app=$('#app');if(!L)return go('#/');const open
 /* ---------- router ---------- */
 function go(hash){if(location.hash!==hash)location.hash=hash;else route()}
 window.addEventListener('hashchange',route);
-function route(){closeTutor();const p=(location.hash||'#/').slice(2).split('/');const app=$('#app');app.innerHTML='';window.scrollTo(0,0);
+function route(){closeTutor();const p=(location.hash||'#/').slice(2).split('/');const app=$('#app');app.innerHTML='';app.onclick=null;window.scrollTo(0,0);
   if(p[0]==='run')vPuzzleRun(p[1]);else if(p[0]==='les')runLesson(p[1],'#/');else if(p[0]==='quiz')runQuiz();else if(p[0]==='open')runOpen();
-  else if(p[0]==='test')runTest();else if(p[0]==='level')vLevelS(+p[1]);else vHome();chips()}
+  else if(p[0]==='test')runTest();else if(p[0]==='level')vLevelS(+p[1]);else if(p[0]==='games')vGames();else if(p[0]==='game'&&p[1])vGame(p[1]);else vHome();chips()}
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();const t=g.dataset.go;if(location.hash===t)route();else go(t);return}
   const a=e.target.closest('[data-act]');if(!a)return;
   if(a.dataset.act==='saveuser'){const v=($('#lu').value||'').trim();SP.user=v;SP.lich=null;ssave();if(v)sync(false);else route()}
   else if(a.dataset.act==='sync')sync(false);
   else if(a.dataset.act==='lconnect')lichConnect();
-  else if(a.dataset.act==='lout')lichDisconnect()});
-touchDay();save();lichReturn().then(route);
+  else if(a.dataset.act==='lout')lichDisconnect().then(route)});
+touchDay();save();lichReturn().then(u=>{if(u){SP.user=u;SP.lich=null;ssave()}route()});
 
 </script>
 </body>

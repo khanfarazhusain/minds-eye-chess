@@ -3,7 +3,7 @@
    Yahan sirf naya program hai: levels, Lichess rating gates, roz ka quota, puzzle bank, galti-theme repeat. */
 const SK='mindseye.road.v1',SEENK='mindseye.road.seen';
 const PREVIEW=/[?&]preview=1/.test(location.search);
-const SDEF=()=>({v:1,user:'',lich:null,lvl:1,tests:{},pr:0,day:{d:''},cards:{},games:{d:'',n:0,wk:'',wn:0},hist:[]});
+const SDEF=()=>({v:1,user:'',lich:null,lvl:1,tests:{},pr:0,day:{d:''},cards:{},gm:{},games:{d:'',n:0,wk:'',wn:0},hist:[]});
 let SP=(()=>{try{const j=JSON.parse(localStorage.getItem(SK)||'null');if(j&&j.v===1)return Object.assign(SDEF(),j)}catch(e){}return SDEF()})();
 function ssave(){try{localStorage.setItem(SK,JSON.stringify(SP))}catch(e){}}
 let SEEN=new Set();try{(localStorage.getItem(SEENK)||'').split(',').forEach(x=>x&&SEEN.add(x))}catch(e){}
@@ -23,10 +23,11 @@ COURSE.forEach(C=>C.lessons.forEach(l=>{NOTEPATH[l.key]=C.id+'-'+l.id}));
 ROAD_LEVELS.forEach(L=>{L.lessons=L.lessons.map(p=>{if(NEWLES[p])return p;const[c,l]=p.split('.');const C=COURSE.find(x=>x.id===c);const les=C&&C.lessons.find(x=>x.id===l);return les?les.key:null}).filter(Boolean)});
 
 /* ---------- din ka hisaab ---------- */
-function sday(){const t=today();if(SP.day.d!==t){SP.day={d:t,flash:0,puz:0,quiz:0,end:0,open:0,calc:0,lesson:0,extra:0,flashNone:false};ssave()}return SP.day}
-const QUOTA_KEYS=[['flash','Mistake Flashcards','🔁'],['puz','Tactics Puzzles','🧩'],['lesson','Today\'s Lesson','📘'],['quiz','Review Quiz','❓'],['end','Endgame Drill','♔'],['open','Opening Drill','📖'],['calc','Calculation & Defence','🧠'],['game','Rated Game (Lichess)','♟']];
-function need(k){const q=CUR().quota;return k==='lesson'?1:k==='game'?1:(q[k]||0)}
-function have(k){const D=sday();if(k==='game')return SP.games.d===today()?Math.min(1,SP.games.n):0;if(k==='flash'&&(D.flashNone||!dueCards().length))return need('flash');if(k==='lesson'&&!nextLes())return 1;return D[k]||0}
+function sday(){const t=today();if(SP.day.d!==t){SP.day={d:t,flash:0,puz:0,quiz:0,end:0,open:0,calc:0,lesson:0,extra:0,review:0,flashNone:false};ssave()}return SP.day}
+const QUOTA_KEYS=[['flash','Mistake Flashcards','🔁'],['puz','Tactics Puzzles','🧩'],['lesson','Today\'s Lesson','📘'],['quiz','Review Quiz','❓'],['end','Endgame Drill','♔'],['open','Opening Drill','📖'],['calc','Calculation & Defence','🧠'],['game','Rated Game (Lichess)','♟'],['review','Game Review','🔍']];
+function need(k){const q=CUR().quota;if(k==='review')return(unreviewed().length||sday().review)?1:0;return k==='lesson'?1:k==='game'?1:(q[k]||0)}
+const flashDue=()=>dueCards().length+dueGm().length;
+function have(k){const D=sday();if(k==='game')return SP.games.d===today()?Math.min(1,SP.games.n):0;if(k==='flash'&&(D.flashNone||!flashDue()))return need('flash');if(k==='lesson'&&!nextLes())return 1;return D[k]||0}
 const partDone=k=>need(k)===0||have(k)>=need(k);
 const warmDone=()=>partDone('flash')&&partDone('puz');
 const dayDone=()=>QUOTA_KEYS.every(([k])=>partDone(k));
@@ -95,7 +96,7 @@ function vPuzzleRun(kind){const app=$('#app');sday();
   async function next(){stage.innerHTML='<p class="muted">Puzzle aa raha hai…</p>';nb.disabled=true;bar();
     if(goal()&&have(kind)>=goal()&&kind!=='flash'){return finish()}
     let p=null,theme=null;
-    if(cfg.flash){const due=dueCards();if(!due.length){if(!D.flash){D.flashNone=true;ssave()}return finish()}theme=due[0];p=await getPuzzle({theme})}
+    if(cfg.flash){const gd=dueGm();if(gd.length){return gmNext(gd[0])}const due=dueCards();if(!due.length){if(!D.flash){D.flashNone=true;ssave()}return finish()}theme=due[0];p=await getPuzzle({theme})}
     else if(cfg.weak){const ws=Object.entries(SP.cards).sort((a,b)=>(b[1].miss||0)-(a[1].miss||0)).map(x=>x[0]);theme=ws[n%Math.max(1,ws.length)];p=await getPuzzle(theme?{theme}:{})}
     else p=await getPuzzle(cfg.any?{any:cfg.any}:{});
     if(!p){stage.innerHTML='<div class="card"><p>Is waqt naya puzzle nahi mila (shayad internet band hai). Thodi der baad try karo.</p></div>';return}
@@ -105,8 +106,10 @@ function vPuzzleRun(kind){const app=$('#app');sday();
       const th=cur.theme||mainTheme(p[4]);if(cur.theme)cardResult(cur.theme,!!res);else if(!res)cardResult(th,false);
       if(kind==='flash'||kind==='puz'||kind==='end'||kind==='calc')D[kind]=(D[kind]||0)+1;else D.extra=(D.extra||0)+1;
       ssave();nb.disabled=false;bar();
-      if(goal()&&have(kind)>=goal()&&kind!=='flash')nb.textContent='Ho gaya ✓';else if(kind==='flash'&&!dueCards().length)nb.textContent='Ho gaya ✓'}}));
+      if(goal()&&have(kind)>=goal()&&kind!=='flash')nb.textContent='Ho gaya ✓';else if(kind==='flash'&&!flashDue())nb.textContent='Ho gaya ✓'}}));
     window.scrollTo(0,0)}
+  function gmNext(k){const s=gmStep(k);stage.innerHTML='';stage.appendChild(renderStep(s,{test:false,lessonTitle:cfg.title,where:cfg.title,done:res=>{
+      gmResult(k,!!res);n++;if(res)ok++;D.flash=(D.flash||0)+1;ssave();nb.disabled=false;bar();if(!flashDue())nb.textContent='Ho gaya ✓'}}));window.scrollTo(0,0)}
   function finish(){stage.innerHTML=`<div class="stack center"><div class="big">✅</div><h2>${esc(cfg.title)}: aaj ka hissa poora</h2><p>${n?`${ok}/${n} pehli koshish mein sahi.`:''} ${kind==='flash'&&!n?'Aaj koi purani galti due nahi.':''}</p><button class="btn primary block" data-go="#/">Today's Work ›</button><button class="btn block" data-go="#/run/extra">Unlimited Practice ›</button></div>`;foot.remove()}
   nb.onclick=()=>{if(nb.textContent.startsWith('Ho gaya'))return finish();nb.textContent='Agla puzzle ›';next()};
   next()}
@@ -156,34 +159,10 @@ async function runTest(){const L=CUR(),app=$('#app');
     app.innerHTML=`<div class="stack center"><div class="big">${pct>=75?'🏅':'📘'}</div><h1>${pct}%</h1><p>${pct>=75?'Test pass! Ab Lichess rating ka darwaza bacha hai.':'Pass ke liye 75% chahiye. Practice karo aur dobara do.'}</p>${gateHTML(L)}<button class="btn primary block" data-go="#/">Today's Work ›</button></div>`}})}
 
 
-/* ---------- Lichess Connect: OAuth PKCE (ek baar login, token is device par save) ----------
-   Lichess ko app register karne ki zaroorat nahi; client_id koi bhi naam ho sakta hai.
-   Password kabhi app mein nahi aata: login Lichess ke apne page par hota hai. */
-const LTOK='mindseye.road.lichess';
-const LCLIENT='road-to-3000.64squares';
-let LT=null;try{LT=JSON.parse(localStorage.getItem(LTOK)||'null')}catch(e){}
-const lichToken=()=>LT&&LT.exp>Date.now()?LT.tok:null;
-function ltSave(v){LT=v;try{v?localStorage.setItem(LTOK,JSON.stringify(v)):localStorage.removeItem(LTOK)}catch(e){}}
-const redirectUri=()=>location.origin+location.pathname;
-const b64u=buf=>btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-async function lichConnect(){const ver=b64u(crypto.getRandomValues(new Uint8Array(32)));const state=b64u(crypto.getRandomValues(new Uint8Array(12)));
-  const chal=b64u(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(ver)));
-  try{sessionStorage.setItem('road.pkce',JSON.stringify({ver,state,back:location.hash||'#/'}))}catch(e){}
-  location.href='https://lichess.org/oauth?'+new URLSearchParams({response_type:'code',client_id:LCLIENT,redirect_uri:redirectUri(),code_challenge_method:'S256',code_challenge:chal,scope:'board:play',state})}
-async function lichReturn(){const q=new URLSearchParams(location.search);if(!q.get('code')&&!q.get('error'))return;
-  let pk=null;try{pk=JSON.parse(sessionStorage.getItem('road.pkce')||'null');sessionStorage.removeItem('road.pkce')}catch(e){}
-  history.replaceState(null,'',location.pathname+(pk&&pk.back?pk.back:'#/'));
-  if(q.get('error')||!pk||pk.state!==q.get('state')){window.__lmsg='Lichess se judna poora nahi hua. Dobara "Connect Lichess" dabao.';return}
-  try{const r=await fetch('https://lichess.org/api/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'authorization_code',code:q.get('code'),code_verifier:pk.ver,redirect_uri:redirectUri(),client_id:LCLIENT})});
-    if(!r.ok)throw new Error('token');const j=await r.json();
-    const a=await (await fetch('https://lichess.org/api/account',{headers:{Authorization:'Bearer '+j.access_token}})).json();
-    ltSave({tok:j.access_token,exp:Date.now()+(j.expires_in||31536000)*1000,user:a.username});SP.user=a.username;SP.lich=null;ssave();window.__lmsg='Lichess jud gaya: '+a.username+'. Ab baar-baar login nahi karna padega.'}
-  catch(e){window.__lmsg='Lichess se token nahi mila. Internet check karke dobara try karo.'}}
-async function lichDisconnect(){const t=lichToken();ltSave(null);if(t)try{await fetch('https://lichess.org/api/token',{method:'DELETE',headers:{Authorization:'Bearer '+t}})}catch(e){}route()}
-function lichCard(){const t=lichToken(),exp=LT&&!t;
+function lichCard(){const t=lichToken(),exp=lichNeedsReconnect();
   return`<div class="card stack"><h3>Lichess Connect</h3>
    ${t?`<p>✅ Connected: <b>${esc(LT.user)}</b>. Login yaad hai, dobara nahi karna.</p><p class="small muted">Rating aur games yahin se aate hain. Games Lichess par khelo: rapid 15+10.</p><div class="row"><button class="btn" data-act="sync">Refresh</button><button class="btn" data-act="lout">Disconnect</button></div>`
-   :`${exp?'<p class="warn">Lichess login purana ho gaya. Ek baar dobara jodo.</p>':''}<p class="small muted">Ek baar jodo, phir app login yaad rakhega. Password Lichess ke apne page par daalna hai, app mein nahi.</p>
+   :`${exp?'<p class="warn">Lichess ko ek baar dobara jodo (login purana ho gaya ya nayi permission chahiye).</p>':''}<p class="small muted">Ek baar jodo, phir app login yaad rakhega. Password Lichess ke apne page par daalna hai, app mein nahi.</p>
    <button class="btn primary block" data-act="lconnect">Connect Lichess</button>
    <a class="btn block" style="text-decoration:none;text-align:center" href="https://lichess.org/signup" target="_blank" rel="noopener">Create a Lichess Account</a>
    <details><summary class="small muted">Ya sirf username daalo (login ke bina)</summary><div class="row" style="margin-top:8px"><input id="lu" placeholder="Lichess username" value="${esc(SP.user||'')}" autocomplete="off" autocapitalize="off"><button class="btn" data-act="saveuser">Save</button></div></details>`}
@@ -201,9 +180,10 @@ function gateHTML(L){const s=gateStatus(L),R=SP.lich;const row=(ok,t)=>`<li>${ok
 function quotaRow(k,label,icon){const n=need(k),hv=have(k),done=partDone(k);
   let act='',note='';
   if(k==='lesson'){const nx=nextLes(),c=canLesson();if(!nx){note='Is level ke saare lessons ho gaye'}else{note=esc(lesOf(nx).title);act=c.ok?`<button class="btn small primary" data-go="#/les/${nx}">Start</button>`:`<span class="muted small">🔒</span>`;if(!c.ok)note+=`<br><small class="muted">${esc(c.why)}</small>`}}
-  else if(k==='game'){note=SP.user?`Aaj: ${SP.games.d===today()?SP.games.n:0} game · Is hafte: ${SP.games.wn||0}`:'Pehle neeche Lichess Connect karo';act=SP.user?`<button class="btn small" data-act="sync">Check</button>`:''}
+  else if(k==='game'){note=SP.user?`Aaj: ${SP.games.d===today()?SP.games.n:0} game · Is hafte: ${SP.games.wn||0}`:'Pehle neeche Lichess Connect karo';act=`<a class="btn small primary" style="text-decoration:none" href="lichess.html#/road">Play</a>`+(SP.user?`<button class="btn small" data-act="sync">Check</button>`:'')}
+  else if(k==='review'){const u=unreviewed();note=u.length?`${u.length} game ka review baaki · galtiyan drills ban jayengi`:hv?'Aaj ka review ho gaya':'Koi naya game nahi';act=u.length?`<button class="btn small primary" data-go="#/game/${u[0].id}">Review</button>`:`<button class="btn small" data-go="#/games">My Games</button>`}
   else if(n===0){note='Is level mein nahi'}
-  else{act=done?'':`<button class="btn small primary" data-go="#/${k==='quiz'?'quiz':k==='open'?'open':'run/'+k}">Start</button>`;note=`${Math.min(hv,n)}/${n}`;if(k==='flash'){const d=dueCards().length;note+=d?` · ${d} galti-pattern due`:''}}
+  else{act=done?'':`<button class="btn small primary" data-go="#/${k==='quiz'?'quiz':k==='open'?'open':'run/'+k}">Start</button>`;note=`${Math.min(hv,n)}/${n}`;if(k==='flash'){const d=dueCards().length,gd=dueGm().length;note+=(d?` · ${d} galti-pattern due`:'')+(gd?` · ${gd} apne game ki galtiyan`:'')}}
   return`<div class="qrow${done?' done':''}"><span class="qi">${done?'✅':icon}</span><div class="qt"><b>${label}</b><div class="muted small">${note}</div></div>${act}</div>`}
 function vHome(){const app=$('#app');sday();const L=CUR();const lock=ratingLocked();const adv=tryAdvance();const L2=CUR();
   const done=QUOTA_KEYS.filter(([k])=>partDone(k)).length;
@@ -214,13 +194,13 @@ function vHome(){const app=$('#app');sday();const L=CUR();const lock=ratingLocke
    ${lock?`<div class="card alert">${md(`**Rating girne se naye lessons band.** Lichess rapid ${SP.lich.rating}, Level ${L2.n} ka darwaza ${L2.lo}. Jab tak wapas nahi aati: roz ka puzzle quota, apni galtiyon ke drills aur rated games.`)}<button class="btn block" data-go="#/run/weak">Weak Spot Drills ›</button></div>`:''}
    <h2>Today's Work</h2><div class="qlist">${QUOTA_KEYS.map(([k,l,i])=>quotaRow(k,l,i)).join('')}</div>
    ${dayDone()?'<div class="card okc"><b>Aaj ka poora kaam ho gaya. Shabaash!</b> Chaho to aur practice karo.</div>':''}
-   <button class="btn block" data-go="#/run/extra">♾ Unlimited Practice</button>
+   <div class="row"><button class="btn block" data-go="#/run/extra">♾ Unlimited Practice</button><button class="btn block" data-go="#/games">♟ My Games</button></div>
    <h2>Levels</h2><div class="lvls">${ROAD_LEVELS.map(x=>`<button class="lv${x.n===L2.n?' on':''}${x.n>L2.n&&!PREVIEW?' locked':''}" data-go="#/level/${x.n}"><b>${x.n}</b><span>${esc(x.name)}</span><small>${x.lo||0}-${x.gate}</small></button>`).join('')}</div>
    ${lichCard()}
    <p class="small muted">Puzzles: Lichess open puzzle database (CC0). Purane lessons: 64 Squares course.</p></div>`;
   app.innerHTML=o;if(SP.user&&(!SP.lich||Date.now()-SP.lich.at>30*60e3))sync(true)}
 async function sync(quiet){const m=$('#lmsg');if(m)m.textContent='Lichess se la raha hoon…';
-  try{await fetchLichess();if(m)m.textContent='Ho gaya.';if(!quiet||$('#app'))route()}catch(e){if(m)m.textContent=e.message==='expired'?'Lichess login purana ho gaya. Ek baar dobara Connect karo.':e.message==='notfound'?'Yeh username Lichess par nahi mila.':'Lichess tak nahi pahunch paya. Internet check karo.'}}
+  try{await fetchLichess();try{await syncGames()}catch(x){}if(m)m.textContent='Ho gaya.';if(!quiet||$('#app'))route()}catch(e){if(m)m.textContent=e.message==='expired'?'Lichess login purana ho gaya. Ek baar dobara Connect karo.':e.message==='notfound'?'Yeh username Lichess par nahi mila.':'Lichess tak nahi pahunch paya. Internet check karo.'}}
 function vLevelS(n){const L=LV(n),app=$('#app');if(!L)return go('#/');const open=PREVIEW||n<=SP.lvl;
   const items=L.lessons.map(k=>{const l=lesOf(k),d=isDone(k);return`<div class="qrow${d?' done':''}"><span class="qi">${d?'✅':NEWLES[k]?'🆕':'📘'}</span><div class="qt"><b>${esc(l.title)}</b><div class="muted small">${esc(l.sub||'')}</div></div>${open&&(d||PREVIEW)?`<button class="btn small" data-go="#/les/${k}">${d?'Redo':'Open'}</button>`:''}</div>`}).join('');
   app.innerHTML=`<div class="stack"><button class="btn small" data-go="#/">‹ Today's Work</button><p class="eyebrow">Level ${n} / 10</p><h1>${esc(L.name)}</h1><p class="muted">Lichess rapid ${L.lo||'shuru'} se ${L.gate} · Puzzles ${L.band[0]}-${L.band[1]} · Roz ~${L.quota.mins} min</p>
@@ -232,13 +212,13 @@ function vLevelS(n){const L=LV(n),app=$('#app');if(!L)return go('#/');const open
 /* ---------- router ---------- */
 function go(hash){if(location.hash!==hash)location.hash=hash;else route()}
 window.addEventListener('hashchange',route);
-function route(){closeTutor();const p=(location.hash||'#/').slice(2).split('/');const app=$('#app');app.innerHTML='';window.scrollTo(0,0);
+function route(){closeTutor();const p=(location.hash||'#/').slice(2).split('/');const app=$('#app');app.innerHTML='';app.onclick=null;window.scrollTo(0,0);
   if(p[0]==='run')vPuzzleRun(p[1]);else if(p[0]==='les')runLesson(p[1],'#/');else if(p[0]==='quiz')runQuiz();else if(p[0]==='open')runOpen();
-  else if(p[0]==='test')runTest();else if(p[0]==='level')vLevelS(+p[1]);else vHome();chips()}
+  else if(p[0]==='test')runTest();else if(p[0]==='level')vLevelS(+p[1]);else if(p[0]==='games')vGames();else if(p[0]==='game'&&p[1])vGame(p[1]);else vHome();chips()}
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();const t=g.dataset.go;if(location.hash===t)route();else go(t);return}
   const a=e.target.closest('[data-act]');if(!a)return;
   if(a.dataset.act==='saveuser'){const v=($('#lu').value||'').trim();SP.user=v;SP.lich=null;ssave();if(v)sync(false);else route()}
   else if(a.dataset.act==='sync')sync(false);
   else if(a.dataset.act==='lconnect')lichConnect();
-  else if(a.dataset.act==='lout')lichDisconnect()});
-touchDay();save();lichReturn().then(route);
+  else if(a.dataset.act==='lout')lichDisconnect().then(route)});
+touchDay();save();lichReturn().then(u=>{if(u){SP.user=u;SP.lich=null;ssave()}route()});
