@@ -10,7 +10,7 @@ const core=cut("'use strict';",'/* ---------- views ---------- */');
 const playerFns=cut('function player(','function vLesson(');
 const content=fs.readFileSync(path.join(__dirname,'content.js'),'utf8').replace(/if\(typeof module[^\n]*\n/,'');
 const rd=f=>fs.readFileSync(path.join(__dirname,f),'utf8');
-const app=rd('app.js'),auth=rd('lichess-auth.js'),play=rd('play.js'),games=rd('games.js');
+const app=rd('app.js'),auth=rd('lichess-auth.js'),play=rd('play.js'),games=rd('games.js'),explain=rd('explain.js');
 const coreLite=core.replace(/const COURSE=\[.*?\];\n/s,'const COURSE=[];\n').replace(/const PLACEMENT=\[.*?\];\n/s,'const PLACEMENT=[];\n');
 const SV=d=>`<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 const IC={
@@ -52,6 +52,7 @@ ul.gate{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;ga
 .moves{font-family:var(--f-mono);font-size:13px;max-height:120px;overflow:auto;line-height:1.7;word-break:break-word}.moves .mn{color:var(--muted)}
 .bar{height:8px;border-radius:6px;background:var(--surface2);overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}
 .wrapr{flex-wrap:wrap;gap:6px}
+ul.xwhy{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 #lu{flex:1;min-width:0;font:inherit;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
 `;
 let html=head.replace(/<title>[^<]*<\/title>/,'<title>Road to 3000 · 64 Squares</title>')
@@ -67,6 +68,7 @@ ${core}
 ${playerFns}
 ${content}
 ${auth}
+${explain}
 ${games}
 ${app}
 </script>

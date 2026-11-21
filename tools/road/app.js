@@ -84,15 +84,15 @@ const dueCards=()=>Object.entries(SP.cards).filter(([t,c])=>c.due<=dayNum()).map
 function rate(pr,ok){const me=SP.pr||CUR().band[0]+150;const e=1/(1+Math.pow(10,(pr-me)/400));SP.pr=Math.round(me+24*((ok?1:0)-e))}
 
 /* ---------- puzzle session: ek ke baad ek, kabhi repeat nahi ---------- */
-function vPuzzleRun(kind){const app=$('#app');sday();
-  const cfg={puz:{title:'Tactics Puzzles',any:null},end:{title:'Endgame Drill',any:['endgame','rookend','pawnend','queenend','minorend']},calc:{title:'Calculation & Defence',any:['defence','quiet','long','zwischen']},flash:{title:'Mistake Flashcards',flash:true},extra:{title:'Unlimited Practice',any:null},weak:{title:'Weak Spot Drills',weak:true}}[kind];
+function vPuzzleRun(kind,arg){const app=$('#app');sday();
+  const cfg=kind==='th'&&arg?{title:(TNAME[arg]||arg)+' Drill',any:[arg]}:{puz:{title:'Tactics Puzzles',any:null},end:{title:'Endgame Drill',any:['endgame','rookend','pawnend','queenend','minorend']},calc:{title:'Calculation & Defence',any:['defence','quiet','long','zwischen']},flash:{title:'Mistake Flashcards',flash:true},extra:{title:'Unlimited Practice',any:null},weak:{title:'Weak Spot Drills',weak:true}}[kind];
   if(!cfg)return go('#/');
   let n=0,ok=0,cur=null;const D=sday();
   const top=h('div','qhead');top.innerHTML=`<button class="x" aria-label="Back">‹</button><div class="prog"><i></i></div><span class="count"></span>`;top.querySelector('.x').onclick=()=>go('#/');app.appendChild(top);
   const head=h('p','eyebrow',esc(cfg.title));app.appendChild(head);const stage=h('div');app.appendChild(stage);
   const foot=h('div','foot');const nb=h('button','btn primary block','Agla puzzle ›');foot.appendChild(nb);app.appendChild(foot);
-  const goal=()=>kind==='extra'||kind==='weak'?0:need(kind);
-  function bar(){const g=goal(),done=kind==='extra'||kind==='weak'?n:have(kind);top.querySelector('.count').textContent=g?`${Math.min(done,g)}/${g}`:`${n} kiye`;top.querySelector('.prog i').style.width=g?Math.min(100,done/g*100)+'%':'100%'}
+  const goal=()=>kind==='extra'||kind==='weak'||kind==='th'?0:need(kind);
+  function bar(){const g=goal(),done=kind==='extra'||kind==='weak'||kind==='th'?n:have(kind);top.querySelector('.count').textContent=g?`${Math.min(done,g)}/${g}`:`${n} kiye`;top.querySelector('.prog i').style.width=g?Math.min(100,done/g*100)+'%':'100%'}
   async function next(){stage.innerHTML='<p class="muted">Puzzle aa raha hai…</p>';nb.disabled=true;bar();
     if(goal()&&have(kind)>=goal()&&kind!=='flash'){return finish()}
     let p=null,theme=null;
@@ -214,7 +214,7 @@ function go(hash){if(location.hash!==hash)location.hash=hash;else route()}
 window.addEventListener('hashchange',route);
 function navOn(){const h=location.hash||'#/';const bs=[...document.querySelectorAll('nav.tabs button[data-go]')];const hit=bs.find(b=>b.dataset.go===h)||bs.find(b=>h.startsWith(b.dataset.go+'/')&&b.dataset.go!=='#/')||bs[0];bs.forEach(b=>b.classList.toggle('on',b===hit))}
 function route(){closeTutor();navOn();const p=(location.hash||'#/').slice(2).split('/');const app=$('#app');app.innerHTML='';app.onclick=null;window.scrollTo(0,0);
-  if(p[0]==='run')vPuzzleRun(p[1]);else if(p[0]==='les')runLesson(p[1],'#/');else if(p[0]==='quiz')runQuiz();else if(p[0]==='open')runOpen();
+  if(p[0]==='run')vPuzzleRun(p[1],p[2]);else if(p[0]==='les')runLesson(p[1],'#/');else if(p[0]==='quiz')runQuiz();else if(p[0]==='open')runOpen();
   else if(p[0]==='test')runTest();else if(p[0]==='level')vLevelS(+p[1]);else if(p[0]==='games')vGames();else if(p[0]==='game'&&p[1])vGame(p[1]);else vHome();chips()}
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();const t=g.dataset.go;if(location.hash===t)route();else go(t);return}
   const a=e.target.closest('[data-act]');if(!a)return;

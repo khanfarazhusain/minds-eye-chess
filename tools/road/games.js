@@ -52,7 +52,7 @@ async function analyseGame(g,onProg){await engStart();const sans=g.moves.split('
     const cls=drop>=30?'blund':drop>=20?'mist':drop>=10?'inacc':'';if(!cls||!best)continue;cnt[cls]++;
     const alt=(E.lines[1]&&wpLine(E.lines[1])>=before-5)?E.lines[1].pv[0]:null;
     out.push({ply:i,fen:fenOf(p),san:sanOf(p,mv[i]),cls,drop:Math.round(drop),before:Math.round(before),after:Math.round(after),best:sanLine(p,best.pv,1)[0],line:sanLine(p,best.pv,6).join(' '),
-      alt:alt?sanLine(p,[alt],1)[0]:null,ev:evTxt(best,p.w)})}
+      alt:alt?sanLine(p,[alt],1)[0]:null,ev:evTxt(best,p.w),x:explainMistake(p,mv[i],E,ev[i+1])})}
   g.an={at:Date.now(),acc:accN?Math.round(accSum/accN):100,cnt,mis:out,evs:ev.map((e,i)=>Math.round(pos[i].w?e.wp:100-e.wp))};
   /* mistake aur blunder -> drill cards (aaj se due) */
   SP.gm=SP.gm||{};out.filter(x=>x.cls!=='inacc').forEach(x=>{const k=g.id+':'+x.ply;if(!SP.gm[k])SP.gm[k]={fen:x.fen,best:x.best,alt:x.alt,line:x.line,san:x.san,gid:g.id,ply:x.ply,opp:g.opp,due:dayNum(),box:0,ok:0}});
@@ -86,15 +86,28 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
   const B=Board($('#gbd'),{st:pos[cur],persp:g.color});
   function show(i){cur=Math.max(0,Math.min(pos.length-1,i));const mi=misBy[cur];B.last=last[cur];B.set({st:pos[cur],arr:mi?[]:null});
     const nx=misBy[cur];$('#gply').textContent=cur?`${Math.ceil(cur/2)}${cur%2?'.':'...'} ${sans[cur-1]}`:'Start';
-    $('#gnote').innerHTML=nx?`<div class="card ${nx.cls==='inacc'?'':'alert'}"><b>${Math.floor(nx.ply/2)+1}${nx.ply%2?'...':'.'} ${esc(nx.san)}${CLS[nx.cls][1]} ${CLS[nx.cls][0]}</b><div class="small">Behtar tha: <b>${esc(nx.best)}</b> (${nx.ev}). Line: ${esc(nx.line)}<br>Jeet ka chance ${nx.before}% → ${nx.after}%</div></div>`:'';
-    if(nx){const m=findMove(pos[cur],nx.best);if(m)B.set({arr:[[sn(m.f),sn(m.t),'g']]})}
+    $('#gnote').innerHTML=nx?noteHTML(nx,cur):'';
+    if(nx){const arr=[];const pm=findMove(pos[cur],nx.san);if(pm)arr.push([sn(pm.f),sn(pm.t),'r']);const m=findMove(pos[cur],nx.best);if(m)arr.push([sn(m.f),sn(m.t),'g']);B.set({arr})}
     $('#gmv').innerHTML=sans.map((x,k)=>{const mk=misBy[k];return(k%2===0?`<span class="mn">${k/2+1}.</span> `:'')+`<span class="mvx${k+1===cur?' on':''}${mk?' '+mk.cls:''}" data-nav-to="${k+1}">${esc(x)}${mk?CLS[mk.cls][1]:''}</span>`}).join(' ')}
-  /* galti wali chaal par jao: board us chaal se PEHLE ki position dikhata hai, tir = behtar chaal */
-  app.onclick=e=>{const n=e.target.closest('[data-nav]');if(n){const d=+n.dataset.nav;show(d===0?0:d===9999?pos.length-1:cur+d);return}
+  function noteHTML(nx,cur){const X=nx.x,num=`${Math.floor(nx.ply/2)+1}${nx.ply%2?'...':'.'}`;
+  const head=`<b>${num} ${esc(nx.san)}${CLS[nx.cls][1]} ${CLS[nx.cls][0]}</b>`;
+  if(!X)return`<div class="card ${nx.cls==='inacc'?'':'alert'}">${head}<div class="small">Behtar tha: <b>${esc(nx.best)}</b> (${nx.ev}). Line: ${esc(nx.line)}<br>Jeet ka chance ${nx.before}% → ${nx.after}%</div><p class="small muted">Is game ka review purane version se hai. "Review Again" dabao to har galti ki wajah bhi milegi.</p></div>`;
+  const th=XTHEME[X.theme];
+  return`<div class="card stack ${nx.cls==='inacc'?'':'alert'}">${head}
+   <div class="small"><b>Kyun galat:</b></div><ul class="xwhy small">${X.why.map(t=>`<li>${md(t).replace(/^<p>|<\/p>$/g,'')}</li>`).join('')}</ul>
+   <div class="small"><b>Kya khelna chahiye tha:</b> ${esc(X.bestSan)} (${nx.ev})${X.bestWhy?' – ye chaal '+esc(X.bestWhy):''}<br><span class="muted">Best line: ${esc(X.bestLine)}</span></div>
+   <div class="small">${X.loss!=null?`Nuksaan: lagbhag <b>${xPawns(X.loss)}</b> · `:''}Jeet ka chance ${nx.before}% → ${nx.after}%</div>
+   <div class="small muted">Board: <span style="color:#D2462C">laal tir</span> = tumhari chaal, <span style="color:#1F9D5A">hara tir</span> = behtar chaal.</div>
+   <div class="row wrapr">${X.ref.length?'<button class="btn small" data-refute="1">Opponent ka jawab dikhao</button>':''}${th?`<button class="btn small primary" data-go="#/run/th/${th[1]}">${esc(th[0])} Drill ›</button>`:''}</div></div>`}
+/* galti wali chaal par jao: board us chaal se PEHLE ki position dikhata hai, tir = behtar chaal */
+  app.onclick=e=>{const rf=e.target.closest('[data-refute]');if(rf){const nx=misBy[cur];if(!nx||!nx.x)return;const A=pos[cur+1];const r=nx.x.ref.length?fromUci(A,nx.x.ref[0]):null;
+      B.last=last[cur+1];B.set({st:A,arr:r?[[sn(r.f),sn(r.t),'r']]:[]});rf.textContent='Opponent ka jawab: laal tir';return}
+    const n=e.target.closest('[data-nav]');if(n){const d=+n.dataset.nav;show(d===0?0:d===9999?pos.length-1:cur+d);return}
     const t=e.target.closest('[data-nav-to]');if(t){show(+t.dataset.navTo);return}const mm=e.target.closest('[data-mis]');if(mm){show(+mm.dataset.mis);window.scrollTo(0,0)}};
   show(cur)}
 function anHTML(g){const a=g.an;return`<div class="card stack"><h3>Review: Accuracy ${a.acc}%</h3><p class="small">${a.cnt.blund} Blunder (??) · ${a.cnt.mist} Mistake (?) · ${a.cnt.inacc} Inaccuracy (?!)</p>
-  ${a.mis.length?`<div class="qlist">${a.mis.map(x=>`<button class="qrow" style="text-align:left;font:inherit;color:inherit" data-mis="${x.ply}"><span class="qi">${x.cls==='blund'?'🟥':x.cls==='mist'?'🟧':'🟨'}</span><div class="qt"><b>${Math.floor(x.ply/2)+1}${x.ply%2?'...':'.'} ${esc(x.san)}${CLS[x.cls][1]}</b><div class="small muted">Khelna chahiye tha: <b>${esc(x.best)}</b> · ${x.before}% → ${x.after}%</div></div></button>`).join('')}</div>`:'<p>Koi badi galti nahi. Shabaash!</p>'}
+  ${a.mis.length?`<div class="qlist">${a.mis.map(x=>`<button class="qrow" style="text-align:left;font:inherit;color:inherit" data-mis="${x.ply}"><span class="qi">${x.cls==='blund'?'🟥':x.cls==='mist'?'🟧':'🟨'}</span><div class="qt"><b>${Math.floor(x.ply/2)+1}${x.ply%2?'...':'.'} ${esc(x.san)}${CLS[x.cls][1]}</b><div class="small muted">${x.x&&XTHEME[x.x.theme]?'<b>'+esc(XTHEME[x.x.theme][0])+'</b> · ':''}Khelna chahiye tha: <b>${esc(x.best)}</b> · ${x.before}% → ${x.after}%</div></div></button>`).join('')}</div>`:'<p>Koi badi galti nahi. Shabaash!</p>'}
+  ${a.mis.some(x=>!x.x)?'<button class="btn block" data-act="ganalyse">Review Again (har galti ki wajah ke saath)</button>':''}
   ${a.cnt.blund+a.cnt.mist?`<p class="small muted">Mistake aur Blunder wali positions "Mistake Flashcards" mein aa gayi hain. Roz wapas aayengi jab tak 3 baar sahi na ho.</p><button class="btn primary block" data-go="#/run/flash">Drill These Mistakes Now</button>`:''}</div>`}
 async function runAnalyse(){const id=(location.hash.split('/')[2]||'');const g=GAMES[id];if(!g)return;const box=$('#gan');
   box.innerHTML='<div class="card stack"><b>Stockfish review chal raha hai…</b><div class="bar"><i id="gpb" style="width:0%"></i></div><p class="small muted" id="gpt">Engine shuru ho raha hai</p></div>';
