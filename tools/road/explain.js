@@ -117,10 +117,14 @@ function xIdeas(st,m){const w=st.w,A=make(st,m),U=m.p.toUpperCase(),pos=[],neg=[
   const hit=xSqs(A,m.t).filter(t=>A.b[t]&&xw(A.b[t])!==w&&A.b[t].toUpperCase()!=='K'&&(xval(A.b[t])>xval(m.p)||!attacked(A.b,t,!w)));
   if(hit.length>=2)pos.push(`ek saath ${xList(hit.map(t=>xo(A.b[t])+' ('+sn(t)+')'))} par hamla (fork) karti hai`);
   else if(hit.length)pos.push(`${xo(A.b[hit[0]])} (${sn(hit[0])}) par hamla karti hai, opponent ko jawab dena padega`);
+  if(!hit.length){const soft=xSqs(A,m.t).filter(t=>A.b[t]&&xw(A.b[t])!==w&&!'PK'.includes(A.b[t].toUpperCase()));if(soft.length)pos.push(`${xo(A.b[soft[0]])} (${sn(soft[0])}) par dabav daalti hai: use hatna padega ya trade hoga`)}
   const ray=xRay(A,m.t);if(ray&&ray.kind==='pin')pos.push(`${xo(ray.front.p)} (${sn(ray.front.s)}) ko pin karti hai, peeche ${xs(ray.back.p)} hai`);
   const h0=xHanging(st,w),h1=xHanging(A,w);
   if(h0.some(h=>h.s===m.f)&&!h1.some(h=>h.s===m.t))pos.push(`khatre me pade ${xo(m.p)} ko surakshit jagah le jaati hai`);
   const saved=h0.filter(h=>h.s!==m.f&&!h1.some(x=>x.s===h.s));if(saved.length)pos.push(`${xo(saved[0].p)} (${sn(saved[0].s)}) ko bachati hai`);
+  if(U==='P'){const oppM=pseudo(Object.assign({},st,{w:!w,ep:-1})),was=xSqs(st,m.f),nw=xSqs(A,m.t).filter(t=>!was.includes(t));
+    const stop=oppM.filter(o=>nw.includes(o.t)&&'NBQ'.includes(o.p.toUpperCase()));if(stop.length)pos.push(`opponent ke ${xo(stop[0].p)} ko ${sn(stop[0].t)} par aane se rokti hai`);
+    const tens=xSqs(A,m.t).filter(t=>A.b[t]===(w?'p':'P')&&(t&7)>=2&&(t&7)<=5);if(tens.length&&!cap)pos.push(`${sn(tens[0])} ke pyade se takkar leti hai (center kholne ki koshish)`)}
   if(U==='P'&&F1.lines-F0.lines>=2)pos.push('apne oont/vazir ke liye raasta kholti hai');
   if(F1.passed.length>F0.passed.length&&U==='P')pos.push('passed pyada banati hai (aage koi pyada rokne wala nahi)');
   if(U==='P'&&!cap&&((w&&(m.t>>3)===4)||(!w&&(m.t>>3)===3))&&!XCEN.includes(m.t))pos.push('aage badh kar jagah (space) leti hai');
@@ -140,7 +144,7 @@ function xIdeas(st,m){const w=st.w,A=make(st,m),U=m.p.toUpperCase(),pos=[],neg=[
     if('NB'.includes(U)&&!F0.undev.includes(m.f)&&F0.undev.length>=2&&!h0.some(h=>h.s===m.f))neg.push(`opening me ek hi mohra dobara chala, jabki ${F0.undev.length} mohre abhi ghar par baithe hain`);
     if(U==='N'&&((m.t&7)===0||(m.t&7)===7))neg.push('ghoda kinare par gaya; wahan se kam squares milte hain ("knight on the rim is dim")');
     const f=m.t&7,r=m.t>>3,pr=w?1:6,ahead=w?2:5;if('NB'.includes(U)&&f>=2&&f<=4&&r===ahead&&st.b[pr*8+f]===(w?'P':'p'))neg.push(`${XFL[f]}-pyade ke theek aage khada hai; ab ${XFL[f]}${w?'3/'+XFL[f]+'4':'6/'+XFL[f]+'5'} wali pyada chaal nahi chal sakti${f===3?' aur doosra oont bhi band rehta hai':''}`);
-    if(U==='P'&&(f===0||f===7||(f===6&&!F0.castled))&&F0.undev.length>=2)neg.push('kinare ka pyada chala; opening me center aur mohre nikalna zyada zaroori hai')}
+    if(U==='P'&&(f===0||f===7||(f===6&&!F0.castled))&&F0.undev.length>=2)neg.push(`kinare ka pyada chala, jabki ${xList(F0.undev.map(q=>xs(st.b[q])+' '+sn(q)))} abhi ghar par baithe hain aur raja ne castle nahi kiya; ye ek chaal (tempo) mohre nikalne me lagni chahiye thi`)}
   if(U==='P'&&F0.castled&&!cap){const k=kingSq(st.b,w);if(Math.abs((k&7)-(m.f&7))<=1&&!neg.some(x=>x.includes('raja')))neg.push('raja ke paas ka pyada aage gaya, raja ke aas-paas kamzor squares bante hain')}
   return{pos,neg}}
 /* line (uci list) ki chaal number ke saath SAN */
@@ -178,3 +182,38 @@ function xWhyPositional(P,m,bm,ref,bpv){const me=P.w,A=make(P,m),B=make(P,bm);co
 const XOPEN=[['Sicilian','Black c5 se d4 square par side se ladta hai; queenside par khel aur ulta castle hamle aam hain.'],['French','Black e6+d5 se center ko chunauti deta hai; c8 wala oont aksar band rehta hai.'],['Caro-Kann','Black c6+d5: majboot dhaancha, c8 oont ko pehle bahar laata hai.'],['Ruy Lopez','Bb5 se e5 ko bachane wale c6 ghode par dabav; lambi strategic ladai.'],['Italian','Bc4 seedha f7 ko nishana banata hai; c3+d4 se center banana plan hai.'],['Giuoco','Bc4 seedha f7 ko nishana banata hai; c3+d4 se center banana plan hai.'],['Two Knights','f7 par jaldi hamle ki ladai; ...d5 se Black jawab deta hai.'],['Scotch','Jaldi d4 se center khol do; mohre tezi se active hote hain.'],['Petrov','Black seedha e4 par jawab deta hai; barabar aur thos opening.'],['Philidor','Black d6 se e5 ko bachata hai; thoda tight par majboot.'],['Ponziani','c3 phir d4: center me do pyade banane ka plan.'],['Scandinavian','Black turant d5 se e4 ko chunauti deta hai; vazir jaldi bahar aata hai.'],['Pirc','Black pehle mohre lagata hai, center par baad me hamla karta hai.'],["Queen's Gambit",'c4 se d5 pyade ko hata kar center par kabza.'],['Slav','Black c6 se d5 ko bachata hai aur oont bahar nikal sakta hai.'],["King's Indian",'Black g6+Bg7 se khulta hai, baad me e5 ya c5 se center par hamla.'],['Nimzo','Bb4 se c3 ghode ko pin karke e4 rokna.'],['London','d4+Bf4: aasaan setup, e3/c3 ke saath majboot dhaancha.'],['English','c4 se side se center (d5) par dabav.'],['Vienna','Nc3 phir f4 ka idea: f-file par khel.'],["King's Gambit",'f4 pyada de kar f-file aur center lena; tez hamla.'],['Four Knights','Dono taraf ghode nikle; thos, barabar opening.'],['Queen\'s Pawn','d4 se center; c4 ya Nf3/Bf4 setup.'],["King's Pawn",'e4 se center; mohre jaldi nikalo, castle karo.']];
 const xOpening=n=>{if(!n)return'';const k=XOPEN.find(([a])=>n.includes(a));return k?k[1]:''};
 const xb=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+
+/* "Seedhi baat": 3-4 saaf vaakya. Maksad -> kya chhoota (behtar chaal) -> opponent ko kya milta -> seekh */
+function xSummary(P,m,best,ref,lossIn,lines){const w=P.w,A=make(P,m),san=sanOf(P,m),I=xIdeas(P,m),o=[];
+  const bm=best&&best.pv&&best.pv[0]?fromUci(P,best.pv[0]):null,isBest=!!bm&&uciOf(bm)===uciOf(m);
+  let loss=lossIn;
+  /* chaal top lines me ho to usi search ka number lo (do alag searches ka fark opening me galat 'nuksaan' dikhata hai) */
+  const own=(lines||[]).find(l=>l.pv[0]===uciOf(m));
+  if(loss==null&&own&&best&&best.mate==null&&own.mate==null)loss=Math.max(0,((best.cp||0)-(own.cp||0))/100);
+  if(loss==null&&best&&ref&&best.mate==null&&ref.mate==null&&best.cp!=null&&ref.cp!=null)loss=Math.max(0,((best.cp||0)+(ref.cp||0))/100);
+  if(loss!=null&&P.fm<=6&&loss<0.6&&!own)loss=Math.min(loss,0.25);
+  o.push(I.pos.length?`**${san}** ka maksad: ${I.pos.slice(0,2).join(' aur ')}.`:`**${san}** ek shaant chaal thi: na koi hamla, na koi naya mohra khel me aaya.`);
+  if(!isBest&&bm&&(loss==null||loss>=0.3)){const J=xIdeas(P,bm),PL=xPlan(P,best.pv);
+    o.push(`${I.neg.length?'Kami: '+I.neg[0]+'. ':''}${loss!=null?`Isse lagbhag **${xPawns(loss)}** jitna fayda chhoot gaya. `:''}Behtar tha **${sanOf(P,bm)}**${J.pos.length?', jo '+J.pos.slice(0,2).join(' aur '):''}${PL.next?`; uske baad plan ${PL.next}${PL.nextDoes.length?' – '+PL.nextDoes[0]:''}`:''}.`)}
+  else if(isBest)o.push('Engine ki pehli pasand bhi yahi chaal thi.');
+  else if(I.neg.length)o.push(`Dhyan: ${I.neg[0]}.`);
+  const r1=ref&&ref.pv&&ref.pv[0]?fromUci(A,ref.pv[0]):null;
+  if(r1){const R=xIdeas(A,r1);let t=`Ab ${w?'Black':'White'} ka sabse achha jawab **${xNum(A,sanOf(A,r1))}** hai${R.pos.length?': '+R.pos.slice(0,2).join(' aur '):''}`;
+    const fA=xFeat(A,w),fO=xFeat(A,!w),opens=r1.p.toUpperCase()==='P'&&(r1.t&7)>=2&&(r1.t&7)<=5&&(!!A.b[r1.t]||xSqs(make(A,r1),r1.t).some(t=>A.b[t]===(w?'P':'p')));
+    if(opens&&!fA.castled&&fA.undev.length>=2&&fO.undev.length<fA.undev.length&&P.fm>=3)t+=`. ${w?'White':'Black'} ka raja abhi beech me hai aur mohre ghar par, isliye center khulna ${w?'White':'Black'} ke liye khatarnak hai`;
+    const B2=make(A,r1),r2=ref.pv[1]?fromUci(B2,ref.pv[1]):null,S3=r2?make(B2,r2):null,r3=S3&&ref.pv[2]?fromUci(S3,ref.pv[2]):null;
+    if(r3){const R3=xIdeas(S3,r3);if(R3.pos.length)t+=`. Phir ${xNum(S3,sanOf(S3,r3))} se ${R3.pos[0]}`}
+    o.push(t+'.')}
+  const tip=!isBest&&(loss==null||loss>=0.3)?xTip(I.neg):'';if(tip)o.push('**Seekh:** '+tip);
+  return{lines:o,loss}}
+function xTip(neg){const n=neg.join(' ');
+  if(/kinare ka pyada/.test(n))return'Opening me pehle ghode-oont nikalo aur castle karo. h/a-pyada tabhi chalo jab koi mohra sach me g5/b5 (ya g4/b4) par aakar pareshan kar raha ho.';
+  if(/vazir bahut jaldi/.test(n))return'Vazir ko pehli 6-7 chaal tak andar rakho; pehle chhote mohre nikalo, warna har naya mohra vazir par hamla karke tempo lega.';
+  if(/dobara chala/.test(n))return'Opening me har chaal se naya mohra nikalo. Ek mohra do baar tabhi chalo jab seedha fayda ho (capture ya dhamki).';
+  if(/kinare par gaya/.test(n))return'Ghoda center ke paas (c3/f3/c6/f6) sabse taakatwar hota hai; kinare par uski chaalein aadhi reh jaati hain.';
+  if(/theek aage khada/.test(n))return'c/d/e pyadon ke theek aage mohra mat rakho jab un pyadon ko aage badhana ho: pehle pyada, phir mohra.';
+  if(/castle nahi ho sakta|castle ka haq/.test(n))return'Raja ko jaldi castle karke surakshit karo; bina wajah raja ya haathi mat hilao.';
+  if(/raja ke saamne|raja ke paas ka pyada/.test(n))return'Castle ke baad raja ke saamne ke pyade (f, g, h) bina wajah mat hilao; har aisi chaal raja ke paas kamzor square banati hai.';
+  if(/asurakshit|bachav hat/.test(n))return'Har chaal se pehle dekho: kaunsa mohra bina bachav reh jayega, aur opponent kya le sakta hai.';
+  if(/doubled|isolated/.test(n))return'Pyadon ka dhaancha ek baar bigde to wapas nahi sudharta; capture karte waqt center ki taraf lo.';
+  return''}
