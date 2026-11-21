@@ -259,15 +259,17 @@ body.emb header.top,body.emb nav.tabs{display:none!important}
 body.emb main{padding-block:6px 40px}
 body.emb::before{display:none}
 </style>
+<link rel="stylesheet" href="ui.css?v=165">
 </head>
 <body>
-<header class="top"><div class="wrap"><a class="brand" href="#/" style="color:inherit;text-decoration:none"><i style="font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.04em">64</i> 64 Squares · Course</a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span><button class="chip" id="tutorbtn" style="border:0" aria-label="AI coach">🤖</button></div></div></header>
+<header class="top"><div class="wrap"><a class="brand" href="#/"><i class="b64">64</i><span class="bname">Chess Course<small>64 Squares</small></span></a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span><button class="chip" id="tutorbtn" style="border:0" aria-label="AI coach">🤖</button></div></div></header>
 <main><div class="wrap" id="app"></div></main>
 <nav class="tabs"><div class="wrap">
-<button data-tab="course" data-go="#/"><span>📚</span>Course</button>
-<button data-tab="puz" data-go="#/puzzles"><span>🧩</span>Puzzles</button>
-<button data-tab="play" data-go="#/play"><span>♟</span>Khelo</button>
-<button onclick="location.href='index.html'"><span>👁</span>Trainer</button>
+<button data-tab="course" data-go="#/"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 12 4l9.5 4.5L12 13z"/><path d="M6.5 10.5V16c0 1.4 2.5 3 5.5 3s5.5-1.6 5.5-3v-5.5"/><path d="M21.5 8.5v5"/></svg></span>Course</button>
+<button data-tab="puz" data-go="#/puzzles"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4.5a2 2 0 1 1 4 0V6h3.5a1 1 0 0 1 1 1v3.5H16a2 2 0 1 0 0 4h1.5V18a1 1 0 0 1-1 1h-3.5v-1.5a2 2 0 1 0-4 0V19H5.5a1 1 0 0 1-1-1v-3.5H6a2 2 0 1 0 0-4H4.5V7a1 1 0 0 1 1-1H9z"/></svg></span>Puzzles</button>
+<button data-tab="play" data-go="#/play"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20h9"/><path d="M9 20c0-3 1.5-5 3-6.5-2.2.4-4 .1-5-1l3.5-6.5c3.5-.5 7 2 7 7.5V20"/><circle cx="12.6" cy="8.6" r=".7" fill="currentColor"/></svg></span>Khelo</button>
+<button onclick="location.href='road.html'"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 3.5L16 11H5"/></svg></span>Road</button>
+<button onclick="location.href='index.html'"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 4l8.5 6.5V20a1 1 0 0 1-1 1h-5v-6h-5v6h-5a1 1 0 0 1-1-1z"/></svg></span>Home</button>
 </div></nav>
 <script>
 'use strict';
@@ -830,5 +832,6 @@ $('#tutorbtn').onclick=openTutor;
 touchDay();save();route();
 
 </script>
+<script src="ui.js?v=165"></script>
 </body>
 </html>

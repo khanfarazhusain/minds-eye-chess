@@ -1,0 +1,183 @@
+/* =====================================================================
+   64 Squares design system v2 (ui.css)
+   One look for every page: index, course, road, lichess, coach, notes.
+   Loaded LAST on each page so it can unify the older page styles.
+   Tokens -> base -> header -> bottom bar -> cards -> buttons -> forms
+   -> lists -> motion -> page fixes.
+   ===================================================================== */
+
+/* ---------- 1. tokens ---------- */
+:root{
+  --bg:#F7F7F2; --surface:#FFFFFF; --surface2:#EFF2EC; --surface3:#E6EBE4;
+  --fg:#131B16; --muted:#5F6B64; --line:#E2E6DF;
+  --accent:#2A7A51; --accent-fg:#FFFFFF; --accent-soft:#DDF1E5;
+  --brass:#B4841C; --good:#25804F; --bad:#C0432B; --good-soft:#DDF1E5; --bad-soft:#F8E1DA;
+  --f-display:"Bricolage Grotesque","Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --r:20px; --r-sm:12px; --r-md:16px; --r-lg:24px;
+  --sh:0 1px 2px rgba(19,27,22,.05),0 6px 20px rgba(26,48,37,.07);
+  --sh2:0 1px 2px rgba(19,27,22,.06),0 14px 34px rgba(26,48,37,.13);
+  --ring:0 0 0 3px color-mix(in srgb,var(--accent) 28%,transparent);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --hdrbg:rgba(247,247,242,.84); --navbg:rgba(18,32,25,.94);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B110E; --surface:#131B17; --surface2:#1B251F; --surface3:#223029;
+  --fg:#ECF1ED; --muted:#95A29A; --line:#24302A;
+  --accent:#5CC08C; --accent-fg:#06180F; --accent-soft:#173826;
+  --brass:#E2B552; --good:#55C688; --bad:#EF7B64; --good-soft:#173826; --bad-soft:#41201A;
+  --sh:0 0 0 1px #1F2A24,0 8px 24px rgba(0,0,0,.28); --sh2:0 0 0 1px #2A3630,0 16px 36px rgba(0,0,0,.45);
+  --hdrbg:rgba(11,17,14,.84); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B110E; --surface:#131B17; --surface2:#1B251F; --surface3:#223029;
+  --fg:#ECF1ED; --muted:#95A29A; --line:#24302A;
+  --accent:#5CC08C; --accent-fg:#06180F; --accent-soft:#173826;
+  --brass:#E2B552; --good:#55C688; --bad:#EF7B64; --good-soft:#173826; --bad-soft:#41201A;
+  --sh:0 0 0 1px #1F2A24,0 8px 24px rgba(0,0,0,.28); --sh2:0 0 0 1px #2A3630,0 16px 36px rgba(0,0,0,.45);
+  --hdrbg:rgba(11,17,14,.84); color-scheme:dark}
+
+/* ---------- 2. base ---------- */
+html,body{background:var(--bg)}
+body{font-family:var(--f-body);color:var(--fg);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:var(--f-display);font-weight:800;letter-spacing:-.025em;text-wrap:balance}
+p,li{text-wrap:pretty}
+.eyebrow{font-family:var(--f-body);font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.muted{color:var(--muted)}
+b,strong{font-weight:700}
+::selection{background:color-mix(in srgb,var(--accent) 30%,transparent)}
+:where(button,a,[tabindex],summary,input,select,textarea):focus-visible{outline:none!important;box-shadow:var(--ring)!important;border-radius:var(--r-sm)}
+.tile b,.h2stats b,.chip,.prrate b,.count,.lnum{font-variant-numeric:tabular-nums}
+
+/* ---------- 3. top header (same on every page) ---------- */
+header.top{background:var(--hdrbg)!important;-webkit-backdrop-filter:saturate(1.5) blur(16px);backdrop-filter:saturate(1.5) blur(16px);border-bottom:0!important;box-shadow:0 1px 0 var(--line)}
+body::before{background:var(--hdrbg)}
+header.top .wrap{min-height:54px}
+.brand{font-family:var(--f-display)!important;font-weight:800!important;font-size:19px!important;letter-spacing:-.02em!important;display:flex;align-items:center;gap:10px;color:var(--fg)!important;text-decoration:none!important;min-width:0}
+.brand i,.brand .b64{display:inline-grid!important;place-items:center;flex:none;width:32px!important;height:32px!important;border-radius:10px!important;background:linear-gradient(145deg,#3A9466,#226A45)!important;color:#fff!important;font-family:var(--f-display)!important;font-style:normal!important;font-weight:800!important;font-size:15px!important;letter-spacing:-.04em!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 3px 8px rgba(34,106,69,.28)}
+.brand .bname{display:flex;flex-direction:column;line-height:1.04;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand .bname small{font-family:var(--f-body);font-weight:600;font-size:11px;letter-spacing:.02em;color:var(--muted);margin-top:1px}
+header.top .chips{font-family:var(--f-body)!important;font-weight:700;font-size:13px;color:var(--fg);gap:6px;margin-left:auto}
+header.top .chip{font-size:13px!important;font-family:var(--f-body)!important;background:var(--surface)!important;box-shadow:inset 0 0 0 1px var(--line);border:0!important;border-radius:999px;padding:5px 11px;line-height:1.2;font-weight:700}
+header.top .chip:empty{display:none}
+
+/* ---------- 4. bottom bar (identical on every page) ---------- */
+nav.tabs{position:fixed;z-index:20;left:0!important;right:0!important;bottom:0!important;max-width:none!important;margin:0!important;border:0!important;border-radius:20px 20px 0 0!important;background:var(--navbg)!important;-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);box-shadow:0 -1px 0 rgba(255,255,255,.04),0 -8px 24px rgba(10,25,18,.16)!important;padding-bottom:max(4px,calc(env(safe-area-inset-bottom,0px) - 12px))!important;padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+nav.tabs .wrap{display:grid;grid-template-columns:repeat(5,1fr)!important;gap:2px;padding:5px 6px 2px!important;max-width:560px;margin:0 auto}
+nav.tabs button,nav.tabs a{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px!important;line-height:1;padding:5px 0 4px!important;border:0;border-radius:18px;color:#8FA398!important;font-family:var(--f-body)!important;font-size:11px!important;font-weight:600;letter-spacing:.01em;text-transform:none!important;white-space:nowrap;background:none!important;text-decoration:none;transition:color .2s var(--ease);-webkit-tap-highlight-color:transparent}
+nav.tabs button::before,nav.tabs a::before{content:"";position:absolute;inset:1px 8px;border-radius:16px;background:rgba(123,224,166,.16);opacity:0;transform:scale(.85);transition:opacity .22s var(--ease),transform .22s var(--ease)}
+nav.tabs button.on,nav.tabs a.on{color:#7BE0A6!important;font-weight:800}
+nav.tabs button.on::before,nav.tabs a.on::before{opacity:1;transform:scale(1)}
+nav.tabs button:active::before,nav.tabs a:active::before{opacity:.7;transform:scale(.94)}
+nav.tabs .ti,nav.tabs button>span,nav.tabs a>span{position:relative;display:grid!important;place-items:center;width:22px!important;height:22px!important;line-height:0;background:none!important;font-size:0!important;border-radius:0!important}
+nav.tabs svg{display:block;width:21px;height:21px;transition:transform .22s var(--ease)}
+nav.tabs .on svg{transform:translateY(-1px)}
+nav.tabs em{font-style:normal}
+@media (max-width:360px){nav.tabs button,nav.tabs a{font-size:10px!important}nav.tabs svg{width:20px;height:20px}}
+
+/* ---------- 5. cards ---------- */
+.card{background:var(--surface);border:0!important;border-radius:var(--r);box-shadow:var(--sh)}
+:is(a.card,button.card,.coursecta,.rungcard,.qt,.pct,.pkcard,.stagerow,button.lesson,.lgrp>summary,.rowcard){transition:transform .16s var(--ease),box-shadow .2s var(--ease),filter .2s}
+:is(a.card,button.card,.coursecta,.rungcard,.qt,.pct,.pkcard,.stagerow,button.lesson:not(.locked),.rowcard):active{transform:scale(.985)}
+@media (hover:hover){:is(a.card,button.card,.coursecta,.rungcard,.rowcard):hover{box-shadow:var(--sh2)}}
+
+/* link cards (Road to 3000, notes, course, Lichess, review): title + text + arrow */
+.coursecta{position:relative;display:grid!important;gap:3px;padding:16px 46px 16px 18px!important;text-decoration:none!important;color:var(--fg)!important}
+.coursecta b{font-family:var(--f-display);font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.coursecta small{font-size:14px;line-height:1.45}
+.coursecta::after{content:"";position:absolute;right:16px;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;background:var(--surface2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235F6B64' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9.5 6 6 6-6 6'/%3E%3C/svg%3E") center/15px no-repeat}
+
+/* row card: icon tile, text, arrow */
+.rowcard{display:grid!important;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;width:100%;padding:14px 14px 14px 14px!important;text-align:left;text-decoration:none!important;color:var(--fg)!important;font:inherit;cursor:pointer;border:0;background:var(--surface);border-radius:var(--r);box-shadow:var(--sh)}
+.rowcard .rc-ic{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;font-size:25px;line-height:1;background:var(--rc,var(--accent-soft))}
+.rowcard .rc-t{min-width:0;display:grid;gap:2px}
+.rowcard .rc-t b{font-family:var(--f-display);font-size:17px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.rowcard .rc-t small{color:var(--muted);font-size:13.5px;line-height:1.4}
+.rowcard .rc-go{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--surface2);color:var(--muted);font-size:0}
+.rowcard .rc-go::before{content:"";width:15px;height:15px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9.5 6 6 6-6 6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9.5 6 6 6-6 6'/%3E%3C/svg%3E") center/contain no-repeat}
+.rc-mint{--rc:#DCEFE3}.rc-sand{--rc:#F6E7C8}.rc-lilac{--rc:#E3E4F6}.rc-rose{--rc:#F5DCD6}.rc-sky{--rc:#D9ECF6}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) :is(.rc-mint,.rc-sand,.rc-lilac,.rc-rose,.rc-sky){--rc:var(--surface2)}}
+:root[data-theme="dark"] :is(.rc-mint,.rc-sand,.rc-lilac,.rc-rose,.rc-sky){--rc:var(--surface2)}
+
+/* ---------- 6. buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:46px;border:0;border-radius:14px;font-family:var(--f-body);font-weight:700;letter-spacing:-.005em;line-height:1.2;transition:transform .12s var(--ease),filter .2s,box-shadow .2s,background .2s}
+.btn:active:not(:disabled){transform:scale(.97)}
+.btn.small{min-height:36px;border-radius:12px}
+.btn.block{display:flex;width:100%}
+.btn.primary,.btn.pri{background:var(--accent);color:var(--accent-fg);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 6px 16px color-mix(in srgb,var(--accent) 28%,transparent)}
+@media (hover:hover){.btn:hover:not(:disabled){filter:brightness(1.04)}}
+.backbtn{min-height:36px}
+
+/* ---------- 7. forms ---------- */
+:where(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]),select,textarea){font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:11px 13px;transition:border-color .2s,box-shadow .2s}
+:where(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea):focus{outline:none;border-color:var(--accent);box-shadow:var(--ring)}
+textarea{line-height:1.45}
+input[type=range]{accent-color:var(--accent)}
+input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
+
+/* ---------- 8. motion: a light fade-up when a new screen opens ---------- */
+@keyframes uiIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.ui-enter>*>*:nth-child(-n+8){animation:uiIn .32s var(--ease) both}
+.ui-enter>*>*:nth-child(2){animation-delay:.03s}.ui-enter>*>*:nth-child(3){animation-delay:.06s}.ui-enter>*>*:nth-child(4){animation-delay:.09s}
+.ui-enter>*>*:nth-child(5){animation-delay:.12s}.ui-enter>*>*:nth-child(6){animation-delay:.15s}.ui-enter>*>*:nth-child(n+7){animation-delay:.18s}
+@media (prefers-reduced-motion:reduce){.ui-enter>*>*{animation:none!important}}
+body.lowfx .ui-enter>*>*{animation:none!important}
+
+/* ---------- 9. page fixes ---------- */
+/* empty states / loading text in a card read as calm notes */
+.card>p.muted:only-child{font-size:15px}
+/* horizontal chip rows scroll with a soft edge instead of being cut */
+.sjump{scrollbar-width:none;-webkit-mask:linear-gradient(90deg,#000 88%,transparent);mask:linear-gradient(90deg,#000 88%,transparent)}
+.sjump::-webkit-scrollbar{display:none}
+/* back buttons: one small pill, top-left, on every page */
+.backbtn,.back{align-self:flex-start!important;width:auto!important;display:inline-flex!important;align-items:center;gap:4px;min-height:36px;padding:7px 14px 7px 11px!important;border:0!important;border-radius:999px!important;background:var(--surface)!important;box-shadow:var(--sh);color:var(--fg)!important;font-weight:700!important;font-size:14.5px;white-space:nowrap;text-decoration:none}
+/* small print at the bottom of road / lichess */
+main>p.small.muted:last-child{font-size:12px;margin-top:22px!important}
+
+/* ---------- 10. Engine Coach page (coach.html) ---------- */
+body.pg-coach{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))!important}
+.pg-coach header.top{position:sticky;top:0;z-index:15;display:block;padding-top:env(safe-area-inset-top,0px)}
+.pg-coach header.top .wrap{display:flex;align-items:center;gap:12px;padding:8px max(16px,env(safe-area-inset-left,0px))}
+.pg-coach header.top a{padding:0}
+.pg-coach>.wrap{padding-top:14px}
+.pg-coach .cohead{font-size:30px;line-height:1.06;margin:14px 0 4px}
+.pg-coach .cosub{margin:0 0 4px;font-size:15px}
+.pg-coach .ctabs{background:var(--surface2);border-radius:16px;padding:4px;gap:4px;margin:14px 0}
+.pg-coach .ctabs button{border-radius:12px;font-weight:700;font-size:13.5px;line-height:1.15;padding:10px 4px;transition:background .2s,color .2s,box-shadow .2s}
+.pg-coach .ctabs button.on{background:var(--surface);color:var(--fg);box-shadow:var(--sh)}
+.pg-coach .card{border-radius:18px;padding:14px 16px;margin:12px 0}
+.pg-coach .card.bad{background:var(--bad-soft)}
+.pg-coach details.card>summary{list-style:none;cursor:pointer;font-family:var(--f-display);font-size:16px;letter-spacing:-.01em}
+.pg-coach details.card>summary::-webkit-details-marker{display:none}
+.pg-coach details.card>summary::after{content:"▾";float:right;color:var(--muted);transition:transform .2s}
+.pg-coach details.card[open]>summary::after{transform:rotate(180deg)}
+.pg-coach .btn{background:var(--surface2);border:0;padding:11px 14px}
+.pg-coach .btn.small{padding:8px 12px}
+.pg-coach .opt{border:0;border-radius:14px;padding:13px 14px;margin:8px 0;box-shadow:var(--sh);transition:transform .12s var(--ease)}
+.pg-coach .opt:active{transform:scale(.985)}
+.pg-coach .opt.ok{box-shadow:inset 0 0 0 2px var(--good)}.pg-coach .opt.no{box-shadow:inset 0 0 0 2px var(--bad)}
+.pg-coach .opt.sel{box-shadow:inset 0 0 0 2px var(--accent)}
+.pg-coach .board{border-radius:14px;box-shadow:0 0 0 1px rgba(0,0,0,.05),0 10px 28px rgba(20,40,30,.16)}
+.pg-coach h2{font-size:19px;margin:2px 0 8px}
+.pg-coach h3{font-size:16px}
+.pg-coach .rulecard{border-radius:12px;padding:10px 12px}
+.pg-coach .stat div{border-radius:14px;padding:12px}
+.pg-coach .stat b{font-family:var(--f-display);font-size:24px}
+.pg-coach .steps span{height:7px;border-radius:4px}
+.pg-coach .tez-card,.pg-coach .xcand{border-radius:14px}
+.pg-coach .chip{border-radius:999px}
+
+/* ---------- 11. Course notes page (notes.html) ---------- */
+.pg-notes main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+.pg-notes header.top .wrap{min-height:54px}
+.pg-notes .hl-links a{background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);font-weight:700;padding:6px 12px}
+.pg-notes .hero h1{font-size:36px;line-height:1.04}
+.pg-notes .lesson{border:0;border-radius:var(--r);box-shadow:var(--sh);padding:18px}
+.pg-notes .yaad{border-radius:14px}
+.pg-notes details:not(.tocl){border-radius:12px}
+.pg-notes .btn{min-height:40px;border-radius:12px;background:var(--surface);box-shadow:var(--sh)}
+.pg-notes .totop{bottom:calc(82px + env(safe-area-inset-bottom,0px));box-shadow:0 8px 20px rgba(20,60,40,.3)}
+.pg-notes h4{font-family:var(--f-display);letter-spacing:-.01em}
+@media print{nav.tabs{display:none!important}}
+/* long move lists / FEN strings used to push the page wider than the phone */
+.pg-notes .n{white-space:normal;overflow-wrap:anywhere}
