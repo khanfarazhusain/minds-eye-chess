@@ -64,7 +64,7 @@ ul.xwhy{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 .arrows .alt{fill:#fff;font:700 .3px/1 system-ui,sans-serif;text-anchor:middle;dominant-baseline:central}
 .sanv{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}li.sanv{text-decoration:none;border-radius:6px}.sanv.on{background:color-mix(in srgb,var(--accent) 18%,transparent);border-radius:6px}
 .xgo{font:inherit;font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:1px 8px;margin-left:4px;cursor:pointer;white-space:nowrap}.xgo.on{background:var(--accent);color:#fff;border-color:var(--accent)}
-.xsum .xsh{margin-bottom:2px}.xsum{background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:14.5px;line-height:1.5}.xsum p{margin:6px 0 0}
+.xsum .xsh{margin-bottom:2px}.xplh{margin:10px 0 4px}.xplan{margin-top:4px}.xsum{background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:14.5px;line-height:1.5}.xsum p{margin:6px 0 0}
 .xsec{border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:4px}
 .xsh{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.xsh b{font-size:14px}
 .xbtns{display:flex;gap:6px}.xbtns .btn.on{background:var(--accent);color:var(--accent-fg)}
