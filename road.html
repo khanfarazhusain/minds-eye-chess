@@ -283,7 +283,7 @@ ul.xwhy{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 .arrows .alt{fill:#fff;font:700 .3px/1 system-ui,sans-serif;text-anchor:middle;dominant-baseline:central}
 .sanv{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}li.sanv{text-decoration:none;border-radius:6px}.sanv.on{background:color-mix(in srgb,var(--accent) 18%,transparent);border-radius:6px}
 .xgo{font:inherit;font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:1px 8px;margin-left:4px;cursor:pointer;white-space:nowrap}.xgo.on{background:var(--accent);color:#fff;border-color:var(--accent)}
-.pnav{display:grid;grid-template-columns:1fr 2fr;gap:10px}.pnav .btn{width:100%;margin:0;justify-content:center}
+.pnav{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pnav .btn{min-height:48px}.pnav .btn:disabled{opacity:.45}.pnav .btn{width:100%;margin:0;justify-content:center}
 .xsum .xsh{margin-bottom:2px}.xplh{margin:10px 0 4px}.xg2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.xg1{display:grid;grid-template-columns:1fr;gap:8px}
 .xg2>.btn,.xg1>.btn{width:100%;margin:0;justify-content:flex-start;text-align:left;min-height:44px;white-space:normal;line-height:1.25}.xg2>.btn.primary{justify-content:center;text-align:center}
 .xsum .btn{background:var(--surface);border:1px solid var(--line)}.xsum .xg2{grid-template-columns:1fr;margin-top:0}.xsum .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
@@ -560,7 +560,7 @@ body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/"><i class="b64">64</i><span class="bname">Road to 3000<small>64 Squares</small></span></a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span></div></div></header>
-<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 12:24 UTC</p></main>
+<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 12:31 UTC</p></main>
 <nav class="tabs"><div class="wrap">
 <button data-go="#/" class="on"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="m9 14.5 2 2 4-4"/></svg></span>Today</button>
 <button data-go="#/run/extra"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>Practice</button>
@@ -1059,9 +1059,9 @@ function arrowsSVG(arr,p){if(!arr||!arr.length)return'';let s='<svg class="arrow
 function player(app,steps,opt){// generic step-by-step player for lessons, tests, reviews
   let i=0;const res=[];const top=h('div','qhead');top.innerHTML=`<button class="x" aria-label="Back">‹</button><div class="prog"><i></i></div><span class="count"></span><button class="btn small tbtn">🤖 Coach</button>`;top.querySelector('.tbtn').onclick=openTutor;app.appendChild(top);
   top.querySelector('.x').onclick=()=>go(opt.back);
-  const stage=h('div');app.appendChild(stage);const foot=h('div','foot');const pb=h('button','btn','‹ Pichla');const nb=h('button','btn primary','Aage ›');const fr=h('div','pnav');fr.appendChild(pb);fr.appendChild(nb);foot.appendChild(fr);pb.onclick=()=>{if(i>0){i--;show()}};app.appendChild(foot);
+  const stage=h('div');app.appendChild(stage);const foot=h('div','foot');const pb=h('button','btn','‹ Previous');const nb=h('button','btn primary','Next ›');const fr=h('div','pnav');fr.appendChild(pb);fr.appendChild(nb);foot.appendChild(fr);pb.onclick=()=>{if(i>0){i--;show()}};app.appendChild(foot);
   function show(){const s=steps[i];top.querySelector('.prog i').style.width=(i/steps.length*100)+'%';top.querySelector('.count').textContent=(i+1)+'/'+steps.length;
-    stage.innerHTML='';nb.disabled=true;pb.disabled=i===0;pb.style.visibility=i===0?'hidden':'';nb.textContent=i===steps.length-1?'Poora karo ✓':'Aage ›';
+    stage.innerHTML='';nb.disabled=true;pb.disabled=i===0;nb.textContent=i===steps.length-1?'Finish ✓':'Next ›';
     if(opt.head)stage.appendChild(h('p','eyebrow',esc(opt.head(s))));
     stage.appendChild(renderStep(s,{test:opt.test,lessonTitle:opt.title(s),where:opt.where,done:ok=>{res[i]=ok;nb.disabled=false;if(ok!=null)setTimeout(()=>{const f=stage.querySelector('.fb');(f||foot).scrollIntoView({behavior:'smooth',block:'nearest'})},80)}}));
     if(s.t==='info'||res[i]!==undefined)nb.disabled=false;window.scrollTo(0,0)}
