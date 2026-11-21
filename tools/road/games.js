@@ -102,7 +102,8 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
   if(!X)return`<div class="card ${nx.cls==='inacc'?'':'alert'}">${head}<div class="small">Behtar tha: <b>${esc(nx.best)}</b> (${nx.ev}). Line: ${esc(nx.line)}<br>Jeet ka chance ${nx.before}% → ${nx.after}%</div><p class="small muted">Is game ka review purane version se hai. "Review Again" dabao to har galti ki wajah bhi milegi.</p></div>`;
   const th=XTHEME[X.theme],PL=X.plan,op=nx.ply<24?xOpening(g.open):'';
   return`<div class="card stack ${nx.cls==='inacc'?'':'alert'}">${head}
-   <div class="small"><b>Kyun galat:</b></div><ul class="xwhy small">${X.why.map(t=>`<li>${xb(t)}</li>`).join('')}</ul>
+   ${(()=>{try{const P0=pos[nx.ply],pm=findMove(P0,nx.san);if(!pm)return'';const SM=xSummary(P0,pm,{pv:X.bpv||[]},{pv:X.ref||[]},X.loss);return`<div class="xsum"><b>Seedhi baat</b>${SM.lines.map(l=>`<p>${xb(l)}</p>`).join('')}</div>`}catch(e){return''}})()}
+   <div class="small"><b>Detail – kyun galat:</b></div><ul class="xwhy small">${X.why.map(t=>`<li>${xb(t)}</li>`).join('')}</ul>
    <div class="small"><b>Behtar chaal: ${esc(X.bestSan)}</b> (${nx.ev})${PL&&PL.does.length?`<ul class="xwhy">${PL.does.slice(0,3).map(t=>`<li>Ye chaal ${esc(t)}.</li>`).join('')}${PL.next?`<li>Agla plan: <b>${esc(PL.next)}</b>${PL.nextDoes.length?' – '+esc(PL.nextDoes.join(' aur ')):''}.</li>`:''}</ul>`:X.bestWhy?' – ye chaal '+esc(X.bestWhy)+'<br>':'<br>'}<span class="muted">Best line: ${esc(X.bestLine)}</span></div>
    ${X.refWhy?`<div class="small"><b>Opponent ki behtar line:</b> ${esc(X.refLine)}<br>${X.why.some(t=>t.startsWith('Opponent ka jawab'))?'':`<span class="muted">Opponent ka iraada: ${esc(X.refWhy)}.</span>`}</div>`:''}
    ${op?`<div class="small"><b>Opening:</b> ${esc(g.open)} – ${esc(op)}</div>`:''}
@@ -131,9 +132,9 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
     let head='';
     if(m){const san=xNum(P,sanOf(P,m)),I=xIdeas(P,m),isBest=best&&best.pv[0]===uciOf(m);
       const wb=best?wpLine(best):50,wa=D.E1&&D.E1.lines[0]?100-wpLine(D.E1.lines[0]):(inCheck(A)&&!legal(A).length?100:50),drop=isBest?0:Math.max(0,wb-wa);
-      const mk=misBy[i-1],VD={inacc:['🟨','Inaccuracy (?!)'],mist:['🟧','Mistake (?)'],blund:['🟥','Blunder (??)']};
-      const vd=mk?VD[mk.cls]:isBest?['✅','Best chaal']:drop<3?['✅','Best jaisi chaal']:drop<10?['👍','Achhi chaal']:drop<20?['🟨','Inaccuracy (?!)']:drop<30?['🟧','Mistake (?)']:['🟥','Blunder (??)'];
-      head=`<h3 style="margin:0">${vd[0]} ${esc(san)} · ${vd[1]}</h3><p class="small muted" style="margin:0">${esc(sideName(mover))} ki chaal. Pehle: ${esc(evWords(evW(P,best)))}. Ab: ${esc(D.E1&&D.E1.lines[0]?evWords(evW(A,D.E1.lines[0])):(legal(A).length?'':'game khatam'))}.</p>`;
+      const SM=xSummary(P,m,best,D.E1&&D.E1.lines[0],null,L),lp=SM.loss||0,dd=Math.max(drop,lp>=1.5?20:lp>=0.6?10:0);const mk=misBy[i-1],VD={inacc:['🟨','Inaccuracy (?!)'],mist:['🟧','Mistake (?)'],blund:['🟥','Blunder (??)']};
+      const vd=mk?VD[mk.cls]:isBest?['✅','Best chaal']:dd<3?['✅','Best jaisi chaal']:dd<10?['👍','Achhi chaal']:dd<20?['🟨','Inaccuracy (?!)']:dd<30?['🟧','Mistake (?)']:['🟥','Blunder (??)'];
+      head=`<h3 style="margin:0">${vd[0]} ${esc(san)} · ${vd[1]}</h3><p class="small muted" style="margin:0">${esc(sideName(mover))} ki chaal. Pehle: ${esc(evWords(evW(P,best)))}. Ab: ${esc(D.E1&&D.E1.lines[0]?evWords(evW(A,D.E1.lines[0])):(legal(A).length?'':'game khatam'))}.</p>`+`<div class="xsum"><b>Seedhi baat</b>${SM.lines.map(l=>`<p>${xb(l)}</p>`).join('')}</div>`;
       /* 1. is chaal ne kya kiya + nayi dhamkiyan */
       const thr=xHanging(A,!mover).filter(h=>h.gain>=1),mine=xHanging(A,mover).filter(h=>h.gain>=1);
       const tArr=xSqs(A,m.t).filter(t=>A.b[t]&&xw(A.b[t])!==mover&&A.b[t].toUpperCase()!=='K').slice(0,3).map(t=>[sn(m.t),sn(t),'r']);

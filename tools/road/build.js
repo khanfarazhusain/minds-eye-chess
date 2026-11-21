@@ -62,6 +62,7 @@ ul.gate{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;ga
 ul.xwhy{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 .arrows .al{stroke:#fff;stroke-width:.04}.arrows .al.g{fill:#1F9D5A}.arrows .al.r{fill:#D2462C}.arrows .al.y{fill:#E8A317}.arrows .al.b{fill:#2F6FD0}
 .arrows .alt{fill:#fff;font:700 .3px/1 system-ui,sans-serif;text-anchor:middle;dominant-baseline:central}
+.xsum{background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:14.5px;line-height:1.5}.xsum p{margin:6px 0 0}
 .xsec{border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:4px}
 .xsh{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.xsh b{font-size:14px}
 .xbtns{display:flex;gap:6px}.xbtns .btn.on{background:var(--accent);color:var(--accent-fg)}
