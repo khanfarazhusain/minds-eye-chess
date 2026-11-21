@@ -22,3 +22,14 @@
 .chatlog{max-height:140px;overflow:auto;margin:6px 0}
 .form .row{flex-wrap:wrap}#fuser{flex:1 1 100%}
 .errbox{background:var(--bad-soft);border:1px solid var(--bad);border-radius:10px;padding:10px 12px;color:var(--fg);font-weight:600}
+/* ---- game screen: app (index.html) ke play screen jaisa ---- */
+.gamev .bwrap{max-width:min(560px,max(260px,calc(100dvh - 330px)))}
+.gamev .board.playb{max-width:none!important}
+.lmline{height:26px;line-height:26px;padding:0 12px;border-radius:999px;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--surface2);color:var(--fg);text-align:center}
+.lmline.opp{background:color-mix(in srgb,#5B66B8 18%,var(--surface))}
+.lmline.me{background:color-mix(in srgb,var(--accent) 16%,var(--surface))}
+.lmline.muted{color:var(--muted)}
+.pl .pn{display:flex;flex-direction:column;min-width:0}
+.pl .caps{display:flex;align-items:center;height:20px;overflow:visible;font-weight:500}
+.caps .cp{container-type:size;width:16px;height:20px;margin-right:-4px;display:inline-flex;align-items:center;justify-content:center;font-style:normal}
+.caps small{margin-left:6px;color:var(--muted);font-size:12px}
