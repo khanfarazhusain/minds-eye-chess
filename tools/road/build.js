@@ -58,6 +58,7 @@ ul.gate{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;ga
 .bar{height:8px;border-radius:6px;background:var(--surface2);overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}
 .wrapr{flex-wrap:wrap;gap:6px}
 ul.xwhy{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.xcands{display:flex;flex-direction:column;gap:8px;margin-top:6px}.xcand{border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:3px}.xcand .btn{align-self:flex-start;margin-top:4px}.xp ul.xwhy{margin-top:4px}
 #lu{flex:1;min-width:0;font:inherit;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
 `;
 let html=head.replace(/<title>[^<]*<\/title>/,'<title>Road to 3000 · 64 Squares</title>')
