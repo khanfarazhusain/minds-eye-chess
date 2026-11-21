@@ -33,7 +33,7 @@ function engStart(){if(ENG.ready)return ENG.ready;ENG.ready=new Promise((res,rej
 function engEval(fen,ms,mpv){const run=()=>engEval1(fen,ms,mpv||2);const p=(ENG.q||Promise.resolve()).then(run,run);ENG.q=p.catch(()=>{});return p}
 function engEval1(fen,ms,mpv){return new Promise(res=>{const lines=[];ENG.w.postMessage('setoption name MultiPV value '+mpv);ENG.cb=l=>{
   if(l.startsWith('info ')&&l.includes(' pv ')&&!/ (lower|upper)bound/.test(l)){const g=k=>{const m=l.match(new RegExp(' '+k+' (-?\\d+)'));return m?+m[1]:null};
-    const mp=g('multipv')||1,mate=g('mate');lines[mp-1]={cp:mate!=null?null:g('cp'),mate,pv:l.split(' pv ')[1].trim().split(/\s+/)}}
+    const mp=g('multipv')||1,mate=g('mate');let pv=l.split(' pv ')[1].trim().split(/\s+/);const pr=lines[mp-1];if(pr&&pr.pv[0]===pv[0]&&pr.pv.length>pv.length&&pv.length<4)pv=pr.pv;lines[mp-1]={cp:mate!=null?null:g('cp'),mate,pv}}
   else if(l.startsWith('bestmove')){ENG.cb=null;res({lines:lines.filter(Boolean),best:l.split(/\s+/)[1]})}};
   ENG.w.postMessage('position fen '+fen);ENG.w.postMessage('go movetime '+ms)})}
 /* jeet ka chance (0-100) chaal wale side ke liye, Lichess wala formula */

@@ -542,7 +542,7 @@ body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/" style="color:inherit;text-decoration:none"><i style="font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.04em">64</i> Road to 3000</a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span></div></div></header>
-<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 03:01 UTC</p></main>
+<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 03:02 UTC</p></main>
 <nav class="tabs"><div class="wrap">
 <button data-go="#/" class="on"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="m9 14.5 2 2 4-4"/></svg></span>Today</button>
 <button data-go="#/run/extra"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>Practice</button>
@@ -1479,7 +1479,7 @@ function engStart(){if(ENG.ready)return ENG.ready;ENG.ready=new Promise((res,rej
 function engEval(fen,ms,mpv){const run=()=>engEval1(fen,ms,mpv||2);const p=(ENG.q||Promise.resolve()).then(run,run);ENG.q=p.catch(()=>{});return p}
 function engEval1(fen,ms,mpv){return new Promise(res=>{const lines=[];ENG.w.postMessage('setoption name MultiPV value '+mpv);ENG.cb=l=>{
   if(l.startsWith('info ')&&l.includes(' pv ')&&!/ (lower|upper)bound/.test(l)){const g=k=>{const m=l.match(new RegExp(' '+k+' (-?\\d+)'));return m?+m[1]:null};
-    const mp=g('multipv')||1,mate=g('mate');lines[mp-1]={cp:mate!=null?null:g('cp'),mate,pv:l.split(' pv ')[1].trim().split(/\s+/)}}
+    const mp=g('multipv')||1,mate=g('mate');let pv=l.split(' pv ')[1].trim().split(/\s+/);const pr=lines[mp-1];if(pr&&pr.pv[0]===pv[0]&&pr.pv.length>pv.length&&pv.length<4)pv=pr.pv;lines[mp-1]={cp:mate!=null?null:g('cp'),mate,pv}}
   else if(l.startsWith('bestmove')){ENG.cb=null;res({lines:lines.filter(Boolean),best:l.split(/\s+/)[1]})}};
   ENG.w.postMessage('position fen '+fen);ENG.w.postMessage('go movetime '+ms)})}
 /* jeet ka chance (0-100) chaal wale side ke liye, Lichess wala formula */
