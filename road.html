@@ -278,6 +278,7 @@ ul.gate{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;ga
 .moves{font-family:var(--f-mono);font-size:13px;max-height:120px;overflow:auto;line-height:1.7;word-break:break-word}.moves .mn{color:var(--muted)}
 .bar{height:8px;border-radius:6px;background:var(--surface2);overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}
 .wrapr{flex-wrap:wrap;gap:6px}
+ul.xwhy{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 #lu{flex:1;min-width:0;font:inherit;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
 
 nav.tabs{left:0!important;right:0!important;bottom:0!important;max-width:none!important;margin:0!important;border:0!important;border-radius:18px 18px 0 0!important;background:rgba(18,32,25,.94)!important;-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);box-shadow:0 -6px 20px rgba(10,25,18,.18)!important;padding-bottom:max(4px,calc(env(safe-area-inset-bottom,0px) - 12px))!important}
@@ -295,7 +296,7 @@ body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/" style="color:inherit;text-decoration:none"><i style="font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.04em">64</i> Road to 3000</a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span></div></div></header>
-<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 02:41 UTC</p></main>
+<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 02:42 UTC</p></main>
 <nav class="tabs"><div class="wrap">
 <button data-go="#/" class="on"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="m9 14.5 2 2 4-4"/></svg></span>Today</button>
 <button data-go="#/run/extra"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>Practice</button>
@@ -959,6 +960,77 @@ async function lstream(path,onLine,opt){const r=await lapi(path,opt);if(!r.ok){l
 const uciOf=m=>sn(m.f)+sn(m.t)+(m.promo?m.promo.toLowerCase():'');
 function fromUci(st,u){const L=legal(st);let m=L.find(x=>uciOf(x)===u);if(!m&&u.length===4){/* castling as king-takes-rook */const f=si(u.slice(0,2)),t=si(u.slice(2,4));const p=st.b[f];if(p&&p.toUpperCase()==='K')m=L.find(x=>x.f===f&&Math.abs((x.t&7)-(f&7))===2&&((t&7)>(f&7))===((x.t&7)>(f&7)))}return m}
 
+/* ================= Game Review: galti ko insaani zubaan mein samjhao =================
+   Stockfish sirf ye batata hai ki chaal kharab thi aur best line kya hai (game ke baad).
+   "Kyun" ka jawab yahan ke simple detectors dete hain: latakta mohra, fork, pin/skewer, mate, raja ki suraksha. */
+const XV={P:1,N:3,B:3,R:5,Q:9,K:0};
+const XN={P:'pyada',N:'ghoda (knight)',B:'oont (bishop)',R:'haathi (rook)',Q:'vazir (queen)',K:'raja'};
+const xw=p=>p===p.toUpperCase();
+const xval=p=>XV[p.toUpperCase()];
+const xname=p=>XN[p.toUpperCase()];
+const xmat=(st,w)=>st.b.reduce((a,p)=>a+(p&&xw(p)===w?xval(p):0),0);
+/* side `byW` ke kaun se mohre square s par capture kar sakte hain (pseudo-legal, baari ki parwah kiye bina) */
+function xAttackers(st,s,byW){return pseudo(Object.assign({},st,{w:byW,ep:-1})).filter(m=>m.t===s&&!m.castle).map(m=>m.f)}
+/* side w ke latakte mohre: hamla hai aur (bachav nahi, ya sasta mohra hamla kar raha hai) */
+function xHanging(st,w){const o=[];st.b.forEach((p,s)=>{if(!p||xw(p)!==w||p.toUpperCase()==='K')return;const att=xAttackers(st,s,!w);if(!att.length)return;
+  const cheap=Math.min(...att.map(f=>xval(st.b[f])||0));const def=attacked(st.b,s,w);if(!def||cheap<xval(p))o.push({s,p,gain:def?xval(p)-cheap:xval(p)})});return o.sort((a,b)=>b.gain-a.gain)}
+/* square s par khade mohre ke hamle (kaunse dushman mohre) */
+function xTargets(st,s){const p=st.b[s];if(!p)return[];const w=xw(p);return pseudo(Object.assign({},st,{w,ep:-1})).filter(m=>m.f===s&&m.cap).map(m=>({s:m.t,p:st.b[m.t]}))}
+/* pin / skewer: slider s se ek seedh mein pehla dushman mohra aur uske peeche zyada keemti (ya raja) */
+function xRay(st,s){const p=st.b[s];if(!p)return null;const U=p.toUpperCase();if(!'BRQ'.includes(U))return null;const w=xw(p);
+  const dirs=U==='B'?[[1,1],[1,-1],[-1,1],[-1,-1]]:U==='R'?[[1,0],[-1,0],[0,1],[0,-1]]:[[1,1],[1,-1],[-1,1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1]];
+  for(const[df,dr]of dirs){let f=(s&7)+df,r=(s>>3)+dr;const hit=[];while(f>=0&&f<8&&r>=0&&r<8&&hit.length<2){const q=st.b[r*8+f];if(q){if(xw(q)===w)break;hit.push({s:r*8+f,p:q})}f+=df;r+=dr}
+    if(hit.length===2){const[a,b]=hit;const va=a.p.toUpperCase()==='K'?100:xval(a.p),vb=b.p.toUpperCase()==='K'?100:xval(b.p);
+      if(a.p.toUpperCase()!=='P'&&vb>va)return{kind:'pin',front:a,back:b};if(va>vb&&vb>=3)return{kind:'skewer',front:a,back:b}}}
+  return null}
+const xsq=s=>sn(s);
+const xPawns=n=>{const v=Math.round(n*10)/10;return v>=0.95&&v<1.05?'1 pyade':v.toFixed(v<3?1:0).replace(/\.0$/,'')+' pyade'};
+/* line ko SAN mein, 1. e4 jaisi numbering ke saath */
+function xLine(st,pv,n){const o=[];let s=st;for(const u of pv.slice(0,n)){const m=fromUci(s,u);if(!m)break;o.push((s.w?s.fm+'. ':(o.length?'':s.fm+'... '))+sanOf(s,m));s=make(s,m)}return o.join(' ')}
+/* P = meri chaal se pehle, m = meri chaal, E0 = P ka engine result, E1 = chaal ke baad ka engine result (opponent ki baari) */
+function explainMistake(P,m,E0,E1){const me=P.w,A=make(P,m);const why=[];let theme='',refArrow=null;
+  const best=E0.lines[0],ref=E1.lines[0];const bm=best?fromUci(P,best.pv[0]):null;const r1=ref&&ref.pv[0]?fromUci(A,ref.pv[0]):null;
+  const mySan=sanOf(P,m),bestSan=bm?sanOf(P,bm):'';
+  /* nuksaan pyadon mein (mate na ho to) */
+  let loss=null;if(best&&ref&&best.mate==null&&ref.mate==null)loss=Math.max(0,((best.cp||0)+(ref.cp||0))/100);
+  /* 1. mate */
+  if(ref&&ref.mate!=null&&ref.mate>0){const line=xLine(A,ref.pv,ref.mate*2-1);theme='mate';
+    const k=kingSq(A.b,me),back=me?(k>>3)===0:(k>>3)===7;if(back&&r1&&'RQ'.includes(r1.p.toUpperCase())&&((r1.t>>3)===(k>>3)))theme='backrank';
+    why.push(`**${mySan}** ke baad opponent ke paas **mate in ${ref.mate}** hai: ${line}.${theme==='backrank'?' Ye **back-rank mate** hai: raja peechhli line par band tha, bahar nikalne ka ghar (luft) nahi tha.':''}`)}
+  else if(best&&best.mate!=null&&best.mate>0){theme='mate1';why.push(`Tumhare paas **mate in ${best.mate}** tha: ${xLine(P,best.pv,best.mate*2-1)}. Ye mauka chhoot gaya.`)}
+  /* 2. opponent ka pehla jawab kya karta hai */
+  if(r1&&!why.length){const B=make(A,r1);const rSan=sanOf(A,r1);refArrow=[sn(r1.f),sn(r1.t),'r'];
+    const cap=A.b[r1.t];
+    if(cap&&xw(cap)===me){const wasHangingBefore=xHanging(P,me).some(h=>h.s===r1.t);
+      if(r1.t===m.t)why.push(`Jo ${xname(cap)} tumne **${xsq(m.t)}** par chala, wo wahan surakshit nahi tha. Opponent **${rSan}** se use le leta hai.`);
+      else if(wasHangingBefore)why.push(`Tumhara ${xname(cap)} **${xsq(r1.t)}** par pehle se latak raha tha (bachav kam tha). **${mySan}** ne use nahi bachaya, aur opponent **${rSan}** se le leta hai.`);
+      else why.push(`**${mySan}** ke baad tumhara ${xname(cap)} **${xsq(r1.t)}** par latak gaya. Opponent **${rSan}** se use le leta hai.`);
+      theme=theme||'hanging'}
+    const tg=xTargets(B,r1.t).filter(t=>t.p.toUpperCase()==='K'||xval(t.p)>=3||(xval(t.p)>xval(r1.p)));
+    if(tg.length>=2){theme='fork';why.push(`**Fork:** ${rSan} se opponent ka ${xname(r1.p)} ek saath ${tg.slice(0,3).map(t=>xname(t.p)+' ('+xsq(t.s)+')').join(' aur ')} par hamla karta hai. Dono nahi bach sakte.`)}
+    const ray=xRay(B,r1.t);if(ray&&!tg.length){theme=ray.kind;
+      why.push(ray.kind==='pin'?`**Pin:** ${rSan} ke baad tumhara ${xname(ray.front.p)} (${xsq(ray.front.s)}) hil nahi sakta, kyunki uske peeche ${xname(ray.back.p)} (${xsq(ray.back.s)}) hai.`
+        :`**Skewer:** ${rSan} tumhare ${xname(ray.front.p)} (${xsq(ray.front.s)}) par hamla karta hai; woh hatega to peeche wala ${xname(ray.back.p)} (${xsq(ray.back.s)}) jayega.`)}
+    if(!why.length&&inCheck(B))why.push(`Opponent **${rSan}** check ke saath hamla shuru karta hai.`)}
+  /* 3. line ke ant tak material */
+  if(ref&&ref.mate==null){let s=A;let n=0;for(const u of ref.pv.slice(0,6)){const mm=fromUci(s,u);if(!mm)break;s=make(s,mm);n++}
+    const d=(xmat(A,me)-xmat(A,!me))-(xmat(s,me)-xmat(s,!me));if(d>=1&&n>=3)why.push(`Opponent ki sabse achhi line: ${xLine(A,ref.pv,n)}. Iske ant tak tum lagbhag **${d} pyade** ka material kho dete ho.`)}
+  /* 4. raja ki suraksha: castled raja ke saamne ka pyada */
+  if(!why.length&&m.p.toUpperCase()==='P'){const k=kingSq(P.b,me),kf=k&7,f=m.f&7;if((kf>=5&&f>=5)||(kf<=2&&f<=2)){theme=theme||'kingatk';why.push(`**${mySan}** raja ke saamne ka pyada hai. Isse raja khula ho gaya aur opponent ke mohron ke liye raasta ban gaya.`)}}
+  /* 5. behtar chaal kya karti */
+  let bestWhy='';if(bm){const c=P.b[bm.t];const hangP=xHanging(P,me);const B2=make(P,bm);
+    if(best.mate!=null&&best.mate>0)bestWhy='mate ki taraf le jaati.';
+    else if(c&&xHanging(P,!me).some(h=>h.s===bm.t))bestWhy=`opponent ka latakta ${xname(c)} (${xsq(bm.t)}) muft mein le leti.`;
+    else if(c)bestWhy=`${xname(c)} (${xsq(bm.t)}) le leti.`;
+    else if(hangP.some(h=>h.s===bm.f))bestWhy=`latakte ${xname(P.b[bm.f])} ko surakshit jagah le jaati.`;
+    else if(hangP.length&&!xHanging(B2,me).some(h=>h.s===hangP[0].s))bestWhy=`${xname(hangP[0].p)} (${xsq(hangP[0].s)}) ko bachati.`;
+    else if(inCheck(B2))bestWhy='check ke saath pehal (initiative) le leti.';
+    else{const tg=xTargets(B2,bm.t).filter(t=>t.p.toUpperCase()==='K'||xval(t.p)>=3);if(tg.length>=2)bestWhy=`fork banati: ${tg.map(t=>xname(t.p)).join(' aur ')} par ek saath hamla.`}}
+  if(!why.length)why.push(`Koi mohra seedha nahi phansta, par Stockfish ke hisaab se is chaal se position ${loss!=null?'lagbhag **'+xPawns(loss)+'** jitni ':''}kamzor hui. Opponent ki behtar line: ${ref?xLine(A,ref.pv,4):'?'}.`);
+  return{why,theme,bestSan,bestWhy,bestLine:best?xLine(P,best.pv,5):'',refLine:ref?xLine(A,ref.pv,4):'',ref:ref?ref.pv.slice(0,6):[],loss:loss!=null?Math.round(loss*10)/10:null,refArrow}}
+/* theme -> puzzle drill (Lichess puzzle theme code) */
+const XTHEME={hanging:['Latakta mohra (Hanging piece)','hanging'],fork:['Fork','fork'],pin:['Pin','pin'],skewer:['Skewer','skewer'],mate:['Mate dhundna','mate2'],mate1:['Mate dhundna','mate1'],backrank:['Back-rank mate','backrank'],kingatk:['Raja par hamla','kingatk']};
+
 /* ================= My Games: record (PGN), game ke baad review, galtiyon ke drills =================
    Engine (Stockfish) SIRF game khatam hone ke baad review ke liye. Course ke lessons aur puzzles mein engine nahi. */
 const GK='mindseye.road.games';
@@ -1013,7 +1085,7 @@ async function analyseGame(g,onProg){await engStart();const sans=g.moves.split('
     const cls=drop>=30?'blund':drop>=20?'mist':drop>=10?'inacc':'';if(!cls||!best)continue;cnt[cls]++;
     const alt=(E.lines[1]&&wpLine(E.lines[1])>=before-5)?E.lines[1].pv[0]:null;
     out.push({ply:i,fen:fenOf(p),san:sanOf(p,mv[i]),cls,drop:Math.round(drop),before:Math.round(before),after:Math.round(after),best:sanLine(p,best.pv,1)[0],line:sanLine(p,best.pv,6).join(' '),
-      alt:alt?sanLine(p,[alt],1)[0]:null,ev:evTxt(best,p.w)})}
+      alt:alt?sanLine(p,[alt],1)[0]:null,ev:evTxt(best,p.w),x:explainMistake(p,mv[i],E,ev[i+1])})}
   g.an={at:Date.now(),acc:accN?Math.round(accSum/accN):100,cnt,mis:out,evs:ev.map((e,i)=>Math.round(pos[i].w?e.wp:100-e.wp))};
   /* mistake aur blunder -> drill cards (aaj se due) */
   SP.gm=SP.gm||{};out.filter(x=>x.cls!=='inacc').forEach(x=>{const k=g.id+':'+x.ply;if(!SP.gm[k])SP.gm[k]={fen:x.fen,best:x.best,alt:x.alt,line:x.line,san:x.san,gid:g.id,ply:x.ply,opp:g.opp,due:dayNum(),box:0,ok:0}});
@@ -1047,15 +1119,28 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
   const B=Board($('#gbd'),{st:pos[cur],persp:g.color});
   function show(i){cur=Math.max(0,Math.min(pos.length-1,i));const mi=misBy[cur];B.last=last[cur];B.set({st:pos[cur],arr:mi?[]:null});
     const nx=misBy[cur];$('#gply').textContent=cur?`${Math.ceil(cur/2)}${cur%2?'.':'...'} ${sans[cur-1]}`:'Start';
-    $('#gnote').innerHTML=nx?`<div class="card ${nx.cls==='inacc'?'':'alert'}"><b>${Math.floor(nx.ply/2)+1}${nx.ply%2?'...':'.'} ${esc(nx.san)}${CLS[nx.cls][1]} ${CLS[nx.cls][0]}</b><div class="small">Behtar tha: <b>${esc(nx.best)}</b> (${nx.ev}). Line: ${esc(nx.line)}<br>Jeet ka chance ${nx.before}% → ${nx.after}%</div></div>`:'';
-    if(nx){const m=findMove(pos[cur],nx.best);if(m)B.set({arr:[[sn(m.f),sn(m.t),'g']]})}
+    $('#gnote').innerHTML=nx?noteHTML(nx,cur):'';
+    if(nx){const arr=[];const pm=findMove(pos[cur],nx.san);if(pm)arr.push([sn(pm.f),sn(pm.t),'r']);const m=findMove(pos[cur],nx.best);if(m)arr.push([sn(m.f),sn(m.t),'g']);B.set({arr})}
     $('#gmv').innerHTML=sans.map((x,k)=>{const mk=misBy[k];return(k%2===0?`<span class="mn">${k/2+1}.</span> `:'')+`<span class="mvx${k+1===cur?' on':''}${mk?' '+mk.cls:''}" data-nav-to="${k+1}">${esc(x)}${mk?CLS[mk.cls][1]:''}</span>`}).join(' ')}
-  /* galti wali chaal par jao: board us chaal se PEHLE ki position dikhata hai, tir = behtar chaal */
-  app.onclick=e=>{const n=e.target.closest('[data-nav]');if(n){const d=+n.dataset.nav;show(d===0?0:d===9999?pos.length-1:cur+d);return}
+  function noteHTML(nx,cur){const X=nx.x,num=`${Math.floor(nx.ply/2)+1}${nx.ply%2?'...':'.'}`;
+  const head=`<b>${num} ${esc(nx.san)}${CLS[nx.cls][1]} ${CLS[nx.cls][0]}</b>`;
+  if(!X)return`<div class="card ${nx.cls==='inacc'?'':'alert'}">${head}<div class="small">Behtar tha: <b>${esc(nx.best)}</b> (${nx.ev}). Line: ${esc(nx.line)}<br>Jeet ka chance ${nx.before}% → ${nx.after}%</div><p class="small muted">Is game ka review purane version se hai. "Review Again" dabao to har galti ki wajah bhi milegi.</p></div>`;
+  const th=XTHEME[X.theme];
+  return`<div class="card stack ${nx.cls==='inacc'?'':'alert'}">${head}
+   <div class="small"><b>Kyun galat:</b></div><ul class="xwhy small">${X.why.map(t=>`<li>${md(t).replace(/^<p>|<\/p>$/g,'')}</li>`).join('')}</ul>
+   <div class="small"><b>Kya khelna chahiye tha:</b> ${esc(X.bestSan)} (${nx.ev})${X.bestWhy?' – ye chaal '+esc(X.bestWhy):''}<br><span class="muted">Best line: ${esc(X.bestLine)}</span></div>
+   <div class="small">${X.loss!=null?`Nuksaan: lagbhag <b>${xPawns(X.loss)}</b> · `:''}Jeet ka chance ${nx.before}% → ${nx.after}%</div>
+   <div class="small muted">Board: <span style="color:#D2462C">laal tir</span> = tumhari chaal, <span style="color:#1F9D5A">hara tir</span> = behtar chaal.</div>
+   <div class="row wrapr">${X.ref.length?'<button class="btn small" data-refute="1">Opponent ka jawab dikhao</button>':''}${th?`<button class="btn small primary" data-go="#/run/th/${th[1]}">${esc(th[0])} Drill ›</button>`:''}</div></div>`}
+/* galti wali chaal par jao: board us chaal se PEHLE ki position dikhata hai, tir = behtar chaal */
+  app.onclick=e=>{const rf=e.target.closest('[data-refute]');if(rf){const nx=misBy[cur];if(!nx||!nx.x)return;const A=pos[cur+1];const r=nx.x.ref.length?fromUci(A,nx.x.ref[0]):null;
+      B.last=last[cur+1];B.set({st:A,arr:r?[[sn(r.f),sn(r.t),'r']]:[]});rf.textContent='Opponent ka jawab: laal tir';return}
+    const n=e.target.closest('[data-nav]');if(n){const d=+n.dataset.nav;show(d===0?0:d===9999?pos.length-1:cur+d);return}
     const t=e.target.closest('[data-nav-to]');if(t){show(+t.dataset.navTo);return}const mm=e.target.closest('[data-mis]');if(mm){show(+mm.dataset.mis);window.scrollTo(0,0)}};
   show(cur)}
 function anHTML(g){const a=g.an;return`<div class="card stack"><h3>Review: Accuracy ${a.acc}%</h3><p class="small">${a.cnt.blund} Blunder (??) · ${a.cnt.mist} Mistake (?) · ${a.cnt.inacc} Inaccuracy (?!)</p>
-  ${a.mis.length?`<div class="qlist">${a.mis.map(x=>`<button class="qrow" style="text-align:left;font:inherit;color:inherit" data-mis="${x.ply}"><span class="qi">${x.cls==='blund'?'🟥':x.cls==='mist'?'🟧':'🟨'}</span><div class="qt"><b>${Math.floor(x.ply/2)+1}${x.ply%2?'...':'.'} ${esc(x.san)}${CLS[x.cls][1]}</b><div class="small muted">Khelna chahiye tha: <b>${esc(x.best)}</b> · ${x.before}% → ${x.after}%</div></div></button>`).join('')}</div>`:'<p>Koi badi galti nahi. Shabaash!</p>'}
+  ${a.mis.length?`<div class="qlist">${a.mis.map(x=>`<button class="qrow" style="text-align:left;font:inherit;color:inherit" data-mis="${x.ply}"><span class="qi">${x.cls==='blund'?'🟥':x.cls==='mist'?'🟧':'🟨'}</span><div class="qt"><b>${Math.floor(x.ply/2)+1}${x.ply%2?'...':'.'} ${esc(x.san)}${CLS[x.cls][1]}</b><div class="small muted">${x.x&&XTHEME[x.x.theme]?'<b>'+esc(XTHEME[x.x.theme][0])+'</b> · ':''}Khelna chahiye tha: <b>${esc(x.best)}</b> · ${x.before}% → ${x.after}%</div></div></button>`).join('')}</div>`:'<p>Koi badi galti nahi. Shabaash!</p>'}
+  ${a.mis.some(x=>!x.x)?'<button class="btn block" data-act="ganalyse">Review Again (har galti ki wajah ke saath)</button>':''}
   ${a.cnt.blund+a.cnt.mist?`<p class="small muted">Mistake aur Blunder wali positions "Mistake Flashcards" mein aa gayi hain. Roz wapas aayengi jab tak 3 baar sahi na ho.</p><button class="btn primary block" data-go="#/run/flash">Drill These Mistakes Now</button>`:''}</div>`}
 async function runAnalyse(){const id=(location.hash.split('/')[2]||'');const g=GAMES[id];if(!g)return;const box=$('#gan');
   box.innerHTML='<div class="card stack"><b>Stockfish review chal raha hai…</b><div class="bar"><i id="gpb" style="width:0%"></i></div><p class="small muted" id="gpt">Engine shuru ho raha hai</p></div>';
@@ -1154,15 +1239,15 @@ const dueCards=()=>Object.entries(SP.cards).filter(([t,c])=>c.due<=dayNum()).map
 function rate(pr,ok){const me=SP.pr||CUR().band[0]+150;const e=1/(1+Math.pow(10,(pr-me)/400));SP.pr=Math.round(me+24*((ok?1:0)-e))}
 
 /* ---------- puzzle session: ek ke baad ek, kabhi repeat nahi ---------- */
-function vPuzzleRun(kind){const app=$('#app');sday();
-  const cfg={puz:{title:'Tactics Puzzles',any:null},end:{title:'Endgame Drill',any:['endgame','rookend','pawnend','queenend','minorend']},calc:{title:'Calculation & Defence',any:['defence','quiet','long','zwischen']},flash:{title:'Mistake Flashcards',flash:true},extra:{title:'Unlimited Practice',any:null},weak:{title:'Weak Spot Drills',weak:true}}[kind];
+function vPuzzleRun(kind,arg){const app=$('#app');sday();
+  const cfg=kind==='th'&&arg?{title:(TNAME[arg]||arg)+' Drill',any:[arg]}:{puz:{title:'Tactics Puzzles',any:null},end:{title:'Endgame Drill',any:['endgame','rookend','pawnend','queenend','minorend']},calc:{title:'Calculation & Defence',any:['defence','quiet','long','zwischen']},flash:{title:'Mistake Flashcards',flash:true},extra:{title:'Unlimited Practice',any:null},weak:{title:'Weak Spot Drills',weak:true}}[kind];
   if(!cfg)return go('#/');
   let n=0,ok=0,cur=null;const D=sday();
   const top=h('div','qhead');top.innerHTML=`<button class="x" aria-label="Back">‹</button><div class="prog"><i></i></div><span class="count"></span>`;top.querySelector('.x').onclick=()=>go('#/');app.appendChild(top);
   const head=h('p','eyebrow',esc(cfg.title));app.appendChild(head);const stage=h('div');app.appendChild(stage);
   const foot=h('div','foot');const nb=h('button','btn primary block','Agla puzzle ›');foot.appendChild(nb);app.appendChild(foot);
-  const goal=()=>kind==='extra'||kind==='weak'?0:need(kind);
-  function bar(){const g=goal(),done=kind==='extra'||kind==='weak'?n:have(kind);top.querySelector('.count').textContent=g?`${Math.min(done,g)}/${g}`:`${n} kiye`;top.querySelector('.prog i').style.width=g?Math.min(100,done/g*100)+'%':'100%'}
+  const goal=()=>kind==='extra'||kind==='weak'||kind==='th'?0:need(kind);
+  function bar(){const g=goal(),done=kind==='extra'||kind==='weak'||kind==='th'?n:have(kind);top.querySelector('.count').textContent=g?`${Math.min(done,g)}/${g}`:`${n} kiye`;top.querySelector('.prog i').style.width=g?Math.min(100,done/g*100)+'%':'100%'}
   async function next(){stage.innerHTML='<p class="muted">Puzzle aa raha hai…</p>';nb.disabled=true;bar();
     if(goal()&&have(kind)>=goal()&&kind!=='flash'){return finish()}
     let p=null,theme=null;
@@ -1284,7 +1369,7 @@ function go(hash){if(location.hash!==hash)location.hash=hash;else route()}
 window.addEventListener('hashchange',route);
 function navOn(){const h=location.hash||'#/';const bs=[...document.querySelectorAll('nav.tabs button[data-go]')];const hit=bs.find(b=>b.dataset.go===h)||bs.find(b=>h.startsWith(b.dataset.go+'/')&&b.dataset.go!=='#/')||bs[0];bs.forEach(b=>b.classList.toggle('on',b===hit))}
 function route(){closeTutor();navOn();const p=(location.hash||'#/').slice(2).split('/');const app=$('#app');app.innerHTML='';app.onclick=null;window.scrollTo(0,0);
-  if(p[0]==='run')vPuzzleRun(p[1]);else if(p[0]==='les')runLesson(p[1],'#/');else if(p[0]==='quiz')runQuiz();else if(p[0]==='open')runOpen();
+  if(p[0]==='run')vPuzzleRun(p[1],p[2]);else if(p[0]==='les')runLesson(p[1],'#/');else if(p[0]==='quiz')runQuiz();else if(p[0]==='open')runOpen();
   else if(p[0]==='test')runTest();else if(p[0]==='level')vLevelS(+p[1]);else if(p[0]==='games')vGames();else if(p[0]==='game'&&p[1])vGame(p[1]);else vHome();chips()}
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();const t=g.dataset.go;if(location.hash===t)route();else go(t);return}
   const a=e.target.closest('[data-act]');if(!a)return;
