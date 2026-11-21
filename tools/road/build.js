@@ -8,6 +8,13 @@ const cut=(a,b,from=0)=>{const i=src.indexOf(a,from);const j=src.indexOf(b,i+a.l
 const head=src.slice(0,src.indexOf('</style>'));
 const core=cut("'use strict';",'/* ---------- views ---------- */');
 const playerFns=cut('function player(','function vLesson(');
+/* Road me lesson player: Aage ke saath "‹ Pichla" button (pichli slide par jaane ke liye). course.html nahi badalta. */
+const playerSub=(x,y)=>{if(!playerFns.includes(x))throw new Error('player marker not found: '+x);return y};
+const playerRoad=playerFns
+  .replace("const nb=h('button','btn primary block','Aage ›');foot.appendChild(nb);",playerSub("const nb=h('button','btn primary block','Aage ›');foot.appendChild(nb);","const pb=h('button','btn','‹ Pichla');const nb=h('button','btn primary','Aage ›');const fr=h('div','pnav');fr.appendChild(pb);fr.appendChild(nb);foot.appendChild(fr);pb.onclick=()=>{if(i>0){i--;show()}};"))
+  .replace("stage.innerHTML='';nb.disabled=true;",playerSub("stage.innerHTML='';nb.disabled=true;","stage.innerHTML='';nb.disabled=true;pb.disabled=i===0;pb.style.visibility=i===0?'hidden':'';"))
+  .replace("if(s.t==='info')nb.disabled=false;window.scrollTo(0,0)}",playerSub("if(s.t==='info')nb.disabled=false;window.scrollTo(0,0)}","if(s.t==='info'||res[i]!==undefined)nb.disabled=false;window.scrollTo(0,0)}"));
+
 const content=fs.readFileSync(path.join(__dirname,'content.js'),'utf8').replace(/if\(typeof module[^\n]*\n/,'');
 const rd=f=>fs.readFileSync(path.join(__dirname,f),'utf8');
 const skin=rd('boardskin.js'),bcss=require('./boardcss.js').boardCSS(fs.readFileSync(path.join(root,'index.html'),'utf8'));
@@ -64,6 +71,7 @@ ul.xwhy{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 .arrows .alt{fill:#fff;font:700 .3px/1 system-ui,sans-serif;text-anchor:middle;dominant-baseline:central}
 .sanv{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}li.sanv{text-decoration:none;border-radius:6px}.sanv.on{background:color-mix(in srgb,var(--accent) 18%,transparent);border-radius:6px}
 .xgo{font:inherit;font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:1px 8px;margin-left:4px;cursor:pointer;white-space:nowrap}.xgo.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pnav{display:grid;grid-template-columns:1fr 2fr;gap:10px}.pnav .btn{width:100%;margin:0;justify-content:center}
 .xsum .xsh{margin-bottom:2px}.xplh{margin:10px 0 4px}.xg2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.xg1{display:grid;grid-template-columns:1fr;gap:8px}
 .xg2>.btn,.xg1>.btn{width:100%;margin:0;justify-content:flex-start;text-align:left;min-height:44px;white-space:normal;line-height:1.25}.xg2>.btn.primary{justify-content:center;text-align:center}
 .xsum .btn{background:var(--surface);border:1px solid var(--line)}.xsum .xg2{grid-template-columns:1fr;margin-top:0}.xsum .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
@@ -91,7 +99,7 @@ ${nav([['today','Today','data-go="#/"',1],['practice','Practice','data-go="#/run
 <script>
 ${core}
 ${skin}
-${playerFns}
+${playerRoad}
 ${content}
 ${auth}
 ${explain}
