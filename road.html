@@ -539,10 +539,11 @@ nav.tabs button svg{display:block;transition:transform .2s}
 @media (max-width:360px){nav.tabs button{font-size:10px!important}nav.tabs button svg{width:20px;height:20px}}
 body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!important}
 </style>
+<link rel="stylesheet" href="ui.css?v=165">
 </head>
 <body>
-<header class="top"><div class="wrap"><a class="brand" href="#/" style="color:inherit;text-decoration:none"><i style="font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.04em">64</i> Road to 3000</a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span></div></div></header>
-<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 03:02 UTC</p></main>
+<header class="top"><div class="wrap"><a class="brand" href="#/"><i class="b64">64</i><span class="bname">Road to 3000<small>64 Squares</small></span></a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span></div></div></header>
+<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 03:50 UTC</p></main>
 <nav class="tabs"><div class="wrap">
 <button data-go="#/" class="on"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="m9 14.5 2 2 4-4"/></svg></span>Today</button>
 <button data-go="#/run/extra"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>Practice</button>
@@ -1516,7 +1517,7 @@ function gmStep(k){const c=SP.gm[k];const n=Math.floor(c.ply/2)+1;
 function gameRow(g){const r=g.res==='win'?'🟢':g.res==='loss'?'🔴':'⚪';const a=g.an;
   return`<div class="qrow"><span class="qi">${r}</span><div class="qt"><b>vs ${esc(g.opp)} (${g.oppR})</b><div class="muted small">${esc(RESN[g.res]||g.res)}${g.diff?' '+(g.diff>0?'+':'')+g.diff:''} · ${g.color==='w'?'White':'Black'} · ${esc(g.open||g.speed||'')}${a?` · Accuracy ${a.acc}% · ${a.cnt.blund}?? ${a.cnt.mist}? ${a.cnt.inacc}?!`:' · Review baaki'}</div></div><button class="btn small ${a?'':'primary'}" data-go="#/game/${g.id}">${a?'Open':'Review'}</button></div>`}
 async function vGames(){const app=$('#app');const L=gameList();
-  app.innerHTML=`<div class="stack"><button class="btn small" data-go="#/">‹ Today's Work</button><h1>My Games</h1>
+  app.innerHTML=`<div class="stack"><button class="btn small backbtn" data-go="#/">‹ Today's Work</button><h1>My Games</h1>
    <p class="muted small">Aapke rated Lichess games (rapid/classical). Har game ki chaalein PGN mein save hoti hain. Review mein Stockfish batata hai kahan galti hui aur kya khelna chahiye tha (sirf game ke baad). Galtiyan "Mistake Flashcards" mein wapas aati rahengi.</p>
    <div class="row"><button class="btn" data-act="gsync">Lichess se laao</button>${L.length?'<button class="btn" data-act="gpgn">Download PGN</button>':''}</div><p class="small" id="gmsg"></p>
    ${L.length?`<div class="qlist">${L.map(gameRow).join('')}</div>`:'<div class="card">Abhi koi game nahi. Lichess par rated rapid game khelo, phir "Lichess se laao" dabao.</div>'}</div>`}
@@ -1525,7 +1526,7 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
   const sans=g.moves.split(' ').filter(Boolean);const pos=[parseFEN(g.fen||START_FEN)],last=[null];
   for(const x of sans){const st=pos[pos.length-1];const m=findMove(st,x);if(!m)break;last.push([sn(m.f),sn(m.t)]);pos.push(make(st,m))}
   let cur=pos.length-1;const a=g.an;const misBy={};(a?a.mis:[]).forEach(x=>misBy[x.ply]=x);
-  app.innerHTML=`<div class="stack"><button class="btn small" data-go="#/games">‹ My Games</button>
+  app.innerHTML=`<div class="stack"><button class="btn small backbtn" data-go="#/games">‹ My Games</button>
    <p class="eyebrow">${esc(RESN[g.res]||g.res)} · ${g.color==='w'?'White':'Black'} · ${esc(g.speed||'')} ${g.rated?'Rated':''}</p><h2 style="margin:0">vs ${esc(g.opp)} (${g.oppR})</h2><p class="small muted">${esc(g.open)}</p>
    <div id="gbd"></div><div class="row" style="justify-content:center"><button class="btn small" data-nav="0">⏮</button><button class="btn small" data-nav="-1">◀</button><span class="small" id="gply"></span><button class="btn small" data-nav="1">▶</button><button class="btn small" data-nav="9999">⏭</button></div>
    <div id="gnote"></div><div id="gxp"></div><div class="moves" id="gmv"></div>
@@ -1845,7 +1846,7 @@ async function sync(quiet){const m=$('#lmsg');if(m)m.textContent='Lichess se la 
   try{await fetchLichess();try{await syncGames()}catch(x){}if(m)m.textContent='Ho gaya.';if(!quiet||$('#app'))route()}catch(e){if(m)m.textContent=e.message==='expired'?'Lichess login purana ho gaya. Ek baar dobara Connect karo.':e.message==='notfound'?'Yeh username Lichess par nahi mila.':'Lichess tak nahi pahunch paya. Internet check karo.'}}
 function vLevelS(n){const L=LV(n),app=$('#app');if(!L)return go('#/');const open=PREVIEW||n<=SP.lvl;
   const items=L.lessons.map(k=>{const l=lesOf(k),d=isDone(k);return`<div class="qrow${d?' done':''}"><span class="qi">${d?'✅':NEWLES[k]?'🆕':'📘'}</span><div class="qt"><b>${esc(l.title)}</b><div class="muted small">${esc(l.sub||'')}</div></div>${open&&(d||PREVIEW)?`<button class="btn small" data-go="#/les/${k}">${d?'Redo':'Open'}</button>`:''}</div>`}).join('');
-  app.innerHTML=`<div class="stack"><button class="btn small" data-go="#/">‹ Today's Work</button><p class="eyebrow">Level ${n} / 10</p><h1>${esc(L.name)}</h1><p class="muted">Lichess rapid ${L.lo||'shuru'} se ${L.gate} · Puzzles ${L.band[0]}-${L.band[1]} · Roz ~${L.quota.mins} min</p>
+  app.innerHTML=`<div class="stack"><button class="btn small backbtn" data-go="#/">‹ Today's Work</button><p class="eyebrow">Level ${n} / 10</p><h1>${esc(L.name)}</h1><p class="muted">Lichess rapid ${L.lo||'shuru'} se ${L.gate} · Puzzles ${L.band[0]}-${L.band[1]} · Roz ~${L.quota.mins} min</p>
    ${!open?'<div class="card">🔒 Yeh level pichhla level aur uska Lichess darwaza paar karne par khulega.</div>':''}
    <h2>Lessons (${L.lessons.filter(isDone).length}/${L.lessons.length})</h2>${L.lessons.length?`<div class="qlist">${items}</div>`:'<div class="card">Is level ka content jald aa raha hai. Tab tak roz ka puzzle quota, opening drills aur games.</div>'}
    <p class="small muted">Naye lessons roz ki list se ek-ek karke khulte hain. ✅ wale yahan se dobara kar sakte ho.</p>
@@ -1869,5 +1870,6 @@ touchDay();save();lichReturn().then(u=>{if(u){SP.user=u;SP.lich=null;ssave()}
   else if(lichToken()&&LT.user&&lcs(SP.user)!==lcs(LT.user)){SP.user=LT.user;SP.lich=null;ssave()}route()});
 
 </script>
+<script src="ui.js?v=165"></script>
 </body>
 </html>
