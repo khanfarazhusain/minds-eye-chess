@@ -283,7 +283,12 @@ ul.xwhy{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 .arrows .alt{fill:#fff;font:700 .3px/1 system-ui,sans-serif;text-anchor:middle;dominant-baseline:central}
 .sanv{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}li.sanv{text-decoration:none;border-radius:6px}.sanv.on{background:color-mix(in srgb,var(--accent) 18%,transparent);border-radius:6px}
 .xgo{font:inherit;font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:1px 8px;margin-left:4px;cursor:pointer;white-space:nowrap}.xgo.on{background:var(--accent);color:#fff;border-color:var(--accent)}
-.xsum .xsh{margin-bottom:2px}.xplh{margin:10px 0 4px}#gfocus .xfocus{margin-top:8px;border:2px solid var(--accent);max-height:42vh;overflow:auto}#gfocus .xfocus .xsh{position:sticky;top:-1px;background:inherit;padding-bottom:4px;z-index:1}#gfocus .xbtns .btn{margin:2px}.xplan{margin-top:4px}.xsum{background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:14.5px;line-height:1.5}.xsum p{margin:6px 0 0}
+.xsum .xsh{margin-bottom:2px}.xplh{margin:10px 0 4px}.xg2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.xg1{display:grid;grid-template-columns:1fr;gap:8px}
+.xg2>.btn,.xg1>.btn{width:100%;margin:0;justify-content:flex-start;text-align:left;min-height:44px;white-space:normal;line-height:1.25}.xg2>.btn.primary{justify-content:center;text-align:center}
+.xsum .btn{background:var(--surface);border:1px solid var(--line)}.xsum .xg2{grid-template-columns:1fr;margin-top:0}.xsum .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.xprow{display:grid;grid-template-columns:minmax(0,1fr) repeat(3,56px);gap:8px;align-items:center;margin-top:10px}.xprl{display:flex;flex-direction:column;min-width:0;line-height:1.2}.xprl small{font-size:12px}
+.xpn{width:56px;height:48px;padding:2px!important;margin:0!important;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;border:1px solid var(--line)}.xpn b{font-size:17px}.xpn small{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52px}.xpn.on small{color:inherit}
+#gfocus .xfocus{margin-top:8px;border:2px solid var(--accent);max-height:42vh;overflow:auto}#gfocus .xfocus .xsh{position:sticky;top:-1px;background:inherit;padding-bottom:4px;z-index:1}#gfocus .xbtns .btn{margin:2px}.xplan{margin-top:4px}.xsum{background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:14.5px;line-height:1.5}.xsum p{margin:6px 0 0}
 .xsec{border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:4px}
 .xsh{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.xsh b{font-size:14px}
 .xbtns{display:flex;gap:6px}.xbtns .btn.on{background:var(--accent);color:var(--accent-fg)}
@@ -589,7 +594,7 @@ body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/"><i class="b64">64</i><span class="bname">Lichess Play<small>64 Squares</small></span></a><div class="chips"><span class="chip" id="luser"></span></div></div></header>
-<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 05:04 UTC</p></main>
+<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 05:11 UTC</p></main>
 <nav class="tabs"><div class="wrap">
 <button data-go="#/" class="on"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.6 3.5 5.4 3.5 8.5s-1.1 5.9-3.5 8.5c-2.4-2.6-3.5-5.4-3.5-8.5s1.1-5.9 3.5-8.5z"/></svg></span>Lobby</button>
 <button data-go="#/road"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20h9"/><path d="M9 20c0-3 1.5-5 3-6.5-2.2.4-4 .1-5-1l3.5-6.5c3.5-.5 7 2 7 7.5V20"/><circle cx="12.6" cy="8.6" r=".7" fill="currentColor"/></svg></span>Rated</button>
