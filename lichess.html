@@ -1,0 +1,984 @@
+<!doctype html>
+<html lang="hi-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#23664A">
+<title>Lichess Play · 64 Squares</title>
+<meta name="description" content="Lichess par khelo: quick pairing, custom game, dost ko challenge, Lichess computer.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --bg:#EDF1EC; --surface:#FFFFFF; --surface2:#E1E8E1; --fg:#17211B; --muted:#56655B; --line:#C9D4CB;
+  --accent:#23664A; --accent-fg:#FFFFFF; --brass:#9C7216; --good:#1F7D4C; --bad:#B53D27; --good-soft:#D7EEDF; --bad-soft:#F6DCD5;
+  --sq-light:#E7DFC4; --sq-dark:#789560; --sq-plain:#B9C0B7; --sq-plain2:#AEB5AC; --hl:#F0BE45; --pc-w:#FFFFFF; --pc-b:#151515; --coord-l:#5E7A49; --coord-d:#EEE7CF;
+  --f-display:"Barlow Condensed","Arial Narrow",sans-serif; --f-body:"Barlow",system-ui,-apple-system,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1512; --surface:#17201B; --surface2:#202B25; --fg:#E3EBE5; --muted:#98A79D; --line:#2D3A33;
+  --accent:#5DBB8A; --accent-fg:#0A1A11; --brass:#E2B552; --good:#55C688; --bad:#EF7B64; --good-soft:#173826; --bad-soft:#41201A;
+  --sq-light:#D8CFAF; --sq-dark:#68844F; --sq-plain:#5C655F; --sq-plain2:#535B55; --coord-l:#4F6A3B; --coord-d:#E6DDBF; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1512; --surface:#17201B; --surface2:#202B25; --fg:#E3EBE5; --muted:#98A79D; --line:#2D3A33;
+  --accent:#5DBB8A; --accent-fg:#0A1A11; --brass:#E2B552; --good:#55C688; --bad:#EF7B64; --good-soft:#173826; --bad-soft:#41201A;
+  --sq-light:#D8CFAF; --sq-dark:#68844F; --sq-plain:#5C655F; --sq-plain2:#535B55; --coord-l:#4F6A3B; --coord-d:#E6DDBF; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--hl);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding-block:10px;gap:12px}
+.brand{font-family:var(--f-display);font-weight:700;font-size:22px;letter-spacing:.02em;display:flex;align-items:center;gap:8px}
+.brand i{font-style:normal;font-size:20px;color:var(--accent)}
+.chips{display:flex;gap:8px;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.chip{background:var(--surface2);border-radius:999px;padding:3px 10px;white-space:nowrap}
+main{padding-block:16px 110px}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding-block:6px}
+nav.tabs button{background:none;border:0;padding:6px 0;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:1px;font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+nav.tabs button span{font-size:20px;line-height:1}
+nav.tabs button.on{color:var(--accent);background:var(--surface2)}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.1;margin:0;text-wrap:balance;letter-spacing:.01em}
+h1{font-size:32px}h2{font-size:24px}h3{font-size:19px}
+p{margin:0}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.muted{color:var(--muted)}
+.eyebrow{font-family:var(--f-display);font-weight:600;text-transform:uppercase;letter-spacing:.12em;font-size:13px;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.btn{border:0;border-radius:8px;padding:12px 16px;font-weight:600;background:var(--surface2);text-align:center}
+.btn.primary{background:var(--accent);color:var(--accent-fg)}
+.btn.block{width:100%}
+.btn.small{padding:7px 12px;font-size:14px}
+.btn:disabled{opacity:.45;cursor:default}
+.mono,.n{font-family:var(--f-mono);font-weight:700}
+.n{background:var(--surface2);padding:0 6px;border-radius:5px;white-space:nowrap}
+.hero{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+.hero h1{font-size:34px}
+.minib{width:104px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.tile b{display:block;font-family:var(--f-display);font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.tile small{color:var(--muted);font-size:13px}
+.stagelist{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
+.stagerow{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:14px 4px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;width:100%}
+.stagerow .num{font-family:var(--f-display);font-size:30px;font-weight:700;color:var(--accent);text-align:center;font-variant-numeric:tabular-nums}
+.stagerow.locked .num{color:var(--muted)}
+.stagerow.locked{opacity:.6}
+.stagerow .t{font-weight:600}
+.stagerow .d{font-size:14px;color:var(--muted)}
+.bar{height:6px;border-radius:3px;background:var(--surface2);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.stars{font-size:15px;letter-spacing:1px;color:var(--brass);white-space:nowrap;font-variant-numeric:tabular-nums}
+.stars .off{color:var(--line)}
+.lessons{display:flex;flex-direction:column;gap:6px}
+.lesson{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 14px;border-radius:8px;background:var(--surface);border:1px solid var(--line);text-align:left;width:100%}
+.lesson.locked{opacity:.5}
+.lesson.next{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.lesson small{display:block;color:var(--muted);font-size:13px}
+.tier{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px}
+/* board */
+.board{display:grid;grid-template-columns:repeat(8,1fr);width:100%;max-width:440px;aspect-ratio:1;margin:0 auto;border-radius:6px;overflow:hidden;box-shadow:0 0 0 2px var(--line);user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.sq{position:relative;display:flex;align-items:center;justify-content:center;container-type:size}
+.sq.l{background:var(--sq-light)}.sq.d{background:var(--sq-dark)}
+.plain .sq.l,.plain .sq.d{background:var(--sq-plain)}
+.plain .sq{box-shadow:inset 0 0 0 .5px var(--sq-plain2)}
+.sq .cf,.sq .cr{position:absolute;font-family:var(--f-mono);font-size:10px;font-weight:700;line-height:1}
+.sq .cf{right:3px;bottom:2px}.sq .cr{left:3px;top:3px}
+.sq.l .cf,.sq.l .cr{color:var(--coord-l)}.sq.d .cf,.sq.d .cr{color:var(--coord-d)}
+.plain .sq .cf,.plain .sq .cr{color:var(--fg);opacity:.7}
+.sq .lab{font-family:var(--f-mono);font-size:11px;font-weight:700;opacity:.75}
+.sq.l .lab{color:var(--coord-l)}.sq.d .lab{color:var(--coord-d)}
+.pc{font-size:78cqh;line-height:1;font-family:"Segoe UI Symbol","Noto Sans Symbols 2","DejaVu Sans",serif;pointer-events:none}
+.pc.w{color:var(--pc-w);text-shadow:0 0 1px #000,0 0 1px #000,0 0 1px #000,0 1px 1px rgba(0,0,0,.5)}
+.pc.b{color:var(--pc-b);text-shadow:0 0 1px rgba(255,255,255,.35)}
+.sq.hl{box-shadow:inset 0 0 0 4px var(--hl)}
+.sq.hl::after{content:"";position:absolute;inset:0;background:var(--hl);opacity:.45}
+.sq.m-sel::after,.sq.m-good::after,.sq.m-bad::after,.sq.m-miss::after{content:"";position:absolute;inset:0}
+.sq.m-sel::after{background:var(--hl);opacity:.55}
+.sq.m-good::after{background:var(--good);opacity:.6}
+.sq.m-bad::after{background:var(--bad);opacity:.6}
+.sq.m-miss::after{box-shadow:inset 0 0 0 4px var(--good)}
+.sq.m-ring::after{content:"";position:absolute;inset:8%;border-radius:50%;box-shadow:0 0 0 3px var(--hl),0 0 0 5px rgba(0,0,0,.35)}
+.sq.dot::before{content:"";position:absolute;width:28%;height:28%;border-radius:50%;background:rgba(20,30,20,.45);z-index:1}
+.sq.from{box-shadow:inset 0 0 0 4px var(--accent)}
+.qhead{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px}
+.x{border:0;background:var(--surface2);width:36px;height:36px;border-radius:50%;font-size:18px}
+.prog{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.count{font-family:var(--f-mono);font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.timer{height:4px;background:transparent;border-radius:2px;overflow:hidden}
+.timer i{display:block;height:100%;background:var(--brass);width:100%}
+.prompt{font-size:21px;font-weight:600;line-height:1.3;text-wrap:balance}
+.prompt .n{font-size:20px}
+.pos{font-family:var(--f-mono);font-size:15px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:4px}
+.pos b{font-family:var(--f-body);font-weight:600;color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin-right:6px}
+.moves{font-family:var(--f-mono);font-size:17px;line-height:1.8;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;word-spacing:2px}
+.moves .mn{color:var(--muted)}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choices.one{grid-template-columns:1fr}
+.choice{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:14px 10px;font-weight:600;font-size:17px}
+.choice.sw-l{background:var(--sq-light);color:#2C3A23;border-color:transparent}
+.choice.sw-d{background:var(--sq-dark);color:#F6F1DE;border-color:transparent}
+.choice.good{outline:3px solid var(--good)}.choice.bad{outline:3px solid var(--bad)}
+.fb{border-radius:var(--r);padding:12px 14px;display:grid;gap:6px}
+.fb.ok{background:var(--good-soft)}.fb.no{background:var(--bad-soft)}
+.fb h3{color:var(--good)}.fb.no h3{color:var(--bad)}
+.memo{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.memo b{font-family:var(--f-display);font-size:28px;font-variant-numeric:tabular-nums}
+/* tutorial */
+.tut p{max-width:65ch}
+.tut ul{margin:0;padding-left:20px;display:grid;gap:4px}
+.seg{display:inline-flex;background:var(--surface2);border-radius:8px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:none;padding:6px 10px;border-radius:6px;font-size:14px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.gstat{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:600}
+.big{font-family:var(--f-display);font-weight:700;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+.gamemoves{font-family:var(--f-mono);font-size:15px;line-height:1.7;max-height:150px;overflow-y:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.warn{color:var(--bad);font-weight:600}
+.sidetag{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px}.sidetag.w{background:#F4F0E2;color:#2C3A23;box-shadow:inset 0 0 0 1px var(--line)}.sidetag.b{background:#222;color:#F4F0E2}
+
+/* course additions */
+.bwrap{position:relative;width:100%;max-width:440px;margin:0 auto}
+.arrows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ar{stroke-width:.17;stroke-linecap:round;opacity:.8}.ah{opacity:.8}
+.ar.g{stroke:#1F9D5A}.ah.g{fill:#1F9D5A}.ar.r{stroke:#D2462C}.ah.r{fill:#D2462C}.ar.y{stroke:#E8A317}.ah.y{fill:#E8A317}.ar.b{stroke:#2F6FD0}.ah.b{fill:#2F6FD0}
+.sq.m-last::after{content:"";position:absolute;inset:0;background:var(--hl);opacity:.32}
+.sq.m-pick::after{content:"";position:absolute;inset:0;background:#2F6FD0;opacity:.45}
+.promo{position:absolute;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;z-index:3;border-radius:6px}
+.promobox{background:var(--surface);border-radius:10px;padding:12px;display:grid;gap:8px;justify-items:center}
+.promobox .pc{font-size:34px}.promobox .btn{padding:6px 10px}
+.step{padding-block:10px 0}
+.tut{display:grid;gap:10px}.tut p,.tut li{font-size:17px;line-height:1.5}
+.note{min-height:48px}
+.moves .mv{white-space:nowrap}.moves .mv.cur{background:var(--hl);color:#1b1b1b;border-radius:4px;padding:0 3px}.moves .mv.fut{opacity:.35}
+.big2{font-size:22px!important}
+.foot{position:sticky;bottom:calc(70px + env(safe-area-inset-bottom,0px));padding-top:14px;background:linear-gradient(transparent,var(--bg) 30%);z-index:2}
+.fab{position:fixed;right:16px;bottom:calc(140px + env(safe-area-inset-bottom,0px));width:52px;height:52px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-fg);font-size:24px;box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:4}
+@media(min-width:640px){.fab{right:calc(50% - 300px)}}
+.coach{background:linear-gradient(135deg,var(--surface),var(--good-soft))}
+.ava{width:46px;height:46px;flex:none;border-radius:50%;background:var(--accent);display:grid;place-items:center;font-size:24px}
+.task{display:flex;gap:10px;align-items:center;font-size:16px}.task i{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:14px;flex:none;color:var(--accent-fg)}
+.task.ok i{background:var(--good);border-color:var(--good)}.task.ok{color:var(--muted);text-decoration:line-through}
+.lvl,.les{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;text-align:left}
+.lvl b,.les b{font-size:17px}.lvl small,.les small{color:var(--muted);font-size:13px}
+.lnum{font-family:var(--f-display);font-weight:700;font-size:26px;width:40px;height:40px;border-radius:10px;background:var(--surface2);display:grid;place-items:center}
+.lst{font-family:var(--f-mono);font-size:14px;color:var(--muted)}
+.lck{width:32px;height:32px;border-radius:50%;background:var(--surface2);display:grid;place-items:center;font-weight:700;font-family:var(--f-mono)}
+.les.test{border-color:var(--brass)}.locked{opacity:.55}
+.prog.sm{height:5px;margin-top:4px}
+.back{background:none;border:0;padding:0;color:var(--accent);font-weight:600;text-align:left}
+.center{text-align:center;align-items:center}.center .btn{width:100%}.center .card{width:100%}
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center}
+.sheetin{background:var(--bg);width:100%;max-width:560px;max-height:88vh;max-height:88svh;border-radius:16px 16px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;overflow:auto}
+.chat{display:flex;flex-direction:column;gap:8px;overflow-y:auto;min-height:80px;max-height:44vh}
+.bub{border-radius:12px;padding:10px 12px;max-width:92%;font-size:15px;display:grid;gap:6px}.bub p{margin:0}.bub ul{margin:0;padding-left:18px}
+.bub.ai{background:var(--surface);border:1px solid var(--line);align-self:flex-start}.bub.me{background:var(--accent);color:var(--accent-fg);align-self:flex-end}
+.bub h4{margin:4px 0 0;font-size:15px}
+.quick{display:flex;gap:6px;flex-wrap:wrap}
+.ask{display:flex;gap:8px}.ask input,.gin{flex:1;min-width:0;font:inherit;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+.gin{width:100%}
+.gkey ol{margin:0;padding-left:20px;display:grid;gap:4px;font-size:15px}
+.typing{color:var(--muted);font-style:italic}
+.chip{font-family:var(--f-mono);font-size:13px}
+.tut .n{font-size:15px}
+h1{font-size:30px}
+a{color:var(--accent)}
+.qhead{grid-template-columns:auto 1fr auto auto!important}.tbtn{white-space:nowrap}
+.brand{white-space:nowrap;font-size:20px}
+.notescta{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--fg);border-left:4px solid var(--brass)}
+.notescta b{font-size:17px}
+.foot{position:static!important;background:none!important;padding:14px 0 8px}
+/* ===== Studio UI (v40): light premium look, board-first game screens ===== */
+:root{
+  --bg:#FBFBF8; --surface:#FFFFFF; --surface2:#F0F2EC; --fg:#16201B; --muted:#68736C; --line:#E4E8E1;
+  --accent:#2F7D55; --accent-fg:#FFFFFF; --brass:#B4841C; --good:#25804F; --bad:#C0432B; --good-soft:#DDF1E5; --bad-soft:#F8E1DA;
+  --f-display:"Bricolage Grotesque","Figtree",system-ui,-apple-system,sans-serif; --f-body:"Figtree",system-ui,-apple-system,sans-serif;
+  --r:18px; --sh:0 1px 2px rgba(22,32,27,.05),0 8px 24px rgba(30,50,40,.07); --sh2:0 1px 2px rgba(22,32,27,.06),0 14px 34px rgba(30,50,40,.12);
+  --stage:#E9EFE8; --sheet:#FFFFFF; --navbg:rgba(255,255,255,.86); --hdrbg:rgba(251,251,248,.86);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1310; --surface:#151D19; --surface2:#1E2823; --fg:#ECF1ED; --muted:#93A098; --line:#25302A;
+  --accent:#5CC08C; --accent-fg:#06180F; --brass:#E2B552; --good:#55C688; --bad:#EF7B64; --good-soft:#173826; --bad-soft:#41201A;
+  --sh:0 0 0 1px #212B26; --sh2:0 0 0 1px #2A3530,0 14px 34px rgba(0,0,0,.4); --stage:#09100D; --sheet:#151D19; --navbg:rgba(21,29,25,.88); --hdrbg:rgba(13,19,16,.86)}}
+:root[data-theme="dark"]{
+  --bg:#0D1310; --surface:#151D19; --surface2:#1E2823; --fg:#ECF1ED; --muted:#93A098; --line:#25302A;
+  --accent:#5CC08C; --accent-fg:#06180F; --brass:#E2B552; --good:#55C688; --bad:#EF7B64; --good-soft:#173826; --bad-soft:#41201A;
+  --sh:0 0 0 1px #212B26; --sh2:0 0 0 1px #2A3530,0 14px 34px rgba(0,0,0,.4); --stage:#09100D; --sheet:#151D19; --navbg:rgba(21,29,25,.88); --hdrbg:rgba(13,19,16,.86)}
+body{font-size:16px;letter-spacing:-.003em}
+body::before{background:var(--hdrbg)}
+header.top{background:var(--hdrbg);-webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid transparent;box-shadow:0 1px 0 var(--line)}
+.brand{font-weight:800;font-size:19px;letter-spacing:-.02em}
+.brand i{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:10px;background:var(--accent);color:var(--accent-fg);font-size:18px}
+.chips{font-family:var(--f-body);font-weight:700;font-size:13px;color:var(--fg)}
+.chip{background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);padding:4px 11px}
+nav.tabs{background:var(--navbg);-webkit-backdrop-filter:saturate(1.4) blur(16px);backdrop-filter:saturate(1.4) blur(16px);border-top:1px solid var(--line)}
+nav.tabs button{font-family:var(--f-body);font-weight:600;font-size:11.5px;gap:3px;color:var(--muted);background:none!important}
+nav.tabs button span{display:grid;place-items:center;width:52px;height:30px;border-radius:999px;font-size:19px;transition:background .2s,color .2s}
+nav.tabs button.on{color:var(--fg);font-weight:800}
+nav.tabs button.on span{background:var(--accent);color:var(--accent-fg)}
+h1,h2,h3{font-weight:800;letter-spacing:-.025em}
+h1{font-size:34px}h2{font-size:24px}h3{font-size:19px}
+.eyebrow{font-family:var(--f-body);font-weight:800;font-size:12px;letter-spacing:.1em;color:var(--accent)}
+.card,.tile,.lesson{border:0;box-shadow:var(--sh);border-radius:var(--r)}
+.card{padding:18px}
+.tile{border-radius:16px}
+.lesson{border-radius:14px}
+.lesson.next{box-shadow:var(--sh),inset 0 0 0 2px var(--accent)}
+.stagelist{border-top:0;gap:8px}
+.stagerow{background:var(--surface);border:0;border-radius:16px;box-shadow:var(--sh);padding:14px 12px}
+.btn{border-radius:14px;font-weight:700;background:var(--surface2);transition:transform .08s,filter .15s}
+.btn:active{transform:scale(.98)}
+.btn.primary{box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 30%,transparent)}
+.btn.small{border-radius:12px}
+.choice{border:0;box-shadow:var(--sh);border-radius:14px}
+.x{background:var(--surface);box-shadow:var(--sh)}
+.prog,.bar{background:var(--surface2)}
+.pos,.moves{border:0;box-shadow:var(--sh);border-radius:14px}
+.key{border-radius:10px}
+.board{border-radius:12px;box-shadow:0 0 0 1px rgba(0,0,0,.06),0 10px 28px rgba(20,40,30,.16)}
+.n{border-radius:6px}
+.drill{border:0;box-shadow:var(--sh);border-radius:16px}
+.seg{border-radius:12px}
+nav.tabs button{text-transform:none;letter-spacing:0}
+/* floating tab bar (matches app v41) */
+nav.tabs{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));padding-bottom:0;border:0;border-radius:24px;background:#16241D;box-shadow:0 12px 30px rgba(10,25,18,.35);max-width:536px;margin:0 auto}
+nav.tabs .wrap{padding:6px 6px}
+nav.tabs button{color:#93A79B}
+nav.tabs button.on{color:#fff}
+nav.tabs button.on span{background:#5CC08C;color:#08170F}
+main{padding-bottom:120px}
+
+/* embedded inside the 64 Squares app */
+body.emb header.top,body.emb nav.tabs{display:none!important}
+body.emb main{padding-block:6px 40px}
+body.emb::before{display:none}
+
+/* ---- Road to 3000 ---- */
+.tbtn{display:none!important}
+.shero h1{font-size:30px;margin:2px 0}
+.qlist{display:flex;flex-direction:column;gap:8px}
+.qrow{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.qrow.done{background:var(--good-soft);border-color:transparent}
+.qi{font-size:20px;width:26px;text-align:center;flex:none}
+.qt{flex:1;min-width:0}
+.small{font-size:13px}
+.lvls{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.lv{display:flex;flex-direction:column;align-items:center;gap:1px;padding:8px 2px;border-radius:10px;border:1px solid var(--line);background:var(--surface)}
+.lv b{font-family:var(--f-display);font-size:20px}.lv span{font-size:11px;font-weight:700;text-align:center}.lv small{font-size:10px;color:var(--muted)}
+.lv.on{border-color:var(--accent);background:var(--surface2)}.lv.locked{opacity:.5}
+.card.alert{border-color:var(--bad);background:var(--bad-soft)}.card.okc{border-color:var(--good);background:var(--good-soft)}
+ul.gate{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;font-size:14px}
+#gmv .mvx{cursor:pointer;padding:0 2px;border-radius:4px}#gmv .mvx.on{background:var(--surface2);font-weight:700}#gmv .mvx.blund{color:var(--bad);font-weight:700}#gmv .mvx.mist{color:#d9822b;font-weight:700}#gmv .mvx.inacc{color:var(--brass)}
+.moves{font-family:var(--f-mono);font-size:13px;max-height:120px;overflow:auto;line-height:1.7;word-break:break-word}.moves .mn{color:var(--muted)}
+.bar{height:8px;border-radius:6px;background:var(--surface2);overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}
+.wrapr{flex-wrap:wrap;gap:6px}
+#lu{flex:1;min-width:0;font:inherit;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+/* ---- Lichess Play ---- */
+.qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.lvgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+.qp{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 4px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:inherit;cursor:pointer}
+.qp b{font-family:var(--f-display);font-size:19px}.qp small{font-size:11px;color:var(--muted)}
+.qp.on{border-color:var(--accent);background:var(--surface2)}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--muted)}
+.form select,.form input,#chatin{font:inherit;font-size:15px;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg);min-width:0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#fuser,#chatin{flex:1}
+.seg{width:100%}.seg button{flex:1}
+.tog{display:flex;gap:6px;align-items:center;font-weight:600}
+.gamev{gap:6px}
+.pl{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:14px;gap:8px}
+.pl span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.clock{font-family:var(--f-mono);font-size:20px;padding:3px 10px;border-radius:8px;background:var(--surface2);font-variant-numeric:tabular-nums}
+.clock.run{background:var(--accent);color:var(--accent-fg)}.clock.low.run{background:var(--bad);color:#fff}
+.moves{font-family:var(--f-mono);font-size:13px;max-height:84px;overflow:auto;line-height:1.6;word-break:break-word}
+.moves .mn{color:var(--muted)}
+.wrapr{flex-wrap:wrap;gap:6px}
+.offer{display:flex;align-items:center;gap:6px;font-weight:600;width:100%;flex-wrap:wrap}
+.chatlog{max-height:140px;overflow:auto;margin:6px 0}
+.form .row{flex-wrap:wrap}#fuser{flex:1 1 100%}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="brand" href="#/" style="color:inherit;text-decoration:none"><i style="font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.04em">64</i> Lichess Play</a><div class="chips"><span class="chip" id="luser"></span></div></div></header>
+<main><div class="wrap" id="app"></div></main>
+<nav class="tabs"><div class="wrap">
+<button data-go="#/"><span>🌐</span>Lobby</button>
+<button onclick="location.href='road.html'"><span>🗓</span>Road</button>
+<button onclick="location.href='course.html'"><span>📚</span>Course</button>
+<button onclick="location.href='index.html'"><span>👁</span>Trainer</button>
+</div></nav>
+<script>
+'use strict';
+const FILES='abcdefgh';
+const sn=s=>FILES[s&7]+((s>>3)+1);
+const si=n=>FILES.indexOf(n[0])+(+n[1]-1)*8;
+const light=s=>((s&7)+(s>>3))%2===1;
+const rnd=n=>Math.floor(Math.random()*n);
+const pick=a=>a[rnd(a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const ALL=[...Array(64).keys()];
+const isW=p=>!!p&&p===p.toUpperCase();
+const PNAME={K:'king',Q:'queen',R:'rook',B:'bishop',N:'knight',P:'pawn'};
+const plabel=p=>(isW(p)?'White ':'Black ')+PNAME[p.toUpperCase()];
+const GLYPH={K:'♚',Q:'♛',R:'♜',B:'♝',N:'♞',P:'♟'};
+const ord=n=>n+(['th','st','nd','rd'][(n%100-20)%10]||['th','st','nd','rd'][n%100]||'th');
+const T=n=>`<b class="n">${n}</b>`;
+const side=p=>p==='w'?"White's":"Black's";
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function sq(f,r){return(f<0||f>7||r<0||r>7)?-1:r*8+f}
+const N_OFF=[[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1],[-2,1],[-1,2]];
+const K_OFF=[[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];
+const B_DIR=[[1,1],[1,-1],[-1,1],[-1,-1]],R_DIR=[[1,0],[-1,0],[0,1],[0,-1]],Q_DIR=[...B_DIR,...R_DIR];
+const EMPTY=()=>Array(64).fill(null);
+function rays(b,s,dirs,slide){const out=[],f=s&7,r=s>>3;for(const[df,dr]of dirs){let ff=f+df,rr=r+dr;while(ff>=0&&ff<8&&rr>=0&&rr<8){const t=rr*8+ff;out.push(t);if(!slide||b[t])break;ff+=df;rr+=dr}}return out}
+function pieceAttacks(b,s,p){p=p||b[s];const U=p.toUpperCase();
+  if(U==='N')return rays(b,s,N_OFF,false);if(U==='K')return rays(b,s,K_OFF,false);
+  if(U==='B')return rays(b,s,B_DIR,true);if(U==='R')return rays(b,s,R_DIR,true);if(U==='Q')return rays(b,s,Q_DIR,true);
+  const d=isW(p)?1:-1;return[-1,1].map(df=>sq((s&7)+df,(s>>3)+d)).filter(t=>t>=0)}
+const emptyAtt=(s,p)=>pieceAttacks(EMPTY(),s,p);
+const toMap=b=>{const m={};b.forEach((p,i)=>{if(p)m[sn(i)]=p});return m};
+
+/* ================= chess engine ================= */
+function startState(){const b=EMPTY(),back='RNBQKBNR';for(let f=0;f<8;f++){b[f]=back[f];b[8+f]='P';b[48+f]='p';b[56+f]=back[f].toLowerCase()}return{b,w:true,c:{K:1,Q:1,k:1,q:1},ep:-1,hm:0,fm:1}}
+function attacked(b,s,byW){const f=s&7,r=s>>3;
+  const pr=byW?r-1:r+1,P=byW?'P':'p';for(const df of[-1,1]){const t=sq(f+df,pr);if(t>=0&&b[t]===P)return true}
+  const Nn=byW?'N':'n';for(const[df,dr]of N_OFF){const t=sq(f+df,r+dr);if(t>=0&&b[t]===Nn)return true}
+  const Kk=byW?'K':'k';for(const[df,dr]of K_OFF){const t=sq(f+df,r+dr);if(t>=0&&b[t]===Kk)return true}
+  const B=byW?'B':'b',R=byW?'R':'r',Q=byW?'Q':'q';
+  for(const[df,dr]of B_DIR){let ff=f+df,rr=r+dr;while(ff>=0&&ff<8&&rr>=0&&rr<8){const p=b[rr*8+ff];if(p){if(p===B||p===Q)return true;break}ff+=df;rr+=dr}}
+  for(const[df,dr]of R_DIR){let ff=f+df,rr=r+dr;while(ff>=0&&ff<8&&rr>=0&&rr<8){const p=b[rr*8+ff];if(p){if(p===R||p===Q)return true;break}ff+=df;rr+=dr}}
+  return false}
+const kingSq=(b,w)=>b.indexOf(w?'K':'k');
+const inCheck=st=>attacked(st.b,kingSq(st.b,st.w),!st.w);
+function pseudo(st){const b=st.b,w=st.w,mv=[];
+  for(let s=0;s<64;s++){const p=b[s];if(!p||isW(p)!==w)continue;const U=p.toUpperCase(),f=s&7,r=s>>3;
+    if(U==='P'){const d=w?1:-1,start=w?1:6,last=w?7:0;
+      const add=(t,cap,ep)=>{if((t>>3)===last){for(const pr of'QRBN')mv.push({f:s,t,p,cap,promo:pr})}else mv.push({f:s,t,p,cap,ep})};
+      const one=sq(f,r+d);if(one>=0&&!b[one]){add(one);const two=sq(f,r+2*d);if(r===start&&!b[two])mv.push({f:s,t:two,p,dbl:1})}
+      for(const df of[-1,1]){const c=sq(f+df,r+d);if(c<0)continue;if(b[c]&&isW(b[c])!==w)add(c,b[c]);else if(c===st.ep)add(c,w?'p':'P',1)}
+    }else{const dirs=U==='N'?N_OFF:U==='K'?K_OFF:U==='B'?B_DIR:U==='R'?R_DIR:Q_DIR,slide='BRQ'.includes(U);
+      for(const t of rays(b,s,dirs,slide)){if(!b[t])mv.push({f:s,t,p});else if(isW(b[t])!==w)mv.push({f:s,t,p,cap:b[t]})}}}
+  if(w){if(st.c.K&&b[4]==='K'&&b[7]==='R'&&!b[5]&&!b[6]&&!attacked(b,4,false)&&!attacked(b,5,false)&&!attacked(b,6,false))mv.push({f:4,t:6,p:'K',castle:'K'});
+    if(st.c.Q&&b[4]==='K'&&b[0]==='R'&&!b[1]&&!b[2]&&!b[3]&&!attacked(b,4,false)&&!attacked(b,3,false)&&!attacked(b,2,false))mv.push({f:4,t:2,p:'K',castle:'Q'})}
+  else{if(st.c.k&&b[60]==='k'&&b[63]==='r'&&!b[61]&&!b[62]&&!attacked(b,60,true)&&!attacked(b,61,true)&&!attacked(b,62,true))mv.push({f:60,t:62,p:'k',castle:'k'});
+    if(st.c.q&&b[60]==='k'&&b[56]==='r'&&!b[57]&&!b[58]&&!b[59]&&!attacked(b,60,true)&&!attacked(b,59,true)&&!attacked(b,58,true))mv.push({f:60,t:58,p:'k',castle:'q'})}
+  return mv}
+function make(st,m){const b=st.b.slice();b[m.f]=null;b[m.t]=m.promo?(st.w?m.promo:m.promo.toLowerCase()):m.p;
+  if(m.ep)b[m.t+(st.w?-8:8)]=null;
+  if(m.castle){const[a,z]={K:[7,5],Q:[0,3],k:[63,61],q:[56,59]}[m.castle];b[z]=b[a];b[a]=null}
+  const c={...st.c};if(m.p==='K'){c.K=0;c.Q=0}if(m.p==='k'){c.k=0;c.q=0}
+  for(const x of[m.f,m.t]){if(x===0)c.Q=0;if(x===7)c.K=0;if(x===56)c.q=0;if(x===63)c.k=0}
+  return{b,w:!st.w,c,ep:m.dbl?(m.f+m.t)/2:-1,hm:(m.p.toUpperCase()==='P'||m.cap)?0:st.hm+1,fm:st.fm+(st.w?0:1)}}
+function legal(st){return pseudo(st).filter(m=>{const n=make(st,m);return!attacked(n.b,kingSq(n.b,st.w),!st.w)})}
+function san(st,m,list){let s;
+  if(m.castle)s=(m.castle.toUpperCase()==='K')?'O-O':'O-O-O';
+  else{const U=m.p.toUpperCase();
+    if(U==='P'){s=(m.cap?FILES[m.f&7]+'x':'')+sn(m.t)+(m.promo?'='+m.promo:'')}
+    else{s=U;const amb=list.filter(o=>o.f!==m.f&&o.p===m.p&&o.t===m.t&&!o.castle);
+      if(amb.length){const sf=amb.some(o=>(o.f&7)===(m.f&7)),sr=amb.some(o=>(o.f>>3)===(m.f>>3));s+=!sf?FILES[m.f&7]:!sr?String((m.f>>3)+1):sn(m.f)}
+      s+=(m.cap?'x':'')+sn(m.t)}}
+  const n=make(st,m);if(inCheck(n))s+=legal(n).length?'+':'#';return s}
+const normSan=s=>s.trim().replace(/0/g,'O').replace(/o/g,'O').replace(/[+#x=!?\s]/g,'').replace(/e\.?p\.?$/,'');
+function findMove(st,input){const list=legal(st);const raw=input.trim();
+  const cm=raw.toLowerCase().match(/^([a-h][1-8])-?([a-h][1-8])([qrbn])?$/);
+  if(cm){const f=si(cm[1]),t=si(cm[2]),pr=(cm[3]||'q').toUpperCase();return list.find(m=>m.f===f&&m.t===t&&(!m.promo||m.promo===pr))||null}
+  let want=normSan(raw);
+  for(const m of list){if(normSan(san(st,m,list))===want)return m}
+  // pawn promotion without piece letter -> queen
+  for(const m of list){if(m.promo==='Q'&&normSan(san(st,m,list)).replace(/Q$/,'')===want)return m}
+  // over-disambiguated input like Ngf3
+  const pm=want.match(/^([KQRBN])([a-h]?[1-8]?)([a-h][1-8])$/);
+  if(pm){const c=list.filter(m=>m.p.toUpperCase()===pm[1]&&m.t===si(pm[3])&&sn(m.f).includes(pm[2]));if(c.length===1)return c[0]}
+  return null}
+const VAL={P:100,N:320,B:330,R:500,Q:900,K:0};
+function evalW(b){let s=0,mat=0;for(let i=0;i<64;i++){const p=b[i];if(p&&p.toUpperCase()!=='K'&&p.toUpperCase()!=='P')mat+=VAL[p.toUpperCase()]}
+  const eg=mat<=1400;
+  for(let i=0;i<64;i++){const p=b[i];if(!p)continue;const U=p.toUpperCase(),w=isW(p),f=i&7,r=i>>3;
+  let v=VAL[U];const c=7-(Math.abs(3.5-f)+Math.abs(3.5-r));
+  if(U==='N')v+=c*6;else if(U==='B')v+=c*3;else if(U==='Q')v+=c;
+  else if(U==='P'){const adv=w?r-1:6-r;v+=eg?adv*adv*6:adv*5+(f>=2&&f<=5?adv*4:0)}
+  else if(U==='K'){v+=eg?c*8:((w?r===0:r===7)?(f===6||f===2?25:10):-15)}
+  s+=w?v:-v}
+  if(eg){const wk=b.indexOf('K'),bk=b.indexOf('k');if(wk>=0&&bk>=0){const d=Math.max(Math.abs((wk&7)-(bk&7)),Math.abs((wk>>3)-(bk>>3)));
+    if(s>300)s+=(14-d)*6;else if(s<-300)s-=(14-d)*6}}
+  return s}
+const mvv=(a,c)=>((c.cap?VAL[c.cap.toUpperCase()]*10-VAL[c.p.toUpperCase()]:0)+(c.promo?800:0))-((a.cap?VAL[a.cap.toUpperCase()]*10-VAL[a.p.toUpperCase()]:0)+(a.promo?800:0));
+function qs(st,al,be,d){const stand=(st.w?1:-1)*evalW(st.b);if(stand>=be)return be;if(stand>al)al=stand;if(d<=0)return al;
+  const caps=pseudo(st).filter(m=>m.cap||m.promo).sort(mvv);
+  for(const m of caps){const n=make(st,m);if(attacked(n.b,kingSq(n.b,st.w),!st.w))continue;const sc=-qs(n,-be,-al,d-1);if(sc>=be)return be;if(sc>al)al=sc}return al}
+function search(st,d,al,be,ply){const ms=legal(st);if(!ms.length)return inCheck(st)?-99999+ply:0;if(st.hm>=100)return 0;if(d<=0)return qs(st,al,be,4);
+  ms.sort(mvv);for(const m of ms){const sc=-search(make(st,m),d-1,-be,-al,ply+1);if(sc>=be)return be;if(sc>al)al=sc}return al}
+function engineMove(st,level){const ms=legal(st);if(!ms.length)return null;const depth=[1,2,3][level-1]||2,noise=[140,35,6][level-1]||35;
+  let best=null,bs=-Infinity;for(const m of shuffle(ms)){const sc=-search(make(st,m),depth-1,-Infinity,Infinity,1)+Math.random()*noise;if(sc>bs){bs=sc;best=m}}return best}
+function boardHTML(o){const persp=o.persp||'w';let h=`<div class="board${o.plain?' plain':''}${o.cls?' '+o.cls:''}" data-board="${o.id||'main'}">`;
+  for(let row=0;row<8;row++)for(let col=0;col<8;col++){const r=persp==='w'?7-row:row,f=persp==='w'?col:7-col,s=r*8+f,name=sn(s);
+    const c=['sq',light(s)?'l':'d'];if(o.hl&&o.hl.includes(name))c.push('hl');const mk=o.marks&&o.marks[name];if(mk)c.push('m-'+mk);if(o.dots&&o.dots.includes(name))c.push('dot');if(o.from===name)c.push('from');
+    let inner='';if(o.coords){if(row===7)inner+=`<span class="cf">${FILES[f]}</span>`;if(col===0)inner+=`<span class="cr">${r+1}</span>`}
+    if(o.labels)inner+=`<span class="lab">${name}</span>`;
+    const p=o.pieces&&o.pieces[name];if(p)inner+=`<span class="pc ${isW(p)?'w':'b'}">${GLYPH[p.toUpperCase()]}︎</span>`;
+    const st=o.heat&&o.heat[name]!=null?` style="background:${o.heat[name]}"`:'';
+    h+=`<div class="${c.join(' ')}" data-sq="${name}"${st}>${o.heat&&o.heatLab?name:inner}</div>`}
+  return h+'</div>'}
+
+const START_FEN='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+const COURSE=[];
+/* placement test: 2 test questions per level (levels 1-7) */
+const PLACEMENT=[];
+if(typeof module!=='undefined')module.exports={COURSE,PLACEMENT};
+
+const LINES={};
+/* ================= course app ================= */
+const $=(s,r)=>(r||document).querySelector(s);
+const h=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e};
+function parseFEN(fen){const[pos,side,cas,ep]=fen.trim().split(/\s+/);const b=EMPTY();const rows=pos.split('/');
+  for(let i=0;i<8;i++){let f=0;for(const ch of rows[i]){if(/\d/.test(ch))f+=+ch;else{b[(7-i)*8+f]=ch;f++}}}
+  const c=cas||'-';return{b,w:side!=='b',c:{K:+c.includes('K'),Q:+c.includes('Q'),k:+c.includes('k'),q:+c.includes('q')},ep:ep&&ep!=='-'?si(ep):-1,hm:0,fm:1}}
+const sanOf=(st,m)=>san(st,m,legal(st));
+const mates=st=>inCheck(st)&&!legal(st).length;
+const posKey=st=>st.b.map(p=>p||'.').join('')+(st.w?'w':'b')+st.ep;
+function sameSan(a,b){return normSan(a)===normSan(b)}
+function md(s){if(!s)return'';return s.split(/\n\n+/).map(par=>{const t=par.trim();
+  if(t.startsWith('- '))return'<ul>'+t.split(/\n/).map(l=>'<li>'+inl(l.replace(/^- /,''))+'</li>').join('')+'</ul>';
+  return'<p>'+inl(t).replace(/\n/g,'<br>')+'</p>'}).join('')}
+function inl(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`(.+?)`/g,'<span class="n">$1</span>')}
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const dayNum=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/864e5);
+
+/* ---------- progress (saved on this device) ---------- */
+const KEY='mindseye.course.v1';
+const DEF=()=>({v:1,g:{},done:{},tests:{},xp:0,streak:{last:'',n:0},stat:{},rev:{},day:{d:'',lesson:0,puz:0,rev:0,xp:0},placed:0,solved:{}});
+let PR=(()=>{try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j&&j.v===1)return Object.assign(DEF(),j)}catch(e){}return DEF()})();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(PR))}catch(e){}}
+function touchDay(){const t=today();if(PR.day.d!==t)PR.day={d:t,lesson:0,puz:0,rev:0,xp:0};
+  if(PR.streak.last!==t){const y=new Date(Date.now()-864e5);const ys=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');
+    PR.streak.n=PR.streak.last===ys?PR.streak.n+1:1;PR.streak.last=t}}
+function addXP(n){touchDay();PR.xp+=n;PR.day.xp+=n;save();chips()}
+function chips(){$('#xp').textContent=PR.xp+' XP';$('#streak').textContent='🔥 '+(PR.streak.last===today()||isYesterday(PR.streak.last)?PR.streak.n:0)}
+function isYesterday(d){const y=new Date(Date.now()-864e5);return d===y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0')}
+/* result of one graded step: feeds weak-topic stats and the review queue */
+function grade(step,ok){if(!step.id)return;const les=step.les;touchDay();
+  const s=PR.stat[les]||(PR.stat[les]={ok:0,bad:0});ok?s.ok++:s.bad++;
+  const r=PR.rev[step.id];
+  if(!ok)PR.rev[step.id]={due:dayNum()+1,box:0};
+  else if(r){r.box++;if(r.box>3)delete PR.rev[step.id];else r.due=dayNum()+[1,3,7,14][r.box]}
+  if(ok&&step.t==='move')PR.solved[step.id]=1;save()}
+
+/* ---------- course index ---------- */
+const STEPS={};const ALLLES=[];
+COURSE.forEach((L,li)=>{L.li=li;L.lessons.forEach((les,lj)=>{les.li=li;les.lj=lj;les.key=les.key||L.id+'.'+les.id;ALLLES.push(les);
+  les.steps.forEach((s,k)=>{s.id=les.key+'.'+k;s.les=les.key;s.li=li;STEPS[s.id]=s})});
+  (L.test||[]).forEach((s,k)=>{s.id=L.id+'.T.'+k;s.les=s.of?((L.lessons.find(l=>l.id===s.of)||{}).key||L.id+'.'+s.of):L.id+'.test';s.li=li;STEPS[s.id]=s})});
+for(const id in LINES){const s=STEPS[id];if(s)Object.assign(s,LINES[id])}
+const lesByKey=k=>ALLLES.find(l=>l.key===k);
+const graded=s=>['quiz','move','reach','tap'].includes(s.t);
+function levelUnlocked(li){return li===0||li<=PR.placed||PR.tests[COURSE[li-1].id]>=70||COURSE[li].lessons.some(l=>PR.done[l.key])}
+function lessonUnlocked(les){if(!levelUnlocked(les.li))return false;if(les.lj===0||les.li<PR.placed)return true;const prev=COURSE[les.li].lessons[les.lj-1];return!!PR.done[prev.key]||!!PR.done[les.key]}
+function nextLesson(){for(const L of COURSE){if(L.li<PR.placed)continue;for(const les of L.lessons)if(!PR.done[les.key])return{les};if(!(PR.tests[L.id]>=70))return{test:L}}return null}
+function weakTopics(){return Object.entries(PR.stat).map(([k,s])=>({k,s,n:s.ok+s.bad,acc:s.ok/Math.max(1,s.ok+s.bad)})).filter(x=>x.n>=3&&x.acc<0.7).sort((a,b)=>a.acc-b.acc)}
+function dueReviews(){const d=dayNum();return Object.entries(PR.rev).filter(([id,r])=>r.due<=d&&STEPS[id]).map(([id])=>STEPS[id])}
+const lesName=k=>{const l=lesByKey(k);if(l)return l.title;const L=COURSE.find(L=>L.id+'.test'===k);return L?L.title+' test':k};
+
+/* ---------- board ---------- */
+function xy(n,p){const f=FILES.indexOf(n[0]),r=+n[1]-1;return p==='b'?[7-f+.5,r+.5]:[f+.5,7-r+.5]}
+function arrowsSVG(arr,p){if(!arr||!arr.length)return'';let s='<svg class="arrows" viewBox="0 0 8 8" aria-hidden="true">';
+  for(const a of arr){const[x1,y1]=xy(a[0],p),[x2,y2]=xy(a[1],p);const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L;
+    const hx=x2-ux*.18,hy=y2-uy*.18,bx=hx-ux*.42,by=hy-uy*.42,px=-uy*.24,py=ux*.24,cl=a[2]||'g';
+    s+=`<line x1="${x1}" y1="${y1}" x2="${bx}" y2="${by}" class="ar ${cl}"/><polygon points="${hx},${hy} ${bx+px},${by+py} ${bx-px},${by-py}" class="ah ${cl}"/>`}
+  return s+'</svg>'}
+function Board(host,o){const el=h('div','bwrap');host.appendChild(el);
+  const B={o:Object.assign({persp:'w',coords:true},o),sel:null,dots:[],last:null,marks:{},lock:false,el};
+  B.draw=()=>{const o=B.o;const pieces=o.st?toMap(o.st.b):(o.pieces||{});const marks=Object.assign({},o.marks||{},B.marks);
+    if(B.last)for(const q of B.last)if(!marks[q])marks[q]='last';if(B.sel)marks[B.sel]='sel';
+    el.innerHTML=boardHTML({persp:o.persp,coords:o.coords,labels:o.labels,hl:o.hl,marks,dots:B.dots,pieces})+arrowsSVG(o.arr,o.persp)};
+  B.set=(o2)=>{Object.assign(B.o,o2);B.draw()};
+  B.clear=()=>{B.sel=null;B.dots=[];B.marks={};};
+  el.addEventListener('click',e=>{const d=e.target.closest('[data-sq]');if(!d)return;const name=d.dataset.sq;
+    if(B.o.onTap){B.o.onTap(name);return}
+    const st=B.o.st;if(!B.o.side||!st||B.lock)return;if(st.w!==(B.o.side==='w'))return;
+    const ms=legal(st);
+    if(B.sel){const cand=ms.filter(m=>sn(m.f)===B.sel&&sn(m.t)===name);
+      if(cand.length){B.sel=null;B.dots=[];
+        if(cand.length>1&&cand[0].promo)promoPick(el,st.w,pr=>{B.draw();B.o.onMove(cand.find(m=>m.promo===pr))});else B.o.onMove(cand[0]);return}}
+    const p=st.b[si(name)];
+    if(p&&isW(p)===st.w&&B.sel!==name){B.sel=name;B.dots=ms.filter(m=>sn(m.f)===name).map(m=>sn(m.t))}else{B.sel=null;B.dots=[]}
+    B.draw()});
+  B.draw();return B}
+function promoPick(el,w,cb){const ov=h('div','promo');ov.innerHTML='<div class="promobox"><b>Pawn ko kya banana hai?</b><div class="row">'+'QRBN'.split('').map(p=>`<button class="btn" data-p="${p}"><span class="pc ${w?'w':'b'}">${GLYPH[p]}︎</span></button>`).join('')+'</div></div>';
+  ov.addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b)return;ov.remove();cb(b.dataset.p)});el.appendChild(ov)}
+
+/* ---------- AI tutor (Gemini free key, same key as the trainer) ---------- */
+const GKEY='mindseye.gemini.key';
+let GK_MEM='';
+function gCookie(){try{const m=document.cookie.match(/(?:^|; )mecgk=([^;]*)/);return m?decodeURIComponent(m[1]):''}catch(e){return''}}
+const gKey=()=>{let k='';try{k=localStorage.getItem(GKEY)||''}catch(e){}return k||GK_MEM||gCookie()};
+function gIdb(fn){try{const r=indexedDB.open('mindseye-kv',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>{try{fn(r.result.transaction('kv','readwrite').objectStore('kv'))}catch(e){}}}catch(e){}}
+function gSetKey(k){GK_MEM=k||'';try{k?localStorage.setItem(GKEY,k):localStorage.removeItem(GKEY)}catch(e){}
+  try{document.cookie='mecgk='+(k?encodeURIComponent(k)+'; max-age=31536000':'; max-age=0')+'; path=/; SameSite=Strict'+(location.protocol==='https:'?'; Secure':'')}catch(e){}
+  gIdb(st=>k?st.put(k,'gkey'):st.delete('gkey'));try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}}
+function gRestore(){let ls='';try{ls=localStorage.getItem(GKEY)||''}catch(e){}if(ls){GK_MEM=ls;if(!gCookie())gSetKey(ls);return}
+  const c=gCookie();if(c){gSetKey(c);return}
+  gIdb(st=>{const q=st.get('gkey');q.onsuccess=()=>{if(q.result&&!gKey()){gSetKey(q.result);if(typeof TUT!=='undefined'&&TUT.open)drawTutor()}}})}
+gRestore();
+const GMODELS=['gemini-flash-latest','gemini-2.5-flash','gemini-2.0-flash','gemini-flash-lite-latest','gemini-2.5-flash-lite'];
+async function gAsk(prompt){const key=gKey();if(!key)throw{code:'nokey'};let last={code:'model'};
+  const order=PR.g.gmodel?[PR.g.gmodel,...GMODELS.filter(m=>m!==PR.g.gmodel)]:GMODELS;
+  for(const model of order){let r,j=null;
+    const body=JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:0.6,maxOutputTokens:2048}});
+    const url=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+    // auth styles: API key header, key in URL, bearer token (for newer key formats); remember the one that works
+    const auths=[0,1,2].sort((a,b)=>(a===PR.g.gauth?-1:b===PR.g.gauth?1:0));let msg='',stat='',authOk=null,msg0='';
+    for(const a of auths){const h={'content-type':'application/json'};if(a===0)h['x-goog-api-key']=key;if(a===2)h['Authorization']='Bearer '+key;
+      try{r=await fetch(a===1?url+'?key='+encodeURIComponent(key):url,{method:'POST',headers:h,body})}catch(e){if(a===auths[auths.length-1])throw{code:'net'};continue}
+      j=null;try{j=await r.json()}catch(e){}msg=(j&&j.error&&j.error.message)||'';stat=(j&&j.error&&j.error.status)||'';
+      const authFail=r.status===401||stat==='UNAUTHENTICATED'||/API_KEY_INVALID|API key not valid|invalid authentication|credential/i.test(msg)||(r.status===400&&/key/i.test(msg));
+      if(!authFail){authOk=a;break}if(!msg0)msg0=msg}
+    if(authOk!=null&&PR.g.gauth!==authOk){PR.g.gauth=authOk;save()}
+    if(r.ok){const c=j&&j.candidates&&j.candidates[0];const t=c&&c.content&&c.content.parts?c.content.parts.map(x=>x.text||'').join('').trim():'';
+      if(!t)throw{code:'empty',msg:(c&&c.finishReason)||(j&&j.promptFeedback&&j.promptFeedback.blockReason)||''};
+      if(PR.g.gmodel!==model){PR.g.gmodel=model;save()}return{text:t,model,cut:c.finishReason==='MAX_TOKENS'}}
+    if(authOk==null)throw{code:'key',msg:msg0||msg};
+    if(r.status===403||stat==='PERMISSION_DENIED')throw{code:'denied',msg};
+    if(r.status===404||(r.status===400&&/model/i.test(msg))){last={code:'model',msg};continue}
+    if(r.status===429){last={code:'limit',msg};continue}
+    if(r.status>=500){last={code:'busy',msg};continue}
+    throw{code:'other',msg:r.status+' '+msg}}
+  throw last}
+function gErr(e){return({nokey:'Pehle free Gemini key add karo (neeche steps hain).',key:'Yeh key sahi nahi hai. aistudio.google.com/apikey se key dobara copy karke save karo.',
+  denied:'Google ne yeh key mana kar di. AI Studio mein nayi key banao.',limit:'Free limit abhi bhar gayi. 1 minute baad dobara try karo. Agar phir bhi na chale to kal try karo.',
+  busy:'Gemini abhi busy hai. 1 minute baad try karo.',net:'Gemini tak nahi pahunch paaye. Internet check karo. Claude ke preview mein yeh block ho sakta hai: GitHub wala link kholo.',
+  empty:'Gemini ne khali jawab diya. Dobara try karo.',model:'Is key ke liye free model nahi mila. Baad mein try karo ya nayi key banao.'}[e&&e.code])||('Kuch gadbad hui. '+((e&&e.msg)||''))}
+function mdLite(t){const lines=esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<i>$2</i>').split('\n');let o='',ul=false;
+  for(let l of lines){l=l.trimEnd();const li=l.match(/^\s*(?:[-*•]|\d+[.)])\s+(.*)$/),hd=l.match(/^#{1,6}\s+(.*)$/);
+    if(li){if(!ul){o+='<ul>';ul=true}o+=`<li>${li[1]}</li>`;continue}if(ul){o+='</ul>';ul=false}
+    if(hd)o+=`<h4>${hd[1]}</h4>`;else if(l.trim())o+=`<p>${l}</p>`}return o+(ul?'</ul>':'')}
+const TUTOR_SYS=`Tum ek friendly chess coach ho jo ek student ko basics se pro level tak haath pakad ke sikha rahe ho. Simple Hinglish mein jawab do (Roman script, jaise "Yeh move achha hai kyunki..."). Chess terms English mein rakho (fork, pin, check). Chhote paragraphs aur bullet points use karo. Jawab 180 words se kam rakho jab tak student lamba na maange. Moves hamesha standard notation mein likho (Nf3, exd5). Agar position di gayi hai to usi par focus karo aur galat moves invent mat karo. Har jawab ke end mein ek chhota sa practice tip ya sawal do.`;
+let TUT={open:false,ctx:null,chat:[],busy:false,msg:''};
+function tutorCtx(){return TUT.ctx||{where:'Home screen'}}
+function ctxText(c){let t=`Student abhi yahan hai: ${c.where}.`;if(c.lesson)t+=`\nLesson: ${c.lesson}.`;if(c.text)t+=`\nLesson ka text: ${c.text.slice(0,900)}`;
+  if(c.fen)t+=`\nBoard position (FEN): ${c.fen}`;if(c.task)t+=`\nTask: ${c.task}`;if(c.answer)t+=`\nSahi jawab: ${c.answer}`;if(c.tried)t+=`\nStudent ne try kiya: ${c.tried}`;
+  const w=weakTopics().slice(0,3).map(x=>lesName(x.k)+' '+Math.round(x.acc*100)+'%');if(w.length)t+=`\nStudent ke weak topics: ${w.join(', ')}.`;
+  t+=`\nCourse progress: ${Object.keys(PR.done).length}/${ALLLES.length} lessons done.`;return t}
+function offlineTip(c){const tips=[];if(c.why)tips.push(c.why);if(c.hint)tips.push('Hint: '+c.hint);
+  if(!tips.length)tips.push('Har chaal se pehle 3 cheezein dekho: Checks, Captures, Threats (CCT). Pehle apne forcing moves dekho, phir opponent ke.');return tips.join('\n\n')}
+function openTutor(){TUT.open=true;drawTutor()}
+function closeTutor(){TUT.open=false;const s=$('#tutor');if(s)s.remove()}
+function tutorQuick(){const c=tutorCtx();const q=[];
+  if(c.lesson)q.push(['explain','Yeh lesson aasaan bhasha mein samjhao'],['example','Ek aur example do']);
+  if(c.tried)q.push(['mistake','Meri galti samjhao']);
+  if(c.fen&&!c.tried)q.push(['hint','Hint do, jawab mat batao']);
+  q.push(['plan','Mera aaj ka training plan batao']);return q}
+const QUICK={explain:'Is lesson ko aur aasaan bhasha mein samjhao, ek chhote example ke saath.',example:'Is topic ka ek aur example do (position aur moves ke saath) aur samjhao.',
+  mistake:'Maine galat chaal chali. Samjhao meri chaal kyun galat thi aur sahi chaal kyun sahi hai. Phir ek tip do ki aage aisi galti na ho.',
+  hint:'Is puzzle ka ek chhota hint do, poora jawab mat batao.',plan:'Mere progress aur weak topics dekh kar aaj ka 20-30 minute ka training plan do.'};
+function drawTutor(){let s=$('#tutor');if(!TUT.open)return;if(!s){s=h('div','sheet');s.id='tutor';document.body.appendChild(s);
+    s.addEventListener('click',tutorClick)}
+  const c=tutorCtx(),key=gKey();
+  let o=`<div class="sheetin"><div class="row" style="justify-content:space-between"><h3>🤖 AI Coach</h3><button class="x" data-tu="close" aria-label="Close">✕</button></div>
+  <p class="muted" style="font-size:14px">${esc(c.lesson?('Lesson: '+c.lesson):c.where)}</p><div class="chat">`;
+  if(!TUT.chat.length)o+=`<div class="bub ai">${md(offlineTip(c))}<small class="muted">Built-in coach (offline)</small></div>`;
+  for(const m of TUT.chat)o+=`<div class="bub ${m.r}">${m.r==='ai'?mdLite(m.t):esc(m.t)}</div>`;
+  if(TUT.busy)o+=`<div class="bub ai"><span class="typing">Soch raha hoon…</span></div>`;
+  if(TUT.msg)o+=`<p class="warn" style="font-size:14px">${esc(TUT.msg)}</p>`;
+  o+=`</div>`;
+  if(key){o+=`<div class="quick">${tutorQuick().map(([k,l])=>`<button class="btn small" data-tu="q" data-k="${k}">${esc(l)}</button>`).join('')}</div>
+    <form class="ask" data-tu="form"><input id="tq" placeholder="Apna sawal likho… (jaise: pin kya hota hai?)" autocomplete="off"><button class="btn primary" data-tu="send">Pucho</button></form>
+    <small class="muted">Gemini (free). Key sirf is phone mein saved hai, trainer app ke saath shared.</small>`}
+  else o+=keyHTML();
+  o+='</div>';s.innerHTML=o;const ch=s.querySelector('.chat');ch.scrollTop=ch.scrollHeight;
+  const f=s.querySelector('form.ask');if(f)f.addEventListener('submit',e=>{e.preventDefault();const v=$('#tq').value.trim();if(v)askTutor(v)})}
+function keyHTML(){return`<div class="gkey stack"><b>AI coach chalu karo (free, ek baar, ~2 minute)</b><ol class="cline">
+   <li><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> kholo aur Google (Gmail) se sign in karo.</li>
+   <li><b>Create API key</b> dabao.</li><li>Key ke saath wala <b>copy</b> icon dabao. Key aksar <span class="mono">AIza</span> ya <span class="mono">AQ.</span> se shuru hoti hai.</li><li>Yahan paste karke <b>Save key</b> dabao.</li></ol>
+   <input class="gin" type="password" placeholder="Key yahan paste karo" autocomplete="off" autocapitalize="off" spellcheck="false">
+   <button class="btn primary block" data-tu="save">Save key</button>
+   <small class="muted">Trainer app mein key pehle se daali hai to yahan apne aap chalegi. Key ke bina bhi poora course aur built-in coach chalta hai.</small></div>`}
+async function askTutor(q,label){if(TUT.busy)return;TUT.chat.push({r:'me',t:label||q});TUT.busy=true;TUT.msg='';drawTutor();
+  const hist=TUT.chat.slice(-7,-1).map(m=>(m.r==='me'?'Student: ':'Coach: ')+m.t).join('\n');
+  const prompt=`${TUTOR_SYS}\n\n${ctxText(tutorCtx())}\n\n${hist?'Pichli baat-cheet:\n'+hist+'\n\n':''}Student ka sawal: ${q}`;
+  try{const r=await gAsk(prompt);TUT.chat.push({r:'ai',t:r.text})}catch(e){TUT.msg=gErr(e)}TUT.busy=false;drawTutor()}
+function tutorClick(e){const b=e.target.closest('[data-tu]');if(!b)return;const a=b.dataset.tu;
+  if(a==='close')closeTutor();
+  else if(a==='q')askTutor(QUICK[b.dataset.k],b.textContent);
+  else if(a==='save'){const k=(b.closest('.gkey').querySelector('input').value||'').trim().replace(/\s/g,'');
+    if(!k){TUT.msg='Pehle key paste karo.';drawTutor();return}PR.g.gauth=null;save();
+    gSetKey(k);TUT.msg='';TUT.chat.push({r:'ai',t:'Key save ho gayi! Test kar raha hoon…'});drawTutor();gAsk('Reply with just the word OK.').then(()=>{TUT.chat.push({r:'ai',t:'Key chal rahi hai. Ab mujhse kuch bhi pucho!'})},e=>{TUT.msg='Key save hui, par test fail: '+gErr(e)}).then(drawTutor)}}
+function setCtx(c){TUT.ctx=c;if(TUT.open)drawTutor()}
+
+/* ---------- step player ---------- */
+// renderStep(step, ctx) -> element. ctx.done(ok) when finished; ctx.test = single attempt
+function renderStep(s,ctx){const el=h('div','stack step');
+  const base={where:ctx.where||'Lesson',lesson:ctx.lessonTitle,text:s.md||s.q,fen:s.fen,why:s.why,hint:s.hint};setCtx(base);
+  if(s.h)el.appendChild(h('h2','',inl(s.h)));
+  ({info:stInfo,quiz:stQuiz,move:stMove,reach:stReach,tap:stTap,line:stLine,play:stPlay})[s.t](s,el,ctx,base);
+  return el}
+function fb(el,ok,title,body){let f=el.querySelector('.fb');if(!f){f=h('div','fb');el.appendChild(f)}f.className='fb '+(ok?'ok':'no');f.innerHTML=`<h3>${title}</h3>${body?md(body):''}`;return f}
+function stInfo(s,el,ctx){if(s.fen||s.pieces){const bh=h('div');el.appendChild(bh);Board(bh,{st:s.fen?parseFEN(s.fen):null,pieces:s.pieces,hl:s.hl,arr:s.arr,persp:s.flip?'b':'w',marks:s.marks})}
+  el.appendChild(h('div','tut',md(s.md)));ctx.done(null)}
+function stQuiz(s,el,ctx,base){if(s.fen){const bh=h('div');el.appendChild(bh);Board(bh,{st:parseFEN(s.fen),hl:s.hl,arr:s.arr,persp:s.flip?'b':'w'})}
+  if(s.pos)el.appendChild(h('div','pos',s.pos.map(l=>`<div>${inl(l)}</div>`).join('')));
+  el.appendChild(h('p','prompt',inl(s.q)));const ch=h('div','choices'+(s.opts.some(o=>o.length>18)?' one':''));el.appendChild(ch);let first=true,fin=false;
+  const ord=s.opts.map((_,i)=>i);for(let k=ord.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[ord[k],ord[j]]=[ord[j],ord[k]]}
+  const btnOf=[];ord.forEach(i=>{const o=s.opts[i];const b=h('button','choice',inl(o));ch.appendChild(b);btnOf[i]=b;b.onclick=()=>{if(fin)return;
+    if(i===s.a){b.classList.add('good');fin=true;fb(el,true,first?'Sahi! ✓':'Ab sahi ✓',s.why);if(first)addXP(10);grade(s,first);ctx.done(first)}
+    else{b.classList.add('bad');setCtx(Object.assign({},base,{tried:o,answer:s.opts[s.a]}));
+      if(ctx.test){fin=true;btnOf[s.a].classList.add('good');fb(el,false,'Galat',`Sahi jawab: **${s.opts[s.a]}**\n\n${s.why||''}`);grade(s,false);ctx.done(false)}
+      else{first=false;fb(el,false,'Nahi, dobara socho',s.hint||'')}}}})}
+/* puzzle: find the move(s) */
+function stMove(s,el,ctx,base){const st0=parseFEN(s.fen);let st=st0;const side=st0.w?'w':'b';
+  const line=s.line||[];const nUser=Math.ceil(line.length/2);let ply=0,first=true,fin=false,tried=[];
+  const top=h('div','row');top.innerHTML=`<span class="sidetag ${side}">${side==='w'?'White':'Black'} ki chaal</span>`+(s.mate?`<span class="chip">Mate in ${nUser}</span>`:'');el.appendChild(top);
+  el.appendChild(h('p','prompt',inl(s.q||(side==='w'?'White':'Black')+' ke liye sabse achhi chaal dhundo')));
+  const bh=h('div');el.appendChild(bh);
+  const B=Board(bh,{st,side,persp:s.flip||side==='b'?'b':'w',hl:s.hl,onMove});
+  const bar=h('div','row');el.appendChild(bar);
+  const hintB=h('button','btn small','💡 Hint'),showB=h('button','btn small','Jawab dikhao'),resetB=h('button','btn small','↺ Dobara');
+  if(!ctx.test){bar.append(hintB,showB,resetB)}
+  hintB.onclick=()=>{const f=line[ply]?findMove(st,line[ply]):null;if(f){B.marks={[sn(f.f)]:'ring'};B.draw()}fb(el,true,'Hint',s.hint||'Jo piece ring mein hai, usse chalo.');first=false};
+  showB.onclick=()=>{first=false;autoplay()};
+  resetB.onclick=()=>{st=st0;ply=0;fin=false;B.last=null;B.clear();B.lock=false;B.set({st});const f=el.querySelector('.fb');if(f)f.remove()};
+  function autoplay(){B.lock=true;const go=()=>{if(ply>=line.length){finish(false,true);return}const m=findMove(st,line[ply]);B.last=[sn(m.f),sn(m.t)];st=make(st,m);ply++;B.set({st});setTimeout(go,650)};go()}
+  function finish(ok,shown){fin=true;B.lock=true;
+    if(shown){fb(el,true,'Jawab: '+line.filter((_,i)=>i%2===0).join(', '),s.why);grade(s,false);ctx.done(false);return}
+    fb(el,true,(first?'Shabaash! ✓ ':'Ho gaya ✓ ')+(s.mate?'Checkmate!':''),s.why);if(first)addXP(15);grade(s,first);ctx.done(first)}
+  function wrong(m,msg){tried.push(sanOf(st,m));setCtx(Object.assign({},base,{fen:fenOf(st),tried:tried.join(', '),answer:line.join(' ')}));
+    if(ctx.test){B.lock=true;fin=true;fb(el,false,'Galat',`Tumne **${tried[tried.length-1]}** khela. Sahi: **${line.filter((_,i)=>i%2===0).join(', ')}**\n\n${s.why||''}`);grade(s,false);ctx.done(false);return}
+    first=false;fb(el,false,msg||'Yeh chaal nahi. Dobara try karo.',s.hint?('Hint: '+s.hint):'');B.clear();B.draw()}
+  function onMove(m){if(fin)return;const mySan=sanOf(st,m),exp=line[ply];const remaining=nUser-Math.floor(ply/2);
+    let ok=exp&&sameSan(mySan,exp),dyn=false;
+    if(!ok&&s.mate&&remaining<=2){const n=make(st,m);ok=remaining===1?mates(n):(legal(n).length>0&&legal(n).every(r=>legal(make(n,r)).some(x=>mates(make(make(n,r),x)))));dyn=ok}
+    if(!ok&&s.acc&&s.acc[ply]&&s.acc[ply].some(a=>sameSan(a,mySan))){ok=ply>=line.length-1;if(!ok){B.clear();B.draw();fb(el,true,'Achhi chaal! 👍','Yeh bhi chal sakti hai, par is puzzle ki main line try karo.');return}}
+    if(!ok&&s.ok&&ply===0&&s.ok.some(a=>sameSan(a,mySan)))ok=true;
+    if(!ok){wrong(m);return}
+    B.last=[sn(m.f),sn(m.t)];st=make(st,m);ply++;B.clear();B.set({st});
+    if(mates(st)||ply>=line.length||(s.ok&&ply===1&&line.length<=1)){finish(true);return}
+    if(dyn&&!sameSan(mySan,exp)){// left the stored line: answer with any reply, keep checking for mate
+      const reps=legal(st);if(!reps.length){finish(true);return}const r=reps.sort((a,b)=>legal(make(st,b)).length-legal(make(st,a)).length)[0];
+      const rs=sanOf(st,r);B.lock=true;setTimeout(()=>{B.last=[sn(r.f),sn(r.t)];st=make(st,r);ply++;B.lock=false;B.set({st});fb(el,true,'Achha! Ab mate do',`Opponent ne **${rs}** khela.`)},500);return}
+    B.lock=true;setTimeout(()=>{const r=findMove(st,line[ply]);B.last=[sn(r.f),sn(r.t)];st=make(st,r);ply++;B.lock=false;B.set({st});
+      fb(el,true,'Sahi! Aage badho',`Opponent: **${line[ply-1]}**. Ab tumhari chaal.`)},550)}}
+function fenOf(st){let o='';for(let r=7;r>=0;r--){let e=0;for(let f=0;f<8;f++){const p=st.b[r*8+f];if(!p)e++;else{if(e){o+=e;e=0}o+=p}}if(e)o+=e;if(r)o+='/'}
+  const c=(st.c.K?'K':'')+(st.c.Q?'Q':'')+(st.c.k?'k':'')+(st.c.q?'q':'');return o+' '+(st.w?'w':'b')+' '+(c||'-')+' '+(st.ep>=0?sn(st.ep):'-')+' '+st.hm+' '+st.fm}
+/* tap every square a piece can reach */
+function stReach(s,el,ctx){const st=parseFEN(s.fen);const ans=legal(st).filter(m=>sn(m.f)===s.from).map(m=>sn(m.t)).filter((v,i,a)=>a.indexOf(v)===i);
+  el.appendChild(h('p','prompt',inl(s.q)));const bh=h('div');el.appendChild(bh);const pick=new Set();let fin=false,first=true;
+  const B=Board(bh,{st,marks:{[s.from]:'sel'},onTap:n=>{if(fin||n===s.from)return;pick.has(n)?pick.delete(n):pick.add(n);B.marks={};pick.forEach(q=>B.marks[q]='pick');B.draw();cnt.textContent=pick.size+' chune'}});
+  const row=h('div','row');const cnt=h('span','muted','0 chune');const go=h('button','btn primary','Check karo');row.append(go,cnt);el.appendChild(row);
+  go.onclick=()=>{if(fin)return;const miss=ans.filter(q=>!pick.has(q)),bad=[...pick].filter(q=>!ans.includes(q));B.marks={};
+    ans.forEach(q=>B.marks[q]=pick.has(q)?'good':'miss');bad.forEach(q=>B.marks[q]='bad');B.draw();
+    if(!miss.length&&!bad.length){fin=true;fb(el,true,(first?'Perfect! ✓ ':'Sahi ✓ ')+ans.length+' squares',s.why);if(first)addXP(10);grade(s,first);ctx.done(first)}
+    else if(ctx.test){fin=true;fb(el,false,'Poora sahi nahi',`${miss.length} square chhoot gaye (hare ring), ${bad.length} galat (laal). ${s.why||''}`);grade(s,false);ctx.done(false)}
+    else{first=false;fb(el,false,'Lagbhag!',`${miss.length?miss.length+' square chhoot gaye (hare ring wale). ':''}${bad.length?bad.length+' galat (laal). ':''}Galat wale hata ke dobara Check karo.`);
+      bad.forEach(q=>pick.delete(q));miss.forEach(q=>pick.add(q));setTimeout(()=>{B.marks={};pick.forEach(q=>B.marks[q]='pick');B.draw()},1400)}}}
+/* tap the named square (random drill or fixed) */
+function stTap(s,el,ctx){const n=s.rand||1;let i=0,ok=0,first=true;const targets=s.ans?[s.ans]:Array.from({length:n},()=>sn(rnd(64)));
+  const p=h('p','prompt');el.appendChild(p);const bh=h('div');el.appendChild(bh);const sc=h('p','muted');el.appendChild(sc);
+  const B=Board(bh,{st:s.fen?parseFEN(s.fen):null,coords:s.coords!==false,persp:s.flip?'b':'w',onTap:q=>{if(i>=targets.length)return;const t=targets[i];
+    if(q===t){B.marks={[q]:'good'};ok++;i++}else{B.marks={[q]:'bad',[t]:'miss'};first=false;i++}B.draw();setTimeout(next,600)}});
+  function next(){if(i>=targets.length){const good=ok>=Math.ceil(targets.length*0.8);fb(el,good,good?`Shabaash! ${ok}/${targets.length} ✓`:`${ok}/${targets.length}. Thodi aur practice!`,s.why);
+      if(good)addXP(5+ok);grade(s,good);ctx.done(good);return}
+    B.marks={};B.draw();p.innerHTML=(s.q||'Square tap karo:')+` <span class="n big2">${targets[i]}</span>`;sc.textContent=`${i+1}/${targets.length}`}
+  next()}
+/* walk through a line of moves with notes; optional recall drill */
+function stLine(s,el,ctx){const st0=parseFEN(s.fen||START_FEN);const moves=s.moves.split(' ');const sts=[st0],mv=[];
+  for(const x of moves){const st=sts[sts.length-1];const m=findMove(st,x);if(!m){el.appendChild(h('p','warn','Line error: '+x));break}mv.push(m);sts.push(make(st,m))}
+  let i=0;const bh=h('div');el.appendChild(bh);const B=Board(bh,{st:st0,persp:s.flip?'b':'w'});
+  const ml=h('div','moves');el.appendChild(ml);const note=h('div','tut note');el.appendChild(note);
+  const nav=h('div','row nav');const pb=h('button','btn','‹ Peeche'),nb=h('button','btn primary','Agli chaal ›');nav.append(pb,nb);el.appendChild(nav);
+  const fm0=st0.fm||1,wfirst=st0.w;
+  function lbl(k){const idx=k+(wfirst?0:1);return Math.floor(idx/2)+fm0+(idx%2?'…':'.')}
+  function draw(){B.last=i?[sn(mv[i-1].f),sn(mv[i-1].t)]:null;B.set({st:sts[i]});
+    ml.innerHTML=moves.map((x,k)=>`<span class="mv${k===i-1?' cur':''}${k>=i?' fut':''}">${(k===0||(k+(wfirst?0:1))%2===0)?`<span class="mn">${lbl(k)}</span> `:''}${esc(x)}</span>`).join(' ');
+    note.innerHTML=md(i===0?(s.md||'Chalo is line ko chaal-dar-chaal dekhte hain.'):(s.notes&&s.notes[i])||'');
+    pb.disabled=i===0;nb.textContent=i>=moves.length?(s.drill?'Ab khud khelo ›':'Ho gaya ✓'):'Agli chaal ›';
+    setCtx({where:'Opening/line walkthrough',lesson:ctx.lessonTitle,text:(s.h||'')+' '+s.moves,fen:fenOf(sts[i])})}
+  pb.onclick=()=>{if(i>0){i--;draw()}};
+  nb.onclick=()=>{if(i<moves.length){i++;draw();if(i>=moves.length&&!s.drill)ctx.done(null)}else if(s.drill)drill()};
+  function drill(){nav.remove();note.innerHTML=md(`Ab yaad se khelo! Tum **${s.drill==='w'?'White':'Black'}** ho. Opponent apne aap khelega.`);let k=0,mist=0;
+    const me=s.drill==='w';B.o.persp=me?'w':'b';
+    const step=()=>{ml.innerHTML=moves.slice(0,k).map(esc).join(' ');B.set({st:sts[k]});
+      if(k>=moves.length){fb(el,mist<=1,mist?`Line poori! ${mist} galti`:'Perfect! Poori line yaad hai ✓','');if(mist<=1)addXP(15);ctx.done(mist<=1);return}
+      if(sts[k].w===me){B.o.side=me?'w':'b';B.lock=false}else{B.lock=true;setTimeout(()=>{B.last=[sn(mv[k].f),sn(mv[k].t)];k++;step()},500)}};
+    B.o.onMove=m=>{if(sameSan(sanOf(sts[k],m),moves[k])){B.last=[sn(m.f),sn(m.t)];k++;const f=el.querySelector('.fb');if(f)f.remove();step()}
+      else{mist++;const e=findMove(sts[k],moves[k]);B.marks={[sn(e.f)]:'ring'};B.draw();B.marks={};fb(el,false,'Nahi, yeh line ki chaal nahi','Ring wala piece chalo. Sahi chaal: **'+moves[k]+'**')}};
+    step()}
+  draw()}
+/* play a position against the built-in engine to reach a goal */
+function stPlay(s,el,ctx){const st0=parseFEN(s.fen);const me=st0.w;let st=st0,n=0,fin=false,hist=[];
+  el.appendChild(h('p','prompt',inl(s.q)));const info=h('div','row');el.appendChild(info);const bh=h('div');el.appendChild(bh);
+  const B=Board(bh,{st,side:me?'w':'b',persp:me?'w':'b',onMove});const msg=h('p','muted');el.appendChild(msg);
+  const bar=h('div','row');const rb=h('button','btn small','↺ Shuru se'),hb=h('button','btn small','💡 Coach hint'),ub=h('button','btn small','↶ Wapas');bar.append(rb,ub,hb);el.appendChild(bar);
+  const goalTxt={mate:'Checkmate karo',promote:'Pawn ko queen banao',draw:'Draw bachao (haaro mat)'}[s.goal];
+  function status(t){info.innerHTML=`<span class="chip">${goalTxt}</span><span class="chip">Chaal ${n}/${s.max}</span>`;msg.innerHTML=t?inl(t):''}
+  rb.onclick=()=>{st=st0;n=0;fin=false;hist=[];B.last=null;B.lock=false;B.marks={};B.set({st});status('');const f=el.querySelector('.fb');if(f)f.remove()};
+  ub.onclick=()=>{if(!hist.length||B.lock)return;const p=hist.pop();st=p.st;n=p.n;fin=false;B.lock=false;B.last=null;B.marks={};B.set({st});status('Ek chaal wapas li.');const f=el.querySelector('.fb');if(f)f.remove()};
+  hb.onclick=()=>{if(fin||B.lock)return;const m=engineMove(st,3);if(m){B.marks={[sn(m.f)]:'ring',[sn(m.t)]:'ring'};B.draw();B.marks={};status('Coach: ring wale piece ko ring wale square par le jao (ek idea).')}};
+  function end(ok,t){fin=true;B.lock=true;fb(el,ok,ok?'Mission poora! ✓':'Is baar nahi',t+(ok?'':'\n\n**↺ Shuru se** dabake dobara try karo.'));if(ok){addXP(20);grade(s,true);ctx.done(true)}else grade(s,false)}
+  function myMat(b){return b.filter(p=>p&&isW(p)===me&&p.toUpperCase()!=='K').length}
+  function check(after){// after: who just moved is me? returns true if game ended
+    const L=legal(st);
+    if(!L.length){if(inCheck(st)){if(st.w!==me)end(true,'Checkmate! Tumne jeet liya.');else end(false,'Tum checkmate ho gaye.')}
+      else end(s.goal==='draw','Stalemate! '+(s.goal==='draw'?'Draw bach gaya.':'Draw ho gaya. Opponent ke king ko kam se kam ek chaal chhodo.'));return true}
+    if(s.goal==='promote'){const pr=after&&st.b.some((p,i)=>p===(me?'Q':'q')&&((i>>3)===(me?7:0)));if(pr){const qi=st.b.findIndex((p,i)=>p===(me?'Q':'q')&&((i>>3)===(me?7:0)));
+      if(!attacked(st.b,qi,!me)||attacked(st.b,qi,me)){end(true,'Pawn queen ban gaya aur safe hai!');return true}}
+      if(!st.b.some(p=>p===(me?'P':'p'))&&!st.b.some(p=>p===(me?'Q':'q'))){end(false,'Pawn chala gaya. Ab jeet nahi sakte.');return true}}
+    if(s.goal==='mate'&&myMat(st.b)===0){end(false,'Tumhara piece chala gaya. Ab mate nahi ho sakta.');return true}
+    if(s.goal==='draw'&&!after&&st.b.some((p,i)=>p===(me?'q':'Q'))){end(false,'Opponent ka pawn queen ban gaya.');return true}
+    if(n>=s.max&&!after){if(s.goal==='draw')end(true,`${s.max} chaalein bach gaye. Yeh draw hai!`);else end(false,`${s.max} chaalein ho gayi. Thoda tez plan chahiye.`);return true}
+    return false}
+  function onMove(m){if(fin)return;hist.push({st,n});B.last=[sn(m.f),sn(m.t)];st=make(st,m);n++;B.set({st});status('');if(check(true))return;
+    B.lock=true;status('Opponent soch raha hai…');setTimeout(()=>{const r=engineMove(st,s.lvl||3);const rs=sanOf(st,r);B.last=[sn(r.f),sn(r.t)];st=make(st,r);B.lock=false;B.set({st});status('Opponent: `'+rs+'`');check(false)},350)}
+  // fix status text after reply (san must be computed before the move)
+  status('')}
+
+
+/* ---------- Lichess Connect: OAuth PKCE (ek baar login, token is device par save) ----------
+   road.html aur lichess.html dono yahi code aur yahi saved token use karte hain.
+   Lichess ko app register karne ki zaroorat nahi; client_id koi bhi naam ho sakta hai.
+   Password kabhi app mein nahi aata: login Lichess ke apne page par hota hai. */
+const LTOK='mindseye.road.lichess';
+const LCLIENT='64squares.app';
+const LSCOPES=['board:play','challenge:read','challenge:write'];
+let LT=null;try{LT=JSON.parse(localStorage.getItem(LTOK)||'null')}catch(e){}
+const lichScopesOk=()=>!!LT&&LSCOPES.every(x=>(LT.scopes||[]).includes(x));
+const lichToken=()=>LT&&LT.exp>Date.now()&&lichScopesOk()?LT.tok:null;
+const lichNeedsReconnect=()=>!!LT&&!lichToken();
+function ltSave(v){LT=v;try{v?localStorage.setItem(LTOK,JSON.stringify(v)):localStorage.removeItem(LTOK)}catch(e){}}
+const redirectUri=()=>location.origin+location.pathname;
+const b64u=buf=>btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+async function lichConnect(){const ver=b64u(crypto.getRandomValues(new Uint8Array(32)));const state=b64u(crypto.getRandomValues(new Uint8Array(12)));
+  const chal=b64u(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(ver)));
+  try{sessionStorage.setItem('road.pkce',JSON.stringify({ver,state,back:location.hash||'#/'}))}catch(e){}
+  location.href='https://lichess.org/oauth?'+new URLSearchParams({response_type:'code',client_id:LCLIENT,redirect_uri:redirectUri(),code_challenge_method:'S256',code_challenge:chal,scope:LSCOPES.join(' '),state})}
+/* Lichess se wapas aane par (?code=...&state=...) token lo aur save karo. window.__lmsg mein nateeja. */
+async function lichReturn(){const q=new URLSearchParams(location.search);if(!q.get('code')&&!q.get('error'))return null;
+  let pk=null;try{pk=JSON.parse(sessionStorage.getItem('road.pkce')||'null');sessionStorage.removeItem('road.pkce')}catch(e){}
+  history.replaceState(null,'',location.pathname+(pk&&pk.back?pk.back:'#/'));
+  if(q.get('error')||!pk||pk.state!==q.get('state')){window.__lmsg='Lichess se judna poora nahi hua. Dobara "Connect Lichess" dabao.';return null}
+  try{const r=await fetch('https://lichess.org/api/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'authorization_code',code:q.get('code'),code_verifier:pk.ver,redirect_uri:redirectUri(),client_id:LCLIENT})});
+    if(!r.ok)throw new Error('token');const j=await r.json();
+    const a=await (await fetch('https://lichess.org/api/account',{headers:{Authorization:'Bearer '+j.access_token}})).json();
+    ltSave({tok:j.access_token,exp:Date.now()+(j.expires_in||31536000)*1000,user:a.username,scopes:LSCOPES});window.__lmsg='Lichess jud gaya: '+a.username+'. Ab baar-baar login nahi karna padega.';return a.username}
+  catch(e){window.__lmsg='Lichess se token nahi mila. Internet check karke dobara try karo.';return null}}
+async function lichDisconnect(){const t=LT&&LT.tok;ltSave(null);if(t)try{await fetch('https://lichess.org/api/token',{method:'DELETE',headers:{Authorization:'Bearer '+t}})}catch(e){}}
+/* token ke saath API call; 401 par token purana maana jaata hai */
+async function lapi(path,opt){const t=lichToken();if(!t)throw new Error('noauth');opt=Object.assign({},opt||{});opt.headers=Object.assign({Authorization:'Bearer '+t},opt.headers||{});
+  const r=await fetch('https://lichess.org'+path,opt);if(r.status===401){ltSave(Object.assign({},LT,{exp:0}));throw new Error('expired')}return r}
+async function lform(path,data,signal){const r=await lapi(path,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(data||{}),signal});
+  if(!r.ok){let m='';try{const j=await r.json();m=j.error||JSON.stringify(j)}catch(e){}throw new Error(m||('Lichess error '+r.status))}return r}
+/* ndjson stream padho (event stream, game stream, seek) */
+async function lstream(path,onLine,opt){const r=await lapi(path,opt);if(!r.ok){let m='';try{const j=await r.json();m=j.error||JSON.stringify(j)}catch(e){}throw new Error(m||('Lichess error '+r.status))}
+  const rd=r.body.getReader(),dec=new TextDecoder();let buf='';
+  for(;;){const{done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});let i;while((i=buf.indexOf('\n'))>=0){const line=buf.slice(0,i).trim();buf=buf.slice(i+1);if(line)try{onLine(JSON.parse(line))}catch(e){}}}}
+
+/* ---------- UCI <-> app ki chaal (dono pages) ---------- */
+const uciOf=m=>sn(m.f)+sn(m.t)+(m.promo?m.promo.toLowerCase():'');
+function fromUci(st,u){const L=legal(st);let m=L.find(x=>uciOf(x)===u);if(!m&&u.length===4){/* castling as king-takes-rook */const f=si(u.slice(0,2)),t=si(u.slice(2,4));const p=st.b[f];if(p&&p.toUpperCase()==='K')m=L.find(x=>x.f===f&&Math.abs((x.t&7)-(f&7))===2&&((t&7)>(f&7))===((x.t&7)>(f&7)))}return m}
+
+/* ================= Lichess Play =================
+   App ke andar Lichess par khelo (Board API + Challenge API). Board, rules aur move-check course.html ke code se.
+   Lichess ka koi engine yahan explanation ke liye use nahi hota; "Play with the Computer" mein Lichess ka AI sirf opponent hai. */
+const go=h=>{if(location.hash!==h)location.hash=h;else route()};
+let ME=null,EVC=null,CH=[],MSG='',SEEK=null,WAIT=null;
+const lc=s=>(s||'').toLowerCase();
+const PRESETS=[[1,0],[2,1],[3,0],[3,2],[5,0],[5,3],[10,0],[10,5],[15,10],[30,0],[30,20]];
+const MINUTES=[0.25,0.5,0.75,1,1.5,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,35,40,45,60,75,90,105,120,135,150,165,180];
+const INCS=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,35,40,45,60,90,120,150,180];
+const DAYS=[1,2,3,5,7,10,14];
+const fmtMin=m=>m===0.25?'¼':m===0.5?'½':m===0.75?'¾':m===1.5?'1½':String(m);
+function speedOf(min,inc){const t=min*60+40*inc;return t<29?'ultraBullet':t<179?'bullet':t<479?'blitz':t<1499?'rapid':'classical'}
+const SPNAME={ultraBullet:'UltraBullet',bullet:'Bullet',blitz:'Blitz',rapid:'Rapid',classical:'Classical',correspondence:'Correspondence'};
+let CF=(()=>{try{return Object.assign({mode:'real',min:10,inc:5,days:2,rated:true,color:'random',rmin:-500,rmax:500,ai:3},JSON.parse(localStorage.getItem('lplay.cf')||'{}'))}catch(e){return{mode:'real',min:10,inc:5,days:2,rated:true,color:'random',rmin:-500,rmax:500,ai:3}}})();
+const cfSave=()=>{try{localStorage.setItem('lplay.cf',JSON.stringify(CF))}catch(e){}};
+const errText=e=>e.message==='expired'?'Lichess login purana ho gaya. Ek baar dobara Connect karo.':e.message==='noauth'?'Pehle Lichess Connect karo.':(e.name==='AbortError'?'':String(e.message||e));
+function flash(t){MSG=t;const m=$('#msg');if(m)m.textContent=t}
+
+/* ---------- account + event stream ---------- */
+async function loadMe(){const r=await lapi('/api/account');if(!r.ok)throw new Error('Lichess error '+r.status);ME=await r.json();const c=$('#luser');if(c)c.textContent=ME.username;return ME}
+function startEvents(){if(EVC)return;EVC=new AbortController();
+  lstream('/api/stream/event',ev=>{
+    if(ev.type==='gameStart'){RS=null;if(SEEK){SEEK.abort();SEEK=null}WAIT=null;const id=ev.game.gameId||ev.game.id;if(!location.hash.startsWith('#/game/'+id))go('#/game/'+id)}
+    else if(ev.type==='challenge'){const c=ev.challenge;if(lc(c.challenger&&c.challenger.id)!==lc(ME&&ME.id)&&!CH.find(x=>x.id===c.id)){CH.push(c);if(isLobby())route()}}
+    else if(ev.type==='challengeCanceled'||ev.type==='challengeDeclined'){const c=ev.challenge;CH=CH.filter(x=>x.id!==c.id);
+      if(WAIT&&WAIT.id===c.id){WAIT=null;MSG=ev.type==='challengeDeclined'?`${(c.destUser&&c.destUser.name)||'Opponent'} ne challenge decline kiya${c.declineReason?': '+c.declineReason:''}.`:'Challenge cancel ho gaya.';go('#/')}
+      else if(isLobby())route()}
+  },{signal:EVC.signal}).catch(e=>{EVC=null;if(e.name!=='AbortError')setTimeout(startEvents,5000)}).then(()=>{EVC=null})}
+const isLobby=()=>!location.hash||location.hash==='#/'||location.hash==='#';
+
+/* ---------- lobby ---------- */
+function connectHTML(){const exp=lichNeedsReconnect();
+  return`<div class="stack"><h1>Lichess Play</h1><p class="muted">Lichess ke players ke saath, dost ke saath, ya Lichess computer ke saath khelo. Saare options Lichess wale.</p>
+  <div class="card stack"><h3>Lichess Connect</h3>${exp?'<p class="warn">Lichess ko ek baar dobara jodo (login purana ho gaya ya nayi permission chahiye).</p>':''}
+  <p class="small muted">Ek baar jodo, phir app login yaad rakhega. Password Lichess ke apne page par daalna hai, app mein nahi.</p>
+  <button class="btn primary block" data-act="lconnect">Connect Lichess</button>
+  <a class="btn block" style="text-decoration:none;text-align:center" href="https://lichess.org/signup" target="_blank" rel="noopener">Create a Lichess Account</a>
+  <p class="small" id="msg">${esc(window.__lmsg||'')}</p></div></div>`}
+const sel=(id,arr,cur,lab)=>`<select id="${id}">${arr.map(v=>`<option value="${v}"${String(v)===String(cur)?' selected':''}>${lab?lab(v):v}</option>`).join('')}</select>`;
+function perfChips(){const P=(ME&&ME.perfs)||{};return['bullet','blitz','rapid','classical','correspondence'].filter(k=>P[k]).map(k=>`<span class="chip">${SPNAME[k]} ${P[k].rating}${P[k].prov?'?':''}</span>`).join('')}
+let LTK=0;
+async function vLobby(){const app=$('#app');const tk=++LTK;
+  if(!lichToken()){app.innerHTML=connectHTML();return}
+  if(!ME){app.innerHTML='<p class="muted">Lichess se jud raha hoon…</p>';try{await loadMe()}catch(e){app.innerHTML=connectHTML();flash(errText(e));return}}
+  startEvents();
+  let playing=[];try{const r=await lapi('/api/account/playing');if(r.ok)playing=(await r.json()).nowPlaying||[]}catch(e){}
+  try{const r=await lapi('/api/challenge');if(r.ok){const j=await r.json();(j.in||[]).forEach(c=>{if(!CH.find(x=>x.id===c.id))CH.push(c)})}}catch(e){}
+  if(!isLobby()||tk!==LTK)return;
+  const sp=CF.mode==='real'?speedOf(CF.min,CF.inc):'correspondence';
+  app.innerHTML=`<div class="stack">
+   <div class="row" style="justify-content:space-between;flex-wrap:wrap"><h1 style="margin:0">Lichess Play</h1><div class="chips" style="flex-wrap:wrap">${perfChips()}</div></div>
+   <p class="small" id="msg">${esc(MSG)}</p>
+   ${CH.length?`<h2>Incoming Challenges</h2><div class="qlist">${CH.map(c=>`<div class="qrow"><span class="qi">⚔️</span><div class="qt"><b>${esc(c.challenger?c.challenger.name:'?')} ${c.challenger&&c.challenger.rating?'('+c.challenger.rating+')':''}</b><div class="muted small">${esc(c.timeControl&&c.timeControl.show||c.speed||'')} · ${c.rated?'Rated':'Casual'} · ${esc(c.variant&&c.variant.name||'Standard')}</div></div><button class="btn small primary" data-act="acc" data-id="${c.id}">Accept</button><button class="btn small" data-act="dec" data-id="${c.id}">Decline</button></div>`).join('')}</div>`:''}
+   ${playing.length?`<h2>Ongoing Games</h2><div class="qlist">${playing.map(g=>`<div class="qrow"><span class="qi">${g.isMyTurn?'🟢':'⏳'}</span><div class="qt"><b>vs ${esc(g.opponent&&g.opponent.username||'?')}</b><div class="muted small">${esc(SPNAME[g.speed]||g.speed||'')} · ${g.isMyTurn?'Your move':'Their move'}</div></div><button class="btn small primary" data-go="#/game/${g.gameId}">Open</button></div>`).join('')}</div>`:''}
+   <h2>Quick Pairing</h2>
+   <div class="row"><label class="tog"><input type="checkbox" id="qrated" ${CF.rated?'checked':''}> Rated</label></div>
+   <div class="qgrid">${PRESETS.map(([m,i])=>`<button class="qp" data-act="quick" data-m="${m}" data-i="${i}"><b>${m}+${i}</b><small>${SPNAME[speedOf(m,i)]}</small></button>`).join('')}<button class="qp" data-act="custom"><b>Custom</b><small>Neeche</small></button></div>
+   <h2 id="cg">Create a Game</h2>
+   <div class="card stack form">
+    <label>Variant ${sel('cvar',['Standard'],'Standard')}</label>
+    <label>Time control ${sel('cmode',['real','corr','unlimited'],CF.mode,v=>({real:'Real time',corr:'Correspondence',unlimited:'Unlimited (sirf challenge)'}[v]))}</label>
+    ${CF.mode==='real'?`<div class="row2"><label>Minutes per side ${sel('cmin',MINUTES,CF.min,fmtMin)}</label><label>Increment (sec) ${sel('cinc',INCS,CF.inc)}</label></div><p class="small muted">${SPNAME[sp]}</p>`:CF.mode==='corr'?`<label>Days per turn ${sel('cdays',DAYS,CF.days)}</label>`:''}
+    <div class="seg" id="crated"><button data-v="0" class="${CF.rated?'':'on'}">Casual</button><button data-v="1" class="${CF.rated?'on':''}">Rated</button></div>
+    <div class="seg" id="ccolor">${['white','random','black'].map(c=>`<button data-v="${c}" class="${CF.color===c?'on':''}">${c==='white'?'♔ White':c==='black'?'♚ Black':'🎲 Random'}</button>`).join('')}</div>
+    <div class="row2"><label>Rating range: min ${sel('crmin',[-500,-450,-400,-350,-300,-250,-200,-150,-100,-50,0],CF.rmin,v=>v>0?'+'+v:v)}</label><label>max ${sel('crmax',[0,50,100,150,200,250,300,350,400,450,500],CF.rmax,v=>'+'+v)}</label></div>
+    <button class="btn primary block" data-act="seek" ${CF.mode==='unlimited'?'disabled':''}>Create Lobby Game</button>
+    <div class="row"><input id="fuser" placeholder="Friend's Lichess username" autocomplete="off" autocapitalize="off"><button class="btn" data-act="friend">Challenge a Friend</button></div>
+   </div>
+   <h2>Play with the Computer</h2>
+   <div class="card stack"><p class="small muted">Lichess ka computer (Stockfish), level 1 se 8. Time aur colour upar "Create a Game" wale use honge. Computer games hamesha casual.</p>
+    <div class="lvgrid">${[1,2,3,4,5,6,7,8].map(l=>`<button class="qp${CF.ai===l?' on':''}" data-act="ailvl" data-l="${l}"><b>${l}</b></button>`).join('')}</div>
+    <button class="btn primary block" data-act="ai">Play Level ${CF.ai}</button></div>
+   <div class="card stack small"><b>Lichess account</b><span class="muted">Connected: ${esc(ME.username)}</span><div class="row"><a class="btn small" style="text-decoration:none" href="https://lichess.org/@/${encodeURIComponent(ME.username)}" target="_blank" rel="noopener">Profile on Lichess</a><button class="btn small" data-act="lout">Disconnect</button></div></div>
+  </div>`;MSG=''}
+function readForm(){const v=id=>{const e=$('#'+id);return e?e.value:null};
+  if(v('cmode'))CF.mode=v('cmode');if(v('cmin'))CF.min=+v('cmin');if(v('cinc'))CF.inc=+v('cinc');if(v('cdays'))CF.days=+v('cdays');if(v('crmin'))CF.rmin=+v('crmin');if(v('crmax'))CF.rmax=+v('crmax');cfSave()}
+function clockParams(forChallenge){if(CF.mode==='real')return forChallenge?{'clock.limit':Math.round(CF.min*60),'clock.increment':CF.inc}:{time:CF.min,increment:CF.inc};if(CF.mode==='corr')return{days:CF.days};return{}}
+
+/* ---------- seek, challenge, AI ---------- */
+async function startSeek(params,label){const app=$('#app');SEEK=new AbortController();
+  app.innerHTML=`<div class="stack center"><div class="big">🔎</div><h1>Searching</h1><p>${esc(label)}</p><p class="muted small">Opponent milte hi game khul jayega.</p><button class="btn block" data-act="cancelseek">Cancel</button><p class="small" id="msg"></p></div>`;
+  startEvents();
+  try{await lform('/api/board/seek',params,SEEK.signal);/* correspondence seek turant laut aata hai */
+    if(params.days&&SEEK){SEEK=null;MSG='Correspondence seek lobby mein lag gaya. Koi join karega to game "Ongoing Games" mein aayega.';go('#/')}}
+  catch(e){const t=errText(e);SEEK=null;if(t){MSG='Lichess: '+t;go('#/')}}}
+function seekParams(){const P={rated:CF.rated,variant:'standard',...clockParams(false)};if(CF.color!=='random')P.color=CF.color;
+  const sp=CF.mode==='real'?speedOf(CF.min,CF.inc):'correspondence';const my=ME&&ME.perfs&&ME.perfs[sp]&&ME.perfs[sp].rating;
+  if(my&&(CF.rmin>-500||CF.rmax<500))P.ratingRange=Math.max(400,my+CF.rmin)+'-'+(my+CF.rmax);return P}
+const seekLabel=()=>CF.mode==='real'?`${fmtMin(CF.min)}+${CF.inc} ${SPNAME[speedOf(CF.min,CF.inc)]} · ${CF.rated?'Rated':'Casual'}`:`${CF.days} day(s) per move · ${CF.rated?'Rated':'Casual'}`;
+async function challengeFriend(user){const P={rated:CF.rated,variant:'standard',color:CF.color,...clockParams(true)};
+  try{const r=await lform('/api/challenge/'+encodeURIComponent(user),P);const j=await r.json();const c=j.challenge||j;WAIT={id:c.id,user};startEvents();
+    $('#app').innerHTML=`<div class="stack center"><div class="big">⚔️</div><h1>Challenge sent</h1><p>${esc(user)} ke accept karne ka intezaar…</p><p class="small muted">Dost ko Lichess par notification jayega. Link bhi bhej sakte ho:</p><p class="mono small" style="word-break:break-all">${esc(c.url||('https://lichess.org/'+c.id))}</p><button class="btn block" data-act="copy" data-v="${esc(c.url||('https://lichess.org/'+c.id))}">Copy Link</button><button class="btn block" data-act="cancelch" data-id="${c.id}">Cancel Challenge</button></div>`}
+  catch(e){flash('Lichess: '+errText(e))}}
+async function playAI(){const P={level:CF.ai,variant:'standard',color:CF.color,...clockParams(true)};
+  try{const r=await lform('/api/challenge/ai',P);const j=await r.json();go('#/game/'+j.id)}catch(e){flash('Lichess: '+errText(e))}}
+
+
+/* ---------- Road to 3000 mode: game hamesha Rated, opponent aapki rating ke aas-paas ---------- */
+const ROAD_TC=[[10,0],[15,10]],ROAD_RANGE=[100,150,200];let RS=null;
+const myRapid=()=>{const r=ME&&ME.perfs&&ME.perfs.rapid;return r&&r.rating||1500};
+async function vRoad(){const app=$('#app');
+  if(!lichToken()){app.innerHTML=connectHTML();return}
+  if(!ME){app.innerHTML='<p class="muted">Lichess se jud raha hoon…</p>';try{await loadMe()}catch(e){app.innerHTML=connectHTML();flash(errText(e));return}}
+  startEvents();const my=myRapid(),pv=ME.perfs&&ME.perfs.rapid&&ME.perfs.rapid.prov;
+  app.innerHTML=`<div class="stack"><p class="eyebrow">Road to 3000</p><h1>Rated Game</h1>
+   <div class="card stack"><p><b>Lichess rapid: ${my}${pv?'?':''}</b></p><p class="small muted">Road to 3000 mein game hamesha <b>Rated</b> hota hai, aur opponent aapki rating ke aas-paas (pehle ±100; match na mile to ±150, phir ±200). Casual ya apni range chunne ka option yahan nahi hai.</p></div>
+   <p class="small" id="msg">${esc(MSG)}</p>
+   <div class="qgrid" style="grid-template-columns:1fr 1fr">${ROAD_TC.map(([m,i])=>`<button class="qp" data-act="roadseek" data-m="${m}" data-i="${i}"><b>${m}+${i}</b><small>Rapid · Rated</small></button>`).join('')}</div>
+   <p class="small muted">Game ke baad Road to 3000 app mein "My Games" se uska review (Stockfish, sirf game ke baad) aur galtiyon ke drills milenge.</p>
+   <button class="btn block" onclick="location.href='road.html'">‹ Back to Road to 3000</button></div>`;MSG=''}
+async function roadSeek(m,i){const my=myRapid();RS={k:0};startEvents();const app=$('#app');
+  while(RS){const w=ROAD_RANGE[RS.k];
+    app.innerHTML=`<div class="stack center"><div class="big">🔎</div><h1>Searching</h1><p>${m}+${i} Rapid · Rated</p><p class="small muted">Opponent rating ${Math.max(400,my-w)}-${my+w}${RS.k?' (range badhayi, match nahi mila tha)':''}</p><button class="btn block" data-act="cancelseek">Cancel</button><p class="small" id="msg"></p></div>`;
+    const mine=new AbortController();SEEK=mine;let widen=false;const t=RS.k<ROAD_RANGE.length-1?setTimeout(()=>{widen=true;mine.abort()},45000):null;
+    try{await lform('/api/board/seek',{rated:true,time:m,increment:i,variant:'standard',ratingRange:Math.max(400,my-w)+'-'+(my+w)},mine.signal);clearTimeout(t);RS=null;if(SEEK===mine)SEEK=null;return}
+    catch(e){clearTimeout(t);if(widen&&RS){RS.k++;continue}const run=!!RS;RS=null;if(SEEK===mine)SEEK=null;if(run&&e.name!=='AbortError'){MSG='Lichess: '+errText(e);go('#/road')}return}}}
+
+/* ---------- game ---------- */
+let G=null;
+function posFrom(fen,moves){let st=parseFEN(!fen||fen==='startpos'?START_FEN:fen);const sans=[];let last=null;for(const u of moves){const m=fromUci(st,u);if(!m)break;sans.push(sanOf(st,m));last=[sn(m.f),sn(m.t)];st=make(st,m)}return{st,sans,last}}
+const fmtClock=ms=>{if(ms==null)return'--';if(ms>=864e5)return Math.floor(ms/864e5)+'d';const s=Math.max(0,Math.ceil(ms/1000));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0')};
+const STATUS={mate:'Checkmate',resign:'Resigned',stalemate:'Stalemate',timeout:'Timeout',draw:'Draw',outoftime:'Time out',cheat:'Cheat detected',noStart:'Game did not start',aborted:'Aborted',unknownFinish:'Finished',variantEnd:'Variant end'};
+function vGame(id){const app=$('#app');if(!lichToken()){app.innerHTML=connectHTML();return}
+  if(G&&G.id!==id&&G.ac)G.ac.abort();
+  G={id,ac:new AbortController(),full:null,state:null,chat:[],gone:null,at:Date.now(),busy:false};
+  app.innerHTML=`<div class="stack gamev"><div class="pl" id="ptop"></div><div id="bd"></div><div class="pl" id="pbot"></div>
+   <div class="moves" id="mv"></div><div class="row wrapr" id="ctl"></div><p class="small" id="msg"></p>
+   <details class="card"><summary><b>Chat</b></summary><div id="chat" class="chatlog small"></div><div class="row"><input id="chatin" placeholder="Message" maxlength="140"><button class="btn small" data-act="chat">Send</button></div></details></div>`;
+  G.B=Board($('#bd'),{st:parseFEN(START_FEN),onMove:m=>myMove(m)});
+  (async()=>{if(!ME)try{await loadMe()}catch(e){}startEvents();
+    lstream('/api/board/game/stream/'+id,ev=>{if(!G||G.id!==id)return;
+      if(ev.type==='gameFull'){G.full=ev;G.state=ev.state;G.at=Date.now();drawGame()}
+      else if(ev.type==='gameState'){G.state=ev;G.at=Date.now();G.busy=false;drawGame()}
+      else if(ev.type==='chatLine'){G.chat.push(ev);drawChat()}
+      else if(ev.type==='opponentGone'){G.gone=ev;drawControls()}},{signal:G.ac.signal}).catch(e=>{const t=errText(e);if(t)flash('Lichess: '+t)})})();
+  clearInterval(window.__clk);window.__clk=setInterval(()=>{if(G&&G.full)drawClocks()},250)}
+function myColor(){const f=G.full;if(!f||!ME)return'w';return lc(f.black&&f.black.id)===lc(ME.id)?'b':'w'}
+function pname(p){if(!p)return'?';if(p.aiLevel)return'Lichess AI level '+p.aiLevel;return(p.title?p.title+' ':'')+(p.name||p.id||'?')+(p.rating?' ('+p.rating+(p.provisional?'?':'')+')':'')}
+function drawGame(){const f=G.full,s=G.state;if(!f||!s)return;const mc=myColor();const moves=(s.moves||'').split(' ').filter(Boolean);
+  const P=posFrom(f.initialFen,moves);G.st=P.st;G.n=moves.length;G.over=s.status!=='started'&&s.status!=='created';
+  G.B.last=P.last;G.B.clear();G.B.lock=G.over||(P.st.w?'w':'b')!==mc;G.B.set({st:P.st,side:mc,persp:mc});
+  const opp=mc==='w'?f.black:f.white,me=mc==='w'?f.white:f.black;
+  $('#ptop').innerHTML=`<span>${esc(pname(opp))}</span><span class="clock" id="ctop"></span>`;$('#pbot').innerHTML=`<span>${esc(pname(me))}</span><span class="clock" id="cbot"></span>`;
+  $('#mv').innerHTML=P.sans.map((x,k)=>(k%2===0?`<span class="mn">${k/2+1}.</span> `:'')+esc(x)).join(' ')||`<span class="muted">${f.rated?'Rated':'Casual'} · ${esc(SPNAME[f.speed]||f.speed||'')} · ${mc==='w'?'Aap White ho':'Aap Black ho'}</span>`;
+  drawClocks();drawControls()}
+function clockNow(){const s=G.state,f=G.full;if(!s||s.wtime==null||!f.clock)return null;let w=s.wtime,b=s.btime;
+  if(!G.over&&G.n>=2){const el=Date.now()-G.at;if(G.st.w)w-=el;else b-=el}return{w,b}}
+function drawClocks(){const c=clockNow(),mc=myColor();const t=$('#ctop'),b=$('#cbot');if(!t||!b)return;
+  if(!c){const d=G.full&&G.full.daysPerTurn;t.textContent=b.textContent=d?d+'d/move':'';return}
+  const mine=mc==='w'?c.w:c.b,theirs=mc==='w'?c.b:c.w;t.textContent=fmtClock(theirs);b.textContent=fmtClock(mine);
+  t.classList.toggle('run',!G.over&&G.n>=2&&(G.st.w?'w':'b')!==mc);b.classList.toggle('run',!G.over&&G.n>=2&&(G.st.w?'w':'b')===mc);b.classList.toggle('low',mine<20000)}
+function drawControls(){const el=$('#ctl');if(!el||!G.state)return;const s=G.state,mc=myColor(),f=G.full;let h='';
+  const oppDraw=mc==='w'?s.bdraw:s.wdraw,oppTb=mc==='w'?s.btakeback:s.wtakeback,myDraw=mc==='w'?s.wdraw:s.bdraw;
+  if(G.over){const win=s.winner?(s.winner===(mc==='w'?'white':'black')?'Aap jeete':'Aap haare'):'Draw';
+    h=`<div class="card stack" style="width:100%"><b>${esc(STATUS[s.status]||s.status)} · ${win}</b><div class="row wrapr"><button class="btn primary" data-act="rematch">Rematch</button><a class="btn" style="text-decoration:none" href="road.html#/game/${G.id}">Review in Road to 3000</a><a class="btn" style="text-decoration:none" href="https://lichess.org/${G.id}" target="_blank" rel="noopener">Open on Lichess</a><button class="btn" data-go="#/">New Game</button></div></div>`}
+  else{if(oppDraw)h+=`<span class="offer">Draw offer: <button class="btn small primary" data-act="draw-yes">Accept</button><button class="btn small" data-act="draw-no">Decline</button></span>`;
+    if(oppTb)h+=`<span class="offer">Takeback request: <button class="btn small primary" data-act="tb-yes">Accept</button><button class="btn small" data-act="tb-no">Decline</button></span>`;
+    if(G.n<2)h+=`<button class="btn small" data-act="abort">Abort</button>`;
+    else{h+=`<button class="btn small" data-act="resign">Resign</button>`;if(!oppDraw)h+=`<button class="btn small" data-act="draw-yes" ${myDraw?'disabled':''}>${myDraw?'Draw offered':'Offer Draw'}</button>`;if(!f.rated||!f.white.aiLevel)h+=`<button class="btn small" data-act="tb-yes">Takeback</button>`}
+    if(G.gone&&G.gone.gone)h+=G.gone.claimWinInSeconds===0?`<button class="btn small primary" data-act="claim">Claim Victory</button>`:`<span class="small muted">Opponent chala gaya. ${G.gone.claimWinInSeconds||''}s mein jeet claim kar sakte ho.</span>`}
+  el.innerHTML=h}
+function drawChat(){const c=$('#chat');if(c)c.innerHTML=G.chat.slice(-30).map(l=>`<div><b>${esc(l.username)}:</b> ${esc(l.text)}</div>`).join('')}
+async function myMove(m){if(!G||G.over)return;const u=uciOf(m);const before=G.st;G.B.last=[sn(m.f),sn(m.t)];G.B.lock=true;G.B.set({st:make(G.st,m)});
+  try{await lform(`/api/board/game/${G.id}/move/${u}`)}catch(e){flash('Chaal nahi gayi: '+errText(e));G.B.set({st:before});G.B.lock=false}}
+async function gameAct(path,okMsg){try{await lform(`/api/board/game/${G.id}/${path}`);if(okMsg)flash(okMsg)}catch(e){flash('Lichess: '+errText(e))}}
+async function rematch(){const f=G.full;const mc=myColor();const opp=mc==='w'?f.black:f.white;const col=mc==='w'?'black':'white';
+  const clk=f.clock?{'clock.limit':Math.round(f.clock.initial/1000),'clock.increment':Math.round(f.clock.increment/1000)}:f.daysPerTurn?{days:f.daysPerTurn}:{};
+  try{if(opp.aiLevel){const r=await lform('/api/challenge/ai',{level:opp.aiLevel,color:col,...clk});const j=await r.json();go('#/game/'+j.id)}
+    else{CF.rated=!!f.rated;CF.color=col;await challengeFriendRaw(opp.id||opp.name,{rated:!!f.rated,color:col,...clk})}}catch(e){flash('Lichess: '+errText(e))}}
+async function challengeFriendRaw(user,P){const r=await lform('/api/challenge/'+encodeURIComponent(user),P);const j=await r.json();const c=j.challenge||j;WAIT={id:c.id,user};
+  $('#app').innerHTML=`<div class="stack center"><div class="big">🔁</div><h1>Rematch sent</h1><p>${esc(user)} ke accept karne ka intezaar…</p><button class="btn block" data-act="cancelch" data-id="${c.id}">Cancel</button></div>`}
+
+/* ---------- router + clicks ---------- */
+window.addEventListener('hashchange',route);
+function route(){const p=(location.hash||'#/').slice(2).split('/');if(p[0]!=='game'&&G){if(G.ac)G.ac.abort();G=null;clearInterval(window.__clk)}
+  if(p[0]==='game'&&p[1])vGame(p[1]);else if(p[0]==='road')vRoad();else vLobby()}
+document.addEventListener('change',e=>{const t=e.target;if(t.id==='qrated'){CF.rated=t.checked;cfSave()}else if(['cmode','cmin','cinc','cdays','crmin','crmax'].includes(t.id)){readForm();if(t.id==='cmode'||t.id==='cmin'||t.id==='cinc')vLobby()}});
+document.addEventListener('click',async e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();go(g.dataset.go);return}
+  const sg=e.target.closest('.seg button');if(sg){const id=sg.parentElement.id;if(id==='crated')CF.rated=sg.dataset.v==='1';if(id==='ccolor')CF.color=sg.dataset.v;cfSave();sg.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===sg));const q=$('#qrated');if(q)q.checked=CF.rated;return}
+  const a=e.target.closest('[data-act]');if(!a)return;const act=a.dataset.act;
+  if(act==='lconnect')lichConnect();
+  else if(act==='lout'){await lichDisconnect();ME=null;if(EVC)EVC.abort();EVC=null;route()}
+  else if(act==='quick'){CF.mode='real';CF.min=+a.dataset.m;CF.inc=+a.dataset.i;cfSave();const P={rated:CF.rated,time:CF.min,increment:CF.inc,variant:'standard'};startSeek(P,`${CF.min}+${CF.inc} ${SPNAME[speedOf(CF.min,CF.inc)]} · ${CF.rated?'Rated':'Casual'}`)}
+  else if(act==='custom'){const c=$('#cg');if(c)c.scrollIntoView({behavior:'smooth'})}
+  else if(act==='seek'){readForm();startSeek(seekParams(),seekLabel())}
+  else if(act==='friend'){readForm();const u=($('#fuser').value||'').trim();if(!u){flash('Dost ka Lichess username likho.');return}challengeFriend(u)}
+  else if(act==='ailvl'){CF.ai=+a.dataset.l;cfSave();vLobby()}
+  else if(act==='ai'){readForm();playAI()}
+  else if(act==='cancelseek'){const wasRoad=!!RS;RS=null;if(SEEK)SEEK.abort();SEEK=null;go(wasRoad?'#/road':'#/')}
+  else if(act==='roadseek')roadSeek(+a.dataset.m,+a.dataset.i);
+  else if(act==='cancelch'){try{await lform('/api/challenge/'+a.dataset.id+'/cancel')}catch(e){}WAIT=null;go('#/')}
+  else if(act==='acc'){try{await lform('/api/challenge/'+a.dataset.id+'/accept');CH=CH.filter(x=>x.id!==a.dataset.id)}catch(e){flash('Lichess: '+errText(e))}}
+  else if(act==='dec'){try{await lform('/api/challenge/'+a.dataset.id+'/decline');CH=CH.filter(x=>x.id!==a.dataset.id);vLobby()}catch(e){flash('Lichess: '+errText(e))}}
+  else if(act==='copy'){try{await navigator.clipboard.writeText(a.dataset.v);a.textContent='Copied'}catch(e){}}
+  else if(G){if(act==='resign')gameAct('resign');else if(act==='abort')gameAct('abort');else if(act==='draw-yes')gameAct('draw/yes','Draw offer bheja.');else if(act==='draw-no')gameAct('draw/no');
+    else if(act==='tb-yes')gameAct('takeback/yes','Takeback request bheji.');else if(act==='tb-no')gameAct('takeback/no');else if(act==='claim')gameAct('claim-victory');else if(act==='rematch')rematch();
+    else if(act==='chat'){const i=$('#chatin');const t=(i.value||'').trim();if(t){i.value='';try{await lform(`/api/board/game/${G.id}/chat`,{room:'player',text:t})}catch(e){flash('Lichess: '+errText(e))}}}}});
+lichReturn().then(()=>route());
+
+</script>
+</body>
+</html>
