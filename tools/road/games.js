@@ -87,8 +87,20 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
    <div class="row wrapr"><button class="btn small" data-act="gcopy">Copy PGN</button><a class="btn small" style="text-decoration:none" href="https://lichess.org/${g.id}" target="_blank" rel="noopener">Open on Lichess</a></div></div>`;
   const B=Board($('#gbd'),{st:pos[cur],persp:g.color});
   /* notation me chuni hui chaal = board par us chaal ke BAAD ki position. Galti ka note aur "Explain" usi chaal ka. */
-  let XOPEN=false;
-  function show(i){cur=Math.max(0,Math.min(pos.length-1,i));XL=null;
+  let XOPEN=false,VR={},VON=null;
+  /* tir ki line: pv ki pehli n chaalein, number 1,2,3 (hara = chaal wala side, peela = opponent) */
+  const pvView=(st,pv,n,mover,lst)=>{const arr=[];let s2=st;for(const u of(pv||[]).slice(0,n)){const mm=fromUci(s2,u);if(!mm)break;arr.push([sn(mm.f),sn(mm.t),s2.w===mover?'g':'y',String(arr.length+1)]);s2=make(s2,mm)}return{st,last:lst,arr}};
+  const xbv=(t,v)=>esc(t).replace(/\*\*(.+?)\*\*/g,(_,x)=>v&&/[a-h][1-8]|O-O/.test(x)?`<b class="sanv" data-xv="${v}">${x}</b>`:`<b>${x}</b>`);
+  /* "Seedhi baat": 📖 Text button + har vaakya ke saath ➡ Board + plan ke number wale tir */
+  function sumHTML(id,P,m,best,ref,loss,lines,lastP){const A=make(P,m),mover=P.w,SM=xSummary(P,m,best,ref,loss,lines);
+    VR[id+'mv']={st:A,last:[sn(m.f),sn(m.t)],arr:[[sn(m.f),sn(m.t),'b']]};
+    if(best&&best.pv&&best.pv.length)VR[id+'bp']=pvView(P,best.pv,5,mover,lastP);
+    if(ref&&ref.pv&&ref.pv.length)VR[id+'op']=pvView(A,ref.pv,4,mover,[sn(m.f),sn(m.t)]);
+    const vid=k=>{const kd=(SM.kinds||[])[k];return kd&&VR[id+kd]?id+kd:''};
+    return`<div class="xsum"><div class="xsh"><b>Seedhi baat</b><span class="xbtns"><button class="btn small on" data-xt="${id}sum">📖 Text</button></span></div>
+      <div id="xt-${id}sum">${SM.lines.map((l,k)=>{const v=vid(k);return`<p>${xbv(l,v)}${v?` <button class="xgo" data-xv="${v}">➡ Board</button>`:''}</p>`}).join('')}</div>
+      <div class="xbtns wrapr" style="margin-top:8px"><button class="btn small" data-xv="${id}mv">➡ Ye chaal</button>${VR[id+'bp']?`<button class="btn small" data-xv="${id}bp">➡ Behtar plan 1-2-3</button>`:''}${VR[id+'op']?`<button class="btn small" data-xv="${id}op">➡ Opponent ka plan 1-2-3</button>`:''}</div></div>`}
+  function show(i){cur=Math.max(0,Math.min(pos.length-1,i));XL=null;VR={};VON=null;
     const nx=cur>0?misBy[cur-1]:null;const arr=[];
     if(nx){const P0=pos[cur-1];const pm=findMove(P0,nx.san);if(pm)arr.push([sn(pm.f),sn(pm.t),'r']);const bm=findMove(P0,nx.best);if(bm)arr.push([sn(bm.f),sn(bm.t),'g'])}
     B.last=last[cur];B.set({st:pos[cur],arr,hl:[]});
@@ -102,10 +114,10 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
   if(!X)return`<div class="card ${nx.cls==='inacc'?'':'alert'}">${head}<div class="small">Behtar tha: <b>${esc(nx.best)}</b> (${nx.ev}). Line: ${esc(nx.line)}<br>Jeet ka chance ${nx.before}% → ${nx.after}%</div><p class="small muted">Is game ka review purane version se hai. "Review Again" dabao to har galti ki wajah bhi milegi.</p></div>`;
   const th=XTHEME[X.theme],PL=X.plan,op=nx.ply<24?xOpening(g.open):'';
   return`<div class="card stack ${nx.cls==='inacc'?'':'alert'}">${head}
-   ${(()=>{try{const P0=pos[nx.ply],pm=findMove(P0,nx.san);if(!pm)return'';const SM=xSummary(P0,pm,{pv:X.bpv||[]},{pv:X.ref||[]},X.loss);return`<div class="xsum"><b>Seedhi baat</b>${SM.lines.map(l=>`<p>${xb(l)}</p>`).join('')}</div>`}catch(e){return''}})()}
+   ${(()=>{try{const P0=pos[nx.ply],pm=findMove(P0,nx.san);if(!pm)return'';return sumHTML('n',P0,pm,{pv:X.bpv||[]},{pv:X.ref||[]},X.loss,null,last[nx.ply])}catch(e){return''}})()}
    <div class="small"><b>Detail – kyun galat:</b></div><ul class="xwhy small">${X.why.map(t=>`<li>${xb(t)}</li>`).join('')}</ul>
-   <div class="small"><b>Behtar chaal: ${esc(X.bestSan)}</b> (${nx.ev})${PL&&PL.does.length?`<ul class="xwhy">${PL.does.slice(0,3).map(t=>`<li>Ye chaal ${esc(t)}.</li>`).join('')}${PL.next?`<li>Agla plan: <b>${esc(PL.next)}</b>${PL.nextDoes.length?' – '+esc(PL.nextDoes.join(' aur ')):''}.</li>`:''}</ul>`:X.bestWhy?' – ye chaal '+esc(X.bestWhy)+'<br>':'<br>'}<span class="muted">Best line: ${esc(X.bestLine)}</span></div>
-   ${X.refWhy?`<div class="small"><b>Opponent ki behtar line:</b> ${esc(X.refLine)}<br>${X.why.some(t=>t.startsWith('Opponent ka jawab'))?'':`<span class="muted">Opponent ka iraada: ${esc(X.refWhy)}.</span>`}</div>`:''}
+   <div class="small"><b>Behtar chaal: ${esc(X.bestSan)}</b> (${nx.ev})${PL&&PL.does.length?`<ul class="xwhy">${PL.does.slice(0,3).map(t=>`<li>Ye chaal ${esc(t)}.</li>`).join('')}${PL.next?`<li>Agla plan: <b>${esc(PL.next)}</b>${PL.nextDoes.length?' – '+esc(PL.nextDoes.join(' aur ')):''}.</li>`:''}</ul>`:X.bestWhy?' – ye chaal '+esc(X.bestWhy)+'<br>':'<br>'}<span class="muted">Best line: ${esc(X.bestLine)}</span>${VR.nbp?' <button class="xgo" data-xv="nbp">➡ Board 1-2-3</button>':''}</div>
+   ${X.refWhy?`<div class="small"><b>Opponent ki behtar line:</b> ${esc(X.refLine)}${VR.nop?' <button class="xgo" data-xv="nop">➡ Board 1-2-3</button>':''}<br>${X.why.some(t=>t.startsWith('Opponent ka jawab'))?'':`<span class="muted">Opponent ka iraada: ${esc(X.refWhy)}.</span>`}</div>`:''}
    ${op?`<div class="small"><b>Opening:</b> ${esc(g.open)} – ${esc(op)}</div>`:''}
    <div class="small muted">Engine note: ${X.loss!=null?`lagbhag ${xPawns(X.loss)} ka fark · `:''}jeet ka chance ${nx.before}% → ${nx.after}%</div>
    <div class="small muted">Board: <span style="color:#D2462C">laal tir</span> = tumhari chaal, <span style="color:#1F9D5A">hara tir</span> = behtar chaal.</div>
@@ -119,22 +131,22 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
     const x=e.cp/100,a=Math.abs(x),s=x>0?'White':'Black';return a<0.3?'Position barabar hai':a<1?`${s} thoda behtar hai (${x>0?'+':''}${x.toFixed(1)})`:a<2.5?`${s} saaf behtar hai (${x>0?'+':''}${x.toFixed(1)})`:`${s} jeet ki taraf hai (${x>0?'+':''}${x.toFixed(1)})`}
   /* pv ki pehli n chaalein: har chaal ka tir (number ke saath) aur ek line ka matlab */
   function plySteps(st,pv,n,mover){const o=[];let s=st;for(const u of pv.slice(0,n)){const m=fromUci(s,u);if(!m)break;const I=xIdeas(s,m);const mine=s.w===mover;
-      o.push({k:o.length+1,san:xNum(s,sanOf(s,m)),who:sideName(s.w),mine,arr:[sn(m.f),sn(m.t),mine?'g':'y',String(o.length+1)],txt:I.pos.slice(0,2).join(' aur ')||I.neg[0]||'position majboot karti hai, agli chaal ki taiyari'});s=make(s,m)}return o}
-  const stepList=S=>`<ol class="xsteps">${S.map(x=>`<li><span class="xn ${x.mine?'g':'y'}">${x.k}</span><b>${esc(x.san)}</b> <span class="muted">${esc(x.who)}</span>: ${esc(x.txt)}.</li>`).join('')}</ol>`;
+      o.push({st:s,mv:m,k:o.length+1,san:xNum(s,sanOf(s,m)),who:sideName(s.w),mine,arr:[sn(m.f),sn(m.t),mine?'g':'y',String(o.length+1)],txt:I.pos.slice(0,2).join(' aur ')||I.neg[0]||'position majboot karti hai, agli chaal ki taiyari'});s=make(s,m)}return o}
+  const stepList=(S,id)=>`<ol class="xsteps">${S.map((x,j)=>{const v=id+'s'+x.k;VR[v]={st:S[0].st,last:null,arr:S.slice(0,j+1).map(y=>y.arr)};return`<li class="sanv" data-xv="${v}"><span class="xn ${x.mine?'g':'y'}">${x.k}</span><b>${esc(x.san)}</b> <span class="muted">${esc(x.who)}</span>: ${esc(x.txt)}. <span class="xgo">➡</span></li>`}).join('')}</ol>`;
   async function explainHere(){XOPEN=true;const i=cur,box=$('#gxp');const P=i?pos[i-1]:pos[0],m=i?findMove(P,sans[i-1]):null,A=m?pos[i]:null;
     box.innerHTML='<div class="card"><b>🔍 Soch raha hoon…</b><p class="small muted">Stockfish is chaal se pehle aur baad ki position dekh raha hai (2-3 second).</p></div>';
     try{await engStart();let D=XPC[i];
       if(!D){const E0=legal(P).length?await engEval(fenOf(P),1500,3):null;const E1=A&&legal(A).length?await engEval(fenOf(A),1200,2):null;D=XPC[i]={E0,E1}}
       if(cur!==i)return;box.innerHTML=xpHTML(i,P,m,A,D);if(XL.lines.best.length||XL.lines.game.length)xLineSet(XL.lines.game.length?'game':'best')}
     catch(e){box.innerHTML=`<div class="card alert">${esc(e.message||String(e))}</div>`}}
-  function xpHTML(i,P,m,A,D){const mover=P.w;const L=D.E0?D.E0.lines:[],best=L[0],bm=best?fromUci(P,best.pv[0]):null;const V={};const secs=[];
+  function xpHTML(i,P,m,A,D){const mover=P.w;const L=D.E0?D.E0.lines:[],best=L[0],bm=best?fromUci(P,best.pv[0]):null;const V=VR;const secs=[];
     const sec=(id,title,body,open)=>secs.push(`<div class="xsec"><div class="xsh"><b>${title}</b><span class="xbtns"><button class="btn small${open?' on':''}" data-xt="${id}">📖 Text</button>${V[id]?`<button class="btn small" data-xv="${id}">➡ Board</button>`:''}</span></div><div class="xsb small" id="xt-${id}"${open?'':' hidden'}>${body}</div></div>`);
     let head='';
     if(m){const san=xNum(P,sanOf(P,m)),I=xIdeas(P,m),isBest=best&&best.pv[0]===uciOf(m);
       const wb=best?wpLine(best):50,wa=D.E1&&D.E1.lines[0]?100-wpLine(D.E1.lines[0]):(inCheck(A)&&!legal(A).length?100:50),drop=isBest?0:Math.max(0,wb-wa);
       const SM=xSummary(P,m,best,D.E1&&D.E1.lines[0],null,L),lp=SM.loss||0,dd=Math.max(drop,lp>=1.5?20:lp>=0.6?10:0);const mk=misBy[i-1],VD={inacc:['🟨','Inaccuracy (?!)'],mist:['🟧','Mistake (?)'],blund:['🟥','Blunder (??)']};
       const vd=mk?VD[mk.cls]:isBest?['✅','Best chaal']:dd<3?['✅','Best jaisi chaal']:dd<10?['👍','Achhi chaal']:dd<20?['🟨','Inaccuracy (?!)']:dd<30?['🟧','Mistake (?)']:['🟥','Blunder (??)'];
-      head=`<h3 style="margin:0">${vd[0]} ${esc(san)} · ${vd[1]}</h3><p class="small muted" style="margin:0">${esc(sideName(mover))} ki chaal. Pehle: ${esc(evWords(evW(P,best)))}. Ab: ${esc(D.E1&&D.E1.lines[0]?evWords(evW(A,D.E1.lines[0])):(legal(A).length?'':'game khatam'))}.</p>`+`<div class="xsum"><b>Seedhi baat</b>${SM.lines.map(l=>`<p>${xb(l)}</p>`).join('')}</div>`;
+      head=`<h3 style="margin:0">${vd[0]} ${esc(san)} · ${vd[1]}</h3><p class="small muted" style="margin:0">${esc(sideName(mover))} ki chaal. Pehle: ${esc(evWords(evW(P,best)))}. Ab: ${esc(D.E1&&D.E1.lines[0]?evWords(evW(A,D.E1.lines[0])):(legal(A).length?'':'game khatam'))}.</p>`+sumHTML('x',P,m,best,D.E1&&D.E1.lines[0],null,L,i?last[i-1]:null);
       /* 1. is chaal ne kya kiya + nayi dhamkiyan */
       const thr=xHanging(A,!mover).filter(h=>h.gain>=1),mine=xHanging(A,mover).filter(h=>h.gain>=1);
       const tArr=xSqs(A,m.t).filter(t=>A.b[t]&&xw(A.b[t])!==mover&&A.b[t].toUpperCase()!=='K').slice(0,3).map(t=>[sn(m.t),sn(t),'r']);
@@ -147,17 +159,17 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
       /* 3. opponent ka plan (aage ki 4 chaalein, number ke saath) */
       if(D.E1&&D.E1.lines[0]){const S=plySteps(A,D.E1.lines[0].pv,4,mover);V.opp={st:A,last:[sn(m.f),sn(m.t)],arr:S.map(x=>x.arr)};
         const alt=D.E1.lines[1]?fromUci(A,D.E1.lines[1].pv[0]):null;
-        sec('opp','3. Ab opponent kya karega (plan)',`${stepList(S)}${alt?`<p style="margin:4px 0 0">Doosra raasta: <b>${esc(xNum(A,sanOf(A,alt)))}</b> – ${esc(xIdeas(A,alt).pos.slice(0,2).join(' aur ')||'thos chaal')}.</p>`:''}<p class="muted" style="margin:4px 0 0">Board: peele tir = ${esc(sideName(!mover))}, hare = ${esc(sideName(mover))}. Number = chaal ka kram (1 pehle).</p>`)}}
+        sec('opp','3. Ab opponent kya karega (plan)',`${stepList(S,'opp')}${alt?`<p style="margin:4px 0 0">Doosra raasta: <b>${esc(xNum(A,sanOf(A,alt)))}</b> – ${esc(xIdeas(A,alt).pos.slice(0,2).join(' aur ')||'thos chaal')}.</p>`:''}<p class="muted" style="margin:4px 0 0">Board: peele tir = ${esc(sideName(!mover))}, hare = ${esc(sideName(mover))}. Number = chaal ka kram (1 pehle).</p>`)}}
     else head=`<h3 style="margin:0">Shuruaati position</h3><p class="small muted" style="margin:0">${esc(evWords(evW(P,best)))}.</p>`;
     /* 4. best chaal aur uska plan */
     if(bm){const S=plySteps(P,best.pv,5,mover),PL=xPlan(P,best.pv),same=m&&best.pv[0]===uciOf(m);V.best={st:P,last:i?last[i-1]:null,arr:S.map(x=>x.arr)};
-      sec('best',`${m?'4. ':''}Best chaal: ${esc(xNum(P,sanOf(P,bm)))} – kyun best?`,`<ul class="xwhy">${same?'<li>Game me yahi chaal kheli gayi. Shabaash!</li>':''}${PL.does.slice(0,3).map(t=>`<li>Ye chaal ${esc(t)}.</li>`).join('')||'<li>Ye position ko sabse majboot rakhti hai, koi kamzori nahi deti.</li>'}${PL.neg&&PL.neg.length?`<li class="muted">Dhyan dene wali baat: ${esc(PL.neg[0])}.</li>`:''}</ul><p style="margin:6px 0 2px"><b>Plan, chaal dar chaal:</b></p>${stepList(S)}`,!m)}
+      sec('best',`${m?'4. ':''}Best chaal: ${esc(xNum(P,sanOf(P,bm)))} – kyun best?`,`<ul class="xwhy">${same?'<li>Game me yahi chaal kheli gayi. Shabaash!</li>':''}${PL.does.slice(0,3).map(t=>`<li>Ye chaal ${esc(t)}.</li>`).join('')||'<li>Ye position ko sabse majboot rakhti hai, koi kamzori nahi deti.</li>'}${PL.neg&&PL.neg.length?`<li class="muted">Dhyan dene wali baat: ${esc(PL.neg[0])}.</li>`:''}</ul><p style="margin:6px 0 2px"><b>Plan, chaal dar chaal:</b> <span class="muted">(kisi chaal ko dabao, board par 1 se wahan tak ke tir dikhenge)</span></p>${stepList(S,'best')}`,!m)}
     /* 5. top chaalein */
     if(L.length>1){V.cand={st:P,last:i?last[i-1]:null,arr:L.map((l,k)=>{const c=fromUci(P,l.pv[0]);return c?[sn(c.f),sn(c.t),k?'b':'g',String(k+1)]:null}).filter(Boolean)};
       let h='<div class="xcands">';L.forEach((l,k)=>{const cm=fromUci(P,l.pv[0]);if(!cm)return;const I=xIdeas(P,cm);const d=k&&best.mate==null&&l.mate==null?((best.cp||0)-(l.cp||0))/100:0;
-        const cons=I.neg.slice(0,2);if(d>=0.3)cons.push(`best se lagbhag ${xPawns(d)} kam`);const S1=make(P,cm),rp=l.pv[1]?fromUci(S1,l.pv[1]):null;
-        h+=`<div class="xcand"><div class="row" style="justify-content:space-between"><b><span class="xn ${k?'b':'g'}">${k+1}</span> ${esc(sanOf(P,cm))}</b><span class="mono">${esc(evWords(evW(P,l)).replace(/^.*\(|\)$/g,'')||'')}</span></div>
-          ${I.pos.slice(0,2).map(t=>`<div>👍 ${esc(t)}</div>`).join('')||'<div>👍 thos, surakshit chaal</div>'}${cons.map(t=>`<div>👎 ${esc(t)}</div>`).join('')}${rp?`<div class="muted">Jawab: ${esc(xNum(S1,sanOf(S1,rp)))} – ${esc(xIdeas(S1,rp).pos[0]||'thos jawab')}</div>`:''}</div>`});
+        const cons=I.neg.slice(0,2);if(d>=0.3)cons.push(`best se lagbhag ${xPawns(d)} kam`);const S1=make(P,cm),rp=l.pv[1]?fromUci(S1,l.pv[1]):null;VR['c'+k]=pvView(P,l.pv,4,mover,i?last[i-1]:null);
+        h+=`<div class="xcand"><div class="row" style="justify-content:space-between"><b><span class="xn ${k?'b':'g'}">${k+1}</span> <span class="sanv" data-xv="c${k}">${esc(sanOf(P,cm))}</span></b><span class="mono">${esc(evWords(evW(P,l)).replace(/^.*\(|\)$/g,'')||'')}</span></div>
+          ${I.pos.slice(0,2).map(t=>`<div>👍 ${esc(t)}</div>`).join('')||'<div>👍 thos, surakshit chaal</div>'}${cons.map(t=>`<div>👎 ${esc(t)}</div>`).join('')}${rp?`<div class="muted">Jawab: ${esc(xNum(S1,sanOf(S1,rp)))} – ${esc(xIdeas(S1,rp).pos[0]||'thos jawab')}</div>`:''}<button class="xgo" data-xv="c${k}">➡ Board par line 1-2-3</button></div>`});
       sec('cand',`${m?'5. ':''}Top ${L.length} chaalein (pros / cons)`,h+'</div>')}
     /* 6. position ka haal, dono taraf */
     {const S=m?A:P;const fw=xFeat(S,true),fb=xFeat(S,false);const mat=xmat(S,true)-xmat(S,false);
@@ -169,7 +181,7 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
       V.pos={st:S,last:last[i],arr:[],hl:[...xHanging(S,true),...xHanging(S,false)].filter(h=>h.gain>=1).map(h=>sn(h.s))};
       sec('pos',`${m?'6. ':''}Position ka haal (dono taraf)`,`<ul class="xwhy"><li>Material: ${mat?`${mat>0?'White':'Black'} ${Math.abs(mat)} pyade jitna aage`:'barabar'}. ${esc(lead(fw.cen,fb.cen,'center'))}, ${esc(lead(fw.mob,fb.mob,'mohron ki activity'))} (${fw.mob} vs ${fb.mob} squares), ${esc(lead(fw.space,fb.space,'space'))}.</li>
         <li><b>${esc(sideName(true))}:</b> ${esc(side(true,fw).join('; '))}.</li><li><b>${esc(sideName(false))}:</b> ${esc(side(false,fb).join('; '))}.</li></ul><p class="muted" style="margin:4px 0 0">Board: peele square = latakte mohre.</p>`)}
-    XL={P,i,m,A,D,V,lines:{best:best?best.pv.slice(0,8):[],game:m&&D.E1&&D.E1.lines[0]?D.E1.lines[0].pv.slice(0,7):[]},k:0,which:'best',on:null};
+    XL={P,i,m,A,D,lines:{best:best?best.pv.slice(0,8):[],game:m&&D.E1&&D.E1.lines[0]?D.E1.lines[0].pv.slice(0,7):[]},k:0,which:'best',on:null};
     return`<div class="card stack xp">${head}${secs.join('')}
       <div class="xsec"><div class="xsh"><b>Line chala kar dekho (◀ ▶)</b></div><div class="small"><div class="seg sm" style="margin:6px 0">${XL.lines.game.length?'<button data-xl="game">Is chaal ke baad</button>':''}${XL.lines.best.length?`<button data-xl="best">Best line${m?' (chaal se pehle)':''}</button>`:''}</div>
       <div class="row" style="justify-content:center"><button class="btn small" data-xs="-1">◀</button><span class="small" id="xlk"></span><button class="btn small" data-xs="1">▶</button></div><div class="small" id="xlc" style="min-height:2.6em"></div></div></div>
@@ -183,9 +195,9 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
     if(c){if(!k)c.innerHTML=nx?`Shuruaat. Pehli chaal (tir 1): <b>${esc(xNum(sts[0],sanOf(sts[0],nx)))}</b>. ▶ dabao.`:'Line khali hai.';
       else{const pm=ms[k-1],ps=sts[k-1],I=xIdeas(ps,pm);
         c.innerHTML=`<b>${k}. ${esc(xNum(ps,sanOf(ps,pm)))}</b> (${esc(sideName(ps.w))}): ${esc((I.pos.slice(0,2).join(' aur ')||I.neg[0]||'position majboot karti hai'))}.${nx?' Agli chaal tir me.':' Line yahin tak.'}`}}}
-  function xView(id,btn){if(!XL||!XL.V[id])return;const on=XL.on===id;document.querySelectorAll('[data-xv]').forEach(b=>b.classList.remove('on'));
-    if(on){XL.on=null;B.last=last[cur];B.set({st:pos[cur],arr:[],hl:[]});return}
-    XL.on=id;btn.classList.add('on');const v=XL.V[id];B.last=v.last;B.set({st:v.st,arr:v.arr,hl:v.hl||[]})}
+  function xView(id,btn){const v=VR[id];if(!v)return;const on=VON===id;document.querySelectorAll('[data-xv].on').forEach(b=>b.classList.remove('on'));
+    if(on){VON=null;B.last=last[cur];B.set({st:pos[cur],arr:[],hl:[]});return}
+    VON=id;document.querySelectorAll(`[data-xv="${id}"]`).forEach(b=>b.classList.add('on'));B.last=v.last;B.set({st:v.st,arr:v.arr,hl:v.hl||[]})}
   app.onclick=e=>{
     if(e.target.closest('[data-xp]')){explainHere();return}
     if(e.target.closest('[data-xclose]')){XOPEN=false;show(cur);return}
@@ -193,7 +205,7 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
     const xv=e.target.closest('[data-xv]');if(xv){xView(xv.dataset.xv,xv);window.scrollTo({top:Math.max(0,$('#gbd').getBoundingClientRect().top+scrollY-80),behavior:'smooth'});return}
     const xl=e.target.closest('[data-xl]');if(xl){xLineSet(xl.dataset.xl);xLineDraw();return}
     const xs2=e.target.closest('[data-xs]');if(xs2&&XL){XL.k+=+xs2.dataset.xs;xLineDraw();return}
-    if(e.target.closest('[data-xback]')){if(XL)XL.on=null;document.querySelectorAll('[data-xv]').forEach(b=>b.classList.remove('on'));B.last=last[cur];B.set({st:pos[cur],arr:[],hl:[]});return}
+    if(e.target.closest('[data-xback]')){VON=null;document.querySelectorAll('[data-xv]').forEach(b=>b.classList.remove('on'));B.last=last[cur];B.set({st:pos[cur],arr:[],hl:[]});return}
     const rf=e.target.closest('[data-refute]');if(rf){const nx=cur?misBy[cur-1]:null;if(!nx||!nx.x)return;const A=pos[cur];const r=nx.x.ref.length?fromUci(A,nx.x.ref[0]):null;
       B.last=last[cur];B.set({st:A,arr:r?[[sn(r.f),sn(r.t),'y']]:[]});rf.textContent='Opponent ka jawab: peela tir';return}
     const n=e.target.closest('[data-nav]');if(n){const d=+n.dataset.nav;show(d===0?0:d===9999?pos.length-1:cur+d);return}

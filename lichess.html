@@ -281,7 +281,9 @@ ul.gate{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;ga
 ul.xwhy{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 .arrows .al{stroke:#fff;stroke-width:.04}.arrows .al.g{fill:#1F9D5A}.arrows .al.r{fill:#D2462C}.arrows .al.y{fill:#E8A317}.arrows .al.b{fill:#2F6FD0}
 .arrows .alt{fill:#fff;font:700 .3px/1 system-ui,sans-serif;text-anchor:middle;dominant-baseline:central}
-.xsum{background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:14.5px;line-height:1.5}.xsum p{margin:6px 0 0}
+.sanv{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}li.sanv{text-decoration:none;border-radius:6px}.sanv.on{background:color-mix(in srgb,var(--accent) 18%,transparent);border-radius:6px}
+.xgo{font:inherit;font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:1px 8px;margin-left:4px;cursor:pointer;white-space:nowrap}.xgo.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.xsum .xsh{margin-bottom:2px}.xsum{background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:14.5px;line-height:1.5}.xsum p{margin:6px 0 0}
 .xsec{border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:4px}
 .xsh{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.xsh b{font-size:14px}
 .xbtns{display:flex;gap:6px}.xbtns .btn.on{background:var(--accent);color:var(--accent-fg)}
@@ -587,7 +589,7 @@ body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/"><i class="b64">64</i><span class="bname">Lichess Play<small>64 Squares</small></span></a><div class="chips"><span class="chip" id="luser"></span></div></div></header>
-<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 04:20 UTC</p></main>
+<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 04:33 UTC</p></main>
 <nav class="tabs"><div class="wrap">
 <button data-go="#/" class="on"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.6 3.5 5.4 3.5 8.5s-1.1 5.9-3.5 8.5c-2.4-2.6-3.5-5.4-3.5-8.5s1.1-5.9 3.5-8.5z"/></svg></span>Lobby</button>
 <button data-go="#/road"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20h9"/><path d="M9 20c0-3 1.5-5 3-6.5-2.2.4-4 .1-5-1l3.5-6.5c3.5-.5 7 2 7 7.5V20"/><circle cx="12.6" cy="8.6" r=".7" fill="currentColor"/></svg></span>Rated</button>
