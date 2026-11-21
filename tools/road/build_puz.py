@@ -1,7 +1,7 @@
 """Build the Safar (3000 tak) puzzle bank from the open Lichess puzzle database (CC0).
 
 Input : lichess_db_puzzle.csv
-Output: packs/safar/index.json and packs/safar/b<band>_<k>.json
+Output: packs/road/index.json and packs/road/b<band>_<k>.json
   band = 100-point rating band (400..3100), k = chunk number (PER puzzles each).
   Each puzzle: [lichess_id, fen_solver_to_move, "SAN solution line", rating, "theme codes"].
 Every puzzle sits in exactly one file, so the app can promise "no puzzle twice".
@@ -10,7 +10,7 @@ import csv, json, os, random, sys, time
 import chess
 
 SRC = sys.argv[1] if len(sys.argv) > 1 else 'lichess_db_puzzle.csv'
-OUT = sys.argv[2] if len(sys.argv) > 2 else 'packs/safar'
+OUT = sys.argv[2] if len(sys.argv) > 2 else 'packs/road'
 PER = int(os.environ.get('PER', '1000'))
 CHUNKS = int(os.environ.get('CHUNKS', '4'))
 LO, HI, STEP = 400, 3100, 100
