@@ -23,12 +23,17 @@ const IC={
  games:SV('<path d="M8 20h9"/><path d="M9 20c0-3 1.5-5 3-6.5-2.2.4-4 .1-5-1l3.5-6.5c3.5-.5 7 2 7 7.5V20"/><circle cx="12.6" cy="8.6" r=".7" fill="currentColor"/>')};
 /* main app (index.html) jaisa neeche ka bar: patla, poori chaudai, upar gol kone */
 const navCSS=`
-nav.tabs{left:0!important;right:0!important;bottom:0!important;max-width:none!important;margin:0!important;border-radius:18px 18px 0 0!important;background:rgba(18,32,25,.94)!important;-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);box-shadow:0 -6px 20px rgba(10,25,18,.18)!important;border:0!important;padding-bottom:calc(4px + env(safe-area-inset-bottom,0px))!important}
+nav.tabs{left:0!important;right:0!important;bottom:0!important;max-width:none!important;margin:0!important;border:0!important;border-radius:18px 18px 0 0!important;background:rgba(18,32,25,.94)!important;-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);box-shadow:0 -6px 20px rgba(10,25,18,.18)!important;padding-bottom:max(4px,calc(env(safe-area-inset-bottom,0px) - 12px))!important}
 nav.tabs .wrap{display:grid;grid-template-columns:repeat(5,1fr)!important;gap:2px;padding:4px 6px 2px!important;max-width:560px;margin:0 auto}
-nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:2px!important;line-height:1;padding:5px 0 4px!important;border-radius:14px;color:#8FA398!important;font-family:var(--f-body);font-size:11px!important;font-weight:600;background:none!important;border:0}
-nav.tabs button span{display:grid;place-items:center;width:21px!important;height:21px!important;line-height:0;background:none!important;font-size:0!important}
-nav.tabs button.on{color:#7BE0A6!important;font-weight:800;background:rgba(92,192,140,.14)!important}
-body:not(.emb) main{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))!important}
+nav.tabs button{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px!important;line-height:1;padding:5px 0 4px!important;border:0;border-radius:18px;color:#8FA398!important;font-family:var(--f-body);font-size:11px!important;font-weight:600;letter-spacing:.01em;white-space:nowrap;background:none!important;transition:color .2s}
+nav.tabs button::before{content:"";position:absolute;inset:1px 8px;border-radius:16px;background:rgba(123,224,166,.16);opacity:0;transform:scale(.85);transition:opacity .2s,transform .2s}
+nav.tabs button.on{color:#7BE0A6!important;font-weight:800}
+nav.tabs button.on::before{opacity:1;transform:scale(1)}
+nav.tabs button.on svg{transform:translateY(-1px)}
+nav.tabs button span{position:relative;display:grid;place-items:center;width:21px!important;height:21px!important;line-height:0;background:none!important;font-size:0!important}
+nav.tabs button svg{display:block;transition:transform .2s}
+@media (max-width:360px){nav.tabs button{font-size:10px!important}nav.tabs button svg{width:20px;height:20px}}
+body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!important}
 `;
 const nav=(items)=>`<nav class="tabs"><div class="wrap">\n${items.map(([ic,label,act,on])=>`<button ${act}${on?' class="on"':''}><span>${IC[ic]}</span>${label}</button>`).join('\n')}\n</div></nav>`;
 const BUILD=new Date().toISOString().slice(0,16).replace('T',' ')+' UTC';

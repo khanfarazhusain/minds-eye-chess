@@ -280,17 +280,22 @@ ul.gate{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;ga
 .wrapr{flex-wrap:wrap;gap:6px}
 #lu{flex:1;min-width:0;font:inherit;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
 
-nav.tabs{left:0!important;right:0!important;bottom:0!important;max-width:none!important;margin:0!important;border-radius:18px 18px 0 0!important;background:rgba(18,32,25,.94)!important;-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);box-shadow:0 -6px 20px rgba(10,25,18,.18)!important;border:0!important;padding-bottom:calc(4px + env(safe-area-inset-bottom,0px))!important}
+nav.tabs{left:0!important;right:0!important;bottom:0!important;max-width:none!important;margin:0!important;border:0!important;border-radius:18px 18px 0 0!important;background:rgba(18,32,25,.94)!important;-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);box-shadow:0 -6px 20px rgba(10,25,18,.18)!important;padding-bottom:max(4px,calc(env(safe-area-inset-bottom,0px) - 12px))!important}
 nav.tabs .wrap{display:grid;grid-template-columns:repeat(5,1fr)!important;gap:2px;padding:4px 6px 2px!important;max-width:560px;margin:0 auto}
-nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:2px!important;line-height:1;padding:5px 0 4px!important;border-radius:14px;color:#8FA398!important;font-family:var(--f-body);font-size:11px!important;font-weight:600;background:none!important;border:0}
-nav.tabs button span{display:grid;place-items:center;width:21px!important;height:21px!important;line-height:0;background:none!important;font-size:0!important}
-nav.tabs button.on{color:#7BE0A6!important;font-weight:800;background:rgba(92,192,140,.14)!important}
-body:not(.emb) main{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))!important}
+nav.tabs button{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px!important;line-height:1;padding:5px 0 4px!important;border:0;border-radius:18px;color:#8FA398!important;font-family:var(--f-body);font-size:11px!important;font-weight:600;letter-spacing:.01em;white-space:nowrap;background:none!important;transition:color .2s}
+nav.tabs button::before{content:"";position:absolute;inset:1px 8px;border-radius:16px;background:rgba(123,224,166,.16);opacity:0;transform:scale(.85);transition:opacity .2s,transform .2s}
+nav.tabs button.on{color:#7BE0A6!important;font-weight:800}
+nav.tabs button.on::before{opacity:1;transform:scale(1)}
+nav.tabs button.on svg{transform:translateY(-1px)}
+nav.tabs button span{position:relative;display:grid;place-items:center;width:21px!important;height:21px!important;line-height:0;background:none!important;font-size:0!important}
+nav.tabs button svg{display:block;transition:transform .2s}
+@media (max-width:360px){nav.tabs button{font-size:10px!important}nav.tabs button svg{width:20px;height:20px}}
+body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!important}
 </style>
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/" style="color:inherit;text-decoration:none"><i style="font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.04em">64</i> Road to 3000</a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span></div></div></header>
-<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 02:33 UTC</p></main>
+<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 02:41 UTC</p></main>
 <nav class="tabs"><div class="wrap">
 <button data-go="#/" class="on"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="m9 14.5 2 2 4-4"/></svg></span>Today</button>
 <button data-go="#/run/extra"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>Practice</button>
