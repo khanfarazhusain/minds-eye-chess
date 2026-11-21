@@ -81,13 +81,13 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
   let cur=pos.length-1;const a=g.an;const misBy={};(a?a.mis:[]).forEach(x=>misBy[x.ply]=x);
   app.innerHTML=`<div class="stack"><button class="btn small backbtn" data-go="#/games">‹ My Games</button>
    <p class="eyebrow">${esc(RESN[g.res]||g.res)} · ${g.color==='w'?'White':'Black'} · ${esc(g.speed||'')} ${g.rated?'Rated':''}</p><h2 style="margin:0">vs ${esc(g.opp)} (${g.oppR})</h2><p class="small muted">${esc(g.open)}</p>
-   <div id="gbd"></div><div class="row" style="justify-content:center"><button class="btn small" data-nav="0">⏮</button><button class="btn small" data-nav="-1">◀</button><span class="small" id="gply"></span><button class="btn small" data-nav="1">▶</button><button class="btn small" data-nav="9999">⏭</button></div>
+   <div id="gbd"></div><div id="gfocus" hidden></div><div class="row" style="justify-content:center"><button class="btn small" data-nav="0">⏮</button><button class="btn small" data-nav="-1">◀</button><span class="small" id="gply"></span><button class="btn small" data-nav="1">▶</button><button class="btn small" data-nav="9999">⏭</button></div>
    <div id="gnote"></div><div id="gxp"></div><div class="moves" id="gmv"></div>
    <div id="gan">${a?anHTML(g):`<button class="btn primary block" data-act="ganalyse">Review this game (Stockfish)</button><p class="small muted">Phone par 30-60 second lagenge. Engine sirf is review ke liye, course mein nahi.</p>`}</div>
    <div class="row wrapr"><button class="btn small" data-act="gcopy">Copy PGN</button><a class="btn small" style="text-decoration:none" href="https://lichess.org/${g.id}" target="_blank" rel="noopener">Open on Lichess</a></div></div>`;
   const B=Board($('#gbd'),{st:pos[cur],persp:g.color});
   /* notation me chuni hui chaal = board par us chaal ke BAAD ki position. Galti ka note aur "Explain" usi chaal ka. */
-  let XOPEN=false,VR={},VON=null;
+  let XOPEN=false,VR={},VON=null,FSY=null;
   /* tir ki line: pv ki pehli n chaalein, number 1,2,3 (hara = chaal wala side, peela = opponent) */
   const pvView=(st,pv,n,mover,lst)=>{const arr=[];let s2=st;for(const u of(pv||[]).slice(0,n)){const mm=fromUci(s2,u);if(!mm)break;arr.push([sn(mm.f),sn(mm.t),s2.w===mover?'g':'y',String(arr.length+1)]);s2=make(s2,mm)}return{st,last:lst,arr}};
   const xbv=(t,v)=>esc(t).replace(/\*\*(.+?)\*\*/g,(_,x)=>v&&/[a-h][1-8]|O-O/.test(x)?`<b class="sanv" data-xv="${v}">${x}</b>`:`<b>${x}</b>`);
@@ -109,7 +109,7 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
       <div class="xbtns wrapr" style="margin-top:8px"><button class="btn small" data-xv="${id}mv">➡ Ye chaal</button></div>
       ${bp?`<p class="xplh"><b>Behtar plan</b> <span class="muted">(${esc(sideName(mover))}, teen best raaste)</span></p>${bp}`:''}
       ${op?`<p class="xplh"><b>Opponent ka plan</b> <span class="muted">(${esc(sideName(!mover))}, teen best raaste)</span></p>${op}`:''}</div>`}
-  function show(i){cur=Math.max(0,Math.min(pos.length-1,i));XL=null;VR={};VON=null;
+  function show(i){cur=Math.max(0,Math.min(pos.length-1,i));XL=null;VR={};VON=null;focusClose(false);
     const nx=cur>0?misBy[cur-1]:null;const arr=[];
     if(nx){const P0=pos[cur-1];const pm=findMove(P0,nx.san);if(pm)arr.push([sn(pm.f),sn(pm.t),'r']);const bm=findMove(P0,nx.best);if(bm)arr.push([sn(bm.f),sn(bm.t),'g'])}
     B.last=last[cur];B.set({st:pos[cur],arr,hl:[]});
@@ -208,13 +208,27 @@ function vGame(id){const app=$('#app');let g=GAMES[id];
       else{const pm=ms[k-1],ps=sts[k-1],I=xIdeas(ps,pm);
         c.innerHTML=`<b>${k}. ${esc(xNum(ps,sanOf(ps,pm)))}</b> (${esc(sideName(ps.w))}): ${esc((I.pos.slice(0,2).join(' aur ')||I.neg[0]||'position majboot karti hai'))}.${nx?' Agli chaal tir me.':' Line yahin tak.'}`}}}
   function xView(id,btn){const v=VR[id];if(!v)return;const on=VON===id;document.querySelectorAll('[data-xv].on').forEach(b=>b.classList.remove('on'));
-    if(on){VON=null;B.last=last[cur];B.set({st:pos[cur],arr:[],hl:[]});return}
-    VON=id;document.querySelectorAll(`[data-xv="${id}"]`).forEach(b=>b.classList.add('on'));B.last=v.last;B.set({st:v.st,arr:v.arr,hl:v.hl||[]})}
+    if(on){VON=null;B.last=last[cur];B.set({st:pos[cur],arr:[],hl:[]});focusClose(true);return}
+    focusOpen(id,btn);VON=id;document.querySelectorAll(`[data-xv="${id}"]`).forEach(b=>b.classList.add('on'));B.last=v.last;B.set({st:v.st,arr:v.arr,hl:v.hl||[]})}
+  /* board ke theek neeche: jo chuna wahi text, ✕ se band (padhne ke liye neeche scroll nahi karna padta) */
+  function focusTxt(id,btn){const clean=h=>h.replace(/ id="[^"]*"/g,'');let t='Board par',x='';
+    if(btn.dataset.xpt){const pg=document.getElementById('xpl-'+id);t=btn.textContent.trim();x=pg?pg.innerHTML:''}
+    else if(btn.closest('li')&&btn.closest('ol')){const ol=btn.closest('ol'),pg=ol.closest('.xplan');const tb=pg&&document.querySelector(`[data-xpt][data-xv="${pg.id.slice(4)}"]`);t=tb?tb.textContent.trim():'Chaal dar chaal';x=ol.outerHTML}
+    else if(btn.closest('.xsec')){const sc=btn.closest('.xsec');t=sc.querySelector('.xsh b').textContent;x=sc.querySelector('.xsb').innerHTML}
+    else if(btn.closest('.xcand')){t='Top chaal';x=btn.closest('.xcand').outerHTML}
+    else if(/mv$/.test(id)&&btn.closest('.xsum')){t='Ye chaal';const p0=btn.closest('.xsum').querySelector('[id^="xt-"] p');x=p0?p0.innerHTML:''}
+    else if(btn.closest('p')){t='Seedhi baat';x=btn.closest('p').innerHTML}
+    else if(btn.closest('div.small')){t='Line';x=btn.closest('div.small').innerHTML}
+    return{t,x:clean(x)}}
+  function focusOpen(id,btn){const f=$('#gfocus');if(!f)return;if(!btn.closest('#gfocus')&&FSY==null)FSY=scrollY;const{t,x}=focusTxt(id,btn);
+    f.innerHTML=`<div class="card xfocus"><div class="xsh"><b>${esc(t)}</b><button class="btn small" data-fclose="1">✕ Band</button></div><div class="small">${x||'<span class="muted">Board par tir dekho.</span>'}</div></div>`;f.hidden=false}
+  function focusClose(back){const f=$('#gfocus');if(!f)return;f.hidden=true;f.innerHTML='';if(back&&FSY!=null)window.scrollTo({top:FSY,behavior:'smooth'});FSY=null}
   app.onclick=e=>{
+    if(e.target.closest('[data-fclose]')){VON=null;document.querySelectorAll('[data-xv].on').forEach(b=>b.classList.remove('on'));B.last=last[cur];B.set({st:pos[cur],arr:[],hl:[]});focusClose(true);return}
     if(e.target.closest('[data-xp]')){explainHere();return}
     if(e.target.closest('[data-xclose]')){XOPEN=false;show(cur);return}
     const xt=e.target.closest('[data-xt]');if(xt){const el=$('#xt-'+xt.dataset.xt);if(el){el.hidden=!el.hidden;xt.classList.toggle('on',!el.hidden)}return}
-    const xv=e.target.closest('[data-xv]');if(xv){if(xv.dataset.xpt)document.querySelectorAll(`[data-xpg="${xv.dataset.xpt}"]`).forEach(d=>d.hidden=d.id!=='xpl-'+xv.dataset.xv);xView(xv.dataset.xv,xv);window.scrollTo({top:Math.max(0,$('#gbd').getBoundingClientRect().top+scrollY-80),behavior:'smooth'});return}
+    const xv=e.target.closest('[data-xv]');if(xv){if(xv.dataset.xpt)document.querySelectorAll(`[data-xpg="${xv.dataset.xpt}"]`).forEach(d=>d.hidden=d.id!=='xpl-'+xv.dataset.xv);const inF=!!xv.closest('#gfocus');xView(xv.dataset.xv,xv);if(!inF)window.scrollTo({top:Math.max(0,$('#gbd').getBoundingClientRect().top+scrollY-80),behavior:'smooth'});return}
     const xl=e.target.closest('[data-xl]');if(xl){xLineSet(xl.dataset.xl);xLineDraw();return}
     const xs2=e.target.closest('[data-xs]');if(xs2&&XL){XL.k+=+xs2.dataset.xs;xLineDraw();return}
     if(e.target.closest('[data-xback]')){VON=null;document.querySelectorAll('[data-xv]').forEach(b=>b.classList.remove('on'));B.last=last[cur];B.set({st:pos[cur],arr:[],hl:[]});return}
