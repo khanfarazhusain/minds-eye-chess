@@ -15,6 +15,7 @@ const coreLite=core.replace(/const COURSE=\[.*?\];\n/s,'const COURSE=[];\n').rep
 const css=`
 /* ---- Road to 3000 ---- */
 .tbtn{display:none!important}
+body:not(.emb) main{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))!important}
 .shero h1{font-size:30px;margin:2px 0}
 .qlist{display:flex;flex-direction:column;gap:8px}
 .qrow{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}

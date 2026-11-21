@@ -8,10 +8,12 @@ const PRESETS=[[1,0],[2,1],[3,0],[3,2],[5,0],[5,3],[10,0],[10,5],[15,10],[30,0],
 const MINUTES=[0.25,0.5,0.75,1,1.5,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,35,40,45,60,75,90,105,120,135,150,165,180];
 const INCS=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,35,40,45,60,90,120,150,180];
 const DAYS=[1,2,3,5,7,10,14];
+/* Lichess ke saare variants. App ka board sirf Standard chess chalata hai; baaki variants ka game Lichess par khulta hai */
+const VARIANTS={standard:'Standard',chess960:'Chess960',crazyhouse:'Crazyhouse',antichess:'Antichess',atomic:'Atomic',horde:'Horde',kingOfTheHill:'King of the Hill',racingKings:'Racing Kings',threeCheck:'Three-check'};
 const fmtMin=m=>m===0.25?'¼':m===0.5?'½':m===0.75?'¾':m===1.5?'1½':String(m);
 function speedOf(min,inc){const t=min*60+40*inc;return t<29?'ultraBullet':t<179?'bullet':t<479?'blitz':t<1499?'rapid':'classical'}
 const SPNAME={ultraBullet:'UltraBullet',bullet:'Bullet',blitz:'Blitz',rapid:'Rapid',classical:'Classical',correspondence:'Correspondence'};
-let CF=(()=>{try{return Object.assign({mode:'real',min:10,inc:5,days:2,rated:true,color:'random',rmin:-500,rmax:500,ai:3},JSON.parse(localStorage.getItem('lplay.cf')||'{}'))}catch(e){return{mode:'real',min:10,inc:5,days:2,rated:true,color:'random',rmin:-500,rmax:500,ai:3}}})();
+let CF=(()=>{try{return Object.assign({mode:'real',min:10,inc:5,days:2,rated:true,color:'random',rmin:-500,rmax:500,ai:3,variant:'standard'},JSON.parse(localStorage.getItem('lplay.cf')||'{}'))}catch(e){return{mode:'real',min:10,inc:5,days:2,rated:true,color:'random',rmin:-500,rmax:500,ai:3,variant:'standard'}}})();
 const cfSave=()=>{try{localStorage.setItem('lplay.cf',JSON.stringify(CF))}catch(e){}};
 const errText=e=>e.message==='expired'?'Lichess login purana ho gaya. Ek baar dobara Connect karo.':e.message==='noauth'?'Pehle Lichess Connect karo.':(e.name==='AbortError'?'':String(e.message||e));
 function flash(t){MSG=t;const m=$('#msg');if(m)m.textContent=t}
@@ -37,7 +39,7 @@ function connectHTML(){const exp=lichNeedsReconnect();
   <a class="btn block" style="text-decoration:none;text-align:center" href="https://lichess.org/signup" target="_blank" rel="noopener">Create a Lichess Account</a>
   <p class="small" id="msg">${esc(window.__lmsg||'')}</p></div></div>`}
 const sel=(id,arr,cur,lab)=>`<select id="${id}">${arr.map(v=>`<option value="${v}"${String(v)===String(cur)?' selected':''}>${lab?lab(v):v}</option>`).join('')}</select>`;
-function perfChips(){const P=(ME&&ME.perfs)||{};return['bullet','blitz','rapid','classical','correspondence'].filter(k=>P[k]).map(k=>`<span class="chip">${SPNAME[k]} ${P[k].rating}${P[k].prov?'?':''}</span>`).join('')}
+function perfChips(){const P=(ME&&ME.perfs)||{};return['bullet','blitz','rapid','classical','correspondence',...Object.keys(VARIANTS).filter(k=>k!=='standard')].filter(k=>P[k]&&(P[k].games||k in SPNAME)).map(k=>`<span class="chip">${SPNAME[k]||VARIANTS[k]} ${P[k].rating}${P[k].prov?'?':''}</span>`).join('')}
 let LTK=0;
 async function vLobby(){const app=$('#app');const tk=++LTK;
   if(!lichToken()){app.innerHTML=connectHTML();return}
@@ -57,7 +59,7 @@ async function vLobby(){const app=$('#app');const tk=++LTK;
    <div class="qgrid">${PRESETS.map(([m,i])=>`<button class="qp" data-act="quick" data-m="${m}" data-i="${i}"><b>${m}+${i}</b><small>${SPNAME[speedOf(m,i)]}</small></button>`).join('')}<button class="qp" data-act="custom"><b>Custom</b><small>Neeche</small></button></div>
    <h2 id="cg">Create a Game</h2>
    <div class="card stack form">
-    <label>Variant ${sel('cvar',['Standard'],'Standard')}</label>
+    <label>Variant ${sel('cvar',Object.keys(VARIANTS),CF.variant,v=>VARIANTS[v])}</label>${CF.variant!=='standard'?'<p class="small muted">'+VARIANTS[CF.variant]+' ka board app mein nahi hai: game milte hi Lichess par khulega (wahan login hona chahiye).</p>':''}
     <label>Time control ${sel('cmode',['real','corr','unlimited'],CF.mode,v=>({real:'Real time',corr:'Correspondence',unlimited:'Unlimited (sirf challenge)'}[v]))}</label>
     ${CF.mode==='real'?`<div class="row2"><label>Minutes per side ${sel('cmin',MINUTES,CF.min,fmtMin)}</label><label>Increment (sec) ${sel('cinc',INCS,CF.inc)}</label></div><p class="small muted">${SPNAME[sp]}</p>`:CF.mode==='corr'?`<label>Days per turn ${sel('cdays',DAYS,CF.days)}</label>`:''}
     <div class="seg" id="crated"><button data-v="0" class="${CF.rated?'':'on'}">Casual</button><button data-v="1" class="${CF.rated?'on':''}">Rated</button></div>
@@ -83,15 +85,15 @@ async function startSeek(params,label){const app=$('#app');SEEK=new AbortControl
   try{await lform('/api/board/seek',params,SEEK.signal);/* correspondence seek turant laut aata hai */
     if(params.days&&SEEK){SEEK=null;MSG='Correspondence seek lobby mein lag gaya. Koi join karega to game "Ongoing Games" mein aayega.';go('#/')}}
   catch(e){const t=errText(e);SEEK=null;if(t){MSG='Lichess: '+t;go('#/')}}}
-function seekParams(){const P={rated:CF.rated,variant:'standard',...clockParams(false)};if(CF.color!=='random')P.color=CF.color;
-  const sp=CF.mode==='real'?speedOf(CF.min,CF.inc):'correspondence';const my=ME&&ME.perfs&&ME.perfs[sp]&&ME.perfs[sp].rating;
+function seekParams(){const P={rated:CF.rated,variant:CF.variant,...clockParams(false)};if(CF.color!=='random')P.color=CF.color;
+  const sp=CF.variant!=='standard'?CF.variant:CF.mode==='real'?speedOf(CF.min,CF.inc):'correspondence';const my=ME&&ME.perfs&&ME.perfs[sp]&&ME.perfs[sp].rating;
   if(my&&(CF.rmin>-500||CF.rmax<500))P.ratingRange=Math.max(400,my+CF.rmin)+'-'+(my+CF.rmax);return P}
-const seekLabel=()=>CF.mode==='real'?`${fmtMin(CF.min)}+${CF.inc} ${SPNAME[speedOf(CF.min,CF.inc)]} · ${CF.rated?'Rated':'Casual'}`:`${CF.days} day(s) per move · ${CF.rated?'Rated':'Casual'}`;
-async function challengeFriend(user){const P={rated:CF.rated,variant:'standard',color:CF.color,...clockParams(true)};
+const seekLabel=()=>(CF.variant!=='standard'?VARIANTS[CF.variant]+' · ':'')+(CF.mode==='real'?`${fmtMin(CF.min)}+${CF.inc} ${SPNAME[speedOf(CF.min,CF.inc)]} · ${CF.rated?'Rated':'Casual'}`:`${CF.days} day(s) per move · ${CF.rated?'Rated':'Casual'}`);
+async function challengeFriend(user){const P={rated:CF.rated,variant:CF.variant,color:CF.color,...clockParams(true)};
   try{const r=await lform('/api/challenge/'+encodeURIComponent(user),P);const j=await r.json();const c=j.challenge||j;WAIT={id:c.id,user};startEvents();
     $('#app').innerHTML=`<div class="stack center"><div class="big">⚔️</div><h1>Challenge sent</h1><p>${esc(user)} ke accept karne ka intezaar…</p><p class="small muted">Dost ko Lichess par notification jayega. Link bhi bhej sakte ho:</p><p class="mono small" style="word-break:break-all">${esc(c.url||('https://lichess.org/'+c.id))}</p><button class="btn block" data-act="copy" data-v="${esc(c.url||('https://lichess.org/'+c.id))}">Copy Link</button><button class="btn block" data-act="cancelch" data-id="${c.id}">Cancel Challenge</button></div>`}
   catch(e){flash('Lichess: '+errText(e))}}
-async function playAI(){const P={level:CF.ai,variant:'standard',color:CF.color,...clockParams(true)};
+async function playAI(){const P={level:CF.ai,variant:CF.variant,color:CF.color,...clockParams(true)};
   try{const r=await lform('/api/challenge/ai',P);const j=await r.json();go('#/game/'+j.id)}catch(e){flash('Lichess: '+errText(e))}}
 
 
@@ -107,7 +109,8 @@ async function vRoad(){const app=$('#app');
    <p class="small" id="msg">${esc(MSG)}</p>
    <div class="qgrid" style="grid-template-columns:1fr 1fr">${ROAD_TC.map(([m,i])=>`<button class="qp" data-act="roadseek" data-m="${m}" data-i="${i}"><b>${m}+${i}</b><small>Rapid · Rated</small></button>`).join('')}</div>
    <p class="small muted">Game ke baad Road to 3000 app mein "My Games" se uska review (Stockfish, sirf game ke baad) aur galtiyon ke drills milenge.</p>
-   <button class="btn block" onclick="location.href='road.html'">‹ Back to Road to 3000</button></div>`;MSG=''}
+   <button class="btn block" onclick="location.href='road.html'">‹ Back to Road to 3000</button>
+   <button class="btn block" data-go="#/">All Lichess Options (variants, casual, friends, computer) ›</button></div>`;MSG=''}
 async function roadSeek(m,i){const my=myRapid();RS={k:0};startEvents();const app=$('#app');
   while(RS){const w=ROAD_RANGE[RS.k];
     app.innerHTML=`<div class="stack center"><div class="big">🔎</div><h1>Searching</h1><p>${m}+${i} Rapid · Rated</p><p class="small muted">Opponent rating ${Math.max(400,my-w)}-${my+w}${RS.k?' (range badhayi, match nahi mila tha)':''}</p><button class="btn block" data-act="cancelseek">Cancel</button><p class="small" id="msg"></p></div>`;
@@ -136,7 +139,12 @@ function vGame(id){const app=$('#app');if(!lichToken()){app.innerHTML=connectHTM
   clearInterval(window.__clk);window.__clk=setInterval(()=>{if(G&&G.full)drawClocks()},250)}
 function myColor(){const f=G.full;if(!f||!ME)return'w';return lc(f.black&&f.black.id)===lc(ME.id)?'b':'w'}
 function pname(p){if(!p)return'?';if(p.aiLevel)return'Lichess AI level '+p.aiLevel;return(p.title?p.title+' ':'')+(p.name||p.id||'?')+(p.rating?' ('+p.rating+(p.provisional?'?':'')+')':'')}
-function drawGame(){const f=G.full,s=G.state;if(!f||!s)return;const mc=myColor();const moves=(s.moves||'').split(' ').filter(Boolean);
+function drawGame(){const f=G.full,s=G.state;if(!f||!s)return;const mc=myColor();
+  const vk=f.variant&&f.variant.key||'standard';if(vk!=='standard'&&vk!=='fromPosition'){const opp=mc==='w'?f.black:f.white;
+    if(!$('#vcard')){$('#bd').innerHTML=`<div class="card stack center" id="vcard"><div class="big">♞</div><h2>${esc(VARIANTS[vk]||f.variant.name||vk)}</h2><p>vs ${esc(pname(opp))} · ${mc==='w'?'Aap White ho':'Aap Black ho'}</p><p class="small muted">Is variant ke rules app ke board mein nahi hain, isliye game Lichess par khelo. Resign, draw aur chat yahan se bhi chalenge.</p><a class="btn primary block" style="text-decoration:none" href="https://lichess.org/${G.id}" target="_blank" rel="noopener">Play on Lichess</a></div>`}
+    G.over=s.status!=='started'&&s.status!=='created';G.n=(s.moves||'').split(' ').filter(Boolean).length;G.st={w:G.n%2===0};
+    $('#ptop').innerHTML=`<span>${esc(pname(opp))}</span><span class="clock" id="ctop"></span>`;$('#pbot').innerHTML=`<span>${esc(pname(mc==='w'?f.white:f.black))}</span><span class="clock" id="cbot"></span>`;
+    $('#mv').innerHTML=`<span class="muted">${esc(VARIANTS[vk]||vk)} · ${f.rated?'Rated':'Casual'} · ${G.n} chaalein</span>`;drawClocks();drawControls();return}const moves=(s.moves||'').split(' ').filter(Boolean);
   const P=posFrom(f.initialFen,moves);G.st=P.st;G.n=moves.length;G.over=s.status!=='started'&&s.status!=='created';
   G.B.last=P.last;G.B.clear();G.B.lock=G.over||(P.st.w?'w':'b')!==mc;G.B.set({st:P.st,side:mc,persp:mc});
   const opp=mc==='w'?f.black:f.white,me=mc==='w'?f.white:f.black;
@@ -174,13 +182,13 @@ async function challengeFriendRaw(user,P){const r=await lform('/api/challenge/'+
 window.addEventListener('hashchange',route);
 function route(){const p=(location.hash||'#/').slice(2).split('/');if(p[0]!=='game'&&G){if(G.ac)G.ac.abort();G=null;clearInterval(window.__clk)}
   if(p[0]==='game'&&p[1])vGame(p[1]);else if(p[0]==='road')vRoad();else vLobby()}
-document.addEventListener('change',e=>{const t=e.target;if(t.id==='qrated'){CF.rated=t.checked;cfSave()}else if(['cmode','cmin','cinc','cdays','crmin','crmax'].includes(t.id)){readForm();if(t.id==='cmode'||t.id==='cmin'||t.id==='cinc')vLobby()}});
+document.addEventListener('change',e=>{const t=e.target;if(t.id==='qrated'){CF.rated=t.checked;cfSave()}else if(t.id==='cvar'){CF.variant=t.value;cfSave();vLobby()}else if(['cmode','cmin','cinc','cdays','crmin','crmax'].includes(t.id)){readForm();if(t.id==='cmode'||t.id==='cmin'||t.id==='cinc')vLobby()}});
 document.addEventListener('click',async e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();go(g.dataset.go);return}
   const sg=e.target.closest('.seg button');if(sg){const id=sg.parentElement.id;if(id==='crated')CF.rated=sg.dataset.v==='1';if(id==='ccolor')CF.color=sg.dataset.v;cfSave();sg.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===sg));const q=$('#qrated');if(q)q.checked=CF.rated;return}
   const a=e.target.closest('[data-act]');if(!a)return;const act=a.dataset.act;
   if(act==='lconnect')lichConnect();
   else if(act==='lout'){await lichDisconnect();ME=null;if(EVC)EVC.abort();EVC=null;route()}
-  else if(act==='quick'){CF.mode='real';CF.min=+a.dataset.m;CF.inc=+a.dataset.i;cfSave();const P={rated:CF.rated,time:CF.min,increment:CF.inc,variant:'standard'};startSeek(P,`${CF.min}+${CF.inc} ${SPNAME[speedOf(CF.min,CF.inc)]} · ${CF.rated?'Rated':'Casual'}`)}
+  else if(act==='quick'){CF.mode='real';CF.min=+a.dataset.m;CF.inc=+a.dataset.i;cfSave();const P={rated:CF.rated,time:CF.min,increment:CF.inc,variant:CF.variant};startSeek(P,(CF.variant!=='standard'?VARIANTS[CF.variant]+' · ':'')+`${CF.min}+${CF.inc} ${SPNAME[speedOf(CF.min,CF.inc)]} · ${CF.rated?'Rated':'Casual'}`)}
   else if(act==='custom'){const c=$('#cg');if(c)c.scrollIntoView({behavior:'smooth'})}
   else if(act==='seek'){readForm();startSeek(seekParams(),seekLabel())}
   else if(act==='friend'){readForm();const u=($('#fuser').value||'').trim();if(!u){flash('Dost ka Lichess username likho.');return}challengeFriend(u)}

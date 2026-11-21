@@ -169,7 +169,7 @@ function lichCard(){const t=lichToken(),exp=lichNeedsReconnect();
    <p class="small" id="lmsg">${esc(window.__lmsg||'')}</p></div>`}
 
 /* ---------- screens ---------- */
-function ratingChip(){const R=SP.lich;return R?`Lichess rapid ${R.rating}${R.prov?'?':''}`:'Lichess: jodo'}
+function ratingChip(){const R=SP.lich,t=lichToken();const who=t?`Connected as ${esc(LT.user)} · `:'';return R?who+(R.rating?`Lichess rapid ${R.rating}${R.prov?'?':''}`:'Lichess rapid: abhi koi game nahi'):t?`Connected as ${esc(LT.user)}`:'Lichess: not connected'}
 function gateHTML(L){const s=gateStatus(L),R=SP.lich;const row=(ok,t)=>`<li>${ok?'✅':'⬜'} ${t}</li>`;
   return`<div class="card stack" style="text-align:left"><h3>Level ${L.n+1<=10?L.n+1:''} Gate</h3><ul class="gate">
    ${row(s.test,`Level ${L.n} test 75%+ (abhi: ${SP.tests[L.n]||0}%)`)}
@@ -221,4 +221,6 @@ document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g
   else if(a.dataset.act==='sync')sync(false);
   else if(a.dataset.act==='lconnect')lichConnect();
   else if(a.dataset.act==='lout')lichDisconnect().then(route)});
-touchDay();save();lichReturn().then(u=>{if(u){SP.user=u;SP.lich=null;ssave()}route()});
+touchDay();save();lichReturn().then(u=>{if(u){SP.user=u;SP.lich=null;ssave()}
+  /* Lichess Play page se connect kiya ho to bhi yahan username le lo */
+  else if(lichToken()&&LT.user&&lcs(SP.user)!==lcs(LT.user)){SP.user=LT.user;SP.lich=null;ssave()}route()});
