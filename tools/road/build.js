@@ -12,10 +12,28 @@ const content=fs.readFileSync(path.join(__dirname,'content.js'),'utf8').replace(
 const rd=f=>fs.readFileSync(path.join(__dirname,f),'utf8');
 const app=rd('app.js'),auth=rd('lichess-auth.js'),play=rd('play.js'),games=rd('games.js');
 const coreLite=core.replace(/const COURSE=\[.*?\];\n/s,'const COURSE=[];\n').replace(/const PLACEMENT=\[.*?\];\n/s,'const PLACEMENT=[];\n');
+const SV=d=>`<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const IC={
+ today:SV('<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="m9 14.5 2 2 4-4"/>'),
+ practice:SV('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>'),
+ course:SV('<path d="M2.5 8.5 12 4l9.5 4.5L12 13z"/><path d="M6.5 10.5V16c0 1.4 2.5 3 5.5 3s5.5-1.6 5.5-3v-5.5"/><path d="M21.5 8.5v5"/>'),
+ trainer:SV('<path d="M3.5 10.5 12 4l8.5 6.5V20a1 1 0 0 1-1 1h-5v-6h-5v6h-5a1 1 0 0 1-1-1z"/>'),
+ lobby:SV('<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.6 3.5 5.4 3.5 8.5s-1.1 5.9-3.5 8.5c-2.4-2.6-3.5-5.4-3.5-8.5s1.1-5.9 3.5-8.5z"/>'),
+ road:SV('<path d="M5 21V4M5 4h11l-2 3.5L16 11H5"/>'),
+ games:SV('<path d="M8 20h9"/><path d="M9 20c0-3 1.5-5 3-6.5-2.2.4-4 .1-5-1l3.5-6.5c3.5-.5 7 2 7 7.5V20"/><circle cx="12.6" cy="8.6" r=".7" fill="currentColor"/>')};
+/* main app (index.html) jaisa neeche ka bar: patla, poori chaudai, upar gol kone */
+const navCSS=`
+nav.tabs{left:0!important;right:0!important;bottom:0!important;max-width:none!important;margin:0!important;border-radius:18px 18px 0 0!important;background:rgba(18,32,25,.94)!important;-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);box-shadow:0 -6px 20px rgba(10,25,18,.18)!important;border:0!important;padding-bottom:calc(4px + env(safe-area-inset-bottom,0px))!important}
+nav.tabs .wrap{display:grid;grid-template-columns:repeat(5,1fr)!important;gap:2px;padding:4px 6px 2px!important;max-width:560px;margin:0 auto}
+nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:2px!important;padding:5px 0 4px!important;border-radius:14px;color:#8FA398!important;font-family:var(--f-body);font-size:11px!important;font-weight:600;background:none!important;border:0}
+nav.tabs button span{display:grid;place-items:center;width:auto!important;height:auto!important;background:none!important;font-size:0!important}
+nav.tabs button.on{color:#7BE0A6!important;font-weight:800;background:rgba(92,192,140,.14)!important}
+body:not(.emb) main{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))!important}
+`;
+const nav=(items)=>`<nav class="tabs"><div class="wrap">\n${items.map(([ic,label,act,on])=>`<button ${act}${on?' class="on"':''}><span>${IC[ic]}</span>${label}</button>`).join('\n')}\n</div></nav>`;
 const css=`
 /* ---- Road to 3000 ---- */
 .tbtn{display:none!important}
-body:not(.emb) main{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))!important}
 .shero h1{font-size:30px;margin:2px 0}
 .qlist{display:flex;flex-direction:column;gap:8px}
 .qrow{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
@@ -37,17 +55,12 @@ ul.gate{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;ga
 `;
 let html=head.replace(/<title>[^<]*<\/title>/,'<title>Road to 3000 · 64 Squares</title>')
  .replace(/<meta name="description"[^>]*>/,'<meta name="description" content="Zero se Lichess 3000 tak: roz ka quota, unlimited puzzles, Lichess rating se level.">')
- +css+`</style>
+ +css+navCSS+`</style>
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/" style="color:inherit;text-decoration:none"><i style="font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.04em">64</i> Road to 3000</a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span></div></div></header>
 <main><div class="wrap" id="app"></div></main>
-<nav class="tabs"><div class="wrap">
-<button data-tab="course" data-go="#/"><span>🗓</span>Today</button>
-<button data-go="#/run/extra"><span>♾</span>Practice</button>
-<button onclick="location.href='course.html'"><span>📚</span>Course</button>
-<button onclick="location.href='index.html'"><span>👁</span>Trainer</button>
-</div></nav>
+${nav([['today','Today','data-go="#/"',1],['practice','Practice','data-go="#/run/extra"'],['games','My Games','data-go="#/games"'],['course','Course',"onclick=\"location.href='course.html'\""],['trainer','Home',"onclick=\"location.href='index.html'\""]])}
 <script>
 ${core}
 ${playerFns}
@@ -65,17 +78,12 @@ console.log('road.html',html.length,'bytes');
 const pcss=fs.readFileSync(path.join(__dirname,'play.css'),'utf8');
 const phtml=head.replace(/<title>[^<]*<\/title>/,'<title>Lichess Play · 64 Squares</title>')
  .replace(/<meta name="description"[^>]*>/,'<meta name="description" content="Lichess par khelo: quick pairing, custom game, dost ko challenge, Lichess computer.">')
- +css+pcss+`</style>
+ +css+pcss+navCSS+`</style>
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/" style="color:inherit;text-decoration:none"><i style="font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.04em">64</i> Lichess Play</a><div class="chips"><span class="chip" id="luser"></span></div></div></header>
 <main><div class="wrap" id="app"></div></main>
-<nav class="tabs"><div class="wrap">
-<button data-go="#/"><span>🌐</span>Lobby</button>
-<button onclick="location.href='road.html'"><span>🗓</span>Road</button>
-<button onclick="location.href='course.html'"><span>📚</span>Course</button>
-<button onclick="location.href='index.html'"><span>👁</span>Trainer</button>
-</div></nav>
+${nav([['lobby','Lobby','data-go="#/"',1],['games','Rated','data-go="#/road"'],['road','Road',"onclick=\"location.href='road.html'\""],['course','Course',"onclick=\"location.href='course.html'\""],['trainer','Home',"onclick=\"location.href='index.html'\""]])}
 <script>
 ${coreLite}
 ${auth}

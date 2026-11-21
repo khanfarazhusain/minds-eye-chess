@@ -31,9 +31,10 @@ async function lichDisconnect(){const t=LT&&LT.tok;ltSave(null);if(t)try{await f
 async function lapi(path,opt){const t=lichToken();if(!t)throw new Error('noauth');opt=Object.assign({},opt||{});opt.headers=Object.assign({Authorization:'Bearer '+t},opt.headers||{});
   const r=await fetch('https://lichess.org'+path,opt);if(r.status===401){ltSave(Object.assign({},LT,{exp:0}));throw new Error('expired')}return r}
 async function lform(path,data,signal){const r=await lapi(path,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(data||{}),signal});
-  if(!r.ok){let m='';try{const j=await r.json();m=j.error||JSON.stringify(j)}catch(e){}throw new Error(m||('Lichess error '+r.status))}return r}
+  if(!r.ok){let m='';try{const j=await r.json();m=typeof j.error==='string'?j.error:JSON.stringify(j.error||j).replace(/[{}"\[\]]/g,' ').trim()}catch(e){}throw new Error(m||('Lichess error '+r.status))}return r}
 /* ndjson stream padho (event stream, game stream, seek) */
-async function lstream(path,onLine,opt){const r=await lapi(path,opt);if(!r.ok){let m='';try{const j=await r.json();m=j.error||JSON.stringify(j)}catch(e){}throw new Error(m||('Lichess error '+r.status))}
+async function lstream(path,onLine,opt){const r=await lapi(path,opt);if(!r.ok){let m='';try{const j=await r.json();m=typeof j.error==='string'?j.error:JSON.stringify(j.error||j).replace(/[{}"\[\]]/g,' ').trim()}catch(e){}throw new Error(m||('Lichess error '+r.status))}
+  if(opt&&opt.onOpen)opt.onOpen();
   const rd=r.body.getReader(),dec=new TextDecoder();let buf='';
   for(;;){const{done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});let i;while((i=buf.indexOf('\n'))>=0){const line=buf.slice(0,i).trim();buf=buf.slice(i+1);if(line)try{onLine(JSON.parse(line))}catch(e){}}}}
 
