@@ -129,19 +129,22 @@ function vPuzzleRun(kind,arg){const app=$('#app');sday();
   next()}
 
 /* ---------- lesson, quiz, opening drill ---------- */
+/* lesson ka number jaisa level list me dikhta hai, jaise 1.3 (Level 1 ka teesra lesson); notes/slides PDFs bhi yahi number dete hain */
+function lesNo(k){for(const L of ROAD_LEVELS){const i=L.lessons.indexOf(k);if(i>=0)return L.n+'.'+(i+1)}return''}
+const lesLabel=k=>{const n=lesNo(k),l=lesOf(k);return(n?'Lesson '+n+': ':'')+(l?l.title:k)};
 function nextLes(){const L=CUR();return L.lessons.find(k=>!isDone(k))||null}
 function canLesson(){if(PREVIEW)return{ok:true};if(ratingLocked())return{ok:false,why:`Lichess rating ${SP.lich.rating} hai, Level ${SP.lvl} ka darwaza ${CUR().lo}. Jab tak rating wapas nahi aati, naye lessons band. Sirf practice aur games.`};
   if(SP.owe&&practiceDone()){SP.owe=0;ssave()}
   if(SP.owe)return{ok:false,why:'Pichhle lesson ki practice (puzzles, quiz, drills) poori karo, phir agla lesson khulega.'};
   if(sday().lesson>=1&&!dayDone())return{ok:false,why:'Aaj ka lesson ho gaya. Agla lesson tab, jab aaj ka poora kaam (practice aur game) ho jaye.'};return{ok:true}}
 function runLesson(k,back){const les=lesOf(k),app=$('#app');if(!les)return go('#/');
-  player(app,les.steps,{back:back||'#/',title:()=>les.title,where:'Lesson',finish:()=>{const qz=lessonQuiz(les);if(!qz.length)return lesFinish(k,null);
+  player(app,les.steps,{back:back||'#/',title:()=>lesLabel(k),where:'Lesson',finish:()=>{const qz=lessonQuiz(les);if(!qz.length)return lesFinish(k,null);
     app.innerHTML=`<div class="stack center"><div class="big">🎯</div><h1>Lesson Quiz</h1><p>${esc(les.title)}</p><div class="card tut">${md(`**${qz.length} sawaal**, zyadatar board par. **80%** sahi karo to lesson poora.`)}</div><button class="btn primary block" id="qgo">Start Quiz ›</button></div>`;
     $('#qgo').onclick=()=>{app.innerHTML='';player(app,qz,{test:true,back:back||'#/',title:()=>les.title+' · quiz',head:()=>'Quiz · '+les.title,where:'Lesson quiz',finish:res=>{const okn=res.filter(Boolean).length,pct=Math.round(okn/qz.length*100);
       if(pct>=80)lesFinish(k,pct);else app.innerHTML=`<div class="stack center"><div class="big">📘</div><h1>${pct}%</h1><p>80% chahiye. Galat sawaal review mein chale gaye.</p><button class="btn primary block" data-go="#/les/${k}" data-re="1">Redo Lesson</button><button class="btn block" data-go="#/">Today's Work</button></div>`}})}}})}
 function lesFinish(k,pct){const first=!PR.done[k];PR.done[k]=1;save();if(first){sday().lesson++;SP.owe=1;ssave();addXP(25)}
   const app=$('#app'),les=lesOf(k);const old=!NEWLES[k];
-  app.innerHTML=`<div class="stack center"><div class="big">🎉</div><h1>Lesson poora!</h1><p>${esc(les.title)}</p>${pct!=null?`<p class="muted">Quiz: ${pct}%</p>`:''}
+  app.innerHTML=`<div class="stack center"><div class="big">🎉</div><h1>Lesson poora!</h1><p>${esc(lesLabel(k))}</p>${pct!=null?`<p class="muted">Quiz: ${pct}%</p>`:''}
    ${old&&NOTEPATH[k]?`<a class="btn block" style="text-decoration:none" href="notes.html#${NOTEPATH[k]}">📝 Lesson Notes</a>`:''}<button class="btn primary block" data-go="#/">Today's Work ›</button></div>`}
 function doneLessonsUpTo(n){const o=[];for(let i=1;i<=n;i++)o.push(...LV(i).lessons.filter(isDone));return o}
 function runQuiz(){const app=$('#app');const ks=doneLessonsUpTo(SP.lvl);
@@ -194,7 +197,7 @@ function gateHTML(L){const s=gateStatus(L),R=SP.lich;const row=(ok,t)=>`<li>${ok
    ${row(s.hold,`Rating ${L.hold} din tak ${L.gate}+ tiki rahe (abhi: ${heldDays(L.gate)} din)`)}</ul></div>`}
 function quotaRow(k,label,icon){const n=need(k),hv=have(k),done=partDone(k);
   let act='',note='';
-  if(k==='lesson'){const nx=nextLes(),c=canLesson();if(!nx){note='Is level ke saare lessons ho gaye'}else{note=esc(lesOf(nx).title);act=c.ok?`<button class="btn small primary" data-go="#/les/${nx}">Start</button>`:`<span class="muted small">🔒</span>`;if(!c.ok)note+=`<br><small class="muted">${esc(c.why)}</small>`}}
+  if(k==='lesson'){const nx=nextLes(),c=canLesson();if(!nx){note='Is level ke saare lessons ho gaye'}else{note=esc(lesLabel(nx));act=c.ok?`<button class="btn small primary" data-go="#/les/${nx}">Start</button>`:`<span class="muted small">🔒</span>`;if(!c.ok)note+=`<br><small class="muted">${esc(c.why)}</small>`}}
   else if(k==='game'){note=SP.user?`Aaj: ${SP.games.d===today()?SP.games.n:0} game · Is hafte: ${SP.games.wn||0}`:'Pehle neeche Lichess Connect karo';act=`<a class="btn small primary" style="text-decoration:none" href="lichess.html#/road">Play</a>`+(SP.user?`<button class="btn small" data-act="sync">Check</button>`:'')}
   else if(k==='review'){const u=unreviewed();note=u.length?`${u.length} game ka review baaki · galtiyan drills ban jayengi`:hv?'Aaj ka review ho gaya':'Koi naya game nahi';act=u.length?`<button class="btn small primary" data-go="#/game/${u[0].id}">Review</button>`:`<button class="btn small" data-go="#/games">My Games</button>`}
   else if(k==='flash'&&n===0){note='Abhi koi galti nahi. Puzzle ya game mein jo galti hogi, wahi yahan wapas aayegi.'}
@@ -219,7 +222,7 @@ function vHome(){const app=$('#app');sday();const L=CUR();const lock=ratingLocke
 async function sync(quiet){const m=$('#lmsg');if(m)m.textContent='Lichess se la raha hoon…';
   try{await fetchLichess();try{await syncGames()}catch(x){}if(m)m.textContent='Ho gaya.';if(!quiet||$('#app'))route()}catch(e){if(m)m.textContent=e.message==='expired'?'Lichess login purana ho gaya. Ek baar dobara Connect karo.':e.message==='notfound'?'Yeh username Lichess par nahi mila.':'Lichess tak nahi pahunch paya. Internet check karo.'}}
 function vLevelS(n){const L=LV(n),app=$('#app');if(!L)return go('#/');const open=PREVIEW||n<=SP.lvl;
-  const items=L.lessons.map(k=>{const l=lesOf(k),d=isDone(k);return`<div class="qrow${d?' done':''}"><span class="qi">${d?'✅':NEWLES[k]?'🆕':'📘'}</span><div class="qt"><b>${esc(l.title)}</b><div class="muted small">${esc(l.sub||'')}</div></div>${open&&(d||PREVIEW)?`<button class="btn small" data-go="#/les/${k}">${d?'Redo':'Open'}</button>`:''}</div>`}).join('');
+  const items=L.lessons.map((k,i)=>{const l=lesOf(k),d=isDone(k);return`<div class="qrow${d?' done':''}"><span class="qi">${d?'✅':NEWLES[k]?'🆕':'📘'}</span><div class="qt"><b>Lesson ${n}.${i+1}: ${esc(l.title)}</b><div class="muted small">${esc(l.sub||'')}</div></div>${open&&(d||PREVIEW)?`<button class="btn small" data-go="#/les/${k}">${d?'Redo':'Open'}</button>`:''}</div>`}).join('');
   app.innerHTML=`<div class="stack"><button class="btn small backbtn" data-go="#/">‹ Today's Work</button><p class="eyebrow">Level ${n} / 10</p><h1>${esc(L.name)}</h1><p class="muted">Lichess rapid ${L.lo||'shuru'} se ${L.gate} · Puzzles ${L.band[0]}-${L.band[1]} · Roz ~${L.quota.mins} min</p>
    ${!open?'<div class="card">🔒 Yeh level pichhla level aur uska Lichess darwaza paar karne par khulega.</div>':''}
    <h2>Lessons (${L.lessons.filter(isDone).length}/${L.lessons.length})</h2>${L.lessons.length?`<div class="qlist">${items}</div>`:'<div class="card">Is level ka content jald aa raha hai. Tab tak roz ka puzzle quota, opening drills aur games.</div>'}
