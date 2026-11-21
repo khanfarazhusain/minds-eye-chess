@@ -132,15 +132,24 @@ async function roadSeek(m,i){const my=myRapid();RS={k:0};const app=$('#app');win
 /* ---------- game ---------- */
 let G=null;
 function posFrom(fen,moves){let st=parseFEN(!fen||fen==='startpos'?START_FEN:fen);const sans=[];let last=null;for(const u of moves){const m=fromUci(st,u);if(!m)break;sans.push(sanOf(st,m));last=[sn(m.f),sn(m.t)];st=make(st,m)}return{st,sans,last}}
+// kaun se mohre kat gaye (app jaisa: player ke naam ke paas chhote mohre + material ka farq)
+const PV={P:1,N:3,B:3,R:5,Q:9};
+function capOf(st){const n={};for(const p of st.b)if(p&&p!=='.')n[p]=(n[p]||0)+1;const full={P:8,N:2,B:2,R:2,Q:1};const out={w:[],b:[]};let mw=0,mb=0;
+  for(const k of 'QRBNP'){const W=n[k]||0,B=n[k.toLowerCase()]||0;mw+=W*PV[k];mb+=B*PV[k];
+    for(let i=W;i<full[k];i++)out.b.push(k);for(let i=B;i<full[k];i++)out.w.push(k.toLowerCase())}
+  return{w:out.w,b:out.b,d:mw-mb}}
+// side ne jo mohre kaate (opponent ke)
+function capHTML(c,side){const l=side==='w'?c.w:c.b;const d=side==='w'?c.d:-c.d;if(!l.length&&d<=0)return'';
+  return`<span class="caps">${l.map(p=>`<i class="cp"><span class="pc ${isW(p)?'w':'b'} p-${p.toUpperCase()}">${GLYPH[p.toUpperCase()]}︎</span></i>`).join('')}${d>0?`<small>+${d}</small>`:''}</span>`}
 const fmtClock=ms=>{if(ms==null)return'--';if(ms>=864e5)return Math.floor(ms/864e5)+'d';const s=Math.max(0,Math.ceil(ms/1000));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0')};
 const STATUS={mate:'Checkmate',resign:'Resigned',stalemate:'Stalemate',timeout:'Timeout',draw:'Draw',outoftime:'Time out',cheat:'Cheat detected',noStart:'Game did not start',aborted:'Aborted',unknownFinish:'Finished',variantEnd:'Variant end'};
 function vGame(id){const app=$('#app');if(!lichToken()){app.innerHTML=connectHTML();return}
   if(G&&G.id!==id&&G.ac)G.ac.abort();
   G={id,ac:new AbortController(),full:null,state:null,chat:[],gone:null,at:Date.now(),busy:false};
-  app.innerHTML=`<div class="stack gamev"><div class="pl" id="ptop"></div><div id="bd"></div><div class="pl" id="pbot"></div>
+  app.innerHTML=`<div class="stack gamev"><div class="pl" id="ptop"></div><div id="bd"></div><div class="lmline" id="lm"></div><div class="pl" id="pbot"></div>
    <div class="moves" id="mv"></div><div class="row wrapr" id="ctl"></div><p class="small" id="msg"></p>
    <details class="card"><summary><b>Chat</b></summary><div id="chat" class="chatlog small"></div><div class="row"><input id="chatin" placeholder="Message" maxlength="140"><button class="btn small" data-act="chat">Send</button></div></details></div>`;
-  G.B=Board($('#bd'),{st:parseFEN(START_FEN),onMove:m=>myMove(m)});
+  G.B=Board($('#bd'),{st:parseFEN(START_FEN),cls:'playb',onMove:m=>myMove(m)});
   (async()=>{if(!ME)try{await loadMe()}catch(e){}startEvents();
     lstream('/api/board/game/stream/'+id,ev=>{if(!G||G.id!==id)return;
       if(ev.type==='gameFull'){G.full=ev;G.state=ev.state;G.at=Date.now();drawGame()}
@@ -159,7 +168,10 @@ function drawGame(){const f=G.full,s=G.state;if(!f||!s)return;const mc=myColor()
   const P=posFrom(f.initialFen,moves);G.st=P.st;G.n=moves.length;G.over=s.status!=='started'&&s.status!=='created';
   G.B.last=P.last;G.B.clear();G.B.lock=G.over||(P.st.w?'w':'b')!==mc;G.B.set({st:P.st,side:mc,persp:mc});
   const opp=mc==='w'?f.black:f.white,me=mc==='w'?f.white:f.black;
-  $('#ptop').innerHTML=`<span>${esc(pname(opp))}</span><span class="clock" id="ctop"></span>`;$('#pbot').innerHTML=`<span>${esc(pname(me))}</span><span class="clock" id="cbot"></span>`;
+  const cap=capOf(P.st);const oc=mc==='w'?'b':'w';
+  $('#ptop').innerHTML=`<span class="pn">${esc(pname(opp))}${capHTML(cap,oc)}</span><span class="clock" id="ctop"></span>`;$('#pbot').innerHTML=`<span class="pn">${esc(pname(me))}${capHTML(cap,mc)}</span><span class="clock" id="cbot"></span>`;
+  const ls=P.sans[P.sans.length-1],lw=P.sans.length%2===1,mine=lw===(mc==='w');
+  $('#lm').className='lmline'+(ls?(mine?' me':' opp'):' muted');$('#lm').innerHTML=ls?`<b>${mine?'👤 Aap':'🌐 '+esc((opp&&(opp.name||opp.id))||'Opponent')}:</b> ${esc(ls)}`:(G.over?'':(P.st.w?'w':'b')===mc?'Aapki chaal: mohra tap karo, phir square':'Opponent ki chaal ka intezaar');
   $('#mv').innerHTML=P.sans.map((x,k)=>(k%2===0?`<span class="mn">${k/2+1}.</span> `:'')+esc(x)).join(' ')||`<span class="muted">${f.rated?'Rated':'Casual'} · ${esc(SPNAME[f.speed]||f.speed||'')} · ${mc==='w'?'Aap White ho':'Aap Black ho'}</span>`;
   drawClocks();drawControls()}
 function clockNow(){const s=G.state,f=G.full;if(!s||s.wtime==null||!f.clock)return null;let w=s.wtime,b=s.btime;
