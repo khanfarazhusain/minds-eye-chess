@@ -181,3 +181,48 @@ body.pg-coach{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))!import
 @media print{nav.tabs{display:none!important}}
 /* long move lists / FEN strings used to push the page wider than the phone */
 .pg-notes .n{white-space:normal;overflow-wrap:anywhere}
+
+/* ---------- 12. v166 colourful cards (classes added by ui.js) ---------- */
+/* bold cards: same feel as the Play page modes */
+.vz{position:relative;overflow:hidden;border:0!important;border-radius:24px!important;color:#fff!important;box-shadow:0 12px 26px rgba(0,0,0,.16)!important;text-decoration:none!important}
+.vz0{background:radial-gradient(120% 100% at 100% 0%,#4FBF83 0%,#2B7A52 50%,#18452F 100%)!important}
+.vz1{background:radial-gradient(120% 100% at 100% 0%,#7A86E0 0%,#3E4AA8 50%,#222A66 100%)!important}
+.vz2{background:radial-gradient(120% 100% at 100% 0%,#FFB067 0%,#E0702F 50%,#93401A 100%)!important}
+.vz3{background:radial-gradient(120% 100% at 100% 0%,#F07AA6 0%,#B83E72 50%,#6A1E43 100%)!important}
+.vz4{background:radial-gradient(120% 100% at 100% 0%,#5FD0D6 0%,#1F8796 50%,#0F4450 100%)!important}
+.vz5{background:radial-gradient(120% 100% at 100% 0%,#B98AF2 0%,#7442C2 50%,#3B1E6E 100%)!important}
+.vz6{background:radial-gradient(120% 100% at 100% 0%,#FFD36A 0%,#D99520 50%,#7D4F0B 100%)!important}
+.vz7{background:radial-gradient(120% 100% at 100% 0%,#FF8F7E 0%,#CF4636 50%,#741D16 100%)!important}
+.vz::before{content:"";position:absolute;right:-40px;top:-50px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.1);pointer-events:none}
+.vz>*{position:relative}
+.vz :is(b,strong,h1,h2,h3,.t,.lt,.tt){color:#fff!important}
+.vz :is(small,p,.muted,.d,.ls,span.muted,.small){color:rgba(255,255,255,.86)!important}
+.vz .eyebrow{color:rgba(255,255,255,.82)!important}
+.vz .rc-ic{background:rgba(255,255,255,.2)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.vz .rc-go{background:rgba(255,255,255,.22)!important;color:#fff!important}
+.vz.coursecta::after{background-color:rgba(255,255,255,.22)!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9.5 6 6 6-6 6'/%3E%3C/svg%3E")!important}
+.vz .btn,.vz button:not(.lvl){background:#fff!important;color:#16201B!important;border:0!important;box-shadow:0 4px 0 rgba(0,0,0,.2)!important}
+.vz .btn.primary,.vz .btn.pri{background:#fff!important;color:#16201B!important}
+.vz .btn:not(.primary):not(.pri){background:rgba(0,0,0,.24)!important;color:#fff!important;box-shadow:0 4px 0 rgba(0,0,0,.22),inset 0 0 0 1.5px rgba(255,255,255,.3)!important}
+.vz .bar,.vz .prog{background:rgba(255,255,255,.22)!important}.vz .bar i,.vz .prog i{background:#fff!important}
+.vz .chip,.vz .n{background:rgba(255,255,255,.2)!important;color:#fff!important}
+.vz a{color:#fff}
+.vz input[type=checkbox]{accent-color:#fff}
+
+/* soft cards: light tints, dark text */
+.pz{border:0!important;box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 20px rgba(30,50,40,.07)!important}
+.pz0{background:linear-gradient(140deg,#E6F5EC,#D2ECDD)!important}
+.pz1{background:linear-gradient(140deg,#E4EEFC,#CFE0F7)!important}
+.pz2{background:linear-gradient(140deg,#EFE8FC,#DDD2F6)!important}
+.pz3{background:linear-gradient(140deg,#FEEEE0,#F9DBC2)!important}
+.pz4{background:linear-gradient(140deg,#FCE6EE,#F6CFDD)!important}
+.pz5{background:linear-gradient(140deg,#FBF4DA,#F4E5AE)!important}
+.pz :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea){background:rgba(255,255,255,.85)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pz0{background:linear-gradient(140deg,#16302A,#12251F)!important}:root:not([data-theme="light"]) .pz1{background:linear-gradient(140deg,#172A40,#121F31)!important}:root:not([data-theme="light"]) .pz2{background:linear-gradient(140deg,#251E3E,#1B1630)!important}:root:not([data-theme="light"]) .pz3{background:linear-gradient(140deg,#35241A,#281B13)!important}:root:not([data-theme="light"]) .pz4{background:linear-gradient(140deg,#35192A,#28131F)!important}:root:not([data-theme="light"]) .pz5{background:linear-gradient(140deg,#332B14,#262010)!important}:root:not([data-theme="light"]) .pz{box-shadow:0 0 0 1px rgba(255,255,255,.05)!important}:root:not([data-theme="light"]) .pz :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea){background:rgba(0,0,0,.25)}}
+:root[data-theme="dark"] .pz0{background:linear-gradient(140deg,#16302A,#12251F)!important}:root[data-theme="dark"] .pz1{background:linear-gradient(140deg,#172A40,#121F31)!important}
+:root[data-theme="dark"] .pz2{background:linear-gradient(140deg,#251E3E,#1B1630)!important}:root[data-theme="dark"] .pz3{background:linear-gradient(140deg,#35241A,#281B13)!important}
+:root[data-theme="dark"] .pz4{background:linear-gradient(140deg,#35192A,#28131F)!important}:root[data-theme="dark"] .pz5{background:linear-gradient(140deg,#332B14,#262010)!important}
+:root[data-theme="dark"] .pz{box-shadow:0 0 0 1px rgba(255,255,255,.05)!important}
+:root[data-theme="dark"] .pz :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea){background:rgba(0,0,0,.25)}
+.vz .lnum{background:rgba(255,255,255,.22)!important;color:#fff!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
+.vz .lst{color:#fff!important;font-weight:800}
