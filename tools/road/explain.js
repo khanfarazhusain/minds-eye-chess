@@ -184,7 +184,7 @@ const xOpening=n=>{if(!n)return'';const k=XOPEN.find(([a])=>n.includes(a));retur
 const xb=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
 
 /* "Seedhi baat": 3-4 saaf vaakya. Maksad -> kya chhoota (behtar chaal) -> opponent ko kya milta -> seekh */
-function xSummary(P,m,best,ref,lossIn,lines){const w=P.w,A=make(P,m),san=sanOf(P,m),I=xIdeas(P,m),o=[];
+function xSummary(P,m,best,ref,lossIn,lines){const w=P.w,A=make(P,m),san=sanOf(P,m),I=xIdeas(P,m),o=[],kinds=[];const K=k=>{while(kinds.length<o.length)kinds.push(k)};
   const bm=best&&best.pv&&best.pv[0]?fromUci(P,best.pv[0]):null,isBest=!!bm&&uciOf(bm)===uciOf(m);
   let loss=lossIn;
   /* chaal top lines me ho to usi search ka number lo (do alag searches ka fark opening me galat 'nuksaan' dikhata hai) */
@@ -192,11 +192,12 @@ function xSummary(P,m,best,ref,lossIn,lines){const w=P.w,A=make(P,m),san=sanOf(P
   if(loss==null&&own&&best&&best.mate==null&&own.mate==null)loss=Math.max(0,((best.cp||0)-(own.cp||0))/100);
   if(loss==null&&best&&ref&&best.mate==null&&ref.mate==null&&best.cp!=null&&ref.cp!=null)loss=Math.max(0,((best.cp||0)+(ref.cp||0))/100);
   if(loss!=null&&P.fm<=6&&loss<0.6&&!own)loss=Math.min(loss,0.25);
-  o.push(I.pos.length?`**${san}** ka maksad: ${I.pos.slice(0,2).join(' aur ')}.`:`**${san}** ek shaant chaal thi: na koi hamla, na koi naya mohra khel me aaya.`);
+  o.push(I.pos.length?`**${san}** ka maksad: ${I.pos.slice(0,2).join(' aur ')}.`:`**${san}** ek shaant chaal thi: na koi hamla, na koi naya mohra khel me aaya.`);K('mv');
   if(!isBest&&bm&&(loss==null||loss>=0.3)){const J=xIdeas(P,bm),PL=xPlan(P,best.pv);
     o.push(`${I.neg.length?'Kami: '+I.neg[0]+'. ':''}${loss!=null?`Isse lagbhag **${xPawns(loss)}** jitna fayda chhoot gaya. `:''}Behtar tha **${sanOf(P,bm)}**${J.pos.length?', jo '+J.pos.slice(0,2).join(' aur '):''}${PL.next?`; uske baad plan ${PL.next}${PL.nextDoes.length?' – '+PL.nextDoes[0]:''}`:''}.`)}
   else if(isBest)o.push('Engine ki pehli pasand bhi yahi chaal thi.');
   else if(I.neg.length)o.push(`Dhyan: ${I.neg[0]}.`);
+  K('bp');
   const r1=ref&&ref.pv&&ref.pv[0]?fromUci(A,ref.pv[0]):null;
   if(r1){const R=xIdeas(A,r1);let t=`Ab ${w?'Black':'White'} ka sabse achha jawab **${xNum(A,sanOf(A,r1))}** hai${R.pos.length?': '+R.pos.slice(0,2).join(' aur '):''}`;
     const fA=xFeat(A,w),fO=xFeat(A,!w),opens=r1.p.toUpperCase()==='P'&&(r1.t&7)>=2&&(r1.t&7)<=5&&(!!A.b[r1.t]||xSqs(make(A,r1),r1.t).some(t=>A.b[t]===(w?'P':'p')));
@@ -204,8 +205,9 @@ function xSummary(P,m,best,ref,lossIn,lines){const w=P.w,A=make(P,m),san=sanOf(P
     const B2=make(A,r1),r2=ref.pv[1]?fromUci(B2,ref.pv[1]):null,S3=r2?make(B2,r2):null,r3=S3&&ref.pv[2]?fromUci(S3,ref.pv[2]):null;
     if(r3){const R3=xIdeas(S3,r3);if(R3.pos.length)t+=`. Phir ${xNum(S3,sanOf(S3,r3))} se ${R3.pos[0]}`}
     o.push(t+'.')}
-  const tip=!isBest&&(loss==null||loss>=0.3)?xTip(I.neg):'';if(tip)o.push('**Seekh:** '+tip);
-  return{lines:o,loss}}
+  K('op');
+  const tip=!isBest&&(loss==null||loss>=0.3)?xTip(I.neg):'';if(tip)o.push('**Seekh:** '+tip);K('');
+  return{lines:o,loss,kinds}}
 function xTip(neg){const n=neg.join(' ');
   if(/kinare ka pyada/.test(n))return'Opening me pehle ghode-oont nikalo aur castle karo. h/a-pyada tabhi chalo jab koi mohra sach me g5/b5 (ya g4/b4) par aakar pareshan kar raha ho.';
   if(/vazir bahut jaldi/.test(n))return'Vazir ko pehli 6-7 chaal tak andar rakho; pehle chhote mohre nikalo, warna har naya mohra vazir par hamla karke tempo lega.';
