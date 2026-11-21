@@ -2,9 +2,11 @@
    App ke andar Lichess par khelo (Board API + Challenge API). Board, rules aur move-check course.html ke code se.
    Lichess ka koi engine yahan explanation ke liye use nahi hota; "Play with the Computer" mein Lichess ka AI sirf opponent hai. */
 const go=h=>{if(location.hash!==h)location.hash=h;else route()};
-let ME=null,EVC=null,CH=[],MSG='',SEEK=null,WAIT=null;
+let GSTART=0,ME=null,EVC=null,CH=[],MSG='',SEEK=null,WAIT=null;
 const lc=s=>(s||'').toLowerCase();
-const PRESETS=[[1,0],[2,1],[3,0],[3,2],[5,0],[5,3],[10,0],[10,5],[15,10],[30,0],[30,20]];
+const PRESETS=[[10,0],[10,5],[15,10],[20,0],[30,0],[30,20]];
+/* Lichess Board API: lobby seek sirf Rapid, Classical, Correspondence. Blitz sirf dost ko challenge aur computer ke saath. Bullet API se bilkul nahi. */
+const seekOk=(min,inc)=>['rapid','classical'].includes(speedOf(min,inc));const challengeOk=(min,inc)=>speedOf(min,inc)!=='bullet'&&speedOf(min,inc)!=='ultraBullet';
 const MINUTES=[0.25,0.5,0.75,1,1.5,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,35,40,45,60,75,90,105,120,135,150,165,180];
 const INCS=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,35,40,45,60,90,120,150,180];
 const DAYS=[1,2,3,5,7,10,14];
@@ -16,18 +18,20 @@ const SPNAME={ultraBullet:'UltraBullet',bullet:'Bullet',blitz:'Blitz',rapid:'Rap
 let CF=(()=>{try{return Object.assign({mode:'real',min:10,inc:5,days:2,rated:true,color:'random',rmin:-500,rmax:500,ai:3,variant:'standard'},JSON.parse(localStorage.getItem('lplay.cf')||'{}'))}catch(e){return{mode:'real',min:10,inc:5,days:2,rated:true,color:'random',rmin:-500,rmax:500,ai:3,variant:'standard'}}})();
 const cfSave=()=>{try{localStorage.setItem('lplay.cf',JSON.stringify(CF))}catch(e){}};
 const errText=e=>e.message==='expired'?'Lichess login purana ho gaya. Ek baar dobara Connect karo.':e.message==='noauth'?'Pehle Lichess Connect karo.':(e.name==='AbortError'?'':String(e.message||e));
-function flash(t){MSG=t;const m=$('#msg');if(m)m.textContent=t}
+function flash(t){MSG=t;const m=$('#msg');if(m){m.textContent=t;m.className='small'+(t?' errbox':'');m.scrollIntoView({block:'center',behavior:'smooth'})}}
 
 /* ---------- account + event stream ---------- */
 async function loadMe(){const r=await lapi('/api/account');if(!r.ok)throw new Error('Lichess error '+r.status);ME=await r.json();const c=$('#luser');if(c)c.textContent=ME.username;return ME}
-function startEvents(){if(EVC)return;EVC=new AbortController();
+let EVOPEN=null;
+/* Lichess: pehle event stream khulna chahiye, phir seek; warna game start ka event chhoot sakta hai */
+function startEvents(){if(EVC)return EVOPEN;EVC=new AbortController();let res;EVOPEN=new Promise(r=>{res=r;setTimeout(r,4000)});
   lstream('/api/stream/event',ev=>{
-    if(ev.type==='gameStart'){RS=null;if(SEEK){SEEK.abort();SEEK=null}WAIT=null;const id=ev.game.gameId||ev.game.id;if(!location.hash.startsWith('#/game/'+id))go('#/game/'+id)}
+    if(ev.type==='gameStart'){GSTART=Date.now();RS=null;if(SEEK){SEEK.abort();SEEK=null}WAIT=null;const id=ev.game.gameId||ev.game.id;if(!location.hash.startsWith('#/game/'+id))go('#/game/'+id)}
     else if(ev.type==='challenge'){const c=ev.challenge;if(lc(c.challenger&&c.challenger.id)!==lc(ME&&ME.id)&&!CH.find(x=>x.id===c.id)){CH.push(c);if(isLobby())route()}}
     else if(ev.type==='challengeCanceled'||ev.type==='challengeDeclined'){const c=ev.challenge;CH=CH.filter(x=>x.id!==c.id);
       if(WAIT&&WAIT.id===c.id){WAIT=null;MSG=ev.type==='challengeDeclined'?`${(c.destUser&&c.destUser.name)||'Opponent'} ne challenge decline kiya${c.declineReason?': '+c.declineReason:''}.`:'Challenge cancel ho gaya.';go('#/')}
       else if(isLobby())route()}
-  },{signal:EVC.signal}).catch(e=>{EVC=null;if(e.name!=='AbortError')setTimeout(startEvents,5000)}).then(()=>{EVC=null})}
+  },{signal:EVC.signal,onOpen:()=>res()}).catch(e=>{EVC=null;res();if(e.name!=='AbortError')setTimeout(startEvents,5000)}).then(()=>{EVC=null})}
 const isLobby=()=>!location.hash||location.hash==='#/'||location.hash==='#';
 
 /* ---------- lobby ---------- */
@@ -48,10 +52,11 @@ async function vLobby(){const app=$('#app');const tk=++LTK;
   let playing=[];try{const r=await lapi('/api/account/playing');if(r.ok)playing=(await r.json()).nowPlaying||[]}catch(e){}
   try{const r=await lapi('/api/challenge');if(r.ok){const j=await r.json();(j.in||[]).forEach(c=>{if(!CH.find(x=>x.id===c.id))CH.push(c)})}}catch(e){}
   if(!isLobby()||tk!==LTK)return;
+  if(MSG)window.scrollTo(0,0);
   const sp=CF.mode==='real'?speedOf(CF.min,CF.inc):'correspondence';
   app.innerHTML=`<div class="stack">
    <div class="row" style="justify-content:space-between;flex-wrap:wrap"><h1 style="margin:0">Lichess Play</h1><div class="chips" style="flex-wrap:wrap">${perfChips()}</div></div>
-   <p class="small" id="msg">${esc(MSG)}</p>
+   <p class="small${MSG?' errbox':''}" id="msg">${esc(MSG)}</p>
    ${CH.length?`<h2>Incoming Challenges</h2><div class="qlist">${CH.map(c=>`<div class="qrow"><span class="qi">⚔️</span><div class="qt"><b>${esc(c.challenger?c.challenger.name:'?')} ${c.challenger&&c.challenger.rating?'('+c.challenger.rating+')':''}</b><div class="muted small">${esc(c.timeControl&&c.timeControl.show||c.speed||'')} · ${c.rated?'Rated':'Casual'} · ${esc(c.variant&&c.variant.name||'Standard')}</div></div><button class="btn small primary" data-act="acc" data-id="${c.id}">Accept</button><button class="btn small" data-act="dec" data-id="${c.id}">Decline</button></div>`).join('')}</div>`:''}
    ${playing.length?`<h2>Ongoing Games</h2><div class="qlist">${playing.map(g=>`<div class="qrow"><span class="qi">${g.isMyTurn?'🟢':'⏳'}</span><div class="qt"><b>vs ${esc(g.opponent&&g.opponent.username||'?')}</b><div class="muted small">${esc(SPNAME[g.speed]||g.speed||'')} · ${g.isMyTurn?'Your move':'Their move'}</div></div><button class="btn small primary" data-go="#/game/${g.gameId}">Open</button></div>`).join('')}</div>`:''}
    <h2>Quick Pairing</h2>
@@ -65,7 +70,8 @@ async function vLobby(){const app=$('#app');const tk=++LTK;
     <div class="seg" id="crated"><button data-v="0" class="${CF.rated?'':'on'}">Casual</button><button data-v="1" class="${CF.rated?'on':''}">Rated</button></div>
     <div class="seg" id="ccolor">${['white','random','black'].map(c=>`<button data-v="${c}" class="${CF.color===c?'on':''}">${c==='white'?'♔ White':c==='black'?'♚ Black':'🎲 Random'}</button>`).join('')}</div>
     <div class="row2"><label>Rating range: min ${sel('crmin',[-500,-450,-400,-350,-300,-250,-200,-150,-100,-50,0],CF.rmin,v=>v>0?'+'+v:v)}</label><label>max ${sel('crmax',[0,50,100,150,200,250,300,350,400,450,500],CF.rmax,v=>'+'+v)}</label></div>
-    <button class="btn primary block" data-act="seek" ${CF.mode==='unlimited'?'disabled':''}>Create Lobby Game</button>
+    ${CF.mode==='real'&&!seekOk(CF.min,CF.inc)?`<p class="small errbox">${SPNAME[sp]}: Lichess apne API se ${challengeOk(CF.min,CF.inc)?'Blitz lobby game nahi banane deta. Blitz sirf dost ko challenge ya computer ke saath chalega':'Bullet bilkul nahi khelne deta (na lobby, na challenge)'}. Lobby game ke liye 8+0 ya usse lamba time chuno (Rapid).</p>`:''}
+    <button class="btn primary block" data-act="seek" ${CF.mode==='unlimited'||(CF.mode==='real'&&!seekOk(CF.min,CF.inc))?'disabled':''}>Create Lobby Game</button>
     <div class="row"><input id="fuser" placeholder="Friend's Lichess username" autocomplete="off" autocapitalize="off"><button class="btn" data-act="friend">Challenge a Friend</button></div>
    </div>
    <h2>Play with the Computer</h2>
@@ -79,12 +85,15 @@ function readForm(){const v=id=>{const e=$('#'+id);return e?e.value:null};
 function clockParams(forChallenge){if(CF.mode==='real')return forChallenge?{'clock.limit':Math.round(CF.min*60),'clock.increment':CF.inc}:{time:CF.min,increment:CF.inc};if(CF.mode==='corr')return{days:CF.days};return{}}
 
 /* ---------- seek, challenge, AI ---------- */
-async function startSeek(params,label){const app=$('#app');SEEK=new AbortController();
+async function startSeek(params,label){const app=$('#app');const mine=new AbortController();SEEK=mine;const t0=Date.now();
   app.innerHTML=`<div class="stack center"><div class="big">🔎</div><h1>Searching</h1><p>${esc(label)}</p><p class="muted small">Opponent milte hi game khul jayega.</p><button class="btn block" data-act="cancelseek">Cancel</button><p class="small" id="msg"></p></div>`;
-  startEvents();
-  try{await lform('/api/board/seek',params,SEEK.signal);/* correspondence seek turant laut aata hai */
-    if(params.days&&SEEK){SEEK=null;MSG='Correspondence seek lobby mein lag gaya. Koi join karega to game "Ongoing Games" mein aayega.';go('#/')}}
-  catch(e){const t=errText(e);SEEK=null;if(t){MSG='Lichess: '+t;go('#/')}}}
+  window.scrollTo(0,0);await startEvents();if(SEEK!==mine)return;
+  try{/* real-time seek: jawab stream hota hai; connection khula rakhna zaroori, band hua to seek cancel */
+    await lstream('/api/board/seek',()=>{},{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(params),signal:mine.signal});
+    if(SEEK!==mine)return;SEEK=null;
+    if(params.days){MSG='Correspondence seek lobby mein lag gaya. Koi join karega to game "Ongoing Games" mein aayega.';go('#/');return}
+    setTimeout(()=>{if(GSTART<t0&&!location.hash.startsWith('#/game/')){MSG='Seek khatam ho gaya, koi opponent nahi mila. Dobara try karo.';go('#/')}},2500)}
+  catch(e){if(SEEK===mine)SEEK=null;if(e.name==='AbortError')return;MSG='Lichess ne mana kiya: '+errText(e);go('#/')}}
 function seekParams(){const P={rated:CF.rated,variant:CF.variant,...clockParams(false)};if(CF.color!=='random')P.color=CF.color;
   const sp=CF.variant!=='standard'?CF.variant:CF.mode==='real'?speedOf(CF.min,CF.inc):'correspondence';const my=ME&&ME.perfs&&ME.perfs[sp]&&ME.perfs[sp].rating;
   if(my&&(CF.rmin>-500||CF.rmax<500))P.ratingRange=Math.max(400,my+CF.rmin)+'-'+(my+CF.rmax);return P}
@@ -100,23 +109,25 @@ async function playAI(){const P={level:CF.ai,variant:CF.variant,color:CF.color,.
 /* ---------- Road to 3000 mode: game hamesha Rated, opponent aapki rating ke aas-paas ---------- */
 const ROAD_TC=[[10,0],[15,10]],ROAD_RANGE=[100,150,200];let RS=null;
 const myRapid=()=>{const r=ME&&ME.perfs&&ME.perfs.rapid;return r&&r.rating||1500};
-async function vRoad(){const app=$('#app');
+async function vRoad(){const app=$('#app');window.scrollTo(0,0);
   if(!lichToken()){app.innerHTML=connectHTML();return}
   if(!ME){app.innerHTML='<p class="muted">Lichess se jud raha hoon…</p>';try{await loadMe()}catch(e){app.innerHTML=connectHTML();flash(errText(e));return}}
   startEvents();const my=myRapid(),pv=ME.perfs&&ME.perfs.rapid&&ME.perfs.rapid.prov;
   app.innerHTML=`<div class="stack"><p class="eyebrow">Road to 3000</p><h1>Rated Game</h1>
    <div class="card stack"><p><b>Lichess rapid: ${my}${pv?'?':''}</b></p><p class="small muted">Road to 3000 mein game hamesha <b>Rated</b> hota hai, aur opponent aapki rating ke aas-paas (pehle ±100; match na mile to ±150, phir ±200). Casual ya apni range chunne ka option yahan nahi hai.</p></div>
-   <p class="small" id="msg">${esc(MSG)}</p>
+   <p class="small${MSG?' errbox':''}" id="msg">${esc(MSG)}</p>
    <div class="qgrid" style="grid-template-columns:1fr 1fr">${ROAD_TC.map(([m,i])=>`<button class="qp" data-act="roadseek" data-m="${m}" data-i="${i}"><b>${m}+${i}</b><small>Rapid · Rated</small></button>`).join('')}</div>
    <p class="small muted">Game ke baad Road to 3000 app mein "My Games" se uska review (Stockfish, sirf game ke baad) aur galtiyon ke drills milenge.</p>
    <button class="btn block" onclick="location.href='road.html'">‹ Back to Road to 3000</button>
    <button class="btn block" data-go="#/">All Lichess Options (variants, casual, friends, computer) ›</button></div>`;MSG=''}
-async function roadSeek(m,i){const my=myRapid();RS={k:0};startEvents();const app=$('#app');
-  while(RS){const w=ROAD_RANGE[RS.k];
+async function roadSeek(m,i){const my=myRapid();RS={k:0};const app=$('#app');window.scrollTo(0,0);
+  while(RS){const w=ROAD_RANGE[RS.k];const t0=Date.now();
     app.innerHTML=`<div class="stack center"><div class="big">🔎</div><h1>Searching</h1><p>${m}+${i} Rapid · Rated</p><p class="small muted">Opponent rating ${Math.max(400,my-w)}-${my+w}${RS.k?' (range badhayi, match nahi mila tha)':''}</p><button class="btn block" data-act="cancelseek">Cancel</button><p class="small" id="msg"></p></div>`;
+    await startEvents();if(!RS)return;
     const mine=new AbortController();SEEK=mine;let widen=false;const t=RS.k<ROAD_RANGE.length-1?setTimeout(()=>{widen=true;mine.abort()},45000):null;
-    try{await lform('/api/board/seek',{rated:true,time:m,increment:i,variant:'standard',ratingRange:Math.max(400,my-w)+'-'+(my+w)},mine.signal);clearTimeout(t);RS=null;if(SEEK===mine)SEEK=null;return}
-    catch(e){clearTimeout(t);if(widen&&RS){RS.k++;continue}const run=!!RS;RS=null;if(SEEK===mine)SEEK=null;if(run&&e.name!=='AbortError'){MSG='Lichess: '+errText(e);go('#/road')}return}}}
+    try{await lstream('/api/board/seek',()=>{},{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({rated:true,time:m,increment:i,variant:'standard',ratingRange:Math.max(400,my-w)+'-'+(my+w)}),signal:mine.signal});
+      clearTimeout(t);if(SEEK===mine)SEEK=null;await new Promise(r=>setTimeout(r,2500));if(!RS||GSTART>=t0)return;/* seek expire: range badhao */if(RS.k<ROAD_RANGE.length-1)RS.k++;continue}
+    catch(e){clearTimeout(t);if(SEEK===mine)SEEK=null;if(widen&&RS){RS.k++;continue}const run=!!RS;RS=null;if(run&&e.name!=='AbortError'){MSG='Lichess ne mana kiya: '+errText(e);go('#/road')}return}}}
 
 /* ---------- game ---------- */
 let G=null;
@@ -180,7 +191,8 @@ async function challengeFriendRaw(user,P){const r=await lform('/api/challenge/'+
 
 /* ---------- router + clicks ---------- */
 window.addEventListener('hashchange',route);
-function route(){const p=(location.hash||'#/').slice(2).split('/');if(p[0]!=='game'&&G){if(G.ac)G.ac.abort();G=null;clearInterval(window.__clk)}
+function navOn(){const h=location.hash||'#/';const bs=[...document.querySelectorAll('nav.tabs button[data-go]')];const hit=bs.find(b=>b.dataset.go===h)||bs.find(b=>h.startsWith(b.dataset.go+'/')&&b.dataset.go!=='#/')||bs[0];bs.forEach(b=>b.classList.toggle('on',b===hit))}
+function route(){navOn();const p=(location.hash||'#/').slice(2).split('/');if(p[0]!=='game'&&G){if(G.ac)G.ac.abort();G=null;clearInterval(window.__clk)}
   if(p[0]==='game'&&p[1])vGame(p[1]);else if(p[0]==='road')vRoad();else vLobby()}
 document.addEventListener('change',e=>{const t=e.target;if(t.id==='qrated'){CF.rated=t.checked;cfSave()}else if(t.id==='cvar'){CF.variant=t.value;cfSave();vLobby()}else if(['cmode','cmin','cinc','cdays','crmin','crmax'].includes(t.id)){readForm();if(t.id==='cmode'||t.id==='cmin'||t.id==='cinc')vLobby()}});
 document.addEventListener('click',async e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();go(g.dataset.go);return}
