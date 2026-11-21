@@ -54,3 +54,10 @@ function Board(host,o){const el=h('div','bwrap');host.appendChild(el);
 function promoPick(el,w,cb){const ov=h('div','promo');ov.innerHTML='<div class="promobox"><b>Pawn ko kya banana hai?</b><div class="row">'+'QRBN'.split('').map(p=>`<button class="btn" data-p="${p}"><span class="pc ${w?'w':'b'} p-${p}">${GLYPH[p]}︎</span></button>`).join('')+'</div></div>';
   ov.addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b)return;ov.remove();cb(b.dataset.p)});el.appendChild(ov)}
 applySkin();
+/* tir: [from,to,rang,number?] — number ho to tir par gol nishaan (1, 2, 3 = chaal ka kram) */
+function arrowsSVG(arr,p){if(!arr||!arr.length)return'';let s='<svg class="arrows" viewBox="0 0 8 8" aria-hidden="true">',lab='';
+  for(const a of arr){const[x1,y1]=xy(a[0],p),[x2,y2]=xy(a[1],p);const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L;
+    const hx=x2-ux*.18,hy=y2-uy*.18,bx=hx-ux*.42,by=hy-uy*.42,px=-uy*.24,py=ux*.24,cl=a[2]||'g';
+    s+=`<line x1="${x1}" y1="${y1}" x2="${bx}" y2="${by}" class="ar ${cl}"/><polygon points="${hx},${hy} ${bx+px},${by+py} ${bx-px},${by-py}" class="ah ${cl}"/>`;
+    if(a[3]){const t=L>1.6?.38:.5,cx=x1+dx*t,cy=y1+dy*t;lab+=`<circle cx="${cx}" cy="${cy}" r=".24" class="al ${cl}"/><text x="${cx}" y="${cy+.01}" class="alt">${a[3]}</text>`}}
+  return s+lab+'</svg>'}

@@ -279,6 +279,14 @@ ul.gate{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;ga
 .bar{height:8px;border-radius:6px;background:var(--surface2);overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}
 .wrapr{flex-wrap:wrap;gap:6px}
 ul.xwhy{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.arrows .al{stroke:#fff;stroke-width:.04}.arrows .al.g{fill:#1F9D5A}.arrows .al.r{fill:#D2462C}.arrows .al.y{fill:#E8A317}.arrows .al.b{fill:#2F6FD0}
+.arrows .alt{fill:#fff;font:700 .3px/1 system-ui,sans-serif;text-anchor:middle;dominant-baseline:central}
+.xsec{border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:4px}
+.xsh{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.xsh b{font-size:14px}
+.xbtns{display:flex;gap:6px}.xbtns .btn.on{background:var(--accent);color:var(--accent-fg)}
+ol.xsteps{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:5px}
+.xn{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;color:#fff;font-size:11px;font-weight:700;margin-right:6px;vertical-align:1px}
+.xn.g{background:#1F9D5A}.xn.y{background:#E8A317}.xn.b{background:#2F6FD0}.xn.r{background:#D2462C}
 .xcands{display:flex;flex-direction:column;gap:8px;margin-top:6px}.xcand{border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:3px}.xcand .btn{align-self:flex-start;margin-top:4px}.xp ul.xwhy{margin-top:4px}
 #lu{flex:1;min-width:0;font:inherit;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
 /* ---- board: index.html se copy (app jaisa board) ---- */
@@ -578,7 +586,7 @@ body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/"><i class="b64">64</i><span class="bname">Lichess Play<small>64 Squares</small></span></a><div class="chips"><span class="chip" id="luser"></span></div></div></header>
-<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 03:50 UTC</p></main>
+<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-21 04:02 UTC</p></main>
 <nav class="tabs"><div class="wrap">
 <button data-go="#/" class="on"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.6 3.5 5.4 3.5 8.5s-1.1 5.9-3.5 8.5c-2.4-2.6-3.5-5.4-3.5-8.5s1.1-5.9 3.5-8.5z"/></svg></span>Lobby</button>
 <button data-go="#/road"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20h9"/><path d="M9 20c0-3 1.5-5 3-6.5-2.2.4-4 .1-5-1l3.5-6.5c3.5-.5 7 2 7 7.5V20"/><circle cx="12.6" cy="8.6" r=".7" fill="currentColor"/></svg></span>Rated</button>
@@ -1066,6 +1074,13 @@ function Board(host,o){const el=h('div','bwrap');host.appendChild(el);
 function promoPick(el,w,cb){const ov=h('div','promo');ov.innerHTML='<div class="promobox"><b>Pawn ko kya banana hai?</b><div class="row">'+'QRBN'.split('').map(p=>`<button class="btn" data-p="${p}"><span class="pc ${w?'w':'b'} p-${p}">${GLYPH[p]}︎</span></button>`).join('')+'</div></div>';
   ov.addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b)return;ov.remove();cb(b.dataset.p)});el.appendChild(ov)}
 applySkin();
+/* tir: [from,to,rang,number?] — number ho to tir par gol nishaan (1, 2, 3 = chaal ka kram) */
+function arrowsSVG(arr,p){if(!arr||!arr.length)return'';let s='<svg class="arrows" viewBox="0 0 8 8" aria-hidden="true">',lab='';
+  for(const a of arr){const[x1,y1]=xy(a[0],p),[x2,y2]=xy(a[1],p);const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L;
+    const hx=x2-ux*.18,hy=y2-uy*.18,bx=hx-ux*.42,by=hy-uy*.42,px=-uy*.24,py=ux*.24,cl=a[2]||'g';
+    s+=`<line x1="${x1}" y1="${y1}" x2="${bx}" y2="${by}" class="ar ${cl}"/><polygon points="${hx},${hy} ${bx+px},${by+py} ${bx-px},${by-py}" class="ah ${cl}"/>`;
+    if(a[3]){const t=L>1.6?.38:.5,cx=x1+dx*t,cy=y1+dy*t;lab+=`<circle cx="${cx}" cy="${cy}" r=".24" class="al ${cl}"/><text x="${cx}" y="${cy+.01}" class="alt">${a[3]}</text>`}}
+  return s+lab+'</svg>'}
 
 /* ---------- Lichess Connect: OAuth PKCE (ek baar login, token is device par save) ----------
    road.html aur lichess.html dono yahi code aur yahi saved token use karte hain.
