@@ -10,6 +10,7 @@ const core=cut("'use strict';",'/* ---------- views ---------- */');
 const playerFns=cut('function player(','function vLesson(');
 const content=fs.readFileSync(path.join(__dirname,'content.js'),'utf8').replace(/if\(typeof module[^\n]*\n/,'');
 const rd=f=>fs.readFileSync(path.join(__dirname,f),'utf8');
+const skin=rd('boardskin.js'),bcss=require('./boardcss.js').boardCSS(fs.readFileSync(path.join(root,'index.html'),'utf8'));
 const app=rd('app.js'),auth=rd('lichess-auth.js'),play=rd('play.js'),games=rd('games.js'),explain=rd('explain.js');
 const coreLite=core.replace(/const COURSE=\[.*?\];\n/s,'const COURSE=[];\n').replace(/const PLACEMENT=\[.*?\];\n/s,'const PLACEMENT=[];\n');
 const SV=d=>`<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
@@ -58,11 +59,12 @@ ul.gate{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;ga
 .bar{height:8px;border-radius:6px;background:var(--surface2);overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}
 .wrapr{flex-wrap:wrap;gap:6px}
 ul.xwhy{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.xcands{display:flex;flex-direction:column;gap:8px;margin-top:6px}.xcand{border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:3px}.xcand .btn{align-self:flex-start;margin-top:4px}.xp ul.xwhy{margin-top:4px}
 #lu{flex:1;min-width:0;font:inherit;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
 `;
 let html=head.replace(/<title>[^<]*<\/title>/,'<title>Road to 3000 · 64 Squares</title>')
  .replace(/<meta name="description"[^>]*>/,'<meta name="description" content="Zero se Lichess 3000 tak: roz ka quota, unlimited puzzles, Lichess rating se level.">')
- +css+navCSS+`</style>
+ +css+bcss+navCSS+`</style>
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/" style="color:inherit;text-decoration:none"><i style="font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.04em">64</i> Road to 3000</a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span></div></div></header>
@@ -70,6 +72,7 @@ let html=head.replace(/<title>[^<]*<\/title>/,'<title>Road to 3000 · 64 Squares
 ${nav([['today','Today','data-go="#/"',1],['practice','Practice','data-go="#/run/extra"'],['games','My Games','data-go="#/games"'],['course','Course',"onclick=\"location.href='course.html'\""],['trainer','Home',"onclick=\"location.href='index.html'\""]])}
 <script>
 ${core}
+${skin}
 ${playerFns}
 ${content}
 ${auth}
@@ -86,7 +89,7 @@ console.log('road.html',html.length,'bytes');
 const pcss=fs.readFileSync(path.join(__dirname,'play.css'),'utf8');
 const phtml=head.replace(/<title>[^<]*<\/title>/,'<title>Lichess Play · 64 Squares</title>')
  .replace(/<meta name="description"[^>]*>/,'<meta name="description" content="Lichess par khelo: quick pairing, custom game, dost ko challenge, Lichess computer.">')
- +css+pcss+navCSS+`</style>
+ +css+bcss+pcss+navCSS+`</style>
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/" style="color:inherit;text-decoration:none"><i style="font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.04em">64</i> Lichess Play</a><div class="chips"><span class="chip" id="luser"></span></div></div></header>
@@ -94,6 +97,7 @@ const phtml=head.replace(/<title>[^<]*<\/title>/,'<title>Lichess Play · 64 Squa
 ${nav([['lobby','Lobby','data-go="#/"',1],['games','Rated','data-go="#/road"'],['road','Road',"onclick=\"location.href='road.html'\""],['course','Course',"onclick=\"location.href='course.html'\""],['trainer','Home',"onclick=\"location.href='index.html'\""]])}
 <script>
 ${coreLite}
+${skin}
 ${auth}
 ${play}
 </script>
