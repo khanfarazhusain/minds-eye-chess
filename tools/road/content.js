@@ -158,6 +158,6 @@ const ROAD_LEVELS = [
  {n:8,name:'Master 2',lo:2400,gate:2600,games:160,hold:21,band:[2300,2750],quota:{flash:30,puz:15,quiz:5,end:3,open:5,calc:3,mins:120},
   lessons:['l7b.qgs1','l7b.qgs2','l7b.quotes']},
  {n:9,name:'Elite',lo:2600,gate:2800,games:200,hold:30,band:[2500,3000],quota:{flash:30,puz:15,quiz:5,end:3,open:5,calc:3,mins:120},lessons:['sf.e9a','sf.e9b','sf.e9c']},
- {n:10,name:'Legend',lo:2800,gate:3000,games:200,hold:30,band:[2700,3000],quota:{flash:30,puz:15,quiz:5,end:3,open:5,calc:3,mins:120},lessons:['sf.e10a','sf.e10b','sf.e10c']}
+ {n:10,name:'Legend',lo:2800,gate:3000,games:200,hold:30,band:[2700,3200],quota:{flash:30,puz:15,quiz:5,end:3,open:5,calc:3,mins:120},lessons:['sf.e10a','sf.e10b','sf.e10c']}
 ];
 if(typeof module!=='undefined')module.exports={ROAD_NEW,ROAD_LEVELS};

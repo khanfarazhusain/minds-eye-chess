@@ -59,10 +59,10 @@ const NEAR={fork:['disc','pin','skewer'],pin:['skewer','fork','xray'],skewer:['p
 const TNAME={fork:'Fork',pin:'Pin',skewer:'Skewer',disc:'Discovered attack',mate1:'Mate in 1',mate2:'Mate in 2',mate3:'Lamba mate',backrank:'Back-rank mate',matepat:'Mate patterns',hanging:'Latakta piece',trapped:'Phansa piece',deflect:'Deflection',attract:'Decoy',remdef:'Defender hatao',rookend:'Rook endgame',pawnend:'Pawn endgame',queenend:'Queen endgame',minorend:'Minor piece endgame',endgame:'Endgame',defence:'Defence',quiet:'Quiet move',promotion:'Promotion',pawnadv:'Aage pawn',kingatk:'King par hamla',sac:'Sacrifice',zwischen:'Zwischenzug',interfere:'Interference',clearance:'Clearance',xray:'X-ray',zugzwang:'Zugzwang',special:'Special moves',long:'Lambi calculation'};
 const GENERIC=['middle','opening','long','endgame','sac'];
 function mainTheme(t){const a=(t||'').split(',').filter(Boolean);return a.find(x=>!GENERIC.includes(x))||a[0]||'mixed'}
-function bandsFor(lo,hi){const o=[];for(let b=Math.floor(lo/100)*100;b<hi&&b<=3000;b+=100)if(b>=400)o.push(b);return o}
+function bandsFor(lo,hi){const o=[];for(let b=Math.floor(lo/100)*100;b<hi&&b<=3100;b+=100)if(b>=400)o.push(b);return o}
 /* naya (kabhi na dekha) puzzle: theme (optional), rating ke paas; nahi mila to aas-paas ki rating, phir milta-julta theme */
 async function getPuzzle(o){const I=await pidx();const L=CUR();const pr=SP.pr||L.band[0]+150;
-  const tries=[];const around=w=>[Math.max(L.band[0]-(w?150:0),400),Math.min(L.band[1]+(w?150:0),3100)];
+  const tries=[];const around=w=>[Math.max(L.band[0]-(w?150:0),400),Math.min(L.band[1]+(w?150:0),3200)];
   const center=Math.min(Math.max(pr,L.band[0]),L.band[1]);
   const mk=(lo,hi,th)=>({lo,hi,th});
   const [a,b]=around(false),[c,d]=around(true);
