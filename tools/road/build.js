@@ -25,12 +25,13 @@ const IC={
 const navCSS=`
 nav.tabs{left:0!important;right:0!important;bottom:0!important;max-width:none!important;margin:0!important;border-radius:18px 18px 0 0!important;background:rgba(18,32,25,.94)!important;-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);box-shadow:0 -6px 20px rgba(10,25,18,.18)!important;border:0!important;padding-bottom:calc(4px + env(safe-area-inset-bottom,0px))!important}
 nav.tabs .wrap{display:grid;grid-template-columns:repeat(5,1fr)!important;gap:2px;padding:4px 6px 2px!important;max-width:560px;margin:0 auto}
-nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:2px!important;padding:5px 0 4px!important;border-radius:14px;color:#8FA398!important;font-family:var(--f-body);font-size:11px!important;font-weight:600;background:none!important;border:0}
-nav.tabs button span{display:grid;place-items:center;width:auto!important;height:auto!important;background:none!important;font-size:0!important}
+nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:2px!important;line-height:1;padding:5px 0 4px!important;border-radius:14px;color:#8FA398!important;font-family:var(--f-body);font-size:11px!important;font-weight:600;background:none!important;border:0}
+nav.tabs button span{display:grid;place-items:center;width:21px!important;height:21px!important;line-height:0;background:none!important;font-size:0!important}
 nav.tabs button.on{color:#7BE0A6!important;font-weight:800;background:rgba(92,192,140,.14)!important}
 body:not(.emb) main{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))!important}
 `;
 const nav=(items)=>`<nav class="tabs"><div class="wrap">\n${items.map(([ic,label,act,on])=>`<button ${act}${on?' class="on"':''}><span>${IC[ic]}</span>${label}</button>`).join('\n')}\n</div></nav>`;
+const BUILD=new Date().toISOString().slice(0,16).replace('T',' ')+' UTC';
 const css=`
 /* ---- Road to 3000 ---- */
 .tbtn{display:none!important}
@@ -59,7 +60,7 @@ let html=head.replace(/<title>[^<]*<\/title>/,'<title>Road to 3000 · 64 Squares
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/" style="color:inherit;text-decoration:none"><i style="font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.04em">64</i> Road to 3000</a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span></div></div></header>
-<main><div class="wrap" id="app"></div></main>
+<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version ${BUILD}</p></main>
 ${nav([['today','Today','data-go="#/"',1],['practice','Practice','data-go="#/run/extra"'],['games','My Games','data-go="#/games"'],['course','Course',"onclick=\"location.href='course.html'\""],['trainer','Home',"onclick=\"location.href='index.html'\""]])}
 <script>
 ${core}
@@ -82,7 +83,7 @@ const phtml=head.replace(/<title>[^<]*<\/title>/,'<title>Lichess Play · 64 Squa
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/" style="color:inherit;text-decoration:none"><i style="font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.04em">64</i> Lichess Play</a><div class="chips"><span class="chip" id="luser"></span></div></div></header>
-<main><div class="wrap" id="app"></div></main>
+<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version ${BUILD}</p></main>
 ${nav([['lobby','Lobby','data-go="#/"',1],['games','Rated','data-go="#/road"'],['road','Road',"onclick=\"location.href='road.html'\""],['course','Course',"onclick=\"location.href='course.html'\""],['trainer','Home',"onclick=\"location.href='index.html'\""]])}
 <script>
 ${coreLite}
