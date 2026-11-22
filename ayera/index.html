@@ -576,6 +576,8 @@ button:active,.btn:active,.pill:active,.choice:active,.practice-card:active,.con
 .pc.qbg{animation:popin .3s ease}
 .swatch.acc{position:relative}.swatch.lockacc{filter:grayscale(1);opacity:.55}.swatch.acc em{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);font-style:normal;font-size:11px;background:#ffd166;border-radius:8px;padding:0 4px;color:#5a3c00;white-space:nowrap}
 .prizeov .avbig svg{width:clamp(120px,30vmin,220px);height:auto}
+.wrep{background:linear-gradient(#fff,#f1f8ff)}.wtiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:6px 0}.wtiles div{background:#fff;border-radius:14px;box-shadow:0 2px 6px #0002;padding:8px;text-align:center;display:flex;flex-direction:column}.wtiles b{font-size:26px;color:#3a7bd5}.wtiles span{font-size:12px;color:#555}
+@media (max-width:420px){.wtiles{grid-template-columns:repeat(2,1fr)}}.wchip{display:inline-block;background:#ffe5ec;border-radius:10px;padding:2px 8px;margin:2px}.wtip{background:#fff8e1;border-radius:12px;padding:8px}
 
 </style>
 </head>
@@ -4228,6 +4230,8 @@ const MG = {
   qbDone: "Great break! Now back to the lesson!",
   pzWin: "You reached the end! What a chess star!",
   pzHop: "Hop! One step closer!",
+  teamtap: "Team tap! Tap all the pieces on your team. Not the Grumbles!",
+  teamWin: "You found your whole team! Great team captain!",
   sqhunt: "Square hunt! Listen to the name, then tap that square as fast as you can!",
   sqWin: "You found every square! Super eyes!",
   streets: "Light up the street! Tap every square on the glowing line!",
@@ -4260,7 +4264,7 @@ function LINESMG(){ const L=[]; for(const k in MG) L.push(["X",MG[k]]); return L
 const GL_AFTER={"1.8":"R","1.11":"B","1.13":"Q","1.15":"K","1.19":"N","1.25":"P","2.12":"U2","3.10":"U3","4.9":"U4","5.10":"U5","6.7":"U6","7.6":"U7","8.7":"U8","9.7":"U9","11.6":"U11","12.5":"U12","13.6":"U13","14.6":"U14","15.4":"U15","16.5":"U16","17.5":"U17","18.4":"U18","20.5":"U20","21.4":"U21","22.4":"U22","24.3":"U24"};
 const GL_GAMES={R:["rescue","race"],B:["slide","treasure"],Q:["queen","catch"],K:["kesc","catch"],N:["maze","balloon"],P:["pwall","race"],U2:["sqhunt","streets"],U3:["streets","sqhunt"],U4:["coinshop",["race","R"]],U5:["hide",["catch","K"]],U6:["checkspot",["catch","K"]],U7:["mate1","checkspot"],U8:["ladder","mate1"],U9:["castledash","promorace"],U11:["forkfind","pinpop"],U12:["trickstorm","forkfind"],U13:["openrace",["maze","N"]],U14:["snowrun",["pwall","P"]],U15:["champcheck","forkfind"],U16:["bridge","snowrun"],U17:["dragon","mate1"],U18:["shield","champcheck"],U20:["harbour","ladder"],U21:["volcano","dragon"],U22:["wizard","shield"],U24:["galaxy","trickstorm"]};
 const GL_NAME={R:"Rook",B:"Bishop",Q:"Queen",K:"King",N:"Knight",P:"Pawn",U2:"Board Town",U3:"Number Forest",U4:"Coin Market",U5:"Safe Castle",U6:"Royal Garden",U7:"Trophy Hill",U8:"Castle Peak",U9:"Magic Castle",U11:"Trick Jungle",U12:"Puzzle Lagoon",U13:"Opening Meadow",U14:"Snowy Summit",U15:"Champion Castle",U16:"Rainbow Bridge",U17:"Dragon Mountain",U18:"Shield Fortress",U20:"Hero Harbour",U21:"Volcano Valley",U22:"Wizard Tower",U24:"Star Galaxy"};
-const GAME_INFO={rescue:["🐣","Rook rescue","R"],race:["🚩","Race","R"],slide:["💎","Bishop slide","B"],treasure:["🧰","Treasure","B"],queen:["👑","Queen power","Q"],catch:["🏃","Catch","K"],kesc:["🚪","King escape","K"],maze:["🐴","Knight maze","N"],balloon:["🎈","Balloons","N"],pwall:["🧱","Pawn wall","P"],sqhunt:["🔎","Square hunt","X"],streets:["💡","Light the street","X"],coinshop:["🪙","Coin shop","X"],hide:["🙈","Hide the piece","X"],checkspot:["🎯","Spot the check","X"],mate1:["🏆","Mate hunt","X"],ladder:["🪜","Ladder climb","X"],castledash:["🏰","Castle dash","X"],promorace:["👑","Crown party","X"],forkfind:["🍴","Fork finder","X"],pinpop:["📌","Pin pop","X"],trickstorm:["🌪️","Trick storm","X"],openrace:["🌼","Opening race","X"],snowrun:["🐧","Snow slide","X"],champcheck:["🦄","Champion check","X"],bridge:["🌈","Rainbow bridge","X"],dragon:["🐉","Dragon attack","X"],shield:["🛡️","Shield up","X"],harbour:["⛵","Harbour hero","X"],volcano:["🌋","Volcano jump","X"],wizard:["🧙","Wizard spell","X"],galaxy:["🚀","Galaxy rocket","X"]};
+const GAME_INFO={rescue:["🐣","Rook rescue","R"],race:["🚩","Race","R"],slide:["💎","Bishop slide","B"],treasure:["🧰","Treasure","B"],queen:["👑","Queen power","Q"],catch:["🏃","Catch","K"],kesc:["🚪","King escape","K"],maze:["🐴","Knight maze","N"],balloon:["🎈","Balloons","N"],pwall:["🧱","Pawn wall","P"],sqhunt:["🔎","Square hunt","X"],streets:["💡","Light the street","X"],coinshop:["🪙","Coin shop","X"],hide:["🙈","Hide the piece","X"],checkspot:["🎯","Spot the check","X"],mate1:["🏆","Mate hunt","X"],ladder:["🪜","Ladder climb","X"],castledash:["🏰","Castle dash","X"],promorace:["👑","Crown party","X"],forkfind:["🍴","Fork finder","X"],pinpop:["📌","Pin pop","X"],trickstorm:["🌪️","Trick storm","X"],openrace:["🌼","Opening race","X"],snowrun:["🐧","Snow slide","X"],champcheck:["🦄","Champion check","X"],bridge:["🌈","Rainbow bridge","X"],dragon:["🐉","Dragon attack","X"],shield:["🛡️","Shield up","X"],harbour:["⛵","Harbour hero","X"],volcano:["🌋","Volcano jump","X"],wizard:["🧙","Wizard spell","X"],galaxy:["🚀","Galaxy rocket","X"],teamtap:["🤝","Team tap","X"]};
 function withGames(Ls){ const out=[]; Ls.forEach(L=>{ out.push(L); const p=GL_AFTER[L.id]; if(p) out.push({id:L.id+"g",title:GL_NAME[p]+" games 🎮",host:p.length>1?"X":p,glk:p,unit:L.unit||1,mg:GL_GAMES[p],story:[],help:[],alone:[],real:[],check:[],chant:""}); }); return out; }
 async function mgLesson(L){ const games=L.mg.slice(); let k=0;
   const finish=()=>{ prog.done[L.id]=3; prog.food=(prog.food||0)+1; save(); sfx.win(); confetti(); const nx=LESSONS[lessonIdx(L.id)+1];
@@ -4301,7 +4305,9 @@ async function pzGame(g, after){ const P=PZ[g]; const st=stage("X"), live=st.liv
   st.holder.innerHTML=`<div class="pzintro"><span class="pzbig">${GAME_INFO[g][0]}</span><b>${GAME_INFO[g][1]}</b><span class="pzpath">${P.run} ➜ ${P.goal}</span></div>`;
   const track=()=>{ const d=st.s.querySelector(".stepdots"); d.innerHTML=`<span class="pztrack">${Array.from({length:PZ_N+1},(_,i)=>i===PZ_N?(r>=PZ_N?`<b class="pzrun">${P.run}${P.goal}</b>`:`<b>${P.goal}</b>`):i===r?`<b class="pzrun">${P.run}</b>`:`<span class='pzstep'>${i<r?"⭐":"•"}</span>`).join("")}</span>`; };
   track(); await st.talk(MG[g],"X"); if(!live()) return;
-  while(r<PZ_N){ let e=null; for(let t=0;t<6&&!e;t++){ try{ e=makeEx(Math.floor(Math.random()*1e9), pick(P.specs)); }catch(x){} } if(!e) break;
+  const known=new Set(); LESSONS.forEach(L=>{ if(prog.done[L.id]||prog.unlockAll) [...(L.help||[]),...(L.alone||[]),...(L.check||[])].forEach(x=>Array.isArray(x)&&known.add(x[0])); });
+  const specs=P.specs.filter(x=>known.has(x[0])).length?P.specs.filter(x=>known.has(x[0])):P.specs;
+  while(r<PZ_N){ let e=null; for(let t=0;t<6&&!e;t++){ try{ e=makeEx(Math.floor(Math.random()*1e9), pick(specs)); }catch(x){} } if(!e) break;
     await playEx(st,e,"alone"); if(!live()) return; r++; track(); sfx.pop(); if(r<PZ_N){ await st.talk(MG.pzHop,"X"); if(!live()) return; } }
   sfx.win(); confetti(); await st.talk(MG.pzWin,"X"); if(!live()) return; await st.waitNext("Yay! ➜"); if(live()) after(); }
 
@@ -4388,12 +4394,15 @@ async function bonusGame(host, after){
       turn++; if(p!=="K"||turn%2===0){ await sleep(300); const att=new Set(myMoves([])); const opts=moves("K",gpos,[],[pos]).filter(s=>s!==pos); const safe=opts.filter(s=>!att.has(s)); const to=(safe.length&&Math.random()<.6)?pick(safe):pick(opts); if(to){ await board.walk(G,to,"K",{live}); gpos=to; G.dataset.sq=to; } }
       board.dots(myMoves([]),[gpos]); busyLock.v=false; });
     return; }
-  if(game==="sqhunt"||game==="streets"||game==="coinshop"||game==="hide"){
-    const rounds=game==="streets"?2:5; let r=0, target=null, need=[], lit=new Set(); const W=[]; const clear=()=>{ W.splice(0).forEach(x=>x.remove&&x.remove()); board.dots([]); };
+  if(game==="sqhunt"||game==="streets"||game==="coinshop"||game==="hide"||game==="teamtap"){
+    const rounds=game==="streets"?2:game==="teamtap"?3:5; let r=0, target=null, need=[], lit=new Set(); const W=[]; const clear=()=>{ W.splice(0).forEach(x=>x.remove&&x.remove()); board.dots([]); };
     const bar2=t=>bar.innerHTML=`<span class="left">${t}</span><span class="left">⭐ ${r} / ${rounds}</span>`;
     await st.talk(MG[game],"X"); if(!live()) return;
     const setup=async()=>{ clear();
-      if(game==="sqhunt"){ target=pick(ALLSQ); bar2(`🔎 Find <b style="font-size:1.4em">${target}</b>`); window.__mgHint=()=>target; await say(target,"X"); }
+      if(game==="teamtap"){ const sqs=rshuffle(Math.random,ALLSQ.slice()).slice(0,8); need=sqs.slice(0,4); lit=new Set(); const ts=["R","B","Q","K","N","P"];
+        need.forEach(q=>W.push(board.place(q,pieceSVG(pick(ts))))); sqs.slice(4).forEach(q=>W.push(board.place(q,grumbleSVG(pick(ts))))); W.foes=sqs.slice(4);
+        bar2("🤝 Tap your team!"); window.__mgHint=()=>need.find(q=>!lit.has(q)); }
+      else if(game==="sqhunt"){ target=pick(ALLSQ); bar2(`🔎 Find <b style="font-size:1.4em">${target}</b>`); window.__mgHint=()=>target; await say(target,"X"); }
       else if(game==="streets"){ const file=r%2===0; const k=Math.floor(Math.random()*8); need=file?[1,2,3,4,5,6,7,8].map(n=>F[k]+n):[...F].map(f=>f+(k+1)); lit=new Set();
         need.forEach(q=>W.push(board.mark(q,"row"))); bar2(file?`💡 The ${F[k]} street`:`💡 Floor ${k+1}`); window.__mgHint=()=>need.find(q=>!lit.has(q)); board.dots(need.filter(q=>!lit.has(q))); }
       else if(game==="coinshop"){ let a,b; do{ a=pick(VAL_ORDER); b=pick(VAL_ORDER); }while(VALUE[a]===VALUE[b]); const sa=pick(["c4","b5","c5"]), sb=pick(["f4","g5","f5"]);
@@ -4402,9 +4411,10 @@ async function bonusGame(host, after){
       else { const t=pick(["R","B","Q","N"]); let me0,g0,att,safe; for(let i=0;i<200;i++){ me0=pick(ALLSQ); g0=pick(ALLSQ.filter(x=>x!==me0)); att=new Set(moves(t,g0,[me0],[]).concat([g0])); if(!att.has(me0)) continue; const mt=pick(["R","B","Q","K"]); const ms=moves(mt,me0,[],[g0]); safe=ms.filter(x=>!att.has(x)&&x!==g0); if(safe.length>=1&&safe.length<ms.length){ W.mt=mt; W.ms=ms; break; } }
         W.push(board.place(g0,grumbleSVG(t))); const meEl=board.place(me0,pieceSVG(W.mt)); W.push(meEl); W.me=meEl; W.safe=safe; W.from=me0; bar2("🙈 Hide it!"); window.__mgHint=()=>W.safe[0]; board.dots(W.ms,[g0]); }
       busyLock.v=false; };
-    const good=async()=>{ r++; sfx.win&&sfx.win(); confetti(); if(r>=rounds){ bar2("🎉"); return end(true,MG[{sqhunt:"sqWin",streets:"stWin",coinshop:"coinWin",hide:"hideWin"}[game]]); } await sleep(700); if(live()) setup(); };
+    const good=async()=>{ r++; sfx.win&&sfx.win(); confetti(); if(r>=rounds){ bar2("🎉"); return end(true,MG[{teamtap:"teamWin",sqhunt:"sqWin",streets:"stWin",coinshop:"coinWin",hide:"hideWin"}[game]]); } await sleep(700); if(live()) setup(); };
     await setup();
     board.onTap(async sq=>{ if(busyLock.v||!live()) return;
+      if(game==="teamtap"){ if(need.includes(sq)&&!lit.has(sq)){ lit.add(sq); W.push(board.mark(sq,"ok")); sfx.pop(); if(lit.size===need.length){ busyLock.v=true; return good(); } } else if(W.foes.includes(sq)){ sfx.oops(); } return; }
       if(game==="sqhunt"){ if(sq===target){ busyLock.v=true; W.push(board.mark(sq,"ok")); sfx.pop(); return good(); } sfx.oops(); say(target,"X"); return; }
       if(game==="streets"){ if(need.includes(sq)&&!lit.has(sq)){ lit.add(sq); W.push(board.mark(sq,"ok")); sfx.pop(); board.dots(need.filter(q=>!lit.has(q))); if(lit.size===need.length){ busyLock.v=true; return good(); } } else if(!lit.has(sq)) sfx.oops(); return; }
       if(game==="coinshop"){ if(!W.cv.some(c=>c[0]===sq)) return; busyLock.v=true; W.cv.forEach(([q,v])=>W.push(board.place(q,`<div class="coinv">${v}🪙</div>`,"cv"))); if(sq===target){ sfx.pop(); return good(); } sfx.oops(); await sleep(1200); if(live()) setup(); return; }
@@ -5221,7 +5231,7 @@ async function lesson(id){
   { const u=UNITS.find(x=>x.n===(L.unit||1))||{}; const ic=el(`<div class="lintro"><div class="lbox"><div class="lic">${LAND_ICON[L.unit||1]||"⭐"}</div><div class="lland">${u.land||""}</div><div class="ltitle">${L.title}</div>${(()=>{ const Ls=LESSONS.filter(x=>(x.unit||1)===(L.unit||1)), d=Ls.filter(x=>prog.done[x.id]).length; return `<div class="lprog">${Ls.map(x=>`<i class="${prog.done[x.id]?"on":""} ${x.id===L.id?"me":""}"></i>`).join("")}</div><div class="lpn">📖 ${d} of ${Ls.length} done</div>`; })()}</div></div>`); document.body.appendChild(ic); setTimeout(()=>ic.classList.add("out"),1900); setTimeout(()=>ic.remove(),2500); }
   // preload this lesson's voices
   if(CHARS[host]&&host!=="X") getPack(host).catch(()=>{}); for(let i=0;i<8;i++) getPack("X"+i).catch(()=>{});
-  const attempt=prog.tries[L.id]=(prog.tries[L.id]||0); const seedBase=lessonIdx(id)*1000+attempt*7919;
+  const __lt0=Date.now(); const attempt=prog.tries[L.id]=(prog.tries[L.id]||0); const seedBase=lessonIdx(id)*1000+attempt*7919;
 
   /* 1. warm-up */
   const due=dueCards(3);
@@ -5266,6 +5276,7 @@ async function lesson(id){
   if(!live()) return; mark();
   const passed = good/n >= 0.85;
   prog.tries[L.id]=attempt+1;
+  prog.log=(prog.log||[]).slice(-400); prog.log.push({d:Date.now(),id:L.id,ok:good,n,secs:Math.round((Date.now()-__lt0)/1000),pass:passed}); save();
   if(passed){ prog.food=(prog.food||0)+1; save();
     const stars = good===n?3:2;
     prog.done[L.id]=Math.max(prog.done[L.id]||0,stars); addCards(L); save();
@@ -5279,7 +5290,7 @@ async function lesson(id){
     if(L.cert){ ov.querySelector("#cert").onclick=()=>certificate(); setTimeout(()=>{ if(document.body.contains(ov)) certificate(); },600); }
     ov.querySelector("#map").onclick=()=>{ov.remove();mapScreen()};
     const nx=LESSONS[lessonIdx(id)+1]; if(!nx) ov.querySelector("#go").remove(); else ov.querySelector("#go").onclick=()=>{ov.remove();lesson(nx.id)};
-    const goBonus=()=>{ ov.remove(); sfx.step(); if(!MG_PIECES.includes(host)) window.__forceMG=[pick(UNIT_GAMES[L.unit||1]||["mate1","forkfind","pinpop","trickstorm","checkspot"]),"X"]; bonusGame(host, ()=>autoChain(nx)); };
+    const goBonus=()=>{ ov.remove(); sfx.step(); window.__forceMG=gameFor(L,host); bonusGame(host, ()=>autoChain(nx)); };
     ov.querySelector("#bonus").onclick=goBonus;
     if(!L.cert&&!window.__testNoAuto&&nx){ ov.querySelector("#bonus").remove(); ov.querySelector(".treatmsg").remove(); autoAfter(ov,"#go",()=>{ov.remove();lesson(nx.id)},5); }
     say(L.bigshow?(L.unit>1?SAY["bigPass"+L.unit]:SAY.bigPass):SAY.pass,"X");
@@ -5370,6 +5381,15 @@ function certificate(){ document.querySelectorAll(".certwrap").forEach(x=>x.remo
   const d=new Date().toLocaleDateString(undefined,{day:"numeric",month:"long",year:"numeric"}), st=Object.values(prog.done).reduce((a,b)=>a+b,0);
   const c=el(`<div class="certwrap"><div class="cert"><div class="pcs">♔ ♕ ♖ ♗ ♘ ♙</div><h1>Certificate of Chess Stardom</h1><p>This is to say that</p><div class="avme">${avatarSVG()}</div><div class="nm">${NAME}</div><p>finished all ${UNITS.length} lands of Little Chess Stars</p><p>and earned ${st} stars! ⭐</p><p>${d}</p><div class="pcs">🏆 🎓 🌟</div></div><div class="row"><button class="btn g" id="pr">🖨️ Print</button><button class="btn b" id="cl">Close</button></div></div>`);
   document.body.appendChild(c); c.querySelector("#pr").onclick=()=>window.print(); c.querySelector("#cl").onclick=()=>c.remove(); sfx.win(); confetti(); say(Q24.cert,"X"); }
+/* loop 39: weekly report for grown-ups */
+function weekReport(){ const wk=Date.now()-7*864e5, lg=(prog.log||[]).filter(x=>x.d>=wk);
+  const days=new Set(lg.map(x=>new Date(x.d).toDateString())).size, pass=lg.filter(x=>x.pass), ok=lg.reduce((a,x)=>a+x.ok,0), n=lg.reduce((a,x)=>a+x.n,0), mins=Math.round(lg.reduce((a,x)=>a+x.secs,0)/60);
+  const weak=Object.entries(prog.weak||{}).map(([k,w])=>[k,w.miss/Math.max(1,w.ok+w.miss),w]).filter(x=>x[2].ok+x[2].miss>=3&&x[1]>=.3).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const nx=LESSONS.find(L=>!prog.done[L.id]);
+  const tip=!lg.length?"Play one short lesson together today. 10 minutes a day is perfect.":n&&ok/n<.7?"Some answers were hard this week. Repeat the last lesson once before moving on.":days<3?"Great work! Try to play on 4 or 5 days a week, little and often.":"Super week! Keep the same rhythm.";
+  return `<div class="gbox wrep"><h3>📅 This week</h3><div class="wtiles"><div><b>${days}</b><span>days played</span></div><div><b>${pass.length}</b><span>lessons passed</span></div><div><b>${n?Math.round(100*ok/n):0}%</b><span>right first time</span></div><div><b>${mins}</b><span>minutes</span></div></div>
+    <p><b>Needs practice:</b> ${weak.length?weak.map(([k])=>`<span class="wchip">${typeof TAG_NAME!=="undefined"&&k.startsWith("q:")?(TAG_NAME[k.slice(2).split(":")[0]]||k.slice(2)):k.replace(":"," ")}</span>`).join(" "):"nothing, all good 👍"}</p>
+    <p><b>Next lesson:</b> ${nx?`${nx.id} ${nx.title}`:"All done! 🎓"}</p><p class="wtip">💡 ${tip}</p></div>`; }
 function grownPage(){
   const rows=LESSONS.map(L=>`<tr><td>${L.id}</td><td>${L.title}</td><td>${prog.done[L.id]?"⭐".repeat(prog.done[L.id]):"—"}</td><td>${prog.tries[L.id]||0}</td></tr>`).join("");
   const cards=Object.values(prog.cards), mastered=cards.filter(c=>c.box>=4).length;
@@ -5377,6 +5397,7 @@ function grownPage(){
   const nice=k=>{ if(k.startsWith("q:")) return TAG_NAME[k.slice(2).split(":")[0]]||k.slice(2); const [kind,p]=k.split(":"); return (p?CHARS[p].name+": ":"")+({star:"moving to stars",gobble:"capturing",tapall:"finding all moves",yesno:"can it go there?",count:"counting moves",maze:"mazes",colour:"square colours",knightcolour:"knight colour hops",reach:"bishop colours",tapset:"tapping squares",find:"piece names",shadow:"piece shapes",who:"piece facts",sort:"white or black team",pawnwar:"pawn wars"}[kind]||kind); };
   const s=el(`<div class="screen grown">${funBg()}<div class="top"><button class="round" id="home">🏠</button><h2>Grown-up page</h2><span></span></div>
     <div class="row gtiles"><button class="btn g" id="songs">🎵 Song box</button><button class="btn b" id="board">Our pieces: ${isYB()?"Yellow & brown":"White & black"}</button>${prog.done["24.5"]?`<button class="btn g" id="certb">🎓 Certificate</button>`:""}<button class="btn b" id="avb">✨ Ayera's look</button><button class="btn b" id="speed">Voice: ${(prog.settings||{}).slow?"Slow 🐢":"Normal 🐇"}</button><button class="btn b" id="unlock">${prog.unlockAll?"Lock lessons again":"Unlock all lessons"}</button><button class="btn r" id="reset">Reset all progress</button></div>
+    ${weekReport()}
     <div class="gbox"><p><b>Lessons passed:</b> ${Object.keys(prog.done).length} of ${LESSONS.length} · <b>Memory cards:</b> ${cards.length} (${mastered} mastered) · <b>Practice streak:</b> ${prog.streak||0} days</p>
     <h3>Progress in every land</h3><div class="ubars">${UNITS.map(u=>{ const Ls=LESSONS.filter(L=>(L.unit||1)===u.n), st=Ls.reduce((a,L)=>a+(prog.done[L.id]||0),0), mx=Ls.length*3;
       const cs=Object.entries(prog.cards).filter(([k])=>Ls.some(L=>k.startsWith(L.id+"#"))), cm=cs.filter(([k,c])=>c.box>=4).length;
@@ -5443,7 +5464,7 @@ new MutationObserver(ms=>{ for(const m of ms){ if(m.type!=="childList") continue
 addEventListener("resize",()=>document.querySelectorAll(".bholder").forEach(fitSoon));
 start();
 /* ---- loop 36: auto flow (FARAZ: everything should come by itself) ---- */
-const UNIT_GAMES={2:["sqhunt","streets"],3:["streets","sqhunt"],4:["coinshop"],5:["hide"],6:["checkspot"],7:["mate1","checkspot"],8:["ladder","mate1"],9:["castledash","promorace"],10:["forkfind","mate1"],11:["forkfind","pinpop"],12:["trickstorm","pinpop"],13:["openrace"],14:["snowrun"],15:["champcheck"],16:["bridge","snowrun"],17:["dragon"],18:["shield"],19:["champcheck","shield"],20:["harbour","snowrun"],21:["volcano","dragon"],22:["wizard"],23:["champcheck","volcano","wizard"],24:["galaxy"]};
+const UNIT_GAMES={1:["teamtap"],2:["sqhunt","streets"],3:["streets","sqhunt"],4:["coinshop"],5:["hide"],6:["checkspot"],7:["mate1","checkspot"],8:["ladder","mate1"],9:["castledash","promorace"],10:["mate1","castledash"],11:["forkfind","pinpop"],12:["trickstorm","pinpop"],13:["openrace"],14:["snowrun"],15:["champcheck"],16:["bridge","snowrun"],17:["dragon"],18:["shield"],19:["champcheck","shield"],20:["harbour","snowrun"],21:["volcano","dragon"],22:["wizard"],23:["champcheck","volcano","wizard"],24:["galaxy"]};
 function autoAfter(ov,sel,fn,secs){ const b=ov.querySelector(sel); if(!b) return; const lab=b.innerHTML; let t=secs, stop=false;
   (async()=>{ await voiceIdle(); while(t>0&&!stop&&document.body.contains(ov)){ b.innerHTML=lab+` <span class="cd">${t}</span>`; await sleep(1000); t--; }
     if(!stop&&document.body.contains(ov)){ if(document.querySelector(".storyov")){ await new Promise(r=>{ const iv=setInterval(()=>{ if(!document.querySelector(".storyov")){ clearInterval(iv); r(); } },400); }); } if(document.body.contains(ov)) fn(); } })(); }
@@ -5459,7 +5480,8 @@ async function songBreak(st,L,host){ const k=songFor(L); if(!SONGS[k]||!st.live(
     const choice=await new Promise(r=>{ ag.onclick=()=>r("again"); go.onclick=()=>r("go"); setTimeout(()=>r("go"),6000); });
     ag.style.display=go.style.display="none"; sb.querySelector(".skip").style.display=""; if(choice!=="again") break; }
   sb.remove(); st.setHero(host); }
-function gameFor(L,host){ return MG_PIECES.includes(host)?null:[pick(UNIT_GAMES[L.unit||1]||["mate1","forkfind","pinpop","trickstorm","checkspot"]),"X"]; }
+function unitGames(u){ for(let k=u;k>=1;k--) if(UNIT_GAMES[k]) return UNIT_GAMES[k]; return ["teamtap"]; }
+function gameFor(L,host){ return (L.unit||1)===1&&MG_PIECES.includes(host)?null:[pick(unitGames(L.unit||1)),"X"]; }
 async function lessonTail(L,host){ window.__forceMG=gameFor(L,host); await new Promise(r=>bonusGame(MG_PIECES.includes(host)?host:"X",r)); await petAuto(); if(typeof accAuto==="function") await accAuto();
   if(typeof dpDone==="function"&&!dpDone()&&Object.keys(prog.cards).length>=3){ await new Promise(r=>{ window.__chainDone=r; dailyPuzzle(); }); }
   else if(dueCards(99).length>=3&&prog.lastDay!==today()){ await new Promise(r=>{ window.__chainDone=r; practice(); }); } }
