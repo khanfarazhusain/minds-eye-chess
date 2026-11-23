@@ -24,7 +24,7 @@ const CG_TH={fork:'l3.fork',pin:'l3.pin',skewer:'l3.skewer',disc:'l3.disc',dblch
 /* course level test ke liye Gym ka zaroori step (kitne steps pass) */
 const CG_GATE={l2b:2,l3:5,l3b:8,lm:11,l6:14,l6b:17,l4:20,l4b:23,l5:26,l5b:29,l7:32,l7b:47};
 const cgMinN=step=>15+step.d*5;
-function cgKnown(k){if(!k||PR.done[k])return true;if(typeof cgRoadKnown==='function'&&cgRoadKnown(k))return true;const l=lesByKey(k);return!!(l&&l.li<PR.placed)}
+function cgKnown(k){if(!k||unlockAll()||PR.done[k])return true;if(typeof cgRoadKnown==='function'&&cgRoadKnown(k))return true;const l=lesByKey(k);return!!(l&&l.li<PR.placed)}
 const cgThemeOk=p=>!p[4].split(',').some(t=>CG_TH[t]&&!cgKnown(CG_TH[t]));
 const CG_STEPS=[];[1,2,3,4,5,6,7,8].forEach(d=>CG_STAGE.forEach(s=>{if(d===1&&s.k==='E')return;CG_STEPS.push({i:CG_STEPS.length,id:d+s.k,d,st:s,mode:d===1&&s.mode==='line'?'blind':s.mode})}));
 const CG_ROUTINE=['**Dhamki:** opponent ki pichli chaal kya karna chahti hai? Mere kaunse piece par khatra hai?','**Target:** kaunse pieces bina protection hain? King kitna khula hai? Kaun do kaam kar raha hai?','**Candidates:** 2-3 chaalein chuno. Pehle checks, phir captures, phir threats.','**Line:** ek candidate ko end tak socho. Har chaal par opponent ka sabse forcing jawab lo.','**Ruko:** line tab roko jab koi check, capture ya threat na bache. Phir material gino.','**Blunder check:** chalne se pehle dekho ki opponent ke paas koi check, capture ya threat to nahi bacha.'];
@@ -39,7 +39,7 @@ const cgTarget=step=>Math.round(CG_SEC[step.d]*(step.mode==='see'?1:1.5));
 const cgNeedOk=step=>step.st.k==='F'?9:8;
 function cgPassed(step){const s=cgStat(step);return s.n>=cgMinN(step)&&s.last>=10&&s.ok>=cgNeedOk(step)&&s.med<=cgTarget(step)}
 const cgLesOk=step=>cgKnown(CG_NEED[step.d]);
-const cgOpen=i=>i<=cgS().f&&cgLesOk(CG_STEPS[i]);
+const cgOpen=i=>unlockAll()||i<=cgS().f&&cgLesOk(CG_STEPS[i]);
 async function cgIdx(){if(!CGI)CGI=await(await fetch('packs/calc/index.json')).json();return CGI}
 async function cgChunk(d,k){const key=d+'_'+k;if(!CGB[key])CGB[key]=await(await fetch(`packs/calc/t${d}_${k}.json`)).json();return CGB[key]}
 function cgRange(step){const T=CGI.tiers[step.d];const v=k=>k==='min'?0:k==='max'?4000:T.q[+k[1]];return[v(step.st.lo),v(step.st.hi)]}
@@ -194,5 +194,5 @@ function cgRun(i,opt){opt=opt||{};const step=CG_STEPS[i],app=$('#app');if(!step|
   next()}
 
 /* course level test ka gate: Gym ladder kahan tak pahunchi */
-function cgGateMsg(levelId){const need=CG_GATE[levelId];if(!need||cgS().f>=need||PR.tests[levelId]>=70)return'';const LL=COURSE.find(x=>x.id===levelId);if(LL&&LL.li<PR.placed)return'';const st=CG_STEPS[Math.min(need,CG_STEPS.length)-1];
+function cgGateMsg(levelId){const need=CG_GATE[levelId];if(!need||unlockAll()||cgS().f>=need||PR.tests[levelId]>=70)return'';const LL=COURSE.find(x=>x.id===levelId);if(LL&&LL.li<PR.placed)return'';const st=CG_STEPS[Math.min(need,CG_STEPS.length)-1];
   return`🧠 **Calculation Gym pehle:** is level ka test dene se pehle Gym mein **${cgStepName(st)}** tak pass karo (abhi step ${cgS().f}/${need}). Pro banne ke liye practice course ka hissa hai.`}
