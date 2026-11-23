@@ -259,6 +259,15 @@ main{padding-bottom:120px}
 body.emb header.top,body.emb nav.tabs{display:none!important}
 body.emb main{padding-block:6px 40px}
 body.emb::before{display:none}
+
+/* ---- yaad (spaced review) ---- */
+.srsbar{display:flex;height:10px;border-radius:6px;overflow:hidden;background:var(--surface2)}.srsbar i{display:block;height:100%}
+.b0{background:#E8A317}.b1{background:#6FA8DC}.b2{background:#2F9D6A}.b3{background:#17603F}
+.srsleg{display:flex;flex-wrap:wrap;gap:4px 12px;color:var(--muted);margin-top:6px}.srsleg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px}
+.recall .rcue{font-size:17px;line-height:1.55;margin:0}.recall .blank{color:var(--muted);border-bottom:2px dashed var(--line);padding:0 14px}.recall .rans{color:var(--accent)}
+.rrate{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}.rrate .btn{display:flex;flex-direction:column;align-items:center;gap:2px;min-height:58px;width:100%;margin:0;justify-content:center;white-space:normal}.rrate .btn span{font-size:21px;line-height:1}.rrate .btn.on{background:var(--accent);color:var(--accent-fg,#fff)}
+p.again{margin:0 0 6px;font-size:13px;font-weight:700;color:#C26A00}
+.card.think{background:var(--surface2)}
 </style>
 <link rel="stylesheet" href="ui.css?v=166">
 </head>
@@ -411,7 +420,7 @@ const dayNum=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/86
 
 /* ---------- progress (saved on this device) ---------- */
 const KEY='mindseye.course.v1';
-const DEF=()=>({v:1,g:{},done:{},tests:{},xp:0,streak:{last:'',n:0},stat:{},rev:{},day:{d:'',lesson:0,puz:0,rev:0,xp:0},placed:0,solved:{}});
+const DEF=()=>({v:1,g:{},done:{},tests:{},xp:0,streak:{last:'',n:0},stat:{},rev:{},day:{d:'',lesson:0,puz:0,rev:0,xp:0},placed:0,solved:{},srs:{},srsL:{}});
 let PR=(()=>{try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j&&j.v===1)return Object.assign(DEF(),j)}catch(e){}return DEF()})();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(PR))}catch(e){}}
 function touchDay(){const t=today();if(PR.day.d!==t)PR.day={d:t,lesson:0,puz:0,rev:0,xp:0};
@@ -421,12 +430,10 @@ function addXP(n){touchDay();PR.xp+=n;PR.day.xp+=n;save();chips()}
 function chips(){$('#xp').textContent=PR.xp+' XP';$('#streak').textContent='🔥 '+(PR.streak.last===today()||isYesterday(PR.streak.last)?PR.streak.n:0)}
 function isYesterday(d){const y=new Date(Date.now()-864e5);return d===y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0')}
 /* result of one graded step: feeds weak-topic stats and the review queue */
-function grade(step,ok){if(!step.id)return;const les=step.les;touchDay();
+function grade(step,ok,q){if(!step.id)return;const les=step.les;touchDay();
   const s=PR.stat[les]||(PR.stat[les]={ok:0,bad:0});ok?s.ok++:s.bad++;
-  const r=PR.rev[step.id];
-  if(!ok)PR.rev[step.id]={due:dayNum()+1,box:0};
-  else if(r){r.box++;if(r.box>3)delete PR.rev[step.id];else r.due=dayNum()+[1,3,7,14][r.box]}
-  if(ok&&step.t==='move')PR.solved[step.id]=1;save()}
+  srsTouch(step,ok,q);
+  if(ok&&step.t==='move'&&STEPS[step.id])PR.solved[step.id]=1;save()}
 
 /* ---------- course index ---------- */
 const STEPS={};const ALLLES=[];
@@ -440,8 +447,126 @@ function levelUnlocked(li){return li===0||li<=PR.placed||PR.tests[COURSE[li-1].i
 function lessonUnlocked(les){if(!levelUnlocked(les.li))return false;if(les.lj===0||les.li<PR.placed)return true;const prev=COURSE[les.li].lessons[les.lj-1];return!!PR.done[prev.key]||!!PR.done[les.key]}
 function nextLesson(){for(const L of COURSE){if(L.li<PR.placed)continue;for(const les of L.lessons)if(!PR.done[les.key])return{les};if(!(PR.tests[L.id]>=70))return{test:L}}return null}
 function weakTopics(){return Object.entries(PR.stat).map(([k,s])=>({k,s,n:s.ok+s.bad,acc:s.ok/Math.max(1,s.ok+s.bad)})).filter(x=>x.n>=3&&x.acc<0.7).sort((a,b)=>a.acc-b.acc)}
-function dueReviews(){const d=dayNum();return Object.entries(PR.rev).filter(([id,r])=>r.due<=d&&STEPS[id]).map(([id])=>STEPS[id])}
+function dueReviews(){return srsDue()}
 const lesName=k=>{const l=lesByKey(k);if(l)return l.title;const L=COURSE.find(L=>L.id+'.test'===k);return L?L.title+' test':k};
+
+/* ---------- spaced review: yaad pakka karne ka system ----------
+   PR.srs[id]={box,due,n,lapses,last,s?}. Har graded cheez (sahi bhi) yahan aati hai, lesson ke "yaad" points bhi.
+   Gaps 1,3,7,21,60,120 din. Galat = phir se kal. 120 din wala bhi sahi = pakka (phir saal mein ek baar).
+   Endgame "khel ke dikhao" positions: 7,14,30,60,120,180 din (hafte, phir mahine).
+   Koi bhi naya section (jaise calculation) jud sakta hai: step ko unique id do aur grade(step,ok) bulao.
+   STEPS mein na ho to step ki copy yahin save hoti hai. Ya SRS.register('prefix.',id=>step). */
+const SRS_GAPS=[1,3,7,21,60,120],SRS_PLAY=[7,14,30,60,120,180];
+const SRS_SRC={};const SRS={register(p,fn){SRS_SRC[p]=fn}};
+const srsGaps=s=>s&&s.t==='play'?SRS_PLAY:SRS_GAPS;
+const SRS_KEEP=['t','h','q','md','fen','line','mate','opts','a','why','hint','flip','acc','ok','from','goal','max','lvl','moves','notes','drill','les','pos','arr','hl','txt','depth','sol','n'];
+function srsCopy(s){const o={};SRS_KEEP.forEach(k=>{if(s[k]!==undefined)o[k]=s[k]});return o}
+function srsHash(s){let x=7;for(let i=0;i<s.length;i++)x=(x*31+s.charCodeAt(i))>>>0;return x}
+function srsMastered(r){return r.box>=SRS_GAPS.length}
+/* q: 0 bhool gaya, 1 yaad tha, 2 aasaan (recall cards) */
+function srsTouch(s,ok,q){if(!s||!s.id)return;if(!PR.srs)PR.srs={};const id=s.id,d=dayNum(),G=srsGaps(s);let r=PR.srs[id];
+  if(!r){r=PR.srs[id]={box:0,due:d+(ok?G[0]:1),n:0,lapses:ok?0:1}}
+  else if(!ok){r.box=0;r.due=d+1;r.lapses=(r.lapses||0)+1}
+  else if(r.due<=d){r.box=Math.min(G.length,r.box+(q===2?2:1));r.due=d+(r.box>=G.length?365:G[r.box])}
+  r.n=(r.n||0)+1;r.last=d;
+  if(!STEPS[id.split('#')[0]]&&!/^kp\./.test(id)&&!srsSrc(id))r.s=srsCopy(s)}
+const srsSrc=id=>{for(const p in SRS_SRC)if(id.startsWith(p))return SRS_SRC[p];return null};
+/* lesson ki line se banaya sawaal (lessonQuiz wala "id#k") dobara banao */
+function lineAsk(st,k){try{const mv=st.moves.trim().split(/\s+/).map(x=>x.replace(/^\d+\.(\.\.)?/,'')).filter(Boolean);let p=parseFEN(st.fen||START_FEN);
+  for(let j=0;j<k;j++){const m=findMove(p,mv[j]);if(!m)return null;p=make(p,m)}if(!mv[k])return null;
+  const so=mv.slice(0,k).map((x,j)=>(j%2?'':(j/2+1)+'.')+x).join(' ');
+  return{t:'move',fen:fenOf(p),line:[mv[k]],q:`**${st.h||'Is line'}**: ${so} ke baad agli chaal chalo.`,why:`Sahi chaal: \`${mv[k]}\`. Ye isi lesson ki line ka hissa hai.`,hint:'Lesson mein jo line dekhi thi, use yaad karo.',les:st.les,id:st.id+'#'+k}}catch(e){return null}}
+function kpStep(id){const rest=id.slice(3),j=rest.lastIndexOf('.');const les=lesByKey(rest.slice(0,j));const t=les&&les.yaad&&les.yaad[+rest.slice(j+1)];
+  return t?{t:'recall',id,les:les.key,txt:t}:null}
+/* id se dikhane layak step */
+function srsStep(id){const r=PR.srs&&PR.srs[id];if(STEPS[id])return STEPS[id];
+  if(/^kp\./.test(id))return kpStep(id);const f=srsSrc(id);if(f){try{const s=f(id);if(s)return Object.assign({id},s)}catch(e){}}
+  if(id.includes('#')){const[b,k]=id.split('#');if(STEPS[b]&&STEPS[b].t==='line')return lineAsk(STEPS[b],+k)}
+  return r&&r.s?Object.assign({id},r.s):null}
+function srsDue(){const d=dayNum(),o=[];for(const id in PR.srs||{}){const r=PR.srs[id];if(r.due<=d)o.push([id,r])}
+  return o.sort((a,b)=>a[1].due-b[1].due||a[1].box-b[1].box).map(x=>x[0]).filter(id=>{const s=srsStep(id);return s&&s.t!=='info'})}
+/* lesson poora: uske saare sawaal + yaad points queue mein (jo pehle se nahi) */
+function srsItems(les){const o=[];(les.steps||[]).forEach(s=>{if(s.id&&(['quiz','move','reach','tap','play'].includes(s.t)||(s.t==='line'&&s.drill)))o.push(s.id)});
+  (les.yaad||[]).forEach((t,i)=>o.push('kp.'+les.key+'.'+i));return o}
+function srsEnroll(les,spread){if(!PR.srs)PR.srs={};if(!PR.srsL)PR.srsL={};const d=dayNum();
+  for(const id of srsItems(les))if(!PR.srs[id]){const s=STEPS[id];PR.srs[id]={box:0,due:d+(spread?1+srsHash(id)%14:(s&&s.t==='play'?7:1)),n:0,lapses:0}}
+  PR.srsL[les.key]=1}
+/* purane data ko naye system mein lao: pichhli galtiyan (PR.rev), pehle se kiye lessons (14 din mein phaila ke), calc thread ki galtiyan */
+function srsInit(){if(!PR.srs)PR.srs={};if(!PR.srsL)PR.srsL={};let ch=0;
+  for(const id in PR.rev||{}){if(!PR.srs[id]){const r=PR.rev[id];PR.srs[id]={box:0,due:r.due,n:1,lapses:1};ch=1}}if(PR.rev&&Object.keys(PR.rev).length){PR.rev={};ch=1}
+  for(const les of ALLLES)if(PR.done[les.key]&&!PR.srsL[les.key]){srsEnroll(les,true);ch=1}
+  try{const cm=JSON.parse(localStorage.getItem('calcMiss')||'null');if(Array.isArray(cm)&&cm.length){cm.forEach(x=>{if(x&&x.id&&x.fen&&x.line){const id=String(x.id).startsWith('calc.')?String(x.id):'calc.'+x.id;
+      srsTouch({id,t:'move',fen:x.fen,line:Array.isArray(x.line)?x.line:String(x.line).split(' '),les:'calc',q:x.q||'Calculation: sabse achhi chaal (poori line) dhundo.',why:x.why||'',depth:x.depth},false)}});localStorage.removeItem('calcMiss');ch=1}}catch(e){}
+  if(ch)save()}
+window.reviewAdd=(s,ok)=>{if(s&&s.id){srsTouch(s,!!ok);save()}};
+/* yaad ka meter */
+function srsStats(){const d=dayNum(),o={total:0,due:0,learn:0,grow:0,strong:0,pakka:0,fading:0};
+  for(const id in PR.srs||{}){const r=PR.srs[id];o.total++;if(r.due<=d)o.due++;if(r.due<d-7)o.fading++;
+    if(srsMastered(r))o.pakka++;else if(r.box>=4)o.strong++;else if(r.box>=2)o.grow++;else o.learn++}return o}
+function srsMeterHTML(){const s=srsStats();if(!s.total)return'';const pc=n=>(n/s.total*100).toFixed(1)+'%';
+  return`<div class="srsbar" aria-hidden="true"><i class="b0" style="width:${pc(s.learn)}"></i><i class="b1" style="width:${pc(s.grow)}"></i><i class="b2" style="width:${pc(s.strong)}"></i><i class="b3" style="width:${pc(s.pakka)}"></i></div>
+   <div class="srsleg small"><span><i class="b0"></i>Naya ${s.learn}</span><span><i class="b1"></i>Ban raha ${s.grow}</span><span><i class="b2"></i>Majboot ${s.strong}</span><span><i class="b3"></i>Pakka ${s.pakka}</span></div>
+   ${s.fading?`<p class="small warn" style="margin:4px 0 0">${s.fading} cheezein 7+ din se due hain: yeh dhundhli ho rahi hain. Pehle inhe karo.</p>`:''}`}
+/* board ko a-h ulta (aaina): wahi idea, nayi shakal. Sirf jab castling na ho aur text mein side/file ki baat na ho */
+const mirSq=q=>FILES[7-FILES.indexOf(q[0])]+q[1];
+const MIR_BAD=/kingside|queenside|king side|queen side|[a-h]-file|[a-h] file|castl|O-O|long diagonal|lambi diagonal|\b[a-h][1-8]-[a-h][1-8]\b/i;
+function mirFen(f){const p=f.trim().split(/\s+/);p[0]=p[0].split('/').map(r=>{let x='';for(const c of r)x+=/\d/.test(c)?'.'.repeat(+c):c;return x.split('').reverse().join('').replace(/\.+/g,m=>m.length)}).join('/');
+  if(p[2])p[2]='-';if(p[3]&&p[3]!=='-')p[3]=mirSq(p[3]);return p.join(' ')}
+const mirTxt=t=>t==null?t:String(t).replace(/(^|[^a-wyz])([a-h])([1-8])/g,(m,a,f,r)=>a+mirSq(f+r)).replace(/(^|[^a-zA-Z])([a-h])x/g,(m,a,f)=>a+FILES[7-FILES.indexOf(f)]+'x');
+function mirLine(fen,line){let a=parseFEN(fen),b=parseFEN(mirFen(fen));const o=[];
+  for(const x of line){const m=findMove(a,x);if(!m)return null;const L=legal(b);const n=L.find(y=>sn(y.f)===mirSq(sn(m.f))&&sn(y.t)===mirSq(sn(m.t))&&(y.promo||'')===(m.promo||''));if(!n)return null;o.push(san(b,n,L));a=make(a,m);b=make(b,n)}return o}
+function mirrorStep(s){if(!s.fen||!['move','play','reach'].includes(s.t))return null;const cas=(s.fen.split(/\s+/)[2]||'-');if(cas!=='-')return null;
+  if([s.q,s.why,s.hint].some(t=>t&&MIR_BAD.test(t)))return null;
+  try{const o=Object.assign({},s,{fen:mirFen(s.fen),q:mirTxt(s.q),why:mirTxt(s.why),hint:mirTxt(s.hint),hl:s.hl&&s.hl.map(mirSq),arr:s.arr&&s.arr.map(a=>[mirSq(a[0]),mirSq(a[1]),a[2]]),_mir:1});
+    if(s.from)o.from=mirSq(s.from);
+    if(s.t==='move'){o.line=mirLine(s.fen,s.line||[]);if(!o.line)return null;const st0=parseFEN(s.fen);
+      const m1=a=>{const r=mirLine(s.fen,[a]);return r?r[0]:null};if(s.ok)o.ok=s.ok.map(m1).filter(Boolean);
+      if(s.acc)o.acc=s.acc.map((arr,k)=>{let p=st0;for(let j=0;j<k;j++)p=make(p,findMove(p,s.line[j]));const pf=fenOf(p);return(arr||[]).map(x=>{const r=mirLine(pf,[x]);return r?r[0]:null}).filter(Boolean)})}
+    return o}catch(e){return null}}
+/* review ke liye step: kabhi aaina wala version, quiz mein pehle socho phir options */
+function srsVariant(s){const r=PR.srs[s.id]||{box:0};let o=Object.assign({},s);
+  if(r.box>=1&&Math.random()<.5){const m=mirrorStep(s);if(m)o=m}
+  if(o.t==='quiz'&&r.box>=1)o._think=1;if(o.t==='line'&&o.drill)o._drillNow=1;return o}
+/* aaj ka review set: purane due pehle, max 2 endgame play (lambe hote hain), mix (ek hi lesson ke lagatar nahi) */
+function srsPick(n){const ids=srsDue();const out=[];let plays=0;
+  for(const id of ids){const s=srsStep(id);if(!s)continue;if(s.t==='play'){if(plays>=2)continue;plays++}out.push(s);if(out.length>=n)break}
+  const by={};out.forEach(s=>(by[s.les]=by[s.les]||[]).push(s));const keys=shuffle(Object.keys(by));const mix=[];
+  while(mix.length<out.length)for(const k of keys)if(by[k].length)mix.push(by[k].shift());
+  return mix.map(srsVariant)}
+/* level test / mixed exam ke liye purane sawaal: kamzor aur due wale pehle */
+function oldSteps(lesKeys,n,extra){const ks=new Set(lesKeys);const d=dayNum();
+  const pool=Object.values(STEPS).filter(s=>ks.has(s.les)&&!s.free&&((s.t==='quiz'&&s.opts)||(s.t==='move'&&s.fen&&s.line&&s.line.length)||(s.t==='reach'&&s.fen))).concat(extra||[]);
+  const seen=new Set();const sc=s=>{const r=(PR.srs||{})[s.id];return(r?(r.lapses||0)*2+(r.due<=d?1:0)+(r.box<2?1:0):1)+Math.random()*2};
+  return pool.map(s=>[sc(s),s]).sort((a,b)=>b[0]-a[0]).map(x=>x[1]).filter(s=>!seen.has(s.id)&&seen.add(s.id)).slice(0,n)}
+
+/* ---------- visualization: board chhupa ke socho ---------- */
+const VIZ_P={K:'King',Q:'Queen',R:'Rook',B:'Bishop',N:'Knight',P:'Pawn'};
+function knightDist(a,b){const q=[[a,0]],seen=new Set([a]);while(q.length){const[x,d]=q.shift();if(x===b)return d;for(const t of emptyAtt(x,'N'))if(!seen.has(t)){seen.add(t);q.push([t,d+1])}}return-1}
+function kingDist(a,b){return Math.max(Math.abs((a&7)-(b&7)),Math.abs((a>>3)-(b>>3)))}
+function numOpts(ans,lo,hi){const s=new Set([ans]);let k=0;while(s.size<4&&k++<40){const v=ans+pick([-2,-1,1,2,3]);if(v>=lo&&v<=hi)s.add(v)}const o=shuffle([...s]);return{opts:o.map(String),a:o.indexOf(ans)}}
+function posText(st){const w=[],b=[];const ord='KQRBNP';for(const U of ord)for(let i=0;i<64;i++){const p=st.b[i];if(p&&p.toUpperCase()===U)(isW(p)?w:b).push((U==='P'?'':U)+sn(i))}
+  return['**White:** '+w.join(', '),'**Black:** '+b.join(', ')]}
+let VIZ_LINES=null;
+function vizLines(){if(VIZ_LINES)return VIZ_LINES;VIZ_LINES=Object.values(STEPS).filter(s=>s.t==='line'&&s.moves&&!s.fen).map(s=>s.moves.trim().split(/\s+/).map(x=>x.replace(/^\d+\.(\.\.)?/,'')).filter(Boolean)).filter(m=>m.length>=4);return VIZ_LINES}
+function vizStep(lv){const kinds=lv<=1?['color','color','knight','king','bishop']:lv===2?['knight','bishop','line','line','color']:['line','line','blind','blind','knight'];
+  for(let tr=0;tr<20;tr++){const k=pick(kinds);
+  if(k==='color'){const s=rnd(64);return{t:'quiz',q:`Board dekhe bina: \`${sn(s)}\` kis rang ka square hai?`,opts:['Light','Dark'],a:light(s)?0:1,why:`File number + rank: even = dark, odd = light. \`${sn(s)}\` = ${FILES.indexOf(sn(s)[0])+1}+${sn(s)[1]} = ${FILES.indexOf(sn(s)[0])+1+(+sn(s)[1])}, isliye **${light(s)?'light':'dark'}**.`}}
+  if(k==='knight'){const a=rnd(64),b=rnd(64);if(a===b)continue;const d=knightDist(a,b);const o=numOpts(d,1,6);return{t:'quiz',q:`Khaali board, dimaag mein: knight \`${sn(a)}\` se \`${sn(b)}\` kam se kam kitni chaal mein?`,...o,why:`**${d}** chaal. Knight har chaal mein rang badalta hai: rang same ho to chaalein even, alag ho to odd.`}}
+  if(k==='king'){const a=rnd(64),b=rnd(64);if(a===b)continue;const d=kingDist(a,b);const o=numOpts(d,1,7);return{t:'quiz',q:`King \`${sn(a)}\` se \`${sn(b)}\` kitni chaal mein (khaali board)?`,...o,why:`King tirchha bhi chalta hai: chaalein = file ka fark aur rank ka fark, dono mein jo bada ho. Yahan **${d}**.`}}
+  if(k==='bishop'){const a=rnd(64);const t=emptyAtt(a,'B');const yes=Math.random()<.5;const b=yes?pick(t):pick(ALL.filter(x=>x!==a&&!t.includes(x)));
+    return{t:'quiz',q:`Khaali board: bishop \`${sn(a)}\` kya **ek chaal** mein \`${sn(b)}\` pahunch sakta hai?`,opts:['Haan','Nahi'],a:yes?0:1,why:yes?`Haan, dono ek hi diagonal par hain.`:(light(a)!==light(b)?`Nahi: dono alag rang ke squares hain, bishop kabhi nahi pahunchega.`:`Nahi: rang same hai par ek diagonal par nahi. Do chaal lagengi.`)}}
+  if(k==='line'){const L=vizLines();if(!L.length)continue;const mv=pick(L);const n=Math.min(mv.length,lv>=3?6+rnd(5):3+rnd(4));let st=parseFEN(START_FEN);let ok=true;
+    for(let j=0;j<n;j++){const m=findMove(st,mv[j]);if(!m){ok=false;break}st=make(st,m)}if(!ok)continue;
+    const occ=ALL.filter(i=>st.b[i]&&st.b[i].toUpperCase()!=='P'&&st.b[i]!==parseFEN(START_FEN).b[i]);if(!occ.length)continue;const s=pick(occ);
+    const nm=x=>x?(isW(x)?'White ':'Black ')+VIZ_P[x.toUpperCase()]:'Khaali';const ans=nm(st.b[s]);
+    const o=new Set([ans]);for(const c of shuffle(['White Knight','Black Knight','White Bishop','Black Bishop','White Queen','Black Queen','Khaali','White Pawn','Black Pawn']))if(o.size<4)o.add(c);const opts=shuffle([...o]);
+    const so=mv.slice(0,n).map((x,j)=>(j%2?'':(j/2+1)+'.')+x).join(' ');
+    return{t:'quiz',q:`Board chhupa hai. Shuru ki position se yeh chaalein dimaag mein chalo:\n\n**${so}**\n\nAb \`${sn(s)}\` par kya hai?`,opts,a:opts.indexOf(ans),why:`\`${sn(s)}\` par **${ans}**. Aankh band karke line chalana = calculation ki neev.`}}
+  if(k==='blind'){const pool=Object.values(STEPS).filter(s=>s.t==='move'&&s.fen&&s.line&&s.line.length===1&&!s.free);if(!pool.length)continue;const s=pick(pool);const st=parseFEN(s.fen);
+    const L=legal(st);const good=findMove(st,s.line[0]);if(!good||L.length<4)continue;const gs=san(st,good,L);
+    const others=shuffle(L.filter(m=>!(m.f===good.f&&m.t===good.t&&(m.promo||'')===(good.promo||''))&&!(s.ok||[]).some(a=>sameSan(a,san(st,m,L)))&&!mates(make(st,m)))).slice(0,3).map(m=>san(st,m,L));const opts=shuffle([gs,...others]);
+    return{t:'quiz',pos:posText(st),q:`Board nahi dikhega. Upar pieces ki list padho, position dimaag mein banao. **${st.w?'White':'Black'} ki chaal:** sabse achhi chaal kaunsi?`,opts,a:opts.indexOf(gs),why:`Sahi: \`${gs}\`. ${s.why||''}`}}}
+  return{t:'quiz',q:'`e4` kis rang ka square hai?',opts:['Light','Dark'],a:0,why:'5+4=9, odd = light.'}}
 
 /* ---------- board ---------- */
 function xy(n,p){const f=FILES.indexOf(n[0]),r=+n[1]-1;return p==='b'?[7-f+.5,r+.5]:[f+.5,7-r+.5]}
@@ -574,7 +699,7 @@ function setCtx(c){TUT.ctx=c;if(TUT.open)drawTutor()}
 function renderStep(s,ctx){const el=h('div','stack step');
   const base={where:ctx.where||'Lesson',lesson:ctx.lessonTitle,text:s.md||s.q,fen:s.fen,why:s.why,hint:s.hint};setCtx(base);
   if(s.h)el.appendChild(h('h2','',inl(s.h)));
-  ({info:stInfo,quiz:stQuiz,move:stMove,reach:stReach,tap:stTap,line:stLine,play:stPlay})[s.t](s,el,ctx,base);
+  ({info:stInfo,quiz:stQuiz,move:stMove,reach:stReach,tap:stTap,line:stLine,play:stPlay,recall:stRecall})[s.t](s,el,ctx,base);
   return el}
 function fb(el,ok,title,body){let f=el.querySelector('.fb');if(!f){f=h('div','fb');el.appendChild(f)}f.className='fb '+(ok?'ok':'no');f.innerHTML=`<h3>${title}</h3>${body?md(body):''}`;return f}
 /* theory slide ka board: 👁 button se chhupao / wapas dikhao */
@@ -587,13 +712,26 @@ function stInfo(s,el,ctx){if(s.fen||s.pieces){const bh=h('div');el.appendChild(b
   el.appendChild(h('div','tut',md(s.md)));ctx.done(null)}
 function stQuiz(s,el,ctx,base){if(s.fen){const bh=h('div');el.appendChild(bh);Board(bh,{st:parseFEN(s.fen),hl:s.hl,arr:s.arr,persp:s.flip?'b':'w'})}
   if(s.pos)el.appendChild(h('div','pos',s.pos.map(l=>`<div>${inl(l)}</div>`).join('')));
-  el.appendChild(h('p','prompt',inl(s.q)));const ch=h('div','choices'+(s.opts.some(o=>o.length>18)?' one':''));el.appendChild(ch);let first=true,fin=false;
+  el.appendChild(h('p','prompt',s.q.includes('\n')?md(s.q):inl(s.q)));const ch=h('div','choices'+(s.opts.some(o=>o.length>18)?' one':''));el.appendChild(ch);let first=true,fin=false;
+  if(s._think){ch.hidden=true;const tb=h('div','card think stack');tb.innerHTML=`<p class="small" style="margin:0">🧠 Pehle <b>bina options</b> ke jawab socho (ya bolo). Phir options kholo.</p>`;const ob=h('button','btn primary block','Soch liya, options dikhao ›');tb.appendChild(ob);el.insertBefore(tb,ch);ob.onclick=()=>{tb.remove();ch.hidden=false}}
   const ord=s.opts.map((_,i)=>i);for(let k=ord.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[ord[k],ord[j]]=[ord[j],ord[k]]}
   const btnOf=[];ord.forEach(i=>{const o=s.opts[i];const b=h('button','choice',inl(o));ch.appendChild(b);btnOf[i]=b;b.onclick=()=>{if(fin)return;
     if(i===s.a){b.classList.add('good');fin=true;fb(el,true,first?'Sahi! ✓':'Ab sahi ✓',s.why);if(first)addXP(10);grade(s,first);ctx.done(first)}
     else{b.classList.add('bad');setCtx(Object.assign({},base,{tried:o,answer:s.opts[s.a]}));
       if(ctx.test){fin=true;btnOf[s.a].classList.add('good');fb(el,false,'Galat',`Sahi jawab: **${s.opts[s.a]}**\n\n${s.why||''}`);grade(s,false);ctx.done(false)}
       else{first=false;fb(el,false,'Nahi, dobara socho',s.hint||'')}}}})}
+/* yaad point ka recall card: pehle khud socho, phir dikhao, phir khud ko rate karo */
+function kpCue(t){const i=t.indexOf(': ');if(i>3&&i<70)return[t.slice(0,i+1),t.slice(i+2)];const e=t.indexOf(' = ');if(e>2&&e<60)return[t.slice(0,e)+' =',t.slice(e+3)];
+  const w=t.split(' ');let k=Math.max(2,Math.ceil(w.length*.35));const odd=x=>((x.match(/\*\*/g)||[]).length%2)||((x.match(/`/g)||[]).length%2);while(k<w.length-1&&odd(w.slice(0,k).join(' ')))k++;return[w.slice(0,k).join(' '),w.slice(k).join(' ')]}
+function stRecall(s,el,ctx){const[a,b]=kpCue(s.txt);const L=lesByKey(s.les);
+  el.appendChild(h('p','eyebrow','🧠 Yaad karo'+(L&&ctx.where!=='Spaced review'?' · '+esc(L.title):'')));
+  el.appendChild(h('p','prompt','Is point ko poora karo. <b>Pehle khud socho ya bol ke batao</b>, phir dikhao.'));
+  const card=h('div','card recall');card.innerHTML=`<p class="rcue">${inl(a)} <span class="blank">…?</span></p>`;el.appendChild(card);
+  const sb=h('button','btn primary block','Jawab dikhao');el.appendChild(sb);
+  sb.onclick=()=>{sb.remove();card.innerHTML=`<p class="rcue">${inl(a)} <b class="rans">${inl(b)}</b></p>`;
+    const row=h('div','rrate');row.innerHTML='<p class="small muted" style="grid-column:1/-1;margin:0">Kitna yaad tha? Imaandari se:</p>';
+    [['😕','Bhool gaya',0],['🙂','Yaad tha',1],['😎','Aasaan',2]].forEach(([e,t,q])=>{const bt=h('button','btn',`<span>${e}</span>${t}`);bt.onclick=()=>{row.querySelectorAll('button').forEach(x=>x.disabled=true);bt.classList.add('on');
+      grade(s,q>0,q);fb(el,q>0,q===0?'Koi baat nahi: kal phir aayega':q===2?'Badhiya! Agla gap lamba':'Shabaash ✓',q===0&&L?'Lesson notes mein ek baar padh lo.':'');ctx.done(q>0)};row.appendChild(bt)});el.appendChild(row)}}
 /* puzzle: find the move(s) */
 function stMove(s,el,ctx,base){const st0=parseFEN(s.fen);let st=st0;const side=st0.w?'w':'b';
   const line=s.line||[];const nUser=Math.ceil(line.length/2);let ply=0,first=true,fin=false,tried=[];
@@ -667,12 +805,12 @@ function stLine(s,el,ctx){const st0=parseFEN(s.fen||START_FEN);const moves=s.mov
   function drill(){nav.remove();note.innerHTML=md(`Ab yaad se khelo! Tum **${s.drill==='w'?'White':'Black'}** ho. Opponent apne aap khelega.`);let k=0,mist=0;
     const me=s.drill==='w';B.o.persp=me?'w':'b';
     const step=()=>{ml.innerHTML=moves.slice(0,k).map(esc).join(' ');B.set({st:sts[k]});
-      if(k>=moves.length){fb(el,mist<=1,mist?`Line poori! ${mist} galti`:'Perfect! Poori line yaad hai ✓','');if(mist<=1)addXP(15);ctx.done(mist<=1);return}
+      if(k>=moves.length){fb(el,mist<=1,mist?`Line poori! ${mist} galti`:'Perfect! Poori line yaad hai ✓','');if(mist<=1)addXP(15);if(s.id)grade(s,mist<=1);ctx.done(mist<=1);return}
       if(sts[k].w===me){B.o.side=me?'w':'b';B.lock=false}else{B.lock=true;setTimeout(()=>{B.last=[sn(mv[k].f),sn(mv[k].t)];k++;step()},500)}};
     B.o.onMove=m=>{if(sameSan(sanOf(sts[k],m),moves[k])){B.last=[sn(m.f),sn(m.t)];k++;const f=el.querySelector('.fb');if(f)f.remove();step()}
       else{mist++;const e=findMove(sts[k],moves[k]);B.marks={[sn(e.f)]:'ring'};B.draw();B.marks={};fb(el,false,'Nahi, yeh line ki chaal nahi','Ring wala piece chalo. Sahi chaal: **'+moves[k]+'**')}};
     step()}
-  draw()}
+  draw();if(s._drillNow&&s.drill){i=moves.length;draw();drill()}}
 /* play a position against the built-in engine to reach a goal */
 function stPlay(s,el,ctx){const st0=parseFEN(s.fen);const me=st0.w;let st=st0,n=0,fin=false,hist=[];
   el.appendChild(h('p','prompt',inl(s.q)));const info=h('div','row');el.appendChild(info);const bh=h('div');el.appendChild(bh);
@@ -701,6 +839,27 @@ function stPlay(s,el,ctx){const st0=parseFEN(s.fen);const me=st0.w;let st=st0,n=
   // fix status text after reply (san must be computed before the move)
   status('')}
 
+/* ---------- review / exam / visualization screens (Main Course aur Road dono) ---------- */
+function srsSession(app,o){const set=srsPick(o.n||15);
+  if(!set.length){app.innerHTML=`<div class="stack center"><div class="big">✅</div><h2>Aaj koi review baaki nahi</h2><p class="muted">Jo seekha hai woh sahi din par yahan wapas aayega (1, 3, 7, 21, 60, 120 din).</p><div class="card stack" style="text-align:left"><h3>🧠 Yaad ka meter</h3>${srsMeterHTML()||'<p class="small muted">Abhi kuch nahi. Pehla lesson karo.</p>'}</div><button class="btn block" data-go="${o.viz}">👁 Board-hidden drill</button><button class="btn primary block" data-go="${o.back}">${o.backTxt}</button></div>`;return}
+  player(app,set,{back:o.back,title:s=>lesName(s.les),head:s=>'Review · '+(s.les==='calc'?'Calculation':lesName(s.les))+(s._mir?' · 🪞 aaina version':''),where:'Spaced review',finish:res=>{const ok=res.filter(Boolean).length;if(o.onDone)o.onDone(set.length);const left=srsDue().length;
+    app.innerHTML=`<div class="stack center"><div class="big">🔁</div><h1>Review poora</h1><p>${ok}/${set.length} sahi. Sahi wale ab lambe gap ke baad aayenge, galat wale kal.</p><div class="card stack" style="text-align:left"><h3>🧠 Yaad ka meter</h3>${srsMeterHTML()}</div>${left?`<button class="btn primary block" data-re="1" data-go="${o.self}">Aur review (${left} due) ›</button>`:''}<button class="btn ${left?'':'primary '}block" data-go="${o.back}">${o.backTxt}</button></div>`}})}
+function examSession(app,o){const set=oldSteps(o.keys,o.n||25,o.extra).map(s=>Object.assign({},s));
+  if(set.length<5){app.innerHTML=`<div class="stack center"><div class="big">🧩</div><h2>Mixed exam ke liye abhi kam sawaal hain</h2><p>Pehle aur lessons poore karo.</p><button class="btn primary block" data-go="${o.back}">Wapas</button></div>`;return}
+  app.innerHTML=`<div class="stack center"><div class="big">🧩</div><h1>${esc(o.title)}</h1><div class="card tut">${md(`**${set.length} sawaal**, sab purane lessons se mila-jula (${o.range}). Kamzor aur bhoole hue sawaal zyada aate hain. Har sawaal ek hi koshish. **70%** = pass. Galat sawaal kal se review mein.`)}</div>${o.best!=null?`<p class="muted">Best: ${o.best}%</p>`:''}<button class="btn primary block" id="exgo">Exam shuru ›</button><button class="btn block" data-go="${o.back}">Baad mein</button></div>`;
+  $('#exgo').onclick=()=>{app.innerHTML='';window.scrollTo(0,0);player(app,set,{test:true,back:o.back,title:s=>lesName(s.les),head:s=>o.title+' · '+lesName(s.les),where:'Mixed exam',finish:res=>{const ok=res.filter(Boolean).length,pct=Math.round(ok/set.length*100);o.store(pct);
+    const by={};set.forEach((s,k)=>{const n=lesName(s.les);(by[n]=by[n]||[0,0]);by[n][1]++;if(res[k])by[n][0]++});const weak=Object.entries(by).filter(([n,[a,b]])=>a<b).sort((x,y)=>x[1][0]/x[1][1]-y[1][0]/y[1][1]).slice(0,8);
+    app.innerHTML=`<div class="stack center"><div class="big">${pct>=70?'🏅':'📘'}</div><h1>${pct}%</h1><p>${pct>=70?'Mixed exam pass! Purani cheezein yaad hain.':'Abhi 70% nahi. Neeche wale topics dobara dekho. Galat sawaal kal review mein aayenge.'}</p>${weak.length?`<div class="card stack" style="text-align:left"><h3>Dhyan do</h3><ul>${weak.map(([n,[a,b]])=>`<li>${esc(n)}: ${a}/${b}</li>`).join('')}</ul></div>`:''}<button class="btn primary block" data-go="${o.back}">Wapas</button></div>`}})}}
+const VIZ_LV=['Basic','Medium','Mushkil'];
+function vizSession(app,o){const lv=PR.vizLv||1;
+  app.innerHTML=`<div class="stack"><button class="btn small backbtn" data-go="${o.back}">‹ Wapas</button><h1>👁 Board-hidden drill</h1><p class="muted">Board ke bina socho. Basic: squares ke rang, knight aur king ka raasta. Medium: opening line dimaag mein chalao. Mushkil: lambi line, aur pieces ki list padh ke best chaal. Jitna chaho utna, kabhi khatam nahi hota.</p>
+   <div class="seg" id="vzl">${VIZ_LV.map((t,k)=>`<button data-l="${k+1}" class="${lv===k+1?'on':''}">${t}</button>`).join('')}</div>
+   <div class="card small">${PR.viz&&PR.viz.n?`Ab tak: ${PR.viz.ok}/${PR.viz.n} sahi (${Math.round(PR.viz.ok/PR.viz.n*100)}%)`:'Pehli baar? Basic se shuru karo.'}</div><button class="btn primary block" id="vzgo">10 sawaal shuru ›</button></div>`;
+  app.querySelector('#vzl').onclick=e=>{const b=e.target.closest('[data-l]');if(b){PR.vizLv=+b.dataset.l;save();vizSession(app,o)}};
+  app.querySelector('#vzgo').onclick=()=>{const L=PR.vizLv||1;const set=Array.from({length:10},()=>vizStep(L));app.innerHTML='';window.scrollTo(0,0);
+    player(app,set,{test:true,again:true,back:o.back,title:()=>'Visualization',head:()=>'👁 Board-hidden · '+VIZ_LV[L-1],where:'Visualization drill',finish:res=>{const ok=res.filter(Boolean).length;PR.viz=PR.viz||{n:0,ok:0};PR.viz.n+=set.length;PR.viz.ok+=ok;touchDay();save();if(o.onDone)o.onDone(set.length);
+      app.innerHTML=`<div class="stack center"><div class="big">👁</div><h1>${ok}/${set.length}</h1><p>${ok>=9&&L<3?'Bahut badhiya! Agla level try karo.':ok>=7?'Achha! Roz 10 karo, dimaag ka board saaf hota jayega.':'Dheere dheere. Har sawaal mein pehle square ka naam dimaag mein dekho.'}</p><button class="btn primary block" data-re="1" data-go="${o.self}">Aur 10 ›</button><button class="btn block" data-go="${o.back}">Wapas</button></div>`}})}}
+
 /* ---------- views ---------- */
 let VIEW={};
 function go(hash){if(location.hash!==hash)location.hash=hash;else route()}
@@ -710,24 +869,27 @@ function route(){closeTutor();const p=(location.hash||'#/').slice(2).split('/');
   tabs(p[0]==='puzzles'?'puz':p[0]==='play'?'play':'course');
   if(p[0]==='next'){const nx=nextLesson();location.replace(nx?(nx.test?'#/test/'+nx.test.li:'#/lesson/'+nx.les.li+'/'+nx.les.lj):'#/');return}
   if(p[0]==='level')vLevel(+p[1]);else if(p[0]==='lesson')vLesson(+p[1],+p[2]);else if(p[0]==='test')vTest(+p[1]);
-  else if(p[0]==='review')vReview();else if(p[0]==='puzzles')vPuzzles();else if(p[0]==='play')vPlay();else if(p[0]==='place')vPlace();else vHome();chips()}
+  else if(p[0]==='review')vReview();else if(p[0]==='viz')vViz();else if(p[0]==='exam')vExam(+p[1]);else if(p[0]==='puzzles')vPuzzles();else if(p[0]==='play')vPlay();else if(p[0]==='place')vPlace();else vHome();chips()}
 function tabs(on){document.querySelectorAll('nav.tabs [data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===on))}
 function coachLine(){const nx=nextLesson(),due=dueReviews().length,weak=weakTopics()[0];touchDay();
   if(!Object.keys(PR.done).length&&!PR.placed)return'Namaste! Main tumhara chess coach hoon. Hum bilkul shuru se chalenge, ek-ek step. Agar thoda chess aata hai to pehle **placement test** de do, main sahi level se shuru karunga.';
-  if(due)return`Kal ki kuch galtiyan dobara dekhni hain (${due}). Pehle **Review** karo, phir naya lesson. Yahi pro players ka tareeka hai.`;
+  if(due)return`Aaj **${due}** purani cheezein review ke liye due hain (sawaal, galtiyan aur yaad points). Pehle **Review** karo, phir naya lesson. Isi se seekha hua pakka hota hai.`;
+  const exL=COURSE.find(L=>L.li%2===1&&PR.tests[L.id]>=70&&!((PR.exam||{})[L.id]>=70));if(exL)return`Level 1-${exL.li+1} ka **Mixed exam** baaki hai. Isse pata chalega purana kitna yaad hai. Level ${exL.li+1} page par milega.`;
   if(weak)return`Tumhara weak topic: **${lesName(weak.k)}** (${Math.round(weak.acc*100)}% sahi). Is lesson ko dobara karo, phir aage badhenge.`;
   if(nx&&nx.test)return`**${nx.test.title}** ke saare lessons ho gaye! Ab test do. 70% aaye to agla level khulega.`;
   if(!nx)return'Wah! Poora course ho gaya. Ab roz puzzles, coach ke saath games aur master games dekhte raho.';
   return`Aaj ka agla lesson: **${nx.les.title}**. Chalo shuru karte hain!`}
 function vHome(){const app=$('#app');touchDay();save();const nx=nextLesson(),due=dueReviews(),D=PR.day;
   const doneN=Object.keys(PR.done).length,pct=Math.round(doneN/ALLLES.length*100);
-  const tasks=[[D.lesson>=1,'1 lesson poora karo'],[D.puz>=5,`5 puzzles solve karo (${Math.min(D.puz,5)}/5)`],[!due.length||D.rev>=Math.min(due.length+D.rev,8),'Review: purani galtiyan dobara'],[D.xp>=60,`60 XP kamao (${Math.min(D.xp,60)}/60)`]];
+  const tasks=[[D.lesson>=1,'1 lesson poora karo'],[D.puz>=5,`5 puzzles solve karo (${Math.min(D.puz,5)}/5)`],[!due.length||D.rev>=Math.min(due.length+D.rev,15),`Review: purana dobara (${due.length} due)`],[D.xp>=60,`60 XP kamao (${Math.min(D.xp,60)}/60)`]];
   let o=`<div class="stack">
   <div class="card coach"><div class="row" style="gap:12px;flex-wrap:nowrap"><div class="ava">🤖</div><div class="stack" style="gap:6px"><span class="eyebrow">Tumhara coach</span><div class="tut">${md(coachLine())}</div></div></div>
    <div class="row">${nx?`<button class="btn primary" data-go="${nx.test?'#/test/'+nx.test.li:'#/lesson/'+nx.les.li+'/'+nx.les.lj}">${nx.test?'Test do ›':'Agla lesson ›'}</button>`:''}
    ${due.length?`<button class="btn" data-go="#/review">Review (${due.length})</button>`:''}${!doneN&&!PR.placed?'<button class="btn" data-go="#/place">Placement test</button>':''}<button class="btn" data-act="tutor">Coach se pucho</button></div></div>
   <div class="card stack"><div class="row" style="justify-content:space-between"><h3>Aaj ke kaam</h3><small class="muted">${today()}</small></div>
    ${tasks.map(([d,t])=>`<div class="task${d?' ok':''}"><i>${d?'✓':''}</i>${esc(t)}</div>`).join('')}</div>
+  <div class="card stack"><div class="row" style="justify-content:space-between"><h3>🧠 Yaad ka meter</h3><small class="muted">${srsStats().total} cheezein</small></div>${srsMeterHTML()||'<p class="small muted">Lesson poora karte hi uske sawaal aur yaad points yahan aate hain, aur sahi din par wapas poochhe jaate hain (1, 3, 7, 21, 60, 120 din).</p>'}
+   <div class="row"><button class="btn${due.length?' primary':''}" data-go="#/review">🔁 Review (${due.length})</button><button class="btn" data-go="#/viz">👁 Board-hidden drill</button></div></div>
   <div class="row" style="justify-content:space-between;align-items:end"><h2>Course: basics se pro tak</h2><small class="muted">${pct}%</small></div>
   <div class="prog"><i style="width:${pct}%"></i></div>
   <a class="card notescta" href="notes.html"><span class="eyebrow">📝 Study notes</span><b>Poore course ke notes, diagrams ke saath</b><small class="muted">Har lesson ka saar, board diagrams aur sawal-jawab. Revision ke liye.</small></a>`;
@@ -743,17 +905,20 @@ function vLevel(li){const L=COURSE[li],app=$('#app');if(!L)return go('#/');const
     o+=`<button class="les${u?'':' locked'}" ${u?`data-go="#/lesson/${li}/${lj}"`:'disabled'}><span class="lck">${d?'✓':u?lj+1:'🔒'}</span><span class="stack" style="gap:2px;text-align:left"><b>${esc(les.title)}</b><small>${esc(les.sub||'')}${s&&s.ok+s.bad?` · ${Math.round(s.ok/(s.ok+s.bad)*100)}% sahi`:''}</small></span></button>`});
   if(L.test){const t=PR.tests[L.id];const u=un&&L.lessons.every(l=>PR.done[l.key])||t!=null||li<PR.placed;
     o+=`<button class="les test${u?'':' locked'}" ${u?`data-go="#/test/${li}"`:'disabled'}><span class="lck">${t>=70?'🏅':'📝'}</span><span class="stack" style="gap:2px;text-align:left"><b>Level test</b><small>${t!=null?'Best: '+t+'%':u?'70% par agla level khulega':'Pehle saare lessons poore karo'}</small></span></button>`}
+  if(li%2===1){const t=PR.tests[L.id],ex=(PR.exam||{})[L.id],u=t>=70||li<PR.placed;
+    o+=`<button class="les test${u?'':' locked'}" ${u?`data-go="#/exam/${li}"`:'disabled'}><span class="lck">${ex>=70?'🏅':'🧩'}</span><span class="stack" style="gap:2px;text-align:left"><b>Mixed exam: Level 1-${li+1}</b><small>${ex!=null?'Best: '+ex+'%':u?'25 sawaal, sab purane levels se mila-jula':'Pehle level test pass karo'}</small></span></button>`}
   o+=`<button class="btn block" data-go="#/play">♟ Coach ke saath game khelo</button></div>`;app.innerHTML=o;setCtx({where:'Level '+(li+1)+': '+L.title})}
 function player(app,steps,opt){// generic step-by-step player for lessons, tests, reviews
-  let i=0;const res=[];const top=h('div','qhead');top.innerHTML=`<button class="x" aria-label="Back">‹</button><div class="prog"><i></i></div><span class="count"></span><button class="btn small tbtn">🤖 Coach</button>`;top.querySelector('.tbtn').onclick=openTutor;app.appendChild(top);
+  let i=0;const res=[];steps=steps.slice();const again=opt.again!=null?opt.again:!opt.test,ins=new Set();const top=h('div','qhead');top.innerHTML=`<button class="x" aria-label="Back">‹</button><div class="prog"><i></i></div><span class="count"></span><button class="btn small tbtn">🤖 Coach</button>`;top.querySelector('.tbtn').onclick=openTutor;app.appendChild(top);
   top.querySelector('.x').onclick=()=>go(opt.back);
   const stage=h('div');app.appendChild(stage);const foot=h('div','foot');const nb=h('button','btn primary block','Aage ›');foot.appendChild(nb);app.appendChild(foot);
   function show(){const s=steps[i];top.querySelector('.prog i').style.width=(i/steps.length*100)+'%';top.querySelector('.count').textContent=(i+1)+'/'+steps.length;
     stage.innerHTML='';nb.disabled=true;nb.textContent=i===steps.length-1?'Poora karo ✓':'Aage ›';
     if(opt.head)stage.appendChild(h('p','eyebrow',esc(opt.head(s))));
-    stage.appendChild(renderStep(s,{test:opt.test,lessonTitle:opt.title(s),where:opt.where,done:ok=>{res[i]=ok;nb.disabled=false;if(ok!=null)setTimeout(()=>{const f=stage.querySelector('.fb');(f||foot).scrollIntoView({behavior:'smooth',block:'nearest'})},80)}}));
+    if(s._again)stage.appendChild(h('p','again','🔁 Dobara: yeh sawaal thodi der pehle galat hua tha'));
+    stage.appendChild(renderStep(s,{test:opt.test,lessonTitle:opt.title(s),where:opt.where,done:ok=>{res[i]=ok;nb.disabled=false;if(ok===false&&again&&!ins.has(s)&&(s._again||0)<2&&s.t!=='play'&&s.t!=='line'&&s.t!=='recall'){ins.add(s);steps.splice(Math.min(i+4,steps.length),0,Object.assign({},s,{_again:(s._again||0)+1}));if(/✓/.test(nb.textContent))nb.textContent=/Finish/.test(nb.textContent)?'Next ›':'Aage ›'}if(ok!=null)setTimeout(()=>{const f=stage.querySelector('.fb');(f||foot).scrollIntoView({behavior:'smooth',block:'nearest'})},80)}}));
     if(s.t==='info')nb.disabled=false;window.scrollTo(0,0)}
-  nb.onclick=()=>{if(i<steps.length-1){i++;show()}else opt.finish(res)};show()}
+  nb.onclick=()=>{if(i<steps.length-1){i++;show()}else opt.finish(steps.map((x,k)=>[x,res[k]]).filter(x=>!x[0]._again).map(x=>x[1]))};show()}
 
 /* hands-on quiz after every lesson, built only from that lesson */
 function lessonQuiz(les){const L0=COURSE[les.li]||COURSE.find(L=>L.lessons.includes(les));const S=(les.steps||[]).concat(((L0&&L0.test)||[]).filter(t=>t.les===les.key));const hands=[],mcq=[];
@@ -772,21 +937,24 @@ function vLesson(li,lj){const L=COURSE[li],les=L&&L.lessons[lj];if(!les)return g
   if(!lessonUnlocked(les)){app.innerHTML=`<div class="card stack"><p>🔒 Pehle pichla lesson poora karo.</p><button class="btn" data-go="#/level/${li}">‹ Level</button></div>`;return}
   player(app,les.steps,{back:'#/level/'+li,title:()=>les.title,where:'Lesson',finish:res=>{const qz=lessonQuiz(les);if(qz.length)return runLessonQuiz(li,lj,qz,res);lessonDone(li,lj,res,null)}})}
 function runLessonQuiz(li,lj,qz,lres){const L=COURSE[li],les=L.lessons[lj],app=$('#app');app.innerHTML=`<div class="stack center"><div class="big">🎯</div><h1>Lesson quiz</h1><p>${esc(les.title)}</p><div class="card tut">${md(`Ab is lesson ka chhota quiz: **${qz.length} sawaal**, zyadatar board par. **80%** sahi karo to lesson poora aur agla lesson khulega.`)}</div><button class="btn primary block" id="qgo">Quiz shuru karo ›</button></div>`;
-  $('#qgo').onclick=()=>{app.innerHTML='';window.scrollTo(0,0);player(app,qz,{test:true,back:'#/level/'+li,title:()=>les.title+' · quiz',head:()=>'Quiz · '+les.title,where:'Lesson quiz',finish:res=>{
+  $('#qgo').onclick=()=>{app.innerHTML='';window.scrollTo(0,0);player(app,qz,{test:true,again:true,back:'#/level/'+li,title:()=>les.title+' · quiz',head:()=>'Quiz · '+les.title,where:'Lesson quiz',finish:res=>{
     const ok=res.filter(Boolean).length,pct=Math.round(ok/qz.length*100);PR.lq=PR.lq||{};const prev=PR.lq[les.key]||0;PR.lq[les.key]=Math.max(prev,pct);save();
     if(pct>=80||PR.done[les.key])lessonDone(li,lj,lres,{pct,ok,n:qz.length,bonus:pct>prev&&pct>=80});
     else app.innerHTML=`<div class="stack center"><div class="big">📘</div><h1>${pct}%</h1><p>${ok}/${qz.length} sahi. Lesson poora karne ke liye 80% chahiye.</p><div class="card tut">${md('Koi baat nahi. Galat sawaal review list mein chale gaye. Lesson ek baar dekh lo ya seedha quiz dobara do.')}</div>
       <button class="btn primary block" id="qre">Quiz dobara do ›</button><button class="btn block" data-go="#/lesson/${li}/${lj}" data-re="1">Lesson dobara dekho</button><button class="btn block" data-go="#/level/${li}">Level par wapas</button></div>`,$('#qre').onclick=()=>runLessonQuiz(li,lj,lessonQuiz(les),lres)}})}}
-function lessonDone(li,lj,res,q){const L=COURSE[li],les=L.lessons[lj],app=$('#app');{const first=!PR.done[les.key];PR.done[les.key]=1;touchDay();if(first)PR.day.lesson++;save();if(first)addXP(25);if(q&&q.bonus)addXP(10+quizStars(q.pct)*5);
+function lessonDone(li,lj,res,q){const L=COURSE[li],les=L.lessons[lj],app=$('#app');{const first=!PR.done[les.key];PR.done[les.key]=1;srsEnroll(les,false);touchDay();if(first)PR.day.lesson++;save();if(first)addXP(25);if(q&&q.bonus)addXP(10+quizStars(q.pct)*5);
     const g=res.filter(x=>x!=null),ok=g.filter(Boolean).length;
     const nxt=L.lessons[lj+1];app.innerHTML=`<div class="stack center"><div class="big">🎉</div><h1>Lesson poora!</h1><p>${esc(les.title)}</p>${q?`<p style="font-size:28px;margin:0">${'⭐'.repeat(quizStars(q.pct))}${'☆'.repeat(3-quizStars(q.pct))}</p><p class="muted">Quiz: ${q.ok}/${q.n} sahi (${q.pct}%)</p>`:g.length?`<p class="muted">Pehli koshish mein sahi: ${ok}/${g.length}</p>`:''}
      <div class="card tut">${md(ok<g.length*0.7&&g.length?'Kuch sawaal mushkil lage. Koi baat nahi: yeh review list mein chale gaye, kal dobara aayenge. Chaho to lesson abhi ek baar aur kar lo.':'Bahut badhiya! Coach khush hai. Chalo agla step.')}</div>
      ${nxt?`<button class="btn primary block" data-go="#/lesson/${li}/${lj+1}">Agla lesson: ${esc(nxt.title)} ›</button>`:L.test?`<button class="btn primary block" data-go="#/test/${li}">Level test do ›</button>`:''}
      <a class="btn block" style="text-decoration:none" href="notes.html#${L.id}-${les.id}">📝 Is lesson ke notes</a><button class="btn block" data-go="#/lesson/${li}/${lj}" data-re="1">Dobara karo</button><button class="btn block" data-go="#/">Home</button></div>`}}
 function vTest(li){const L=COURSE[li],app=$('#app');if(!L||!L.test)return go('#/');
-  player(app,L.test,{test:true,back:'#/level/'+li,title:()=>L.title+' test',where:'Level test',head:s=>s.les&&lesByKey(s.les)?lesByKey(s.les).title:'Test',finish:res=>{
-    const ok=res.filter(Boolean).length,pct=Math.round(ok/L.test.length*100);const prev=PR.tests[L.id];PR.tests[L.id]=Math.max(prev||0,pct);save();if(pct>=70&&!(prev>=70))addXP(50);
-    const by={};L.test.forEach((s,k)=>{const n=s.les?lesName(s.les):'Test';(by[n]=by[n]||[0,0]);by[n][1]++;if(res[k])by[n][0]++});
+  /* 30-40% sawaal pichhle levels se (kamzor/bhoole hue pehle), taaki purana bhi pakka rahe */
+  const olds=li?oldSteps([].concat(...COURSE.slice(0,li).map(C=>C.lessons.map(l=>l.key))),Math.round(L.test.length*0.5),[].concat(...COURSE.slice(0,li).map(C=>C.test||[]))).map(s=>Object.assign({},s,{_old:1})):[];
+  const T=shuffle(L.test.concat(olds));
+  player(app,T,{test:true,back:'#/level/'+li,title:()=>L.title+' test',where:'Level test',head:s=>(s._old?'Purana: ':'')+(s.les&&lesByKey(s.les)?lesByKey(s.les).title:'Test'),finish:res=>{
+    const ok=res.filter(Boolean).length,pct=Math.round(ok/T.length*100);const prev=PR.tests[L.id];PR.tests[L.id]=Math.max(prev||0,pct);save();if(pct>=70&&!(prev>=70))addXP(50);
+    const by={};T.forEach((s,k)=>{const n=s.les?lesName(s.les):'Test';(by[n]=by[n]||[0,0]);by[n][1]++;if(res[k])by[n][0]++});
     const weak=Object.entries(by).filter(([n,[a,b]])=>a<b);
     const summary=`Level test: ${L.title}. Score ${pct}%. `+Object.entries(by).map(([n,[a,b]])=>`${n}: ${a}/${b}`).join(', ');
     app.innerHTML=`<div class="stack center"><div class="big">${pct>=70?'🏅':'📘'}</div><h1>${pct}%</h1><p>${pct>=70?'Pass! Agla level khul gaya.':'Abhi pass nahi (70% chahiye). Kamzor topics dobara karo, phir test do.'}</p>
@@ -796,10 +964,11 @@ function vTest(li){const L=COURSE[li],app=$('#app');if(!L||!L.test)return go('#/
     const ab=$('#aib');if(ab)ab.onclick=()=>{ab.disabled=true;$('#aifb').innerHTML='<p class="muted">Coach soch raha hai…</p>';
       gAsk(`${TUTOR_SYS}\n\n${summary}\n\nIs result ko dekh kar student ko feedback do: kya achha hai, kya kamzor hai, aur agle 3 din ka chhota practice plan.`).then(r=>{$('#aifb').innerHTML=mdLite(r.text)},e=>{$('#aifb').innerHTML=`<p class="warn">${esc(gErr(e))}</p>`;ab.disabled=false})};
     setCtx({where:'Test result',text:summary})}})}
-function vReview(){const app=$('#app');const due=shuffle(dueReviews()).slice(0,8);
-  if(!due.length){app.innerHTML=`<div class="stack center"><div class="big">✅</div><h2>Aaj koi review baaki nahi</h2><button class="btn primary block" data-go="#/">Home</button></div>`;return}
-  player(app,due,{test:false,back:'#/',title:s=>lesName(s.les),head:s=>'Review · '+lesName(s.les),where:'Review (purani galtiyan)',finish:res=>{touchDay();PR.day.rev+=due.length;save();
-    const ok=res.filter(Boolean).length;app.innerHTML=`<div class="stack center"><div class="big">🔁</div><h1>Review poora</h1><p>${ok}/${due.length} pehli baar mein sahi. Jo galat hue woh kal phir aayenge.</p><button class="btn primary block" data-go="#/">Home</button></div>`}})}
+function vReview(){srsSession($('#app'),{back:'#/',backTxt:'Home',self:'#/review',viz:'#/viz',onDone:n=>{touchDay();PR.day.rev+=n;save()}})}
+function vViz(){vizSession($('#app'),{back:'#/',self:'#/viz'})}
+function vExam(li){const L=COURSE[li];if(!L)return go('#/');PR.exam=PR.exam||{};
+  const keys=[].concat(...COURSE.slice(0,li+1).map(C=>C.lessons.filter(l=>PR.done[l.key]||C.li<PR.placed).map(l=>l.key)));
+  examSession($('#app'),{keys,extra:[].concat(...COURSE.slice(0,li+1).map(C=>C.test||[])),n:25,title:'Mixed exam: Level 1-'+(li+1),range:'Level 1 se '+(li+1)+' tak',best:PR.exam[L.id],back:'#/level/'+li,store:p=>{PR.exam[L.id]=Math.max(PR.exam[L.id]||0,p);if(p>=70)addXP(40);save()}})}
 function vPlace(){const app=$('#app');const steps=PLACEMENT.map(id=>STEPS[id]).filter(Boolean);
   player(app,steps,{test:true,back:'#/',title:()=>'Placement test',head:()=>'Placement test',where:'Placement test',finish:res=>{
     let lvl=0;for(let k=0;k<steps.length;k+=2){if(res[k]&&res[k+1])lvl=k/2+1;else break}lvl=Math.min(lvl,COURSE.length-1);PR.placed=lvl;save();
@@ -836,7 +1005,7 @@ function vPlay(){const app=$('#app');if(!G)G={st:parseFEN(START_FEN),me:'w',lvl:
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();const t=g.dataset.go;if(location.hash===t)route();else go(t);return}
   const a=e.target.closest('[data-act]');if(a&&a.dataset.act==='tutor')openTutor()});
 $('#tutorbtn').onclick=openTutor;
-touchDay();save();route();
+touchDay();srsInit();save();route();
 
 </script>
 <script src="ui.js?v=166"></script>

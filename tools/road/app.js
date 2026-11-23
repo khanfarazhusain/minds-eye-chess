@@ -23,8 +23,8 @@ COURSE.forEach(C=>C.lessons.forEach(l=>{NOTEPATH[l.key]=C.id+'-'+l.id}));
 ROAD_LEVELS.forEach(L=>{L.lessons=L.lessons.map(p=>{if(NEWLES[p])return p;const[c,l]=p.split('.');const C=COURSE.find(x=>x.id===c);const les=C&&C.lessons.find(x=>x.id===l);return les?les.key:null}).filter(Boolean)});
 
 /* ---------- din ka hisaab ---------- */
-function sday(){const t=today();if(SP.day.d!==t){SP.day={d:t,flash:0,puz:0,quiz:0,end:0,open:0,calc:0,lesson:0,extra:0,review:0,flashNone:false};ssave()}return SP.day}
-const QUOTA_KEYS=[['lesson','Today\'s Lesson','📘'],['puz','Tactics Puzzles','🧩'],['quiz','Review Quiz','❓'],['flash','Mistake Flashcards','🔁'],['end','Endgame Drill','♔'],['open','Opening Drill','📖'],['calc','Calculation & Defence','🧠'],['game','Rated Game (Lichess)','♟'],['review','Game Review','🔍']];
+function sday(){const t=today();if(SP.day.d!==t){SP.day={d:t,srs:0,flash:0,puz:0,quiz:0,end:0,open:0,calc:0,lesson:0,extra:0,review:0,flashNone:false};ssave()}return SP.day}
+const QUOTA_KEYS=[['lesson','Today\'s Lesson','📘'],['srs','Spaced Review','🧠'],['puz','Tactics Puzzles','🧩'],['quiz','Review Quiz','❓'],['flash','Mistake Flashcards','🔁'],['end','Endgame Drill','♔'],['open','Opening Drill','📖'],['calc','Calculation & Defence','🧠'],['game','Rated Game (Lichess)','♟'],['review','Game Review','🔍']];
 /* Pehle seekho, phir practice: puzzles sirf un themes ke jo lessons mein seekh liye (pichhle levels ke saare + is level ke kiye hue) */
 const LES_TH={'l1.values':['hanging'],'l2b.safety':['hanging'],'l2b.captures':['hanging'],'l1b.mate':['mate1','kingatk'],'l2.kqk':['mate1'],'l2.krk':['mate1'],'l2.ladder':['mate1'],
  'l2b.traps1':['hanging','trapped'],'l3.fork':['fork'],'l3.pin':['pin'],'l3.skewer':['skewer'],'lm.mates':['mate1','mate2'],'lm.backrank':['backrank'],
@@ -35,7 +35,7 @@ const LES_TH={'l1.values':['hanging'],'l2b.safety':['hanging'],'l2b.captures':['
 const ENDT=['endgame','rookend','pawnend','queenend','minorend'],CALCT=['defence','quiet','long','zwischen'];
 function learnedTh(){const o=new Set();for(const L of ROAD_LEVELS)for(const k of L.lessons)if(L.n<SP.lvl||isDone(k))(LES_TH[k]||[]).forEach(t=>o.add(t));return[...o]}
 function poolOf(k){const l=learnedTh();if(k==='puz')return l.filter(t=>!ENDT.includes(t));if(k==='end')return l.filter(t=>ENDT.includes(t));if(k==='calc')return l.filter(t=>CALCT.includes(t));return null}
-function need(k){const q=CUR().quota;if(k==='review')return(unreviewed().length||sday().review)?1:0;if(k==='lesson'||k==='game')return 1;
+function need(k){const q=CUR().quota;if(k==='srs')return Math.min(q.srs||20,srsDue().length+(sday().srs||0));if(k==='review')return(unreviewed().length||sday().review)?1:0;if(k==='lesson'||k==='game')return 1;
   if(!PREVIEW&&(k==='puz'||k==='end'||k==='calc')&&!poolOf(k).length)return 0;
   if(k==='flash')return Math.min(q.flash||0,flashDue());return q[k]||0}
 const flashDue=()=>dueCards().length+dueGm().length;
@@ -137,9 +137,9 @@ function canLesson(){if(PREVIEW)return{ok:true};if(ratingLocked())return{ok:fals
 function runLesson(k,back){const les=lesOf(k),app=$('#app');if(!les)return go('#/');
   player(app,les.steps,{back:back||'#/',title:()=>les.title,where:'Lesson',finish:()=>{const qz=lessonQuiz(les);if(!qz.length)return lesFinish(k,null);
     app.innerHTML=`<div class="stack center"><div class="big">🎯</div><h1>Lesson Quiz</h1><p>${esc(les.title)}</p><div class="card tut">${md(`**${qz.length} sawaal**, zyadatar board par. **80%** sahi karo to lesson poora.`)}</div><button class="btn primary block" id="qgo">Start Quiz ›</button></div>`;
-    $('#qgo').onclick=()=>{app.innerHTML='';player(app,qz,{test:true,back:back||'#/',title:()=>les.title+' · quiz',head:()=>'Quiz · '+les.title,where:'Lesson quiz',finish:res=>{const okn=res.filter(Boolean).length,pct=Math.round(okn/qz.length*100);
+    $('#qgo').onclick=()=>{app.innerHTML='';player(app,qz,{test:true,again:true,back:back||'#/',title:()=>les.title+' · quiz',head:()=>'Quiz · '+les.title,where:'Lesson quiz',finish:res=>{const okn=res.filter(Boolean).length,pct=Math.round(okn/qz.length*100);
       if(pct>=80)lesFinish(k,pct);else app.innerHTML=`<div class="stack center"><div class="big">📘</div><h1>${pct}%</h1><p>80% chahiye. Galat sawaal review mein chale gaye.</p><button class="btn primary block" data-go="#/les/${k}" data-re="1">Redo Lesson</button><button class="btn block" data-go="#/">Today's Work</button></div>`}})}}})}
-function lesFinish(k,pct){const first=!PR.done[k];PR.done[k]=1;save();if(first){sday().lesson++;SP.owe=1;ssave();addXP(25)}
+function lesFinish(k,pct){const first=!PR.done[k];PR.done[k]=1;if(lesOf(k))srsEnroll(lesOf(k),false);save();if(first){sday().lesson++;SP.owe=1;ssave();addXP(25)}
   const app=$('#app'),les=lesOf(k);const old=!NEWLES[k];
   app.innerHTML=`<div class="stack center"><div class="big">🎉</div><h1>Lesson poora!</h1><p>${esc(les.title)}</p>${pct!=null?`<p class="muted">Quiz: ${pct}%</p>`:''}
    ${old&&NOTEPATH[k]?`<a class="btn block" style="text-decoration:none" href="notes.html#${NOTEPATH[k]}">📝 Lesson Notes</a>`:''}<button class="btn primary block" data-go="#/">Today's Work ›</button></div>`}
@@ -148,7 +148,7 @@ function runQuiz(){const app=$('#app');const ks=doneLessonsUpTo(SP.lvl);
   const pool=[].concat(...ks.map(k=>lesOf(k).steps.filter(s=>s.t==='quiz'||(s.t==='move'&&s.fen&&s.line&&s.line.length))));
   if(!pool.length){sday().quiz=need('quiz');ssave();app.innerHTML=`<div class="stack center"><div class="big">📘</div><h2>Abhi quiz ke liye koi poora lesson nahi</h2><p>Pehla lesson karo, kal se uske sawaal yahan aayenge.</p><button class="btn primary block" data-go="#/">Today's Work</button></div>`;return}
   const qs=shuffle(pool).slice(0,need('quiz'));
-  player(app,qs,{test:true,back:'#/',title:s=>lesOf(s.les)?lesOf(s.les).title:'Quiz',head:s=>'Quiz · '+(lesOf(s.les)?lesOf(s.les).title:''),where:'Daily quiz',finish:res=>{const D=sday();D.quiz=(D.quiz||0)+qs.length;ssave();
+  player(app,qs,{test:true,again:true,back:'#/',title:s=>lesOf(s.les)?lesOf(s.les).title:'Quiz',head:s=>'Quiz · '+(lesOf(s.les)?lesOf(s.les).title:''),where:'Daily quiz',finish:res=>{const D=sday();D.quiz=(D.quiz||0)+qs.length;ssave();
     app.innerHTML=`<div class="stack center"><div class="big">❓</div><h2>Quiz poora: ${res.filter(Boolean).length}/${qs.length}</h2><p>Galat sawaal review mein chale gaye.</p><button class="btn primary block" data-go="#/">Today's Work ›</button></div>`}})}
 function openLines(){const ks=doneLessonsUpTo(SP.lvl);const o=[];ks.forEach(k=>lesOf(k).steps.forEach(s=>{if(s.t==='line'&&s.moves&&!s.fen&&s.moves.split(' ').length>=3)o.push(s)}));return o}
 function runOpen(){const app=$('#app');const ls=openLines();
@@ -161,14 +161,17 @@ function runOpen(){const app=$('#app');const ls=openLines();
 function testSteps(L){const ks=L.lessons;const S=[];
   COURSE.forEach(C=>(C.test||[]).forEach(s=>{if(ks.includes(s.les))S.push(s)}));
   ks.filter(k=>NEWLES[k]).forEach(k=>NEWLES[k].steps.forEach(s=>{if(s.t==='quiz'||s.t==='move')S.push(s)}));
-  return shuffle(S).slice(0,20)}
+  /* 30-40% purane levels se (kamzor/bhoole hue pehle) */
+  const cur=shuffle(S).slice(0,L.n>1?13:20);if(L.n===1)return cur;
+  const prev=doneLessonsUpTo(L.n-1),pk=new Set(prev);const oldT=[];COURSE.forEach(C=>(C.test||[]).forEach(s=>{if(pk.has(s.les))oldT.push(s)}));
+  return cur.concat(oldSteps(prev,7,oldT).map(s=>Object.assign({},s,{_old:1})))}
 async function runTest(){const L=CUR(),app=$('#app');
   if(!PREVIEW&&L.lessons.some(k=>!isDone(k)))return go('#/level/'+L.n);
   if(ratingLocked())return go('#/');
   app.innerHTML='<p class="muted">Test taiyaar ho raha hai…</p>';
   const S=testSteps(L);const pz=[];for(let i=0;i<10;i++){const p=await getPuzzle({});if(p){SEEN.add(p[0]);pz.push(puzStep(p))}}seenSave();
   const all=shuffle(S.concat(pz));app.innerHTML='';
-  player(app,all,{test:true,back:'#/level/'+L.n,title:()=>'Level '+L.n+' test',head:()=>'Level '+L.n+' test',where:'Level test',finish:res=>{
+  player(app,all,{test:true,back:'#/level/'+L.n,title:()=>'Level '+L.n+' test',head:s=>'Level '+L.n+' test'+(s._old?' · purana':''),where:'Level test',finish:res=>{
     const ok=res.filter(Boolean).length,pct=Math.round(ok/all.length*100);SP.tests[L.n]=Math.max(SP.tests[L.n]||0,pct);ssave();
     const gs=gateStatus(L);
     app.innerHTML=`<div class="stack center"><div class="big">${pct>=75?'🏅':'📘'}</div><h1>${pct}%</h1><p>${pct>=75?'Test pass! Ab Lichess rating ka darwaza bacha hai.':'Pass ke liye 75% chahiye. Practice karo aur dobara do.'}</p>${gateHTML(L)}<button class="btn primary block" data-go="#/">Today's Work ›</button></div>`}})}
@@ -197,6 +200,7 @@ function quotaRow(k,label,icon){const n=need(k),hv=have(k),done=partDone(k);
   if(k==='lesson'){const nx=nextLes(),c=canLesson();if(!nx){note='Is level ke saare lessons ho gaye'}else{note=esc(lesOf(nx).title);act=c.ok?`<button class="btn small primary" data-go="#/les/${nx}">Start</button>`:`<span class="muted small">🔒</span>`;if(!c.ok)note+=`<br><small class="muted">${esc(c.why)}</small>`}}
   else if(k==='game'){note=SP.user?`Aaj: ${SP.games.d===today()?SP.games.n:0} game · Is hafte: ${SP.games.wn||0}`:'Pehle neeche Lichess Connect karo';act=`<a class="btn small primary" style="text-decoration:none" href="lichess.html#/road">Play</a>`+(SP.user?`<button class="btn small" data-act="sync">Check</button>`:'')}
   else if(k==='review'){const u=unreviewed();note=u.length?`${u.length} game ka review baaki · galtiyan drills ban jayengi`:hv?'Aaj ka review ho gaya':'Koi naya game nahi';act=u.length?`<button class="btn small primary" data-go="#/game/${u[0].id}">Review</button>`:`<button class="btn small" data-go="#/games">My Games</button>`}
+  else if(k==='srs'){note=n?`${Math.min(hv,n)}/${n} · ${srsDue().length} due · sahi wale lambe gap par wapas`:'Aaj kuch due nahi. Seekhi hui cheezein sahi din par yahan aayengi.';act=n&&!done?`<button class="btn small primary" data-go="#/review">Start</button>`:`<button class="btn small" data-go="#/viz">👁 Drill</button>`}
   else if(k==='flash'&&n===0){note='Abhi koi galti nahi. Puzzle ya game mein jo galti hogi, wahi yahan wapas aayegi.'}
   else if(n===0&&(CUR().quota[k]||0)>0){note='Lesson ke baad khulega: jo seekha hi nahi, uska puzzle nahi aayega.'}
   else if(n===0){note='Is level mein nahi'}
@@ -211,6 +215,8 @@ function vHome(){const app=$('#app');sday();const L=CUR();const lock=ratingLocke
    ${lock?`<div class="card alert">${md(`**Rating girne se naye lessons band.** Lichess rapid ${SP.lich.rating}, Level ${L2.n} ka darwaza ${L2.lo}. Jab tak wapas nahi aati: roz ka puzzle quota, apni galtiyon ke drills aur rated games.`)}<button class="btn block" data-go="#/run/weak">Weak Spot Drills ›</button></div>`:''}
    <h2>Today's Work</h2><div class="qlist">${QUOTA_KEYS.map(([k,l,i])=>quotaRow(k,l,i)).join('')}</div>
    ${dayDone()?'<div class="card okc"><b>Aaj ka poora kaam ho gaya. Shabaash!</b> Chaho to aur practice karo.</div>':''}
+   <div class="card stack"><div class="row" style="justify-content:space-between"><h3>🧠 Yaad ka meter</h3><small class="muted">${srsStats().total} items</small></div>${srsMeterHTML()||'<p class="small muted">Lesson poora karte hi uske sawaal aur yaad points yahan aate hain (1, 3, 7, 21, 60, 120 din par wapas).</p>'}
+    <div class="row"><button class="btn" data-go="#/review">🔁 Review (${srsDue().length})</button><button class="btn" data-go="#/viz">👁 Board-hidden drill</button></div></div>
    <div class="row"><button class="btn block" data-go="#/run/extra">♾ Unlimited Practice</button><button class="btn block" data-go="#/games">♟ My Games</button></div>
    <h2>Levels</h2><div class="lvls">${ROAD_LEVELS.map(x=>`<button class="lv${x.n===L2.n?' on':''}${x.n>L2.n&&!PREVIEW?' locked':''}" data-go="#/level/${x.n}"><b>${x.n}</b><span>${esc(x.name)}</span><small>${x.lo||0}-${x.gate}</small></button>`).join('')}</div>
    ${lichCard()}
@@ -224,7 +230,11 @@ function vLevelS(n){const L=LV(n),app=$('#app');if(!L)return go('#/');const open
    ${!open?'<div class="card">🔒 Yeh level pichhla level aur uska Lichess darwaza paar karne par khulega.</div>':''}
    <h2>Lessons (${L.lessons.filter(isDone).length}/${L.lessons.length})</h2>${L.lessons.length?`<div class="qlist">${items}</div>`:'<div class="card">Is level ka content jald aa raha hai. Tab tak roz ka puzzle quota, opening drills aur games.</div>'}
    <p class="small muted">Naye lessons roz ki list se ek-ek karke khulte hain. ✅ wale yahan se dobara kar sakte ho.</p>
-   ${n===SP.lvl||PREVIEW?`<h2>Level Test</h2><button class="btn ${L.lessons.every(isDone)||PREVIEW?'primary':''} block" ${L.lessons.every(isDone)||PREVIEW?'data-go="#/test"':'disabled'}>Take Level ${n} Test (75% to pass)</button>`+gateHTML(L):''}</div>`}
+   ${n===SP.lvl||PREVIEW?`<h2>Level Test</h2><button class="btn ${L.lessons.every(isDone)||PREVIEW?'primary':''} block" ${L.lessons.every(isDone)||PREVIEW?'data-go="#/test"':'disabled'}>Take Level ${n} Test (75% to pass)</button>`+gateHTML(L):''}
+   ${n%2===0&&(open||PREVIEW)?`<h2>Mixed Exam</h2><button class="btn block" data-go="#/exam/${n}">🧩 Mixed Exam: Level 1-${n}${(SP.exam||{})[n]!=null?' · best '+SP.exam[n]+'%':''}</button><p class="small muted">Har 2 level baad: 25 sawaal, sab purane lessons se mila-jula. Kamzor topics pehle.</p>`:''}</div>`}
+
+function vExamS(n){if(!(n>=2))return go('#/');SP.exam=SP.exam||{};const prev=doneLessonsUpTo(Math.min(n,SP.lvl)),pk=new Set(prev);const ex=[];COURSE.forEach(C=>(C.test||[]).forEach(s=>{if(pk.has(s.les))ex.push(s)}));
+  examSession($('#app'),{keys:prev,extra:ex,n:25,title:'Mixed Exam: Level 1-'+n,range:'Level 1 se '+n+' tak',best:SP.exam[n],back:'#/level/'+n,store:p=>{SP.exam[n]=Math.max(SP.exam[n]||0,p);ssave();if(p>=70)addXP(40)}})}
 
 /* ---------- router ---------- */
 function go(hash){if(location.hash!==hash)location.hash=hash;else route()}
@@ -232,13 +242,13 @@ window.addEventListener('hashchange',route);
 function navOn(){const h=location.hash||'#/';const bs=[...document.querySelectorAll('nav.tabs button[data-go]')];const hit=bs.find(b=>b.dataset.go===h)||bs.find(b=>h.startsWith(b.dataset.go+'/')&&b.dataset.go!=='#/')||bs[0];bs.forEach(b=>b.classList.toggle('on',b===hit))}
 function route(){closeTutor();navOn();const p=(location.hash||'#/').slice(2).split('/');const app=$('#app');app.innerHTML='';app.onclick=null;window.scrollTo(0,0);
   if(p[0]==='run')vPuzzleRun(p[1],p[2]);else if(p[0]==='les')runLesson(p[1],'#/');else if(p[0]==='quiz')runQuiz();else if(p[0]==='open')runOpen();
-  else if(p[0]==='test')runTest();else if(p[0]==='level')vLevelS(+p[1]);else if(p[0]==='games')vGames();else if(p[0]==='game'&&p[1])vGame(p[1]);else vHome();chips()}
+  else if(p[0]==='test')runTest();else if(p[0]==='review')srsSession(app,{back:'#/',backTxt:"Today's Work ›",self:'#/review',viz:'#/viz',onDone:n=>{const D=sday();D.srs=(D.srs||0)+n;ssave()}});else if(p[0]==='viz')vizSession(app,{back:'#/',self:'#/viz'});else if(p[0]==='exam')vExamS(+p[1]);else if(p[0]==='level')vLevelS(+p[1]);else if(p[0]==='games')vGames();else if(p[0]==='game'&&p[1])vGame(p[1]);else vHome();chips()}
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();const t=g.dataset.go;if(location.hash===t)route();else go(t);return}
   const a=e.target.closest('[data-act]');if(!a)return;
   if(a.dataset.act==='saveuser'){const v=($('#lu').value||'').trim();SP.user=v;SP.lich=null;ssave();if(v)sync(false);else route()}
   else if(a.dataset.act==='sync')sync(false);
   else if(a.dataset.act==='lconnect')lichConnect();
   else if(a.dataset.act==='lout')lichDisconnect().then(route)});
-touchDay();save();lichReturn().then(u=>{if(u){SP.user=u;SP.lich=null;ssave()}
+touchDay();srsInit();save();lichReturn().then(u=>{if(u){SP.user=u;SP.lich=null;ssave()}
   /* Lichess Play page se connect kiya ho to bhi yahan username le lo */
   else if(lichToken()&&LT.user&&lcs(SP.user)!==lcs(LT.user)){SP.user=LT.user;SP.lich=null;ssave()}route()});
