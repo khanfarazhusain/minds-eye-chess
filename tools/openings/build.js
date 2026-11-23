@@ -35,7 +35,7 @@ for(const f of SRC){const M=require(path.join(__dirname,f));const lv={to:M.to,ro
         if(r){s.line=r.out;if(s.mate&&!C.mates(r.p))errs.push(where+': mate flag but final position is not mate');if(/#$/.test(r.out[r.out.length-1])&&!C.mates(r.p))errs.push(where+': # but not mate')}
         (s.ok||[]).forEach(o=>{if(!C.findMove(C.parseFEN(s.fen),o))errs.push(where+': ok move illegal '+o)})}}
       if(s.t==='quiz'&&!(s.a>=0&&s.a<s.opts.length))errs.push(where+': bad answer index');
-      if(s.test){delete s.test;if(M.newLevel)lv.test.push(Object.assign({of:L.id},s))}
+      if(s.test===0)delete s.test;if(s.test){delete s.test;if(M.newLevel)lv.test.push(Object.assign({of:L.id},s))}
       les.steps.push(s)});
     lv.lessons.push(les)}
   out.levels.push(lv)}
