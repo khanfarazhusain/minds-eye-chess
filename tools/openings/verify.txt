@@ -1,155 +1,181 @@
-depth 16, 1502 moves checked
+depth 16, 1756 moves checked
 l2b.op1open #1 Italian Game (Giuoco Piano): end eval (White) 20
-l2b.op1open #3 Ruy Lopez (Spanish): end eval (White) 48
-l2b.op1open #5 Scotch Game: end eval (White) 21
-l2b.op1open #6 Petrov Defence: copy mat karo!: end eval (White) 42
-l2b.op1open #8 Philidor Defence: end eval (White) 57
-l2b.op1open #9 Vienna Game: end eval (White) -15
-l2b.op1open #10 King's Gambit: accept aur develop: end eval (White) -31
-l2b.op1sic #1 Open Sicilian: Najdorf: end eval (White) 40
-l2b.op1sic #3 Dragon: end eval (White) 67
-l2b.op1sic #4 Sveshnikov: end eval (White) 39
-l2b.op1sic #5 Taimanov: end eval (White) 47
-l2b.op1sic #6 Alapin (2.c3) aur Black ka jawab: end eval (White) 12
-l2b.op1sic #7 Smith-Morra Gambit: lena aur bachna: end eval (White) 0
-l2b.op1sic #8 Smith-Morra: mana karna (decline): end eval (White) 9
-l2b.op1sic #9 Grand Prix Attack: end eval (White) -17
-l2b.op1semi #0 French Defence: Advance Variation: end eval (White) 40
-l2b.op1semi #2 French: Winawer aur Tarrasch (pehli chaalein): end eval (White) 60
-l2b.op1semi #4 Caro-Kann: Classical: end eval (White) 37
-l2b.op1semi #5 Caro-Kann: Advance: end eval (White) 19
-l2b.op1semi #7 Scandinavian: queen ko tempo se bhagao: end eval (White) 52
-l2b.op1semi #8 Pirc aur Modern: end eval (White) 42
-l2b.op1semi #9 Alekhine Defence: end eval (White) 74
-l2b.op1qg #1 Queen's Gambit Declined: end eval (White) 27
+l2b.op1open #3 Ruy Lopez (Spanish): end eval (White) 53
+l2b.op1open #5 Scotch Game: end eval (White) 22
+l2b.op1open #6 Petrov Defence: copy mat karo!: end eval (White) 36
+l2b.op1open #8 Philidor Defence: end eval (White) 53
+l2b.op1open #9 Vienna Game: end eval (White) -22
+l2b.op1open #10 King's Gambit: accept aur develop: end eval (White) -34
+l2b.op1sic #1 Open Sicilian: Najdorf: end eval (White) 38
+l2b.op1sic #3 Dragon: end eval (White) 60
+l2b.op1sic #4 Sveshnikov: end eval (White) 31
+l2b.op1sic #5 Taimanov: end eval (White) 57
+l2b.op1sic #6 Alapin (2.c3) aur Black ka jawab: end eval (White) 15
+l2b.op1sic #7 Smith-Morra Gambit: lena aur bachna: end eval (White) 3
+l2b.op1sic #8 Smith-Morra: mana karna (decline): end eval (White) 17
+l2b.op1sic #9 Grand Prix Attack: end eval (White) -24
+l2b.op1semi #0 French Defence: Advance Variation: end eval (White) 24
+l2b.op1semi #2 French: Winawer aur Tarrasch (pehli chaalein): end eval (White) 59
+l2b.op1semi #4 Caro-Kann: Classical: end eval (White) 34
+l2b.op1semi #5 Caro-Kann: Advance: end eval (White) 27
+l2b.op1semi #7 Scandinavian: queen ko tempo se bhagao: end eval (White) 74
+l2b.op1semi #8 Pirc aur Modern: end eval (White) 46
+l2b.op1semi #9 Alekhine Defence: end eval (White) 77
+l2b.op1qg #1 Queen's Gambit Declined: end eval (White) 17
 l2b.op1qg #2 Queen's Gambit Accepted: end eval (White) 31
-l2b.op1qg #4 Slav Defence: end eval (White) 29
-l2b.op1qg #5 Albin Countergambit: end eval (White) 100
-l2b.op1ind #0 King's Indian Defence: end eval (White) 75
+l2b.op1qg #4 Slav Defence: end eval (White) 32
+l2b.op1qg #5 Albin Countergambit: end eval (White) 103
+l2b.op1ind #0 King's Indian Defence: end eval (White) 71
 l2b.op1ind #1 Grunfeld: end eval (White) 29
-l2b.op1ind #2 Nimzo-Indian: end eval (White) 18
-l2b.op1ind #3 Queen's Indian: end eval (White) 25
-l2b.op1ind #4 Benoni: end eval (White) 79
-l2b.op1ind #5 Dutch Defence (Leningrad): end eval (White) 57
-l2b.op1ind #6 English Opening: end eval (White) 26
-l2b.op1ind #7 Reti Opening: end eval (White) 44
-l2b.op1ind #8 King's Indian Attack (KIA): end eval (White) -8
-l2b.op1gam #2 Evans Gambit: lo aur wapas do: end eval (White) -18
-l2b.op1gam #3 Danish Gambit: pawn wapas do: end eval (White) 1
-l2b.op1gam #4 Blackmar-Diemer Gambit: end eval (White) -47
-l2b.op1sys #0 London System: end eval (White) 24
-l2b.op1sys #1 London ke khilaaf: ...c5 aur ...Qb6: end eval (White) 30
-l2b.op1sys #3 Colle System: end eval (White) -3
-l2b.op1sys #4 Stonewall Attack: end eval (White) -89
-l2b.op1sys #5 Trompowsky (2.Bg5): end eval (White) 52
-l4.op2ital #0 Giuoco Pianissimo: modern main line: end eval (White) 14
-l4.op2ital #2 Two Knights: 4.Ng5 d5 main line (Black): end eval (White) 5
-l4.op2ital #4 Two Knights: 4.d3 (shaant): end eval (White) 20
-l4.op2ital #7 Hungarian aur 3...d6 ke khilaaf: d4!: end eval (White) 39
-l4.op2ital #8 Evans Gambit: main line (White): end eval (White) -5
-l4.op2ruy #0 Closed Ruy Lopez: Chigorin: end eval (White) 43
-l4.op2ruy #1 Closed Ruy: Breyer: end eval (White) 44
-l4.op2ruy #2 Berlin Defence: end eval (White) 23
-l4.op2ruy #4 Marshall Attack: end eval (White) 18
-l4.op2ruy #5 Exchange Variation: end eval (White) 0
-l4.op2scot #0 Scotch: Mieses (4...Nf6): end eval (White) -3
-l4.op2scot #1 Scotch: Classical (4...Bc5): end eval (White) 13
-l4.op2scot #2 Scotch Gambit: end eval (White) 5
-l4.op2scot #3 Four Knights: Spanish aur Rubinstein: end eval (White) -10
-l4.op2scot #4 Four Knights: Scotch Four Knights: end eval (White) 10
-l4.op2scot #5 Ponziani: Black ka jawab: end eval (White) -75
-l4.op2scot #6 Center Game: queen ko tempo se bhagao: end eval (White) -48
-l4.op2kgv #0 King's Gambit Accepted: 3...g5 aur Kieseritzky: end eval (White) -82
-l4.op2kgv #1 KGA: modern 3...d5 (Black): end eval (White) -60
-l4.op2kgv #2 Falkbeer Countergambit: end eval (White) 0
-l4.op2kgv #3 King's Gambit Declined: Classical: end eval (White) 94
-l4.op2kgv #4 Vienna Gambit: Black ka sahi jawab: end eval (White) 6
-l4.op2kgv #5 Vienna: Frankenstein-Dracula: end eval (White) 71
-l4.op2pet #0 Petrov: Classical main line: end eval (White) 36
-l4.op2pet #1 Petrov: 5.Nc3 (White ka aggressive line): end eval (White) 34
-l4.op2pet #3 Philidor: Lion / Hanham setup: end eval (White) 67
-l4b.op2qgd #0 QGD: Tartakower: end eval (White) -9
+l2b.op1ind #2 Nimzo-Indian: end eval (White) 17
+l2b.op1ind #3 Queen's Indian: end eval (White) 34
+l2b.op1ind #4 Benoni: end eval (White) 73
+l2b.op1ind #5 Dutch Defence (Leningrad): end eval (White) 59
+l2b.op1ind #6 English Opening: end eval (White) 28
+l2b.op1ind #7 Reti Opening: end eval (White) 36
+l2b.op1ind #8 King's Indian Attack (KIA): end eval (White) 0
+l2b.op1gam #2 Evans Gambit: lo aur wapas do: end eval (White) -14
+l2b.op1gam #3 Danish Gambit: pawn wapas do: end eval (White) 3
+l2b.op1gam #4 Blackmar-Diemer Gambit: end eval (White) -35
+l2b.op1sys #0 London System: end eval (White) 25
+l2b.op1sys #1 London ke khilaaf: ...c5 aur ...Qb6: end eval (White) 29
+l2b.op1sys #3 Colle System: end eval (White) -7
+l2b.op1sys #4 Stonewall Attack: end eval (White) -90
+l2b.op1sys #5 Trompowsky (2.Bg5): end eval (White) 57
+l4b.op2kid #0 KID: Mar del Plata: end eval (White) 57
+l4b.op2kid #1 KID: Samisch: end eval (White) 50
+l4b.op2kid #2 KID: Fianchetto: end eval (White) 109
+l4b.op2kid #3 Grunfeld Exchange: end eval (White) 26
+l4b.op2kid #4 Grunfeld: Russian System: end eval (White) 12
+l4b.op2nimzo #0 Nimzo: Rubinstein (4.e3): end eval (White) 24
+l4b.op2nimzo #1 Nimzo: Classical (4.Qc2): end eval (White) 19
+l4b.op2nimzo #2 Queen's Indian: 4.g3: end eval (White) 32
+l4b.op2nimzo #3 Catalan: Open: end eval (White) 25
+l4b.op2nimzo #4 Bogo-Indian: end eval (White) 35
+l4b.op2ben #0 Modern Benoni: Classical: end eval (White) 68
+l4b.op2ben #1 Benko Gambit: end eval (White) 84
+l4b.op2ben #2 Budapest: White ka sahi khel: end eval (White) 40
+l4b.op2ben #3 Dutch: Stonewall: end eval (White) 39
+l4b.op2ben #4 Dutch ke khilaaf: Staunton Gambit: end eval (White) 8
+l4b.op2flank #0 English: Reversed Sicilian: end eval (White) 14
+l4b.op2flank #1 English: Botvinnik setup (Black): end eval (White) 29
+l4b.op2flank #2 Symmetrical English: end eval (White) 44
+l4b.op2flank #3 Reti: 2...d4: end eval (White) 0
+l4b.op2flank #4 KIA ke khilaaf: queenside plan: end eval (White) 21
+l4b.op2flank #5 Larsen: 1.b3 e5: end eval (White) -12
+l4.op2ital #0 Giuoco Pianissimo: modern main line: end eval (White) 17
+l4.op2ital #2 Two Knights: 4.Ng5 d5 main line (Black): end eval (White) 11
+l4.op2ital #4 Two Knights: 4.d3 (shaant): end eval (White) 21
+l4.op2ital #7 Hungarian aur 3...d6 ke khilaaf: d4!: end eval (White) 49
+l4.op2ital #8 Evans Gambit: main line (White): end eval (White) 0
+l4.op2ruy #0 Closed Ruy Lopez: Chigorin: end eval (White) 58
+l4.op2ruy #1 Closed Ruy: Breyer: end eval (White) 46
+l4.op2ruy #2 Berlin Defence: end eval (White) 19
+l4.op2ruy #4 Marshall Attack: end eval (White) 27
+l4.op2ruy #5 Exchange Variation: end eval (White) -2
+l4.op2scot #0 Scotch: Mieses (4...Nf6): end eval (White) 7
+l4.op2scot #1 Scotch: Classical (4...Bc5): end eval (White) 23
+l4.op2scot #2 Scotch Gambit: end eval (White) 15
+l4.op2scot #3 Four Knights: Spanish aur Rubinstein: end eval (White) 7
+l4.op2scot #4 Four Knights: Scotch Four Knights: end eval (White) 3
+l4.op2scot #5 Ponziani: Black ka jawab: end eval (White) -38
+l4.op2scot #6 Center Game: queen ko tempo se bhagao: end eval (White) -36
+l4.op2kgv #0 King's Gambit Accepted: 3...g5 aur Kieseritzky: end eval (White) -67
+l4.op2kgv #1 KGA: modern 3...d5 (Black): end eval (White) -46
+l4.op2kgv #2 Falkbeer Countergambit: end eval (White) 4
+l4.op2kgv #3 King's Gambit Declined: Classical: end eval (White) 92
+l4.op2kgv #4 Vienna Gambit: Black ka sahi jawab: end eval (White) 7
+l4.op2kgv #5 Vienna: Frankenstein-Dracula: end eval (White) 65
+l4.op2pet #0 Petrov: Classical main line: end eval (White) 44
+l4.op2pet #1 Petrov: 5.Nc3 (White ka aggressive line): end eval (White) 20
+l4.op2pet #3 Philidor: Lion / Hanham setup: end eval (White) 68
+l4b.op2qgd #0 QGD: Tartakower: end eval (White) -4
 l4b.op2qgd #1 QGD: Lasker Defence: end eval (White) 14
-l4b.op2qgd #2 QGD Exchange: minority attack: end eval (White) 19
-l4b.op2qgd #4 QGA: Classical main line: end eval (White) 35
-l4b.op2qgd #5 QGA: 3.e4 e5!: end eval (White) 38
-l4b.op2slav #0 Slav: main line: end eval (White) 38
-l4b.op2slav #1 Semi-Slav: Meran: end eval (White) 25
-l4b.op2slav #2 Semi-Slav: Moscow: end eval (White) 28
-l4b.op2slav #3 Exchange Slav: end eval (White) 9
-l4b.op2slav #4 Chebanenko (4...a6): end eval (White) 40
-l4b.op2qgo #0 Tarrasch: main line: end eval (White) 60
-l4b.op2qgo #1 Chigorin: end eval (White) 59
-l4b.op2qgo #2 Albin: White ka modern jawab: end eval (White) 73
-l4b.op2sys #0 London: modern main line: end eval (White) -8
-l4b.op2sys #1 London ke khilaaf: ...Nh5: end eval (White) 35
-l4b.op2sys #2 Jobava London: end eval (White) 25
-l4b.op2sys #3 Colle-Zukertort: end eval (White) -11
-l4b.op2sys #4 BDG: Teichmann Defence: end eval (White) -5
+l4b.op2qgd #2 QGD Exchange: minority attack: end eval (White) 30
+l4b.op2qgd #4 QGA: Classical main line: end eval (White) 46
+l4b.op2qgd #5 QGA: 3.e4 e5!: end eval (White) 54
+l4b.op2slav #0 Slav: main line: end eval (White) 45
+l4b.op2slav #1 Semi-Slav: Meran: end eval (White) 9
+l4b.op2slav #2 Semi-Slav: Moscow: end eval (White) 17
+l4b.op2slav #3 Exchange Slav: end eval (White) 10
+l4b.op2slav #4 Chebanenko (4...a6): end eval (White) 47
+l4b.op2qgo #0 Tarrasch: main line: end eval (White) 58
+l4b.op2qgo #1 Chigorin: end eval (White) 56
+l4b.op2qgo #2 Albin: White ka modern jawab: end eval (White) 92
+l4b.op2sys #0 London: modern main line: end eval (White) 0
+l4b.op2sys #1 London ke khilaaf: ...Nh5: end eval (White) 34
+l4b.op2sys #2 Jobava London: end eval (White) 21
+l4b.op2sys #3 Colle-Zukertort: end eval (White) -1
+l4b.op2sys #4 BDG: Teichmann Defence: end eval (White) -8
 l4.op2fr #0 Advance: main line: end eval (White) 9
-l4.op2fr #3 Winawer: main line: end eval (White) 27
-l4.op2fr #4 Classical: Steinitz: end eval (White) 7
-l4.op2fr #5 Tarrasch: 3...c5: end eval (White) 36
-l4.op2fr #6 Exchange: Black ke liye aasaan: end eval (White) 27
+l4.op2fr #3 Winawer: main line: end eval (White) 43
+l4.op2fr #4 Classical: Steinitz: end eval (White) -3
+l4.op2fr #5 Tarrasch: 3...c5: end eval (White) 37
+l4.op2fr #6 Exchange: Black ke liye aasaan: end eval (White) 28
 l4.op2ck #0 Advance: Short Variation: end eval (White) 0
-l4.op2ck #1 Advance: Bayonet (4.Nc3 e6 5.g4): end eval (White) 12
-l4.op2ck #2 Classical: 10 chaal: end eval (White) 35
-l4.op2ck #3 Panov Attack: end eval (White) 31
-l4.op2ck #4 Exchange: Carlsbad structure: end eval (White) 34
-l4.op2scan #0 Scandinavian 3...Qa5: end eval (White) 61
-l4.op2scan #1 Scandinavian 3...Qd6: end eval (White) 67
-l4.op2scan #2 Modern Scandi: 2...Nf6: end eval (White) 84
-l4.op2scan #3 Pirc: 150 Attack: end eval (White) 44
-l4.op2scan #4 Pirc: Austrian Attack: end eval (White) 52
-l4.op2scan #5 Alekhine: Four Pawns Attack: end eval (White) 65
-l4.op2najd #0 English Attack: end eval (White) 49
-l4.op2najd #2 6.Bg5: sabse sharp: end eval (White) 57
-l4.op2najd #3 6.Be2: Classical: end eval (White) 15
-l4.op2drag #0 Yugoslav Attack: 9.Bc4 main line: end eval (White) 40
-l4.op2drag #1 Yugoslav: 9.O-O-O d5!: end eval (White) 67
-l4.op2drag #4 Accelerated Dragon: Maroczy Bind: end eval (White) 66
-l4.op2svesh #0 Sveshnikov main line: end eval (White) -3
-l4.op2svesh #2 Taimanov: English Attack setup ke khilaaf: end eval (White) 51
-l4.op2svesh #3 Kan: end eval (White) 77
-l4.op2anti #0 Alapin: 2...d5: end eval (White) 8
-l4.op2anti #1 Rossolimo: end eval (White) 34
-l4.op2anti #2 Moscow Variation: end eval (White) 14
-l4.op2anti #3 Closed Sicilian: end eval (White) 2
+l4.op2ck #1 Advance: Bayonet (4.Nc3 e6 5.g4): end eval (White) 14
+l4.op2ck #2 Classical: 10 chaal: end eval (White) 36
+l4.op2ck #3 Panov Attack: end eval (White) 42
+l4.op2ck #4 Exchange: Carlsbad structure: end eval (White) 31
+l4.op2scan #0 Scandinavian 3...Qa5: end eval (White) 37
+l4.op2scan #1 Scandinavian 3...Qd6: end eval (White) 81
+l4.op2scan #2 Modern Scandi: 2...Nf6: end eval (White) 78
+l4.op2scan #3 Pirc: 150 Attack: end eval (White) 43
+l4.op2scan #4 Pirc: Austrian Attack: end eval (White) 51
+l4.op2scan #5 Alekhine: Four Pawns Attack: end eval (White) 84
+l4.op2najd #0 English Attack: end eval (White) 57
+l4.op2najd #2 6.Bg5: sabse sharp: end eval (White) 59
+l4.op2najd #3 6.Be2: Classical: end eval (White) 14
+l4.op2drag #0 Yugoslav Attack: 9.Bc4 main line: end eval (White) 49
+l4.op2drag #1 Yugoslav: 9.O-O-O d5!: end eval (White) 71
+l4.op2drag #4 Accelerated Dragon: Maroczy Bind: end eval (White) 58
+l4.op2svesh #0 Sveshnikov main line: end eval (White) 2
+l4.op2svesh #2 Taimanov: English Attack setup ke khilaaf: end eval (White) 41
+l4.op2svesh #3 Kan: end eval (White) 53
+l4.op2anti #0 Alapin: 2...d5: end eval (White) 15
+l4.op2anti #1 Rossolimo: end eval (White) 35
+l4.op2anti #2 Moscow Variation: end eval (White) 10
+l4.op2anti #3 Closed Sicilian: end eval (White) -16
+op3.indstr #0 KID: Bayonet Attack (9.b4): end eval (White) 47
+op3.indstr #2 Hedgehog (English se): end eval (White) 38
+op3.indord #2 Catalan se QGD (transposition): end eval (White) 60
+op3.indord #3 Grunfeld se bachna: 3.f3: end eval (White) 0
 op3.ital #0 Pianissimo: 15+ chaal aur ...d5 break: end eval (White) 0
-op3.ital #2 5.d4: isolated queen pawn (IQP): end eval (White) 27
-op3.ital #6 Transposition: Two Knights 4.d3 = Giuoco: end eval (White) 4
-op3.ruy #0 Zaitsev: Karpov-Kasparov ka battle: end eval (White) 47
-op3.ruy #2 Anti-Marshall: 8.h3: end eval (White) 44
-op3.ruy #4 Marshall: aage ki line: end eval (White) 31
+op3.ital #2 5.d4: isolated queen pawn (IQP): end eval (White) 25
+op3.ital #6 Transposition: Two Knights 4.d3 = Giuoco: end eval (White) 7
+op3.ruy #0 Zaitsev: Karpov-Kasparov ka battle: end eval (White) 45
+op3.ruy #2 Anti-Marshall: 8.h3: end eval (White) 33
+op3.ruy #4 Marshall: aage ki line: end eval (White) 35
 op3.ruy #5 Berlin endgame ke plans: end eval (White) 15
-op3.scot #0 Scotch Mieses: 12+ chaal: end eval (White) -21
-op3.scot #2 Scotch Classical: lambi line: end eval (White) -8
-op3.scot #3 Scotch Four Knights: solid Black: end eval (White) -15
-op3.gam #0 Evans Gambit: Lasker Defence: end eval (White) 8
-op3.gam #1 King's Gambit: Fischer Defence: end eval (White) -43
+op3.scot #0 Scotch Mieses: 12+ chaal: end eval (White) -29
+op3.scot #2 Scotch Classical: lambi line: end eval (White) -6
+op3.scot #3 Scotch Four Knights: solid Black: end eval (White) -14
+op3.gam #0 Evans Gambit: Lasker Defence: end eval (White) 10
+op3.gam #1 King's Gambit: Fischer Defence: end eval (White) -26
 op3.gam #2 Danish: dono pawns lo, phir wapas do: end eval (White) 0
-op3.gam #3 Fried Liver ka sach: 6.d4 (Lolli): end eval (White) 486
-op3.qgstr #0 Carlsbad: White ka f3 + e4 plan: end eval (White) 43
-op3.qgstr #2 Semi-Tarrasch: IQP aur hanging pawns: end eval (White) 10
-op3.slavadv #0 Meran: deep main line: end eval (White) 25
-op3.slavadv #1 Anti-Meran: 6.Qc2: end eval (White) 7
-op3.sysadv #0 London: 1...Nf6 2.Bf4 c5!: end eval (White) -5
-op3.sysadv #1 London: KID setup se jawab: end eval (White) 51
-op3.frstr #0 Advance: Milner-Barry Gambit: end eval (White) -42
-op3.frstr #1 Advance: ...f6 break: end eval (White) 69
-op3.frstr #3 Winawer: Poisoned Pawn: end eval (White) 74
-op3.ckstr #0 Panov: IQP deep: end eval (White) 62
-op3.ckstr #1 Exchange Caro: Black ka minority attack: end eval (White) 17
-op3.ckstr #3 Advance Caro: Short line deep: end eval (White) 121
-op3.scpi #0 Scandinavian: White ka O-O-O plan: end eval (White) 2
-op3.scpi #1 Pirc: Classical (4.Nf3): end eval (White) 56
-op3.sicstr #0 Scheveningen: Keres Attack ke khilaaf: end eval (White) 126
-op3.sicstr #2 Najdorf ...e5: d5 square ki ladai: end eval (White) 21
-op3.sicord #2 Najdorf se Scheveningen (transposition): end eval (White) 34
-op3.sicord #3 Taimanov se Scheveningen: end eval (White) 32
-op3.sicanti #0 Alapin: IQP line deep: end eval (White) -8
-op3.sicanti #1 Smith-Morra: solid Black setup: end eval (White) -4
-op3.sicanti #2 Rossolimo: modern main line: end eval (White) 42
+op3.gam #3 Fried Liver ka sach: 6.d4 (Lolli): end eval (White) 513
+op3.qgstr #0 Carlsbad: White ka f3 + e4 plan: end eval (White) 50
+op3.qgstr #2 Semi-Tarrasch: IQP aur hanging pawns: end eval (White) 7
+op3.slavadv #0 Meran: deep main line: end eval (White) 37
+op3.slavadv #1 Anti-Meran: 6.Qc2: end eval (White) 12
+op3.sysadv #0 London: 1...Nf6 2.Bf4 c5!: end eval (White) 2
+op3.sysadv #1 London: KID setup se jawab: end eval (White) 48
+op3.frstr #0 Advance: Milner-Barry Gambit: end eval (White) -30
+op3.frstr #1 Advance: ...f6 break: end eval (White) 104
+op3.frstr #3 Winawer: Poisoned Pawn: end eval (White) 71
+op3.ckstr #0 Panov: IQP deep: end eval (White) 49
+op3.ckstr #1 Exchange Caro: Black ka minority attack: end eval (White) 21
+op3.ckstr #3 Advance Caro: Short line deep: end eval (White) 117
+op3.scpi #0 Scandinavian: White ka O-O-O plan: end eval (White) 0
+op3.scpi #1 Pirc: Classical (4.Nf3): end eval (White) 53
+op3.sicstr #0 Scheveningen: Keres Attack ke khilaaf: end eval (White) 135
+op3.sicstr #2 Najdorf ...e5: d5 square ki ladai: end eval (White) 15
+op3.sicord #2 Najdorf se Scheveningen (transposition): end eval (White) 35
+op3.sicord #3 Taimanov se Scheveningen: end eval (White) 30
+op3.sicanti #0 Alapin: IQP line deep: end eval (White) -11
+op3.sicanti #1 Smith-Morra: solid Black setup: end eval (White) 0
+op3.sicanti #2 Rossolimo: modern main line: end eval (White) 39
 
 PROBLEMS:
-op3.sysadv #3 London. Black ka sabse active idea?: answer Nc6 loses 80cp (best d7d5, -10)
+l4b.op2ben #5 Benoni Taimanov Attack: `Bb5+`. Black ka sabse safe jawab?: answer Kf8 loses 104cp (best f6d7, -81)
+op3.indstr #3 Benoni. White ka standard plan: knight ko best square par lao.: answer Rb1 loses 76cp (best g1h1, 76)

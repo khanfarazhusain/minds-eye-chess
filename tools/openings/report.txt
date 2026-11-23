@@ -86,6 +86,31 @@ l2b.op1mix #8 (move): after d4 Nf6 c4 g6 Nc3 Bg7  ECO: E61 King's Indian Defense
 l2b.op1mix #9 (move): after e4 e5 Nf3 Nf6 Nxe5  ECO: C42 Petrov's Defense
 l2b.op1mix #10 (move): after e4 e6 d4 d5 e5  ECO: C02 French Defense: Advance Variation
 l2b.op1mix #11 (move): after e4 c5 Nf3 d6 d4 cxd4  ECO: B50 Sicilian Defense
+l4b.op2kid #0 (line): KID: Mar del Plata  ECO: E98 King's Indian Defense: Orthodox Variation, Classical System, Neo-Classical Line (19 ply)  [28 ply]
+l4b.op2kid #1 (line): KID: Samisch  ECO: E81 King's Indian Defense: Sämisch Variation, Sämisch Gambit (12 ply)  [22 ply]
+l4b.op2kid #2 (line): KID: Fianchetto  ECO: E69 King's Indian Defense: Fianchetto Variation, Classical Main Line (17 ply)  [18 ply]
+l4b.op2kid #3 (line): Grunfeld Exchange  ECO: D85 Grünfeld Defense: Exchange Variation, Modern Exchange Variation (14 ply)  [23 ply]
+l4b.op2kid #4 (line): Grunfeld: Russian System  ECO: D97 Grünfeld Defense: Russian Variation, Hungarian Variation (14 ply)  [18 ply]
+l4b.op2kid #5 (move): after d4 Nf6 c4 g6 Nc3 Bg7 e4 d6 f4  ECO: E76 King's Indian Defense: Four Pawns Attack
+l4b.op2nimzo #0 (line): Nimzo: Rubinstein (4.e3)  ECO: E59 Nimzo-Indian Defense: Normal Variation, Bernstein Defense (19 ply)  [20 ply]
+l4b.op2nimzo #1 (line): Nimzo: Classical (4.Qc2)  ECO: E32 Nimzo-Indian Defense: Classical Variation, Keres Defense (12 ply)  [20 ply]
+l4b.op2nimzo #2 (line): Queen's Indian: 4.g3  ECO: E15 Queen's Indian Defense: Fianchetto Variation, Check Variation, Intermezzo Line (12 ply)  [20 ply]
+l4b.op2nimzo #3 (line): Catalan: Open  ECO: E05 Catalan Opening: Open Defense, Classical Line (10 ply)  [21 ply]
+l4b.op2nimzo #4 (line): Bogo-Indian  ECO: E11 Bogo-Indian Defense: Nimzowitsch Variation (8 ply)  [16 ply]
+l4b.op2nimzo #5 (move): after d4 Nf6 c4 e6 Nc3 Bb4 e3 O-O Bd3 d5 Nf3 c5 O-O Nc6 a3  ECO: E56 Nimzo-Indian Defense: Normal Variation, Gligoric System, Bernstein Defense
+l4b.op2ben #0 (line): Modern Benoni: Classical  ECO: A79 Benoni Defense: Classical Variation, Czerniak Defense (21 ply)  [24 ply]
+l4b.op2ben #1 (line): Benko Gambit  ECO: A59 Benko Gambit Accepted: Yugoslav (13 ply)  [22 ply]
+l4b.op2ben #2 (line): Budapest: White ka sahi khel  ECO: A52 Indian Defense: Budapest Gambit Accepted, Main Line, Rubinstein Variation (7 ply)  [19 ply]
+l4b.op2ben #3 (line): Dutch: Stonewall  ECO: A81 Dutch Defense: Fianchetto Attack (3 ply)  [18 ply]
+l4b.op2ben #4 (line): Dutch ke khilaaf: Staunton Gambit  ECO: A83 Dutch Defense: Staunton Gambit (7 ply)  [15 ply]
+l4b.op2ben #5 (move): after d4 Nf6 c4 c5 d5 e6 Nc3 exd5 cxd5 d6 e4 g6 f4 Bg7 Bb5+  ECO: A67 Benoni Defense: Taimanov Variation
+l4b.op2flank #0 (line): English: Reversed Sicilian  ECO: A29 English Opening: King's English Variation, Four Knights Variation, Fianchetto Line, with Nb6 (12 ply)  [19 ply]
+l4b.op2flank #1 (line): English: Botvinnik setup (Black)  ECO: A26 English Opening: King's English Variation, Botvinnik System (11 ply)  [16 ply]
+l4b.op2flank #2 (line): Symmetrical English  ECO: A35 English Opening: Symmetrical Variation, Four Knights Variation (6 ply)  [19 ply]
+l4b.op2flank #3 (line): Reti: 2...d4  ECO: A09 Réti Opening: Advance Variation (4 ply)  [14 ply]
+l4b.op2flank #4 (line): KIA ke khilaaf: queenside plan  ECO: A07 King's Indian Attack (3 ply)  [16 ply]
+l4b.op2flank #5 (line): Larsen: 1.b3 e5  ECO: A01 Nimzo-Larsen Attack: Modern Variation (5 ply)  [12 ply]
+l4b.op2flank #6 (move): after f4 d5 Nf3 g6 e3 Bg7 Be2 Nf6 O-O O-O d3  ECO: A03 Bird Opening: Dutch Variation
 l4.op2ital #0 (line): Giuoco Pianissimo: modern main line  ECO: C54 Italian Game: Classical Variation, Giuoco Pianissimo (10 ply)  [22 ply]
 l4.op2ital #2 (line): Two Knights: 4.Ng5 d5 main line (Black)  ECO: C59 Italian Game: Two Knights Defense, Polerio Defense, Suhle Defense (16 ply)  [20 ply]
 l4.op2ital #3 (move): after e4 e5 Nf3 Nc6 Bc4 Nf6 Ng5 d5 exd5 Na5 Bb5+ c6 dxc6 bxc6 Be2 h6 Nf3  ECO: C59 Italian Game: Two Knights Defense, Polerio Defense, Suhle Defense
@@ -193,6 +218,13 @@ l4.op2anti #2 (line): Moscow Variation  ECO: B52 Sicilian Defense: Moscow Variat
 l4.op2anti #3 (line): Closed Sicilian  ECO: B26 Sicilian Defense: Closed (11 ply)  [20 ply]
 l4.op2anti #4 (move): after e4 c5 d4 cxd4 c3 dxc3 Nxc3 Nc6 Nf3 e6 Bc4 Qc7 O-O Nf6 Qe2 Ng4 h3  ECO: B21 Sicilian Defense: Smith-Morra Gambit Accepted, Siberian Variation
 l4.op2anti #5 (move): after e4 c5 c3 Nf6 e5 Nd5 d4 cxd4 Nf3  ECO: B22 Sicilian Defense: Alapin Variation, Smith-Morra Declined
+op3.indstr #0 (line): KID: Bayonet Attack (9.b4)  ECO: E97 King's Indian Defense: Orthodox Variation, Bayonet Attack, Sokolov's Line (19 ply)  [24 ply]
+op3.indstr #2 (line): Hedgehog (English se)  ECO: A30 English Opening: Symmetrical Variation (3 ply)  [22 ply]
+op3.indstr #3 (move): after d4 Nf6 c4 c5 d5 e6 Nc3 exd5 cxd5 d6 e4 g6 Nf3 Bg7 Be2 O-O O-O Re8 Nd2 Na6 f3 Nc7 a4 b6  ECO: A79 Benoni Defense: Classical Variation, Czerniak Defense
+op3.indord #0 (info): after d4 Nf6 c4 e6  ECO: A50 Indian Defense: Normal Variation
+op3.indord #2 (line): Catalan se QGD (transposition)  ECO: E00 Catalan Opening (6 ply)  [18 ply]
+op3.indord #3 (line): Grunfeld se bachna: 3.f3  ECO: D70 Neo-Grünfeld Defense: Goglidze Attack (6 ply)  [15 ply]
+op3.indord #4 (move): after d4 Nf6 c4 g6 Nc3 Bg7 e4 d6 Nf3 O-O h3  ECO: E90 King's Indian Defense: Normal Variation, Rare Defenses
 op3.ital #0 (line): Pianissimo: 15+ chaal aur ...d5 break  ECO: C54 Italian Game: Classical Variation, Giuoco Pianissimo (10 ply)  [26 ply]
 op3.ital #2 (line): 5.d4: isolated queen pawn (IQP)  ECO: C54 Italian Game: Classical Variation, Greco Gambit, Traditional Line (11 ply)  [24 ply]
 op3.ital #3 (info): after e4 e5 Nf3 Nc6 Bc4 Bc5 c3 Nf6 d4 exd4 cxd4 Bb4+ Bd2 Bxd2+ Nbxd2 d5 exd5 Nxd5 Qb3 Nce7 O-O O-O Rfe1 c6  ECO: C54 Italian Game: Classical Variation, Greco Gambit, Traditional Line
