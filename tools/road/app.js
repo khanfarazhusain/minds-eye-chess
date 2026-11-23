@@ -36,7 +36,8 @@ const ENDT=['endgame','rookend','pawnend','queenend','minorend'],CALCT=['defence
 function learnedTh(){const o=new Set();for(const L of ROAD_LEVELS)for(const k of L.lessons)if(L.n<SP.lvl||isDone(k))(LES_TH[k]||[]).forEach(t=>o.add(t));return[...o]}
 function poolOf(k){const l=learnedTh();if(k==='puz')return l.filter(t=>!ENDT.includes(t));if(k==='end')return l.filter(t=>ENDT.includes(t));if(k==='calc')return l.filter(t=>CALCT.includes(t));return null}
 function need(k){const q=CUR().quota;if(k==='srs')return Math.min(q.srs||20,srsDue().length+(sday().srs||0));if(k==='review')return(unreviewed().length||sday().review)?1:0;if(k==='lesson'||k==='game')return 1;
-  if(!PREVIEW&&(k==='puz'||k==='end'||k==='calc')&&!poolOf(k).length)return 0;
+  if(!PREVIEW&&(k==='puz'||k==='end')&&!poolOf(k).length)return 0;
+  if(!PREVIEW&&k==='calc'&&!cgLesOk(CG_STEPS[0]))return 0;
   if(k==='flash')return Math.min(q.flash||0,flashDue());return q[k]||0}
 const flashDue=()=>dueCards().length+dueGm().length;
 function have(k){const D=sday();if(k==='game')return SP.games.d===today()?Math.min(1,SP.games.n):0;if(k==='flash'&&(D.flashNone||!flashDue()))return need('flash');if(k==='lesson'&&!nextLes())return 1;return D[k]||0}
@@ -98,7 +99,7 @@ const dueCards=()=>Object.entries(SP.cards).filter(([t,c])=>c.due<=dayNum()).map
 function rate(pr,ok){const me=SP.pr||CUR().band[0]+150;const e=1/(1+Math.pow(10,(pr-me)/400));SP.pr=Math.round(me+24*((ok?1:0)-e))}
 
 /* ---------- puzzle session: ek ke baad ek, kabhi repeat nahi ---------- */
-function vPuzzleRun(kind,arg){const app=$('#app');sday();
+function vPuzzleRun(kind,arg){if(kind==='calc')return go('#/calc');const app=$('#app');sday();
   const cfg=kind==='th'&&arg?{title:(TNAME[arg]||arg)+' Drill',any:[arg]}:{puz:{title:'Tactics Puzzles',any:null},end:{title:'Endgame Drill',any:['endgame','rookend','pawnend','queenend','minorend']},calc:{title:'Calculation & Defence',any:['defence','quiet','long','zwischen']},flash:{title:'Mistake Flashcards',flash:true},extra:{title:'Unlimited Practice',any:null},weak:{title:'Weak Spot Drills',weak:true}}[kind];
   if(!cfg)return go('#/');
   let n=0,ok=0,cur=null;const D=sday();
@@ -165,7 +166,13 @@ function testSteps(L){const ks=L.lessons;const S=[];
   const cur=shuffle(S).slice(0,L.n>1?13:20);if(L.n===1)return cur;
   const prev=doneLessonsUpTo(L.n-1),pk=new Set(prev);const oldT=[];COURSE.forEach(C=>(C.test||[]).forEach(s=>{if(pk.has(s.les))oldT.push(s)}));
   return cur.concat(oldSteps(prev,7,oldT).map(s=>Object.assign({},s,{_old:1})))}
-async function runTest(){const L=CUR(),app=$('#app');
+/* Calculation Gym ke saath: Gym ka har puzzle roz ke 'calc' quota mein ginta hai; Road ke pichle levels ke lessons "seekhe hue" maane jaate hain */
+function onCalcDone(ok){const D=sday();D.calc=(D.calc||0)+1;ssave()}
+function cgRoadKnown(k){return ROAD_LEVELS.some(L=>L.n<SP.lvl&&L.lessons.includes(k))}
+/* level test se pehle Gym ladder kahan tak (steps pass): pro banne ke liye practice zaroori */
+const CG_RGATE={2:5,3:11,4:17,5:23,6:29,7:35,8:41,9:47,10:47};
+function cgRoadGate(n){const need=CG_RGATE[n]||0;if(PREVIEW||cgS().f>=need)return'';const st=CG_STEPS[need-1];return`🧠 **Calculation Gym pehle:** Level ${n} test se pehle Gym mein **${cgStepName(st)}** tak pass karo (abhi ${cgS().f}/${need} steps).`}
+async function runTest(){const L=CUR(),app=$('#app');{const gm=cgRoadGate(L.n);if(gm){app.innerHTML=`<div class="card stack">${md(gm)}<button class="btn primary block" data-go="#/calc">🧠 Calculation Gym ›</button><button class="btn block" data-go="#/level/${L.n}">‹ Level</button></div>`;return}}
   if(!PREVIEW&&L.lessons.some(k=>!isDone(k)))return go('#/level/'+L.n);
   if(ratingLocked())return go('#/');
   app.innerHTML='<p class="muted">Test taiyaar ho raha hai…</p>';
@@ -217,6 +224,7 @@ function vHome(){const app=$('#app');sday();const L=CUR();const lock=ratingLocke
    ${dayDone()?'<div class="card okc"><b>Aaj ka poora kaam ho gaya. Shabaash!</b> Chaho to aur practice karo.</div>':''}
    <div class="card stack"><div class="row" style="justify-content:space-between"><h3>🧠 Yaad ka meter</h3><small class="muted">${srsStats().total} items</small></div>${srsMeterHTML()||'<p class="small muted">Lesson poora karte hi uske sawaal aur yaad points yahan aate hain (1, 3, 7, 21, 60, 120 din par wapas).</p>'}
     <div class="row"><button class="btn" data-go="#/review">🔁 Review (${srsDue().length})</button><button class="btn" data-go="#/viz">👁 Board-hidden drill</button></div></div>
+   <button class="btn primary block" data-go="#/calc">🧠 Calculation Gym · step ${Math.min(cgS().f+1,CG_STEPS.length)}/${CG_STEPS.length}</button>
    <div class="row"><button class="btn block" data-go="#/run/extra">♾ Unlimited Practice</button><button class="btn block" data-go="#/games">♟ My Games</button></div>
    <h2>Levels</h2><div class="lvls">${ROAD_LEVELS.map(x=>`<button class="lv${x.n===L2.n?' on':''}${x.n>L2.n&&!PREVIEW?' locked':''}" data-go="#/level/${x.n}"><b>${x.n}</b><span>${esc(x.name)}</span><small>${x.lo||0}-${x.gate}</small></button>`).join('')}</div>
    ${lichCard()}
@@ -230,7 +238,7 @@ function vLevelS(n){const L=LV(n),app=$('#app');if(!L)return go('#/');const open
    ${!open?'<div class="card">🔒 Yeh level pichhla level aur uska Lichess darwaza paar karne par khulega.</div>':''}
    <h2>Lessons (${L.lessons.filter(isDone).length}/${L.lessons.length})</h2>${L.lessons.length?`<div class="qlist">${items}</div>`:'<div class="card">Is level ka content jald aa raha hai. Tab tak roz ka puzzle quota, opening drills aur games.</div>'}
    <p class="small muted">Naye lessons roz ki list se ek-ek karke khulte hain. ✅ wale yahan se dobara kar sakte ho.</p>
-   ${n===SP.lvl||PREVIEW?`<h2>Level Test</h2><button class="btn ${L.lessons.every(isDone)||PREVIEW?'primary':''} block" ${L.lessons.every(isDone)||PREVIEW?'data-go="#/test"':'disabled'}>Take Level ${n} Test (75% to pass)</button>`+gateHTML(L):''}
+   ${n===SP.lvl||PREVIEW?`<h2>Level Test</h2>${cgRoadGate(n)?`<div class="card">${md(cgRoadGate(n))}<a class="btn small" style="text-decoration:none" href="#/calc">Gym kholo ›</a></div>`:''}<button class="btn ${L.lessons.every(isDone)||PREVIEW?'primary':''} block" ${L.lessons.every(isDone)||PREVIEW?'data-go="#/test"':'disabled'}>Take Level ${n} Test (75% to pass)</button>`+gateHTML(L):''}
    ${n%2===0&&(open||PREVIEW)?`<h2>Mixed Exam</h2><button class="btn block" data-go="#/exam/${n}">🧩 Mixed Exam: Level 1-${n}${(SP.exam||{})[n]!=null?' · best '+SP.exam[n]+'%':''}</button><p class="small muted">Har 2 level baad: 25 sawaal, sab purane lessons se mila-jula. Kamzor topics pehle.</p>`:''}</div>`}
 
 function vExamS(n){if(!(n>=2))return go('#/');SP.exam=SP.exam||{};const prev=doneLessonsUpTo(Math.min(n,SP.lvl)),pk=new Set(prev);const ex=[];COURSE.forEach(C=>(C.test||[]).forEach(s=>{if(pk.has(s.les))ex.push(s)}));
@@ -241,7 +249,7 @@ function go(hash){if(location.hash!==hash)location.hash=hash;else route()}
 window.addEventListener('hashchange',route);
 function navOn(){const h=location.hash||'#/';const bs=[...document.querySelectorAll('nav.tabs button[data-go]')];const hit=bs.find(b=>b.dataset.go===h)||bs.find(b=>h.startsWith(b.dataset.go+'/')&&b.dataset.go!=='#/')||bs[0];bs.forEach(b=>b.classList.toggle('on',b===hit))}
 function route(){closeTutor();navOn();const p=(location.hash||'#/').slice(2).split('/');const app=$('#app');app.innerHTML='';app.onclick=null;window.scrollTo(0,0);
-  if(p[0]==='run')vPuzzleRun(p[1],p[2]);else if(p[0]==='les')runLesson(p[1],'#/');else if(p[0]==='quiz')runQuiz();else if(p[0]==='open')runOpen();
+  if(p[0]==='calc'){if(p[1]==='run')cgRun(+p[2]);else if(p[1]==='jump')cgRun(+p[2],{test:1});else cgHome()}else if(p[0]==='run')vPuzzleRun(p[1],p[2]);else if(p[0]==='les')runLesson(p[1],'#/');else if(p[0]==='quiz')runQuiz();else if(p[0]==='open')runOpen();
   else if(p[0]==='test')runTest();else if(p[0]==='review')srsSession(app,{back:'#/',backTxt:"Today's Work ›",self:'#/review',viz:'#/viz',onDone:n=>{const D=sday();D.srs=(D.srs||0)+n;ssave()}});else if(p[0]==='viz')vizSession(app,{back:'#/',self:'#/viz'});else if(p[0]==='exam')vExamS(+p[1]);else if(p[0]==='level')vLevelS(+p[1]);else if(p[0]==='games')vGames();else if(p[0]==='game'&&p[1])vGame(p[1]);else vHome();chips()}
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();const t=g.dataset.go;if(location.hash===t)route();else go(t);return}
   const a=e.target.closest('[data-act]');if(!a)return;
