@@ -45,6 +45,7 @@ nav.tabs button svg{display:block;transition:transform .2s}
 body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!important}
 `;
 const nav=(items)=>`<nav class="tabs"><div class="wrap">\n${items.map(([ic,label,act,on])=>`<button ${act}${on?' class="on"':''}><span>${IC[ic]}</span>${label}</button>`).join('\n')}\n</div></nav>`;
+const OPLV=require('crypto').createHash('md5').update(fs.readFileSync(path.join(root,'packs','opl.js'))).digest('hex').slice(0,8); /* opening ladder pack: cache-bust */
 const UIV='166'; /* ui.css / ui.js version: bump with the app version */
 const BUILD=new Date().toISOString().slice(0,16).replace('T',' ')+' UTC';
 const css=`
@@ -97,6 +98,7 @@ let html=head.replace(/<title>[^<]*<\/title>/,'<title>Road to 3000 · 64 Squares
 <header class="top"><div class="wrap"><a class="brand" href="#/"><i class="b64">64</i><span class="bname">Road to 3000<small>64 Squares</small></span></a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span></div></div></header>
 <main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version ${BUILD}</p></main>
 ${nav([['today','Today','data-go="#/"',1],['practice','Practice','data-go="#/run/extra"'],['games','My Games','data-go="#/games"'],['course','Course',"onclick=\"location.href='course.html'\""],['trainer','Home',"onclick=\"location.href='index.html'\""]])}
+<script src="packs/opl.js?v=${OPLV}"></script>
 <script>
 ${core}
 ${skin}

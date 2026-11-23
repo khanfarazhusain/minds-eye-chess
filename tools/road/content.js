@@ -160,4 +160,6 @@ const ROAD_LEVELS = [
  {n:9,name:'Elite',lo:2600,gate:2800,games:200,hold:30,band:[2500,3000],quota:{flash:30,puz:15,quiz:5,end:3,open:5,calc:8,mins:120},lessons:['sf.e9a','sf.e9b','sf.e9c']},
  {n:10,name:'Legend',lo:2800,gate:3000,games:200,hold:30,band:[2700,3200],quota:{flash:30,puz:15,quiz:5,end:3,open:5,calc:8,mins:120},lessons:['sf.e10a','sf.e10b','sf.e10c']}
 ];
+/* Openings Ladder (packs/opl.js) ke lessons apne Road level mein */
+if(typeof OPL!=='undefined')OPL.road(ROAD_LEVELS);
 if(typeof module!=='undefined')module.exports={ROAD_NEW,ROAD_LEVELS};
