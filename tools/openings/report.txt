@@ -86,3 +86,68 @@ l2b.op1mix #8 (move): after d4 Nf6 c4 g6 Nc3 Bg7  ECO: E61 King's Indian Defense
 l2b.op1mix #9 (move): after e4 e5 Nf3 Nf6 Nxe5  ECO: C42 Petrov's Defense
 l2b.op1mix #10 (move): after e4 e6 d4 d5 e5  ECO: C02 French Defense: Advance Variation
 l2b.op1mix #11 (move): after e4 c5 Nf3 d6 d4 cxd4  ECO: B50 Sicilian Defense
+l4.op2ital #0 (line): Giuoco Pianissimo: modern main line  ECO: C54 Italian Game: Classical Variation, Giuoco Pianissimo (10 ply)  [22 ply]
+l4.op2ital #2 (line): Two Knights: 4.Ng5 d5 main line (Black)  ECO: C59 Italian Game: Two Knights Defense, Polerio Defense, Suhle Defense (16 ply)  [20 ply]
+l4.op2ital #3 (move): after e4 e5 Nf3 Nc6 Bc4 Nf6 Ng5 d5 exd5 Na5 Bb5+ c6 dxc6 bxc6 Be2 h6 Nf3  ECO: C59 Italian Game: Two Knights Defense, Polerio Defense, Suhle Defense
+l4.op2ital #4 (line): Two Knights: 4.d3 (shaant)  ECO: C55 Italian Game: Two Knights Defense, Modern Bishop's Opening (8 ply)  [20 ply]
+l4.op2ital #5 (move): after e4 e5 Nf3 Nc6 Bc4 Nd4  ECO: C50 Italian Game: Blackburne-Kostić Gambit
+l4.op2ital #6 (move): after e4 e5 Nf3 Nc6 Bc4 Nd4 Nxe5 Qg5 Nxf7 Qxg2 Rf1 Qxe4+ Be2  ECO: C50 Italian Game: Blackburne-Kostić Gambit
+l4.op2ital #7 (line): Hungarian aur 3...d6 ke khilaaf: d4!  ECO: C50 Italian Game: Hungarian Defense (6 ply)  [15 ply]
+l4.op2ital #8 (line): Evans Gambit: main line (White)  ECO: C52 Italian Game: Evans Gambit, Mieses Defense (14 ply)  [19 ply]
+l4.op2ital #9 (quiz): after e4 e5 Nf3 Nc6 Bc4 Bc5 b4 Bxb4 c3 Ba5 d4 exd4 O-O Nge7 cxd4 d5 exd5 Nxd5 Ba3  ECO: C52 Italian Game: Evans Gambit, Mieses Defense
+l4.op2ital #10 (move): after e4 e5 Nf3 Nc6 Bc4 Bc5 c3 Nf6 d4 exd4 cxd4 Bb4+ Bd2 Bxd2+ Nbxd2  ECO: C54 Italian Game: Classical Variation, Greco Gambit, Traditional Line
+l4.op2ruy #0 (line): Closed Ruy Lopez: Chigorin  ECO: C99 Ruy Lopez: Closed, Chigorin Defense, Panov System (25 ply)  [25 ply]
+l4.op2ruy #1 (line): Closed Ruy: Breyer  ECO: C95 Ruy Lopez: Closed, Breyer Defense, Zaitsev Hybrid (20 ply)  [26 ply]
+l4.op2ruy #2 (line): Berlin Defence  ECO: C67 Ruy Lopez: Berlin Defense, l'Hermet Variation, Berlin Wall Defense (16 ply)  [18 ply]
+l4.op2ruy #4 (line): Marshall Attack  ECO: C89 Ruy Lopez: Marshall Attack, Modern Main Line (28 ply)  [28 ply]
+l4.op2ruy #5 (line): Exchange Variation  ECO: C69 Ruy Lopez: Exchange Variation, Gligoric Variation (10 ply)  [17 ply]
+l4.op2ruy #7 (move): after e4 e5 Nf3 Nc6 Bb5 a6 Ba4 d6 d4 b5 Bb3 Nxd4 Nxd4 exd4 Qxd4  ECO: C71 Ruy Lopez: Morphy Defense, Modern Steinitz Defense
+l4.op2ruy #8 (move): after e4 e5 Nf3 Nc6 Bb5 f5  ECO: C63 Ruy Lopez: Schliemann Defense
+l4.op2ruy #9 (move): after e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O Be7 Re1 b5 Bb3 O-O c3  ECO: C88 Ruy Lopez: Closed
+l4.op2scot #0 (line): Scotch: Mieses (4...Nf6)  ECO: C45 Scotch Game: Mieses Variation (11 ply)  [17 ply]
+l4.op2scot #1 (line): Scotch: Classical (4...Bc5)  ECO: C45 Scotch Game: Classical Variation (8 ply)  [18 ply]
+l4.op2scot #2 (line): Scotch Gambit  ECO: C44 Scotch Game: Scotch Gambit, Advance Variation (9 ply)  [18 ply]
+l4.op2scot #3 (line): Four Knights: Spanish aur Rubinstein  ECO: C48 Four Knights Game: Spanish Variation, Rubinstein Variation, Marshall Gambit (12 ply)  [16 ply]
+l4.op2scot #4 (line): Four Knights: Scotch Four Knights  ECO: C47 Four Knights Game: Scotch Variation Accepted (8 ply)  [20 ply]
+l4.op2scot #5 (line): Ponziani: Black ka jawab  ECO: C44 Ponziani Opening: Vukovic Gambit (10 ply)  [10 ply]
+l4.op2scot #6 (line): Center Game: queen ko tempo se bhagao  ECO: C22 Center Game: Berger Variation (8 ply)  [14 ply]
+l4.op2scot #7 (move): after e4 e5 Nf3 Nc6 d4 exd4 Nxd4 Bc5 Be3 Qf6 c3 Nge7 Bc4  ECO: C45 Scotch Game: Classical Variation
+l4.op2scot #8 (quiz): after e4 e5 Nf3 Nc6 d4 exd4 Bc4 Nf6  ECO: C44 Scotch Game: Scotch Gambit
+l4.op2scot #9 (move): after e4 e5 Nf3 Nc6 Nc3 Nf6 Bb5 Nd4 Nxe5  ECO: C48 Four Knights Game: Spanish Variation, Rubinstein Variation
+l4.op2kgv #0 (line): King's Gambit Accepted: 3...g5 aur Kieseritzky  ECO: C39 King's Gambit Accepted: Kieseritzky Gambit, Berlin Defense, Rubinstein Variation (11 ply)  [15 ply]
+l4.op2kgv #1 (line): KGA: modern 3...d5 (Black)  ECO: C36 King's Gambit Accepted: Abbazia Defense (8 ply)  [17 ply]
+l4.op2kgv #2 (line): Falkbeer Countergambit  ECO: C31 King's Gambit Declined: Falkbeer Countergambit, Modern Transfer (6 ply)  [12 ply]
+l4.op2kgv #3 (line): King's Gambit Declined: Classical  ECO: C30 King's Gambit Declined: Classical Variation (7 ply)  [16 ply]
+l4.op2kgv #4 (line): Vienna Gambit: Black ka sahi jawab  ECO: C29 Vienna Game: Vienna Gambit, Breyer Variation (10 ply)  [16 ply]
+l4.op2kgv #5 (line): Vienna: Frankenstein-Dracula  ECO: C27 Vienna Game: Stanley Variation, Frankenstein-Dracula Variation (20 ply)  [20 ply]
+l4.op2kgv #6 (move): after e4 e5 Nc3 Nf6 Bc4 Nxe4 Nxe4  ECO: C27 Vienna Game: Frankenstein-Dracula Variation
+l4.op2kgv #7 (move): after e4 e5 f4 exf4 Nf3 g5 Bc4 g4 O-O gxf3 Qxf3  ECO: C37 King's Gambit Accepted: Muzio Gambit, Wild Muzio Gambit
+l4.op2pet #0 (line): Petrov: Classical main line  ECO: C42 Petrov's Defense: Classical Attack, Chigorin Variation, Main Line (17 ply)  [20 ply]
+l4.op2pet #1 (line): Petrov: 5.Nc3 (White ka aggressive line)  ECO: C42 Petrov's Defense: Nimzowitsch Attack (9 ply)  [17 ply]
+l4.op2pet #2 (move): after e4 e5 Nf3 Nf6 Nxe5 d6 Nf3 Nxe4 Qe2  ECO: C42 Petrov's Defense: Cozio Attack
+l4.op2pet #3 (line): Philidor: Lion / Hanham setup  ECO: B00 Pirc Defense (4 ply)  [16 ply]
+l4.op2pet #5 (move): after e4 e5 Nf3 d6 Bc4 Bg4 Nc3 g6  ECO: C41 Philidor Defense
+l4.op2pet #6 (move): after e4 e5 Nf3 d6 d4 Nd7 Bc4 Be7  ECO: C41 Philidor Defense: Hanham Variation
+l4.op2pet #7 (move): after e4 e5 Nf3 Nf6 Nxe5 d6 Nxf7  ECO: C42 Petrov's Defense: Cochrane Gambit
+op3.ital #0 (line): Pianissimo: 15+ chaal aur ...d5 break  ECO: C54 Italian Game: Classical Variation, Giuoco Pianissimo (10 ply)  [26 ply]
+op3.ital #2 (line): 5.d4: isolated queen pawn (IQP)  ECO: C54 Italian Game: Classical Variation, Greco Gambit, Traditional Line (11 ply)  [24 ply]
+op3.ital #3 (info): after e4 e5 Nf3 Nc6 Bc4 Bc5 c3 Nf6 d4 exd4 cxd4 Bb4+ Bd2 Bxd2+ Nbxd2 d5 exd5 Nxd5 Qb3 Nce7 O-O O-O Rfe1 c6  ECO: C54 Italian Game: Classical Variation, Greco Gambit, Traditional Line
+op3.ital #5 (move): after e4 e5 Nf3 Nc6 Bc4 Bc5 c3 Nf6 d4 exd4 cxd4 Bb4+ Bd2 Bxd2+ Nbxd2 d5 exd5 Nxd5 Qb3  ECO: C54 Italian Game: Classical Variation, Greco Gambit, Traditional Line
+op3.ital #6 (line): Transposition: Two Knights 4.d3 = Giuoco  ECO: C50 Italian Game: Giuoco Pianissimo, Normal (8 ply)  [18 ply]
+op3.ital #7 (move): after e4 e5 Nf3 Nc6 Bc4 Bc5 c3 Nf6 d3 d6 O-O O-O Re1 a6 a4 Ba7 h3 h6 Nbd2 Re8 Nf1  ECO: C54 Italian Game: Classical Variation, Giuoco Pianissimo
+op3.ruy #0 (line): Zaitsev: Karpov-Kasparov ka battle  ECO: C92 Ruy Lopez: Closed, Flohr System (18 ply)  [33 ply]
+op3.ruy #2 (line): Anti-Marshall: 8.h3  ECO: C88 Ruy Lopez: Closed (14 ply)  [22 ply]
+op3.ruy #4 (line): Marshall: aage ki line  ECO: C89 Ruy Lopez: Marshall Attack, Modern Main Line (28 ply)  [34 ply]
+op3.ruy #5 (line): Berlin endgame ke plans  ECO: C67 Ruy Lopez: Berlin Defense, l'Hermet Variation, Berlin Wall Defense (16 ply)  [26 ply]
+op3.ruy #6 (move): after e4 e5 Nf3 Nc6 Bb5 Nf6 O-O Nxe4 d4 Nd6 Bxc6 dxc6 dxe5 Nf5 Qxd8+ Kxd8 Nc3 Ke8 h3  ECO: C67 Ruy Lopez: Berlin Defense, l'Hermet Variation, Berlin Wall Defense
+op3.ruy #7 (move): after e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O Be7 Re1 b5 Bb3 d6 c3 O-O h3 Bb7 d4 Re8 Nbd2 Bf8  ECO: C92 Ruy Lopez: Closed, Flohr System
+op3.scot #0 (line): Scotch Mieses: 12+ chaal  ECO: C45 Scotch Game: Mieses Variation (11 ply)  [26 ply]
+op3.scot #2 (line): Scotch Classical: lambi line  ECO: C45 Scotch Game: Potter Variation (9 ply)  [26 ply]
+op3.scot #3 (line): Scotch Four Knights: solid Black  ECO: C47 Four Knights Game: Scotch Variation Accepted (8 ply)  [24 ply]
+op3.scot #4 (move): after e4 e5 Nf3 Nc6 d4 exd4 Nxd4 Nf6 Nxc6 bxc6 e5 Qe7 Qe2 Nd5 c4  ECO: C45 Scotch Game: Mieses Variation
+op3.scot #5 (quiz): after e4 e5 Nf3 Nc6 Nc3 Nf6 d4 exd4 Nxd4  ECO: C47 Four Knights Game: Scotch Variation Accepted
+op3.gam #0 (line): Evans Gambit: Lasker Defence  ECO: C52 Italian Game: Evans Gambit, Bronstein Defense (12 ply)  [20 ply]
+op3.gam #1 (line): King's Gambit: Fischer Defence  ECO: C34 King's Gambit Accepted: Fischer Defense (6 ply)  [14 ply]
+op3.gam #2 (line): Danish: dono pawns lo, phir wapas do  ECO: C21 Danish Gambit Accepted: Schlechter Defense (10 ply)  [19 ply]
+op3.gam #3 (line): Fried Liver ka sach: 6.d4 (Lolli)  ECO: C57 Italian Game: Two Knights Defense, Lolli Attack (11 ply)  [19 ply]
+op3.gam #4 (move): after e4 e5 Nf3 Nc6 Bc4 Bc5 b4 Bxb4 c3 Ba5 d4 d6 O-O Bb6 dxe5 dxe5  ECO: C52 Italian Game: Evans Gambit, Bronstein Defense

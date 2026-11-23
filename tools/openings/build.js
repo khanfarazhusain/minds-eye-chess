@@ -11,7 +11,7 @@ const fo=src.slice(src.indexOf('function fenOf('));const fenOfSrc=fo.slice(0,fo.
 const C=vm.runInNewContext(src.slice(a,z)+'\n'+fenOfSrc+';({parseFEN,legal,make,san,findMove,fenOf,START_FEN,mates})',{console});
 const ECO=JSON.parse(fs.readFileSync(path.join(ROOT,'packs','openings.json'),'utf8'));
 
-const SRC=fs.readdirSync(__dirname).filter(f=>/^l\d\.js$/.test(f)).sort();
+const SRC=fs.readdirSync(__dirname).filter(f=>/^l\d[\w]*\.js$/.test(f)).sort();
 const errs=[],rep=[];
 function play(moves,fen,where){let p=C.parseFEN(fen||C.START_FEN);const out=[];
   for(const m of moves){const mv=C.findMove(p,m);if(!mv){errs.push(`${where}: illegal "${m}" after "${out.join(' ')}"`);return null}
@@ -25,7 +25,7 @@ function ecoName(mv){let best=null;for(const[code,name,line]of ECO){const L=line
   if(L.length<=mv.length&&L.every((x,i)=>x===mv[i])&&(!best||L.length>best[2]))best=[code,name,L.length]}return best}
 
 const out={levels:[]};
-for(const f of SRC){const M=require(path.join(__dirname,f));const lv={to:M.to,road:M.road,newLevel:M.newLevel||null,lessons:[]};
+for(const f of SRC){const M=require(path.join(__dirname,f));const lv={to:M.to,road:M.road,newLevel:M.newLevel||null,lessons:[],test:[]};
   for(const L of M.lessons){const key=(M.newLevel?M.newLevel.id:M.to)+'.'+L.id;const les={id:L.id,key,title:L.title,sub:L.sub,yaad:L.yaad,steps:[]};
     L.steps.forEach((s0,k)=>{const s=Object.assign({},s0);const where=`${key} #${k} (${s.t})`;
       if(s.after!=null){const r=play(s.after.split(/\s+/).filter(Boolean),null,where);if(r){s.fen=C.fenOf(r.p);const e=ecoName(r.out);rep.push(`${where}: after ${r.out.join(' ')}  ECO: ${e?e[0]+' '+e[1]:'-'}`)}delete s.after}
@@ -35,6 +35,7 @@ for(const f of SRC){const M=require(path.join(__dirname,f));const lv={to:M.to,ro
         if(r){s.line=r.out;if(s.mate&&!C.mates(r.p))errs.push(where+': mate flag but final position is not mate');if(/#$/.test(r.out[r.out.length-1])&&!C.mates(r.p))errs.push(where+': # but not mate')}
         (s.ok||[]).forEach(o=>{if(!C.findMove(C.parseFEN(s.fen),o))errs.push(where+': ok move illegal '+o)})}}
       if(s.t==='quiz'&&!(s.a>=0&&s.a<s.opts.length))errs.push(where+': bad answer index');
+      if(s.test){delete s.test;if(M.newLevel)lv.test.push(Object.assign({of:L.id},s))}
       les.steps.push(s)});
     lv.lessons.push(les)}
   out.levels.push(lv)}
@@ -48,7 +49,8 @@ var OPL=(function(){var D=${JSON.stringify(out)};
 function merge(C){if(!C||!C.length||C.__opl)return;C.__opl=1;D.levels.forEach(function(lv){var L;
   if(lv.newLevel){L=C.find(function(x){return x.id===lv.newLevel.id});if(!L){L=Object.assign({lessons:[]},JSON.parse(JSON.stringify(lv.newLevel)));var i=lv.newLevel.after?C.findIndex(function(x){return x.id===lv.newLevel.after}):-1;if(i<0)C.push(L);else C.splice(i+1,0,L)}}
   else L=C.find(function(x){return x.id===lv.to});if(!L)return;
-  lv.lessons.forEach(function(les){if(!L.lessons.some(function(x){return x.id===les.id}))L.lessons.push(JSON.parse(JSON.stringify(les)))})})}
+  lv.lessons.forEach(function(les){if(!L.lessons.some(function(x){return x.id===les.id}))L.lessons.push(JSON.parse(JSON.stringify(les)))});
+  if(lv.test&&lv.test.length){L.test=(L.test||[]).concat(JSON.parse(JSON.stringify(lv.test)))}})}
 function road(R){if(!R||R.__opl)return;R.__opl=1;D.levels.forEach(function(lv){var L=R.find(function(x){return x.n===lv.road});if(!L)return;
   lv.lessons.forEach(function(les){if(L.lessons.indexOf(les.key)<0)L.lessons.push(les.key)})})}
 return{data:D,merge:merge,road:road}})();
