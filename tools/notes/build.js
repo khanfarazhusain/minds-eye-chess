@@ -9,6 +9,8 @@ if(a<0||z<0)throw new Error('course.html markers not found');
 const L=vm.runInNewContext(src.slice(a,z)+';({COURSE,LINES,parseFEN,legal,make,san,findMove,md,inl,esc,sn,si,light,START_FEN})',{console});
 const {KP,EXTRA}=require('./keypoints.js');
 const {COURSE,LINES,parseFEN,legal,make,san,findMove,md,inl,esc,sn,si,light,START_FEN}=L;
+/* Openings Ladder (packs/opl.js) ke lessons bhi notes mein, jaise app mein */
+require(path.join(ROOT,'packs','opl.js')).merge(COURSE);
 const FILES='abcdefgh';
 const GLYPH={K:'♚',Q:'♛',R:'♜',B:'♝',N:'♞',P:'♟'};
 const isW=p=>p===p.toUpperCase();
@@ -44,7 +46,8 @@ const lastMarks=m=>m?{[sn(m.f)]:'last',[sn(m.t)]:'last'}:{};
 
 function lessonHTML(Lv,li,les,lj){const key=les.key||Lv.id+'.'+les.id,anchor=Lv.id+'-'+les.id;
   let head=`<section class="lesson" id="${anchor}"><div class="lhead"><span class="lno">${li+1}.${lj+1}</span><div><h3>${esc(les.title)}</h3><p class="muted">${esc(les.sub||'')}</p></div></div>`;
-  if(KP[key])head+=`<div class="yaad"><b class="eyebrow">Yaad rakho</b><ul>${KP[key].map(t=>'<li>'+inl(t)+'</li>').join('')}</ul></div>`;
+  const kp=KP[key]||les.yaad;
+  if(kp)head+=`<div class="yaad"><b class="eyebrow">Yaad rakho</b><ul>${kp.map(t=>'<li>'+inl(t)+'</li>').join('')}</ul></div>`;
   else warnings.push('no KP '+key);
   let qn=0,o='';const topics=[];
   // numbered topic heading (x.y.z) for every block
