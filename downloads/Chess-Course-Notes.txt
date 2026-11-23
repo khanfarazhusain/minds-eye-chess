@@ -1,4 +1,4 @@
-CHESS COURSE NOTES (basics se pro tak) - 15 levels, 70 lessons
+CHESS COURSE NOTES (basics se pro tak) - 15 levels, 74 lessons
 Online (diagrams ke saath): https://khanfarazhusain.github.io/minds-eye-chess/notes.html
 
 Diagram kaise padhein:
@@ -9,7 +9,7 @@ Diagram kaise padhein:
 
 Headings: ### = Level, === = Lesson (jaise 1.2), --- = Topic (jaise 1.2.3)
 
-Basics se pro tak · 15 levels · 70 lessons
+Basics se pro tak · 15 levels · 74 lessons
 
 Chess course ke notes
 
@@ -2090,7 +2090,7 @@ Yaad rakho
     insufficient material, agreement.
 -   K+N vs K aur K+B vs K = draw (mate namumkin).
 -   K+R vs K aur K+Q vs K = jeet.
--   Haarti position mein repetition / perpetual check se draw bacha sakte ho.
+-   Haarti position mein repetition / perpetual check se draw le sakte ho.
 -   Jeet: checkmate, opponent resign kare, ya opponent ka time khatam (agar
     tumhare paas mate ka material ho).
 -   Draw: stalemate, insufficient material, 3-fold repetition, 50-move rule,
@@ -2101,19 +2101,21 @@ Is lesson ke topics
 
 -   2.2.1 Jeetne ke 3 tareeke
 -   2.2.2 Draw ke 5 tareeke
--   2.2.3 Sawal 1: King + ek Knight vs akela King
--   2.2.4 Sawal 2: King + Rook vs akela King?
--   2.2.5 Sawal 3: Dono players ek hi chaal baar-baar repeat karte hain aur
+-   2.2.3 Perpetual check: haarti game ko draw banao
+-   2.2.4 Sawal 1: King + ek Knight vs akela King
+-   2.2.5 Sawal 2: King + Rook vs akela King?
+-   2.2.6 Sawal 3: Dono players ek hi chaal baar-baar repeat karte hain aur
     position…
--   2.2.6 Sawal 4: Opponent ka time khatam ho gaya, par tumhare paas sirf king
+-   2.2.7 Sawal 4: Opponent ka time khatam ho gaya, par tumhare paas sirf king
     hai
--   2.2.7 Abhyaas: Tum Black ho aur bahut peeche ho
--   2.2.8 Sawal 5: King + Bishop vs King + Bishop (dono bishops same colour)
--   2.2.9 Sawal 6: 50 chaal (dono taraf) tak na koi pawn chala, na capture hua
--   2.2.10 Sawal 7: Dono players game ke beech draw par raazi ho gaye
--   2.2.11 Sawal 8: Tum jeet rahe ho
--   2.2.12 Diagram: Stalemate
--   2.2.13 Diagram: Insufficient material
+-   2.2.8 Abhyaas: Tum Black ho aur bahut peeche ho
+-   2.2.9 Sawal 5: King + Bishop vs King + Bishop (dono bishops same colour)
+-   2.2.10 Sawal 6: 50 chaal (dono taraf) tak na koi pawn chala, na capture
+    hua
+-   2.2.11 Sawal 7: Dono players game ke beech draw par raazi ho gaye
+-   2.2.12 Sawal 8: Tum jeet rahe ho
+-   2.2.13 Diagram: Stalemate
+-   2.2.14 Diagram: Insufficient material
 
     2.2.1 Jeetne ke 3 tareeke
     -------------------------
@@ -2136,7 +2138,33 @@ Is lesson ke topics
     King+Bishop vs King, King+Knight vs King.
 -   Agreement: dono players draw maan lein.
 
-    2.2.3 Sawal 1: King + ek Knight vs akela King
+    2.2.3 Perpetual check: haarti game ko draw banao
+    ------------------------------------------------
+
+-   Perpetual check = lagaataar check. Opponent ka king har check se bhaagta
+    hai, par checks kabhi khatam nahi hote.
+-   Isse same position baar-baar aati hai, to game draw ho jaata hai (3-fold
+    repetition).
+-   Kab kaam aata hai: jab tum bahut peeche ho aur mate hone wale ho. Haarne
+    se pehle lagaataar check do aur draw le lo.
+-   Board dekho: White bahut peeche hai (Black ke paas extra queen aur rook,
+    aur Black mate ki dhamki de raha hai). White khelta hai Qf7+ Kh8 Qf8+ Kh7
+    Qf7+... Black king sirf h7 aur h8 ke beech ghoomta reh jaata hai. Draw!
+-   Dhyan: check dene se pehle dekho ki opponent beech mein apna piece rakh
+    kar (block) ya king ko door bhaga kar checks rok to nahi sakta.
+
+    8 | . . . . . . . .
+    7 | . . . . . . . k
+    6 | . . . . . . p p
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . Q . .
+    2 | . r q . . . . .
+    1 | . . . . . . K .
+       ----------------
+        a b c d e f g h
+
+    2.2.4 Sawal 1: King + ek Knight vs akela King
     ---------------------------------------------
 
 King + ek Knight vs akela King: kya hoga?
@@ -2147,7 +2175,7 @@ Jawab:
 
 -   Akele knight ya bishop se mate nahi diya ja sakta.
 
-    2.2.4 Sawal 2: King + Rook vs akela King?
+    2.2.5 Sawal 2: King + Rook vs akela King?
     -----------------------------------------
 
 King + Rook vs akela King?
@@ -2159,7 +2187,7 @@ Jawab:
 -   Rook (ya queen) ke saath mate force kar sakte hain.
 -   Yeh technique Level 3 mein seekhoge.
 
-    2.2.5 Sawal 3: Dono players ek hi chaal baar-baar repeat karte hain aur position…
+    2.2.6 Sawal 3: Dono players ek hi chaal baar-baar repeat karte hain aur position…
     ----------------------------------------------------------------------
 
 Dono players ek hi chaal baar-baar repeat karte hain aur position 3 baar same
@@ -2172,7 +2200,7 @@ Jawab:
 -   3 baar same position = draw claim kar sakte hain.
 -   Isko "perpetual check" mein bhi dekhoge.
 
-    2.2.6 Sawal 4: Opponent ka time khatam ho gaya, par tumhare paas sirf king hai
+    2.2.7 Sawal 4: Opponent ka time khatam ho gaya, par tumhare paas sirf king hai
     ----------------------------------------------------------------------
 
 Opponent ka time khatam ho gaya, par tumhare paas sirf king hai. Result?
@@ -2183,10 +2211,11 @@ Jawab:
 
 -   Akela king kabhi mate nahi kar sakta, isliye time par bhi draw.
 
-    2.2.7 Abhyaas: Tum Black ho aur bahut peeche ho
+    2.2.8 Abhyaas: Tum Black ho aur bahut peeche ho
     -----------------------------------------------
 
-Tum Black ho aur bahut peeche ho. Perpetual check se draw bachao!
+Tum Black ho aur bahut peeche ho. Mate hone se bacho aur perpetual check se
+draw karo!
 
     1 | . . . . . . . .
     2 | K . . . . . . .
@@ -2221,7 +2250,7 @@ Jawab:
 
 Line ke baad position
 
-    2.2.8 Sawal 5: King + Bishop vs King + Bishop (dono bishops same colour)
+    2.2.9 Sawal 5: King + Bishop vs King + Bishop (dono bishops same colour)
     ----------------------------------------------------------------------
 
 King + Bishop vs King + Bishop (dono bishops same colour). Result?
@@ -2232,7 +2261,7 @@ Jawab:
 
 -   Koi bhi mate force nahi kar sakta.
 
-    2.2.9 Sawal 6: 50 chaal (dono taraf) tak na koi pawn chala, na capture hua
+    2.2.10 Sawal 6: 50 chaal (dono taraf) tak na koi pawn chala, na capture hua
     ----------------------------------------------------------------------
 
 50 chaal (dono taraf) tak na koi pawn chala, na capture hua. Kya hota hai?
@@ -2243,7 +2272,7 @@ Jawab:
 
 -   Yeh 50-move rule hai.
 
-    2.2.10 Sawal 7: Dono players game ke beech draw par raazi ho gaye
+    2.2.11 Sawal 7: Dono players game ke beech draw par raazi ho gaye
     -----------------------------------------------------------------
 
 Dono players game ke beech draw par raazi ho gaye. Allowed?
@@ -2254,7 +2283,7 @@ Jawab:
 
 -   Draw offer apni chaal chalne ke baad karo, opponent maane to draw.
 
-    2.2.11 Sawal 8: Tum jeet rahe ho
+    2.2.12 Sawal 8: Tum jeet rahe ho
     --------------------------------
 
 Tum jeet rahe ho. Stalemate se kaise bacho?
@@ -2266,7 +2295,7 @@ Jawab:
 -   Akele king ko hamesha kam se kam ek square ya chaal chhodo, jab tak mate
     na de sako.
 
-    2.2.12 Diagram: Stalemate
+    2.2.13 Diagram: Stalemate
     -------------------------
 
     8 | k . . . . . . .
@@ -2282,7 +2311,7 @@ Jawab:
 
 Stalemate: Black ki chaal, check nahi, par koi legal chaal nahi
 
-    2.2.13 Diagram: Insufficient material
+    2.2.14 Diagram: Insufficient material
     -------------------------------------
 
     8 | . . . . . . . .
@@ -4725,6 +4754,254 @@ Jawab:
         a b c d e f g h
 
 Chaal ke baad
+
+    4.6 Calculation 1: sochne ka routine aur 1 chaal
+    ================================================
+
+6-step routine, 1 chaal ki calculation, Calculation Gym
+
+Yaad rakho
+
+-   Har position mein ek hi routine: Dhamki → Target → Candidates → Line →
+    Ruko → Blunder check.
+-   Candidates ka order: pehle checks, phir captures, phir threats (CCT).
+-   1 chaal ki calculation: meri chaal ke baad opponent kya le sakta hai, kya
+    check de sakta hai?
+-   Pehli achhi chaal dikhe to bhi blunder check karo.
+-   Calculation Gym mein roz 10-15 puzzles: pehle sahi, phir tez.
+
+Is lesson ke topics
+
+-   4.6.1 Calculation = dimaag mein chaalein khelna
+-   4.6.2 6-step routine (har puzzle, har game)
+-   4.6.3 Sawal 1: Routine ka pehla step kya hai?
+-   4.6.4 Sawal 2: Candidates kis order mein dekhte hain?
+-   4.6.5 1 chaal ki calculation: 3 sawal
+-   4.6.6 Abhyaas: Routine lagao
+-   4.6.7 Abhyaas: Target dhundo
+-   4.6.8 Abhyaas: Captures bhi dekho
+-   4.6.9 Sawal 3: Tumhe ek achhi chaal mil gayi
+-   4.6.10 Ab roz ki practice: Calculation Gym
+
+    4.6.1 Calculation = dimaag mein chaalein khelna
+    -----------------------------------------------
+
+-   Calculation ka matlab hai board ko chhuye bina aage ki chaalein sochna:
+    meri chaal, opponent ka best jawab, phir meri chaal.
+-   Do cheezein chahiye:
+    -   Thorough (poora): koi zaroori jawab chhoote nahi.
+    -   Fast (tez): faltu lines par time barbaad na ho.
+-   Yeh talent nahi, routine aur practice hai.
+-   Is course mein calculation 1 chaal se shuru hoti hai aur dheere-dheere 8
+    chaal tak jaati hai.
+-   Har step chhota hai, isliye koi bhi seekh sakta hai.
+
+    4.6.2 6-step routine (har puzzle, har game)
+    -------------------------------------------
+
+-   1.
+-   Dhamki: opponent ki pichli chaal kya chahti hai?
+-   Mere kis piece par khatra hai?
+-   2.
+-   Target: kaunse pieces bina protection hain?
+-   King kitna khula hai?
+-   Kaun do kaam kar raha hai?
+-   3.
+-   Candidates: 2-3 chaalein chuno.
+-   Pehle checks, phir captures, phir threats.
+-   4.
+-   Line: ek candidate ko end tak socho.
+-   Har chaal par opponent ka sabse forcing jawab lo.
+-   5.
+-   Ruko: jab koi check, capture ya threat na bache, ruk jao aur material
+    gino.
+-   6.
+-   Blunder check: chalne se pehle dekho, opponent ke paas koi check, capture
+    ya threat to nahi bacha.
+-   Shuru mein yeh slow lagega. 100-200 puzzles ke baad yeh apne aap 10-20
+    second mein hone lagta hai.
+
+    4.6.3 Sawal 1: Routine ka pehla step kya hai?
+    ---------------------------------------------
+
+Routine ka pehla step kya hai?
+
+Jawab:
+
+✓ Opponent ki dhamki dekhna
+
+-   Pehle bachao.
+-   Opponent ki pichli chaal kya karna chahti hai, yeh na dekha to apni jeet
+    ki line bhi haar mein badal sakti hai.
+
+    4.6.4 Sawal 2: Candidates kis order mein dekhte hain?
+    -----------------------------------------------------
+
+Candidates kis order mein dekhte hain?
+
+Jawab:
+
+✓ Checks → Captures → Threats
+
+-   Checks ke jawab sabse kam hote hain, isliye unhe calculate karna sabse
+    aasaan aur tez hai.
+-   Phir captures, phir threats.
+
+    4.6.5 1 chaal ki calculation: 3 sawal
+    -------------------------------------
+
+-   Har candidate chaal par khud se 3 sawal pucho:
+-   1.
+-   Kya yeh check, capture ya threat hai?
+-   2.
+-   Is chaal ke baad opponent kya le sakta hai aur kya check de sakta hai?
+-   3.
+-   Jo piece maine chalaya, kya woh safe hai?
+-   Aur jo piece pehle use bacha raha tha, ab kaun bachayega?
+-   Teeno ka jawab theek ho, tabhi chalo.
+
+    4.6.6 Abhyaas: Routine lagao
+    ----------------------------
+
+Routine lagao: checks pehle. 1 chaal mein mate.
+
+    1 | R N K . . B Q R
+    2 | P B P . . . . .
+    3 | . P . . . P P .
+    4 | . . . P . P P .
+    5 | . . . . . p . .
+    6 | . . n p . . . .
+    7 | p p p . . . p p
+    8 | r . b k q b r .
+       ----------------
+        h g f e d c b a
+
+(Black ki chaal)
+
+Jawab:
+
+1… Qd1#
+
+-   Qd1#: d-file khuli thi aur White king ke paas koi square nahi.
+-   Lichess puzzle [lAXzO] · rating 500
+
+    1 | R N K . q B Q R
+    2 | P B P . . . . .
+    3 | . P . . . P P .
+    4 | . . . P . P P .
+    5 | . . . . . p . .
+    6 | . . n p . . . .
+    7 | p p p . . . p p
+    8 | r . b k . b r .
+       ----------------
+        h g f e d c b a
+
+Chaal ke baad
+
+    4.6.7 Abhyaas: Target dhundo
+    ----------------------------
+
+Target dhundo: kaunsa piece kamzor hai? 1 chaal.
+
+    1 | K . R . . r . .
+    2 | P P . . . . p .
+    3 | R . . . . . . .
+    4 | . . . . . . n P
+    5 | Q . . P . b . .
+    6 | . . . p . . . p
+    7 | . B p . . . p .
+    8 | . k r . . . . .
+       ----------------
+        h g f e d c b a
+
+(Black ki chaal)
+
+Jawab:
+
+1… Rxf1#
+
+-   Rxf1#: f1 ka rook sirf king se bacha tha, aur capture ke saath back-rank
+    mate.
+-   Lichess puzzle [oSJZu] · rating 550
+
+    1 | K . r . . . . .
+    2 | P P . . . . p .
+    3 | R . . . . . . .
+    4 | . . . . . . n P
+    5 | Q . . P . b . .
+    6 | . . . p . . . p
+    7 | . B p . . . p .
+    8 | . k r . . . . .
+       ----------------
+        h g f e d c b a
+
+Chaal ke baad
+
+    4.6.8 Abhyaas: Captures bhi dekho
+    ---------------------------------
+
+Captures bhi dekho. 1 chaal mein mate.
+
+    1 | R . K . . B N R
+    2 | P P b . . . P P
+    3 | . . . . Q P . .
+    4 | . n . . . . . B
+    5 | . N . p . . . n
+    6 | . . . . . p . .
+    7 | p p p . . . . p
+    8 | r . . k q . . r
+       ----------------
+        h g f e d c b a
+
+(Black ki chaal)
+
+Jawab:
+
+1… Qxd3#
+
+-   Qxd3#: queen bina protection thi, aur use lete hi mate.
+-   Pehle captures gino.
+-   Lichess puzzle [HByRB] · rating 550
+
+    1 | R . K . . B N R
+    2 | P P b . . . P P
+    3 | . . . . q P . .
+    4 | . n . . . . . B
+    5 | . N . p . . . n
+    6 | . . . . . p . .
+    7 | p p p . . . . p
+    8 | r . . k . . . r
+       ----------------
+        h g f e d c b a
+
+Chaal ke baad
+
+    4.6.9 Sawal 3: Tumhe ek achhi chaal mil gayi
+    --------------------------------------------
+
+Tumhe ek achhi chaal mil gayi. Ab kya?
+
+Jawab:
+
+✓ Blunder check: opponent ke checks, captures, threats
+
+-   Routine ka aakhri step.
+-   Lasker: achhi chaal dikhe to ruko, behtar dhundo, aur pakka karo ki koi
+    jaal nahi.
+
+    4.6.10 Ab roz ki practice: Calculation Gym
+    ------------------------------------------
+
+-   Calculation Gym (Puzzles tab ya home par) mein 8 depth hain (1 se 8
+    chaal).
+-   Har depth ke 6 steps hain: Asaan → Medium → Andhe (board chhupa) → Mushkil
+    → Poori line → GM.
+-   Har step mein aakhri 10 mein 8 sahi aur target time ke andar, tab agla
+    step khulta hai.
+-   Galat puzzle 3 puzzles baad dobara aata hai, aur review mein bhi.
+-   Mushkil lage to coach mode apne aap chalu hota hai (routine + hint).
+-   Roz 10-15 puzzles.
+-   Jitni practice lage, utni karo.
 
     ######################################################################
     ##  LEVEL 5: MIDDLEGAME 1: TACTICS KE HATHIYAAR
@@ -8322,6 +8599,422 @@ Jawab:
 ✓ 1
 
 -   c1-d2-e3-f4-g5-h6 ek hi diagonal: 1 chaal.
+
+    6.5 Calculation 2: skip rules aur 2 chaal
+    =========================================
+
+Kaunsi line chhodni hai, opponent ka forcing jawab, 2 chaal ki line
+
+Yaad rakho
+
+-   Pehle forcing chaalein. Quiet chaal tabhi jab forcing se kuch na mile.
+-   Jo chaal bina check/mate ke apna piece latka de, use chhodo.
+-   Opponent ke jawab: pehle uske checks aur captures, phir 1 best defence.
+-   Har line ek baar socho, nateeja yaad rakho (+3, barabar, mate).
+-   Ek line saaf jeet de to baaki chhodo: simple jeet best.
+-   Position shaant ho gayi to ruko.
+
+Is lesson ke topics
+
+-   6.5.1 Tez calculation ka raaz: kya NAHI sochna
+-   6.5.2 Sawal 1: Tumhari candidate chaal se tumhara rook latak jaata hai,
+    aur woh…
+-   6.5.3 Sawal 2: Tumne check diya
+-   6.5.4 Sawal 3: Ek line mein tum queen jeet rahe ho aur position shaant hai
+-   6.5.5 2 chaal ki line kaise sochte hain
+-   6.5.6 Abhyaas: 2 chaal mein mate
+-   6.5.7 Abhyaas: 2 chaal: check se fork
+-   6.5.8 Abhyaas: 2 chaal: opponent ke capture wale jawab ko bhi socho
+
+    6.5.1 Tez calculation ka raaz: kya NAHI sochna
+    ----------------------------------------------
+
+-   Grandmaster zyada lines nahi sochte.
+-   Woh faltu lines jaldi chhod dete hain.
+-   Yeh 6 skip rules yaad karo:
+-   1.
+-   Pehle forcing chaalein (check, capture, threat).
+-   Quiet chaal tabhi jab forcing se kuch na mile.
+-   2.
+-   Jo chaal bina check ya mate ke apna piece latka de, use chhod do.
+-   3.
+-   Opponent ke jawab mein pehle uske checks aur captures, phir 1 best
+    defence.
+-   Baaki jawab chhodo.
+-   4.
+-   Har line ek hi baar socho, end mein nateeja yaad rakho.
+-   Dobara mat socho.
+-   5.
+-   Ek candidate saaf jeet de raha ho to baaki chhodo.
+-   6.
+-   Position shaant ho gayi (koi check, capture, threat nahi) to wahin ruko.
+
+    6.5.2 Sawal 1: Tumhari candidate chaal se tumhara rook latak jaata hai, aur woh…
+    ----------------------------------------------------------------------
+
+Tumhari candidate chaal se tumhara rook latak jaata hai, aur woh check bhi
+nahi hai. Kya karein?
+
+Jawab:
+
+✓ Is line ko chhod do (skip rule 2)
+
+-   Bina forcing wajah ke piece latkana = line chhodo.
+-   Time bacha, dusre candidates par lagao.
+
+    6.5.3 Sawal 2: Tumne check diya
+    -------------------------------
+
+Tumne check diya. Opponent ke 3 jawab hain: king hatana, piece beech mein
+rakhna, ya checking piece ko capture karna. Pehle kaunsa socho?
+
+Jawab:
+
+✓ Capture (sabse forcing)
+
+-   Opponent ke liye bhi forcing pehle: capture sabse khatarnak jawab hota
+    hai.
+-   Phir block, phir king move.
+
+    6.5.4 Sawal 3: Ek line mein tum queen jeet rahe ho aur position shaant hai
+    ----------------------------------------------------------------------
+
+Ek line mein tum queen jeet rahe ho aur position shaant hai. Kya aur
+candidates sochne chahiye?
+
+Jawab:
+
+✓ Nahi, blunder check karo aur chalo
+
+-   Skip rule 5: saaf jeet mil gayi to bas.
+-   Sirf blunder check.
+
+    6.5.5 2 chaal ki line kaise sochte hain
+    ---------------------------------------
+
+-   2 chaal = meri chaal → uska jawab → meri chaal.
+-   Candidate chuno (CCT).
+-   Opponent ka sabse forcing jawab socho. Check ke baad aksar uske 1-2 hi
+    jawab hote hain.
+-   Har jawab ke baad apni doosri chaal dhundo, aur nateeja gino.
+-   Check se shuru hone wali lines sabse tez calculate hoti hain, kyunki
+    opponent ke paas kam options hote hain.
+
+    6.5.6 Abhyaas: 2 chaal mein mate
+    --------------------------------
+
+2 chaal mein mate. Check se shuru karo, phir opponent ka jawab socho.
+
+    8 | . . . . . . k .
+    7 | . p . . . . p p
+    6 | p . . . . . . .
+    5 | . . . N b . . .
+    4 | . . . . . . . .
+    3 | P . . . . . . P
+    2 | . P r . . . . .
+    1 | . . . . . R . K
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Ne7+ Kh8 2. Rf8#
+
+-   Ne7+ Kh8 Rf8#: check ke baad king ke paas sirf h8 tha, aur phir back-rank
+    mate.
+-   Lichess puzzle [116xS] · rating 852
+
+    8 | . . . . . R . k
+    7 | . p . . N . p p
+    6 | p . . . . . . .
+    5 | . . . . b . . .
+    4 | . . . . . . . .
+    3 | P . . . . . . P
+    2 | . P r . . . . .
+    1 | . . . . . . . K
+       ----------------
+        a b c d e f g h
+
+Line ke baad position
+
+    6.5.7 Abhyaas: 2 chaal: check se fork
+    -------------------------------------
+
+2 chaal: check se fork. Opponent ka forced jawab socho.
+
+    1 | . K R . . . . .
+    2 | . . P . . . P .
+    3 | P . . P . . . P
+    4 | . . . . Q . . .
+    5 | . . p n p . . .
+    6 | . p . p . . p N
+    7 | . p . . . . . .
+    8 | . . . k . q . .
+       ----------------
+        h g f e d c b a
+
+(Black ki chaal)
+
+Jawab:
+
+1… Nf3+ 2. Kg2 Nxd4
+
+-   Nf3+: check + queen par attack (fork).
+-   King hatega, phir Nxd4.
+-   Lichess puzzle [567t5] · rating 900
+
+    1 | . . R . . . . .
+    2 | . K P . . . P .
+    3 | P . . P . . . P
+    4 | . . . . n . . .
+    5 | . . p . p . . .
+    6 | . p . p . . p N
+    7 | . p . . . . . .
+    8 | . . . k . q . .
+       ----------------
+        h g f e d c b a
+
+Line ke baad position
+
+    6.5.8 Abhyaas: 2 chaal: opponent ke capture wale jawab ko bhi socho
+    -------------------------------------------------------------------
+
+2 chaal: opponent ke capture wale jawab ko bhi socho.
+
+    8 | . . . . r . k .
+    7 | . . . b . . p p
+    6 | . . N . p p . .
+    5 | . p . q . . . .
+    4 | . Q . P . . . .
+    3 | . . . . P . . .
+    2 | . . . . . P P P
+    1 | . . R . . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Ne7+ Rxe7 2. Qxe7
+
+-   Ne7+: king aur queen par fork.
+-   Rxe7 ke baad Qxe7 se rook bhi gaya.
+-   Opponent ka capture wala jawab pehle socha, isliye line pakki thi.
+-   Lichess puzzle [g4zB5] · rating 902
+
+    8 | . . . . . . k .
+    7 | . . . b Q . p p
+    6 | . . . . p p . .
+    5 | . p . q . . . .
+    4 | . . . P . . . .
+    3 | . . . . P . . .
+    2 | . . . . . P P P
+    1 | . . R . . . K .
+       ----------------
+        a b c d e f g h
+
+Line ke baad position
+
+    6.6 Calculation 3: 3-5 chaal ka tree
+    ====================================
+
+Candidate tree, checkpoints, board ko dimaag mein rakhna
+
+Yaad rakho
+
+-   Tree: 2-3 candidates, har ek par opponent ke 1-2 forcing jawab.
+-   Har 2 chaal par checkpoint: material, king, latke pieces.
+-   Hata hua piece dimaag se bhi hatao. Naya khula raasta (file, diagonal)
+    yaad rakho.
+-   Lambi line sirf forcing chaalon mein. Quiet position mein 2-3 chaal +
+    evaluation.
+-   Line ke end mein sawal: kya opponent ke paas koi check bacha?
+
+Is lesson ke topics
+
+-   6.6.1 Calculation tree
+-   6.6.2 Board ko dimaag mein kaise rakhein
+-   6.6.3 Sawal 1: Line mein tumhara bishop capture ho gaya
+-   6.6.4 Sawal 2: Position shaant hai, koi check ya capture nahi
+-   6.6.5 Abhyaas: 3 chaal: check, check, phir jeet
+-   6.6.6 Abhyaas: 3 chaal: pehle sacrifice, phir fork
+-   6.6.7 Abhyaas: 4 chaal mein mate
+
+    6.6.1 Calculation tree
+    ----------------------
+
+-   3-5 chaal mein lines ped (tree) ki tarah failti hain.
+-   Ped ko chhota rakho:
+    -   Jad: 2-3 candidates (CCT).
+    -   Shaakhaayein: har candidate par opponent ke 1-2 forcing jawab.
+    -   Har shaakha ko ek baar end tak le jao, nateeja likho (dimaag mein):
+        +3, =, mate.
+    -   Sabse achhe nateeje wali jad chuno.
+-   Agar 3 candidates × 2 jawab × 2 = 12 lines ho rahi hain to skip rules
+    lagao.
+-   Aksar 3-4 lines hi asli hoti hain.
+
+    6.6.2 Board ko dimaag mein kaise rakhein
+    ----------------------------------------
+
+-   Lambi calculation mein galti aksar visualization ki hoti hai, chess ki
+    nahi:
+    -   Ghost piece: jo piece capture ho gaya, dimaag mein woh ab bhi "bacha
+        raha" lagta hai. Har capture par bolo: "ab yeh piece nahi hai".
+    -   Naye raaste: piece hata to uske peeche ki file ya diagonal khul gayi.
+        Bolo: "ab d-file khuli".
+    -   Checkpoint: har 2 chaal par ruk kar 3 cheezein gino: material, dono
+        kings, latke hue pieces.
+-   Gym ke Andhe steps yahi sikhate hain: position dekho, yaad karo, phir
+    khali board par chalo.
+
+    6.6.3 Sawal 1: Line mein tumhara bishop capture ho gaya
+    -------------------------------------------------------
+
+Line mein tumhara bishop capture ho gaya. Ab calculation mein sabse badi galti
+kya hogi?
+
+Jawab:
+
+✓ Yeh maan lena ki bishop ab bhi e5 ko bacha raha hai
+
+-   Ghost piece ki galti.
+-   Har capture ke baad dimaag ki tasveer update karo.
+
+    6.6.4 Sawal 2: Position shaant hai, koi check ya capture nahi
+    -------------------------------------------------------------
+
+Position shaant hai, koi check ya capture nahi. Kitna gehra calculate karein?
+
+Jawab:
+
+✓ 2-3 chaal aur phir evaluation
+
+-   Lambi lines sirf forcing sequences mein.
+-   Quiet position mein chhoti calculation + plan + evaluation.
+
+    6.6.5 Abhyaas: 3 chaal: check, check, phir jeet
+    -----------------------------------------------
+
+3 chaal: check, check, phir jeet. Har check ke baad opponent ke saare jawab
+socho.
+
+    8 | r . . . . . . .
+    7 | p p p . . k r p
+    6 | . . n . . . . .
+    5 | b . . q . . . .
+    4 | . . p p R . . .
+    3 | . . P . . . . .
+    2 | P . . . . P P P
+    1 | R N B Q . . K .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Qf3+ Kg8 2. Re8+ Rxe8 3. Qxd5+
+
+-   `Qf3+ Kg8 Re8+!
+-   Rxe8 Qxd5+`: rook dekar Black ki queen jeet li.
+-   Do checks ne opponent ke options band rakhe.
+-   Lichess puzzle [djn3j] · rating 1250
+
+    8 | . . . . r . k .
+    7 | p p p . . . r p
+    6 | . . n . . . . .
+    5 | b . . Q . . . .
+    4 | . . p p . . . .
+    3 | . . P . . . . .
+    2 | P . . . . P P P
+    1 | R N B . . . K .
+       ----------------
+        a b c d e f g h
+
+Line ke baad position
+
+    6.6.6 Abhyaas: 3 chaal: pehle sacrifice, phir fork
+    --------------------------------------------------
+
+3 chaal: pehle sacrifice, phir fork. Checkpoint lagao: har chaal ke baad
+material gino.
+
+    1 | . K N . . . B R
+    2 | . P . . . . P .
+    3 | P . . . . P . P
+    4 | . . . n P p . .
+    5 | Q p . . p . p .
+    6 | . . . q . . . p
+    7 | p . . . . . . .
+    8 | . k r . . b . .
+       ----------------
+        h g f e d c b a
+
+(Black ki chaal)
+
+Jawab:
+
+1… Rxf1+ 2. Kxf1 Ng3+ 3. Kf2 Nxh5
+
+-   Rxf1+ Kxf1 Ng3+ king aur queen par fork, phir Nxh5.
+-   Rook gaya, queen mili.
+-   Lichess puzzle [iEksD] · rating 1302
+
+    1 | . . . . . . B R
+    2 | . P K . . . P .
+    3 | P . . . . P . P
+    4 | . . . . P p . .
+    5 | n p . . p . p .
+    6 | . . . q . . . p
+    7 | p . . . . . . .
+    8 | . k . . . b . .
+       ----------------
+        h g f e d c b a
+
+Line ke baad position
+
+    6.6.7 Abhyaas: 4 chaal mein mate
+    --------------------------------
+
+4 chaal mein mate. Har check par king ke saare squares gino.
+
+    1 | K . . . . . . .
+    2 | p . P . Q R P .
+    3 | r P . P . . B .
+    4 | . p B . P . . P
+    5 | . . . . p . p .
+    6 | . . . . . . . p
+    7 | . . . q . . b .
+    8 | . . . . . . . k
+       ----------------
+        h g f e d c b a
+
+(Black ki chaal)
+
+Jawab:
+
+1… Qe4+ 2. f3 Qxf3+ 3. Qg2 Qd1+ 4. Qf1 Qxf1#
+
+-   Qe4+ f3 Qxf3+ Qg2 Qd1+ Qf1 Qxf1#: lagaataar checks, White sirf block kar
+    saka.
+-   Lichess puzzle [89QiC] · rating 1500
+
+    1 | K . q . . . . .
+    2 | p . . . . R P .
+    3 | r P . P . . B .
+    4 | . p B . P . . P
+    5 | . . . . p . p .
+    6 | . . . . . . . p
+    7 | . . . . . . b .
+    8 | . . . . . . . k
+       ----------------
+        h g f e d c b a
+
+Line ke baad position
 
     ######################################################################
     ##  LEVEL 7: MIDDLEGAME 3: CHECKMATE PATTERNS
@@ -13964,7 +14657,7 @@ Final position (4.Kf4)
     12.4.6 Khud khelo: Draw bachao
     ------------------------------
 
-Ab tum karo: Reti study mein draw bachao (10 chaal).
+Ab tum karo: Reti study mein haar se bacho aur draw karo (10 chaal).
 
 Hint: King ko diagonal par chalao: Kg7, Kf6, Ke5.
 
@@ -14264,8 +14957,8 @@ Hint: Rd1+, phir rook 4th rank par (Rd4), phir king bahar.
     13.2.5 Khud khelo: Draw bachao
     ------------------------------
 
-Tum Black ho. 15 chaal tak draw bachao. Rook 6th rank par rakho jab tak pawn
-e6 na aaye.
+Tum Black ho. 15 chaal tak haar se bacho aur draw pakka karo. Rook 6th rank
+par rakho jab tak pawn e6 na aaye.
 
     1 | . . . . . . . .
     2 | . . . . . . . .
@@ -14316,8 +15009,8 @@ Jawab:
     13.2.8 Khud khelo: Draw bachao
     ------------------------------
 
-Vancura: tum Black ho. 15 chaal draw bachao. Rook se a6 pawn par nazar aur
-side se checks.
+Vancura: tum Black ho. 15 chaal tak haar se bacho aur draw pakka karo. Rook se
+a6 pawn par nazar aur side se checks.
 
 Hint: Rook ko 6th rank par rakho, pawn ko attack karte raho.
 
@@ -14968,6 +15661,164 @@ Jawab:
 ✓ Tumhara lambi-avadhi ka improvement
 
 -   Ande (jeet) aate rahenge agar hans (improvement) zinda hai.
+
+    14.6 Calculation 4: Legendary 6-8 chaal
+    =======================================
+
+Lambi forcing lines, ginti, critical moment, roz ka GM plan
+
+Yaad rakho
+
+-   6-8 chaal ki line lagbhag hamesha forcing hoti hai: checks, captures,
+    promotion race.
+-   Pawn race mein chaalein gino: kaun pehle queen banta hai, aur kya queen
+    banate hi check hai?
+-   Critical moment par ruko: game ka faisla hone wala ho to zyada time do.
+-   Line ke beech mein opponent ki "chupi" chaal (quiet defence, zwischenzug)
+    dhundo.
+-   Roz: 10 Gym puzzles apne step par + 3 review + 1 lambi line board chhupa
+    ke.
+
+Is lesson ke topics
+
+-   14.6.1 Legendary calculation kya hai
+-   14.6.2 Critical moment aur time
+-   14.6.3 Sawal 1: Lambi (6+ chaal) calculation kab karni chahiye?
+-   14.6.4 Abhyaas: Pawn race
+-   14.6.5 Abhyaas: Legendary
+-   14.6.6 GM banne ka roz ka plan
+
+    14.6.1 Legendary calculation kya hai
+    ------------------------------------
+
+-   6-8 chaal ki calculation sirf GM ka jaadu nahi.
+-   Lambi lines aksar forcing hoti hain: lagaataar checks, captures ya pawn
+    race.
+-   Har chaal par opponent ke 1-2 jawab hote hain, isliye ped patla rehta hai.
+-   Teen auzaar:
+    -   Ginti (counting): pawn race mein dono taraf ki chaalein gino.
+    -   Checkpoints: har 2 chaal par material, kings aur latke pieces gino.
+    -   Chupi chaal: line ke beech opponent ka quiet defence ya zwischenzug
+        (beech ki chaal). Har checkpoint par pucho: "kya opponent ke paas
+        check ke alawa koi zabardast chaal hai?"
+
+    14.6.2 Critical moment aur time
+    -------------------------------
+
+-   Har chaal par 8 chaal calculate karna galat hai.
+-   Critical moment pehchano:
+    -   Bade trades ya sacrifice ka faisla
+    -   Endgame mein jaane ka faisla
+    -   Opponent ki forcing chaalein shuru hone wali hon
+-   Aise moment par 5-10 minute lagao, aur baaki chaalein principles se jaldi
+    khelo.
+-   Line ki shuruaat mein hi skip rules lagao, warna time khatam ho jaata hai.
+
+    14.6.3 Sawal 1: Lambi (6+ chaal) calculation kab karni chahiye?
+    ---------------------------------------------------------------
+
+Lambi (6+ chaal) calculation kab karni chahiye?
+
+Jawab:
+
+✓ Forcing sequence ya critical moment par
+
+-   Lambi lines tabhi bharosemand hain jab forcing ho.
+-   Quiet chaalon par itna gehra sochna time barbaad karta hai.
+
+    14.6.4 Abhyaas: Pawn race
+    -------------------------
+
+Pawn race: 6 chaal. Ginti karo: kiska pawn pehle pahunchta hai?
+
+    8 | . . . . . . . .
+    7 | . . . . . . . .
+    6 | . . . . . . . .
+    5 | . . . . . P k p
+    4 | . . . . K . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . .
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Ke5 h4 2. f6 Kg6 3. Ke6 h3 4. f7 Kg7 5. Ke7 h2 6. f8=Q+
+
+-   Ke5! King pawn ke saath.
+-   Ginti: White ka f-pawn check ke saath queen banta hai, Black ka h-pawn ek
+    chaal peeche reh jaata hai.
+-   Lichess puzzle [BOADm] · rating 982
+
+    8 | . . . . . Q . .
+    7 | . . . . K . k .
+    6 | . . . . . . . .
+    5 | . . . . . . . .
+    4 | . . . . . . . .
+    3 | . . . . . . . .
+    2 | . . . . . . . p
+    1 | . . . . . . . .
+       ----------------
+        a b c d e f g h
+
+Line ke baad position
+
+    14.6.5 Abhyaas: Legendary
+    -------------------------
+
+Legendary: 6 chaal mein mate. Sacrifice, sacrifice, phir mate. Har check par
+opponent ka forced jawab socho.
+
+    8 | . . . . . r k .
+    7 | . . . . n . p .
+    6 | . . . p p . P .
+    5 | . . p . p . . .
+    4 | p . . . P . . .
+    3 | P . . . . . . .
+    2 | . . P . . r . .
+    1 | . q B K Q . R R
+       ----------------
+        a b c d e f g h
+
+(White ki chaal)
+
+Jawab:
+
+1. Rh8+ Kxh8 2. Rh1+ Kg8 3. Rh8+ Kxh8 4. Qh1+ Rh2 5. Qxh2+ Kg8 6. Qh7#
+
+-   `Rh8+!
+-   Kxh8 Rh1+ Kg8 Rh8+!
+-   Kxh8 Qh1+ Rh2 Qxh2+ Kg8 Qh7#`: do rooks dekar h-file khuli, phir queen ka
+    mate.
+-   Har chaal check thi, isliye 6 chaal bhi calculate ho saki.
+-   Lichess puzzle [5DUpz] · rating 1113
+
+    8 | . . . . . r k .
+    7 | . . . . n . p Q
+    6 | . . . p p . P .
+    5 | . . p . p . . .
+    4 | p . . . P . . .
+    3 | P . . . . . . .
+    2 | . . P . . . . .
+    1 | . q B K . . . .
+       ----------------
+        a b c d e f g h
+
+Line ke baad position
+
+    14.6.6 GM banne ka roz ka plan
+    ------------------------------
+
+-   10-15 Gym puzzles apne current step par (pehle sahi, phir tez).
+-   3 review puzzles (purani galtiyan).
+-   1 lambi line board chhupa ke (Andhe ya Poori line step).
+-   Har haftey ek slow game (15+10 ya lamba): har critical moment par routine
+    lagao, game ke baad check karo ki kahan line galat thi.
+-   Ladder ke 47 steps poore hone mein mahine lagenge.
+-   Yahi asli GM training hai: chhote steps, roz, bina chhode.
 
     ######################################################################
     ##  LEVEL 15: PRO 2: CHAMPIONS, ITIHAAS AUR TRAINING PLAN
