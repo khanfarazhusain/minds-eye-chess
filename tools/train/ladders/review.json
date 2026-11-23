@@ -1,0 +1,146 @@
+[
+ {
+  "ch": "l1b",
+  "after": "l1.notation",
+  "needs": [
+   "l1.notation",
+   "l1.values"
+  ],
+  "les": {
+   "id": "tr_mr1",
+   "key": "tr.mr1",
+   "title": "🏋 Apna game review: blunders",
+   "sub": "Engine tumhare game ki badi galtiyan dhundega, har galti ek card",
+   "yaad": [
+    "Har game ke baad review.",
+    "Galti ka card baar baar aayega jab tak pakka na ho."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Apne game se seekho",
+     "md": "Lichess ya Chess.com par khela koi game (PGN) yahan daalo. Engine **blunders** (badi galtiyan) dhundega. Har galti ek **card** banegi: abhi solve karo, aur kuch din baad review mein dobara aayegi.\n\nHar haare game ke baad yeh lesson dobara kholo (lesson list se)."
+    },
+    {
+     "t": "myrev",
+     "lvl": 1
+    }
+   ],
+   "pool": [
+    {
+     "t": "myrev",
+     "lvl": 1
+    }
+   ],
+   "qn": 0
+  }
+ },
+ {
+  "ch": "l2b",
+  "after": "l2.think",
+  "needs": [
+   "l2.think",
+   "tr.mr1"
+  ],
+  "les": {
+   "id": "tr_mr2",
+   "key": "tr.mr2",
+   "title": "🏋 Apna game review: CCT se galti samjho",
+   "sub": "Mistakes bhi, aur har galti ki wajah (check, capture, threat)",
+   "yaad": [
+    "Galti ki wajah likho: kya miss hua?",
+    "Sabse zyada wali wajah par practice."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Apne game se seekho",
+     "md": "Ab engine **mistakes** bhi dhundega. Har card solve karne ke baad batao **kya miss hua**: check, capture, threat, ya apna piece latka. App ginti rakhega ki tumhari sabse zyada galti kahan hoti hai."
+    },
+    {
+     "t": "myrev",
+     "lvl": 2
+    }
+   ],
+   "pool": [
+    {
+     "t": "myrev",
+     "lvl": 2
+    }
+   ],
+   "qn": 0
+  }
+ },
+ {
+  "ch": "l7",
+  "after": "l7.analysis",
+  "needs": [
+   "l7.analysis",
+   "tr.mr2"
+  ],
+  "les": {
+   "id": "tr_mr3",
+   "key": "tr.mr3",
+   "title": "🏋 Apna game review: pehle khud, phir engine",
+   "sub": "Pro tareeka: khud analyse karo, engine se milao, category banao",
+   "yaad": [
+    "Pehle khud, phir engine.",
+    "Galtiyon ki category: tactic, blunder, time, plan, endgame."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Apne game se seekho",
+     "md": "Analysis lesson ka tareeka: **pehle khud** apni galat chaalein chuno, phir engine. App batayega kitni galtiyan tumne khud pakdi aur kitni chhoot gayi. Phir har galti ki **category** (tactic, blunder, time, plan, endgame)."
+    },
+    {
+     "t": "myrev",
+     "lvl": 3
+    }
+   ],
+   "pool": [
+    {
+     "t": "myrev",
+     "lvl": 3
+    }
+   ],
+   "qn": 0
+  }
+ },
+ {
+  "ch": "l7b",
+  "after": "l7.plan",
+  "needs": [
+   "l7.plan",
+   "tr.mr3"
+  ],
+  "les": {
+   "id": "tr_mr4",
+   "key": "tr.mr4",
+   "title": "🏋 Apna game review: GM level",
+   "sub": "Inaccuracies bhi, 5 cards tak, deep engine",
+   "yaad": [
+    "Chhoti galtiyan bhi jodkar game haarte hain.",
+    "Har hafte kam se kam 3 games review."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Apne game se seekho",
+     "md": "GM level review: engine **inaccuracies** bhi pakdega (chhoti galtiyan), aur sabse badi 5 cards banengi. Pehle khud, phir engine, phir category. Training plan: har hafte kam se kam 3 games."
+    },
+    {
+     "t": "myrev",
+     "lvl": 4
+    }
+   ],
+   "pool": [
+    {
+     "t": "myrev",
+     "lvl": 4
+    }
+   ],
+   "qn": 0
+  }
+ }
+]
