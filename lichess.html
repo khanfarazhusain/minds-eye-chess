@@ -625,7 +625,7 @@ body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/"><i class="b64">64</i><span class="bname">Lichess Play<small>64 Squares</small></span></a><div class="chips"><span class="chip" id="luser"></span></div></div></header>
-<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-23 00:46 UTC</p></main>
+<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-23 01:05 UTC</p></main>
 <nav class="tabs"><div class="wrap">
 <button data-go="#/" class="on"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.6 3.5 5.4 3.5 8.5s-1.1 5.9-3.5 8.5c-2.4-2.6-3.5-5.4-3.5-8.5s1.1-5.9 3.5-8.5z"/></svg></span>Lobby</button>
 <button data-go="#/road"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20h9"/><path d="M9 20c0-3 1.5-5 3-6.5-2.2.4-4 .1-5-1l3.5-6.5c3.5-.5 7 2 7 7.5V20"/><circle cx="12.6" cy="8.6" r=".7" fill="currentColor"/></svg></span>Rated</button>
@@ -795,8 +795,13 @@ COURSE.forEach((L,li)=>{L.li=li;L.lessons.forEach((les,lj)=>{les.li=li;les.lj=lj
 for(const id in LINES){const s=STEPS[id];if(s)Object.assign(s,LINES[id])}
 const lesByKey=k=>ALLLES.find(l=>l.key===k);
 const graded=s=>['quiz','move','reach','tap'].includes(s.t);
-function levelUnlocked(li){return li===0||li<=PR.placed||PR.tests[COURSE[li-1].id]>=70||COURSE[li].lessons.some(l=>PR.done[l.key])}
-function lessonUnlocked(les){if(!levelUnlocked(les.li))return false;if(les.lj===0||les.li<PR.placed)return true;const prev=COURSE[les.li].lessons[les.lj-1];return!!PR.done[prev.key]||!!PR.done[les.key]}
+/* Settings > "Unlock all stages" (main app, mindseye.chess.v1 .set.unlockAll). EK hi jagah: har taala/gate pehle unlockAll() poochhe.
+   Naya gate banao to: if(unlockAll()) khula. Road/Lichess pages build.js se yahi function paate hain. */
+let UA_V=null,UA_T=0;
+function unlockAll(){if(/[?&]unlock=1(&|$)/.test(location.search))return true;const n=Date.now();if(UA_V===null||n-UA_T>1000){UA_T=n;try{const j=JSON.parse(localStorage.getItem('mindseye.chess.v1')||'null');UA_V=!!(j&&j.set&&j.set.unlockAll)}catch(e){UA_V=false}}return UA_V}
+window.unlockAll=unlockAll;window.addEventListener('storage',e=>{if(!e.key||e.key==='mindseye.chess.v1')UA_V=null});
+function levelUnlocked(li){return unlockAll()||li===0||li<=PR.placed||PR.tests[COURSE[li-1].id]>=70||COURSE[li].lessons.some(l=>PR.done[l.key])}
+function lessonUnlocked(les){if(unlockAll())return true;if(!levelUnlocked(les.li))return false;if(les.lj===0||les.li<PR.placed)return true;const prev=COURSE[les.li].lessons[les.lj-1];return!!PR.done[prev.key]||!!PR.done[les.key]}
 function nextLesson(){for(const L of COURSE){if(L.li<PR.placed)continue;for(const les of L.lessons)if(!PR.done[les.key])return{les};if(!(PR.tests[L.id]>=70))return{test:L}}return null}
 function weakTopics(){return Object.entries(PR.stat).map(([k,s])=>({k,s,n:s.ok+s.bad,acc:s.ok/Math.max(1,s.ok+s.bad)})).filter(x=>x.n>=3&&x.acc<0.7).sort((a,b)=>a.acc-b.acc)}
 function dueReviews(){return srsDue()}
@@ -1239,7 +1244,7 @@ const CG_TH={fork:'l3.fork',pin:'l3.pin',skewer:'l3.skewer',disc:'l3.disc',dblch
 /* course level test ke liye Gym ka zaroori step (kitne steps pass) */
 const CG_GATE={l2b:2,l3:5,l3b:8,lm:11,l6:14,l6b:17,l4:20,l4b:23,l5:26,l5b:29,l7:32,l7b:47};
 const cgMinN=step=>15+step.d*5;
-function cgKnown(k){if(!k||PR.done[k])return true;if(typeof cgRoadKnown==='function'&&cgRoadKnown(k))return true;const l=lesByKey(k);return!!(l&&l.li<PR.placed)}
+function cgKnown(k){if(!k||unlockAll()||PR.done[k])return true;if(typeof cgRoadKnown==='function'&&cgRoadKnown(k))return true;const l=lesByKey(k);return!!(l&&l.li<PR.placed)}
 const cgThemeOk=p=>!p[4].split(',').some(t=>CG_TH[t]&&!cgKnown(CG_TH[t]));
 const CG_STEPS=[];[1,2,3,4,5,6,7,8].forEach(d=>CG_STAGE.forEach(s=>{if(d===1&&s.k==='E')return;CG_STEPS.push({i:CG_STEPS.length,id:d+s.k,d,st:s,mode:d===1&&s.mode==='line'?'blind':s.mode})}));
 const CG_ROUTINE=['**Dhamki:** opponent ki pichli chaal kya karna chahti hai? Mere kaunse piece par khatra hai?','**Target:** kaunse pieces bina protection hain? King kitna khula hai? Kaun do kaam kar raha hai?','**Candidates:** 2-3 chaalein chuno. Pehle checks, phir captures, phir threats.','**Line:** ek candidate ko end tak socho. Har chaal par opponent ka sabse forcing jawab lo.','**Ruko:** line tab roko jab koi check, capture ya threat na bache. Phir material gino.','**Blunder check:** chalne se pehle dekho ki opponent ke paas koi check, capture ya threat to nahi bacha.'];
@@ -1254,7 +1259,7 @@ const cgTarget=step=>Math.round(CG_SEC[step.d]*(step.mode==='see'?1:1.5));
 const cgNeedOk=step=>step.st.k==='F'?9:8;
 function cgPassed(step){const s=cgStat(step);return s.n>=cgMinN(step)&&s.last>=10&&s.ok>=cgNeedOk(step)&&s.med<=cgTarget(step)}
 const cgLesOk=step=>cgKnown(CG_NEED[step.d]);
-const cgOpen=i=>i<=cgS().f&&cgLesOk(CG_STEPS[i]);
+const cgOpen=i=>unlockAll()||i<=cgS().f&&cgLesOk(CG_STEPS[i]);
 async function cgIdx(){if(!CGI)CGI=await(await fetch('packs/calc/index.json')).json();return CGI}
 async function cgChunk(d,k){const key=d+'_'+k;if(!CGB[key])CGB[key]=await(await fetch(`packs/calc/t${d}_${k}.json`)).json();return CGB[key]}
 function cgRange(step){const T=CGI.tiers[step.d];const v=k=>k==='min'?0:k==='max'?4000:T.q[+k[1]];return[v(step.st.lo),v(step.st.hi)]}
@@ -1409,7 +1414,7 @@ function cgRun(i,opt){opt=opt||{};const step=CG_STEPS[i],app=$('#app');if(!step|
   next()}
 
 /* course level test ka gate: Gym ladder kahan tak pahunchi */
-function cgGateMsg(levelId){const need=CG_GATE[levelId];if(!need||cgS().f>=need||PR.tests[levelId]>=70)return'';const LL=COURSE.find(x=>x.id===levelId);if(LL&&LL.li<PR.placed)return'';const st=CG_STEPS[Math.min(need,CG_STEPS.length)-1];
+function cgGateMsg(levelId){const need=CG_GATE[levelId];if(!need||unlockAll()||cgS().f>=need||PR.tests[levelId]>=70)return'';const LL=COURSE.find(x=>x.id===levelId);if(LL&&LL.li<PR.placed)return'';const st=CG_STEPS[Math.min(need,CG_STEPS.length)-1];
   return`🧠 **Calculation Gym pehle:** is level ka test dene se pehle Gym mein **${cgStepName(st)}** tak pass karo (abhi step ${cgS().f}/${need}). Pro banne ke liye practice course ka hissa hai.`}
 /* ==== /calc gym js ==== */
 

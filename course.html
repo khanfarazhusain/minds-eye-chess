@@ -463,8 +463,13 @@ COURSE.forEach((L,li)=>{L.li=li;L.lessons.forEach((les,lj)=>{les.li=li;les.lj=lj
 for(const id in LINES){const s=STEPS[id];if(s)Object.assign(s,LINES[id])}
 const lesByKey=k=>ALLLES.find(l=>l.key===k);
 const graded=s=>['quiz','move','reach','tap'].includes(s.t);
-function levelUnlocked(li){return li===0||li<=PR.placed||PR.tests[COURSE[li-1].id]>=70||COURSE[li].lessons.some(l=>PR.done[l.key])}
-function lessonUnlocked(les){if(!levelUnlocked(les.li))return false;if(les.lj===0||les.li<PR.placed)return true;const prev=COURSE[les.li].lessons[les.lj-1];return!!PR.done[prev.key]||!!PR.done[les.key]}
+/* Settings > "Unlock all stages" (main app, mindseye.chess.v1 .set.unlockAll). EK hi jagah: har taala/gate pehle unlockAll() poochhe.
+   Naya gate banao to: if(unlockAll()) khula. Road/Lichess pages build.js se yahi function paate hain. */
+let UA_V=null,UA_T=0;
+function unlockAll(){if(/[?&]unlock=1(&|$)/.test(location.search))return true;const n=Date.now();if(UA_V===null||n-UA_T>1000){UA_T=n;try{const j=JSON.parse(localStorage.getItem('mindseye.chess.v1')||'null');UA_V=!!(j&&j.set&&j.set.unlockAll)}catch(e){UA_V=false}}return UA_V}
+window.unlockAll=unlockAll;window.addEventListener('storage',e=>{if(!e.key||e.key==='mindseye.chess.v1')UA_V=null});
+function levelUnlocked(li){return unlockAll()||li===0||li<=PR.placed||PR.tests[COURSE[li-1].id]>=70||COURSE[li].lessons.some(l=>PR.done[l.key])}
+function lessonUnlocked(les){if(unlockAll())return true;if(!levelUnlocked(les.li))return false;if(les.lj===0||les.li<PR.placed)return true;const prev=COURSE[les.li].lessons[les.lj-1];return!!PR.done[prev.key]||!!PR.done[les.key]}
 function nextLesson(){for(const L of COURSE){if(L.li<PR.placed)continue;for(const les of L.lessons)if(!PR.done[les.key])return{les};if(!(PR.tests[L.id]>=70))return{test:L}}return null}
 function weakTopics(){return Object.entries(PR.stat).map(([k,s])=>({k,s,n:s.ok+s.bad,acc:s.ok/Math.max(1,s.ok+s.bad)})).filter(x=>x.n>=3&&x.acc<0.7).sort((a,b)=>a.acc-b.acc)}
 function dueReviews(){return srsDue()}
@@ -907,7 +912,7 @@ const CG_TH={fork:'l3.fork',pin:'l3.pin',skewer:'l3.skewer',disc:'l3.disc',dblch
 /* course level test ke liye Gym ka zaroori step (kitne steps pass) */
 const CG_GATE={l2b:2,l3:5,l3b:8,lm:11,l6:14,l6b:17,l4:20,l4b:23,l5:26,l5b:29,l7:32,l7b:47};
 const cgMinN=step=>15+step.d*5;
-function cgKnown(k){if(!k||PR.done[k])return true;if(typeof cgRoadKnown==='function'&&cgRoadKnown(k))return true;const l=lesByKey(k);return!!(l&&l.li<PR.placed)}
+function cgKnown(k){if(!k||unlockAll()||PR.done[k])return true;if(typeof cgRoadKnown==='function'&&cgRoadKnown(k))return true;const l=lesByKey(k);return!!(l&&l.li<PR.placed)}
 const cgThemeOk=p=>!p[4].split(',').some(t=>CG_TH[t]&&!cgKnown(CG_TH[t]));
 const CG_STEPS=[];[1,2,3,4,5,6,7,8].forEach(d=>CG_STAGE.forEach(s=>{if(d===1&&s.k==='E')return;CG_STEPS.push({i:CG_STEPS.length,id:d+s.k,d,st:s,mode:d===1&&s.mode==='line'?'blind':s.mode})}));
 const CG_ROUTINE=['**Dhamki:** opponent ki pichli chaal kya karna chahti hai? Mere kaunse piece par khatra hai?','**Target:** kaunse pieces bina protection hain? King kitna khula hai? Kaun do kaam kar raha hai?','**Candidates:** 2-3 chaalein chuno. Pehle checks, phir captures, phir threats.','**Line:** ek candidate ko end tak socho. Har chaal par opponent ka sabse forcing jawab lo.','**Ruko:** line tab roko jab koi check, capture ya threat na bache. Phir material gino.','**Blunder check:** chalne se pehle dekho ki opponent ke paas koi check, capture ya threat to nahi bacha.'];
@@ -922,7 +927,7 @@ const cgTarget=step=>Math.round(CG_SEC[step.d]*(step.mode==='see'?1:1.5));
 const cgNeedOk=step=>step.st.k==='F'?9:8;
 function cgPassed(step){const s=cgStat(step);return s.n>=cgMinN(step)&&s.last>=10&&s.ok>=cgNeedOk(step)&&s.med<=cgTarget(step)}
 const cgLesOk=step=>cgKnown(CG_NEED[step.d]);
-const cgOpen=i=>i<=cgS().f&&cgLesOk(CG_STEPS[i]);
+const cgOpen=i=>unlockAll()||i<=cgS().f&&cgLesOk(CG_STEPS[i]);
 async function cgIdx(){if(!CGI)CGI=await(await fetch('packs/calc/index.json')).json();return CGI}
 async function cgChunk(d,k){const key=d+'_'+k;if(!CGB[key])CGB[key]=await(await fetch(`packs/calc/t${d}_${k}.json`)).json();return CGB[key]}
 function cgRange(step){const T=CGI.tiers[step.d];const v=k=>k==='min'?0:k==='max'?4000:T.q[+k[1]];return[v(step.st.lo),v(step.st.hi)]}
@@ -1077,7 +1082,7 @@ function cgRun(i,opt){opt=opt||{};const step=CG_STEPS[i],app=$('#app');if(!step|
   next()}
 
 /* course level test ka gate: Gym ladder kahan tak pahunchi */
-function cgGateMsg(levelId){const need=CG_GATE[levelId];if(!need||cgS().f>=need||PR.tests[levelId]>=70)return'';const LL=COURSE.find(x=>x.id===levelId);if(LL&&LL.li<PR.placed)return'';const st=CG_STEPS[Math.min(need,CG_STEPS.length)-1];
+function cgGateMsg(levelId){const need=CG_GATE[levelId];if(!need||unlockAll()||cgS().f>=need||PR.tests[levelId]>=70)return'';const LL=COURSE.find(x=>x.id===levelId);if(LL&&LL.li<PR.placed)return'';const st=CG_STEPS[Math.min(need,CG_STEPS.length)-1];
   return`🧠 **Calculation Gym pehle:** is level ka test dene se pehle Gym mein **${cgStepName(st)}** tak pass karo (abhi step ${cgS().f}/${need}). Pro banne ke liye practice course ka hissa hai.`}
 /* ==== /calc gym js ==== */
 /* ---------- views ---------- */
@@ -1111,7 +1116,7 @@ function vHome(){const app=$('#app');touchDay();save();const nx=nextLesson(),due
   <div class="card stack"><div class="row" style="justify-content:space-between"><h3>🧠 Yaad ka meter</h3><small class="muted">${srsStats().total} cheezein</small></div>${srsMeterHTML()||'<p class="small muted">Lesson poora karte hi uske sawaal aur yaad points yahan aate hain, aur sahi din par wapas poochhe jaate hain (1, 3, 7, 21, 60, 120 din).</p>'}
    <div class="row"><button class="btn${due.length?' primary':''}" data-go="#/review">🔁 Review (${due.length})</button><button class="btn" data-go="#/viz">👁 Board-hidden drill</button></div></div>
   <div class="row" style="justify-content:space-between;align-items:end"><h2>Course: basics se pro tak</h2><small class="muted">${pct}%</small></div>
-  <div class="prog"><i style="width:${pct}%"></i></div>
+  <div class="prog"><i style="width:${pct}%"></i></div>${unlockAll()?'<div class="card small">🔓 <b>Unlock all stages ON</b>: saare levels, lessons, tests, exams aur Gym steps khule hain. Band karne ke liye app ki Settings dekho.</div>':''}
   <a class="card notescta" href="notes.html"><span class="eyebrow">📝 Study notes</span><b>Poore course ke notes, diagrams ke saath</b><small class="muted">Har lesson ka saar, board diagrams aur sawal-jawab. Revision ke liye.</small></a>
   <a class="card notescta" href="#/calc"><span class="eyebrow">🧠 Calculation Gym</span><b>1 chaal se 8 chaal tak, step by step</b><small class="muted">${typeof cgS==='function'?`Step ${Math.min(cgS().f+1,CG_STEPS.length)}/${CG_STEPS.length}. `:''}Roz 10-15 puzzles: tez bhi, poori bhi. Board chhupa ke bhi.</small></a>`;
   for(const L of COURSE){const n=L.lessons.filter(l=>PR.done[l.key]).length,un=levelUnlocked(L.li),t=PR.tests[L.id];
@@ -1124,10 +1129,10 @@ function vLevel(li){const L=COURSE[li],app=$('#app');if(!L)return go('#/');const
   if(!un)o+=`<div class="card"><p>🔒 Yeh level band hai. Pichle level ka test 70% se pass karo, ya <a href="#/place">placement test</a> do.</p></div>`;
   L.lessons.forEach((les,lj)=>{const d=PR.done[les.key],u=lessonUnlocked(les),s=PR.stat[les.key];
     o+=`<button class="les${u?'':' locked'}" ${u?`data-go="#/lesson/${li}/${lj}"`:'disabled'}><span class="lck">${d?'✓':u?lj+1:'🔒'}</span><span class="stack" style="gap:2px;text-align:left"><b>${esc(les.title)}</b><small>${esc(les.sub||'')}${s&&s.ok+s.bad?` · ${Math.round(s.ok/(s.ok+s.bad)*100)}% sahi`:''}</small></span></button>`});
-  if(L.test){const t=PR.tests[L.id];const u=un&&L.lessons.every(l=>PR.done[l.key])||t!=null||li<PR.placed;
+  if(L.test){const t=PR.tests[L.id];const u=unlockAll()||un&&L.lessons.every(l=>PR.done[l.key])||t!=null||li<PR.placed;
     {const gm=typeof cgGateMsg==='function'?cgGateMsg(L.id):'';if(gm)o+=`<div class="card">${md(gm)}<a class="btn small" style="text-decoration:none" href="#/calc">Gym kholo ›</a></div>`}
     o+=`<button class="les test${u?'':' locked'}" ${u?`data-go="#/test/${li}"`:'disabled'}><span class="lck">${t>=70?'🏅':'📝'}</span><span class="stack" style="gap:2px;text-align:left"><b>Level test</b><small>${t!=null?'Best: '+t+'%':u?'70% par agla level khulega':'Pehle saare lessons poore karo'}</small></span></button>`}
-  if(li%2===1){const t=PR.tests[L.id],ex=(PR.exam||{})[L.id],u=t>=70||li<PR.placed;
+  if(li%2===1){const t=PR.tests[L.id],ex=(PR.exam||{})[L.id],u=unlockAll()||t>=70||li<PR.placed;
     o+=`<button class="les test${u?'':' locked'}" ${u?`data-go="#/exam/${li}"`:'disabled'}><span class="lck">${ex>=70?'🏅':'🧩'}</span><span class="stack" style="gap:2px;text-align:left"><b>Mixed exam: Level 1-${li+1}</b><small>${ex!=null?'Best: '+ex+'%':u?'25 sawaal, sab purane levels se mila-jula':'Pehle level test pass karo'}</small></span></button>`}
   o+=`<button class="btn block" data-go="#/play">♟ Coach ke saath game khelo</button></div>`;app.innerHTML=o;setCtx({where:'Level '+(li+1)+': '+L.title})}
 function player(app,steps,opt){// generic step-by-step player for lessons, tests, reviews
@@ -1189,7 +1194,7 @@ function vTest(li){const L=COURSE[li],app=$('#app');if(!L||!L.test)return go('#/
 function vReview(){srsSession($('#app'),{back:'#/',backTxt:'Home',self:'#/review',viz:'#/viz',onDone:n=>{touchDay();PR.day.rev+=n;save()}})}
 function vViz(){vizSession($('#app'),{back:'#/',self:'#/viz'})}
 function vExam(li){const L=COURSE[li];if(!L)return go('#/');PR.exam=PR.exam||{};
-  const keys=[].concat(...COURSE.slice(0,li+1).map(C=>C.lessons.filter(l=>PR.done[l.key]||C.li<PR.placed).map(l=>l.key)));
+  const keys=[].concat(...COURSE.slice(0,li+1).map(C=>C.lessons.filter(l=>unlockAll()||PR.done[l.key]||C.li<PR.placed).map(l=>l.key)));
   examSession($('#app'),{keys,extra:[].concat(...COURSE.slice(0,li+1).map(C=>C.test||[])),n:25,title:'Mixed exam: Level 1-'+(li+1),range:'Level 1 se '+(li+1)+' tak',best:PR.exam[L.id],back:'#/level/'+li,store:p=>{PR.exam[L.id]=Math.max(PR.exam[L.id]||0,p);if(p>=70)addXP(40);save()}})}
 function vPlace(){const app=$('#app');const steps=PLACEMENT.map(id=>STEPS[id]).filter(Boolean);
   player(app,steps,{test:true,back:'#/',title:()=>'Placement test',head:()=>'Placement test',where:'Placement test',finish:res=>{

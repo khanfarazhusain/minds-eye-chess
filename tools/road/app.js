@@ -3,6 +3,8 @@
    Yahan sirf naya program hai: levels, Lichess rating gates, roz ka quota, puzzle bank, galti-theme repeat. */
 const SK='mindseye.road.v1',SEENK='mindseye.road.seen';
 const PREVIEW=/[?&]preview=1/.test(location.search);
+/* Preview ya Settings ka "Unlock all stages": saare taale khule (unlockAll() course.html core se aata hai) */
+const OPENALL=()=>PREVIEW||unlockAll();
 const SDEF=()=>({v:1,user:'',lich:null,lvl:1,tests:{},pr:0,day:{d:''},cards:{},gm:{},games:{d:'',n:0,wk:'',wn:0},hist:[]});
 let SP=(()=>{try{const j=JSON.parse(localStorage.getItem(SK)||'null');if(j&&j.v===1)return Object.assign(SDEF(),j)}catch(e){}return SDEF()})();
 function ssave(){try{localStorage.setItem(SK,JSON.stringify(SP))}catch(e){}}
@@ -36,8 +38,8 @@ const ENDT=['endgame','rookend','pawnend','queenend','minorend'],CALCT=['defence
 function learnedTh(){const o=new Set();for(const L of ROAD_LEVELS)for(const k of L.lessons)if(L.n<SP.lvl||isDone(k))(LES_TH[k]||[]).forEach(t=>o.add(t));return[...o]}
 function poolOf(k){const l=learnedTh();if(k==='puz')return l.filter(t=>!ENDT.includes(t));if(k==='end')return l.filter(t=>ENDT.includes(t));if(k==='calc')return l.filter(t=>CALCT.includes(t));return null}
 function need(k){const q=CUR().quota;if(k==='srs')return Math.min(q.srs||20,srsDue().length+(sday().srs||0));if(k==='review')return(unreviewed().length||sday().review)?1:0;if(k==='lesson'||k==='game')return 1;
-  if(!PREVIEW&&(k==='puz'||k==='end')&&!poolOf(k).length)return 0;
-  if(!PREVIEW&&k==='calc'&&!cgLesOk(CG_STEPS[0]))return 0;
+  if(!OPENALL()&&(k==='puz'||k==='end')&&!poolOf(k).length)return 0;
+  if(!OPENALL()&&k==='calc'&&!cgLesOk(CG_STEPS[0]))return 0;
   if(k==='flash')return Math.min(q.flash||0,flashDue());return q[k]||0}
 const flashDue=()=>dueCards().length+dueGm().length;
 function have(k){const D=sday();if(k==='game')return SP.games.d===today()?Math.min(1,SP.games.n):0;if(k==='flash'&&(D.flashNone||!flashDue()))return need('flash');if(k==='lesson'&&!nextLes())return 1;return D[k]||0}
@@ -63,7 +65,7 @@ function heldDays(target){const H=SP.hist;if(!H.length||H[H.length-1][1]<target)
 function gateStatus(L){const R=SP.lich;const s={test:(SP.tests[L.n]||0)>=75,rating:!!R&&R.rating>=L.gate,prov:!!R&&!R.prov,games:!!R&&(R.games+(L.n>=7?R.clsGames||0:0))>=L.games,hold:heldDays(L.gate)>=L.hold};s.ok=s.test&&s.rating&&s.prov&&s.games&&s.hold;return s}
 function tryAdvance(){const L=CUR();if(L.n<10&&(gateStatus(L).ok)){SP.lvl++;ssave();return true}return false}
 /* rating level ke darwaze se neeche: naye lessons band, sirf practice */
-const ratingLocked=()=>!PREVIEW&&SP.lvl>1&&!!SP.lich&&SP.lich.rating<CUR().lo;
+const ratingLocked=()=>!OPENALL()&&SP.lvl>1&&!!SP.lich&&SP.lich.rating<CUR().lo;
 
 /* ---------- puzzle bank (packs/road) ---------- */
 let PIDX=null;const BANK={};const LOADED={};
@@ -113,7 +115,7 @@ function vPuzzleRun(kind,arg){if(kind==='calc')return go('#/calc');const app=$('
     let p=null,theme=null;
     if(cfg.flash){const gd=dueGm();if(gd.length){return gmNext(gd[0])}const due=dueCards();if(!due.length){if(!D.flash){D.flashNone=true;ssave()}return finish()}theme=due[0];p=await getPuzzle({theme})}
     else if(cfg.weak){const ws=Object.entries(SP.cards).sort((a,b)=>(b[1].miss||0)-(a[1].miss||0)).map(x=>x[0]);theme=ws[n%Math.max(1,ws.length)];p=await getPuzzle(theme?{theme}:{})}
-    else{const pool=PREVIEW||kind==='extra'||kind==='th'?null:poolOf(kind);p=await getPuzzle(pool&&pool.length?{any:pool,strict:true}:cfg.any?{any:cfg.any}:{})}
+    else{const pool=OPENALL()||kind==='extra'||kind==='th'?null:poolOf(kind);p=await getPuzzle(pool&&pool.length?{any:pool,strict:true}:cfg.any?{any:cfg.any}:{})}
     if(!p){stage.innerHTML='<div class="card"><p>Is waqt naya puzzle nahi mila (shayad internet band hai). Thodi der baad try karo.</p></div>';return}
     cur={p,theme};const s=puzStep(p,{q:theme?`Galti wala pattern: **${TNAME[theme]||theme}**. Naya puzzle, sahi chaal dhundo.`:''});
     stage.innerHTML='';stage.appendChild(renderStep(s,{test:false,lessonTitle:cfg.title,where:cfg.title,done:res=>{
@@ -131,7 +133,7 @@ function vPuzzleRun(kind,arg){if(kind==='calc')return go('#/calc');const app=$('
 
 /* ---------- lesson, quiz, opening drill ---------- */
 function nextLes(){const L=CUR();return L.lessons.find(k=>!isDone(k))||null}
-function canLesson(){if(PREVIEW)return{ok:true};if(ratingLocked())return{ok:false,why:`Lichess rating ${SP.lich.rating} hai, Level ${SP.lvl} ka darwaza ${CUR().lo}. Jab tak rating wapas nahi aati, naye lessons band. Sirf practice aur games.`};
+function canLesson(){if(OPENALL())return{ok:true};if(ratingLocked())return{ok:false,why:`Lichess rating ${SP.lich.rating} hai, Level ${SP.lvl} ka darwaza ${CUR().lo}. Jab tak rating wapas nahi aati, naye lessons band. Sirf practice aur games.`};
   if(SP.owe&&practiceDone()){SP.owe=0;ssave()}
   if(SP.owe)return{ok:false,why:'Pichhle lesson ki practice (puzzles, quiz, drills) poori karo, phir agla lesson khulega.'};
   if(sday().lesson>=1&&!dayDone())return{ok:false,why:'Aaj ka lesson ho gaya. Agla lesson tab, jab aaj ka poora kaam (practice aur game) ho jaye.'};return{ok:true}}
@@ -171,9 +173,9 @@ function onCalcDone(ok){const D=sday();D.calc=(D.calc||0)+1;ssave()}
 function cgRoadKnown(k){return ROAD_LEVELS.some(L=>L.n<SP.lvl&&L.lessons.includes(k))}
 /* level test se pehle Gym ladder kahan tak (steps pass): pro banne ke liye practice zaroori */
 const CG_RGATE={2:5,3:11,4:17,5:23,6:29,7:35,8:41,9:47,10:47};
-function cgRoadGate(n){const need=CG_RGATE[n]||0;if(PREVIEW||cgS().f>=need)return'';const st=CG_STEPS[need-1];return`🧠 **Calculation Gym pehle:** Level ${n} test se pehle Gym mein **${cgStepName(st)}** tak pass karo (abhi ${cgS().f}/${need} steps).`}
-async function runTest(){const L=CUR(),app=$('#app');{const gm=cgRoadGate(L.n);if(gm){app.innerHTML=`<div class="card stack">${md(gm)}<button class="btn primary block" data-go="#/calc">🧠 Calculation Gym ›</button><button class="btn block" data-go="#/level/${L.n}">‹ Level</button></div>`;return}}
-  if(!PREVIEW&&L.lessons.some(k=>!isDone(k)))return go('#/level/'+L.n);
+function cgRoadGate(n){const need=CG_RGATE[n]||0;if(OPENALL()||cgS().f>=need)return'';const st=CG_STEPS[need-1];return`🧠 **Calculation Gym pehle:** Level ${n} test se pehle Gym mein **${cgStepName(st)}** tak pass karo (abhi ${cgS().f}/${need} steps).`}
+async function runTest(n){const L=(OPENALL()&&LV(n))||CUR(),app=$('#app');{const gm=cgRoadGate(L.n);if(gm){app.innerHTML=`<div class="card stack">${md(gm)}<button class="btn primary block" data-go="#/calc">🧠 Calculation Gym ›</button><button class="btn block" data-go="#/level/${L.n}">‹ Level</button></div>`;return}}
+  if(!OPENALL()&&L.lessons.some(k=>!isDone(k)))return go('#/level/'+L.n);
   if(ratingLocked())return go('#/');
   app.innerHTML='<p class="muted">Test taiyaar ho raha hai…</p>';
   const S=testSteps(L);const pz=[];for(let i=0;i<10;i++){const p=await getPuzzle({});if(p){SEEN.add(p[0]);pz.push(puzStep(p))}}seenSave();
@@ -215,7 +217,7 @@ function quotaRow(k,label,icon){const n=need(k),hv=have(k),done=partDone(k);
   return`<div class="qrow${done?' done':''}"><span class="qi">${done?'✅':icon}</span><div class="qt"><b>${label}</b><div class="muted small">${note}</div></div>${act}</div>`}
 function vHome(){const app=$('#app');sday();const L=CUR();const lock=ratingLocked();const adv=tryAdvance();const L2=CUR();
   const done=QUOTA_KEYS.filter(([k])=>partDone(k)).length;
-  let o=`<div class="stack">${PREVIEW?'<div class="card alert">Preview mode: saare taale khule hain (sirf dekhne ke liye).</div>':''}
+  let o=`<div class="stack">${PREVIEW?'<div class="card alert">Preview mode: saare taale khule hain (sirf dekhne ke liye).</div>':''}${!PREVIEW&&unlockAll()?'<div class="card">🔓 <b>Unlock all stages ON</b>: saare levels, lessons, tests aur exams khule hain. Band karne ke liye app ki Settings dekho.</div>':''}
    ${adv?`<div class="card okc"><b>🎉 Level ${L2.n} khul gaya: ${esc(L2.name)}!</b></div>`:''}
    <div class="shero card"><p class="eyebrow">Level ${L2.n} / 10 · ${esc(L2.name)}</p><h1>${L2.lo||'Start'} → ${L2.gate}</h1><p class="muted">${ratingChip()} · Puzzle rating ${SP.pr||L2.band[0]+150}</p>
    <div class="bar"><i style="width:${Math.round(done/QUOTA_KEYS.length*100)}%"></i></div><p class="small muted">Aaj: ${done}/${QUOTA_KEYS.length} hisse · ~${L2.quota.mins} min</p></div>
@@ -226,22 +228,22 @@ function vHome(){const app=$('#app');sday();const L=CUR();const lock=ratingLocke
     <div class="row"><button class="btn" data-go="#/review">🔁 Review (${srsDue().length})</button><button class="btn" data-go="#/viz">👁 Board-hidden drill</button></div></div>
    <button class="btn primary block" data-go="#/calc">🧠 Calculation Gym · step ${Math.min(cgS().f+1,CG_STEPS.length)}/${CG_STEPS.length}</button>
    <div class="row"><button class="btn block" data-go="#/run/extra">♾ Unlimited Practice</button><button class="btn block" data-go="#/games">♟ My Games</button></div>
-   <h2>Levels</h2><div class="lvls">${ROAD_LEVELS.map(x=>`<button class="lv${x.n===L2.n?' on':''}${x.n>L2.n&&!PREVIEW?' locked':''}" data-go="#/level/${x.n}"><b>${x.n}</b><span>${esc(x.name)}</span><small>${x.lo||0}-${x.gate}</small></button>`).join('')}</div>
+   <h2>Levels</h2><div class="lvls">${ROAD_LEVELS.map(x=>`<button class="lv${x.n===L2.n?' on':''}${x.n>L2.n&&!OPENALL()?' locked':''}" data-go="#/level/${x.n}"><b>${x.n}</b><span>${esc(x.name)}</span><small>${x.lo||0}-${x.gate}</small></button>`).join('')}</div>
    ${lichCard()}
    <p class="small muted">Puzzles: Lichess open puzzle database (CC0). Purane lessons: 64 Squares course.</p></div>`;
   app.innerHTML=o;if(SP.user&&(!SP.lich||Date.now()-SP.lich.at>30*60e3))sync(true)}
 async function sync(quiet){const m=$('#lmsg');if(m)m.textContent='Lichess se la raha hoon…';
   try{await fetchLichess();try{await syncGames()}catch(x){}if(m)m.textContent='Ho gaya.';if(!quiet||$('#app'))route()}catch(e){if(m)m.textContent=e.message==='expired'?'Lichess login purana ho gaya. Ek baar dobara Connect karo.':e.message==='notfound'?'Yeh username Lichess par nahi mila.':'Lichess tak nahi pahunch paya. Internet check karo.'}}
-function vLevelS(n){const L=LV(n),app=$('#app');if(!L)return go('#/');const open=PREVIEW||n<=SP.lvl;
-  const items=L.lessons.map(k=>{const l=lesOf(k),d=isDone(k);return`<div class="qrow${d?' done':''}"><span class="qi">${d?'✅':NEWLES[k]?'🆕':'📘'}</span><div class="qt"><b>${esc(l.title)}</b><div class="muted small">${esc(l.sub||'')}</div></div>${open&&(d||PREVIEW)?`<button class="btn small" data-go="#/les/${k}">${d?'Redo':'Open'}</button>`:''}</div>`}).join('');
+function vLevelS(n){const L=LV(n),app=$('#app');if(!L)return go('#/');const open=OPENALL()||n<=SP.lvl;
+  const items=L.lessons.map(k=>{const l=lesOf(k),d=isDone(k);return`<div class="qrow${d?' done':''}"><span class="qi">${d?'✅':NEWLES[k]?'🆕':'📘'}</span><div class="qt"><b>${esc(l.title)}</b><div class="muted small">${esc(l.sub||'')}</div></div>${open&&(d||OPENALL())?`<button class="btn small" data-go="#/les/${k}">${d?'Redo':'Open'}</button>`:''}</div>`}).join('');
   app.innerHTML=`<div class="stack"><button class="btn small backbtn" data-go="#/">‹ Today's Work</button><p class="eyebrow">Level ${n} / 10</p><h1>${esc(L.name)}</h1><p class="muted">Lichess rapid ${L.lo||'shuru'} se ${L.gate} · Puzzles ${L.band[0]}-${L.band[1]} · Roz ~${L.quota.mins} min</p>
    ${!open?'<div class="card">🔒 Yeh level pichhla level aur uska Lichess darwaza paar karne par khulega.</div>':''}
    <h2>Lessons (${L.lessons.filter(isDone).length}/${L.lessons.length})</h2>${L.lessons.length?`<div class="qlist">${items}</div>`:'<div class="card">Is level ka content jald aa raha hai. Tab tak roz ka puzzle quota, opening drills aur games.</div>'}
    <p class="small muted">Naye lessons roz ki list se ek-ek karke khulte hain. ✅ wale yahan se dobara kar sakte ho.</p>
-   ${n===SP.lvl||PREVIEW?`<h2>Level Test</h2>${cgRoadGate(n)?`<div class="card">${md(cgRoadGate(n))}<a class="btn small" style="text-decoration:none" href="#/calc">Gym kholo ›</a></div>`:''}<button class="btn ${L.lessons.every(isDone)||PREVIEW?'primary':''} block" ${L.lessons.every(isDone)||PREVIEW?'data-go="#/test"':'disabled'}>Take Level ${n} Test (75% to pass)</button>`+gateHTML(L):''}
-   ${n%2===0&&(open||PREVIEW)?`<h2>Mixed Exam</h2><button class="btn block" data-go="#/exam/${n}">🧩 Mixed Exam: Level 1-${n}${(SP.exam||{})[n]!=null?' · best '+SP.exam[n]+'%':''}</button><p class="small muted">Har 2 level baad: 25 sawaal, sab purane lessons se mila-jula. Kamzor topics pehle.</p>`:''}</div>`}
+   ${n===SP.lvl||OPENALL()?`<h2>Level Test</h2>${cgRoadGate(n)?`<div class="card">${md(cgRoadGate(n))}<a class="btn small" style="text-decoration:none" href="#/calc">Gym kholo ›</a></div>`:''}<button class="btn ${L.lessons.every(isDone)||OPENALL()?'primary':''} block" ${L.lessons.every(isDone)||OPENALL()?`data-go="#/test/${n}"`:'disabled'}>Take Level ${n} Test (75% to pass)</button>`+gateHTML(L):''}
+   ${n%2===0&&(open||OPENALL())?`<h2>Mixed Exam</h2><button class="btn block" data-go="#/exam/${n}">🧩 Mixed Exam: Level 1-${n}${(SP.exam||{})[n]!=null?' · best '+SP.exam[n]+'%':''}</button><p class="small muted">Har 2 level baad: 25 sawaal, sab purane lessons se mila-jula. Kamzor topics pehle.</p>`:''}</div>`}
 
-function vExamS(n){if(!(n>=2))return go('#/');SP.exam=SP.exam||{};const prev=doneLessonsUpTo(Math.min(n,SP.lvl)),pk=new Set(prev);const ex=[];COURSE.forEach(C=>(C.test||[]).forEach(s=>{if(pk.has(s.les))ex.push(s)}));
+function vExamS(n){if(!(n>=2))return go('#/');SP.exam=SP.exam||{};const prev=OPENALL()?[].concat(...ROAD_LEVELS.filter(x=>x.n<=n).map(x=>x.lessons)):doneLessonsUpTo(Math.min(n,SP.lvl)),pk=new Set(prev);const ex=[];COURSE.forEach(C=>(C.test||[]).forEach(s=>{if(pk.has(s.les))ex.push(s)}));
   examSession($('#app'),{keys:prev,extra:ex,n:25,title:'Mixed Exam: Level 1-'+n,range:'Level 1 se '+n+' tak',best:SP.exam[n],back:'#/level/'+n,store:p=>{SP.exam[n]=Math.max(SP.exam[n]||0,p);ssave();if(p>=70)addXP(40)}})}
 
 /* ---------- router ---------- */
@@ -250,7 +252,7 @@ window.addEventListener('hashchange',route);
 function navOn(){const h=location.hash||'#/';const bs=[...document.querySelectorAll('nav.tabs button[data-go]')];const hit=bs.find(b=>b.dataset.go===h)||bs.find(b=>h.startsWith(b.dataset.go+'/')&&b.dataset.go!=='#/')||bs[0];bs.forEach(b=>b.classList.toggle('on',b===hit))}
 function route(){closeTutor();navOn();const p=(location.hash||'#/').slice(2).split('/');const app=$('#app');app.innerHTML='';app.onclick=null;window.scrollTo(0,0);
   if(p[0]==='calc'){if(p[1]==='run')cgRun(+p[2]);else if(p[1]==='jump')cgRun(+p[2],{test:1});else cgHome()}else if(p[0]==='run')vPuzzleRun(p[1],p[2]);else if(p[0]==='les')runLesson(p[1],'#/');else if(p[0]==='quiz')runQuiz();else if(p[0]==='open')runOpen();
-  else if(p[0]==='test')runTest();else if(p[0]==='review')srsSession(app,{back:'#/',backTxt:"Today's Work ›",self:'#/review',viz:'#/viz',onDone:n=>{const D=sday();D.srs=(D.srs||0)+n;ssave()}});else if(p[0]==='viz')vizSession(app,{back:'#/',self:'#/viz'});else if(p[0]==='exam')vExamS(+p[1]);else if(p[0]==='level')vLevelS(+p[1]);else if(p[0]==='games')vGames();else if(p[0]==='game'&&p[1])vGame(p[1]);else vHome();chips()}
+  else if(p[0]==='test')runTest(+p[1]);else if(p[0]==='review')srsSession(app,{back:'#/',backTxt:"Today's Work ›",self:'#/review',viz:'#/viz',onDone:n=>{const D=sday();D.srs=(D.srs||0)+n;ssave()}});else if(p[0]==='viz')vizSession(app,{back:'#/',self:'#/viz'});else if(p[0]==='exam')vExamS(+p[1]);else if(p[0]==='level')vLevelS(+p[1]);else if(p[0]==='games')vGames();else if(p[0]==='game'&&p[1])vGame(p[1]);else vHome();chips()}
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();const t=g.dataset.go;if(location.hash===t)route();else go(t);return}
   const a=e.target.closest('[data-act]');if(!a)return;
   if(a.dataset.act==='saveuser'){const v=($('#lu').value||'').trim();SP.user=v;SP.lich=null;ssave();if(v)sync(false);else route()}
