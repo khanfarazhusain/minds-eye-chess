@@ -5,13 +5,13 @@ const X=core();const R=rng(9090);const sh=a=>{for(let i=a.length-1;i>0;i--){cons
 const V={P:1,N:3,B:3,R:5,Q:9,K:0};const cnt=st=>st.b.filter(Boolean).length;
 
 async function main(){const sf=new SF();
-  const gamesBy={};for(const f of fs.readdirSync(path.join(__dirname,'data'))){const elo=+(f.match(/\d{4}/)||[0])[0];gamesBy[elo]=pgnGames(fs.readFileSync(path.join(__dirname,'data',f),'utf8'))}
+  const gamesBy={};for(const f of fs.readdirSync(path.join(__dirname,'data')).filter(f=>f.endsWith('.pgn'))){const elo=+(f.match(/\d{4}/)||[0])[0];gamesBy[elo]=pgnGames(fs.readFileSync(path.join(__dirname,'data',f),'utf8'))}
   const evalW=async fen=>{const st=X.parseFEN(fen);const r=await sf.go(fen,{depth:14});const l=r.lines[0];if(!l)return 0;const e=l.mate!=null?(l.mate>0?99:-99):l.cp/100;return st.w?e:-e};
   const quiet=async st=>{if(X.inCheck(st))return false;const r=await sf.go(X.fenOf(st),{depth:8});const bm=X.legal(st).find(m=>uciOf(m)===r.best.slice(0,4)+(r.best[4]||''));return!!bm&&!st.b[bm.t]&&!X.inCheck(X.make(st,bm))};
 
   /* ---------- sparring positions ---------- */
   const all=[];for(const elo in gamesBy)for(const g of gamesBy[elo]){let st=X.parseFEN(X.START_FEN);g.moves.forEach((x,k)=>{const m=X.findMove(st,x);if(!m)return;st=X.make(st,m);if(k>=14&&k%4===0)all.push(st)})}
-  sh(all);const S2=[],S3=[],S4=[],S5=[];
+  sh(all);const S2=[],S3=[],S4=[],S5=[];if(process.env.ONLY_GUESS)all.length=0;
   for(const st of all){if(S2.length>=28&&S3.length>=28&&S4.length>=28&&S5.length>=28)break;const n=cnt(st);if(!(await quiet(st)))continue;const fen=X.fenOf(st);const e=await evalW(fen);const me=e>=0?'w':'b',em=Math.abs(e);
     /* learner always plays the side to move (FEN side), so flip sign to side-to-move */
     const es=st.w?e:-e;
@@ -59,10 +59,17 @@ async function main(){const sf=new SF();
       const from=16+2*Math.floor(R()*6);const seg=await sfSeg(g,sfSide,from,10);if(!seg)continue;
       out.push({t:'guess',game:`${g.tags.White} vs ${g.tags.Black}`.replace(/\s*\(Elo (\d+)\)/g,' ($1)'),moves:g.moves.join(' '),me:sfSide,from,to:seg.to,mode:'sf',sc:seg.sc,need,
         q:`Tum **${sfSide==='w'?'White':'Black'}** (Stockfish, ${elo} Elo) ho. 10 chaalein guess karo. Game wali chaal = 10 point, engine ke hisaab se achhi chaal = 8 ya 4.`})}return out}
-  const g3=await engG([2000,2200,2300],50,30),g4=await engG([2400,2600],55,30);
+  /* asli OTB classical games (Lichess broadcast database, CC0): tools/train/data/masters/otb-<band>.pgn */
+  const OTB=b=>pgnGames(fs.readFileSync(path.join(__dirname,'data','masters','otb-'+b+'.pgn'),'utf8'));
+  const tname=(t,c)=>(t[c+'Title']?t[c+'Title']+' ':'')+String(t[c]||'?').replace(/^(.+?), (.+)$/,'$2 $1')+(t[c+'Elo']?' ('+t[c+'Elo']+')':'');
+  async function otbG(bands,need,cap){const out=[];for(const b of bands)for(const g of OTB(b)){if(out.length>=cap)break;const me=g.tags.Result==='1-0'?'w':'b';
+      const from=16+2*Math.floor(R()*6)+(me==='b'?1:0);const seg=await sfSeg(g,me,from,10);if(!seg)continue;const who=tname(g.tags,me==='w'?'White':'Black');
+      out.push({t:'guess',game:`${tname(g.tags,'White')} vs ${tname(g.tags,'Black')} · ${g.tags.BroadcastName||g.tags.Event||''}${(n=>String(g.tags.BroadcastName||'').includes(n)?'':' '+n)(String(g.tags.Date||'').slice(0,4))}`.trim(),moves:g.moves.join(' '),me,from,to:seg.to,mode:'sf',sc:seg.sc,need,
+        q:`Asli tournament game. Tum **${me==='w'?'White':'Black'}** ho: **${who}** (jeetne wale). 10 chaalein guess karo. Game wali chaal = 10 point, engine ke hisaab se achhi chaal = 8 ya 4.`})}return out}
+  const g3=await otbG(['2000','2200'],50,45),g4=await otbG(['2400'],55,40);
   const masters=COURSE_LINES(k=>['l6.elements','l7.masters','l7.champs1'].includes(k)).filter(t=>t.moves.split(' ').length>=30);
   const g5m=[];for(const t of masters){const mv=t.moves.split(' ');const me=winner(mv);const seg=await sfSeg({moves:mv},me,Math.max(0,mv.length-24),10);if(seg)g5m.push({t:'guess',game:t.h.replace(/`/g,''),moves:t.moves,me,from:Math.max(0,mv.length-24),to:mv.length,mode:'sf',sc:seg.sc,need:55,q:`**${t.h}**: tum **${me==='w'?'White':'Black'}** (jeetne wale) ho. Aakhri 10+ chaalein guess karo.`})}
-  const g5=[...g5m,...await engG([2700,2800],55,24)];
+  const g5=[...g5m,...await otbG(['2700','2600'],55,45)];
   console.error('guess',g1.length,g2.length,g3.length,g4.length,g5.length);
   const gl=(id,ch,after,needs,title,sub,yaad,md,arr,nP,qn)=>({ch,after,needs,les:{id:'tr_'+id,key:'tr.'+id,title,sub,yaad,steps:[{t:'info',h:'Guess the move',md},...arr.slice(0,nP)],pool:arr.slice(nP),qn}});
   sh(g2);sh(g3);sh(g4);
@@ -71,12 +78,12 @@ async function main(){const sf=new SF();
       'Pichle lesson ke traps ab **game ki tarah**: tum jeetne wali side ho, har chaal guess karo. **70%** sahi = pass.\n\nTest: 5 games.',g1,4,5),
     gl('gm2','l4b','l4.rep',['l4.ideas','l4.italian','l4.ruy','l4.sicilian','l4.french','l4.qg','l4.indian','l4.gambits','l4.rep'],'🏋 Guess the move: openings','Seekhi hui openings ki har chaal',['Har chaal ka idea: center, development, king safety.','Apne repertoire wali lines sabse pehle pakki.'],
       'Opening lessons ki saari lines: tum ek side ho, har chaal guess karo. **70%** = pass. Har baar alag lines.\n\nTest: 5 lines.',g2,5,5),
-    gl('gm3','l6b','l6.plans',['l6.elements','l6.plans'],'🏋 Guess the move: strong engine games (2000-2300)','Middlegame mein strong player jaisa socho',['Pehle plan, phir chaal.','Forcing chaalein pehle check karo.'],
-      'Strong engine games (Stockfish 2000-2300 Elo). Opening ke baad ki **10 chaalein** guess karo. Game wali chaal 10 point, engine ke hisaab se lagbhag utni hi achhi 8, theek-thaak 4.\n\nPass: **50%**. Test: 5 games.',g3,3,5),
-    gl('gm4','l7','l7.analysis',['tr.gm3','l7.analysis'],'🏋 Guess the move: 2400-2600','Expert level games',['Har chaal se pehle candidates (2-3).','Opponent ka plan bhi socho.'],
-      'Ab 2400-2600 Elo games. **55%** = pass. Har chaal par 2-3 candidates socho, phir chuno.\n\nTest: 5 games.',g4,3,5),
-    gl('gm5','l7b','l7.champs2',['l7.masters','l7.champs1','l7.champs2','tr.gm4'],'🏋 Guess the move: masters aur 2700+','Famous master games aur sabse strong games',['Masters ke plans: attack, sacrifice, endgame.','Jeetne wale ki aankh se dekho.'],
-      'Famous master games (Opera, Immortal, Lasker...) aur 2700-2800 Elo games. **55%** = pass. GM level.\n\nTest: 5 games.',g5,3,5)];
+    gl('gm3','l6b','l6.plans',['l6.elements','l6.plans'],'🏋 Guess the move: tournament games (2000-2400)','Asli classical games, FM/IM level',['Pehle plan, phir chaal.','Forcing chaalein pehle check karo.'],
+      'Asli tournament games (classical, 2000-2400 rating, 2026). Jeetne wale player ki opening ke baad ki **10 chaalein** guess karo. Game wali chaal 10 point, engine ke hisaab se lagbhag utni hi achhi 8, theek-thaak 4.\n\nPass: **50%**. Test: 5 games.',g3,3,5),
+    gl('gm4','l7','l7.analysis',['tr.gm3','l7.analysis'],'🏋 Guess the move: IM/GM games (2400-2600)','Asli classical games, IM aur GM',['Har chaal se pehle candidates (2-3).','Opponent ka plan bhi socho.'],
+      'Ab 2400-2600 rating ke asli tournament games (IM, GM). **55%** = pass. Har chaal par 2-3 candidates socho, phir chuno.\n\nTest: 5 games.',g4,3,5),
+    gl('gm5','l7b','l7.champs2',['l7.masters','l7.champs1','l7.champs2','tr.gm4'],'🏋 Guess the move: famous masters aur elite GMs (2600+)','Opera, Immortal, Lasker aur aaj ke top GMs',['Masters ke plans: attack, sacrifice, endgame.','Jeetne wale ki aankh se dekho.'],
+      'Famous master games (Opera, Immortal, Lasker...) aur 2026 ke elite tournaments (Norway Chess, Prague Masters, TePe Sigeman, Saint Louis...) ke 2600-2800 GMs ke games. **55%** = pass. GM level.\n\nTest: 5 games.',g5,3,5)];
 
   /* ---------- apne games ka review ---------- */
   const rv=(id,ch,after,needs,lvl,title,sub,yaad,md)=>({ch,after,needs,les:{id:'tr_'+id,key:'tr.'+id,title,sub,yaad,steps:[{t:'info',h:'Apne game se seekho',md},{t:'myrev',lvl}],pool:[{t:'myrev',lvl}],qn:0}});
@@ -90,6 +97,6 @@ async function main(){const sf=new SF();
     rv('mr4','l7b','l7.plan',['l7.plan','tr.mr3'],4,'🏋 Apna game review: GM level','Inaccuracies bhi, 5 cards tak, deep engine',['Chhoti galtiyan bhi jodkar game haarte hain.','Har hafte kam se kam 3 games review.'],
       'GM level review: engine **inaccuracies** bhi pakdega (chhoti galtiyan), aur sabse badi 5 cards banengi. Pehle khud, phir engine, phir category. Training plan: har hafte kam se kam 3 games.')];
   sf.quit();
-  const W=(n,o)=>fs.writeFileSync(path.join(__dirname,'ladders',n+'.json'),JSON.stringify(o,null,1));W('spar',SP);W('guess',GU);W('review',RV);
+  const W=(n,o)=>fs.writeFileSync(path.join(__dirname,'ladders',n+'.json'),JSON.stringify(o,null,1));if(!process.env.ONLY_GUESS)W('spar',SP);W('guess',GU);W('review',RV);
   console.log([...SP,...GU,...RV].map(l=>l.les.key+': '+l.les.steps.length+' steps, pool '+l.les.pool.length).join('\n'))}
 main().catch(e=>{console.error(e);process.exit(1)});
