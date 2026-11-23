@@ -625,7 +625,7 @@ body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/"><i class="b64">64</i><span class="bname">Lichess Play<small>64 Squares</small></span></a><div class="chips"><span class="chip" id="luser"></span></div></div></header>
-<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-23 01:12 UTC</p></main>
+<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-23 01:23 UTC</p></main>
 <nav class="tabs"><div class="wrap">
 <button data-go="#/" class="on"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.6 3.5 5.4 3.5 8.5s-1.1 5.9-3.5 8.5c-2.4-2.6-3.5-5.4-3.5-8.5s1.1-5.9 3.5-8.5z"/></svg></span>Lobby</button>
 <button data-go="#/road"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20h9"/><path d="M9 20c0-3 1.5-5 3-6.5-2.2.4-4 .1-5-1l3.5-6.5c3.5-.5 7 2 7 7.5V20"/><circle cx="12.6" cy="8.6" r=".7" fill="currentColor"/></svg></span>Rated</button>
@@ -1085,7 +1085,7 @@ function setCtx(c){TUT.ctx=c;if(TUT.open)drawTutor()}
 function renderStep(s,ctx){const el=h('div','stack step');
   const base={where:ctx.where||'Lesson',lesson:ctx.lessonTitle,text:s.md||s.q,fen:s.fen,why:s.why,hint:s.hint};setCtx(base);
   if(s.h)el.appendChild(h('h2','',inl(s.h)));
-  ({info:stInfo,quiz:stQuiz,move:stMove,reach:stReach,tap:stTap,line:stLine,play:stPlay,recall:stRecall,pzset:stPz})[s.t](s,el,ctx,base);
+  ({info:stInfo,quiz:stQuiz,move:stMove,reach:stReach,tap:stTap,line:stLine,play:stPlay,recall:stRecall,pzset:stPz,guess:stGuess,myrev:stMyRev})[s.t](s,el,ctx,base);
   return el}
 function fb(el,ok,title,body){let f=el.querySelector('.fb');if(!f){f=h('div','fb');el.appendChild(f)}f.className='fb '+(ok?'ok':'no');f.innerHTML=`<h3>${title}</h3>${body?md(body):''}`;return f}
 /* theory slide ka board: 👁 button se chhupao / wapas dikhao */
@@ -1182,6 +1182,73 @@ function stPz(s,el,ctx){const T=!!ctx.test,rush=s.mode==='rush';el.appendChild(h
       if(rush){box.innerHTML='';const go=h('button','btn primary block',`▶ Shuru karo (${fmt(left)})`);ctrl.appendChild(go);chips();go.onclick=()=>{ctrl.innerHTML='';timer=setInterval(()=>{if(!el.isConnected){clearInterval(timer);return}left--;chips();if(left<=0)done()},1000);next()}}
       else next()},()=>{box.innerHTML='<p class="warn">Puzzles load nahi hue (internet?).</p>'})}
   chips();begin()}
+/* ---------- guess the move: s={t:'guess',fen?,moves,me:'w'|'b',from,to,mode:'exact'|'sf',sc:{ply:{san:pts}},need:%,game} ----------
+   exact: game wali chaal = 1 point. sf: game wali chaal 10, Stockfish (pehle se nikala) ke hisaab se achhi chaal 8/4 points. */
+function stGuess(s,el,ctx){const T=!!ctx.test;const mv=s.moves.split(' ');const meW=s.me!=='b';
+  const top=h('div','row');el.appendChild(top);el.appendChild(h('p','prompt',inl(s.q||`Tum **${meW?'White':'Black'}** ho. Har chaal par socho: master/engine ne kya khela hoga?`)));
+  const bh=h('div');el.appendChild(bh);const msg=h('div','tut');el.appendChild(msg);const log=h('p','muted small');el.appendChild(log);const ctrl=h('div','stack');el.appendChild(ctrl);
+  let st,ply,got,max,fin;const B=Board(bh,{st:parseFEN(s.fen||START_FEN),side:meW?'w':'b',persp:meW?'w':'b',onMove});
+  const mine=k=>{let x=parseFEN(s.fen||START_FEN).w;return(k%2===0)===(x===meW)};
+  const chips=()=>{top.innerHTML=`<span class="chip">${s.game?esc(s.game):'Guess the move'}</span><span class="chip">Points ${got}/${max}</span><span class="chip">Chahiye ${s.need}%</span>`};
+  function adv(){/* play forward until it is my turn or the end */
+    while(ply<s.to&&ply<mv.length&&!mine(ply)){const m=findMove(st,mv[ply]);if(!m)break;B.last=[sn(m.f),sn(m.t)];st=make(st,m);ply++}
+    B.set({st});log.innerHTML='Game: '+mv.slice(0,ply).map((x,k)=>(k%2===0?(Math.floor(k/2)+1)+'. ':'')+esc(x)).join(' ');
+    if(ply>=s.to||ply>=mv.length)return finish();B.lock=false;chips()}
+  function finish(){fin=true;B.lock=true;const pct=max?Math.round(got/max*100):0;const ok=pct>=s.need;chips();
+    fb(el,ok,ok?`${pct}%: pass ✓`:`${pct}%: ${s.need}% chahiye`,ok?'Badhiya! Tum master ki tarah soch rahe ho.':(T?'Agli baar har chaal par plan aur forcing chaalein dono socho.':'**↺ Dobara** dabao. Har chaal se pehle socho: plan kya hai, kaunsi chaal sabse forcing hai?'));
+    grade(s,ok);if(ok){addXP(20);ctx.done(true)}else if(T)ctx.done(false);else{const rb=h('button','btn primary block','↺ Dobara');ctrl.innerHTML='';ctrl.appendChild(rb);rb.onclick=()=>{const f=el.querySelector('.fb');if(f)f.remove();ctrl.innerHTML='';begin()}}}
+  function onMove(m){if(fin||B.lock)return;const my=sanOf(st,m),real=mv[ply];let pts,full;
+    if(s.mode==='sf'){const t=(s.sc&&s.sc[ply])||{};full=10;pts=sameSan(my,real)?10:(Object.entries(t).find(([k])=>sameSan(k,my))||[0,0])[1]}else{full=1;pts=sameSan(my,real)?1:0}
+    got+=pts;max+=full;B.lock=true;
+    msg.innerHTML=md(sameSan(my,real)?`✓ **${my}**: bilkul game wali chaal! (+${pts})`:`Tumne **${my}** socha${pts?` (achhi chaal, +${pts})`:''}. Game mein: **${real}**.`);
+    const r=findMove(st,real);B.last=[sn(r.f),sn(r.t)];st=make(st,r);ply++;B.set({st});setTimeout(adv,sameSan(my,real)?350:900)}
+  function begin(){st=parseFEN(s.fen||START_FEN);ply=0;got=0;max=0;fin=false;msg.innerHTML='';
+    while(ply<s.from){const m=findMove(st,mv[ply]);if(!m)break;st=make(st,m);ply++}adv()}
+  begin()}
+/* ---------- apne games ka review: galti -> card (spaced review queue mein) ----------
+   s={t:'myrev',lvl:1|2|3|4}. 1: sirf blunders. 2: mistakes bhi + CCT tag. 3: pehle khud galtiyan chuno, phir engine + category. 4 (GM): inaccuracies bhi, 5 cards tak. */
+function pgnMoves(t){return t.replace(/\[[^\]]*\]/g,'').replace(/\{[^}]*\}/g,'').replace(/\([^)]*\)/g,'').replace(/\$\d+/g,'').replace(/\d+\.(\.\.)?/g,' ').replace(/(1-0|0-1|1\/2-1\/2|\*)\s*$/,'').trim().split(/\s+/).filter(Boolean)}
+function stMyRev(s,el,ctx){const lv=s.lvl||1;const box=h('div','stack');el.appendChild(box);PR.mrev=PR.mrev||{};PR.mtag=PR.mtag||{};
+  const TAGS=lv>=3?['Tactic miss hua','Blunder (piece/mate latka)','Time ki kami','Galat plan','Endgame technique']:['Check miss hua','Capture miss hua','Threat (dhamki) miss hui','Mera piece latak gaya'];
+  let road={};try{road=JSON.parse(localStorage.getItem('mindseye.road.games')||'{}')||{}}catch(e){}
+  const games=Object.values(road).filter(g=>g&&g.moves&&g.res!=='live').sort((a,b)=>(a.res==='loss'?0:1)-(b.res==='loss'?0:1)||b.at-a.at).slice(0,8);
+  function pick(){box.innerHTML='';box.appendChild(h('div','tut',md(`**Apna game chuno.** Haare hue game sabse zyada sikhate hain. Engine ${lv===1?'**blunders**':lv>=4?'**blunders, mistakes aur inaccuracies**':'**blunders aur mistakes**'} dhundega, aur har galti ek **card** banegi jo review mein dobara aayegi.`)));
+    if(games.length){box.appendChild(h('b','','Tumhare Lichess games (Road se):'));games.forEach(g=>{const b=h('button','btn block',`${g.res==='loss'?'❌':g.res==='win'?'✅':'½'} vs ${esc(g.opp)} · ${g.color==='w'?'White':'Black'}${PR.mrev[g.id]?' · reviewed':''}`);b.onclick=()=>start(g.moves.split(' '),g.color,g.id,g.fen);box.appendChild(b)})}
+    box.appendChild(h('b','','Ya PGN paste karo (Lichess/Chess.com se "Copy PGN"):'));const ta=h('textarea','');ta.rows=5;ta.style.width='100%';ta.placeholder='1. e4 e5 2. Nf3 ...';box.appendChild(ta);
+    const row=h('div','row');const bw=h('button','btn primary','Main White tha'),bb=h('button','btn primary','Main Black tha');row.append(bw,bb);box.appendChild(row);const err=h('p','warn');box.appendChild(err);
+    const go=c=>{const mv=pgnMoves(ta.value);let st=parseFEN(START_FEN),ok=0;for(const x of mv){const m=findMove(st,x);if(!m)break;st=make(st,m);ok++}
+      if(ok<10){err.textContent=ok?`Sirf ${ok} chaalein padhi gayi. Poora PGN paste karo.`:'PGN samajh nahi aaya. Lichess par game kholo → Share → PGN copy.';return}
+      let hsh=0;for(const ch of mv.join(' '))hsh=(hsh*31+ch.charCodeAt(0))|0;start(mv.slice(0,ok),c,'p'+(hsh>>>0).toString(36))};bw.onclick=()=>go('w');bb.onclick=()=>go('b')}
+  async function start(mv,color,gid,fen0){let marked=new Set();
+    if(lv>=3){await new Promise(res=>{box.innerHTML='';box.appendChild(h('div','tut',md('**Pehle khud** (analysis ka rule): apni woh chaalein tap karo jo tumhe lagti hain galat thi (3 tak). Phir engine se milayenge.')));
+      const wrap=h('div','row');wrap.style.flexWrap='wrap';let st=parseFEN(fen0||START_FEN);mv.forEach((x,k)=>{const mine=(st.w?'w':'b')===color;const n=Math.floor(k/2)+1;
+        if(mine){const b=h('button','btn small',`${n}${color==='w'?'.':'…'} ${esc(x)}`);b.onclick=()=>{if(marked.has(k)){marked.delete(k);b.classList.remove('primary')}else if(marked.size<3){marked.add(k);b.classList.add('primary')}};wrap.appendChild(b)}
+        const m=findMove(st,x);if(m)st=make(st,m)});box.appendChild(wrap);const d=h('button','btn primary block','Ab engine se check karo ›');d.onclick=res;box.appendChild(d)})}
+    box.innerHTML='<p class="muted">Engine game dekh raha hai… <b id="mrp">0%</b> (phone par 20-40 second)</p>';
+    let st=parseFEN(fen0||START_FEN);const pos=[st],ms=[];for(const x of mv){const m=findMove(st,x);if(!m)break;ms.push(m);st=make(st,m);pos.push(st)}
+    const wp=l=>!l?50:l.mate!=null?(l.mate>0?100:0):50+50*(2/(1+Math.exp(-0.00368208*Math.max(-1500,Math.min(1500,l.cp||0))))-1);const ev=[];
+    try{for(let i=0;i<pos.length;i++){const p=pos[i];if(!legal(p).length){ev.push({wp:inCheck(p)?0:50,lines:[]});continue}const r=await sfGo(fenOf(p),{depth:lv>=4?12:10,mpv:2});ev.push({wp:wp(r.lines[0]),lines:r.lines});const e=$('#mrp');if(e)e.textContent=Math.round((i+1)/pos.length*100)+'%'}}
+    catch(e){box.innerHTML='<p class="warn">Engine shuru nahi hua. Page reload karke dobara try karo.</p>';return}
+    const th=lv===1?30:lv>=4?10:20,cards=[];
+    for(let i=0;i<ms.length;i++){const p=pos[i];if((p.w?'w':'b')!==color||!ev[i].lines.length)continue;const best=ev[i].lines[0];const bm=uciMove(p,best.pv[0]);if(!bm)continue;
+      const drop=Math.max(0,ev[i].wp-(100-ev[i+1].wp));if(drop<th||sameSan(sanOf(p,bm),sanOf(p,ms[i])))continue;
+      const alt=ev[i].lines[1]&&wp(ev[i].lines[1])>=ev[i].wp-5?uciMove(p,ev[i].lines[1].pv[0]):null;
+      cards.push({i,drop,card:{t:'move',id:'mg.'+gid+'.'+i,les:s.les,fen:fenOf(p),line:[sanOf(p,bm)],ok:alt?[sanOf(p,alt)]:undefined,q:`**Apne game se** (chaal ${Math.floor(i/2)+1}): yahan tumne \`${sanOf(p,ms[i])}\` khela tha. Behtar chaal dhundo.`,
+        why:`Engine ki chaal: \`${sanOf(p,bm)}\`${alt?` (ya \`${sanOf(p,alt)}\`)`:''}. Tumhari chaal se jeet ka chance **${Math.round(drop)}%** gira.`,hint:'Pehle checks, captures aur threats. Phir dekho kya latak raha hai.'}})}
+    cards.sort((a,b)=>b.drop-a.drop);const C=cards.slice(0,lv>=4?5:3).sort((a,b)=>a.i-b.i);PR.mrev[gid]=1;save();
+    let msg=`Engine ne **${cards.length}** galti${cards.length===1?'':'yan'} dhundi${cards.length>C.length?` (sabse badi ${C.length} cards bani)`:''}.`;
+    if(lv>=3){const hit=C.filter(c=>marked.has(c.i)).length;msg+=` Tumne khud **${marked.size}** chuni thi, unmein se **${hit}** sach mein galat thi.${C.length-hit>0?` **${C.length-hit}** galti tumhe pata hi nahi chali: yahi sabse zyada sikhati hain.`:''}`}
+    if(!C.length){box.innerHTML='';box.appendChild(h('div','tut',md(msg+'\n\nKoi badi galti nahi! Bahut badhiya. (Agla game bhi review karo.)')));finish();return}
+    C.forEach(c=>{try{srsTouch(c.card,false)}catch(e){}});save();let k=0;
+    const next=()=>{if(k>=C.length)return summary();const c=C[k++];box.innerHTML='';box.appendChild(h('p','eyebrow',`Galti card ${k}/${C.length}`));
+      const view=Object.assign({},c.card);delete view.id;/* review queue mein card already hai; yahan practice */
+      box.appendChild(renderStep(view,{where:'Game review',lessonTitle:ctx.lessonTitle,done:()=>{if(lv>=2){const t=h('div','stack');t.appendChild(h('b','','Yeh galti kis wajah se hui?'));TAGS.forEach(x=>{const b=h('button','btn block',x);b.onclick=()=>{PR.mtag[x]=(PR.mtag[x]||0)+1;save();next()};t.appendChild(b)});box.appendChild(t)}
+        else{const b=h('button','btn primary block',k>=C.length?'Review poora ›':'Agla card ›');b.onclick=next;box.appendChild(b)}}}))};
+    box.innerHTML='';box.appendChild(h('div','tut',md(msg+'\n\nAb har galti ka card khud solve karo. Yeh cards review queue mein bhi chale gaye: kuch din baad dobara aayenge.')));const g=h('button','btn primary block','Cards shuru ›');g.onclick=next;box.appendChild(g);
+    function summary(){box.innerHTML='';const top=Object.entries(PR.mtag).sort((a,b)=>b[1]-a[1]).slice(0,3);
+      box.appendChild(h('div','tut',md(`**Review poora!** ${C.length} card${C.length>1?'s':''} review queue mein.`+(top.length&&lv>=2?`\n\nAb tak tumhari sabse zyada galtiyan: ${top.map(([t,n])=>`**${t}** (${n})`).join(', ')}. Isi par zyada practice karo.`:''))));finish()}}
+  function finish(){addXP(20);ctx.done(true)}
+  pick()}
 function fenOf(st){let o='';for(let r=7;r>=0;r--){let e=0;for(let f=0;f<8;f++){const p=st.b[r*8+f];if(!p)e++;else{if(e){o+=e;e=0}o+=p}}if(e)o+=e;if(r)o+='/'}
   const c=(st.c.K?'K':'')+(st.c.Q?'Q':'')+(st.c.k?'k':'')+(st.c.q?'q':'');return o+' '+(st.w?'w':'b')+' '+(c||'-')+' '+(st.ep>=0?sn(st.ep):'-')+' '+st.hm+' '+st.fm}
 /* tap every square a piece can reach */
@@ -1235,7 +1302,7 @@ function stPlay(s,el,ctx){const st0=parseFEN(s.fen);const me=st0.w;let st=st0,n=
   el.appendChild(h('p','prompt',inl(s.q)));const info=h('div','row');el.appendChild(info);const bh=h('div');el.appendChild(bh);
   const B=Board(bh,{st,side:me?'w':'b',persp:me?'w':'b',onMove});const msg=h('p','muted');el.appendChild(msg);
   const bar=h('div','row');const rb=h('button','btn small','↺ Shuru se'),hb=h('button','btn small','💡 Coach hint'),ub=h('button','btn small','↶ Wapas');if(T)bar.append(rb);else bar.append(rb,ub,hb);el.appendChild(bar);
-  const goalTxt={mate:'Checkmate karo',promote:'Pawn ko queen banao',draw:'Draw bachao (haaro mat)'}[s.goal];
+  const goalTxt={mate:'Checkmate karo',promote:'Pawn ko queen banao',draw:'Draw bachao (haaro mat)',dev:'Develop + castle',eval:'Engine number '+(s.need>=0?'+':'')+s.need+' ya behtar'}[s.goal];
   function status(t){info.innerHTML=`<span class="chip">${goalTxt}</span><span class="chip">Chaal ${n}/${s.max}</span>${T?'<span class="chip">Test: ek koshish</span>':''}`;msg.innerHTML=t?inl(t):''}
   rb.onclick=()=>{if(T&&fin)return;st=st0;n=0;fin=false;hist=[];B.last=null;B.lock=false;B.marks={};B.set({st});status('');const f=el.querySelector('.fb');if(f)f.remove()};
   ub.onclick=()=>{if(!hist.length||B.lock)return;const p=hist.pop();st=p.st;n=p.n;fin=false;B.lock=false;B.last=null;B.marks={};B.set({st});status('Ek chaal wapas li.');const f=el.querySelector('.fb');if(f)f.remove()};
@@ -1252,6 +1319,13 @@ function stPlay(s,el,ctx){const st0=parseFEN(s.fen);const me=st0.w;let st=st0,n=
     if(s.goal==='mate'&&myMat(st.b)===0){end(false,'Tumhara piece chala gaya. Ab mate nahi ho sakta.');return true}
     if(s.goal==='draw'&&!after&&st.b.some((p,i)=>p===(me?'q':'Q'))){end(false,'Opponent ka pawn queen ban gaya.');return true}
     if(s.goal==='draw'&&!st.b.some(p=>p&&!isW(p)!==me&&'PRQ'.includes(p.toUpperCase()))){end(true,'Opponent ke paas jeetne ka material nahi bacha. Draw pakka!');return true}
+    if(s.goal==='dev'&&after){const P=me?'NBNB':'nbnb',home=me?[1,6,2,5]:[57,62,58,61];const out=home.filter((q,k)=>st.b[q]!==P[k]).length;const k=kingSq(st.b,me),kr=k>>3,kf=k&7;
+      const cast=kr===(me?0:7)&&(kf>=6||kf<=2);const pts=c=>st.b.reduce((a,p)=>a+(p&&isW(p)===c?({P:1,N:3,B:3,R:5,Q:9}[p.toUpperCase()]||0):0),0);
+      if(pts(me)<pts(!me)){end(false,'Material kho diya. Development ke saath pieces bhi bachao.');return true}
+      status(`Bahar: ${out}/4 chhote pieces${cast?' · castled ✓':''}`);if(out>=4&&cast){end(true,`${n} chaal mein saare chhote pieces bahar aur king castle! Opening principles pakke.`);return true}}
+    if(s.goal==='eval'&&n>=s.max&&!after){fin=true;B.lock=true;status('Engine position check kar raha hai…');
+      sfGo(fenOf(st),{depth:14}).then(r=>{const l=r.lines[0]||{};let e=l.mate!=null?(l.mate>0?99:-99):(l.cp||0)/100;if(st.w!==me)e=-e;fin=false;
+        end(e>=s.need,`${s.max} chaal ho gayi. Stockfish: **${e>=99?'mate':e<=-99?'mate (opponent)':(e>0?'+':'')+e.toFixed(1)}** tumhari taraf se (chahiye ${s.need>=0?'+':''}${s.need}).`)},()=>{fin=false;end(false,'Engine nahi chala, dobara try karo.')});return true}
     if(n>=s.max&&!after){if(s.goal==='draw')end(true,`${s.max} chaalein bach gaye. Yeh draw hai!`);else end(false,`${s.max} chaalein ho gayi. Thoda tez plan chahiye.`);return true}
     return false}
   function onMove(m){if(fin)return;hist.push({st,n});B.last=[sn(m.f),sn(m.t)];st=make(st,m);n++;B.set({st});status('');if(check(true))return;

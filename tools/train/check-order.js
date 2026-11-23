@@ -10,10 +10,12 @@ const TERMS=['stalemate','checkmate','castle','opposition','key square','square 
   'outpost','open file','7th rank','prophylaxis','blunder','increment','time trouble','zugzwang','candidate','forcing','hanging','exchange','underpromotion','en passant','eval','tempo','w shape'];
 const order=[];X.COURSE.forEach(C=>C.lessons.forEach(l=>order.push(l)));
 const pos=k=>order.findIndex(l=>l.key===k);
-const textOf=l=>JSON.stringify([l.title,l.sub,l.yaad,l.steps,l.pool||[]]).toLowerCase();
+/* sirf woh text jo learner padhta hai (field names/values jaise goal:'eval' nahi) */
+const SEEN_F=['h','md','q','why','hint','opts','game'];
+const textOf=l=>JSON.stringify([l.title,l.sub,l.yaad,...[...l.steps,...(l.pool||[])].map(s=>SEEN_F.map(k=>s[k]))]).toLowerCase();
 const has=(t,term)=>new RegExp('(^|[^a-z])'+term.replace(/[-]/g,'\\-')+'(s|es|d|ed|ing)?([^a-z]|$)').test(t);
 // first mention of each term in the course (lesson index)
-const first={};order.forEach((l,i)=>{if(l.tr)return;const t=textOf(l);TERMS.forEach(term=>{if(first[term]==null&&has(t,term))first[term]=i})});
+const first={};order.forEach((l,i)=>{const T0=X.TRAIN.find(T=>T.les.key===l.key);if(l.tr&&!T0)return;const t=textOf(l);TERMS.forEach(term=>{if(first[term]==null&&(l.tr?(T0.teaches||[]).includes(term):has(t,term)))first[term]=i})});
 
 const TRAIN=X.TRAIN;if(!TRAIN.length)errs.push('TRAIN khaali hai (build.js chalao)');
 for(const T of TRAIN){const k=T.les.key,i=pos(k);if(i<0){errs.push(k+': course mein nahi mila');continue}
