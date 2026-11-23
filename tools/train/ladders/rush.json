@@ -1,0 +1,734 @@
+[
+ {
+  "ch": "l1b",
+  "after": "l7.tourney",
+  "needs": [
+   "l1.mate",
+   "l7.tourney"
+  ],
+  "les": {
+   "id": "tr_rs1",
+   "key": "tr.rs1",
+   "title": "🏋 Drill: mate-in-1 rush",
+   "sub": "3 minute mein jitne mate-in-1",
+   "yaad": [
+    "Clock chalti hai: jaldi par dhyan se.",
+    "Pehle check wali chaalein dekho."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Drill: time pressure",
+     "md": "Ab **clock** ke saath! 3 minute mein jitne ho sake **mate in 1** karo. Galat chaal par 1 second ka break, phir agla puzzle.\n\nTarget: **10 sahi**. Har baar naye puzzles."
+    },
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk"
+     ],
+     "q": "3 minute, **10 mate** chahiye.",
+     "lo": 400,
+     "hi": 1100,
+     "th": [
+      "mate1"
+     ],
+     "secs": 180,
+     "need": 10
+    }
+   ],
+   "pool": [
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk"
+     ],
+     "lo": 400,
+     "hi": 1100,
+     "th": [
+      "mate1"
+     ],
+     "secs": 180,
+     "need": 10,
+     "q": "**Test rush**: 3 minute, **10 mate** chahiye."
+    },
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk"
+     ],
+     "lo": 400,
+     "hi": 1100,
+     "th": [
+      "mate1"
+     ],
+     "secs": 180,
+     "need": 10,
+     "q": "**Test rush**: 3 minute, **10 mate** chahiye."
+    },
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk"
+     ],
+     "lo": 400,
+     "hi": 1100,
+     "th": [
+      "mate1"
+     ],
+     "secs": 180,
+     "need": 10,
+     "q": "**Test rush**: 3 minute, **10 mate** chahiye."
+    }
+   ],
+   "qn": 1
+  }
+ },
+ {
+  "ch": "l2b",
+  "after": "l2.captures",
+  "needs": [
+   "l2.safety",
+   "l2.captures"
+  ],
+  "les": {
+   "id": "tr_rs2",
+   "key": "tr.rs2",
+   "title": "🏋 Drill: free piece rush",
+   "sub": "3 minute mein latakte pieces pakdo",
+   "yaad": [
+    "Har position: kaun sa piece bina protection hai?",
+    "Attackers aur defenders gino."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Drill: time pressure",
+     "md": "3 minute mein **free pieces** (hanging) pakdo. Attackers aur defenders jaldi gino.\n\nTarget: **12 sahi**."
+    },
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk"
+     ],
+     "q": "3 minute, **12 sahi** chahiye.",
+     "lo": 400,
+     "hi": 1200,
+     "th": [
+      "hanging"
+     ],
+     "secs": 180,
+     "need": 12
+    }
+   ],
+   "pool": [
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk"
+     ],
+     "lo": 400,
+     "hi": 1200,
+     "th": [
+      "hanging"
+     ],
+     "secs": 180,
+     "need": 12,
+     "q": "**Test rush**: 3 minute, **12 sahi** chahiye."
+    },
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk"
+     ],
+     "lo": 400,
+     "hi": 1200,
+     "th": [
+      "hanging"
+     ],
+     "secs": 180,
+     "need": 12,
+     "q": "**Test rush**: 3 minute, **12 sahi** chahiye."
+    },
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk"
+     ],
+     "lo": 400,
+     "hi": 1200,
+     "th": [
+      "hanging"
+     ],
+     "secs": 180,
+     "need": 12,
+     "q": "**Test rush**: 3 minute, **12 sahi** chahiye."
+    }
+   ],
+   "qn": 1
+  }
+ },
+ {
+  "ch": "l3",
+  "after": "l3.remove",
+  "needs": [
+   "l3.fork",
+   "l3.pin",
+   "l3.skewer",
+   "l3.disc",
+   "l3.remove"
+  ],
+  "les": {
+   "id": "tr_rs3",
+   "key": "tr.rs3",
+   "title": "🏋 Drill: tactics rush",
+   "sub": "5 minute: fork, pin, skewer, discovered, defender hatao",
+   "yaad": [
+    "Pehle forcing chaalein: check, capture, threat.",
+    "Pattern pehchano, phir chalo."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Drill: time pressure",
+     "md": "5 minute mein tactics: **fork, pin, skewer, discovered attack, defender hatao**. Sirf pehli chaal sahi karni hai.\n\nTarget: **15 sahi**."
+    },
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef"
+     ],
+     "q": "5 minute, **15 sahi** chahiye.",
+     "lo": 600,
+     "hi": 1300,
+     "th": [
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "remdef"
+     ],
+     "secs": 300,
+     "need": 15
+    }
+   ],
+   "pool": [
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef"
+     ],
+     "lo": 600,
+     "hi": 1300,
+     "th": [
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "remdef"
+     ],
+     "secs": 300,
+     "need": 15,
+     "q": "**Test rush**: 5 minute, **15 sahi** chahiye."
+    },
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef"
+     ],
+     "lo": 600,
+     "hi": 1300,
+     "th": [
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "remdef"
+     ],
+     "secs": 300,
+     "need": 15,
+     "q": "**Test rush**: 5 minute, **15 sahi** chahiye."
+    },
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef"
+     ],
+     "lo": 600,
+     "hi": 1300,
+     "th": [
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "remdef"
+     ],
+     "secs": 300,
+     "need": 15,
+     "q": "**Test rush**: 5 minute, **15 sahi** chahiye."
+    }
+   ],
+   "qn": 1
+  }
+ },
+ {
+  "ch": "l7",
+  "after": "l7.time",
+  "needs": [
+   "l7.time",
+   "tr.rs3"
+  ],
+  "les": {
+   "id": "tr_rs4",
+   "key": "tr.rs4",
+   "title": "🏋 Drill: clock handling (increment)",
+   "sub": "1 minute + 8 second har sahi par, 3 galti = khatam",
+   "yaad": [
+    "Increment: har sahi chaal par time judta hai.",
+    "Time trouble mein simple aur safe."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Drill: time pressure",
+     "md": "Asli game jaisa clock: shuru mein sirf **1 minute**, har sahi jawab par **+8 second** (increment). **3 galtiyan** = game khatam. Jaldi bhi, sahi bhi.\n\nTarget: **15 sahi**."
+    },
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion",
+      "sac",
+      "endgame",
+      "minorend",
+      "pawnend",
+      "rookend"
+     ],
+     "q": "1:00 + 8s, 3 jaan, **15 sahi** chahiye.",
+     "lo": 1200,
+     "hi": 1900,
+     "secs": 60,
+     "inc": 8,
+     "lives": 3,
+     "need": 15
+    }
+   ],
+   "pool": [
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion",
+      "sac",
+      "endgame",
+      "minorend",
+      "pawnend",
+      "rookend"
+     ],
+     "lo": 1200,
+     "hi": 1900,
+     "secs": 60,
+     "inc": 8,
+     "lives": 3,
+     "need": 15,
+     "q": "**Test rush**: 1:00 + 8s, 3 jaan, **15 sahi** chahiye."
+    },
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion",
+      "sac",
+      "endgame",
+      "minorend",
+      "pawnend",
+      "rookend"
+     ],
+     "lo": 1200,
+     "hi": 1900,
+     "secs": 60,
+     "inc": 8,
+     "lives": 3,
+     "need": 15,
+     "q": "**Test rush**: 1:00 + 8s, 3 jaan, **15 sahi** chahiye."
+    },
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion",
+      "sac",
+      "endgame",
+      "minorend",
+      "pawnend",
+      "rookend"
+     ],
+     "lo": 1200,
+     "hi": 1900,
+     "secs": 60,
+     "inc": 8,
+     "lives": 3,
+     "need": 15,
+     "q": "**Test rush**: 1:00 + 8s, 3 jaan, **15 sahi** chahiye."
+    }
+   ],
+   "qn": 1
+  }
+ },
+ {
+  "ch": "l7",
+  "after": "l7.tips",
+  "needs": [
+   "l7.time",
+   "l7.tips",
+   "tr.rs4"
+  ],
+  "les": {
+   "id": "tr_rs5",
+   "key": "tr.rs5",
+   "title": "🏋 Drill: GM rush (1800-2500)",
+   "sub": "3 minute, 3 galti = khatam, mushkil puzzles",
+   "yaad": [
+    "Speed ke saath accuracy: pehle CCT.",
+    "Ek galti ke baad ruko mat, agla socho."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Drill: time pressure",
+     "md": "GM level speed: **3 minute**, mushkil puzzles (1800-2500), **3 galtiyan** = khatam.\n\nTarget: **12 sahi**."
+    },
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion",
+      "sac",
+      "endgame",
+      "minorend",
+      "pawnend",
+      "rookend"
+     ],
+     "q": "3 minute, 3 jaan, **12 sahi** chahiye.",
+     "lo": 1800,
+     "hi": 2500,
+     "secs": 180,
+     "lives": 3,
+     "need": 12
+    }
+   ],
+   "pool": [
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion",
+      "sac",
+      "endgame",
+      "minorend",
+      "pawnend",
+      "rookend"
+     ],
+     "lo": 1800,
+     "hi": 2500,
+     "secs": 180,
+     "lives": 3,
+     "need": 12,
+     "q": "**Test rush**: 3 minute, 3 jaan, **12 sahi** chahiye."
+    },
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion",
+      "sac",
+      "endgame",
+      "minorend",
+      "pawnend",
+      "rookend"
+     ],
+     "lo": 1800,
+     "hi": 2500,
+     "secs": 180,
+     "lives": 3,
+     "need": 12,
+     "q": "**Test rush**: 3 minute, 3 jaan, **12 sahi** chahiye."
+    },
+    {
+     "t": "pzset",
+     "mode": "rush",
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion",
+      "sac",
+      "endgame",
+      "minorend",
+      "pawnend",
+      "rookend"
+     ],
+     "lo": 1800,
+     "hi": 2500,
+     "secs": 180,
+     "lives": 3,
+     "need": 12,
+     "q": "**Test rush**: 3 minute, 3 jaan, **12 sahi** chahiye."
+    }
+   ],
+   "qn": 1
+  }
+ }
+]

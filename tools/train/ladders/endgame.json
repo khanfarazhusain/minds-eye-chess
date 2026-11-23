@@ -1,0 +1,2883 @@
+[
+ {
+  "ch": "l2",
+  "after": "l2.ladder",
+  "needs": [
+   "l1.mate",
+   "l2.kqk",
+   "l2.krk",
+   "l2.ladder"
+  ],
+  "les": {
+   "id": "tr_eg1",
+   "key": "tr.eg1",
+   "title": "🏋 Drill: basic mates engine ke against",
+   "sub": "Queen, rook aur seedhi se mate, engine poori taakat se bachta hai",
+   "yaad": [
+    "Box chhota karo, king saath lao, kinare par mate.",
+    "Queen se mate karte waqt stalemate se bacho.",
+    "Test: 5 mein se 4 bina hint."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Drill: engine ke against mate karo",
+     "md": "Yeh lesson nahi, **practice** hai. Jo mates tumne seekhe (queen, rook, do rooks ki seedhi), unhe ab **engine ke against** karna hai. Engine har baar sabse lambi bachne wali chaal chalega.\n\n- Pehle **practice**: galti ho to ↶ Wapas, 💡 hint, ↺ shuru se.\n- Phir **test**: 5 naye positions, **ek hi koshish**, hint nahi. **4/5** par agla lesson khulega.\n\nYaad rakho: **stalemate = draw**. Har chaal se pehle dekho ki opponent king ke paas chaal bachi hai ya nahi."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/4K3/8/1Q6/8/7k w - - 0 1",
+     "goal": "mate",
+     "max": 12,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **12 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "8/1k6/6Q1/8/8/K7/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 13,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **13 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "5K2/1k6/8/6Q1/8/8/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 13,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **13 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "R7/4K3/2k5/8/8/8/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 20,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **20 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "5k2/4R3/8/8/8/7K/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 17,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **17 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/5R2/4K3/8/8/8/4k3 w - - 0 1",
+     "goal": "mate",
+     "max": 17,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **17 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "8/3k2K1/8/2R5/8/5R2/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 7,
+     "sf": 250,
+     "q": "Do rooks ki seedhi (ladder) se mate. Engine poori taakat se bachega. **7 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "5K2/8/1R6/7k/8/R7/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 8,
+     "sf": 250,
+     "q": "Do rooks ki seedhi (ladder) se mate. Engine poori taakat se bachega. **8 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    }
+   ],
+   "pool": [
+    {
+     "t": "play",
+     "fen": "2k5/8/8/8/7Q/8/8/1K6 w - - 0 1",
+     "goal": "mate",
+     "max": 14,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **14 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "1K6/7Q/8/8/8/8/8/4k3 w - - 0 1",
+     "goal": "mate",
+     "max": 13,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **13 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/3K4/1Q6/8/6k1/8 w - - 0 1",
+     "goal": "mate",
+     "max": 14,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **14 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "4K3/2k5/8/8/8/7Q/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 12,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **12 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "5Q2/8/8/8/8/4k1K1/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 13,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **13 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "8/8/4k3/8/K7/8/7Q/8 w - - 0 1",
+     "goal": "mate",
+     "max": 14,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **14 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "8/1k6/8/6Q1/8/2K5/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 14,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **14 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "7Q/8/8/7K/8/8/8/3k4 w - - 0 1",
+     "goal": "mate",
+     "max": 13,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **13 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "8/5k2/8/8/8/5K2/8/3Q4 w - - 0 1",
+     "goal": "mate",
+     "max": 13,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **13 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/8/6Q1/3K4/5k2 w - - 0 1",
+     "goal": "mate",
+     "max": 13,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **13 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "8/8/6K1/8/1Q6/8/8/5k2 w - - 0 1",
+     "goal": "mate",
+     "max": 14,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **14 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "6K1/1k6/8/8/8/3Q4/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 15,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **15 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "8/8/3K4/8/8/8/k7/4Q3 w - - 0 1",
+     "goal": "mate",
+     "max": 11,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **11 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "8/8/3Q4/8/7k/8/8/2K5 w - - 0 1",
+     "goal": "mate",
+     "max": 12,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **12 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/3Q4/1k6/8/5K2/8 w - - 0 1",
+     "goal": "mate",
+     "max": 12,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **12 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "8/8/7k/8/8/8/8/4Q2K w - - 0 1",
+     "goal": "mate",
+     "max": 15,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **15 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "2Q5/4k3/8/8/4K3/8/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 11,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **11 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/4K3/8/2k5/8/5Q2 w - - 0 1",
+     "goal": "mate",
+     "max": 13,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **13 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "8/8/3k4/8/8/5Q2/1K6/8 w - - 0 1",
+     "goal": "mate",
+     "max": 15,
+     "sf": 250,
+     "q": "Queen se mate. Engine poori taakat se bachega. **15 chaal** mein mate karo.",
+     "why": "Queen knight ki doori par rakh kar box chhota karo, phir king paas lao. Stalemate se bacho!"
+    },
+    {
+     "t": "play",
+     "fen": "5k2/3K4/8/8/8/4R3/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 15,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **15 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "7K/8/8/2R5/8/8/8/k7 w - - 0 1",
+     "goal": "mate",
+     "max": 21,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **21 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "7R/8/8/3K4/8/8/8/k7 w - - 0 1",
+     "goal": "mate",
+     "max": 16,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **16 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "2k5/7R/8/8/8/8/3K4/8 w - - 0 1",
+     "goal": "mate",
+     "max": 15,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **15 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "1R6/1K6/8/8/8/7k/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 18,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **18 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "2k5/5K2/8/8/8/7R/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 17,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **17 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/k3K3/6R1/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 19,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **19 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/5K2/8/8/2R5/6k1 w - - 0 1",
+     "goal": "mate",
+     "max": 20,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **20 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/3R4/8/K7/8/6k1 w - - 0 1",
+     "goal": "mate",
+     "max": 21,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **21 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/2R5/4K3/8/8/3k4/8 w - - 0 1",
+     "goal": "mate",
+     "max": 19,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **19 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "8/3R4/8/4K3/8/8/8/6k1 w - - 0 1",
+     "goal": "mate",
+     "max": 15,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **15 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/7k/3K4/8/8/8/R7 w - - 0 1",
+     "goal": "mate",
+     "max": 15,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **15 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/R1K5/8/2k5/8 w - - 0 1",
+     "goal": "mate",
+     "max": 15,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **15 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/3R4/3K4/5k2/8 w - - 0 1",
+     "goal": "mate",
+     "max": 16,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **16 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/2K5/8/4R3/3k4 w - - 0 1",
+     "goal": "mate",
+     "max": 15,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **15 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/6R1/8/7k/8/7K/8 w - - 0 1",
+     "goal": "mate",
+     "max": 16,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **16 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/5K2/8/8/7k/2R5 w - - 0 1",
+     "goal": "mate",
+     "max": 14,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **14 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/8/K7/1R6/4k3 w - - 0 1",
+     "goal": "mate",
+     "max": 21,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **21 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "8/3k4/8/R3K3/8/8/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 16,
+     "sf": 250,
+     "q": "Rook se mate. Engine poori taakat se bachega. **16 chaal** mein mate karo.",
+     "why": "Box chhota karo: rook se line kaato, king ko saath lao (opposition), phir kinare par mate."
+    },
+    {
+     "t": "play",
+     "fen": "1R6/8/5k2/8/8/R7/8/2K5 w - - 0 1",
+     "goal": "mate",
+     "max": 9,
+     "sf": 250,
+     "q": "Do rooks ki seedhi (ladder) se mate. Engine poori taakat se bachega. **9 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/6k1/8/1R3R2/1K6/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 8,
+     "sf": 250,
+     "q": "Do rooks ki seedhi (ladder) se mate. Engine poori taakat se bachega. **8 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "8/R1R5/8/6k1/8/8/1K6/8 w - - 0 1",
+     "goal": "mate",
+     "max": 10,
+     "sf": 250,
+     "q": "Do rooks ki seedhi (ladder) se mate. Engine poori taakat se bachega. **10 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "2R5/8/8/5K2/8/4k3/8/7R w - - 0 1",
+     "goal": "mate",
+     "max": 9,
+     "sf": 250,
+     "q": "Do rooks ki seedhi (ladder) se mate. Engine poori taakat se bachega. **9 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/3R4/2k5/4R3/4K3/8 w - - 0 1",
+     "goal": "mate",
+     "max": 10,
+     "sf": 250,
+     "q": "Do rooks ki seedhi (ladder) se mate. Engine poori taakat se bachega. **10 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "3R4/8/2K5/7k/8/3R4/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 7,
+     "sf": 250,
+     "q": "Do rooks ki seedhi (ladder) se mate. Engine poori taakat se bachega. **7 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "7R/3k4/8/2R5/8/8/8/4K3 w - - 0 1",
+     "goal": "mate",
+     "max": 8,
+     "sf": 250,
+     "q": "Do rooks ki seedhi (ladder) se mate. Engine poori taakat se bachega. **8 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "8/7k/8/2R1R3/8/1K6/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 7,
+     "sf": 250,
+     "q": "Do rooks ki seedhi (ladder) se mate. Engine poori taakat se bachega. **7 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "1k6/7Q/6K1/8/7R/8/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 6,
+     "sf": 250,
+     "q": "Queen + rook ki seedhi se mate. Engine poori taakat se bachega. **6 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "5K2/7k/8/8/Q7/8/1R6/8 w - - 0 1",
+     "goal": "mate",
+     "max": 6,
+     "sf": 250,
+     "q": "Queen + rook ki seedhi se mate. Engine poori taakat se bachega. **6 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/4k3/6Q1/7K/8/2R5 w - - 0 1",
+     "goal": "mate",
+     "max": 8,
+     "sf": 250,
+     "q": "Queen + rook ki seedhi se mate. Engine poori taakat se bachega. **8 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "3k4/8/8/8/1R6/7K/1Q6/8 w - - 0 1",
+     "goal": "mate",
+     "max": 7,
+     "sf": 250,
+     "q": "Queen + rook ki seedhi se mate. Engine poori taakat se bachega. **7 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/2R5/8/8/k7/5K2/6Q1 w - - 0 1",
+     "goal": "mate",
+     "max": 6,
+     "sf": 250,
+     "q": "Queen + rook ki seedhi se mate. Engine poori taakat se bachega. **6 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/5Q2/3k4/8/8/1R3K2/8 w - - 0 1",
+     "goal": "mate",
+     "max": 7,
+     "sf": 250,
+     "q": "Queen + rook ki seedhi se mate. Engine poori taakat se bachega. **7 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "3k4/8/8/6K1/5Q2/8/5R2/8 w - - 0 1",
+     "goal": "mate",
+     "max": 7,
+     "sf": 250,
+     "q": "Queen + rook ki seedhi se mate. Engine poori taakat se bachega. **7 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    },
+    {
+     "t": "play",
+     "fen": "3QK3/1k6/8/8/8/7R/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 7,
+     "sf": 250,
+     "q": "Queen + rook ki seedhi se mate. Engine poori taakat se bachega. **7 chaal** mein mate karo.",
+     "why": "Seedhi (ladder): ek piece rank band kare, doosra agli rank par check de."
+    }
+   ],
+   "qn": 5
+  }
+ },
+ {
+  "ch": "l5",
+  "after": "l5.kp",
+  "needs": [
+   "l5.kp"
+  ],
+  "les": {
+   "id": "tr_eg2",
+   "key": "tr.eg2",
+   "title": "🏋 Drill: king + pawn, jeeto aur bachao",
+   "sub": "Opposition aur key squares engine ke against",
+   "yaad": [
+    "King pawn ke aage = jeet ka raasta.",
+    "Defend karte waqt king pawn ke saamne, opposition lo."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Drill: king + pawn, dono taraf se",
+     "md": "Opposition aur key squares ab **engine ke against**.\n\n- Kuch positions mein tum **jeetoge** (pawn queen banao).\n- Kuch mein tum **defend** karoge (draw bachao).\n\nPractice ke baad test: 5 naye positions, ek koshish, **4/5** chahiye."
+    },
+    {
+     "t": "play",
+     "fen": "2k5/8/3K4/4P3/8/8/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "5k2/8/4K3/4P3/8/8/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/6k1/3K4/8/4P3/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "6k1/8/8/4K3/4P3/8/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "3k4/8/8/2K5/3P4/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/k7/8/8/1K6/2P5/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/6k1/8/5KP1/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    }
+   ],
+   "pool": [
+    {
+     "t": "play",
+     "fen": "8/8/8/2k2K2/8/4P3/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "4k3/8/8/8/4K3/4P3/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/5k2/8/8/3KP3/8/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "6k1/8/8/4KP2/8/8/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/4k3/8/8/3K4/3P4/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "5k2/8/8/8/3K4/4P3/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "5k2/8/8/2K5/3P4/8/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/1k1K4/8/3P4/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "4k3/8/3K4/2P5/8/8/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "4k3/8/8/5K2/6P1/8/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/3k4/5K2/8/5P2/8/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "6k1/8/8/5K2/8/5P2/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/3k4/8/6K1/5P2/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "7k/5K2/8/6P1/8/8/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/3k4/8/8/3K4/8/4P3/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "5k2/8/8/8/8/2K5/3P4/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "4k3/8/8/2K5/2P5/8/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "2k5/8/8/3K4/2P5/8/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "k7/8/8/3K4/8/2P5/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "4k3/8/8/8/3K4/8/4P3/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/3k4/8/4K3/8/4P3/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "2k5/8/1K6/2P5/8/8/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 25,
+     "sf": 250,
+     "q": "King aur pawn: king aage lao, **opposition** lo aur pawn ko **queen banao**.",
+     "why": "King pawn ke aage, key squares par. Kings aamne-saamne ho to opposition jiske paas, woh jeetta hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/3k4/8/8/4PK2/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/k7/8/1PK5/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/8/k7/1PK5/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "8/3k4/8/8/2PK4/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/6k1/8/5K2/5P2/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/4k3/8/3K4/3P4/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "8/1k6/8/8/1K6/1P6/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/2k5/KP6/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "5k2/8/8/8/8/3PK3/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "4k3/8/8/8/5PK1/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "8/3K4/5k2/4P3/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "k7/8/8/K7/1P6/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "6k1/8/8/5K2/6P1/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/4k3/8/4PK2/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/2k5/8/8/3K4/3P4/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/7k/8/5KP1/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/7k/5KP1/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "8/3k4/8/4KP2/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    },
+    {
+     "t": "play",
+     "fen": "7k/8/8/5PK1/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 20,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. King pawn ke **saamne** rakho aur **opposition** lo. **20 chaal** tak queen mat banne do.",
+     "why": "Defender ka king pawn ke aage, aur jab white king aamne aaye to tum opposition lo (kings ke beech ek square, chaal uski)."
+    }
+   ],
+   "qn": 5
+  }
+ },
+ {
+  "ch": "l5b",
+  "after": "l5.pawnend",
+  "needs": [
+   "l5.square",
+   "l5.pawnend"
+  ],
+  "les": {
+   "id": "tr_eg3",
+   "key": "tr.eg3",
+   "title": "🏋 Drill: square rule aur passed pawns",
+   "sub": "Pawn bhagao, pawn pakdo, outside passed pawn se jeeto",
+   "yaad": [
+    "Square rule: king box mein = pawn pakda jaayega.",
+    "Outside passed pawn dushman king ko door kheenchta hai."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Drill: square rule aur passed pawns",
+     "md": "Pawn endgame ki tricks ab engine ke against: **square rule** (pawn bhagao ya pakdo) aur **outside passed pawn**.\n\nTest: 5 naye positions, **4/5** chahiye."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/2K5/7P/8/3k4/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "6k1/8/8/1P6/5K2/8/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/6p1/7K/8/k7/8/8 w - - 0 1",
+     "goal": "draw",
+     "max": 12,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. **Square rule**: king ko pawn ke box mein lao aur pawn pakdo (12 chaal tak queen mat banne do).",
+     "why": "King ko pawn ke box mein lao, phir pawn ke aage."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/4p3/4K3/8/8/3k4/8 w - - 0 1",
+     "goal": "draw",
+     "max": 12,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. **Square rule**: king ko pawn ke box mein lao aur pawn pakdo (12 chaal tak queen mat banne do).",
+     "why": "King ko pawn ke box mein lao, phir pawn ke aage."
+    },
+    {
+     "t": "play",
+     "fen": "8/6p1/8/8/8/6K1/P5P1/4k3 w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    },
+    {
+     "t": "play",
+     "fen": "8/3k4/2p5/8/7P/2P5/3K4/8 w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    },
+    {
+     "t": "play",
+     "fen": "8/2k5/7p/8/4K3/7P/P7/8 w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    }
+   ],
+   "pool": [
+    {
+     "t": "play",
+     "fen": "8/8/8/K7/8/8/4P3/4k3 w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/6K1/8/8/8/7P/7k/8 w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "k7/2K5/8/8/8/8/7P/8 w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "2K5/8/8/8/8/8/3P3k/8 w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "K7/8/8/8/7P/8/8/5k2 w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "1k6/8/8/8/8/1K6/7P/8 w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/P7/7K/8/5k2 w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "k7/8/3K4/8/8/8/2P5/8 w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/P7/5k2/8/6K1 w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/8/5K2/P7/7k w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/1K5P/8/8/k7 w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/1K5P/8/8/5k2/8 w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "K7/8/8/8/7k/3P4/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "6K1/8/8/8/6P1/k7/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 12,
+     "sf": 250,
+     "q": "**Square rule**: kya black king pawn pakad payega? Pawn ko **queen banao** (12 chaal).",
+     "why": "Pawn se promotion tak box banao. King box ke bahar = pawn bhaag jaata hai."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/1p6/8/3K4/8/8/5k2 w - - 0 1",
+     "goal": "draw",
+     "max": 12,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. **Square rule**: king ko pawn ke box mein lao aur pawn pakdo (12 chaal tak queen mat banne do).",
+     "why": "King ko pawn ke box mein lao, phir pawn ke aage."
+    },
+    {
+     "t": "play",
+     "fen": "8/2p5/8/8/1K6/7k/8/8 w - - 0 1",
+     "goal": "draw",
+     "max": 12,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. **Square rule**: king ko pawn ke box mein lao aur pawn pakdo (12 chaal tak queen mat banne do).",
+     "why": "King ko pawn ke box mein lao, phir pawn ke aage."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/5K2/p7/8/8/8/6k1 w - - 0 1",
+     "goal": "draw",
+     "max": 12,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. **Square rule**: king ko pawn ke box mein lao aur pawn pakdo (12 chaal tak queen mat banne do).",
+     "why": "King ko pawn ke box mein lao, phir pawn ke aage."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/7p/8/1k1K4/8/8 w - - 0 1",
+     "goal": "draw",
+     "max": 12,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. **Square rule**: king ko pawn ke box mein lao aur pawn pakdo (12 chaal tak queen mat banne do).",
+     "why": "King ko pawn ke box mein lao, phir pawn ke aage."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/7p/6K1/8/8/8/1k6 w - - 0 1",
+     "goal": "draw",
+     "max": 12,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. **Square rule**: king ko pawn ke box mein lao aur pawn pakdo (12 chaal tak queen mat banne do).",
+     "why": "King ko pawn ke box mein lao, phir pawn ke aage."
+    },
+    {
+     "t": "play",
+     "fen": "8/2p5/8/8/7k/8/8/6K1 w - - 0 1",
+     "goal": "draw",
+     "max": 12,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. **Square rule**: king ko pawn ke box mein lao aur pawn pakdo (12 chaal tak queen mat banne do).",
+     "why": "King ko pawn ke box mein lao, phir pawn ke aage."
+    },
+    {
+     "t": "play",
+     "fen": "8/7p/8/6K1/8/7k/8/8 w - - 0 1",
+     "goal": "draw",
+     "max": 12,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. **Square rule**: king ko pawn ke box mein lao aur pawn pakdo (12 chaal tak queen mat banne do).",
+     "why": "King ko pawn ke box mein lao, phir pawn ke aage."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/3K1p2/8/8/8/2k5/8 w - - 0 1",
+     "goal": "draw",
+     "max": 12,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. **Square rule**: king ko pawn ke box mein lao aur pawn pakdo (12 chaal tak queen mat banne do).",
+     "why": "King ko pawn ke box mein lao, phir pawn ke aage."
+    },
+    {
+     "t": "play",
+     "fen": "8/3K4/4p3/8/8/k7/8/8 w - - 0 1",
+     "goal": "draw",
+     "max": 12,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. **Square rule**: king ko pawn ke box mein lao aur pawn pakdo (12 chaal tak queen mat banne do).",
+     "why": "King ko pawn ke box mein lao, phir pawn ke aage."
+    },
+    {
+     "t": "play",
+     "fen": "8/1p6/8/8/8/6k1/K7/8 w - - 0 1",
+     "goal": "draw",
+     "max": 12,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. **Square rule**: king ko pawn ke box mein lao aur pawn pakdo (12 chaal tak queen mat banne do).",
+     "why": "King ko pawn ke box mein lao, phir pawn ke aage."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/2p5/6k1/8/8/8/1K6 w - - 0 1",
+     "goal": "draw",
+     "max": 12,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. **Square rule**: king ko pawn ke box mein lao aur pawn pakdo (12 chaal tak queen mat banne do).",
+     "why": "King ko pawn ke box mein lao, phir pawn ke aage."
+    },
+    {
+     "t": "play",
+     "fen": "8/6p1/8/8/8/5K2/8/7k w - - 0 1",
+     "goal": "draw",
+     "max": 12,
+     "sf": 250,
+     "q": "Tum defend kar rahe ho. **Square rule**: king ko pawn ke box mein lao aur pawn pakdo (12 chaal tak queen mat banne do).",
+     "why": "King ko pawn ke box mein lao, phir pawn ke aage."
+    },
+    {
+     "t": "play",
+     "fen": "8/4K1kp/8/8/P7/7P/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    },
+    {
+     "t": "play",
+     "fen": "3K4/8/1p6/4k3/7P/8/1P6/8 w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    },
+    {
+     "t": "play",
+     "fen": "k7/8/5p2/8/8/P4P2/4K3/8 w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    },
+    {
+     "t": "play",
+     "fen": "8/K7/2p5/8/7P/8/2P2k2/8 w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    },
+    {
+     "t": "play",
+     "fen": "2k5/5p2/8/8/P7/1K3P2/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/6p1/5K2/8/2k3P1/P7/8 w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/5p2/8/P7/5P2/8/2k2K2 w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    },
+    {
+     "t": "play",
+     "fen": "8/4k3/2p4K/8/7P/2P5/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/p7/K7/8/8/P6P/7k w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/p5k1/3K4/8/P7/7P/8 w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/p3K3/8/P7/7P/4k3/8 w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    },
+    {
+     "t": "play",
+     "fen": "8/2p5/5k2/8/2P5/7P/2K5/8 w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    },
+    {
+     "t": "play",
+     "fen": "8/1k5p/8/4K3/P6P/8/8/8 w - - 0 1",
+     "goal": "promote",
+     "max": 30,
+     "sf": 250,
+     "q": "**Outside passed pawn**: kinare wala pawn dushman king ko kheenchta hai. Plan banao aur **queen banao** (30 chaal).",
+     "why": "Passed pawn aage badhao; jab king use pakadne jaaye, tumhara king doosri taraf pawns khaaye."
+    }
+   ],
+   "qn": 5
+  }
+ },
+ {
+  "ch": "l5b",
+  "after": "l5.rook",
+  "needs": [
+   "l5.rook"
+  ],
+  "les": {
+   "id": "tr_eg4",
+   "key": "tr.eg4",
+   "title": "🏋 Drill: Lucena, Philidor, Vancura",
+   "sub": "Rook endgames har file aur dono colours se",
+   "yaad": [
+    "Lucena = bridge se jeet.",
+    "Philidor = 6th rank, phir peeche se checks.",
+    "Vancura = side se defence."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Drill: Lucena, Philidor, Vancura",
+     "md": "Rook endgames sabse zyada aate hain. Ab teeno technique **engine ke against**, alag alag files aur dono colours se.\n\n- **Lucena**: jeeto (bridge).\n- **Philidor**: draw bachao (6th rank, phir peeche se checks).\n- **Vancura**: draw bachao (side se).\n\nTest: 5 naye positions, **4/5** chahiye."
+    },
+    {
+     "t": "play",
+     "fen": "2K5/k1P5/8/8/3r4/8/8/1R6 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "4K3/2k1P3/8/8/8/8/5r2/3R4 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "5r2/8/3R4/8/8/8/4p1K1/4k3 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/2kp4/6R1/r7/3K4 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "4k3/7R/1r6/3KP3/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/3kp3/6R1/r7/4K3 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "R7/7k/P4r2/8/8/8/2K5/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "7R/k7/2r4P/8/8/6K1/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    }
+   ],
+   "pool": [
+    {
+     "t": "play",
+     "fen": "5K2/3k1P2/8/8/8/8/6r1/4R3 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "5K2/3k1P2/8/8/8/6r1/8/4R3 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "1K6/1P1k4/8/8/r7/8/8/2R5 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "3K4/1k1P4/8/8/8/8/4r3/2R5 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "2r5/R7/8/8/8/8/1p1K4/1k6 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "6r1/4R3/8/8/8/8/5p1K/5k2 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "6r1/8/8/4R3/8/8/5p1K/5k2 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "3K4/1k1P4/8/8/4r3/8/8/2R5 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "3K4/3P1k2/8/8/8/8/2r5/4R3 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "2r5/8/4R3/8/8/8/1K1p4/3k4 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "3r4/1R6/8/8/8/8/2p1K3/2k5 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "2K5/2P1k3/8/8/1r6/8/8/3R4 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "5K2/3k1P2/8/8/6r1/8/8/4R3 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "5K2/5P1k/8/8/4r3/8/8/6R1 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "4r3/6R1/8/8/8/8/3K1p2/5k2 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "4r3/8/8/2R5/8/8/3p1K2/3k4 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "4r3/8/6R1/8/8/8/3K1p2/5k2 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "4K3/4P1k1/8/8/3r4/8/8/5R2 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "4K3/4P1k1/8/8/8/8/3r4/5R2 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "2r5/8/8/R7/8/8/1p1K4/1k6 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "5r2/3R4/8/8/8/8/4p1K1/4k3 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "5r2/8/8/7R/8/8/4K1p1/6k1 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "1K6/1P1k4/8/8/8/r7/8/2R5 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "5K2/5P1k/8/8/8/4r3/8/6R1 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "2K5/2P1k3/8/8/8/1r6/8/3R4 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "4K3/2k1P3/8/8/5r2/8/8/3R4 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "3K4/3P1k2/8/8/2r5/8/8/4R3 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "3r4/8/5R2/8/8/8/2K1p3/4k3 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "4r3/2R5/8/8/8/8/3p1K2/3k4 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "4K3/2k1P3/8/8/8/5r2/8/3R4 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "2r5/8/8/4R3/8/8/1K1p4/3k4 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "3r4/8/8/1R6/8/8/2p1K3/2k5 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "1r6/8/3R4/8/8/8/K1p5/2k5 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "6K1/4k1P1/8/8/7r/8/8/5R2 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "1r6/3R4/8/8/8/8/K1p5/2k5 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "3r4/5R2/8/8/8/8/2K1p3/4k3 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "5K2/5P1k/8/8/8/8/4r3/6R1 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "6K1/4k1P1/8/8/8/8/7r/5R2 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "4K3/4P1k1/8/8/8/3r4/8/5R2 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "5r2/8/7R/8/8/8/4K1p1/6k1 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "6r1/8/4R3/8/8/8/5p1K/5k2 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "5r2/7R/8/8/8/8/4K1p1/6k1 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "4r3/8/8/6R1/8/8/3K1p2/5k2 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "3r4/8/8/5R2/8/8/2K1p3/4k3 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "4r3/8/2R5/8/8/8/3p1K2/3k4 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "2r5/4R3/8/8/8/8/1K1p4/3k4 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "1r6/8/8/3R4/8/8/K1p5/2k5 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "5r2/8/8/3R4/8/8/4p1K1/4k3 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "3K4/1k1P4/8/8/8/4r3/8/2R5 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "3K4/3P1k2/8/8/8/2r5/8/4R3 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "2K5/2P1k3/8/8/8/8/1r6/3R4 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "1K6/1P1k4/8/8/8/8/r7/2R5 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "6K1/4k1P1/8/8/8/7r/8/5R2 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "2r5/8/R7/8/8/8/1p1K4/1k6 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "2K5/k1P5/8/8/8/3r4/8/1R6 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "2K5/k1P5/8/8/8/8/3r4/1R6 w - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "3r4/8/1R6/8/8/8/2p1K3/2k5 b - - 0 1",
+     "goal": "promote",
+     "max": 20,
+     "sf": 250,
+     "q": "**Lucena**: pawn 7th par, king aage. Rook se **bridge** banao aur pawn ko **queen banao** (20 chaal).",
+     "why": "Pehle rook se dushman king ko door rakho, phir rook ko 4th rank (pawn ki taraf se) par lao: king bahar nikle to rook checks block karega (bridge)."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/2kp4/1R6/7r/3K4 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/1kp5/R7/7r/2K5 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "3k4/R7/6r1/2KP4/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "3k4/7R/r7/2KP4/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "2k5/R7/6r1/1KP5/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/kp6/6R1/7r/1K6 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/3kp3/6R1/7r/4K3 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/2kp4/6R1/7r/3K4 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "3k4/7R/6r1/2KP4/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/4kp2/1R6/r7/5K2 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/1kp5/7R/r7/2K5 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "2k5/7R/r7/1KP5/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "2k5/7R/6r1/1KP5/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "6k1/R7/1r6/5KP1/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/3kp3/7R/r7/4K3 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "4k3/7R/r7/3KP3/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "3k4/7R/1r6/2KP4/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/1kp5/6R1/7r/2K5 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "4k3/R7/7r/3KP3/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/3kp3/1R6/r7/4K3 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/5kp1/1R6/r7/6K1 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/1kp5/6R1/r7/2K5 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "2k5/R7/7r/1KP5/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/2kp4/7R/r7/3K4 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/3kp3/1R6/7r/4K3 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/2kp4/1R6/r7/3K4 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "4k3/R7/1r6/3KP3/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "3k4/R7/7r/2KP4/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/4kp2/R7/7r/5K2 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "5k2/R7/1r6/4KP2/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "5k2/R7/7r/4KP2/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/4kp2/7R/r7/5K2 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "4k3/7R/6r1/3KP3/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "4k3/R7/6r1/3KP3/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/2kp4/R7/7r/3K4 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/3kp3/R7/7r/4K3 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "1k6/7R/6r1/KP6/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "3k4/R7/1r6/2KP4/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/8/4kp2/1R6/7r/5K2 w - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "5k2/7R/1r6/4KP2/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "5k2/7R/r7/4KP2/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Philidor**: tum defend kar rahe ho. Rook **6th rank** (apni taraf se 3rd) par rakho; pawn aage aaye to rook peeche se **checks**. **15 chaal** bachao.",
+     "why": "Rook 6th rank par jab tak pawn aage na aaye; pawn aaya to rook peeche jaa kar checks."
+    },
+    {
+     "t": "play",
+     "fen": "R7/6k1/P4r2/8/2K5/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "R7/7k/P4r2/2K5/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "R7/7k/P4r2/8/8/8/8/1K6 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "7R/k7/2r4P/8/6K1/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "7R/1k6/2r4P/8/5K2/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "7R/k7/2r4P/8/8/8/5K2/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "R7/7k/P4r2/8/2K5/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "R7/6k1/P4r2/2K5/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "R7/6k1/P4r2/8/8/8/2K5/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "7R/k7/2r4P/8/8/8/8/6K1 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "7R/1k6/2r4P/5K2/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "7R/1k6/2r4P/8/8/8/8/6K1 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "7R/1k6/2r4P/8/8/4K3/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "R7/7k/P4r2/8/1K6/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "R7/6k1/P4r2/8/8/8/8/1K6 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "7R/k7/2r4P/5K2/8/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "7R/1k6/2r4P/8/8/8/5K2/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "7R/1k6/2r4P/8/6K1/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "7R/1k6/2r4P/8/8/6K1/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "7R/k7/2r4P/8/8/4K3/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "R7/7k/P4r2/8/8/1K6/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "R7/6k1/P4r2/8/1K6/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "7R/k7/2r4P/8/5K2/8/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "R7/6k1/P4r2/8/8/1K6/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "R7/6k1/P4r2/8/8/3K4/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    },
+    {
+     "t": "play",
+     "fen": "R7/7k/P4r2/8/8/3K4/8/8 b - - 0 1",
+     "goal": "draw",
+     "max": 15,
+     "sf": 250,
+     "q": "**Vancura**: tum defend kar rahe ho. Rook side se pawn par nazar rakhe, king paas aaye to side se **checks**. **15 chaal** bachao.",
+     "why": "Rook pawn ke bagal wali rank par, king kone ke paas; checks side se."
+    }
+   ],
+   "qn": 5
+  }
+ },
+ {
+  "ch": "l5b",
+  "after": "l5.minor",
+  "needs": [
+   "l5.minor",
+   "l2.ladder"
+  ],
+  "les": {
+   "id": "tr_eg5",
+   "key": "tr.eg5",
+   "title": "🏋 Drill: bishop + knight mate (GM level)",
+   "sub": "Sabse mushkil basic mate, engine ke against",
+   "yaad": [
+    "Mate bishop ke colour wale corner mein.",
+    "Knight W shape mein, bishop diagonal band kare, king paas."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Naya: bishop + knight se mate kaise",
+     "md": "Pichle lesson mein seekha: K+B+N vs K **jeet** hai, mate sirf **bishop ke colour wale corner** mein. Ab technique:\n\n1. **Teeno saath**: apna king dushman king ke paas, bishop aur knight beech mein squares band karte hain.\n2. Dushman king **galat corner** mein ho to use kinare ke saath **sahi corner** ki taraf dhakelo. Knight ek **W** shape mein chalta hai (jaise `Nf7-e5-d7-c5`), bishop diagonal band karta hai.\n3. Sahi corner ke paas: king ko corner mein band karo, bishop se aakhri check.\n\nYeh **lamba** hai (30 chaal tak). Isliye positions mein dushman king pehle se kinare par hai. Stalemate se bacho."
+    },
+    {
+     "t": "play",
+     "fen": "7k/3K4/8/6N1/8/8/7B/8 w - - 0 1",
+     "goal": "mate",
+     "max": 25,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (25 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/5K2/8/N6k/4B3/8 w - - 0 1",
+     "goal": "mate",
+     "max": 20,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (20 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    },
+    {
+     "t": "play",
+     "fen": "7k/6N1/8/1K6/7B/8/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 25,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (25 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    },
+    {
+     "t": "play",
+     "fen": "4k3/8/6N1/8/K6B/8/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 26,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (26 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    }
+   ],
+   "pool": [
+    {
+     "t": "play",
+     "fen": "8/8/3K4/8/8/4B1N1/8/3k4 w - - 0 1",
+     "goal": "mate",
+     "max": 24,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (24 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    },
+    {
+     "t": "play",
+     "fen": "N6k/8/8/4K3/8/8/7B/8 w - - 0 1",
+     "goal": "mate",
+     "max": 21,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (21 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    },
+    {
+     "t": "play",
+     "fen": "3N4/8/3K4/8/8/5B2/7k/8 w - - 0 1",
+     "goal": "mate",
+     "max": 24,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (24 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/6N1/8/6K1/3B4/1k6 w - - 0 1",
+     "goal": "mate",
+     "max": 29,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (29 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    },
+    {
+     "t": "play",
+     "fen": "2K3k1/8/8/8/8/B7/5N2/8 w - - 0 1",
+     "goal": "mate",
+     "max": 26,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (26 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    },
+    {
+     "t": "play",
+     "fen": "5k2/8/8/1N4B1/8/8/6K1/8 w - - 0 1",
+     "goal": "mate",
+     "max": 25,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (25 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/k1B5/8/5N2/8/1K6/8 w - - 0 1",
+     "goal": "mate",
+     "max": 25,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (25 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/7k/8/K1N4B/8/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 27,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (27 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    },
+    {
+     "t": "play",
+     "fen": "4N2k/8/8/8/2K5/8/8/2B5 w - - 0 1",
+     "goal": "mate",
+     "max": 26,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (26 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    },
+    {
+     "t": "play",
+     "fen": "8/k7/5K2/1B6/8/1N6/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 27,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (27 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    },
+    {
+     "t": "play",
+     "fen": "8/8/8/4K3/3NB3/8/8/6k1 w - - 0 1",
+     "goal": "mate",
+     "max": 23,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (23 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    },
+    {
+     "t": "play",
+     "fen": "8/k7/8/8/8/1K1N1B2/8/8 w - - 0 1",
+     "goal": "mate",
+     "max": 27,
+     "sf": 250,
+     "q": "**Bishop + knight mate**: king ko **bishop ke colour wale corner** mein le jao aur mate karo (27 chaal).",
+     "why": "Kings aamne-saamne rakho, knight aur bishop milkar king ko sahi corner ki taraf dhakelte hain (W shape mein knight). Galat corner mein mate nahi hota."
+    }
+   ],
+   "qn": 4
+  },
+  "teaches": [
+   "w shape"
+  ]
+ }
+]

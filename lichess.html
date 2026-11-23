@@ -625,7 +625,7 @@ body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/"><i class="b64">64</i><span class="bname">Lichess Play<small>64 Squares</small></span></a><div class="chips"><span class="chip" id="luser"></span></div></div></header>
-<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-23 01:05 UTC</p></main>
+<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-23 01:10 UTC</p></main>
 <nav class="tabs"><div class="wrap">
 <button data-go="#/" class="on"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.6 3.5 5.4 3.5 8.5s-1.1 5.9-3.5 8.5c-2.4-2.6-3.5-5.4-3.5-8.5s1.1-5.9 3.5-8.5z"/></svg></span>Lobby</button>
 <button data-go="#/road"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20h9"/><path d="M9 20c0-3 1.5-5 3-6.5-2.2.4-4 .1-5-1l3.5-6.5c3.5-.5 7 2 7 7.5V20"/><circle cx="12.6" cy="8.6" r=".7" fill="currentColor"/></svg></span>Rated</button>
@@ -736,6 +736,24 @@ function search(st,d,al,be,ply){const ms=legal(st);if(!ms.length)return inCheck(
   ms.sort(mvv);for(const m of ms){const sc=-search(make(st,m),d-1,-be,-al,ply+1);if(sc>=be)return be;if(sc>al)al=sc}return al}
 function engineMove(st,level){const ms=legal(st);if(!ms.length)return null;const depth=[1,2,3][level-1]||2,noise=[140,35,6][level-1]||35;
   let best=null,bs=-Infinity;for(const m of shuffle(ms)){const sc=-search(make(st,m),depth-1,-Infinity,Infinity,1)+Math.random()*noise;if(sc>bs){bs=sc;best=m}}return best}
+/* Stockfish (engine/sf-worker.js, offline) for pro-training drills: endgames, sparring, defence. Fallback: built-in engine. */
+const SFX={p:null,w:null,cb:null,q:Promise.resolve()};
+function sfStart(){if(SFX.p)return SFX.p;SFX.p=new Promise((res,rej)=>{let w,ok=false;try{w=new Worker('engine/sf-worker.js')}catch(e){SFX.p=null;rej(e);return}SFX.w=w;
+  const t=setTimeout(()=>{if(!ok){SFX.p=null;try{w.terminate()}catch(e){}rej(new Error('slow'))}},60000);
+  w.onmessage=e=>{const l=String(e.data);if(l==='uciok'){w.postMessage('setoption name Hash value 16');w.postMessage('isready')}else if(l==='readyok'&&!ok){ok=true;clearTimeout(t);res()}else if(SFX.cb)SFX.cb(l)};
+  w.onerror=e=>{try{e.preventDefault()}catch(x){}clearTimeout(t);SFX.p=null;rej(new Error('engine'))};w.postMessage('uci')});return SFX.p}
+/* o: {ms, depth, mpv, skill}. Resolves {best:uci, lines:[{cp,mate,pv}]} (score = side to move) */
+function sfGo(fen,o){o=o||{};const run=()=>sfStart().then(()=>new Promise(res=>{const lines=[];const w=SFX.w;
+  w.postMessage('setoption name MultiPV value '+(o.mpv||1));w.postMessage('setoption name Skill Level value '+(o.skill==null?20:o.skill));
+  SFX.cb=l=>{if(l.startsWith('info ')&&l.includes(' pv ')&&!/ (lower|upper)bound/.test(l)){const g=k=>{const m=l.match(new RegExp(' '+k+' (-?\\d+)'));return m?+m[1]:null};
+      lines[(g('multipv')||1)-1]={cp:g('mate')!=null?null:g('cp'),mate:g('mate'),pv:l.split(' pv ')[1].trim().split(/\s+/)}}
+    else if(l.startsWith('bestmove')){SFX.cb=null;res({best:l.split(/\s+/)[1],lines:lines.filter(Boolean)})}};
+  w.postMessage('position fen '+fen);w.postMessage(o.depth?'go depth '+o.depth:'go movetime '+(o.ms||300))}));
+  const p=SFX.q.then(run,run);SFX.q=p.catch(()=>{});return p}
+const uciMove=(st,u)=>{const L=legal(st);const sq=x=>'abcdefgh'.indexOf(x[0])+8*(+x[1]-1);const f=sq(u.slice(0,2)),t=sq(u.slice(2,4)),pr=u[4];
+  return L.find(m=>m.f===f&&m.t===t&&(!m.promo||!pr||m.promo.toLowerCase()===pr))||null};
+/* best move for drills: Stockfish if it starts, else the built-in engine (level 3) */
+function sfMove(st,o){return sfGo(fenOf(st),o).then(r=>uciMove(st,r.best)||engineMove(st,3),()=>engineMove(st,3))}
 function boardHTML(o){const persp=o.persp||'w';let h=`<div class="board${o.plain?' plain':''}${o.cls?' '+o.cls:''}" data-board="${o.id||'main'}">`;
   for(let row=0;row<8;row++)for(let col=0;col<8;col++){const r=persp==='w'?7-row:row,f=persp==='w'?col:7-col,s=r*8+f,name=sn(s);
     const c=['sq',light(s)?'l':'d'];if(o.hl&&o.hl.includes(name))c.push('hl');const mk=o.marks&&o.marks[name];if(mk)c.push('m-'+mk);if(o.dots&&o.dots.includes(name))c.push('dot');if(o.from===name)c.push('from');
@@ -787,6 +805,12 @@ function grade(step,ok,q){if(!step.id)return;const les=step.les;touchDay();
   srsTouch(step,ok,q);
   if(ok&&step.t==='move'&&STEPS[step.id])PR.solved[step.id]=1;save()}
 
+/* ---------- pro training ladders (tools/train/build.js likhta hai; haath se mat badlo) ----------
+   Har drill lesson apne chapter mein `after` wale lesson ke baad aata hai, aur sirf `needs` wale (pehle sikhaye) lessons ki cheezein use karta hai.
+   tools/train/check-order.js har build par yeh sequence check karta hai. */
+const TRAIN=/*TRAIN-DATA*/[]/*TRAIN-DATA-END*/;
+TRAIN.forEach(T=>{const C=COURSE.find(c=>c.id===T.ch);if(!C||C.lessons.some(l=>l.key===T.les.key))return;let at=C.lessons.findIndex(l=>(l.key||C.id+'.'+l.id)===T.after);
+  at=at<0?C.lessons.length:at+1;while(C.lessons[at]&&C.lessons[at].tr)at++;T.les.tr=1;C.lessons.splice(at,0,T.les)});
 /* ---------- course index ---------- */
 const STEPS={};const ALLLES=[];
 COURSE.forEach((L,li)=>{L.li=li;L.lessons.forEach((les,lj)=>{les.li=li;les.lj=lj;les.key=les.key||L.id+'.'+les.id;ALLLES.push(les);
@@ -794,6 +818,9 @@ COURSE.forEach((L,li)=>{L.li=li;L.lessons.forEach((les,lj)=>{les.li=li;les.lj=lj
   (L.test||[]).forEach((s,k)=>{s.id=L.id+'.T.'+k;s.les=s.of?((L.lessons.find(l=>l.id===s.of)||{}).key||L.id+'.'+s.of):L.id+'.test';s.li=li;STEPS[s.id]=s})});
 for(const id in LINES){const s=STEPS[id];if(s)Object.assign(s,LINES[id])}
 const lesByKey=k=>ALLLES.find(l=>l.key===k);
+/* drill pools: har baar naye sawaal, review queue ke liye STEPS mein bhi */
+TRAIN.forEach(T=>(T.les.pool||[]).forEach((s,k)=>{s.id=T.les.key+'.p'+k;s.les=T.les.key;s.li=T.les.li;STEPS[s.id]=s}));
+function drillQuiz(les){return shuffle(les.pool).slice(0,les.qn||10).map(s=>Object.assign({},s))}
 const graded=s=>['quiz','move','reach','tap'].includes(s.t);
 /* Settings > "Unlock all stages" (main app, mindseye.chess.v1 .set.unlockAll). EK hi jagah: har taala/gate pehle unlockAll() poochhe.
    Naya gate banao to: if(unlockAll()) khula. Road/Lichess pages build.js se yahi function paate hain. */
@@ -1056,7 +1083,7 @@ function setCtx(c){TUT.ctx=c;if(TUT.open)drawTutor()}
 function renderStep(s,ctx){const el=h('div','stack step');
   const base={where:ctx.where||'Lesson',lesson:ctx.lessonTitle,text:s.md||s.q,fen:s.fen,why:s.why,hint:s.hint};setCtx(base);
   if(s.h)el.appendChild(h('h2','',inl(s.h)));
-  ({info:stInfo,quiz:stQuiz,move:stMove,reach:stReach,tap:stTap,line:stLine,play:stPlay,recall:stRecall})[s.t](s,el,ctx,base);
+  ({info:stInfo,quiz:stQuiz,move:stMove,reach:stReach,tap:stTap,line:stLine,play:stPlay,recall:stRecall,pzset:stPz})[s.t](s,el,ctx,base);
   return el}
 function fb(el,ok,title,body){let f=el.querySelector('.fb');if(!f){f=h('div','fb');el.appendChild(f)}f.className='fb '+(ok?'ok':'no');f.innerHTML=`<h3>${title}</h3>${body?md(body):''}`;return f}
 /* theory slide ka board: 👁 button se chhupao / wapas dikhao */
@@ -1122,6 +1149,37 @@ function stMove(s,el,ctx,base){const st0=parseFEN(s.fen);let st=st0;const side=s
       const rs=sanOf(st,r);B.lock=true;setTimeout(()=>{B.last=[sn(r.f),sn(r.t)];st=make(st,r);ply++;B.lock=false;B.set({st});fb(el,true,'Achha! Ab mate do',`Opponent ne **${rs}** khela.`)},500);return}
     B.lock=true;setTimeout(()=>{const r=findMove(st,line[ply]);B.last=[sn(r.f),sn(r.t)];st=make(st,r);ply++;B.lock=false;B.set({st});
       fb(el,true,'Sahi! Aage badho',`Opponent: **${line[ply-1]}**. Ab tumhari chaal.`)},550)}}
+/* ---------- puzzle sets aur puzzle rush (packs/road ke Lichess puzzles, sirf sikhaye hue themes) ----------
+   s: {t:'pzset', mode:'set'|'rush', lo, hi, th:[koi ek theme zaroor], al:[sirf yeh themes allowed], n, need, secs, inc, lives, q} */
+const TPZ={idx:null,bank:{},got:{}},TPZ_GEN=['middle','opening','long','endgame','sac','short','veryLong','advantage','crushing','equality','master','masterVsMaster','superGM','oneMove'];
+const TNAME2={fork:'Fork',pin:'Pin',skewer:'Skewer',disc:'Discovered attack',mate1:'Mate in 1',mate2:'Mate in 2',mate3:'Lamba mate',backrank:'Back-rank',hanging:'Free piece',defence:'Defence',quiet:'Quiet move',zwischen:'Zwischenzug',deflect:'Deflection',attract:'Decoy',remdef:'Defender hatao',trapped:'Trapped piece',kingatk:'King attack',matepat:'Mate pattern',pawnend:'Pawn endgame',rookend:'Rook endgame',promotion:'Promotion',pawnadv:'Pawn push',sac:'Sacrifice',xray:'X-ray',clearance:'Clearance',interfere:'Interference',dblchk:'Double check'};
+async function tpzLoad(lo,hi,want,okF){if(!TPZ.idx)TPZ.idx=await (await fetch('packs/road/index.json')).json();const out=[],seen=new Set();
+  const bands=shuffle(Object.keys(TPZ.idx.bands).map(Number).filter(b=>b+100>lo&&b<hi&&TPZ.idx.bands[b]>0));
+  for(let round=0;round<4&&out.length<want;round++)for(const b of bands){const k=(round+rnd(TPZ.idx.bands[b]))%TPZ.idx.bands[b],key=b+'_'+k;
+    if(!TPZ.got[key]){TPZ.got[key]=1;try{const a=await (await fetch(`packs/road/b${b}_${k}.json`)).json();(TPZ.bank[b]=TPZ.bank[b]||[]).push(...a)}catch(e){TPZ.got[key]=0}}
+    for(const p of shuffle(TPZ.bank[b]||[]))if(!seen.has(p[0])&&p[3]>=lo&&p[3]<hi&&okF(p)){seen.add(p[0]);out.push(p);if(out.length>=want)break}if(out.length>=want)break}
+  return shuffle(out)}
+function tpzStep(p,rush,les){const th=p[4].split(',').filter(Boolean);const mate=th.find(x=>/^mate\d/.test(x));const line=p[2].split(' ');
+  return{t:'move',fen:p[1],line:rush?line.slice(0,1):line,mate:mate&&(!rush||mate==='mate1')?1:0,id:'pz.'+p[0],les,q:'',why:`Lichess puzzle ${p[0]} · rating ${p[3]} · ${th.map(x=>TNAME2[x]||x).join(', ')}`+(rush&&line.length>1?`\n\nPoori line: \`${line.join(' ')}\``:''),hint:'Pehle checks, captures aur threats.'}}
+function stPz(s,el,ctx){const T=!!ctx.test,rush=s.mode==='rush';el.appendChild(h('p','prompt',inl(s.q)));
+  const info=h('div','row');el.appendChild(info);const box=h('div');el.appendChild(box);const ctrl=h('div','stack');el.appendChild(ctrl);
+  let list=[],i=0,ok=0,bad=0,left=s.secs||0,timer=null,fin=false;const al=new Set((s.al||[]).concat(TPZ_GEN));
+  const okF=p=>{const t=p[4].split(',').filter(Boolean);return(!s.th||t.some(x=>s.th.includes(x)))&&t.every(x=>al.has(x))};
+  const fmt=x=>Math.floor(x/60)+':'+String(Math.max(0,x)%60).padStart(2,'0');
+  const chips=()=>{info.innerHTML=`<span class="chip">✓ ${ok} / ${s.need}</span>`+(rush?`<span class="chip">⏱ ${fmt(left)}</span>`:`<span class="chip">Puzzle ${Math.min(i,s.n)}/${s.n}</span>`)+(s.lives?`<span class="chip">❤ ${Math.max(0,s.lives-bad)}</span>`:'')+(T?'<span class="chip">Test</span>':'')};
+  function done(){if(fin)return;fin=true;clearInterval(timer);const pass=ok>=s.need;box.innerHTML='';
+    fb(el,pass,pass?`Pass! ${ok} sahi ✓`:`${ok} sahi, ${s.need} chahiye`,pass?'Bahut badhiya. Yeh speed aur accuracy game mein kaam aayegi.':(T?'Galat puzzles review mein chale gaye.':'**↺ Naya set** dabao aur dobara try karo. Har baar naye puzzles aate hain.'));
+    grade(s,pass);if(pass){addXP(20);ctx.done(true)}else if(T)ctx.done(false);else{const rb=h('button','btn primary block','↺ Naya set');ctrl.innerHTML='';ctrl.appendChild(rb);rb.onclick=()=>{const f=el.querySelector('.fb');if(f)f.remove();begin()}}}
+  function next(){if(fin)return;if(!el.isConnected){clearInterval(timer);return}
+    if((!rush&&i>=s.n)||(rush&&left<=0)||(s.lives&&bad>=s.lives)||i>=list.length||(!rush&&ok+(s.n-i)<s.need))return done();
+    const st=tpzStep(list[i++],rush,s.les);chips();box.innerHTML='';ctrl.innerHTML='';
+    box.appendChild(renderStep(st,{test:true,where:'Drill',lessonTitle:ctx.lessonTitle,done:r=>{r?ok++:bad++;chips();
+      if(rush){if(s.inc&&r)left+=s.inc;setTimeout(next,r?300:1100)}else{const nb=h('button','btn block',i>=s.n?'Result ›':'Agla puzzle ›');ctrl.innerHTML='';ctrl.appendChild(nb);nb.onclick=next}}}))}
+  function begin(){fin=false;i=0;ok=0;bad=0;left=s.secs||0;box.innerHTML='<p class="muted">Puzzles aa rahe hain…</p>';ctrl.innerHTML='';
+    tpzLoad(s.lo,s.hi,rush?80:s.n+5,okF).then(L=>{list=L;if(!list.length){box.innerHTML='<p class="warn">Puzzles load nahi hue (internet?). Thodi der baad try karo.</p>';return}
+      if(rush){box.innerHTML='';const go=h('button','btn primary block',`▶ Shuru karo (${fmt(left)})`);ctrl.appendChild(go);chips();go.onclick=()=>{ctrl.innerHTML='';timer=setInterval(()=>{if(!el.isConnected){clearInterval(timer);return}left--;chips();if(left<=0)done()},1000);next()}}
+      else next()},()=>{box.innerHTML='<p class="warn">Puzzles load nahi hue (internet?).</p>'})}
+  chips();begin()}
 function fenOf(st){let o='';for(let r=7;r>=0;r--){let e=0;for(let f=0;f<8;f++){const p=st.b[r*8+f];if(!p)e++;else{if(e){o+=e;e=0}o+=p}}if(e)o+=e;if(r)o+='/'}
   const c=(st.c.K?'K':'')+(st.c.Q?'Q':'')+(st.c.k?'k':'')+(st.c.q?'q':'');return o+' '+(st.w?'w':'b')+' '+(c||'-')+' '+(st.ep>=0?sn(st.ep):'-')+' '+st.hm+' '+st.fm}
 /* tap every square a piece can reach */
@@ -1169,32 +1227,34 @@ function stLine(s,el,ctx){const st0=parseFEN(s.fen||START_FEN);const moves=s.mov
     step()}
   draw();if(s._drillNow&&s.drill){i=moves.length;draw();drill()}}
 /* play a position against the built-in engine to reach a goal */
-function stPlay(s,el,ctx){const st0=parseFEN(s.fen);const me=st0.w;let st=st0,n=0,fin=false,hist=[];
+function stPlay(s,el,ctx){const st0=parseFEN(s.fen);const me=st0.w;let st=st0,n=0,fin=false,hist=[];const T=!!ctx.test;
+  /* s.sf = Stockfish opponent (ms per move); s.skill = Stockfish skill 0-20 (sparring). Bina s.sf: built-in engine s.lvl. */
+  const opp=x=>s.sf?sfMove(x,{ms:s.sf,skill:s.skill}):Promise.resolve(engineMove(x,s.lvl||3));
   el.appendChild(h('p','prompt',inl(s.q)));const info=h('div','row');el.appendChild(info);const bh=h('div');el.appendChild(bh);
   const B=Board(bh,{st,side:me?'w':'b',persp:me?'w':'b',onMove});const msg=h('p','muted');el.appendChild(msg);
-  const bar=h('div','row');const rb=h('button','btn small','↺ Shuru se'),hb=h('button','btn small','💡 Coach hint'),ub=h('button','btn small','↶ Wapas');bar.append(rb,ub,hb);el.appendChild(bar);
+  const bar=h('div','row');const rb=h('button','btn small','↺ Shuru se'),hb=h('button','btn small','💡 Coach hint'),ub=h('button','btn small','↶ Wapas');if(T)bar.append(rb);else bar.append(rb,ub,hb);el.appendChild(bar);
   const goalTxt={mate:'Checkmate karo',promote:'Pawn ko queen banao',draw:'Draw bachao (haaro mat)'}[s.goal];
-  function status(t){info.innerHTML=`<span class="chip">${goalTxt}</span><span class="chip">Chaal ${n}/${s.max}</span>`;msg.innerHTML=t?inl(t):''}
-  rb.onclick=()=>{st=st0;n=0;fin=false;hist=[];B.last=null;B.lock=false;B.marks={};B.set({st});status('');const f=el.querySelector('.fb');if(f)f.remove()};
+  function status(t){info.innerHTML=`<span class="chip">${goalTxt}</span><span class="chip">Chaal ${n}/${s.max}</span>${T?'<span class="chip">Test: ek koshish</span>':''}`;msg.innerHTML=t?inl(t):''}
+  rb.onclick=()=>{if(T&&fin)return;st=st0;n=0;fin=false;hist=[];B.last=null;B.lock=false;B.marks={};B.set({st});status('');const f=el.querySelector('.fb');if(f)f.remove()};
   ub.onclick=()=>{if(!hist.length||B.lock)return;const p=hist.pop();st=p.st;n=p.n;fin=false;B.lock=false;B.last=null;B.marks={};B.set({st});status('Ek chaal wapas li.');const f=el.querySelector('.fb');if(f)f.remove()};
-  hb.onclick=()=>{if(fin||B.lock)return;const m=engineMove(st,3);if(m){B.marks={[sn(m.f)]:'ring',[sn(m.t)]:'ring'};B.draw();B.marks={};status('Coach: ring wale piece ko ring wale square par le jao (ek idea).')}};
-  function end(ok,t){fin=true;B.lock=true;fb(el,ok,ok?'Mission poora! ✓':'Is baar nahi',t+(ok?'':'\n\n**↺ Shuru se** dabake dobara try karo.'));if(ok){addXP(20);grade(s,true);ctx.done(true)}else grade(s,false)}
+  hb.onclick=()=>{if(fin||B.lock)return;B.lock=true;status('Coach soch raha hai…');(s.sf?sfMove(st,{ms:400}):Promise.resolve(engineMove(st,3))).then(m=>{B.lock=false;if(m&&!fin){B.marks={[sn(m.f)]:'ring',[sn(m.t)]:'ring'};B.draw();B.marks={};status('Coach: ring wale piece ko ring wale square par le jao (ek idea).')}})};
+  function end(ok,t){fin=true;B.lock=true;fb(el,ok,ok?'Mission poora! ✓':'Is baar nahi',t+(ok||T?(s.why&&!ok?'\n\n'+s.why:''):'\n\n**↺ Shuru se** dabake dobara try karo.'));if(ok){addXP(20);grade(s,true);ctx.done(true)}else{grade(s,false);if(T)ctx.done(false)}}
   function myMat(b){return b.filter(p=>p&&isW(p)===me&&p.toUpperCase()!=='K').length}
   function check(after){// after: who just moved is me? returns true if game ended
     const L=legal(st);
-    if(!L.length){if(inCheck(st)){if(st.w!==me)end(true,'Checkmate! Tumne jeet liya.');else end(false,'Tum checkmate ho gaye.')}
+    if(!L.length){if(inCheck(st)){if(st.w!==me)end(s.goal!=='draw'||true,'Checkmate! Tumne jeet liya.');else end(false,'Tum checkmate ho gaye.')}
       else end(s.goal==='draw','Stalemate! '+(s.goal==='draw'?'Draw bach gaya.':'Draw ho gaya. Opponent ke king ko kam se kam ek chaal chhodo.'));return true}
     if(s.goal==='promote'){const pr=after&&st.b.some((p,i)=>p===(me?'Q':'q')&&((i>>3)===(me?7:0)));if(pr){const qi=st.b.findIndex((p,i)=>p===(me?'Q':'q')&&((i>>3)===(me?7:0)));
       if(!attacked(st.b,qi,!me)||attacked(st.b,qi,me)){end(true,'Pawn queen ban gaya aur safe hai!');return true}}
       if(!st.b.some(p=>p===(me?'P':'p'))&&!st.b.some(p=>p===(me?'Q':'q'))){end(false,'Pawn chala gaya. Ab jeet nahi sakte.');return true}}
     if(s.goal==='mate'&&myMat(st.b)===0){end(false,'Tumhara piece chala gaya. Ab mate nahi ho sakta.');return true}
     if(s.goal==='draw'&&!after&&st.b.some((p,i)=>p===(me?'q':'Q'))){end(false,'Opponent ka pawn queen ban gaya.');return true}
+    if(s.goal==='draw'&&!st.b.some(p=>p&&!isW(p)!==me&&'PRQ'.includes(p.toUpperCase()))){end(true,'Opponent ke paas jeetne ka material nahi bacha. Draw pakka!');return true}
     if(n>=s.max&&!after){if(s.goal==='draw')end(true,`${s.max} chaalein bach gaye. Yeh draw hai!`);else end(false,`${s.max} chaalein ho gayi. Thoda tez plan chahiye.`);return true}
     return false}
   function onMove(m){if(fin)return;hist.push({st,n});B.last=[sn(m.f),sn(m.t)];st=make(st,m);n++;B.set({st});status('');if(check(true))return;
-    B.lock=true;status('Opponent soch raha hai…');setTimeout(()=>{const r=engineMove(st,s.lvl||3);const rs=sanOf(st,r);B.last=[sn(r.f),sn(r.t)];st=make(st,r);B.lock=false;B.set({st});status('Opponent: `'+rs+'`');check(false)},350)}
-  // fix status text after reply (san must be computed before the move)
-  status('')}
+    B.lock=true;status('Opponent soch raha hai…');const s0=st,t0=Date.now();opp(s0).then(r=>{if(st!==s0||fin||!r)return;setTimeout(()=>{if(st!==s0||fin)return;const rs=sanOf(st,r);B.last=[sn(r.f),sn(r.t)];st=make(st,r);B.lock=false;B.set({st});status('Opponent: `'+rs+'`');check(false)},Math.max(0,350-(Date.now()-t0)))})}
+  if(s.sf)sfStart().catch(()=>{});status('')}
 
 /* ---------- review / exam / visualization screens (Main Course aur Road dono) ---------- */
 function srsSession(app,o){const set=srsPick(o.n||15);

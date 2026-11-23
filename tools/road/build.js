@@ -20,7 +20,7 @@ const content=fs.readFileSync(path.join(__dirname,'content.js'),'utf8').replace(
 const rd=f=>fs.readFileSync(path.join(__dirname,f),'utf8');
 const skin=rd('boardskin.js'),bcss=require('./boardcss.js').boardCSS(fs.readFileSync(path.join(root,'index.html'),'utf8'));
 const app=rd('app.js'),auth=rd('lichess-auth.js'),play=rd('play.js'),games=rd('games.js'),explain=rd('explain.js');
-const coreLite=core.replace(/const COURSE=\[.*?\];\n/s,'const COURSE=[];\n').replace(/const PLACEMENT=\[.*?\];\n/s,'const PLACEMENT=[];\n');
+const coreLite=core.replace(/const COURSE=\[.*?\];\n/s,'const COURSE=[];\n').replace(/const PLACEMENT=\[.*?\];\n/s,'const PLACEMENT=[];\n').replace(/\/\*TRAIN-DATA\*\/.*?\/\*TRAIN-DATA-END\*\//s,'/*TRAIN-DATA*/[]/*TRAIN-DATA-END*/');
 const SV=d=>`<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 const IC={
  today:SV('<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="m9 14.5 2 2 4-4"/>'),

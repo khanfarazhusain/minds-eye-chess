@@ -23,6 +23,8 @@ const isDone=k=>!!PR.done[k];
 const NOTEPATH={};
 COURSE.forEach(C=>C.lessons.forEach(l=>{NOTEPATH[l.key]=C.id+'-'+l.id}));
 ROAD_LEVELS.forEach(L=>{L.lessons=L.lessons.map(p=>{if(NEWLES[p])return p;const[c,l]=p.split('.');const C=COURSE.find(x=>x.id===c);const les=C&&C.lessons.find(x=>x.id===l);return les?les.key:null}).filter(Boolean)});
+/* pro-training drills (course.html TRAIN): Road mein bhi, apne lesson ke turant baad (tools/train/check-order.js yahi order check karta hai) */
+if(typeof TRAIN!=='undefined')TRAIN.forEach(T=>{const k=T.roadAfter||T.after;for(const L of ROAD_LEVELS){const i=L.lessons.indexOf(k);if(i>=0){let j=i+1;while(L.lessons[j]&&L.lessons[j].startsWith('tr.'))j++;if(!L.lessons.includes(T.les.key))L.lessons.splice(j,0,T.les.key);break}}});
 
 /* ---------- din ka hisaab ---------- */
 function sday(){const t=today();if(SP.day.d!==t){SP.day={d:t,srs:0,flash:0,puz:0,quiz:0,end:0,open:0,calc:0,lesson:0,extra:0,review:0,flashNone:false};ssave()}return SP.day}
