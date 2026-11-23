@@ -129,6 +129,28 @@ l4.op2pet #3 (line): Philidor: Lion / Hanham setup  ECO: B00 Pirc Defense (4 ply
 l4.op2pet #5 (move): after e4 e5 Nf3 d6 Bc4 Bg4 Nc3 g6  ECO: C41 Philidor Defense
 l4.op2pet #6 (move): after e4 e5 Nf3 d6 d4 Nd7 Bc4 Be7  ECO: C41 Philidor Defense: Hanham Variation
 l4.op2pet #7 (move): after e4 e5 Nf3 Nf6 Nxe5 d6 Nxf7  ECO: C42 Petrov's Defense: Cochrane Gambit
+l4b.op2qgd #0 (line): QGD: Tartakower  ECO: D53 Queen's Gambit Declined (8 ply)  [26 ply]
+l4b.op2qgd #1 (line): QGD: Lasker Defence  ECO: D53 Queen's Gambit Declined (8 ply)  [26 ply]
+l4b.op2qgd #2 (line): QGD Exchange: minority attack  ECO: D35 Queen's Gambit Declined: Normal Defense (6 ply)  [21 ply]
+l4b.op2qgd #3 (move): after d4 d5 c4 e6 Nc3 Nf6 Bg5 Nbd7 cxd5 exd5 Nxd5  ECO: D51 Queen's Gambit Declined: Modern Variation, Knight Defense
+l4b.op2qgd #4 (line): QGA: Classical main line  ECO: D27 Queen's Gambit Accepted: Classical Defense, Main Line (12 ply)  [20 ply]
+l4b.op2qgd #5 (line): QGA: 3.e4 e5!  ECO: D20 Queen's Gambit Accepted: Central Variation, McDonnell Defense (6 ply)  [16 ply]
+l4b.op2slav #0 (line): Slav: main line  ECO: D19 Slav Defense: Czech Variation, Dutch Variation (15 ply)  [20 ply]
+l4b.op2slav #1 (line): Semi-Slav: Meran  ECO: D43 Semi-Slav Defense (8 ply)  [22 ply]
+l4b.op2slav #2 (line): Semi-Slav: Moscow  ECO: D43 Semi-Slav Defense: Moscow Variation (12 ply)  [20 ply]
+l4b.op2slav #3 (line): Exchange Slav  ECO: D10 Slav Defense: Exchange Variation (5 ply)  [18 ply]
+l4b.op2slav #4 (line): Chebanenko (4...a6)  ECO: D15 Slav Defense: Chebanenko Variation (8 ply)  [16 ply]
+l4b.op2slav #5 (move): after d4 d5 c4 c6 Nf3 Nf6 Nc3 dxc4  ECO: D15 Slav Defense: Two Knights Attack
+l4b.op2qgo #0 (line): Tarrasch: main line  ECO: D34 Tarrasch Defense: Classical Variation, Main Line (22 ply)  [22 ply]
+l4b.op2qgo #1 (line): Chigorin  ECO: D07 Queen's Gambit Declined: Chigorin Defense, Modern Gambit (8 ply)  [19 ply]
+l4b.op2qgo #2 (line): Albin: White ka modern jawab  ECO: D09 Queen's Gambit Declined: Albin Countergambit, Fianchetto Variation, Be6 Line (10 ply)  [19 ply]
+l4b.op2qgo #3 (move): after d4 d5 c4 Bf5  ECO: D06 Queen's Gambit Declined: Baltic Defense
+l4b.op2sys #0 (line): London: modern main line  ECO: D00 Queen's Pawn Game: Accelerated London System (3 ply)  [19 ply]
+l4b.op2sys #1 (line): London ke khilaaf: ...Nh5  ECO: A45 Indian Defense: Accelerated London System (3 ply)  [20 ply]
+l4b.op2sys #2 (line): Jobava London  ECO: D01 Rapport-Jobava System (5 ply)  [14 ply]
+l4b.op2sys #3 (line): Colle-Zukertort  ECO: D05 Queen's Pawn Game: Colle System (7 ply)  [19 ply]
+l4b.op2sys #4 (line): BDG: Teichmann Defence  ECO: D00 Blackmar-Diemer Gambit Accepted: Teichmann Defense, Classical Variation (15 ply)  [18 ply]
+l4b.op2sys #5 (move): after d4 d5 Bf4 c5 e3 Nc6 c3 Qb6 Qb3  ECO: D00 Queen's Pawn Game: Accelerated London System, Steinitz Countergambit
 l4.op2fr #0 (line): Advance: main line  ECO: C02 French Defense: Advance Variation, Main Line (11 ply)  [18 ply]
 l4.op2fr #1 (move): after e4 e6 d4 d5 e5 c5 c3 Nc6 Nf3 Qb6 Bd3  ECO: C02 French Defense: Advance Variation, Milner-Barry Gambit
 l4.op2fr #2 (move): after e4 e6 d4 d5 e5 c5 c3 Nc6 Nf3 Qb6 Bd3 cxd4 cxd4 Nxd4 Nxd4 Qxd4  ECO: C02 French Defense: Advance Variation, Milner-Barry Gambit
@@ -193,6 +215,15 @@ op3.gam #1 (line): King's Gambit: Fischer Defence  ECO: C34 King's Gambit Accept
 op3.gam #2 (line): Danish: dono pawns lo, phir wapas do  ECO: C21 Danish Gambit Accepted: Schlechter Defense (10 ply)  [19 ply]
 op3.gam #3 (line): Fried Liver ka sach: 6.d4 (Lolli)  ECO: C57 Italian Game: Two Knights Defense, Lolli Attack (11 ply)  [19 ply]
 op3.gam #4 (move): after e4 e5 Nf3 Nc6 Bc4 Bc5 b4 Bxb4 c3 Ba5 d4 d6 O-O Bb6 dxe5 dxe5  ECO: C52 Italian Game: Evans Gambit, Bronstein Defense
+op3.qgstr #0 (line): Carlsbad: White ka f3 + e4 plan  ECO: D35 Queen's Gambit Declined: Normal Defense (6 ply)  [22 ply]
+op3.qgstr #2 (line): Semi-Tarrasch: IQP aur hanging pawns  ECO: D35 Queen's Gambit Declined: Normal Defense (6 ply)  [23 ply]
+op3.qgstr #3 (move): after d4 d5 c4 e6 Nc3 Nf6 Nf3 c5 cxd5 Nxd5 e3 Nc6 Bd3 Be7 O-O O-O a3 cxd4 exd4 Bf6  ECO: D35 Queen's Gambit Declined: Normal Defense
+op3.slavadv #0 (line): Meran: deep main line  ECO: D48 Semi-Slav Defense: Meran Variation, Reynolds' Variation (19 ply)  [26 ply]
+op3.slavadv #1 (line): Anti-Meran: 6.Qc2  ECO: D43 Semi-Slav Defense (8 ply)  [22 ply]
+op3.slavadv #3 (move): after d4 d5 c4 c6 Nf3 Nf6 Nc3 e6 e3 Nbd7 Qc2 Bd6 Bd3 O-O O-O  ECO: D43 Semi-Slav Defense
+op3.sysadv #0 (line): London: 1...Nf6 2.Bf4 c5!  ECO: A45 Indian Defense: Accelerated London System (3 ply)  [15 ply]
+op3.sysadv #1 (line): London: KID setup se jawab  ECO: A45 Indian Defense: Accelerated London System (3 ply)  [18 ply]
+op3.sysadv #3 (move): after d4 Nf6 Bf4 c5 e3  ECO: A45 Indian Defense: Accelerated London System
 op3.frstr #0 (line): Advance: Milner-Barry Gambit  ECO: C02 French Defense: Advance Variation, Milner-Barry Gambit, Main Line (15 ply)  [24 ply]
 op3.frstr #1 (line): Advance: ...f6 break  ECO: C02 French Defense: Advance Variation, Main Line (11 ply)  [22 ply]
 op3.frstr #3 (line): Winawer: Poisoned Pawn  ECO: C18 French Defense: Winawer Variation, Poisoned Pawn Variation, Main Line (19 ply)  [26 ply]
