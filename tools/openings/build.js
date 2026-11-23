@@ -63,3 +63,5 @@ console.log(`packs/opl.js: ${nL} lessons, ${nS} steps, ${(js.length/1024).toFixe
 const hv=require('crypto').createHash('md5').update(js).digest('hex').slice(0,8);
 const cp=path.join(ROOT,'course.html');const cs=fs.readFileSync(cp,'utf8');const cs2=cs.replace(/packs\/opl\.js\?v=[\w]+/,'packs/opl.js?v='+hv);
 if(cs2!==cs){fs.writeFileSync(cp,cs2);console.log('course.html: opl.js?v='+hv)}
+// play steps: label ki side = side-to-move
+for(const lv of out.levels)for(const l of lv.lessons)for(const s of l.steps)if(s.t==='play'&&/(White|Black) ki taraf/.test(s.q)){const want=/White ki taraf/.test(s.q)?'w':'b';if(s.fen.split(' ')[1]!==want){console.error('play side mismatch',l.key,s.q.slice(0,60));process.exit(1)}}
