@@ -1,0 +1,199 @@
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "1"]
+[White "FHK Engine v1"]
+[Black "Stockfish 16 (Elo 2000)"]
+[Result "1-0"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. d4 Nf6 2. Bg5 e6 3. e4 h6 {opening book end} 4. Bxf6 Qxf6 5. Nf3 g5 6. Nc3 g4 7. Ne5 h5 8. Be2 a6 9. h3 b5 10. hxg4 Bb7 11. g5 Qxg5 12. Bxh5 Ke7 13. Qf3 f5 14. Rd1 Rg8 15. Qh3 fxe4 16. g4 Bg7 17. Nf7 Qf4 18. Ne2 Qf6 19. Qg3 Qf3 20. Qh4+ Bf6 21. g5 Rxg5 22. Nxg5 Qg2 23. Rg1 Bxg5 24. Qxg5+ Qxg5 25. Rxg5 Nc6 26. d5 Nd4 27. Nxd4 e5 28. Rg7+ Kf6 29. Rg6+ Kf7 30. Rxa6+ Ke7 31. Rxa8 exd4 32. Re8+ Kd6 33. Rxe4 Bc8 34. Rdxd4 b4 35. Rxb4 Kxd5 36. Red4+ Ke5 37. f4+ Ke6 38. Rb8 Ke7 39. Rxc8 d6 40. Rxc7+ Ke6 41. Bg4+ Kf6 42. Rxd6# 1-0
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "2"]
+[White "Stockfish 16 (Elo 2000)"]
+[Black "FHK Engine v1"]
+[Result "0-1"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. d4 Nf6 2. Bg5 e6 3. e4 h6 {opening book end} 4. Bh4 g5 5. e5 gxh4 6. exf6 Qxf6 7. c3 Nc6 8. Nd2 d5 9. Qf3 Bg7 10. Qxf6 Bxf6 11. Bb5 Bd7 12. g3 a6 13. Bxc6 Bxc6 14. Ne2 O-O-O 15. Nf3 Rhg8 16. O-O-O Ba4 17. b3 Bb5 18. Rde1 Bd3 19. Nxh4 Bg5+ 20. Nf4 Bxf4+ 21. gxf4 Rg4 22. Nf3 Rxf4 23. Ne5 Bh7 24. f3 f6 25. Nf7 Rf8 26. Rxe6 Rxf7 27. Rhe1 Rxf3 28. c4 dxc4 29. d5 c3 30. h4 Kd7 31. Rd1 Rf2 32. Rd4 Rb2 33. Ree4 Rxa2 34. d6 cxd6 35. b4 Bxe4 36. Rxe4 Rg7 37. Re7+ Rxe7 38. Kb1 Rb2+ 39. Kc1 Re1# 0-1
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "3"]
+[White "FHK Engine v1"]
+[Black "Stockfish 16 (Elo 2000)"]
+[Result "1-0"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. e4 e5 2. Nf3 d6 3. d4 exd4 {opening book end} 4. Nxd4 c6 5. Bd3 Nf6 6. O-O Nbd7 7. Nc3 Nc5 8. Be3 a5 9. a3 a4 10. Nf3 Bg4 11. h3 Bxf3 12. Qxf3 Ne6 13. Rad1 Nd7 14. Be2 Be7 15. Qg3 b5 16. f4 h5 17. f5 h4 18. Qh2 Bg5 19. Bxg5 Nxg5 20. Rxd6 Qb6+ 21. Kh1 Qe3 22. Rd3 Qc5 23. Qc7 Ne5 24. Rd5 cxd5 25. Qxc5 Nxe4 26. Nxe4 dxe4 27. Bxb5+ Nd7 28. Bxd7+ Kxd7 29. Rd1+ Ke8 30. Qc6+ Kf8 31. Qxa8+ Ke7 32. Qxe4+ Kf6 33. Rd6+ Kg5 34. Qg4# 1-0
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "4"]
+[White "Stockfish 16 (Elo 2000)"]
+[Black "FHK Engine v1"]
+[Result "0-1"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. e4 e5 2. Nf3 d6 3. d4 exd4 {opening book end} 4. Bc4 Nf6 5. O-O Nc6 6. Bb5 Nxe4 7. Re1 d5 8. Nxd4 Bc5 9. Bxc6+ bxc6 10. Nd2 O-O 11. N2b3 Bb6 12. a4 Qh4 13. Be3 Re8 14. a5 Bxd4 15. Qxd4 Qh5 16. a6 Qg6 17. Bf4 Bh3 18. Bg3 Nxg3 19. Qd3 Ne2+ 20. Kh1 Bxg2# 0-1
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "5"]
+[White "FHK Engine v1"]
+[Black "Stockfish 16 (Elo 2000)"]
+[Result "1-0"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. c4 Nf6 2. Nc3 e6 3. e4 d5 {opening book end} 4. e5 d4 5. exf6 dxc3 6. fxg7 cxd2+ 7. Qxd2 Bxg7 8. Qxd8+ Kxd8 9. Bg5+ f6 10. O-O-O+ Ke8 11. Be3 h5 12. Bd3 Nc6 13. Bg6+ Kf8 14. Nf3 Bh6 15. Bxh6+ Ke7 16. Be3 f5 17. Bg5+ Kf8 18. Rhe1 Kg7 19. Nh4 b5 20. cxb5 Na5 21. Bd2 e5 22. Bxa5 Rh6 23. Bxf5 a6 24. Bxc8 axb5 25. Nf5+ Kg6 26. Bc3 Rxc8 27. Ne7+ Kf7 28. Nxc8 c5 29. Nd6+ Rxd6 30. Rxd6 Kg8 31. Rxe5 Kf8 32. Rf6+ Kg7 33. Re7+ Kh8 34. Rf8# 1-0
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "6"]
+[White "Stockfish 16 (Elo 2000)"]
+[Black "FHK Engine v1"]
+[Result "0-1"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. c4 Nf6 2. Nc3 e6 3. e4 d5 {opening book end} 4. e5 d4 5. Nce2 Ng4 6. Nf3 Nc6 7. Qb3 Ngxe5 8. Ng3 Bd6 9. Nxe5 Nxe5 10. Ne4 Be7 11. g3 f5 12. f4 fxe4 13. fxe5 O-O 14. Bg2 Qe8 15. Bxe4 Qh5 16. a3 Qxe5 17. d3 Qf6 18. Qc2 c6 19. Bf4 e5 20. Bd2 Qf2+ 21. Kd1 a5 22. Be1 Qe3 23. h3 Bf5 24. Bxf5 Rxf5 25. g4 Rf3 26. Qe2 Qxd3+ 27. Qxd3 Rxd3+ 28. Kc2 e4 29. Rd1 Rxd1 30. Rf1 Ra1 31. h4 Bxh4 32. Kd2 Bxe1+ 33. Ke2 d3+ 34. Ke3 d2 35. a4 d1=Q 36. Kxe4 Qxg4+ 37. Ke5 Bg3+ 38. Rf4 Qxf4+ 39. Ke6 Qf7# 0-1
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "7"]
+[White "FHK Engine v1"]
+[Black "Stockfish 16 (Elo 2000)"]
+[Result "1-0"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. e4 c5 2. c3 Nf6 3. e5 Nd5 {opening book end} 4. Nf3 Nb6 5. d4 d6 6. dxc5 N6d7 7. cxd6 Nc6 8. Bb5 exd6 9. exd6 Nf6 10. Bf4 Nh5 11. Be5 Bg4 12. Qe2 Bxf3 13. Qxf3 Qb6 14. d7+ Kd8 15. Qxh5 Nxe5 16. Qxe5 Bc5 17. Na3 f6 18. Qe2 Kc7 19. Rd1 a6 20. Ba4 Raf8 21. Nc4 Bxf2+ 22. Kf1 Bd4 23. Nxb6 Bxb6 24. Qg4 Kb8 25. Qxg7 Rfg8 26. Qh6 Rd8 27. Rd6 Be3 28. Qxe3 b5 29. Qb6+ Ka8 30. Qxa6+ Kb8 31. Qxb5+ Kc7 32. Qb6# 1-0
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "8"]
+[White "Stockfish 16 (Elo 2000)"]
+[Black "FHK Engine v1"]
+[Result "0-1"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. e4 c5 2. c3 Nf6 3. e5 Nd5 {opening book end} 4. Qf3 e6 5. Qe4 d6 6. Nf3 dxe5 7. Bb5+ Bd7 8. Be2 Bd6 9. c4 f5 10. Qc2 Nf4 11. d4 exd4 12. b4 Nc6 13. Bxf4 Nxb4 14. Qd2 Bxf4 15. Qxf4 Nc2+ 16. Kd2 Nxa1 17. Ne5 Qa5+ 18. Kd1 Qxa2 19. Qc1 Ba4+ 20. Ke1 Nb3 21. Nc3 Nxc1 22. Nxa2 Nxa2 23. Nd3 b6 24. Bd1 Bxd1 25. Nf4 Bb3 26. h4 Bxc4 27. Rh2 Nb4 28. Kd2 e5 29. Ne2 O-O 30. Rh1 Bd5 31. Rg1 a5 32. h5 a4 33. Re1 a3 34. f3 e4 35. Rb1 e3+ 36. Kd1 a2 37. Rxb4 a1=Q+ 38. Rb1 Qxb1+ 39. Nc1 Bb3+ 40. Ke1 Qxc1+ 41. Ke2 Bc4# 0-1
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "9"]
+[White "FHK Engine v1"]
+[Black "Stockfish 16 (Elo 2000)"]
+[Result "1-0"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. d4 d5 2. Nc3 Nf6 3. Bg5 Bf5 {opening book end} 4. e3 Nbd7 5. Nf3 Ne4 6. Nxe4 dxe4 7. Nh4 h6 8. Nxf5 hxg5 9. c3 Rb8 10. Ng3 Rh4 11. Qa4 e6 12. Qxa7 Bd6 13. Be2 Nb6 14. O-O g6 15. Rad1 f5 16. h3 Qc8 17. Qa5 Ra8 18. Qb5+ Ke7 19. Qb3 Nd7 20. a4 c6 21. Bc4 Nf8 22. Rfe1 g4 23. hxg4 Qc7 24. gxf5 gxf5 25. Bxe6 Kf6 26. Nxf5 Bh2+ 27. Kf1 Rh8 28. d5 Nxe6 29. dxe6 Kxf5 30. Rd7 Qc8 31. Qc4 Be5 32. g4+ Kg5 33. Qxe4 Bd6 34. Rg7+ Kf6 35. Qg6+ Ke5 36. Qf5# 1-0
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "10"]
+[White "Stockfish 16 (Elo 2000)"]
+[Black "FHK Engine v1"]
+[Result "0-1"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. d4 d5 2. Nc3 Nf6 3. Bg5 Bf5 {opening book end} 4. e3 e6 5. g4 Bg6 6. Nge2 c5 7. Bxf6 Qxf6 8. dxc5 Bxc5 9. Bg2 h5 10. Na4 Bd6 11. c4 hxg4 12. Nac3 Na6 13. Qd4 Qxd4 14. Nxd4 Nc5 15. Ndb5 Be5 16. cxd5 exd5 17. Nxd5 Nd3+ 18. Kd2 Rd8 19. Ndc7+ Kf8 20. Bd5 Nxf2 21. Rhf1 Rxh2 22. Rfe1 Ne4+ 23. Kd3 Nd6+ 24. e4 Nxb5 25. Nxb5 Rxd5+ 26. Kc4 Rdd2 27. Rad1 Rxb2 28. Re3 g3 29. Nxa7 Rhc2+ 30. Kd5 Bf4 31. Rf3 g2 32. Rxf4 Rd2+ 33. Kc4 Rxd1 34. Rg4 Bxe4 35. Kc5 b6+ 36. Kc4 Rc2+ 37. Kb3 Rb1+ 38. Ka4 Rxa2# 0-1
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "11"]
+[White "FHK Engine v1"]
+[Black "Stockfish 16 (Elo 2000)"]
+[Result "1-0"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. e4 Nf6 2. e5 Nd5 3. d4 d6 {opening book end} 4. c4 Nb6 5. Nf3 e6 6. Nc3 N6d7 7. exd6 cxd6 8. Bd3 Nf6 9. O-O Be7 10. Bf4 b6 11. Qa4+ Kf8 12. Rae1 Nbd7 13. Nb5 Nh5 14. Bxd6 g6 15. Bc7 Qe8 16. Be4 a6 17. Nd6 Bxd6 18. Bxd6+ Kg8 19. Bxa8 Qd8 20. c5 Ng7 21. c6 b5 22. Qa3 Ne8 23. Be7 b4 24. Qxb4 Qb6 25. cxd7 Qd8 26. Bxd8 Nd6 27. Qxd6 h5 28. dxc8=Q Kh7 29. Ng5+ Kg8 30. Bf6# 1-0
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "12"]
+[White "Stockfish 16 (Elo 2000)"]
+[Black "FHK Engine v1"]
+[Result "0-1"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. e4 Nf6 2. e5 Nd5 3. d4 d6 {opening book end} 4. Nf3 Bf5 5. a3 dxe5 6. dxe5 Nc6 7. Bb5 Qd7 8. c4 Nb6 9. Qb3 a6 10. c5 axb5 11. cxb6 Na5 12. Qb4 e6 13. Qc3 cxb6 14. Be3 Rc8 15. Qd4 Nb3 16. Nc3 Nxd4 17. Nxd4 b4 18. axb4 Bg6 19. Ndb5 Bxb4 20. Na7 Rxc3 21. bxc3 Bxc3+ 22. Kf1 Bxa1 23. Bd4 Qxd4 24. f4 Bd3+ 25. Ke1 Bc3+ 26. Kd1 Qa4+ 27. Kc1 Qa1# 0-1
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "13"]
+[White "FHK Engine v1"]
+[Black "Stockfish 16 (Elo 2000)"]
+[Result "1-0"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. b3 e5 2. Bb2 Nc6 3. e3 d5 {opening book end} 4. Nf3 e4 5. Ne5 Qf6 6. Bb5 a6 7. Bxc6+ bxc6 8. O-O Qh6 9. d3 Nf6 10. dxe4 Nxe4 11. c4 Be6 12. Nd2 Bf5 13. Ndf3 Bd6 14. cxd5 cxd5 15. Qxd5 O-O 16. Nxf7 Qe6 17. Qxe6 Bxe6 18. Nxd6 Nf6 19. Bxf6 a5 20. Be7 cxd6 21. Bxf8 Rxf8 22. Rfd1 Rf5 23. Rxd6 Bd5 24. g4 Rf4 25. Ne5 Rf3 26. Rxd5 Rf8 27. Rc1 a4 28. bxa4 Rb8 29. Rc7 Re8 30. Rdd7 Ra8 31. Rxg7+ Kh8 32. Rxh7+ Kg8 33. Rhg7+ Kh8 34. Ng6# 1-0
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "14"]
+[White "Stockfish 16 (Elo 2000)"]
+[Black "FHK Engine v1"]
+[Result "1/2-1/2"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. b3 e5 2. Bb2 Nc6 3. e3 d5 {opening book end} 4. Bb5 Qg5 5. Nf3 Qxg2 6. Rg1 Qh3 7. Rg3 Qh5 8. Nxe5 Qxd1+ 9. Kxd1 Ne7 10. Nc3 Bd7 11. Nxd7 Kxd7 12. Na4 Ng6 13. Rg5 Ke6 14. Bf1 Rd8 15. Bh3+ Ke7 16. Rh5 Ke8 17. Bg2 Nge7 18. Nc5 b6 19. Na4 d4 20. c3 dxe3 21. fxe3 f6 22. Kc2 g6 23. Rh4 Kf7 24. Rf1 a6 25. d4 Bg7 26. Bc1 Kg8 27. e4 g5 28. Rh3 h5 29. Rg3 h4 30. Rgf3 g4 31. Rf4 h3 32. Bh1 g3 33. hxg3 h2 34. Nb2 Rd7 35. Rh4 Rxh4 36. gxh4 f5 37. e5 Nxe5 38. dxe5 Bxe5 39. c4 Bg3 40. Rf3 Bd6 41. Rh3 c5 42. Nd3 Kh7 43. Nf4 Ng6 44. Nxg6 Kxg6 45. h5+ Kf6 46. a3 Be5 47. h6 Kg6 48. Bf3 a5 49. Bd2 Re7 50. Bc1 Rd7 1/2-1/2
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "15"]
+[White "FHK Engine v1"]
+[Black "Stockfish 16 (Elo 2000)"]
+[Result "1-0"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. e4 e5 2. Nc3 Nf6 3. f4 d5 {opening book end} 4. exd5 exf4 5. d4 Nxd5 6. Nxd5 Qxd5 7. Bxf4 Bb4+ 8. c3 Be7 9. Qf3 Be6 10. Bd3 c6 11. Qxd5 Bxd5 12. Nf3 Be6 13. Ng5 Nd7 14. Nxe6 fxe6 15. O-O e5 16. dxe5 Nb6 17. e6 O-O 18. Be5 Na4 19. b4 Nb2 20. Be2 Rae8 21. Rab1 Rxf1+ 22. Kxf1 Bf6 23. Bxf6 gxf6 24. Rxb2 Ra8 25. Rd2 c5 26. e7 Kg7 27. Rd8 cxb4 28. Rxa8 b5 29. e8=Q b3 30. Rxa7+ Kh6 31. Qh5# 1-0
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "16"]
+[White "Stockfish 16 (Elo 2000)"]
+[Black "FHK Engine v1"]
+[Result "0-1"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. e4 e5 2. Nc3 Nf6 3. f4 d5 {opening book end} 4. Qe2 exf4 5. d4 dxe4 6. Qf2 g5 7. h4 e3 8. Qf3 Nc6 9. Bb5 Bg4 10. Bxc6+ bxc6 11. Qxc6+ Bd7 12. Qb7 g4 13. Nd5 Nxd5 14. Qxd5 Bd6 15. Qe4+ Kf8 16. c4 c6 17. a3 Qa5+ 18. b4 Bxb4+ 19. axb4 Qxa1 20. Qc2 a5 21. Ne2 f3 22. b5 cxb5 23. O-O f2+ 24. Kh2 b4 25. Qe4 Re8 26. Qd5 Re7 27. Bxe3 Rxe3 28. Qc5+ Ke8 29. Rxa1 Rxe2 30. Rf1 b3 31. Kg3 b2 32. Qb6 a4 33. Qb8+ Ke7 34. Qb4+ Kf6 35. h5 Bf5 36. Qd6+ Be6 37. Qf4+ Ke7 38. Qg5+ Ke8 39. Qb5+ Bd7 40. Qa5 Rf8 41. d5 f5 42. Kh4 f4 43. c5 f3 44. g3 Rf5 45. c6 Bxc6 46. Qc3 Bd7 47. Qh8+ Ke7 48. Qxh7+ Kd6 49. Qg6+ Kc5 50. Qh7 Rxd5 51. Qg6 Bf5 52. Qf7 b1=Q 53. Qf8+ Rd6 54. Rxb1 Bxb1 55. Qc8+ Rc6 56. Qd8 f1=Q 57. Qa5+ Kd4 58. Qxa4+ Rc4 59. Qa7+ Kd3 60. Qg1 Qxg1 61. h6 Qc5 62. h7 Rh2# 0-1
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "17"]
+[White "FHK Engine v1"]
+[Black "Stockfish 16 (Elo 2000)"]
+[Result "1-0"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. d4 e6 2. c4 Bb4+ 3. Bd2 Qe7 {opening book end} 4. Nc3 d5 5. a3 Bxc3 6. Bxc3 dxc4 7. e3 b5 8. Qf3 c6 9. d5 Nf6 10. dxc6 O-O 11. c7 Qxc7 12. Bxf6 gxf6 13. O-O-O b4 14. Rd4 Nd7 15. Qxa8 bxa3 16. bxa3 Qa5 17. Bxc4 Qxa3+ 18. Kd1 Ne5 19. Qe4 Bd7 20. Bd3 Rc8 21. Qxh7+ Kf8 22. Bc2 Be8 23. Ne2 Ke7 24. Ke1 Bb5 25. h3 Qa5+ 26. Kd1 Nc4 27. Rxc4 Rxc4 28. Re1 Rb4 29. g3 Rb2 30. Qe4 Rxc2 31. Kxc2 Qxe1 32. Nc3 a6 33. Qb4+ Ke8 34. Qf4 Qf1 35. Qxf6 Bd3+ 36. Kd2 Bg6 37. h4 Bf5 38. e4 Qxf2+ 39. Ne2 Qf3 40. exf5 Qd5+ 41. Ke3 Qc5+ 42. Nd4 exf5 43. Kf2 Qa5 44. Nxf5 Qxf5+ 45. Qxf5 a5 46. h5 f6 47. h6 Kd8 48. h7 Ke7 49. h8=Q a4 50. Qfxf6+ Kd7 51. Qhd8# 1-0
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "18"]
+[White "Stockfish 16 (Elo 2000)"]
+[Black "FHK Engine v1"]
+[Result "0-1"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. d4 e6 2. c4 Bb4+ 3. Bd2 Qe7 {opening book end} 4. Nc3 Nf6 5. e3 O-O 6. Nf3 d6 7. a3 Bxc3 8. Bxc3 Ne4 9. Nd2 Nxc3 10. Qb3 c5 11. Qxc3 cxd4 12. Qxd4 Nc6 13. Qf4 e5 14. Qe4 f5 15. Qc2 f4 16. Bd3 fxe3 17. fxe3 Qh4+ 18. g3 Qh6 19. O-O-O Bg4 20. Rdf1 Kh8 21. Rxf8+ Rxf8 22. Rf1 Rd8 23. Bf5 Be2 24. Re1 Qxe3 25. Qe4 Qxe4 26. Bxe4 Nd4 27. Bxb7 Kg8 28. b4 h6 29. Bd5+ Kf8 30. a4 Bd3 31. Re3 Bg6 32. Kb2 Bf7 33. Bxf7 Kxf7 34. Kc3 Ke6 35. Nb3 Nxb3 36. Kxb3 d5 37. cxd5+ Rxd5 38. a5 Rd2 39. a6 Rxh2 40. b5 Rh1 41. Ka4 Rb1 42. Rd3 e4 43. Rb3 Ra1+ 44. Kb4 Kd6 45. Rc3 Rb1+ 46. Kc4 Ke5 47. Ra3 h5 48. Re3 g5 49. Re2 h4 50. gxh4 Rc1+ 51. Kb3 gxh4 52. Rh2 e3 53. b6 axb6 54. a7 Rc8 55. Rh3 Ra8 56. Rxe3+ Kf6 57. Rh3 Kg5 58. Re3 Rxa7 59. Re1 h3 60. Kc4 h2 61. Rd1 Ra2 62. Kb5 Rb2+ 63. Kc4 Kf4 64. Ra1 Kg3 65. Rc1 b5+ 66. Kc5 b4 67. Ra1 b3 68. Kc4 Ra2 69. Rb1 b2 70. Kc5 Ra1 71. Rxb2 Rc1+ 72. Kd6 h1=Q 73. Rb4 Qc6+ 74. Ke5 Re1+ 75. Kd4 Rd1+ 76. Ke3 Qf3# 0-1
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "19"]
+[White "FHK Engine v1"]
+[Black "Stockfish 16 (Elo 2000)"]
+[Result "1-0"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. g3 d5 2. Bg2 e5 3. d3 Nf6 {opening book end} 4. Nf3 Bb4+ 5. Bd2 Qd6 6. c3 Bc5 7. d4 exd4 8. cxd4 Bb6 9. Nc3 Nc6 10. Bg5 Ne7 11. a4 Ba5 12. O-O c6 13. Bf4 Qe6 14. Ng5 Qf5 15. e4 Qd7 16. e5 Nfg8 17. Re1 h6 18. e6 fxe6 19. Nxe6 Nf6 20. Nxg7+ Kf8 21. Nh5 Neg8 22. Be5 Bd8 23. Rc1 Qf7 24. Bf3 Bf5 25. Qb3 Rc8 26. Qb4+ Be7 27. Qxb7 a5 28. Nxd5 cxd5 29. Rxc8+ Bxc8 30. Qxc8+ Qe8 31. Qxe8+ Nxe8 32. Bxh8 Bg5 33. Bxd5 Ne7 34. Bc4 Ng6 35. Be5 Bd2 36. Rd1 Bb4 37. f4 Nxe5 38. dxe5 Nc7 39. f5 Ne6 40. fxe6 Ke7 41. Nf6 Bd2 42. Rxd2 Kf8 43. Rd8+ Kg7 44. Rg8# 1-0
+
+[Event "ME Engine test"]
+[Site "Mind's Eye Chess"]
+[Round "20"]
+[White "Stockfish 16 (Elo 2000)"]
+[Black "FHK Engine v1"]
+[Result "1/2-1/2"]
+[TimeControl "300ms/move vs 300ms/move"]
+
+1. g3 d5 2. Bg2 e5 3. d3 Nf6 {opening book end} 4. Nf3 Nc6 5. O-O Bd6 6. Nc3 O-O 7. Nd2 Be6 8. e4 d4 9. Ne2 a6 10. h3 Qd7 11. h4 Bh3 12. Nf3 Bxg2 13. Kxg2 Rad8 14. Nh2 a5 15. Ng1 h6 16. Bd2 Bc5 17. a4 Rfe8 18. Kh1 Nb4 19. g4 Qd6 20. Ngf3 Qe6 21. g5 hxg5 22. hxg5 Nd7 23. g6 Qxg6 24. Rg1 Qh5 25. Rg2 Be7 26. Qe2 Qh7 27. Rag1 g6 28. Rg3 Bf6 29. Kg2 Qg7 30. Rh3 Be7 31. Rh1 f6 32. c3 dxc3 33. bxc3 Nc6 34. d4 Nb6 35. Ng4 exd4 36. Bf4 dxc3 37. Qa2+ Nd5 38. exd5 Nb4 39. Qc4 Nxd5 40. Bxc7 c2 41. Bxd8 Rxd8 42. Nd4 Rd6 43. Ne6 Rxe6 44. Nh6+ Kf8 45. Qc8+ Bd8 46. Qxd8+ Re8 47. Qxd5 Re5 48. Qd8+ Re8 49. Qd5 1/2-1/2

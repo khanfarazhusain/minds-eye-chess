@@ -1,0 +1,2532 @@
+[
+ {
+  "ch": "l1b",
+  "after": "l1.mate",
+  "needs": [
+   "l1.mate"
+  ],
+  "les": {
+   "id": "tr_df1",
+   "key": "tr.df1",
+   "title": "🏋 Drill: check se bacho (defence 1)",
+   "sub": "Asli games ki positions: sabse achha bachaav chuno",
+   "yaad": [
+    "Check se bachne ke 3 tareeke: king hatao, block, capture.",
+    "Sabse achha woh jisme kuch na khoye."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Drill: defence ki shuruaat",
+     "md": "Achha player sirf attack nahi karta, **bachaav** bhi karta hai. Yahan har position mein tumhe **check** mila hai. Teeno tareeke socho (king hatao, block, capture) aur **sabse achha** chuno.\n\nJawab Stockfish se check kiye gaye hain.\n\nTest: 10 naye positions, **80%**."
+    },
+    {
+     "t": "move",
+     "fen": "rnbqkbr1/pp3p1p/4pn1Q/1B1P4/3p4/P1N5/1PP2PPP/R1B1K1NR b KQq - 2 9",
+     "line": [
+      "Bd7"
+     ],
+     "ok": [
+      "Bd7"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Bd7`: beech mein piece rakh kar check block kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r5k1/P3R1P1/7P/8/r5KP/4B3/8/8 w - - 3 45",
+     "line": [
+      "Kf3"
+     ],
+     "ok": [
+      "Kf3",
+      "Kg3",
+      "Kh5"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kf3`: king ko safe square par hataya. Yeh bhi theek thi: `Kg3`, `Kh5`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "3r1rk1/1p3ppp/p1p2Nq1/4p3/3nN3/1B5P/P4PP1/2B1RQK1 b - - 0 23",
+     "line": [
+      "gxf6"
+     ],
+     "ok": [
+      "gxf6"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `gxf6`: checking piece ko capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/4R3/6k1/8/5p2/7p/1r5K/8 w - - 20 79",
+     "line": [
+      "Kxh3"
+     ],
+     "ok": [
+      "Kxh3"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kxh3`: king ne khud checking piece capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "7R/2k3pp/2N5/3KN3/1b3P2/1b5r/8/8 w - - 2 35",
+     "line": [
+      "Ke4"
+     ],
+     "ok": [
+      "Ke4"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Ke4`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r1b1k2r/pp1p2pp/3bp3/q3np2/2PQn3/N4NP1/PP2PPBP/R1B1K2R w KQkq - 11 12",
+     "line": [
+      "Bd2"
+     ],
+     "ok": [
+      "Bd2",
+      "Kf1"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Bd2`: beech mein piece rakh kar check block kiya. Yeh bhi theek thi: `Kf1`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "5R2/8/5k2/5p2/4pK2/8/8/7r b - - 7 74",
+     "line": [
+      "Ke6"
+     ],
+     "ok": [
+      "Ke6",
+      "Kg6"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Ke6`: king ko safe square par hataya. Yeh bhi theek thi: `Kg6`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "3r2k1/p5p1/3p3p/3Bp3/1PPn4/P5P1/3Nb2P/2K1R3 b - - 1 29",
+     "line": [
+      "Kf8"
+     ],
+     "ok": [
+      "Kf8"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kf8`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r2qkb1r/p1p2p1p/2Q2n2/6p1/3P1pbP/2N1p3/PPP3P1/R1B1K1NR b KQkq - 0 11",
+     "line": [
+      "Bd7"
+     ],
+     "ok": [
+      "Bd7"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Bd7`: beech mein piece rakh kar check block kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/2p4p/2p2k2/2N1Np1p/5P2/2R5/3r2K1/1r6 w - - 10 55",
+     "line": [
+      "Kf3"
+     ],
+     "ok": [
+      "Kf3",
+      "Kg3"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kf3`: king ko safe square par hataya. Yeh bhi theek thi: `Kg3`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    }
+   ],
+   "pool": [
+    {
+     "t": "move",
+     "fen": "8/p6Q/5k2/7B/1P1n2P1/1q6/4K1PP/8 w - - 15 39",
+     "line": [
+      "Kf2"
+     ],
+     "ok": [
+      "Kf2",
+      "Kd2",
+      "Ke1"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kf2`: king ko safe square par hataya. Yeh bhi theek thi: `Kd2`, `Ke1`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "6r1/8/1B3n2/1Q3k2/PP2p3/5n2/2P3p1/2K5 b - - 1 37",
+     "line": [
+      "Kf4"
+     ],
+     "ok": [
+      "Kf4"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kf4`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "2R4k/5p1p/1q2p1pn/3pP1N1/3p2P1/6BP/1r3P2/7K b - - 0 44",
+     "line": [
+      "Kg7"
+     ],
+     "ok": [
+      "Kg7"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kg7`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "1rb2r1k/3p2p1/pp1Np1Qp/2P5/P3q1R1/6P1/4P1K1/8 w - - 0 36",
+     "line": [
+      "Nxe4"
+     ],
+     "ok": [
+      "Nxe4"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Nxe4`: checking piece ko capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/3b4/3k2Q1/3P1r1P/p5pK/5pP1/1p2rp2/5R2 b - - 2 49",
+     "line": [
+      "Kc5"
+     ],
+     "ok": [
+      "Kc5",
+      "Kc7"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kc5`: king ko safe square par hataya. Yeh bhi theek thi: `Kc7`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/Q7/8/7P/2rk2pK/5pP1/4r3/1b3q2 b - - 2 59",
+     "line": [
+      "Kd3"
+     ],
+     "ok": [
+      "Kd3"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kd3`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r4k1r/p2b1p1p/2p5/q7/1bPPQppP/P3p3/6P1/R1B1K1NR w KQ - 0 19",
+     "line": [
+      "axb4"
+     ],
+     "ok": [
+      "axb4"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `axb4`: checking piece ko capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "5b2/2k3n1/4K1P1/5N2/2N5/8/8/8 w - - 7 72",
+     "line": [
+      "Kf7"
+     ],
+     "ok": [
+      "Kf7"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kf7`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r1b3r1/1pp2kPp/7B/p2pP3/1b5q/5Q2/PP3PPP/RN3K1R b - - 4 16",
+     "line": [
+      "Kg6"
+     ],
+     "ok": [
+      "Kg6",
+      "Ke6"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kg6`: king ko safe square par hataya. Yeh bhi theek thi: `Ke6`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/7p/p4pk1/R2P4/1K4r1/8/8/8 w - - 0 59",
+     "line": [
+      "Kc5"
+     ],
+     "ok": [
+      "Kc5",
+      "Kc3"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kc5`: king ko safe square par hataya. Yeh bhi theek thi: `Kc3`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "rnbqkb1r/pp2pppp/8/1B1p2B1/3P4/8/PPP2PPP/R2QK1NR b KQkq - 1 7",
+     "line": [
+      "Nc6"
+     ],
+     "ok": [
+      "Nc6",
+      "Bd7"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Nc6`: beech mein piece rakh kar check block kiya. Yeh bhi theek thi: `Bd7`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/3PNpk1/5nb1/1p6/3Q4/5P1p/r6K/8 w - - 1 44",
+     "line": [
+      "Kg3"
+     ],
+     "ok": [
+      "Kg3",
+      "Kxh3"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kg3`: king ko safe square par hataya. Yeh bhi theek thi: `Kxh3`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "1rQ4k/5p1p/1q2p1pn/3pP1N1/3p2P1/6BP/1r3P2/2R4K b - - 0 43",
+     "line": [
+      "Rxc8"
+     ],
+     "ok": [
+      "Rxc8"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Rxc8`: checking piece ko capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "1R1k1b1r/N2b2pp/R7/4N3/4KP2/6rP/P1n5/8 b - - 6 28",
+     "line": [
+      "Kc7"
+     ],
+     "ok": [
+      "Kc7"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kc7`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r1b2rk1/pp2pp1p/2n3p1/2p5/P7/3PqNPP/2P2PB1/1R2K2R w K - 0 15",
+     "line": [
+      "fxe3"
+     ],
+     "ok": [
+      "fxe3"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `fxe3`: checking piece ko capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r1bqk2r/1pp2ppp/p1B5/3pP3/4n3/2b2N2/PPQ2PPP/R1B2RK1 b kq - 0 11",
+     "line": [
+      "bxc6"
+     ],
+     "ok": [
+      "bxc6"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `bxc6`: checking piece ko capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "3r4/1pk1Q3/p1p2p2/3b1q1p/3P2r1/5N2/PPP2PPP/R3R1K1 b - - 0 19",
+     "line": [
+      "Rd7"
+     ],
+     "ok": [
+      "Rd7",
+      "Kc8"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Rd7`: beech mein piece rakh kar check block kiya. Yeh bhi theek thi: `Kc8`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/pk4Q1/1p1b2P1/7P/5P2/3Prb1K/P5r1/8 b - - 3 45",
+     "line": [
+      "Ka6"
+     ],
+     "ok": [
+      "Ka6"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Ka6`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "1R3b1r/N1kb2pp/1R6/3KN3/1n3P2/4r2P/P7/8 w - - 11 31",
+     "line": [
+      "Rxb4"
+     ],
+     "ok": [
+      "Rxb4"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Rxb4`: checking piece ko capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r1b1k2r/ppp1qpPp/1bn5/8/2pP4/5N2/PP3PPP/RNBQK2R w KQkq - 1 10",
+     "line": [
+      "Be3"
+     ],
+     "ok": [
+      "Be3"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Be3`: beech mein piece rakh kar check block kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/8/8/2b5/6k1/7p/8/6K1 w - - 12 78",
+     "line": [
+      "Kh2"
+     ],
+     "ok": [
+      "Kh2",
+      "Kh1"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kh2`: king ko safe square par hataya. Yeh bhi theek thi: `Kh1`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r7/pp1n1Q2/8/5kp1/4p3/4Bn2/PPP5/2K5 b - - 0 30",
+     "line": [
+      "Nf6"
+     ],
+     "ok": [
+      "Nf6"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Nf6`: beech mein piece rakh kar check block kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "6n1/2R3kp/1p5r/p4p2/P7/1P5P/5P2/5K2 b - - 1 37",
+     "line": [
+      "Kf8"
+     ],
+     "ok": [
+      "Kf8",
+      "Kf6"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kf8`: king ko safe square par hataya. Yeh bhi theek thi: `Kf6`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/8/8/8/6r1/4k3/5pK1/1R6 w - - 22 69",
+     "line": [
+      "Kh2"
+     ],
+     "ok": [
+      "Kh2",
+      "Kh1"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kh2`: king ko safe square par hataya. Yeh bhi theek thi: `Kh1`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/6k1/8/8/8/5R1p/r3K3/8 w - - 14 66",
+     "line": [
+      "Ke3"
+     ],
+     "ok": [
+      "Ke3"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Ke3`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "3rr3/Rk3pp1/3b3p/2p4P/1pP1PP2/4B3/2K2P2/R7 b - - 4 35",
+     "line": [
+      "Kc8"
+     ],
+     "ok": [
+      "Kc8",
+      "Kb8"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kc8`: king ko safe square par hataya. Yeh bhi theek thi: `Kb8`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "3rk3/pRp3p1/1b6/4r1PB/3n4/8/2bBNP1P/4K1R1 b - - 2 42",
+     "line": [
+      "g6"
+     ],
+     "ok": [
+      "g6"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `g6`: beech mein piece rakh kar check block kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "1r2r1k1/2p3q1/2p3P1/p7/P1PB4/1P3b2/2Q2PK1/3R4 w - - 0 39",
+     "line": [
+      "Kxf3"
+     ],
+     "ok": [
+      "Kxf3"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kxf3`: king ne khud checking piece capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r7/pp1n1p2/4k3/6p1/2Q1p3/4Bn2/PPP5/2K5 b - - 2 29",
+     "line": [
+      "Kf5"
+     ],
+     "ok": [
+      "Kf5"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kf5`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "1R6/8/8/8/8/5p2/2r4K/4k3 w - - 2 57",
+     "line": [
+      "Kg3"
+     ],
+     "ok": [
+      "Kg3"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kg3`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r2qkb1r/pp1B1p1p/2p2np1/8/3p4/3Q1N2/PPP2PPP/R1B2RK1 b kq - 0 11",
+     "line": [
+      "Qxd7"
+     ],
+     "ok": [
+      "Qxd7"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Qxd7`: checking piece ko capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/8/R4k2/2p2P2/1b4P1/1P6/6r1/1K6 b - - 2 46",
+     "line": [
+      "Ke5"
+     ],
+     "ok": [
+      "Ke5"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Ke5`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/8/6R1/8/8/6k1/1r6/7K b - - 88 150",
+     "line": [
+      "Kf3"
+     ],
+     "ok": [
+      "Kf3",
+      "Kf4",
+      "Kh3",
+      "Kh4"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kf3`: king ko safe square par hataya. Yeh bhi theek thi: `Kf4`, `Kh3`, `Kh4`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "6r1/8/8/8/8/4k1K1/5p2/2R5 w - - 14 65",
+     "line": [
+      "Kh2"
+     ],
+     "ok": [
+      "Kh2"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kh2`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r4Rk1/pp1qb1p1/4b2p/2pnP3/4p3/1N4P1/PP2P1BP/R1BQ2K1 b - - 0 16",
+     "line": [
+      "Rxf8"
+     ],
+     "ok": [
+      "Rxf8",
+      "Bxf8"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Rxf8`: checking piece ko capture kiya. Yeh bhi theek thi: `Bxf8`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "5k2/2R5/r5KP/8/8/8/8/8 w - - 38 146",
+     "line": [
+      "Kg5"
+     ],
+     "ok": [
+      "Kg5",
+      "Kh5",
+      "Kf5",
+      "Kh7"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kg5`: king ko safe square par hataya. Yeh bhi theek thi: `Kh5`, `Kf5`, `Kh7`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "5k1r/3b1p1p/8/p1Q5/1pPP2pP/4r3/4NpPK/q4R2 b - - 1 28",
+     "line": [
+      "Ke8"
+     ],
+     "ok": [
+      "Ke8"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Ke8`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/1p6/pP2kr1p/8/2p1R3/6P1/2P3K1/8 b - - 0 49",
+     "line": [
+      "Kd5"
+     ],
+     "ok": [
+      "Kd5"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kd5`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "7k/8/5R1P/8/3K2r1/8/8/8 w - - 10 132",
+     "line": [
+      "Ke3"
+     ],
+     "ok": [
+      "Ke3",
+      "Kd3",
+      "Kc5",
+      "Ke5",
+      "Kc3",
+      "Kd5"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Ke3`: king ko safe square par hataya. Yeh bhi theek thi: `Kd3`, `Kc5`, `Ke5`, `Kc3`, `Kd5`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r2qr1k1/1p3ppp/1pnp1n2/5b2/p1PP4/P1N3P1/1P3PBP/R1BQK2R w K - 2 15",
+     "line": [
+      "Be3"
+     ],
+     "ok": [
+      "Be3"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Be3`: beech mein piece rakh kar check block kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "2kr2r1/1b1ppp1Q/8/2pPq3/1B6/8/PP3PPP/R3KBNR w KQ - 1 17",
+     "line": [
+      "Ne2"
+     ],
+     "ok": [
+      "Ne2",
+      "Be2"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Ne2`: beech mein piece rakh kar check block kiya. Yeh bhi theek thi: `Be2`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "1b6/8/p4Pk1/1p1p1P2/1P1B2K1/2P5/8/8 b - - 0 50",
+     "line": [
+      "Kf7"
+     ],
+     "ok": [
+      "Kf7"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kf7`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "3k4/4b2n/4Pp2/3R1P1p/1P2r2P/P5P1/2PK4/8 b - - 2 45",
+     "line": [
+      "Ke8"
+     ],
+     "ok": [
+      "Ke8"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Ke8`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "rnb1kb1r/1pN2pp1/p2p4/4p1p1/4P1n1/5N2/PqPQ1PPP/2R1KB1R b Kkq - 1 12",
+     "line": [
+      "Kd8"
+     ],
+     "ok": [
+      "Kd8",
+      "Ke7"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kd8`: king ko safe square par hataya. Yeh bhi theek thi: `Ke7`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/2p4p/2p2k2/4Np1p/4NP2/4R1K1/1r5r/8 b - - 17 58",
+     "line": [
+      "fxe4"
+     ],
+     "ok": [
+      "fxe4"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `fxe4`: checking piece ko capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "3r4/1prPp2p/6p1/P3kp2/2P2P2/8/3R2P1/1R3K2 b - - 0 41",
+     "line": [
+      "Kxf4"
+     ],
+     "ok": [
+      "Kxf4"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kxf4`: king ne khud checking piece capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/5r2/3n4/3p4/6B1/1bP3K1/pk2P3/2B3R1 b - - 5 96",
+     "line": [
+      "Kxc3"
+     ],
+     "ok": [
+      "Kxc3",
+      "Kc2"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kxc3`: king ne khud checking piece capture kiya. Yeh bhi theek thi: `Kc2`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "5k2/pp3pp1/6Np/4b3/8/1B5b/PP6/6K1 b - - 3 37",
+     "line": [
+      "fxg6"
+     ],
+     "ok": [
+      "fxg6"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `fxg6`: checking piece ko capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r2qk2r/2p2ppp/p1Q5/2bpPb2/4n3/5N1P/PP3PP1/R1BR2K1 b kq - 0 15",
+     "line": [
+      "Bd7"
+     ],
+     "ok": [
+      "Bd7",
+      "Kf8"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Bd7`: beech mein piece rakh kar check block kiya. Yeh bhi theek thi: `Kf8`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "rnbq1rk1/ppp1nppp/4p3/3pP3/3P4/P1b2N2/1PP2PPP/R1BQKB1R w KQ - 0 7",
+     "line": [
+      "bxc3"
+     ],
+     "ok": [
+      "bxc3"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `bxc3`: checking piece ko capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r1b1q1k1/pp3rpp/2n2P2/2p5/1bBP4/1QN5/PP3PPP/R1B1K2R w KQ - 1 12",
+     "line": [
+      "Kd1"
+     ],
+     "ok": [
+      "Kd1",
+      "Kf1"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kd1`: king ko safe square par hataya. Yeh bhi theek thi: `Kf1`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "2Q5/8/3r4/2k4P/p5pK/5pP1/4rp2/1b6 b - - 1 55",
+     "line": [
+      "Rc6"
+     ],
+     "ok": [
+      "Rc6"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Rc6`: beech mein piece rakh kar check block kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r2qkb1r/pp3ppp/2B1p3/2Ppnb2/7N/8/PPPN1PPP/R1BQK2R b KQkq - 0 10",
+     "line": [
+      "Nxc6"
+     ],
+     "ok": [
+      "Nxc6"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Nxc6`: checking piece ko capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "3R4/1R6/2p5/p6q/Pk2p1r1/1B6/2P1KP2/8 b - - 11 52",
+     "line": [
+      "Kc5"
+     ],
+     "ok": [
+      "Kc5"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kc5`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "6n1/1p3kPp/7B/p1p1Np1r/P2b4/1Pp4P/5P2/4RK2 b - - 3 33",
+     "line": [
+      "Bxe5"
+     ],
+     "ok": [
+      "Bxe5"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Bxe5`: checking piece ko capture kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "3r1Br1/6k1/1pp2pp1/p1Pn1q1p/P2PR3/5N2/1PQ2PPP/4R1K1 b - - 0 30",
+     "line": [
+      "Rgxf8"
+     ],
+     "ok": [
+      "Rgxf8",
+      "Rdxf8"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Rgxf8`: checking piece ko capture kiya. Yeh bhi theek thi: `Rdxf8`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "r4r2/pp2npkp/2p3p1/2q1B3/3p4/6Q1/PPP2PPP/4R1K1 b - - 5 22",
+     "line": [
+      "Kg8"
+     ],
+     "ok": [
+      "Kg8"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kg8`: king ko safe square par hataya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/1Q3ppk/4p2p/1p5N/5P2/4n2P/2r4K/8 w - - 6 55",
+     "line": [
+      "Kg1"
+     ],
+     "ok": [
+      "Kg1",
+      "Kh1"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Kg1`: king ko safe square par hataya. Yeh bhi theek thi: `Kh1`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "8/8/2r5/7P/Q2k2pK/5pP1/4r3/1b3q2 b - - 0 58",
+     "line": [
+      "Rc4"
+     ],
+     "ok": [
+      "Rc4",
+      "Kd5"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Rc4`: beech mein piece rakh kar check block kiya. Yeh bhi theek thi: `Kd5`. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    },
+    {
+     "t": "move",
+     "fen": "1r3r2/2k1p2Q/b1pp1p2/p5q1/P3P3/1BN2P2/1PP2P2/R3RK2 w - - 2 29",
+     "line": [
+      "Nb5+"
+     ],
+     "ok": [
+      "Nb5+"
+     ],
+     "q": "**Check!** Bachne ke 3 tareeke: king hatao, block karo, ya checking piece capture karo. **Sabse achha** tareeka chuno.",
+     "why": "Best: `Nb5+`: beech mein piece rakh kar check block kiya. Har tareeka barabar nahi hota: dekho kahan piece ya king zyada safe hai.",
+     "hint": "Teeno tareeke dekho, phir woh chuno jisme kuch nahi khota."
+    }
+   ],
+   "qn": 10
+  }
+ },
+ {
+  "ch": "l2b",
+  "after": "l2.safety",
+  "needs": [
+   "l1.values",
+   "l2.safety"
+  ],
+  "les": {
+   "id": "tr_df2",
+   "key": "tr.df2",
+   "title": "🏋 Drill: khatre mein piece bachao (defence 2)",
+   "sub": "Attack mein aaye piece ko bina kuch khoye bachao",
+   "yaad": [
+    "Har chaal se pehle: mera koi piece attack mein to nahi?",
+    "Bachao: hatao, protect karo, ya beech mein rok do."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Drill: piece bachao",
+     "md": "Opponent ne tumhare ek piece par attack kiya hai. Use **bachao**, aur dhyan rakho ki bachate waqt koi **doosra piece latak** na jaaye.\n\nTest: 10 naye positions, **80%**."
+    },
+    {
+     "t": "move",
+     "fen": "1rb2rk1/1p1p2pp/p3p3/8/2P1N3/1R2qBP1/P1Q1P1K1/8 b - - 2 27",
+     "line": [
+      "Qd4"
+     ],
+     "ok": [
+      "Qd4"
+     ],
+     "q": "Tumhara **queen** `e3` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qd4`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "rnb2rk1/pp3p1p/6p1/q2pPp1P/1b4Q1/1Pp2N2/P1P2PP1/R1B1K2R w KQ - 0 13",
+     "line": [
+      "Qh4"
+     ],
+     "ok": [
+      "Qh4"
+     ],
+     "q": "Tumhara **queen** `g4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qh4`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r2r3k/1p3p1p/p3bNpP/2PP1n2/8/PQ1K1B1q/1B6/3R4 w - - 6 35",
+     "line": [
+      "Kc2"
+     ],
+     "ok": [
+      "Kc2"
+     ],
+     "q": "Tumhara **bishop** `f3` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Kc2`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "rnbqkb1r/pp2pppp/5n2/3p4/3p1B2/2N1P3/PPP2PPP/R2QKBNR w KQkq - 0 5",
+     "line": [
+      "Nb5"
+     ],
+     "ok": [
+      "Nb5",
+      "exd4"
+     ],
+     "q": "Tumhara **knight** `c3` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Nb5`. Yeh bhi theek: `exd4`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r3kb1r/ppn5/2p1pp1n/3p1qBp/3P4/P1N2N2/1PPQ1PPP/R4RK1 w kq - 0 14",
+     "line": [
+      "Bf4"
+     ],
+     "ok": [
+      "Bf4",
+      "Bh4",
+      "Qf4",
+      "Be3"
+     ],
+     "q": "Tumhara **bishop** `g5` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Bf4`. Yeh bhi theek: `Bh4`, `Qf4`, `Be3`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "rn1q1r1k/1b1pb1pp/pP2p3/2pP3n/3B1p2/1QN2NP1/PP2PPBP/R4RK1 w - c6 0 15",
+     "line": [
+      "Be5"
+     ],
+     "ok": [
+      "Be5"
+     ],
+     "q": "Tumhara **bishop** `d4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Be5`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "3r2k1/5p2/2p5/4p1P1/2b1P3/bq2BPKp/5N2/2R1Q3 w - - 0 37",
+     "line": [
+      "Rb1"
+     ],
+     "ok": [
+      "Rb1",
+      "Ra1",
+      "Rc3"
+     ],
+     "q": "Tumhara **rook** `c1` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Rb1`. Yeh bhi theek: `Ra1`, `Rc3`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r4rk1/2nbppbp/p2p1np1/q2P2N1/2B1P3/7P/N1QB1PP1/3R1RK1 b - - 3 19",
+     "line": [
+      "Qc5"
+     ],
+     "ok": [
+      "Qc5",
+      "Qa3",
+      "Qa4",
+      "Qb6"
+     ],
+     "q": "Tumhara **queen** `a5` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qc5`. Yeh bhi theek: `Qa3`, `Qa4`, `Qb6`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "3q1rk1/2P2pp1/8/p3R3/3r1np1/8/1PRN1PPP/3Q2K1 b - - 0 27",
+     "line": [
+      "Qd7"
+     ],
+     "ok": [
+      "Qd7"
+     ],
+     "q": "Tumhara **queen** `d8` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qd7`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r1b2rk1/1p3ppp/p7/2P1Pn1P/3PN3/P2Q4/4B1q1/2B1K2R w K - 1 25",
+     "line": [
+      "Bf3"
+     ],
+     "ok": [
+      "Bf3"
+     ],
+     "q": "Tumhara **rook** `h1` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Bf3`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    }
+   ],
+   "pool": [
+    {
+     "t": "move",
+     "fen": "rnbqkbnr/ppp2p2/4p1p1/3pP2p/3P2Q1/2N2N2/PPP2PPP/R1B1KB1R w KQkq h6 0 7",
+     "line": [
+      "Qg3"
+     ],
+     "ok": [
+      "Qg3",
+      "Qf4",
+      "Qh3"
+     ],
+     "q": "Tumhara **queen** `g4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qg3`. Yeh bhi theek: `Qf4`, `Qh3`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "1k1r4/pp2b1r1/2b5/2qNN3/3pp3/7Q/P1P2PPP/1R3RK1 w - - 2 23",
+     "line": [
+      "Nb4"
+     ],
+     "ok": [
+      "Nb4",
+      "Nxc6+"
+     ],
+     "q": "Tumhara **knight** `d5` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Nb4`. Yeh bhi theek: `Nxc6+`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "2rk4/pRpb2p1/1b6/1n2P3/8/6P1/2r1NPBP/2BK3R b - - 6 33",
+     "line": [
+      "Bf5"
+     ],
+     "ok": [
+      "Bf5",
+      "Rc5",
+      "Rc4",
+      "Ra2"
+     ],
+     "q": "Tumhara **rook** `c2` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Bf5`. Yeh bhi theek: `Rc5`, `Rc4`, `Ra2`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r3kbnr/1p1b1ppp/4p3/3pP3/1P3q2/1Q1B4/1B1N1PPP/R4RK1 b kq - 0 15",
+     "line": [
+      "Rd8"
+     ],
+     "ok": [
+      "Rd8",
+      "Rb8",
+      "Rc8"
+     ],
+     "q": "Tumhara **rook** `a8` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Rd8`. Yeh bhi theek: `Rb8`, `Rc8`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r1q1k2r/pp2bpp1/1np2nbp/8/3PpB2/2N2NPP/PPQ2PB1/4RRK1 w kq - 0 16",
+     "line": [
+      "Ne5"
+     ],
+     "ok": [
+      "Ne5",
+      "Nh4"
+     ],
+     "q": "Tumhara **knight** `f3` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Ne5`. Yeh bhi theek: `Nh4`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r2qkbnr/1pp3pp/p1p1bp2/4N3/4P3/8/PPPP1PPP/RNBQ1RK1 w kq - 0 7",
+     "line": [
+      "Nf3"
+     ],
+     "ok": [
+      "Nf3",
+      "Nd3",
+      "Ng4"
+     ],
+     "q": "Tumhara **knight** `e5` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Nf3`. Yeh bhi theek: `Nd3`, `Ng4`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r4k1r/3b1p1p/8/p7/1pPPQ1pP/4p3/4NpPK/q1B2R2 b - - 1 25",
+     "line": [
+      "Re8"
+     ],
+     "ok": [
+      "Re8"
+     ],
+     "q": "Tumhara **rook** `a8` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Re8`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r7/pp3qpk/1bnP2rp/5b2/5Q1N/2P5/PP3PPP/RNB1R1K1 b - - 8 20",
+     "line": [
+      "Rf6"
+     ],
+     "ok": [
+      "Rf6"
+     ],
+     "q": "Tumhara **rook** `g6` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Rf6`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r5k1/1p3pb1/1n1P2p1/5b2/5N2/3Q3p/5P2/6RK w - - 2 35",
+     "line": [
+      "Qb3"
+     ],
+     "ok": [
+      "Qb3"
+     ],
+     "q": "Tumhara **queen** `d3` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qb3`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r4rk1/2nbppbp/p2p1np1/3P2N1/qBB1P3/7P/N1Q2PP1/3R1RK1 w - - 6 21",
+     "line": [
+      "Bb3"
+     ],
+     "ok": [
+      "Bb3"
+     ],
+     "q": "Tumhara **queen** `c2` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Bb3`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r3r1k1/pp1n1pbp/2pBn1p1/6q1/2P1N3/5B2/PPQ2PPP/3R1RK1 b - - 3 18",
+     "line": [
+      "Qf5"
+     ],
+     "ok": [
+      "Qf5",
+      "Qa5",
+      "Qh6",
+      "Qd8"
+     ],
+     "q": "Tumhara **queen** `g5` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qf5`. Yeh bhi theek: `Qa5`, `Qh6`, `Qd8`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "3r2k1/2p2ppp/q1p5/5r2/8/6PP/3RQN1K/2N5 b - - 1 34",
+     "line": [
+      "Qc8"
+     ],
+     "ok": [
+      "Qc8",
+      "Qa8"
+     ],
+     "q": "Tumhara **queen** `a6` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qc8`. Yeh bhi theek: `Qa8`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r1b2rk1/ppp1b1pp/4p3/4q3/2PpB3/PQ4P1/1P1P3P/R1B1K2R w KQ - 0 17",
+     "line": [
+      "d3"
+     ],
+     "ok": [
+      "d3",
+      "Qc2"
+     ],
+     "q": "Tumhara **bishop** `e4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `d3`. Yeh bhi theek: `Qc2`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r2qkb1r/pRp3p1/2n1b2p/5p2/Q3p3/2P3P1/P2PPPBP/2B1K1NR b Kkq - 1 11",
+     "line": [
+      "Qd7"
+     ],
+     "ok": [
+      "Qd7",
+      "Bd7",
+      "Qd6"
+     ],
+     "q": "Tumhara **knight** `c6` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qd7`. Yeh bhi theek: `Bd7`, `Qd6`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "rnb1kb1r/pp2pppp/5n2/4q3/1p6/P1N5/2PPNPPP/1RBQKB1R w Kkq - 0 8",
+     "line": [
+      "d4"
+     ],
+     "ok": [
+      "d4",
+      "axb4"
+     ],
+     "q": "Tumhara **knight** `c3` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `d4`. Yeh bhi theek: `axb4`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "rnb1kb1r/pp2pppp/5n2/2PpB3/8/4PN2/PqP2PPP/RN1QKB1R b KQkq - 1 6",
+     "line": [
+      "Qb4+"
+     ],
+     "ok": [
+      "Qb4+"
+     ],
+     "q": "Tumhara **queen** `b2` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qb4+`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "4k2r/1p2pp1p/p2Pb1pb/P7/7r/4BN2/1PP2PP1/R4RK1 b k - 3 24",
+     "line": [
+      "Rh5"
+     ],
+     "ok": [
+      "Rh5"
+     ],
+     "q": "Tumhara **rook** `h4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Rh5`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "1rb4k/2q2p1p/2p1p1pn/2bpP1N1/3N2P1/2Q3BP/1r3P2/R3R2K b - - 1 39",
+     "line": [
+      "Be7"
+     ],
+     "ok": [
+      "Be7"
+     ],
+     "q": "Tumhara **bishop** `c5` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Be7`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "3r2k1/p2q2p1/1p2b2p/2bnP3/2N1B3/6P1/PP2PQ1P/R1B3K1 w - - 1 22",
+     "line": [
+      "e3"
+     ],
+     "ok": [
+      "e3"
+     ],
+     "q": "Tumhara **queen** `f2` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `e3`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "8/8/1B6/3nn1r1/PP2p3/5k2/2P3pQ/2K5 w - - 16 45",
+     "line": [
+      "Bg1"
+     ],
+     "ok": [
+      "Bg1",
+      "Qh3+"
+     ],
+     "q": "Tumhara **bishop** `b6` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Bg1`. Yeh bhi theek: `Qh3+`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r1bqkb1r/ppp2ppp/2np4/1B6/3pn3/5N2/PPP2PPP/RNBQR1K1 b kq - 1 7",
+     "line": [
+      "d5"
+     ],
+     "ok": [
+      "d5"
+     ],
+     "q": "Tumhara **knight** `e4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `d5`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "6k1/1p3pbp/6p1/p2qP3/5P2/1P4PP/P1Qr1B1K/5R2 w - - 9 37",
+     "line": [
+      "Qc4"
+     ],
+     "ok": [
+      "Qc4",
+      "Qc8+"
+     ],
+     "q": "Tumhara **queen** `c2` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qc4`. Yeh bhi theek: `Qc8+`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "8/bb3pk1/4r1p1/N2r3p/P1N2P2/4P2P/6PK/2RR4 b - - 0 40",
+     "line": [
+      "Re4"
+     ],
+     "ok": [
+      "Re4",
+      "Ba8",
+      "Rxd1",
+      "Bc6"
+     ],
+     "q": "Tumhara **bishop** `b7` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Re4`. Yeh bhi theek: `Ba8`, `Rxd1`, `Bc6`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "3r2k1/5pp1/p2p3p/Pp2p3/2NpP2q/2rP4/R4PP1/1Q2R1K1 w - - 2 29",
+     "line": [
+      "Nb6"
+     ],
+     "ok": [
+      "Nb6"
+     ],
+     "q": "Tumhara **knight** `c4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Nb6`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r4k1r/p4p2/1bqpb1p1/2nN3p/4P3/P1QB1N1P/5PP1/2R3KR b - - 1 23",
+     "line": [
+      "Rh6"
+     ],
+     "ok": [
+      "Rh6",
+      "Rg8",
+      "Rh7"
+     ],
+     "q": "Tumhara **rook** `h8` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Rh6`. Yeh bhi theek: `Rg8`, `Rh7`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r2q1rk1/ppb2ppp/2p2n2/2n2b2/PP1p4/R2P1NP1/3BPPBP/1N1QR1K1 b - b3 0 14",
+     "line": [
+      "Ne6"
+     ],
+     "ok": [
+      "Ne6",
+      "Na6"
+     ],
+     "q": "Tumhara **knight** `c5` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Ne6`. Yeh bhi theek: `Na6`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r1b2k1r/pp1nqp2/2pp2p1/b2P3p/1P2P3/P1NB1N1P/5PP1/2RQ2KR b - b3 0 17",
+     "line": [
+      "Bb6"
+     ],
+     "ok": [
+      "Bb6",
+      "Bd8"
+     ],
+     "q": "Tumhara **bishop** `a5` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Bb6`. Yeh bhi theek: `Bd8`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r4rk1/1pp2ppp/p1n2b2/4p3/1P1q4/1B1b3P/P3RPPN/RNBQ2K1 w - - 0 15",
+     "line": [
+      "Bb2"
+     ],
+     "ok": [
+      "Bb2"
+     ],
+     "q": "Tumhara **rook** `a1` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Bb2`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r2qk2r/1p2bp2/n1p2np1/p2p1p2/N2P1B2/P2Q2Pp/1PP1PPBP/3R1RK1 w kq - 0 14",
+     "line": [
+      "Bh1"
+     ],
+     "ok": [
+      "Bh1",
+      "Bf3"
+     ],
+     "q": "Tumhara **bishop** `g2` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Bh1`. Yeh bhi theek: `Bf3`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "8/8/1B6/3nnkrQ/PP2p3/8/2P3p1/2K5 w - - 12 43",
+     "line": [
+      "Qh7+"
+     ],
+     "ok": [
+      "Qh7+",
+      "Qh3+"
+     ],
+     "q": "Tumhara **queen** `h5` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qh7+`. Yeh bhi theek: `Qh3+`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r2r3k/1p3p1p/p3bNpP/2PPqn2/8/PQ3B2/5K2/2BR4 w - - 0 32",
+     "line": [
+      "Bb2"
+     ],
+     "ok": [
+      "Bb2"
+     ],
+     "q": "Tumhara **knight** `f6` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Bb2`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "8/p5p1/P3k2p/1P6/K3p3/1R4P1/8/1r6 b - - 1 43",
+     "line": [
+      "Ra1+"
+     ],
+     "ok": [
+      "Ra1+",
+      "Rf1",
+      "Rd1",
+      "Rc1"
+     ],
+     "q": "Tumhara **rook** `b1` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Ra1+`. Yeh bhi theek: `Rf1`, `Rd1`, `Rc1`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r2qk2r/pRpb2p1/1b5p/5P2/Q2n4/2P3P1/P3PPBP/2B1K1NR w Kkq - 1 15",
+     "line": [
+      "Qd1"
+     ],
+     "ok": [
+      "Qd1"
+     ],
+     "q": "Tumhara **queen** `a4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qd1`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r4rk1/ppp2pbp/n5N1/8/2P1n3/2N5/PP3PPP/R1BR2K1 b - - 0 13",
+     "line": [
+      "Rfe8"
+     ],
+     "ok": [
+      "Rfe8",
+      "fxg6",
+      "hxg6"
+     ],
+     "q": "Tumhara **knight** `e4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Rfe8`. Yeh bhi theek: `fxg6`, `hxg6`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r1bqk2r/pppp1ppp/1bn2n2/4P3/2BP4/5N2/PP3PPP/RNBQK2R b KQkq - 0 7",
+     "line": [
+      "d5"
+     ],
+     "ok": [
+      "d5",
+      "Ne4"
+     ],
+     "q": "Tumhara **knight** `f6` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `d5`. Yeh bhi theek: `Ne4`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "3r1rk1/pp3pb1/2p1bnp1/q3p1P1/4P3/2N1B3/PPQ1BP2/R3K1R1 b - - 2 20",
+     "line": [
+      "Nd7"
+     ],
+     "ok": [
+      "Nd7",
+      "Nh7",
+      "Ne8",
+      "Nh5"
+     ],
+     "q": "Tumhara **knight** `f6` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Nd7`. Yeh bhi theek: `Nh7`, `Ne8`, `Nh5`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "rnbqkb1r/pp1ppppp/5n2/2p1P3/8/2P5/PP1P1PPP/RNBQKBNR b KQkq - 0 3",
+     "line": [
+      "Nd5"
+     ],
+     "ok": [
+      "Nd5",
+      "Ng8"
+     ],
+     "q": "Tumhara **knight** `f6` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Nd5`. Yeh bhi theek: `Ng8`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "3r2k1/5p2/2p5/4p1P1/2b1P3/bq2BPKp/5N2/1R2Q3 b - - 1 37",
+     "line": [
+      "Bb4"
+     ],
+     "ok": [
+      "Bb4",
+      "Bb2",
+      "Qa2"
+     ],
+     "q": "Tumhara **queen** `b3` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Bb4`. Yeh bhi theek: `Bb2`, `Qa2`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r2qk2r/4bp2/n1p2np1/pp1p1p2/N2P1B2/P2Q1BPp/1PP1PP1P/3R1RK1 w kq b6 0 15",
+     "line": [
+      "Nc3"
+     ],
+     "ok": [
+      "Nc3",
+      "Nc5"
+     ],
+     "q": "Tumhara **knight** `a4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Nc3`. Yeh bhi theek: `Nc5`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "2r5/1p3k2/p1r1ppnp/3p2pP/2nP4/P1PR2B1/2P2PP1/1N2R1K1 b - - 0 28",
+     "line": [
+      "Ne7"
+     ],
+     "ok": [
+      "Ne7",
+      "Nf8",
+      "Nf4"
+     ],
+     "q": "Tumhara **knight** `g6` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Ne7`. Yeh bhi theek: `Nf8`, `Nf4`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "7r/1r3k2/1p4p1/p1pNp3/P1PN2p1/7P/1P6/3R3K w - - 0 33",
+     "line": [
+      "Rf1+"
+     ],
+     "ok": [
+      "Rf1+"
+     ],
+     "q": "Tumhara **knight** `d4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Rf1+`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "2kr4/1p1b1p2/p3pb1Q/4n3/1P6/PB2R3/1qP2PPP/4R1K1 b - - 0 24",
+     "line": [
+      "Ng4"
+     ],
+     "ok": [
+      "Ng4"
+     ],
+     "q": "Tumhara **bishop** `f6` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Ng4`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r2qkb1r/1pp1n2p/p1p1bp2/4P3/3P2p1/5N2/PPP2PPP/RNBQ1RK1 w kq - 0 10",
+     "line": [
+      "Re1"
+     ],
+     "ok": [
+      "Re1",
+      "exf6"
+     ],
+     "q": "Tumhara **knight** `f3` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Re1`. Yeh bhi theek: `exf6`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "8/p5p1/P3k2p/1P6/K3p3/3R2P1/8/1r6 w - - 0 43",
+     "line": [
+      "Rb3"
+     ],
+     "ok": [
+      "Rb3",
+      "Rd8"
+     ],
+     "q": "Tumhara **rook** `d3` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Rb3`. Yeh bhi theek: `Rd8`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r2r2k1/pp3pp1/1q3n1p/5b2/2Pbp3/1QN2BB1/PP3PPP/R4RK1 w - - 0 17",
+     "line": [
+      "Be2"
+     ],
+     "ok": [
+      "Be2",
+      "Bd1"
+     ],
+     "q": "Tumhara **bishop** `f3` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Be2`. Yeh bhi theek: `Bd1`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "8/8/8/1k6/R7/6p1/p5K1/r7 w - - 8 111",
+     "line": [
+      "Ra7"
+     ],
+     "ok": [
+      "Ra7",
+      "Ra8",
+      "Ra3"
+     ],
+     "q": "Tumhara **rook** `a4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Ra7`. Yeh bhi theek: `Ra8`, `Ra3`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r4rk1/pbqp1ppp/1pnb1n2/1Pp1p3/2P5/P2P2P1/3BPPBP/RN1QNRK1 b - - 0 11",
+     "line": [
+      "Ne7"
+     ],
+     "ok": [
+      "Ne7",
+      "Nd8",
+      "Nd4"
+     ],
+     "q": "Tumhara **knight** `c6` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Ne7`. Yeh bhi theek: `Nd8`, `Nd4`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r1bqkb1r/1ppp1ppp/p1n2n2/4P3/B2p4/5N2/PPP2PPP/RNBQK2R b KQkq - 0 6",
+     "line": [
+      "Ne4"
+     ],
+     "ok": [
+      "Ne4"
+     ],
+     "q": "Tumhara **knight** `f6` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Ne4`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "3r2k1/pp3pp1/3q3p/2b5/P2N4/1bP4P/1P3QP1/R2R2K1 w - - 1 27",
+     "line": [
+      "Rd2"
+     ],
+     "ok": [
+      "Rd2",
+      "Rd3"
+     ],
+     "q": "Tumhara **rook** `d1` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Rd2`. Yeh bhi theek: `Rd3`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "8/1rp4p/2p2k2/2N1Np1p/3r1P2/8/2R3K1/8 b - - 7 53",
+     "line": [
+      "Rb1"
+     ],
+     "ok": [
+      "Rb1",
+      "Rb5",
+      "Rbb4",
+      "Rxf4"
+     ],
+     "q": "Tumhara **rook** `b7` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Rb1`. Yeh bhi theek: `Rb5`, `Rbb4`, `Rxf4`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "rnbqk2r/pp3p2/4p1p1/4P2p/P3p3/2p2N1Q/2P2PPP/R1B1K2R w KQkq - 0 13",
+     "line": [
+      "Ng5"
+     ],
+     "ok": [
+      "Ng5"
+     ],
+     "q": "Tumhara **knight** `f3` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Ng5`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "3N2k1/7p/3P2p1/4pp2/1P6/p1r3PP/5n1K/3R1B2 w - - 0 38",
+     "line": [
+      "Ra1"
+     ],
+     "ok": [
+      "Ra1",
+      "Rd5",
+      "Rb1"
+     ],
+     "q": "Tumhara **rook** `d1` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Ra1`. Yeh bhi theek: `Rd5`, `Rb1`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "rnbqkb1r/1p3ppp/p2p1n2/4p3/3NP3/2N5/PPP1BPPP/R1BQK2R w KQkq e6 0 7",
+     "line": [
+      "Nb3"
+     ],
+     "ok": [
+      "Nb3",
+      "Nf3",
+      "Nf5"
+     ],
+     "q": "Tumhara **knight** `d4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Nb3`. Yeh bhi theek: `Nf3`, `Nf5`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "2r3k1/R1P2pp1/8/4q3/2Rr2p1/8/1P1NnPPP/5Q1K w - - 9 33",
+     "line": [
+      "Qd1"
+     ],
+     "ok": [
+      "Qd1",
+      "Rxd4",
+      "Qa1"
+     ],
+     "q": "Tumhara **knight** `d2` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qd1`. Yeh bhi theek: `Rxd4`, `Qa1`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r1b1kbnr/1p3ppp/4p3/3pP3/1p1q4/PQ1B4/1B3PPP/RN2K2R b KQkq - 1 12",
+     "line": [
+      "Qb6"
+     ],
+     "ok": [
+      "Qb6",
+      "Qh4"
+     ],
+     "q": "Tumhara **queen** `d4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qb6`. Yeh bhi theek: `Qh4`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "1n6/1P6/8/2k5/5NPb/3K1N2/8/8 b - - 4 59",
+     "line": [
+      "Bf6"
+     ],
+     "ok": [
+      "Bf6"
+     ],
+     "q": "Tumhara **bishop** `h4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Bf6`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "3r2k1/1p3pp1/1p1p1q1p/3B1b2/2P5/P1N3P1/1Pn2Q1P/4R1K1 w - - 2 29",
+     "line": [
+      "Rf1"
+     ],
+     "ok": [
+      "Rf1"
+     ],
+     "q": "Tumhara **rook** `e1` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Rf1`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "r3k2r/2pn1ppp/2p1b3/p1p1Pq2/2PQ3B/5N1P/PP3PP1/3R1RK1 w kq - 0 19",
+     "line": [
+      "Qc3"
+     ],
+     "ok": [
+      "Qc3",
+      "Qe3",
+      "Qd2"
+     ],
+     "q": "Tumhara **queen** `d4` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Qc3`. Yeh bhi theek: `Qe3`, `Qd2`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "5rk1/1p1r1pp1/1b5p/pPp1pN2/2P5/P3P1P1/5P1P/3R1RK1 b - - 2 26",
+     "line": [
+      "Rfd8"
+     ],
+     "ok": [
+      "Rfd8"
+     ],
+     "q": "Tumhara **rook** `d7` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Rfd8`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    },
+    {
+     "t": "move",
+     "fen": "2kr4/pp2bpr1/2b2N2/2q1p3/3pP3/3Q1N2/P1P2PPP/1R3RK1 w - - 1 20",
+     "line": [
+      "Nh5"
+     ],
+     "ok": [
+      "Nh5"
+     ],
+     "q": "Tumhara **knight** `f6` par khatre mein hai. Use bachao (aur kuch aur mat khona).",
+     "why": "Best: `Nh5`. Chaal ke baad dekho: naya square safe hai? Koi doosra piece latak to nahi gaya?",
+     "hint": "Piece ko safe square par le jao, ya use protect karo."
+    }
+   ],
+   "qn": 10
+  }
+ },
+ {
+  "ch": "l3b",
+  "after": "l3.golden",
+  "needs": [
+   "l3.golden",
+   "l2.safety"
+  ],
+  "les": {
+   "id": "tr_df3",
+   "key": "tr.df3",
+   "title": "🏋 Drill: only-move defence (1000-1500)",
+   "sub": "Lichess ke defence puzzles: sirf ek chaal bachaati hai",
+   "yaad": [
+    "Pehle opponent ki dhamki dekho.",
+    "Forcing jawab: check, capture, threat."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Drill: sirf ek chaal bachaati hai",
+     "md": "In puzzles mein tum **muskil mein** ho. Sirf ek chaal sab kuch bachaati hai. Golden rule yaad karo: pehle **opponent ki dhamki** dekho, phir forcing chaalein.\n\nPractice set: 10 puzzles, **7** sahi chahiye. Har set mein naye puzzles. Test bhi aisa hi ek set."
+    },
+    {
+     "t": "pzset",
+     "mode": "set",
+     "lo": 900,
+     "hi": 1500,
+     "th": [
+      "defence"
+     ],
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence"
+     ],
+     "n": 10,
+     "need": 7,
+     "q": "**Defence set**: 10 puzzles, kam se kam **7** sahi."
+    }
+   ],
+   "pool": [
+    {
+     "t": "pzset",
+     "mode": "set",
+     "lo": 900,
+     "hi": 1500,
+     "th": [
+      "defence"
+     ],
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence"
+     ],
+     "n": 10,
+     "need": 7,
+     "q": "**Test set**: 10 defence puzzles, **7** sahi chahiye."
+    },
+    {
+     "t": "pzset",
+     "mode": "set",
+     "lo": 900,
+     "hi": 1500,
+     "th": [
+      "defence"
+     ],
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence"
+     ],
+     "n": 10,
+     "need": 7,
+     "q": "**Test set**: 10 defence puzzles, **7** sahi chahiye."
+    },
+    {
+     "t": "pzset",
+     "mode": "set",
+     "lo": 900,
+     "hi": 1500,
+     "th": [
+      "defence"
+     ],
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence"
+     ],
+     "n": 10,
+     "need": 7,
+     "q": "**Test set**: 10 defence puzzles, **7** sahi chahiye."
+    }
+   ],
+   "qn": 1
+  }
+ },
+ {
+  "ch": "l6b",
+  "after": "l6.prophy",
+  "needs": [
+   "l6.prophy",
+   "tr.df3"
+  ],
+  "les": {
+   "id": "tr_df4",
+   "key": "tr.df4",
+   "title": "🏋 Drill: defence aur quiet moves (1500-2100)",
+   "sub": "Prophylaxis ke baad: shaant bachaav wali chaalein",
+   "yaad": [
+    "Opponent ka plan pehle socho (prophylaxis).",
+    "Sabse achhi defence aksar shaant chaal hoti hai."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Drill: mushkil defence",
+     "md": "Ab rating 1500-2100 ke defence aur **quiet move** puzzles. Prophylaxis ka sawaal pucho: **opponent kya karna chahta hai?** Phir use roko.\n\nSet: 10 puzzles, **7** sahi."
+    },
+    {
+     "t": "pzset",
+     "mode": "set",
+     "lo": 1500,
+     "hi": 2100,
+     "th": [
+      "defence",
+      "quiet"
+     ],
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion"
+     ],
+     "n": 10,
+     "need": 7,
+     "q": "**Defence set**: 10 puzzles, **7** sahi."
+    }
+   ],
+   "pool": [
+    {
+     "t": "pzset",
+     "mode": "set",
+     "lo": 1500,
+     "hi": 2100,
+     "th": [
+      "defence",
+      "quiet"
+     ],
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion"
+     ],
+     "n": 10,
+     "need": 7,
+     "q": "**Test set**: 10 puzzles, **7** sahi."
+    },
+    {
+     "t": "pzset",
+     "mode": "set",
+     "lo": 1500,
+     "hi": 2100,
+     "th": [
+      "defence",
+      "quiet"
+     ],
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion"
+     ],
+     "n": 10,
+     "need": 7,
+     "q": "**Test set**: 10 puzzles, **7** sahi."
+    },
+    {
+     "t": "pzset",
+     "mode": "set",
+     "lo": 1500,
+     "hi": 2100,
+     "th": [
+      "defence",
+      "quiet"
+     ],
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion"
+     ],
+     "n": 10,
+     "need": 7,
+     "q": "**Test set**: 10 puzzles, **7** sahi."
+    }
+   ],
+   "qn": 1
+  }
+ },
+ {
+  "ch": "l7",
+  "after": "l7.calc2",
+  "needs": [
+   "l7.calc2",
+   "tr.df4"
+  ],
+  "les": {
+   "id": "tr_df5",
+   "key": "tr.df5",
+   "title": "🏋 Drill: GM level defence (2100-2800)",
+   "sub": "Sabse mushkil only-move positions",
+   "yaad": [
+    "Lamba calculation: opponent ka sabse achha jawab.",
+    "Haar maan ke mat baitho: sirf ek chaal bhi kaafi hai."
+   ],
+   "steps": [
+    {
+     "t": "info",
+     "h": "Drill: GM defence",
+     "md": "Ab 2100 se 2800 rating ke defence puzzles. Deep calculation lagao: har candidate ke baad **opponent ka sabse achha jawab** socho.\n\nSet: 10 puzzles, **6** sahi."
+    },
+    {
+     "t": "pzset",
+     "mode": "set",
+     "lo": 2100,
+     "hi": 2800,
+     "th": [
+      "defence"
+     ],
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion",
+      "sac",
+      "endgame",
+      "minorend",
+      "pawnend",
+      "rookend"
+     ],
+     "n": 10,
+     "need": 6,
+     "q": "**GM defence set**: 10 puzzles, **6** sahi."
+    }
+   ],
+   "pool": [
+    {
+     "t": "pzset",
+     "mode": "set",
+     "lo": 2100,
+     "hi": 2800,
+     "th": [
+      "defence"
+     ],
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion",
+      "sac",
+      "endgame",
+      "minorend",
+      "pawnend",
+      "rookend"
+     ],
+     "n": 10,
+     "need": 6,
+     "q": "**Test set**: 10 puzzles, **6** sahi."
+    },
+    {
+     "t": "pzset",
+     "mode": "set",
+     "lo": 2100,
+     "hi": 2800,
+     "th": [
+      "defence"
+     ],
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion",
+      "sac",
+      "endgame",
+      "minorend",
+      "pawnend",
+      "rookend"
+     ],
+     "n": 10,
+     "need": 6,
+     "q": "**Test set**: 10 puzzles, **6** sahi."
+    },
+    {
+     "t": "pzset",
+     "mode": "set",
+     "lo": 2100,
+     "hi": 2800,
+     "th": [
+      "defence"
+     ],
+     "al": [
+      "hanging",
+      "mate1",
+      "kingatk",
+      "trapped",
+      "fork",
+      "pin",
+      "skewer",
+      "disc",
+      "dblchk",
+      "remdef",
+      "deflect",
+      "attract",
+      "xray",
+      "interfere",
+      "clearance",
+      "quiet",
+      "defence",
+      "long",
+      "zwischen",
+      "mate2",
+      "backrank",
+      "matepat",
+      "mate3",
+      "pawnadv",
+      "promotion",
+      "sac",
+      "endgame",
+      "minorend",
+      "pawnend",
+      "rookend"
+     ],
+     "n": 10,
+     "need": 6,
+     "q": "**Test set**: 10 puzzles, **6** sahi."
+    }
+   ],
+   "qn": 1
+  }
+ }
+]
