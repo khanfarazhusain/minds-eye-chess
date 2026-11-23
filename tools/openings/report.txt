@@ -1,0 +1,88 @@
+l2b.opmap #1 (quiz): after e4 e5  ECO: C20 King's Pawn Game
+l2b.opmap #2 (quiz): after e4 c5  ECO: B20 Sicilian Defense
+l2b.opmap #3 (quiz): after d4 d5  ECO: D00 Queen's Pawn Game
+l2b.opmap #4 (quiz): after d4 Nf6 c4 g6  ECO: E60 Indian Defense: West Indian Defense
+l2b.opmap #5 (quiz): after c4  ECO: A10 English Opening
+l2b.opmap #8 (info): after e4 e5 f4  ECO: C30 King's Gambit
+l2b.op1open #0 (info): after e4 e5 Nf3 Nc6  ECO: C44 King's Knight Opening: Normal Variation
+l2b.op1open #1 (line): Italian Game (Giuoco Piano)  ECO: C54 Italian Game: Classical Variation, Giuoco Pianissimo (10 ply)  [12 ply]
+l2b.op1open #2 (move): after e4 e5 Nf3 Nc6 Bc4  ECO: C50 Italian Game
+l2b.op1open #3 (line): Ruy Lopez (Spanish)  ECO: C90 Ruy Lopez: Closed (16 ply)  [16 ply]
+l2b.op1open #4 (quiz): after e4 e5 Nf3 Nc6 Bb5  ECO: C60 Ruy Lopez
+l2b.op1open #5 (line): Scotch Game  ECO: C45 Scotch Game: Classical Variation (8 ply)  [12 ply]
+l2b.op1open #6 (line): Petrov Defence: copy mat karo!  ECO: C42 Petrov's Defense: Classical Attack, Mason-Showalter Variation (12 ply)  [14 ply]
+l2b.op1open #7 (move): after e4 e5 Nf3 Nf6 Nxe5 Nxe4  ECO: C42 Petrov's Defense: Damiano Variation
+l2b.op1open #8 (line): Philidor Defence  ECO: C41 Philidor Defense: Lion Variation (8 ply)  [12 ply]
+l2b.op1open #9 (line): Vienna Game  ECO: C29 Vienna Game: Vienna Gambit, Breyer Variation (10 ply)  [10 ply]
+l2b.op1open #10 (line): King's Gambit: accept aur develop  ECO: C36 King's Gambit Accepted: Abbazia Defense (8 ply)  [10 ply]
+l2b.op1open #11 (move): after e4 e5 Nf3 f5 Nxe5 Qf6  ECO: C40 Latvian Gambit
+l2b.op1open #12 (move): after e4 e5 Nf3 d5 exd5 e4  ECO: C40 Elephant Gambit: Paulsen Countergambit
+l2b.op1open #13 (quiz): after e4 e5 Nf3 Nc6 d4  ECO: C44 Scotch Game
+l2b.op1sic #0 (info): after e4 c5  ECO: B20 Sicilian Defense
+l2b.op1sic #1 (line): Open Sicilian: Najdorf  ECO: B90 Sicilian Defense: Najdorf Variation (10 ply)  [10 ply]
+l2b.op1sic #2 (move): after e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6  ECO: B54 Sicilian Defense: Modern Variations, Main Line
+l2b.op1sic #3 (line): Dragon  ECO: B76 Sicilian Defense: Dragon Variation, Yugoslav Attack (16 ply)  [16 ply]
+l2b.op1sic #4 (line): Sveshnikov  ECO: B33 Sicilian Defense: Lasker-Pelikan Variation (10 ply)  [12 ply]
+l2b.op1sic #5 (line): Taimanov  ECO: B47 Sicilian Defense: Taimanov Variation, Bastrikov Variation (10 ply)  [10 ply]
+l2b.op1sic #6 (line): Alapin (2.c3) aur Black ka jawab  ECO: B22 Sicilian Defense: Alapin Variation, Smith-Morra Declined (8 ply)  [12 ply]
+l2b.op1sic #7 (line): Smith-Morra Gambit: lena aur bachna  ECO: B21 Sicilian Defense: Smith-Morra Gambit Accepted, Scheveningen Formation (12 ply)  [14 ply]
+l2b.op1sic #8 (line): Smith-Morra: mana karna (decline)  ECO: B21 Sicilian Defense: Smith-Morra Gambit Declined, Alapin Formation (6 ply)  [8 ply]
+l2b.op1sic #9 (line): Grand Prix Attack  ECO: B23 Sicilian Defense: Grand Prix Attack (5 ply)  [10 ply]
+l2b.op1sic #10 (quiz): after e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 a6  ECO: B90 Sicilian Defense: Najdorf Variation
+l2b.op1semi #0 (line): French Defence: Advance Variation  ECO: C02 French Defense: Advance Variation, Paulsen Attack (9 ply)  [10 ply]
+l2b.op1semi #1 (move): after e4 e6 d4 d5 e5  ECO: C02 French Defense: Advance Variation
+l2b.op1semi #2 (line): French: Winawer aur Tarrasch (pehli chaalein)  ECO: C18 French Defense: Winawer Variation, Advance Variation (12 ply)  [12 ply]
+l2b.op1semi #3 (info): after e4 e6 d4 d5 e5  ECO: C02 French Defense: Advance Variation
+l2b.op1semi #4 (line): Caro-Kann: Classical  ECO: B15 Caro-Kann Defense (6 ply)  [14 ply]
+l2b.op1semi #5 (line): Caro-Kann: Advance  ECO: B12 Caro-Kann Defense: Advance Variation, Short Variation (7 ply)  [10 ply]
+l2b.op1semi #6 (move): after e4 c6 d4 d5 Nc3 dxe4 Nxe4 Nd7 Qe2 Ngf6  ECO: B15 Caro-Kann Defense
+l2b.op1semi #7 (line): Scandinavian: queen ko tempo se bhagao  ECO: B01 Scandinavian Defense: Classical Variation (10 ply)  [14 ply]
+l2b.op1semi #8 (line): Pirc aur Modern  ECO: B07 Pirc Defense (6 ply)  [12 ply]
+l2b.op1semi #9 (line): Alekhine Defence  ECO: B05 Alekhine Defense: Modern Variation, Main Line (8 ply)  [12 ply]
+l2b.op1semi #11 (quiz): after e4 d5 exd5 Qxd5  ECO: B01 Scandinavian Defense: Mieses-Kotrč Variation
+l2b.op1qg #0 (info): after d4 d5 c4  ECO: D06 Queen's Gambit
+l2b.op1qg #1 (line): Queen's Gambit Declined  ECO: D53 Queen's Gambit Declined (8 ply)  [12 ply]
+l2b.op1qg #2 (line): Queen's Gambit Accepted  ECO: D27 Queen's Gambit Accepted: Classical Defense, Main Line (12 ply)  [12 ply]
+l2b.op1qg #3 (move): after d4 d5 c4 dxc4 e3 b5 a4 c6 axb5 cxb5  ECO: D20 Queen's Gambit Accepted: Old Variation
+l2b.op1qg #4 (line): Slav Defence  ECO: D18 Slav Defense: Czech Variation, Classical System (11 ply)  [14 ply]
+l2b.op1qg #5 (line): Albin Countergambit  ECO: D09 Queen's Gambit Declined: Albin Countergambit, Fianchetto Variation, Be6 Line (10 ply)  [11 ply]
+l2b.op1qg #6 (move): after d4 d5 c4 e5 dxe5 d4 e3 Bb4+ Bd2 dxe3 Bxb4 exf2+ Ke2  ECO: D08 Queen's Gambit Declined: Albin Countergambit, Lasker Trap
+l2b.op1qg #8 (quiz): after d4 d5 c4 c6  ECO: D10 Slav Defense
+l2b.op1ind #0 (line): King's Indian Defence  ECO: E97 King's Indian Defense: Orthodox Variation, Aronin-Taimanov Defense (14 ply)  [16 ply]
+l2b.op1ind #1 (line): Grunfeld  ECO: D85 Grünfeld Defense: Exchange Variation, Modern Exchange Variation (14 ply)  [14 ply]
+l2b.op1ind #2 (line): Nimzo-Indian  ECO: E53 Nimzo-Indian Defense: Normal Variation, Gligoric System (12 ply)  [13 ply]
+l2b.op1ind #3 (line): Queen's Indian  ECO: E15 Queen's Indian Defense: Fianchetto Variation, Check Variation, Intermezzo Line (12 ply)  [12 ply]
+l2b.op1ind #4 (line): Benoni  ECO: A65 Benoni Defense: King's Pawn Line (11 ply)  [14 ply]
+l2b.op1ind #5 (line): Dutch Defence (Leningrad)  ECO: A81 Dutch Defense: Semi-Leningrad Variation (6 ply)  [12 ply]
+l2b.op1ind #6 (line): English Opening  ECO: A22 English Opening: King's English Variation, Two Knights Variation, Reversed Dragon (6 ply)  [12 ply]
+l2b.op1ind #7 (line): Reti Opening  ECO: A09 Réti Opening (3 ply)  [10 ply]
+l2b.op1ind #8 (line): King's Indian Attack (KIA)  ECO: C00 French Defense: King's Indian Attack (3 ply)  [14 ply]
+l2b.op1ind #9 (move): after f4 e5 fxe5 d6 exd6 Bxd6 Nc3  ECO: A02 Bird Opening: From's Gambit
+l2b.op1ind #10 (quiz): after d4 Nf6 c4 e6 Nc3 Bb4  ECO: E20 Nimzo-Indian Defense
+l2b.op1ind #11 (quiz): after d4 Nf6 c4 g6 Nc3 d5  ECO: D80 Grünfeld Defense
+l2b.op1gam #1 (move): after e4 e5 f4 Bc5 fxe5  ECO: C30 King's Gambit Declined: Classical Variation
+l2b.op1gam #2 (line): Evans Gambit: lo aur wapas do  ECO: C52 Italian Game: Evans Gambit, Bronstein Defense (12 ply)  [12 ply]
+l2b.op1gam #3 (line): Danish Gambit: pawn wapas do  ECO: C21 Danish Gambit Declined: Sörensen Defense (6 ply)  [12 ply]
+l2b.op1gam #4 (line): Blackmar-Diemer Gambit  ECO: D00 Blackmar-Diemer Gambit Accepted: Euwe Defense (10 ply)  [12 ply]
+l2b.op1gam #5 (move): after d4 Nf6 c4 e5 dxe5 Ng4 Bf4 Nc6 Nf3 Bb4+ Nbd2 Qe7 a3 Ngxe5 axb4  ECO: A52 Indian Defense: Budapest Gambit Accepted, Main Line, Rubinstein Variation
+l2b.op1gam #6 (move): after d4 e5 dxe5 Nc6 Nf3 Qe7 Bf4 Qb4+ Bd2 Qxb2 Bc3 Bb4 Qd2 Bxc3 Qxc3  ECO: A40 Englund Gambit: Main Line
+l2b.op1gam #7 (move): after e4 e5 Nf3 Nf6 Nxe5 Nc6 Nxc6 dxc6  ECO: C42 Petrov's Defense: Stafford Gambit Accepted
+l2b.op1gam #9 (quiz): after d4 d5 e4  ECO: D00 Blackmar-Diemer Gambit
+l2b.op1sys #0 (line): London System  ECO: D00 Queen's Pawn Game: Accelerated London System (3 ply)  [15 ply]
+l2b.op1sys #1 (line): London ke khilaaf: ...c5 aur ...Qb6  ECO: D00 Queen's Pawn Game: Accelerated London System, Steinitz Countergambit (4 ply)  [12 ply]
+l2b.op1sys #2 (move): after d4 d5 Bf4 Nf6 e3 c5 c3 Nc6 Nd2  ECO: D00 Queen's Pawn Game: Accelerated London System
+l2b.op1sys #3 (line): Colle System  ECO: D05 Queen's Pawn Game: Colle System (7 ply)  [17 ply]
+l2b.op1sys #4 (line): Stonewall Attack  ECO: D00 Queen's Pawn Game: Stonewall Attack (5 ply)  [14 ply]
+l2b.op1sys #5 (line): Trompowsky (2.Bg5)  ECO: A45 Trompowsky Attack (3 ply)  [10 ply]
+l2b.op1mix #0 (quiz): after e4 e5 Nf3 Nc6 Bb5  ECO: C60 Ruy Lopez
+l2b.op1mix #1 (quiz): after e4 e6 d4 d5  ECO: C00 French Defense
+l2b.op1mix #2 (quiz): after d4 d5 Bf4  ECO: D00 Queen's Pawn Game: Accelerated London System
+l2b.op1mix #3 (quiz): after e4 c5 d4 cxd4 c3  ECO: B21 Sicilian Defense: Smith-Morra Gambit
+l2b.op1mix #4 (move): after e4 e5 Nf3 Nc6  ECO: C44 King's Knight Opening: Normal Variation
+l2b.op1mix #5 (move): after d4 d5 c4  ECO: D06 Queen's Gambit
+l2b.op1mix #6 (move): after e4 c6 d4 d5 e5  ECO: B12 Caro-Kann Defense: Advance Variation
+l2b.op1mix #7 (move): after e4 d5 exd5 Qxd5  ECO: B01 Scandinavian Defense: Mieses-Kotrč Variation
+l2b.op1mix #8 (move): after d4 Nf6 c4 g6 Nc3 Bg7  ECO: E61 King's Indian Defense
+l2b.op1mix #9 (move): after e4 e5 Nf3 Nf6 Nxe5  ECO: C42 Petrov's Defense
+l2b.op1mix #10 (move): after e4 e6 d4 d5 e5  ECO: C02 French Defense: Advance Variation
+l2b.op1mix #11 (move): after e4 c5 Nf3 d6 d4 cxd4  ECO: B50 Sicilian Defense

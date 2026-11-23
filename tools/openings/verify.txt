@@ -1,0 +1,47 @@
+depth 18, 300 moves checked
+l2b.op1open #1 Italian Game (Giuoco Piano): end eval (White) 17
+l2b.op1open #3 Ruy Lopez (Spanish): end eval (White) 41
+l2b.op1open #5 Scotch Game: end eval (White) 27
+l2b.op1open #6 Petrov Defence: copy mat karo!: end eval (White) 35
+l2b.op1open #8 Philidor Defence: end eval (White) 49
+l2b.op1open #9 Vienna Game: end eval (White) -17
+l2b.op1open #10 King's Gambit: accept aur develop: end eval (White) -24
+l2b.op1sic #1 Open Sicilian: Najdorf: end eval (White) 32
+l2b.op1sic #3 Dragon: end eval (White) 53
+l2b.op1sic #4 Sveshnikov: end eval (White) 28
+l2b.op1sic #5 Taimanov: end eval (White) 53
+l2b.op1sic #6 Alapin (2.c3) aur Black ka jawab: end eval (White) 3
+l2b.op1sic #7 Smith-Morra Gambit: lena aur bachna: end eval (White) 0
+l2b.op1sic #8 Smith-Morra: mana karna (decline): end eval (White) 8
+l2b.op1sic #9 Grand Prix Attack: end eval (White) -31
+l2b.op1semi #0 French Defence: Advance Variation: end eval (White) 18
+l2b.op1semi #2 French: Winawer aur Tarrasch (pehli chaalein): end eval (White) 55
+l2b.op1semi #4 Caro-Kann: Classical: end eval (White) 25
+l2b.op1semi #5 Caro-Kann: Advance: end eval (White) 20
+l2b.op1semi #7 Scandinavian: queen ko tempo se bhagao: end eval (White) 67
+l2b.op1semi #8 Pirc aur Modern: end eval (White) 36
+l2b.op1semi #9 Alekhine Defence: end eval (White) 92
+l2b.op1qg #1 Queen's Gambit Declined: end eval (White) 25
+l2b.op1qg #2 Queen's Gambit Accepted: end eval (White) 38
+l2b.op1qg #4 Slav Defence: end eval (White) 36
+l2b.op1qg #5 Albin Countergambit: end eval (White) 105
+l2b.op1ind #0 King's Indian Defence: end eval (White) 73
+l2b.op1ind #1 Grunfeld: end eval (White) 39
+l2b.op1ind #2 Nimzo-Indian: end eval (White) 12
+l2b.op1ind #3 Queen's Indian: end eval (White) 30
+l2b.op1ind #4 Benoni: end eval (White) 67
+l2b.op1ind #5 Dutch Defence (Leningrad): end eval (White) 62
+l2b.op1ind #6 English Opening: end eval (White) 21
+l2b.op1ind #7 Reti Opening: end eval (White) 42
+l2b.op1ind #8 King's Indian Attack (KIA): end eval (White) -8
+l2b.op1gam #2 Evans Gambit: lo aur wapas do: end eval (White) -13
+l2b.op1gam #3 Danish Gambit: pawn wapas do: end eval (White) -6
+l2b.op1gam #4 Blackmar-Diemer Gambit: end eval (White) -46
+l2b.op1sys #0 London System: end eval (White) 13
+l2b.op1sys #1 London ke khilaaf: ...c5 aur ...Qb6: end eval (White) 21
+l2b.op1sys #3 Colle System: end eval (White) 3
+l2b.op1sys #4 Stonewall Attack: end eval (White) -88
+l2b.op1sys #5 Trompowsky (2.Bg5): end eval (White) 55
+
+PROBLEMS:
+l2b.op1gam #7 Stafford Gambit: Black ne pawn diya aur tricks ki taiyaari ki. White ki seed: answer e5 loses 83cp (best d2d3, 167)

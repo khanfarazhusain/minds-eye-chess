@@ -301,6 +301,7 @@ details.cgr:not(.card){background:var(--surface);border:1px solid var(--line);bo
 <button onclick="location.href='road.html'"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 3.5L16 11H5"/></svg></span>Road</button>
 <button onclick="location.href='index.html'"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 4l8.5 6.5V20a1 1 0 0 1-1 1h-5v-6h-5v6h-5a1 1 0 0 1-1-1z"/></svg></span>Home</button>
 </div></nav>
+<script src="packs/opl.js?v=55d93231"></script>
 <script>
 'use strict';
 const FILES='abcdefgh';
@@ -437,6 +438,8 @@ const COURSE=[{"id":"l1","title":"Shuruaat 1: board aur pieces","sub":"Chess ki 
 /* placement test: 2 test questions per level (levels 1-7) */
 const PLACEMENT=["l1.T.3","l1.T.5","l1b.T.0","l1b.T.3","l2.T.0","l2.T.2","l2b.T.0","l2b.T.3","l3.T.0","l3.T.4","l3b.T.0","l3b.T.2","lm.T.0","lm.T.3","l6.T.0","l6.T.2","l6b.T.0","l6b.T.2","l4.T.0","l4.T.3","l4b.T.0","l4b.T.2","l5.T.0","l5.T.3","l5b.T.0","l5b.T.2","l7.T.0","l7.T.2"];
 if(typeof module!=='undefined')module.exports={COURSE,PLACEMENT};
+/* Openings Ladder (packs/opl.js): har opening beginner se mastery, existing levels ke end mein lessons */
+if(typeof OPL!=='undefined')OPL.merge(COURSE);
 
 const LINES={};
 /* ================= course app ================= */
