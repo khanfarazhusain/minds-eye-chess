@@ -598,7 +598,7 @@ body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/"><i class="b64">64</i><span class="bname">Road to 3000<small>64 Squares</small></span></a><div class="chips"><span class="chip" id="xp">0 XP</span><span class="chip" id="streak">🔥 0</span></div></div></header>
-<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-23 06:54 UTC</p></main>
+<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-23 07:09 UTC</p></main>
 <nav class="tabs"><div class="wrap">
 <button data-go="#/" class="on"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="m9 14.5 2 2 4-4"/></svg></span>Today</button>
 <button data-go="#/run/extra"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>Practice</button>
@@ -606,7 +606,7 @@ body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!
 <button onclick="location.href='course.html'"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 12 4l9.5 4.5L12 13z"/><path d="M6.5 10.5V16c0 1.4 2.5 3 5.5 3s5.5-1.6 5.5-3v-5.5"/><path d="M21.5 8.5v5"/></svg></span>Course</button>
 <button onclick="location.href='index.html'"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 4l8.5 6.5V20a1 1 0 0 1-1 1h-5v-6h-5v6h-5a1 1 0 0 1-1-1z"/></svg></span>Home</button>
 </div></nav>
-<script src="packs/opl.js?v=26eb32ca"></script>
+<script src="packs/opl.js?v=384189c4"></script>
 <script>
 'use strict';
 const FILES='abcdefgh';
@@ -2188,7 +2188,7 @@ function gameRow(g){const r=g.res==='win'?'🟢':g.res==='loss'?'🔴':'⚪';con
 async function vGames(){const app=$('#app');const L=gameList();
   app.innerHTML=`<div class="stack"><button class="btn small backbtn" data-go="#/">‹ Today's Work</button><h1>My Games</h1>
    <p class="muted small">Aapke rated Lichess games (rapid/classical). Har game ki chaalein PGN mein save hoti hain. Review mein Stockfish batata hai kahan galti hui aur kya khelna chahiye tha (sirf game ke baad). Galtiyan "Mistake Flashcards" mein wapas aati rahengi.</p>
-   <div class="row"><button class="btn" data-act="gsync">Lichess se laao</button>${L.length?'<button class="btn" data-act="gpgn">Download PGN</button>':''}</div><p class="small" id="gmsg"></p>
+   <div class="row"><button class="btn" data-act="gsync">Lichess se laao</button>${L.length?'<button class="btn" data-act="gpgn">Download PGN</button>':''}${L.length?'<button class="btn" data-go="#/opcheck">Opening check</button>':''}</div><p class="small" id="gmsg"></p>
    ${L.length?`<div class="qlist">${L.map(gameRow).join('')}</div>`:'<div class="card">Abhi koi game nahi. Lichess par rated rapid game khelo, phir "Lichess se laao" dabao.</div>'}</div>`}
 function vGame(id){const app=$('#app');let g=GAMES[id];
   if(!g){app.innerHTML='<p class="muted">Game la raha hoon…</p>';fetchGame(id).then(()=>{if(location.hash==='#/game/'+id)vGame(id)}).catch(e=>{app.innerHTML=`<div class="card">${esc(e.message)}</div><button class="btn block" data-go="#/games">‹ My Games</button>`});return}
@@ -2649,6 +2649,64 @@ document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g
 touchDay();srsInit();save();lichReturn().then(u=>{if(u){SP.user=u;SP.lich=null;ssave()}
   /* Lichess Play page se connect kiya ho to bhi yahan username le lo */
   else if(lichToken()&&LT.user&&lcs(SP.user)!==lcs(LT.user)){SP.user=LT.user;SP.lich=null;ssave()}route()});
+
+/* ================= Opening check: apni games se repertoire update =================
+   My Games (Lichess) ke har game mein dekho opening book (packs/openings.json + Openings Ladder ki lines) kahan khatam hua,
+   kisne pehle book chhoda, aur wahan engine ki best chaal kya thi. Galat/kamzor chaal = spaced review card (Course aur Road dono).
+   Road ka route() badle bina: route ko wrap karta hai (#/opcheck). */
+const OPC_K='mindseye.road.opcheck';
+let OPC=(()=>{try{return JSON.parse(localStorage.getItem(OPC_K)||'{}')||{}}catch(e){return{}}})();
+const opcSave=()=>{try{localStorage.setItem(OPC_K,JSON.stringify(OPC))}catch(e){}};
+let OPB=null;
+const opN=x=>String(x||'').replace(/[+#!?]/g,'');
+async function opBook(){if(OPB)return OPB;const r=await fetch('packs/openings.json');if(!r.ok)throw new Error('Opening book load nahi hui');const E=await r.json();
+  const pre=new Map();const node=k=>{let o=pre.get(k);if(!o){o={n:new Set(),name:''};pre.set(k,o)}return o};
+  for(const[code,name,line]of E){const m=line.split(' ').map(opN);for(let i=0;i<=m.length;i++){const o=node(m.slice(0,i).join(' '));if(i<m.length)o.n.add(m[i]);else o.name=code+' '+name}}
+  const rep=new Map();
+  if(typeof OPL!=='undefined')OPL.data.levels.forEach(lv=>lv.lessons.forEach(l=>l.steps.forEach(s=>{if(s.t!=='line'||s.game||s.fen)return;const m=s.moves.split(' ').map(opN);
+    for(let i=0;i<m.length;i++){const k=m.slice(0,i).join(' ');if(!rep.has(k))rep.set(k,new Set());rep.get(k).add(m[i])}})));
+  return OPB={pre,rep}}
+/* game ka opening scan: pehli chaal jo book/repertoire mein nahi */
+function opScan(g,B){if(g.fen)return null;const mv=g.moves.split(' ').filter(Boolean).map(opN);let name='',i=0;
+  for(;i<mv.length;i++){const k=mv.slice(0,i).join(' ');const o=B.pre.get(k),r=B.rep.get(k);if(o&&o.name)name=o.name;if(!((o&&o.n.has(mv[i]))||(r&&r.has(mv[i]))))break}
+  if(i>=mv.length||i<2)return null;const k=mv.slice(0,i).join(' ');const side=i%2===0?'w':'b';
+  return{ply:i,who:side===g.color?'me':'opp',name:name||'Opening',move:g.moves.split(' ').filter(Boolean)[i],book:[...new Set([...(B.rep.get(k)||[]),...((B.pre.get(k)||{n:new Set()}).n)])].slice(0,6)}}
+/* engine: user ki chaal (book chhodne wali, ya opponent ke chhodne ke baad ka jawab) best se kitni kamzor */
+async function opJudge(g,sc){const sans=g.moves.split(' ').filter(Boolean);const ply=sc.who==='me'?sc.ply:sc.ply+1;if(ply>=sans.length)return null;
+  let st=parseFEN(START_FEN);for(let i=0;i<ply;i++){const m=findMove(st,sans[i]);if(!m)return null;st=make(st,m)}
+  const um=findMove(st,sans[ply]);if(!um)return null;await engStart();const r=await engEval(fenOf(st),900,2);const best=r.lines[0];if(!best)return null;
+  const bestSan=sanLine(st,best.pv,1)[0];const before=wpLine(best);let drop=0;
+  if(best.pv[0]!==uciOf(um)){const r2=await engEval(fenOf(make(st,um)),600,1);drop=Math.max(0,before-(100-wpLine(r2.lines[0])))}
+  return{ply,fen:fenOf(st),mine:sanOf(st,um),best:bestSan,ev:evTxt(best,st.w),drop:Math.round(drop),line:sanLine(st,best.pv,5).join(' ')}}
+function opCard(g,sc,j){const ok=[j.best];const st=parseFEN(j.fen);(sc.who==='me'?sc.book:[]).forEach(b=>{if(findMove(st,b)&&!ok.includes(b))ok.push(b)});
+  return{t:'move',id:'opc.'+g.id+'.'+j.ply,fen:j.fen,line:[j.best],ok:sc.who==='me'?ok:undefined,
+    q:`**Apni game** vs ${g.opp} (${sc.name}): yahan tumne \`${j.mine}\` khela. Behtar chaal?`,
+    why:`Engine: \`${j.best}\` (${j.ev}). Line: ${j.line}.${sc.who==='me'&&sc.book.length?' Book/repertoire mein: '+sc.book.map(x=>'`'+x+'`').join(', ')+'.':''} Ise apne repertoire mein jodo.`}}
+async function opRun(onProg){const B=await opBook();const L=gameList().filter(g=>!g.fen&&g.moves).slice(0,30);let n=0,cards=0;
+  for(const g of L){n++;onProg&&onProg(n,L.length);if(OPC[g.id])continue;const sc=opScan(g,B);if(!sc){OPC[g.id]={none:1};continue}
+    let j=null;try{j=await opJudge(g,sc)}catch(e){}
+    OPC[g.id]={sc,j,at:Date.now()};if(j&&j.drop>=8){const c=opCard(g,sc,j);if(window.reviewAdd){window.reviewAdd(c,false);cards++}OPC[g.id].card=c.id}opcSave()}
+  return cards}
+function opRow(g){const R=OPC[g.id];if(!R||R.none||!R.sc)return'';const sc=R.sc,j=R.j;const mn=Math.floor(sc.ply/2)+1;
+  const who=sc.who==='me'?'Tumne book chhoda':'Opponent ne book chhoda';
+  const verdict=!j?'':j.drop>=8?`<span class="chip" style="background:#FCE8E6">Behtar tha: <b>${esc(j.best)}</b></span>`:`<span class="chip">Achha khela ✓</span>`;
+  return`<div class="card stack" style="gap:4px"><div class="row" style="justify-content:space-between"><b>vs ${esc(g.opp)}</b><span class="small muted">${esc(RESN[g.res]||g.res)} · ${g.color==='w'?'White':'Black'}</span></div>
+   <div class="small">${esc(sc.name)}</div><div class="small muted">${who}: move ${mn} par <b>${esc(sc.move)}</b>${sc.book.length?' (book: '+sc.book.map(esc).join(', ')+')':''}${j?` · tumhari chaal: ${esc(j.mine)}`:''}</div>
+   <div class="row">${verdict}<button class="btn small" data-go="#/game/${esc(g.id)}">Game dekho</button></div></div>`}
+function opSummary(){const by={};for(const g of gameList()){const R=OPC[g.id];if(!R||!R.sc)continue;const k=(g.color==='w'?'White: ':'Black: ')+R.sc.name.replace(/^[A-E]\d\d /,'').replace(/:.*$/,'');
+  const o=by[k]=by[k]||{n:0,w:0,d:0,l:0,bad:0,ply:0};o.n++;o[g.res==='win'?'w':g.res==='draw'?'d':'l']++;if(R.j&&R.j.drop>=8)o.bad++;o.ply+=R.sc.ply}
+  const rows=Object.entries(by).sort((a,b)=>b[1].n-a[1].n);if(!rows.length)return'';
+  return`<div class="card"><b>Repertoire report</b><table class="small" style="width:100%;margin-top:6px"><tr><th align="left">Opening</th><th>Games</th><th>+/=/-</th><th>Book tak</th><th>Galti</th></tr>${rows.map(([k,o])=>`<tr><td>${esc(k)}</td><td align="center">${o.n}</td><td align="center">${o.w}/${o.d}/${o.l}</td><td align="center">${Math.round(o.ply/o.n/2)} chaal</td><td align="center">${o.bad}</td></tr>`).join('')}</table>
+   <p class="small muted" style="margin:6px 0 0">Jahan "Galti" zyada ya "Book tak" kam hai, us opening ka Openings Ladder lesson dobara karo.</p></div>`}
+function vOpCheck(){const app=$('#app');const L=gameList().filter(g=>!g.fen&&g.moves).slice(0,30);
+  app.innerHTML=`<div class="stack"><button class="btn small backbtn" data-go="#/games">‹ My Games</button><h1>Opening check</h1>
+   <p class="muted small">Apni Lichess games se repertoire update karo. Har game mein dekhte hain opening book kahan khatam hui, kisne pehle naya khela, aur wahan engine ki best chaal kya thi. Kamzor chaal ka card spaced review mein jaata hai, taaki agli baar sahi chaal yaad rahe.</p>
+   <div class="row"><button class="btn primary" id="opgo">${L.some(g=>!OPC[g.id])?'Check karo':'Dobara dekho'}</button><button class="btn" data-go="#/games">Lichess se games laao</button></div><p class="small" id="opmsg">${L.length?'':'Pehle My Games mein Lichess se games laao.'}</p>
+   <div id="opsum">${opSummary()}</div><div class="stack" id="oplist">${L.map(opRow).join('')}</div></div>`;
+  $('#opgo').onclick=async()=>{const m=$('#opmsg');$('#opgo').disabled=true;try{const c=await opRun((i,n)=>{m.textContent=`Game ${i}/${n} check ho raha hai…`});m.textContent=c?`${c} naye review card bane. Review mein milenge.`:'Ho gaya. Koi naya card nahi.';
+    $('#opsum').innerHTML=opSummary();$('#oplist').innerHTML=L.map(opRow).join('')}catch(e){m.textContent=e.message}$('#opgo').disabled=false}}
+{const r0=route;route=function(){if((location.hash||'').startsWith('#/opcheck')){closeTutor();navOn();$('#app').innerHTML='';window.scrollTo(0,0);vOpCheck();return}return r0()}}
+window.addEventListener('hashchange',()=>{if((location.hash||'').startsWith('#/opcheck'))route()});
 
 </script>
 <script src="ui.js?v=166"></script>

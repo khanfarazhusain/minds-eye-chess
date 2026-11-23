@@ -300,3 +300,29 @@ op4.mind #1 (line): Erigaisi Arjun (2776) vs Carlsen (2869), TePe Sigeman Chess 
 op4.mind #2 (line): Grandelius (2662) vs Carlsen (2840), TePe Sigeman Chess Tournament 2026  ECO: A50 Indian Defense: Normal Variation (3 ply)  [44 ply]
 op4.mind #5 (play): after d4 Nf6 c4 g6 Nc3 Bg7 e4 d6 Nf3 O-O Be2 e5 O-O Nc6 d5 Ne7 Ne1 Nd7 Be3 f5 f3  ECO: E98 King's Indian Defense: Orthodox Variation, Classical System, Neo-Classical Line
 op4.mind #6 (play): after d4 Nf6 c4 e6 Nc3 Bb4 e3 O-O Bd3 d5 Nf3 c5 O-O Nc6 a3 Bxc3 bxc3 dxc4 Bxc4 Qc7  ECO: E59 Nimzo-Indian Defense: Normal Variation, Bernstein Defense
+op5.repw #0 (line): vs 1...e5: Italian Pianissimo  ECO: C54 Italian Game: Classical Variation, Giuoco Pianissimo (10 ply)  [21 ply]
+op5.repw #1 (line): vs 1...c5: Alapin 2...d5  ECO: B22 Sicilian Defense: Alapin Variation, Barmen Defense, Modern Line (10 ply)  [18 ply]
+op5.repw #2 (line): vs 1...c5: Alapin 2...Nf6  ECO: B22 Sicilian Defense: Alapin Variation, Smith-Morra Declined (8 ply)  [18 ply]
+op5.repw #3 (line): vs 1...e6: French Advance  ECO: C02 French Defense: Advance Variation, Main Line (11 ply)  [14 ply]
+op5.repw #4 (line): vs 1...c6: Caro Advance (Short)  ECO: B12 Caro-Kann Defense: Advance Variation, Short Variation (7 ply)  [18 ply]
+op5.repw #5 (line): vs 1...d5: Scandinavian  ECO: B01 Scandinavian Defense: Main Line, Mieses Variation (8 ply)  [19 ply]
+op5.repw #6 (line): vs 1...d6: 150 Attack  ECO: B07 Pirc Defense: 150 Attack (9 ply)  [18 ply]
+op5.repw #7 (line): vs 1...Nf6: Alekhine Modern  ECO: B05 Alekhine Defense: Modern Variation, Main Line (8 ply)  [12 ply]
+op5.repb #0 (line): vs Italian  ECO: C54 Italian Game: Classical Variation, Giuoco Pianissimo (10 ply)  [22 ply]
+op5.repb #1 (line): vs Ruy Lopez: Berlin  ECO: C67 Ruy Lopez: Berlin Defense, l'Hermet Variation, Berlin Wall Defense (16 ply)  [20 ply]
+op5.repb #2 (line): vs Scotch: Classical  ECO: C45 Scotch Game: Classical Variation (8 ply)  [18 ply]
+op5.repb #3 (line): vs King's Gambit  ECO: C36 King's Gambit Accepted: Abbazia Defense (8 ply)  [17 ply]
+op5.repb #4 (line): vs 1.d4: QGD Tartakower  ECO: D53 Queen's Gambit Declined (8 ply)  [22 ply]
+op5.repb #5 (line): vs London  ECO: D00 Queen's Pawn Game: Accelerated London System, Steinitz Countergambit (4 ply)  [12 ply]
+op5.repb #6 (line): vs 1.c4: Reversed Sicilian  ECO: A29 English Opening: King's English Variation, Four Knights Variation, Fianchetto Line, with Nb6 (12 ply)  [14 ply]
+op5.upd #2 (move): after e4 c6 d4 d5 e5 Bf5 g4  ECO: B12 Caro-Kann Defense: Advance Variation, Bayonet Attack
+op5.upd #3 (move): after e4 e5 Nf3 Nc6 Bb5 Nd4  ECO: C61 Ruy Lopez: Bird Variation
+op5.upd #4 (move): after d4 d5 c4 e6 Nc3 c6 e4  ECO: D31 Semi-Slav Defense: Marshall Gambit
+op5.prep #2 (move): after e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6  ECO: B54 Sicilian Defense: Modern Variations, Main Line
+op5.prep #3 (move): after d4 d5 c4 e6 Nc3 Nf6 Bg5 Nbd7 cxd5 exd5 Nxd5  ECO: D51 Queen's Gambit Declined: Modern Variation, Knight Defense
+op5.prep #4 (move): after e4 e6 d4 d5 e5  ECO: C02 French Defense: Advance Variation
+op5.prep #5 (move): after d4 Nf6 c4 g6 Nc3 Bg7 e4 d6 Nf3 O-O Be2 e5 O-O Nc6 d5  ECO: E97 King's Indian Defense: Orthodox Variation, Aronin-Taimanov Defense
+op5.prep #6 (move): after e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O Be7 Re1 b5 Bb3 O-O c3  ECO: C88 Ruy Lopez: Closed
+op5.prep #7 (move): after d4 d5 Bf4 c5 e3 Nc6 c3  ECO: D00 Queen's Pawn Game: Accelerated London System, Steinitz Countergambit
+op5.prep #8 (move): after e4 c6 d4 d5 Nc3 dxe4 Nxe4 Nd7 Qe2 Ngf6  ECO: B15 Caro-Kann Defense
+op5.prep #9 (move): after d4 Nf6 c4 e6 Nc3 Bb4 e3 O-O Bd3 d5 Nf3 c5 O-O Nc6 a3  ECO: E56 Nimzo-Indian Defense: Normal Variation, Gligoric System, Bernstein Defense

@@ -72,7 +72,7 @@ function gameRow(g){const r=g.res==='win'?'🟢':g.res==='loss'?'🔴':'⚪';con
 async function vGames(){const app=$('#app');const L=gameList();
   app.innerHTML=`<div class="stack"><button class="btn small backbtn" data-go="#/">‹ Today's Work</button><h1>My Games</h1>
    <p class="muted small">Aapke rated Lichess games (rapid/classical). Har game ki chaalein PGN mein save hoti hain. Review mein Stockfish batata hai kahan galti hui aur kya khelna chahiye tha (sirf game ke baad). Galtiyan "Mistake Flashcards" mein wapas aati rahengi.</p>
-   <div class="row"><button class="btn" data-act="gsync">Lichess se laao</button>${L.length?'<button class="btn" data-act="gpgn">Download PGN</button>':''}</div><p class="small" id="gmsg"></p>
+   <div class="row"><button class="btn" data-act="gsync">Lichess se laao</button>${L.length?'<button class="btn" data-act="gpgn">Download PGN</button>':''}${L.length?'<button class="btn" data-go="#/opcheck">Opening check</button>':''}</div><p class="small" id="gmsg"></p>
    ${L.length?`<div class="qlist">${L.map(gameRow).join('')}</div>`:'<div class="card">Abhi koi game nahi. Lichess par rated rapid game khelo, phir "Lichess se laao" dabao.</div>'}</div>`}
 function vGame(id){const app=$('#app');let g=GAMES[id];
   if(!g){app.innerHTML='<p class="muted">Game la raha hoon…</p>';fetchGame(id).then(()=>{if(location.hash==='#/game/'+id)vGame(id)}).catch(e=>{app.innerHTML=`<div class="card">${esc(e.message)}</div><button class="btn block" data-go="#/games">‹ My Games</button>`});return}

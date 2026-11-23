@@ -19,7 +19,7 @@ const playerRoad=playerFns
 const content=fs.readFileSync(path.join(__dirname,'content.js'),'utf8').replace(/if\(typeof module[^\n]*\n/,'');
 const rd=f=>fs.readFileSync(path.join(__dirname,f),'utf8');
 const skin=rd('boardskin.js'),bcss=require('./boardcss.js').boardCSS(fs.readFileSync(path.join(root,'index.html'),'utf8'));
-const app=rd('app.js'),auth=rd('lichess-auth.js'),play=rd('play.js'),games=rd('games.js'),explain=rd('explain.js');
+const app=rd('app.js'),auth=rd('lichess-auth.js'),play=rd('play.js'),games=rd('games.js'),explain=rd('explain.js'),opcheck=rd('opcheck.js');
 const coreLite=core.replace(/const COURSE=\[.*?\];\n/s,'const COURSE=[];\n').replace(/const PLACEMENT=\[.*?\];\n/s,'const PLACEMENT=[];\n').replace(/\/\*TRAIN-DATA\*\/.*?\/\*TRAIN-DATA-END\*\//s,'/*TRAIN-DATA*/[]/*TRAIN-DATA-END*/');
 const SV=d=>`<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 const IC={
@@ -108,6 +108,7 @@ ${auth}
 ${explain}
 ${games}
 ${app}
+${opcheck}
 </script>
 <script src="ui.js?v=${UIV}"></script>
 </body>
