@@ -280,3 +280,23 @@ op3.sicanti #0 (line): Alapin: IQP line deep  ECO: B22 Sicilian Defense: Alapin 
 op3.sicanti #1 (line): Smith-Morra: solid Black setup  ECO: B21 Sicilian Defense: Smith-Morra Gambit Accepted, Scheveningen Formation (12 ply)  [20 ply]
 op3.sicanti #2 (line): Rossolimo: modern main line  ECO: B31 Sicilian Defense: Nyezhmetdinov-Rossolimo Attack, Fianchetto Variation (6 ply)  [20 ply]
 op3.sicanti #3 (move): after e4 c5 Nc3 Nc6 f4 g6 Nf3 Bg7 Bb5  ECO: B23 Sicilian Defense: Grand Prix Attack
+op4.mopen #1 (line): Carlsen (2840) vs Firouzja (2759), 2026 Norway Chess Open  ECO: C77 Ruy Lopez: Morphy Defense, Tarrasch Variation (9 ply)  [44 ply]
+op4.mopen #2 (line): Carlsen (2840) vs So (2754), 2026 Norway Chess Open  ECO: C50 Italian Game: Giuoco Pianissimo, Normal (8 ply)  [44 ply]
+op4.mopen #5 (play): after e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O Be7 Re1 b5 Bb3 d6 c3 O-O h3 Na5 Bc2 c5 d4 Qc7  ECO: C97 Ruy Lopez: Closed, Chigorin Defense
+op4.mopen #6 (play): after e4 e5 Nf3 Nc6 Bc4 Bc5 c3 Nf6 d3 d6 O-O a6 a4 Ba7 Re1 O-O h3 h6 Nbd2 Re8 Nf1  ECO: C54 Italian Game: Classical Variation, Giuoco Pianissimo
+op4.msic #1 (line): Erigaisi Arjun (2751) vs Grandelius (2662), TePe Sigeman Chess Tournament 2026  ECO: B76 Sicilian Defense: Dragon Variation, Yugoslav Attack, Modern Line (17 ply)  [44 ply]
+op4.msic #2 (line): Eljanov (2674) vs Sarana (2664), Hungarian Superleague 2025/26 2026  ECO: B50 Sicilian Defense: Modern Variations (4 ply)  [44 ply]
+op4.msic #5 (play): after e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 a6 Be3 e5 Nb3 Be6 f3 Be7 Qd2 O-O O-O-O Nbd7  ECO: B90 Sicilian Defense: Najdorf Variation, English Attack
+op4.msic #6 (play): after e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 g6 Be3 Bg7 f3 O-O Qd2 Nc6 O-O-O  ECO: B76 Sicilian Defense: Dragon Variation, Yugoslav Attack
+op4.msemi #1 (line): Carlsen (2869) vs Erigaisi Arjun (2776), TePe Sigeman Chess Tournament 2026  ECO: B08 Pirc Defense: Classical Variation, Quiet System (9 ply)  [44 ply]
+op4.msemi #2 (line): Keymer (2776) vs Aravindh (2700), Prague Chess Festival  ECO: B00 Pirc Defense (4 ply)  [44 ply]
+op4.msemi #5 (play): after e4 e6 d4 d5 e5 c5 c3 Nc6 Nf3 Qb6 a3 c4 Nbd2 Na5  ECO: C02 French Defense: Advance Variation, Main Line
+op4.msemi #6 (play): after e4 c6 d4 d5 Nc3 dxe4 Nxe4 Bf5 Ng3 Bg6 h4 h6 Nf3 Nd7 h5 Bh7 Bd3 Bxd3 Qxd3 e6 Bd2 Ngf6 O-O-O  ECO: B15 Caro-Kann Defense
+op4.mqg #1 (line): Erigaisi Arjun (2776) vs Carlsen (2869), TePe Sigeman Chess Tournament 2026  ECO: D35 Queen's Gambit Declined: Exchange Variation, Positional Variation (9 ply)  [44 ply]
+op4.mqg #2 (line): Carlsen (2840) vs Erdogmus (2708), TePe Sigeman Chess Tournament 2026  ECO: D02 Queen's Pawn Game: Krause Variation (4 ply)  [44 ply]
+op4.mqg #5 (play): after d4 d5 c4 e6 Nc3 Nf6 cxd5 exd5 Bg5 Be7 e3 c6 Qc2 Nbd7 Bd3 O-O Nge2 Re8 O-O Nf8  ECO: D35 Queen's Gambit Declined: Normal Defense
+op4.mqg #6 (play): after d4 d5 c4 c6 Nf3 Nf6 Nc3 dxc4 a4 Bf5 e3 e6 Bxc4 Bb4 O-O Nbd7 Qe2  ECO: D19 Slav Defense: Czech Variation, Dutch Variation
+op4.mind #1 (line): Erigaisi Arjun (2776) vs Carlsen (2869), TePe Sigeman Chess Tournament 2026  ECO: E20 Nimzo-Indian Defense: Romanishin Variation (7 ply)  [44 ply]
+op4.mind #2 (line): Grandelius (2662) vs Carlsen (2840), TePe Sigeman Chess Tournament 2026  ECO: A50 Indian Defense: Normal Variation (3 ply)  [44 ply]
+op4.mind #5 (play): after d4 Nf6 c4 g6 Nc3 Bg7 e4 d6 Nf3 O-O Be2 e5 O-O Nc6 d5 Ne7 Ne1 Nd7 Be3 f5 f3  ECO: E98 King's Indian Defense: Orthodox Variation, Classical System, Neo-Classical Line
+op4.mind #6 (play): after d4 Nf6 c4 e6 Nc3 Bb4 e3 O-O Bd3 d5 Nf3 c5 O-O Nc6 a3 Bxc3 bxc3 dxc4 Bxc4 Qc7  ECO: E59 Nimzo-Indian Defense: Normal Variation, Bernstein Defense

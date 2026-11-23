@@ -1,0 +1,222 @@
+{
+ "open": {
+  "games": [
+   {
+    "h": "Carlsen (2840) vs Firouzja (2759), 2026 Norway Chess Open 2026",
+    "moves": "e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 Nc3 Be7 O-O b5 Bb3 O-O d3 d6 a3 Na5 Ba2 Be6 Bxe6 fxe6 b4 Nc6 Bd2 Qe8 Ne2 Nh5 c3 Qg6 Ng3 Nf4 a4 Qf7 d4 g5 axb5 axb5 Rxa8 Rxa8 dxe5 dxe5 Bxf4 exf4",
+    "notes": {
+     "9": "Theory yahan tak: **C77 Ruy Lopez: Morphy Defense, Tarrasch Variation**. Ab players apne plan se.",
+     "44": "Move 22 tak. Engine: +0.8 (White ke hisaab se). Game ka nateeja: **1-0** (Carlsen jeete)."
+    },
+    "eco": "C77 Ruy Lopez: Morphy Defense, Tarrasch Variation"
+   },
+   {
+    "h": "Carlsen (2840) vs So (2754), 2026 Norway Chess Open 2026",
+    "moves": "e4 e5 Nf3 Nc6 Bc4 Nf6 d3 Bc5 Bg5 h6 Bh4 d6 c3 a5 O-O O-O Nbd2 Ba7 a4 g5 Bg3 Kg7 Re1 g4 Nh4 Nh5 Nf1 Qg5 Ne3 Bxe3 Rxe3 Nf4 Qe1 Be6 f3 h5 Bb5 Ne7 d4 f6 Rd1 Neg6 Rd2 Rf7",
+    "notes": {
+     "8": "Theory yahan tak: **C50 Italian Game: Giuoco Pianissimo, Normal**. Ab players apne plan se.",
+     "44": "Move 22 tak. Engine: -0.0 (White ke hisaab se). Game ka nateeja: **0-1** (So jeete)."
+    },
+    "eco": "C50 Italian Game: Giuoco Pianissimo, Normal"
+   }
+  ],
+  "guess": [
+   {
+    "fen": "r5k1/2p1bq1p/2n1p3/1p4p1/1P2Pp2/2P2NN1/5PPP/3Q1RK1 w - - 0 23",
+    "line": [
+     "Qd7"
+    ],
+    "game": "Carlsen vs Firouzja",
+    "mvn": 23,
+    "side": "w",
+    "eco": "Ruy Lopez: Morphy Defense, Tarrasch Variation"
+   },
+   {
+    "fen": "r4r2/1pp2pk1/2npb2p/p3p1q1/P1B1PnpN/2PPRPB1/1P4PP/R3Q1K1 b - - 0 18",
+    "line": [
+     "h5"
+    ],
+    "game": "Carlsen vs So",
+    "mvn": 18,
+    "side": "b",
+    "eco": "Italian Game: Giuoco Pianissimo, Normal"
+   }
+  ]
+ },
+ "sic": {
+  "games": [
+   {
+    "h": "Erigaisi Arjun (2751) vs Grandelius (2662), TePe Sigeman Chess Tournament 2026 2026",
+    "moves": "e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 g6 Be3 Bg7 f3 Nc6 Qd2 O-O O-O-O d5 Nxc6 bxc6 Bc4 e6 Bb3 Bb7 h4 dxe4 Qf2 Qc7 Nxe4 Nxe4 fxe4 c5 Bxc5 Rfd8 Bxa7 Qe5 c3 Qxe4 Rxd8+ Rxd8 Re1 Qxg2 Qxg2 Bxg2",
+    "notes": {
+     "17": "Theory yahan tak: **B76 Sicilian Defense: Dragon Variation, Yugoslav Attack, Modern Line**. Ab players apne plan se.",
+     "44": "Move 22 tak. Engine: +0.4 (White ke hisaab se). Game ka nateeja: **1-0** (Erigaisi Arjun jeete)."
+    },
+    "eco": "B76 Sicilian Defense: Dragon Variation, Yugoslav Attack, Modern Line"
+   },
+   {
+    "h": "Eljanov (2674) vs Sarana (2664), Hungarian Superleague 2025/26 2026",
+    "moves": "e4 c5 Nf3 d6 Bc4 Nf6 d3 Nc6 O-O g6 c3 Bg7 a4 O-O Re1 b6 Bb3 e5 Na3 h6 Nc4 Qc7 Ne3 Ne7 h3 Bb7 Ng4 Nxg4 hxg4 d5 g5 h5 Qe2 Rad8 exd5 Bxd5 Bxd5 Rxd5 Bf4 Nc6 Bg3 Qd7 Rad1 Rd8",
+    "notes": {
+     "4": "Theory yahan tak: **B50 Sicilian Defense: Modern Variations**. Ab players apne plan se.",
+     "44": "Move 22 tak. Engine: -0.3 (White ke hisaab se). Game ka nateeja: **0-1** (Sarana jeete)."
+    },
+    "eco": "B50 Sicilian Defense: Modern Variations"
+   }
+  ],
+  "guess": [
+   {
+    "fen": "r4rk1/pbq2pbp/2p1p1p1/8/4n2P/1B2BP2/PPP2QP1/2KR3R w - - 0 16",
+    "line": [
+     "fxe4"
+    ],
+    "game": "Erigaisi Arjun vs Grandelius",
+    "mvn": 16,
+    "side": "w",
+    "eco": "Sicilian Defense: Dragon Variation, Yugoslav Attack, Modern Line"
+   },
+   {
+    "fen": "r4rk1/pbq1npb1/1p1p1npp/2p1p3/P3P1N1/1BPP1N1P/1P3PP1/R1BQR1K1 b - - 2 14",
+    "line": [
+     "Nxg4"
+    ],
+    "game": "Eljanov vs Sarana",
+    "mvn": 14,
+    "side": "b",
+    "eco": "Sicilian Defense: Modern Variations"
+   }
+  ]
+ },
+ "semi": {
+  "games": [
+   {
+    "h": "Carlsen (2869) vs Erigaisi Arjun (2776), TePe Sigeman Chess Tournament 2026 2026",
+    "moves": "e4 d6 d4 Nf6 Nc3 g6 Nf3 Bg7 Be2 O-O O-O e6 a4 Nc6 a5 Rb8 h3 h6 Be3 b6 a6 Ne7 Qd2 Kh7 Bd3 c6 Ne2 b5 Ng3 Rb6 b3 Qc7 c4 bxc4 bxc4 c5 d5 e5 Nh2 Bxa6 f4 exf4 Bxf4 Nd7",
+    "notes": {
+     "9": "Theory yahan tak: **B08 Pirc Defense: Classical Variation, Quiet System**. Ab players apne plan se.",
+     "44": "Move 22 tak. Engine: -0.1 (White ke hisaab se). Game ka nateeja: **0-1** (Erigaisi Arjun jeete)."
+    },
+    "eco": "B08 Pirc Defense: Classical Variation, Quiet System"
+   },
+   {
+    "h": "Keymer (2776) vs Aravindh (2700), Prague Chess Festival 2026 | Masters 2026",
+    "moves": "e4 d6 d4 Nf6 Nc3 e5 Nf3 Nbd7 h3 Be7 g4 h6 Be3 c6 a4 O-O Qd2 d5 exd5 e4 dxc6 exf3 cxd7 Bxd7 g5 hxg5 Bxg5 Nd5 Rg1 Nxc3 bxc3 Re8 Kd1 Rc8 Bxe7 Qxe7 Bd3 g6 Qh6 Rc6 Kd2 Bf5 Qg5 Rxc3",
+    "notes": {
+     "4": "Theory yahan tak: **B00 Pirc Defense**. Ab players apne plan se.",
+     "44": "Move 22 tak. Engine: +3.7 (White ke hisaab se). Game ka nateeja: **1-0** (Keymer jeete)."
+    },
+    "eco": "B00 Pirc Defense"
+   }
+  ],
+  "guess": [
+   {
+    "fen": "5r2/p1q1npbk/br1p1npp/2pPp3/2P1PP2/3BB1NP/3Q2PN/R4RK1 b - f3 0 21",
+    "line": [
+     "exf4"
+    ],
+    "game": "Carlsen vs Erigaisi Arjun",
+    "mvn": 21,
+    "side": "b",
+    "eco": "Pirc Defense: Classical Variation, Quiet System"
+   },
+   {
+    "fen": "r2q1rk1/pp1bbpp1/5n1p/8/P2P2P1/2N1Bp1P/1PPQ1P2/R3KB1R w KQ - 0 13",
+    "line": [
+     "g5"
+    ],
+    "game": "Keymer vs Aravindh",
+    "mvn": 13,
+    "side": "w",
+    "eco": "Pirc Defense"
+   }
+  ]
+ },
+ "qg": {
+  "games": [
+   {
+    "h": "Erigaisi Arjun (2776) vs Carlsen (2869), TePe Sigeman Chess Tournament 2026 2026",
+    "moves": "d4 Nf6 c4 e6 Nc3 d5 cxd5 exd5 Bg5 Be7 e3 h6 Bh4 O-O Bd3 c6 Nge2 Nbd7 Qc2 Re8 O-O a5 a4 Nh5 Bxe7 Qxe7 Rae1 Ndf6 Nc1 Ne4 f3 Nxc3 bxc3 c5 e4 cxd4 exd5 Qd8 cxd4 Rxe1 Rxe1 Nf6 Qb3 Bd7",
+    "notes": {
+     "9": "Theory yahan tak: **D35 Queen's Gambit Declined: Exchange Variation, Positional Variation**. Ab players apne plan se.",
+     "44": "Move 22 tak. Engine: +0.2 (White ke hisaab se). Game ka nateeja: **0-1** (Carlsen jeete)."
+    },
+    "eco": "D35 Queen's Gambit Declined: Exchange Variation, Positional Variation"
+   },
+   {
+    "h": "Carlsen (2840) vs Erdogmus (2708), TePe Sigeman Chess Tournament 2026 2026",
+    "moves": "d4 d5 Nf3 c5 c4 dxc4 e4 cxd4 Qxd4 Qxd4 Nxd4 Bd7 Bxc4 Nc6 Be3 Nxd4 Bxd4 e6 f3 Ne7 Kf2 Nc6 Be3 Rc8 Nd2 Ne5 Be2 Bc5 Bxc5 Rxc5 Rhc1 Rxc1 Rxc1 Nc6 e5 Ke7 f4 Rc8 a3 f6 exf6+ gxf6 Rc3 Nd4",
+    "notes": {
+     "4": "Theory yahan tak: **D02 Queen's Pawn Game: Krause Variation**. Ab players apne plan se.",
+     "44": "Move 22 tak. Engine: +0.2 (White ke hisaab se). Game ka nateeja: **1-0** (Carlsen jeete)."
+    },
+    "eco": "D02 Queen's Pawn Game: Krause Variation"
+   }
+  ],
+  "guess": [
+   {
+    "fen": "2r1b1k1/1p3pp1/1Q5p/3PNn2/3P1q2/5P1P/6P1/R4BK1 b - - 6 34",
+    "line": [
+     "Qe3+"
+    ],
+    "game": "Erigaisi Arjun vs Carlsen",
+    "mvn": 34,
+    "side": "b",
+    "eco": "Queen's Gambit Declined: Exchange Variation, Positional Variation"
+   },
+   {
+    "fen": "r3kbnr/pp1bpppp/8/8/2BnP3/4B3/PP3PPP/RN2K2R w KQkq - 0 9",
+    "line": [
+     "Bxd4"
+    ],
+    "game": "Carlsen vs Erdogmus",
+    "mvn": 9,
+    "side": "w",
+    "eco": "Queen's Pawn Game: Krause Variation"
+   }
+  ]
+ },
+ "ind": {
+  "games": [
+   {
+    "h": "Erigaisi Arjun (2776) vs Carlsen (2869), TePe Sigeman Chess Tournament 2026 2026",
+    "moves": "d4 Nf6 c4 e6 Nc3 Bb4 g3 O-O Bg2 d5 a3 Be7 Qd3 b6 cxd5 Nxd5 Nf3 Bb7 Nxd5 exd5 O-O Nd7 Bf4 c5 b3 Re8 h4 h6 Rfd1 a5 a4 Ba6 Qc2 Rc8 Qb2 Nf6 Bh3 Ra8 Be5 Bf8 Rac1 Ne4 dxc5 bxc5",
+    "notes": {
+     "7": "Theory yahan tak: **E20 Nimzo-Indian Defense: Romanishin Variation**. Ab players apne plan se.",
+     "44": "Move 22 tak. Engine: +0.4 (White ke hisaab se). Game ka nateeja: **0-1** (Carlsen jeete)."
+    },
+    "eco": "E20 Nimzo-Indian Defense: Romanishin Variation"
+   },
+   {
+    "h": "Grandelius (2662) vs Carlsen (2840), TePe Sigeman Chess Tournament 2026 2026",
+    "moves": "d4 Nf6 c4 e6 Nc3 c5 d5 exd5 cxd5 d6 e4 g6 Be2 Bg7 Be3 O-O Nf3 Bg4 Nd2 Bxe2 Qxe2 Nbd7 O-O Ne8 f4 f5 exf5 gxf5 Bf2 Nc7 Nf3 Nf6 Qd3 b5 Nxb5 Nxb5 Qxb5 Rb8 Qd3 Ne4 Rab1 Qa5 Ng5 Qd2",
+    "notes": {
+     "3": "Theory yahan tak: **A50 Indian Defense: Normal Variation**. Ab players apne plan se.",
+     "44": "Move 22 tak. Engine: -1.2 (White ke hisaab se). Game ka nateeja: **0-1** (Carlsen jeete)."
+    },
+    "eco": "A50 Indian Defense: Normal Variation"
+   }
+  ],
+  "guess": [
+   {
+    "fen": "r2qrbk1/5pp1/b6p/p1ppBB2/P3n2P/1P3NP1/1Q2PP2/2RR2K1 b - - 1 23",
+    "line": [
+     "Nf6"
+    ],
+    "game": "Erigaisi Arjun vs Carlsen",
+    "mvn": 23,
+    "side": "b",
+    "eco": "Nimzo-Indian Defense: Romanishin Variation"
+   },
+   {
+    "fen": "rn1q1rk1/pp3pbp/3p1np1/2pP4/4P1b1/2N1B3/PP1NBPPP/R2QK2R b KQ - 7 10",
+    "line": [
+     "Bxe2"
+    ],
+    "game": "Grandelius vs Carlsen",
+    "mvn": 10,
+    "side": "b",
+    "eco": "Indian Defense: Normal Variation"
+   }
+  ]
+ }
+}

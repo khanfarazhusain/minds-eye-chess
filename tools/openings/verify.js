@@ -21,7 +21,7 @@ async function moveLoss(st,mv){const fen=C.fenOf(st);const b=await ev(fen);const
 (async()=>{send('uci');send('setoption name Threads value 4');send('isready');
   const bad=[],info=[];let n=0;
   for(const lv of OPL.data.levels)for(const les of lv.lessons)for(const [k,s] of les.steps.entries()){const where=`${les.key} #${k} ${s.h||s.q}`.slice(0,90);
-    if(s.t==='line'){let st=C.parseFEN(s.fen||C.START_FEN);const mv=s.moves.split(' ');
+    if(s.t==='line'&&!s.game){let st=C.parseFEN(s.fen||C.START_FEN);const mv=s.moves.split(' ');
       for(let i=0;i<mv.length;i++){const side=st.w?'w':'b';if(!s.drill||side===s.drill){const r=await moveLoss(st,mv[i]);n++;if(r.loss>(s.theory?140:LOSS))bad.push(`${where}: ply ${i+1} ${mv[i]} loses ${r.loss}cp (best ${r.bm})`)}
         st=C.make(st,C.findMove(st,mv[i]))}
       const e=await ev(C.fenOf(st));const w=st.w?e.sc:-e.sc;info.push(`${where}: end eval (White) ${w}`);if(!s.win&&Math.abs(w)>150)bad.push(`${where}: end eval ${w} (White POV)`)}
