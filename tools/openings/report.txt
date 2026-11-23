@@ -129,6 +129,27 @@ l4.op2pet #3 (line): Philidor: Lion / Hanham setup  ECO: B00 Pirc Defense (4 ply
 l4.op2pet #5 (move): after e4 e5 Nf3 d6 Bc4 Bg4 Nc3 g6  ECO: C41 Philidor Defense
 l4.op2pet #6 (move): after e4 e5 Nf3 d6 d4 Nd7 Bc4 Be7  ECO: C41 Philidor Defense: Hanham Variation
 l4.op2pet #7 (move): after e4 e5 Nf3 Nf6 Nxe5 d6 Nxf7  ECO: C42 Petrov's Defense: Cochrane Gambit
+l4.op2najd #0 (line): English Attack  ECO: B90 Sicilian Defense: Najdorf Variation, English Attack (15 ply)  [24 ply]
+l4.op2najd #1 (move): after e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 a6 Be3  ECO: B90 Sicilian Defense: Najdorf Variation, English Attack
+l4.op2najd #2 (line): 6.Bg5: sabse sharp  ECO: B99 Sicilian Defense: Najdorf Variation, Main Line (18 ply)  [20 ply]
+l4.op2najd #3 (line): 6.Be2: Classical  ECO: B92 Sicilian Defense: Najdorf Variation, Opocensky Variation, Traditional Line (16 ply)  [21 ply]
+l4.op2najd #5 (move): after e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 a6 Bg5 e6 f4 Qb6  ECO: B97 Sicilian Defense: Najdorf Variation, Poisoned Pawn Variation
+l4.op2drag #0 (line): Yugoslav Attack: 9.Bc4 main line  ECO: B78 Sicilian Defense: Dragon Variation, Yugoslav Attack, Old Line (20 ply)  [24 ply]
+l4.op2drag #1 (line): Yugoslav: 9.O-O-O d5!  ECO: B76 Sicilian Defense: Dragon Variation, Yugoslav Attack (16 ply)  [26 ply]
+l4.op2drag #2 (move): after e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 g6 Be3 Bg7 f3 O-O Qd2 Nc6 O-O-O  ECO: B76 Sicilian Defense: Dragon Variation, Yugoslav Attack
+l4.op2drag #4 (line): Accelerated Dragon: Maroczy Bind  ECO: B38 Sicilian Defense: Accelerated Dragon, Maróczy Bind (11 ply)  [22 ply]
+l4.op2drag #5 (move): after e4 c5 Nf3 Nc6 d4 cxd4 Nxd4 g6 Nc3 Bg7 Be3 Nf6 Bc4  ECO: B35 Sicilian Defense: Accelerated Dragon, Modern Bc4 Variation
+l4.op2svesh #0 (line): Sveshnikov main line  ECO: B33 Sicilian Defense: Lasker-Pelikan Variation, Sveshnikov Variation (20 ply)  [26 ply]
+l4.op2svesh #2 (line): Taimanov: English Attack setup ke khilaaf  ECO: B48 Sicilian Defense: Taimanov Variation, Bastrikov Variation, English Attack (11 ply)  [20 ply]
+l4.op2svesh #3 (line): Kan  ECO: B42 Sicilian Defense: Kan Variation, Polugaevsky Variation (10 ply)  [20 ply]
+l4.op2svesh #4 (move): after e4 c5 Nf3 Nc6 d4 cxd4 Nxd4 Nf6 Nc3 e5 Ndb5 d6 Bg5 a6 Na3  ECO: B33 Sicilian Defense: Lasker-Pelikan Variation
+l4.op2svesh #5 (move): after e4 c5 Nf3 e6 d4 cxd4 Nxd4 Nc6 Nc3 Qc7 Be3 a6 Qd2 Nf6 O-O-O  ECO: B48 Sicilian Defense: Taimanov Variation, Bastrikov Variation, English Attack
+l4.op2anti #0 (line): Alapin: 2...d5  ECO: B22 Sicilian Defense: Alapin Variation, Barmen Defense, Modern Line (10 ply)  [18 ply]
+l4.op2anti #1 (line): Rossolimo  ECO: B31 Sicilian Defense: Nyezhmetdinov-Rossolimo Attack, Fianchetto Variation (6 ply)  [16 ply]
+l4.op2anti #2 (line): Moscow Variation  ECO: B52 Sicilian Defense: Moscow Variation, Sokolsky Variation (9 ply)  [20 ply]
+l4.op2anti #3 (line): Closed Sicilian  ECO: B26 Sicilian Defense: Closed (11 ply)  [20 ply]
+l4.op2anti #4 (move): after e4 c5 d4 cxd4 c3 dxc3 Nxc3 Nc6 Nf3 e6 Bc4 Qc7 O-O Nf6 Qe2 Ng4 h3  ECO: B21 Sicilian Defense: Smith-Morra Gambit Accepted, Siberian Variation
+l4.op2anti #5 (move): after e4 c5 c3 Nf6 e5 Nd5 d4 cxd4 Nf3  ECO: B22 Sicilian Defense: Alapin Variation, Smith-Morra Declined
 op3.ital #0 (line): Pianissimo: 15+ chaal aur ...d5 break  ECO: C54 Italian Game: Classical Variation, Giuoco Pianissimo (10 ply)  [26 ply]
 op3.ital #2 (line): 5.d4: isolated queen pawn (IQP)  ECO: C54 Italian Game: Classical Variation, Greco Gambit, Traditional Line (11 ply)  [24 ply]
 op3.ital #3 (info): after e4 e5 Nf3 Nc6 Bc4 Bc5 c3 Nf6 d4 exd4 cxd4 Bb4+ Bd2 Bxd2+ Nbxd2 d5 exd5 Nxd5 Qb3 Nce7 O-O O-O Rfe1 c6  ECO: C54 Italian Game: Classical Variation, Greco Gambit, Traditional Line
@@ -151,3 +172,16 @@ op3.gam #1 (line): King's Gambit: Fischer Defence  ECO: C34 King's Gambit Accept
 op3.gam #2 (line): Danish: dono pawns lo, phir wapas do  ECO: C21 Danish Gambit Accepted: Schlechter Defense (10 ply)  [19 ply]
 op3.gam #3 (line): Fried Liver ka sach: 6.d4 (Lolli)  ECO: C57 Italian Game: Two Knights Defense, Lolli Attack (11 ply)  [19 ply]
 op3.gam #4 (move): after e4 e5 Nf3 Nc6 Bc4 Bc5 b4 Bxb4 c3 Ba5 d4 d6 O-O Bb6 dxe5 dxe5  ECO: C52 Italian Game: Evans Gambit, Bronstein Defense
+op3.sicstr #0 (line): Scheveningen: Keres Attack ke khilaaf  ECO: B54 Sicilian Defense: Modern Variations, Main Line (8 ply)  [20 ply]
+op3.sicstr #2 (line): Najdorf ...e5: d5 square ki ladai  ECO: B92 Sicilian Defense: Najdorf Variation, Opocensky Variation, Traditional Line (16 ply)  [23 ply]
+op3.sicstr #4 (move): after e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 e6 Be2 Be7 O-O O-O f4 Nc6 Be3 a6 a4 Qc7 Kh1 Re8  ECO: B54 Sicilian Defense: Modern Variations, Main Line
+op3.sicstr #5 (move): after e4 c5 Nf3 Nc6 d4 cxd4 Nxd4 g6 c4 Bg7 Be3 Nf6 Nc3 O-O Be2 d6 O-O Bd7 Qd2 Nxd4 Bxd4 Bc6 f3  ECO: B38 Sicilian Defense: Accelerated Dragon, Maróczy Bind
+op3.sicord #0 (info): after e4 c5 Nf3  ECO: B27 Sicilian Defense
+op3.sicord #2 (line): Najdorf se Scheveningen (transposition)  ECO: B84 Sicilian Defense: Scheveningen Variation, Classical Variation (12 ply)  [22 ply]
+op3.sicord #3 (line): Taimanov se Scheveningen  ECO: B83 Sicilian Defense: Scheveningen Variation, Modern Variation (12 ply)  [18 ply]
+op3.sicord #4 (quiz): after e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 e6 Be2 Be7 O-O O-O f4 Nc6 Be3 a6  ECO: B54 Sicilian Defense: Modern Variations, Main Line
+op3.sicord #5 (move): after e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 a6 h3  ECO: B90 Sicilian Defense: Najdorf Variation, Adams Attack
+op3.sicanti #0 (line): Alapin: IQP line deep  ECO: B22 Sicilian Defense: Alapin Variation, Barmen Defense (6 ply)  [24 ply]
+op3.sicanti #1 (line): Smith-Morra: solid Black setup  ECO: B21 Sicilian Defense: Smith-Morra Gambit Accepted, Scheveningen Formation (12 ply)  [20 ply]
+op3.sicanti #2 (line): Rossolimo: modern main line  ECO: B31 Sicilian Defense: Nyezhmetdinov-Rossolimo Attack, Fianchetto Variation (6 ply)  [20 ply]
+op3.sicanti #3 (move): after e4 c5 Nc3 Nc6 f4 g6 Nf3 Bg7 Bb5  ECO: B23 Sicilian Defense: Grand Prix Attack
