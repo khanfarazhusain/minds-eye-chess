@@ -1,0 +1,226 @@
+% Real over-the-board classical games from the Lichess broadcast database (database.lichess.org, CC0).
+
+[Event "2026 Norway Chess Open"]
+[Site "Oslo, NO"]
+[Date "2026.05.24"]
+[White "Keymer, Vincent"]
+[Black "Gukesh D"]
+[Result "1-0"]
+[WhiteElo "2759"]
+[BlackElo "2732"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "Norway Chess 2026 | Open"]
+
+1. d4 Nf6 2. Nf3 d5 3. c3 e6 4. Bf4 c5 5. e3 Nc6 6. Nbd2 Be7 7. h3 Bd6 8. dxc5 Bxc5 9. Bd3 O-O 10. O-O Re8 11. e4 e5 12. Bg5 d4 13. Nb3 Bd6 14. cxd4 exd4 15. Nbxd4 Nxd4 16. Nxd4 h6 17. Be3 Be5 18. Nf3 Bxb2 19. Rb1 Ba3 20. Qb3 Bf8 21. Bc4 Be6 22. Rfd1 Qc8 23. Bxe6 Rxe6 24. e5 Ne4 25. Rdc1 Nc5 26. Bxc5 Bxc5 27. Qxb7 Qxb7 28. Rxb7 Rc8 29. Rc2 Rec6 30. Rd2 Rb6 31. Rbd7 Rb1+ 32. Kh2 Rf1 33. Kg3 Bb6 34. R7d3 Rc6 35. Nd4 Rg6+ 36. Kh2 Rg5 37. Re2 Rg6 38. g3 Rc1 39. Kg2 Rc4 40. Nf5 Re6 41. f4 h5 42. Rd7 Rc3 43. Ne7+ Kf8 44. Nd5 Ke8 45. Rxa7 Rxg3+ 46. Kxg3 Rg6+ 47. Kf3 Bxa7 48. Rc2 Bg1 49. f5 Rh6 50. Rg2 Bc5 51. Rxg7 Kf8 52. f6 1-0
+
+[Event "Prague Chess Festival 2026 | Masters"]
+[Site "https://lichess.org/broadcast/prague-international-chess-festival-2026--masters/round-1/A2GfgC2l/4DG8pkVF"]
+[Date "2026.02.25"]
+[White "Abdusattorov, Nodirbek"]
+[Black "Aravindh, Chithambaram VR."]
+[Result "1-0"]
+[WhiteElo "2751"]
+[BlackElo "2700"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "Prague International Chess Festival 2026 | Masters"]
+
+1. e4 d6 2. d4 Nf6 3. Nc3 e5 4. Nf3 Nbd7 5. Bc4 Be7 6. O-O O-O 7. Re1 exd4 8. Nxd4 Ne5 9. Bf1 Re8 10. Bf4 Ng6 11. Bg3 Bf8 12. a4 c6 13. a5 Bd7 14. Nb3 Be6 15. h3 b5 16. axb6 axb6 17. Rxa8 Qxa8 18. Nd4 Bd7 19. Re3 b5 20. b4 Qa7 21. Qd2 Qb6 22. Be2 Rd8 23. Nf3 d5 24. exd5 Bxb4 25. Ne5 cxd5 26. Nxd7 Rxd7 27. Qd1 d4 28. Ne4 Nd5 29. Rf3 Bf8 30. Bd3 Nb4 31. Rf5 Nxd3 32. Qxd3 b4 33. h4 Qe6 34. Ng5 Qe1+ 35. Kh2 h6 36. Ne4 Ra7 37. f3 Qb1 38. Qc4 d3 39. cxd3 Qa2 40. Rb5 Qxc4 41. dxc4 Ra4 42. Rb8 b3 43. h5 Ne7 44. Bd6 Ra7 45. c5 Rd7 46. Rxb3 Nc6 47. Rb6 Bxd6+ 48. cxd6 Ne5 49. Rb8+ Kh7 50. Re8 Nc6 51. g4 Nd4 52. Kg3 Nb5 53. Re7 Rd8 54. d7 Nd4 55. Nc5 1-0
+
+[Event "2026 Norway Chess Open"]
+[Site "Oslo, NO"]
+[Date "2026.05.24"]
+[White "Firouzja, Alireza"]
+[Black "Praggnanandhaa R"]
+[Result "1-0"]
+[WhiteElo "2759"]
+[BlackElo "2733"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "Norway Chess 2026 | Open"]
+
+1. d4 d5 2. c4 e6 3. Nf3 Nf6 4. Nc3 c6 5. Bg5 Nbd7 6. cxd5 exd5 7. e3 h6 8. Bh4 g5 9. Bg3 Nh5 10. Bd3 Nxg3 11. hxg3 Bg7 12. Qc2 Nb6 13. O-O-O Be6 14. Kb1 Qe7 15. Rc1 O-O-O 16. Na4 Kb8 17. Nc5 Rc8 18. Qb3 Rc7 19. Rc3 Ka8 20. Rhc1 Nd7 21. Nxd7 Bxd7 22. a4 h5 23. Qc2 h4 24. gxh4 gxh4 25. Bf5 Bf6 26. Bxd7 Rxd7 27. Ne1 Qe4 28. Qxe4 dxe4 29. Rc5 h3 30. gxh3 Rxh3 31. Rf5 Rd6 32. Nc2 a6 33. Rg1 Ka7 34. Rg4 Re6 35. Nb4 Rh6 36. Na2 Rg6 37. Rxg6 fxg6 38. Rf4 c5 39. dxc5 b6 40. Nb4 bxc5 41. Nd5 Bg5 42. Rg4 Bd8 43. Nc3 g5 44. Nxe4 Re5 45. Kc2 Kb6 46. Kd3 Kc6 47. b3 Be7 48. Rg1 Rd5+ 49. Ke2 Kb6 50. Nd2 Ka5 51. Rg4 Rd8 52. Re4 Bf8 53. Kd1 Rd6 54. Kc2 Rf6 55. Nc4+ Kb4 56. f3 Rh6 57. Nd2+ Ka3 58. a5 Rh4 59. f4 c4 60. Rxc4 1-0
+
+[Event "2026 Norway Chess Open"]
+[Site "Oslo, NO"]
+[Date "2026.05.24"]
+[White "Praggnanandhaa R"]
+[Black "Gukesh D"]
+[Result "0-1"]
+[WhiteElo "2733"]
+[BlackElo "2732"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "Norway Chess 2026 | Open"]
+
+1. d4 Nf6 2. c4 e6 3. Nf3 d5 4. Nc3 Bb4 5. Qa4+ Nc6 6. Qc2 Bd6 7. Bg5 h6 8. Bxf6 Qxf6 9. e3 O-O 10. c5 Be7 11. Bb5 Bd7 12. O-O Rfd8 13. h3 g6 14. a3 a6 15. Bxc6 Bxc6 16. Ne5 Be8 17. f4 b6 18. b4 a5 19. Rfb1 Qg7 20. Qe2 Rdb8 21. e4 dxe4 22. Nxe4 Ra7 23. Qe3 Qf8 24. Kh2 Kh7 25. b5 a4 26. c6 Rd8 27. Rd1 f6 28. Nc4 Bf7 29. Qe2 Qg8 30. Rac1 Raa8 31. Rd2 Re8 32. Nc3 e5 33. d5 exf4 34. Qf2 g5 35. Nxb6 cxb6 36. d6 Bf8 37. Qxb6 g4 38. hxg4 Qxg4 39. Qf2 Re3 40. Rd4 Qh5+ 41. Kg1 Qe5 42. Qd2 f3 43. Kf2 Bxd6 44. Rxd6 Rg8 45. gxf3 Rxf3+ 46. Kxf3 Bh5+ 47. Kf2 Qg3+ 0-1
+
+[Event "2026 Norway Chess Open"]
+[Site "Oslo, NO"]
+[Date "2026.05.24"]
+[White "Carlsen, Magnus"]
+[Black "Firouzja, Alireza"]
+[Result "1-0"]
+[WhiteElo "2840"]
+[BlackElo "2759"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "Norway Chess 2026 | Open"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. Nc3 Be7 6. O-O b5 7. Bb3 O-O 8. d3 d6 9. a3 Na5 10. Ba2 Be6 11. Bxe6 fxe6 12. b4 Nc6 13. Bd2 Qe8 14. Ne2 Nh5 15. c3 Qg6 16. Ng3 Nf4 17. a4 Qf7 18. d4 g5 19. axb5 axb5 20. Rxa8 Rxa8 21. dxe5 dxe5 22. Bxf4 exf4 23. Qd7 fxg3 24. Qxc6 gxf2+ 25. Kxf2 Rf8 26. Kg1 Bd6 27. Qxb5 g4 28. Nd2 Bf4 29. g3 Be3+ 30. Kg2 Qg7 31. Qd3 Bb6 32. Rxf8+ Qxf8 33. Qe2 h5 34. h3 Qg7 35. hxg4 hxg4 36. c4 c6 37. Nf1 Kf8 38. Nh2 Qc3 39. Nxg4 Qxb4 40. Ne5 Qd6 41. Qh5 Ke7 42. Qh7+ Ke8 43. Qg8+ Ke7 44. Qg7+ Ke8 45. Kh3 Bd4 46. Qh8+ Ke7 47. Nxc6+ Qxc6 48. Qxd4 Kf7 49. c5 Qb5 50. Kh4 Kg6 51. Qe5 Qc4 52. Qg5+ Kf7 53. Kh5 Qc3 54. e5 Qc2 55. Qf6+ 1-0
+
+[Event "TePe Sigeman Chess Tournament 2026"]
+[Site "Elite Plaza Hotel, Gustav Adolfs Torg 49, Malmo, Sweden"]
+[Date "2026.05.07"]
+[White "Erigaisi Arjun"]
+[Black "Carlsen, Magnus"]
+[Result "0-1"]
+[WhiteElo "2776"]
+[BlackElo "2869"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "TePe Sigeman & Co Chess Tournament 2026"]
+
+1. d4 Nf6 2. c4 e6 3. Nc3 d5 4. cxd5 exd5 5. Bg5 Be7 6. e3 h6 7. Bh4 O-O 8. Bd3 c6 9. Nge2 Nbd7 10. Qc2 Re8 11. O-O a5 12. a4 Nh5 13. Bxe7 Qxe7 14. Rae1 Ndf6 15. Nc1 Ne4 16. f3 Nxc3 17. bxc3 c5 18. e4 cxd4 19. exd5 Qd8 20. cxd4 Rxe1 21. Rxe1 Nf6 22. Qb3 Bd7 23. Bc4 Ne8 24. Nd3 Nd6 25. Ne5 Qh4 26. Rd1 Be8 27. Bf1 Rc8 28. Qb6 Bxa4 29. Ra1 Qf4 30. h3 Be8 31. Rxa5 Qe3+ 32. Kh2 Qf4+ 33. Kg1 Nf5 34. Ra1 Qe3+ 35. Kh2 Nxd4 36. Ng4 Nxf3+ 0-1
+
+[Event "Prague Chess Festival 2026 | Masters"]
+[Site "https://lichess.org/broadcast/prague-international-chess-festival-2026--masters/round-1/A2GfgC2l/1Z2dteKN"]
+[Date "2026.02.25"]
+[White "Van Foreest, Jorden"]
+[Black "Keymer, Vincent"]
+[Result "1-0"]
+[WhiteElo "2705"]
+[BlackElo "2776"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "Prague International Chess Festival 2026 | Masters"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 Nf6 4. d3 Bc5 5. Be3 Bxe3 6. fxe3 Ne7 7. Nc3 c6 8. Bc4 b5 9. Bb3 d6 10. a4 b4 11. Nb1 Ng6 12. Nbd2 d5 13. Qe2 Be6 14. O-O-O Qa5 15. Kb1 h6 16. h4 Bg4 17. Qf2 O-O 18. Qg3 Rae8 19. Rdf1 Qd8 20. Ng5 Qd7 21. Ngf3 Nh5 22. Qe1 f5 23. exd5 cxd5 24. e4 fxe4 25. Qxe4 Kh7 26. Bxd5 Ng3 27. Ng5+ hxg5 28. hxg5+ Bh3 29. Rxf8 Nxe4 30. Bg8+ Kh8 31. Be6+ Nxf8 32. Rxh3+ Nh7 33. Bxd7 Nxd2+ 34. Kc1 Re7 35. Kxd2 g6 36. Bc6 Kg7 37. Rg3 Rf7 38. Bf3 Rf5 39. Rg4 a5 40. Rc4 Nxg5 41. Ke3 Nxf3 42. gxf3 Rh5 43. Rc5 Rh2 44. b3 Kf6 45. Rxa5 Rxc2 46. Rb5 Ra2 47. Rxb4 g5 48. Rb6+ Kf5 49. Rb5 Ke6 50. a5 e4 51. Kxe4 1-0
+
+[Event "Prague Chess Festival 2026 | Masters"]
+[Site "https://lichess.org/broadcast/prague-international-chess-festival-2026--masters/round-3/Nuic5PZR/3wdQOZwy"]
+[Date "2026.02.27"]
+[White "Van Foreest, Jorden"]
+[Black "Gukesh D"]
+[Result "1-0"]
+[WhiteElo "2705"]
+[BlackElo "2754"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "Prague International Chess Festival 2026 | Masters"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O b5 6. Bb3 d6 7. c3 Be7 8. Re1 Na5 9. Bc2 c5 10. d4 cxd4 11. cxd4 Bg4 12. dxe5 Bxf3 13. Qxf3 dxe5 14. Nc3 O-O 15. Bg5 Nc6 16. Rad1 Nd4 17. Qg3 Qb8 18. Rxd4 exd4 19. e5 dxc3 20. Qh4 Nh5 21. Bxe7 g6 22. Bxf8 Qxf8 23. bxc3 Qc5 24. Qe4 Re8 25. Qe3 Rc8 26. e6 Qxe3 27. exf7+ Kxf7 28. Rxe3 Kf6 29. Bb3 a5 30. g3 Ng7 31. Rf3+ Ke5 32. Rf7 Nf5 33. Rb7 Rc5 34. f4+ Ke4 35. Kf2 Kd3 36. g4 a4 37. Bg8 Nd6 38. Rd7 Rc6 39. Bxh7 Kxc3 40. Bxg6 b4 41. h4 b3 42. axb3 a3 43. h5 Nb5 44. g5 a2 45. Rd1 Nd4 46. h6 Rc8 47. h7 Rh8 48. Be4 1-0
+
+[Event "2026 Norway Chess Open"]
+[Site "Oslo, NO"]
+[Date "2026.05.24"]
+[White "Carlsen, Magnus"]
+[Black "So, Wesley"]
+[Result "0-1"]
+[WhiteElo "2840"]
+[BlackElo "2754"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "Norway Chess 2026 | Open"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. d3 Bc5 5. Bg5 h6 6. Bh4 d6 7. c3 a5 8. O-O O-O 9. Nbd2 Ba7 10. a4 g5 11. Bg3 Kg7 12. Re1 g4 13. Nh4 Nh5 14. Nf1 Qg5 15. Ne3 Bxe3 16. Rxe3 Nf4 17. Qe1 Be6 18. f3 h5 19. Bb5 Ne7 20. d4 f6 21. Rd1 Neg6 22. Rd2 Rf7 23. Kh1 Kh7 24. d5 Bd7 25. Bxd7 Rxd7 26. Nf5 Ne7 27. Bh4 Qg6 28. Ng3 Qh6 29. c4 Rf8 30. Rb3 Nfg6 31. Nf1 Nxh4 32. Qxh4 f5 33. Qe1 fxe4 34. Qxe4+ Ng6 35. g3 Rdf7 36. Rf2 Qc1 37. Kg2 Rxf3 38. Rbxf3 gxf3+ 39. Rxf3 Qxb2+ 40. Kh3 Qd4 41. Qxd4 exd4 42. Rxf8 Nxf8 43. Kg2 Nd7 44. Nd2 Ne5 45. h3 Kg6 46. Kf2 Kg5 47. Kf1 Kf6 48. Kf2 Nd3+ 49. Ke2 Nb2 50. Nb3 Ke5 51. Nxa5 Ke4 52. g4 hxg4 53. hxg4 d3+ 54. Kd2 b6 55. Nb3 Nxc4+ 56. Kc3 d2 57. Kc2 Kxd5 58. g5 Ke5 0-1
+
+[Event "TePe Sigeman Chess Tournament 2026"]
+[Site "Elite Plaza Hotel, Gustav Adolfs Torg 49, Malmo, Sweden"]
+[Date "2026.05.06"]
+[White "Carlsen, Magnus"]
+[Black "Erdogmus, Yagiz Kaan"]
+[Result "1-0"]
+[WhiteElo "2840"]
+[BlackElo "2708"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "TePe Sigeman & Co Chess Tournament 2026"]
+
+1. d4 d5 2. Nf3 c5 3. c4 dxc4 4. e4 cxd4 5. Qxd4 Qxd4 6. Nxd4 Bd7 7. Bxc4 Nc6 8. Be3 Nxd4 9. Bxd4 e6 10. f3 Ne7 11. Kf2 Nc6 12. Be3 Rc8 13. Nd2 Ne5 14. Be2 Bc5 15. Bxc5 Rxc5 16. Rhc1 Rxc1 17. Rxc1 Nc6 18. e5 Ke7 19. f4 Rc8 20. a3 f6 21. exf6+ gxf6 22. Rc3 Nd4 23. Rxc8 Bxc8 24. Bd3 h6 25. Ke3 Nc6 26. Nf3 b6 27. g4 e5 28. h3 Kd6 29. Nd2 exf4+ 30. Kxf4 Ne5 31. Bf5 Bb7 32. Bc2 Bg2 33. Kg3 Bd5 34. Kf4 Bg2 35. h4 Ke7 36. b3 Bh3 37. Bf5 Bg2 38. Ne4 Bxe4 39. Bxe4 Nf7 40. Bd5 Nd6 41. a4 Kd7 42. b4 Nc8 43. Ke4 Ne7 44. Kd4 f5 45. g5 hxg5 46. hxg5 Kd6 47. Bb7 Ng6 48. Kc4 Nf8 49. Bc8 Ne6 50. g6 Ke7 51. Kb5 f4 52. Ka6 f3 53. Kxa7 b5 54. g7 Nxg7 55. axb5 f2 56. Bh3 Ne6 57. b6 Nd4 58. b7 Nc6+ 59. Ka8 1-0
+
+[Event "Prague Chess Festival 2026 | Masters"]
+[Site "https://lichess.org/broadcast/prague-international-chess-festival-2026--masters/round-4/sLJ9wlaB/cyzP4X1Y"]
+[Date "2026.02.28"]
+[White "Keymer, Vincent"]
+[Black "Aravindh, Chithambaram VR."]
+[Result "1-0"]
+[WhiteElo "2776"]
+[BlackElo "2700"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "Prague International Chess Festival 2026 | Masters"]
+
+1. e4 d6 2. d4 Nf6 3. Nc3 e5 4. Nf3 Nbd7 5. h3 Be7 6. g4 h6 7. Be3 c6 8. a4 O-O 9. Qd2 d5 10. exd5 e4 11. dxc6 exf3 12. cxd7 Bxd7 13. g5 hxg5 14. Bxg5 Nd5 15. Rg1 Nxc3 16. bxc3 Re8 17. Kd1 Rc8 18. Bxe7 Qxe7 19. Bd3 g6 20. Qh6 Rc6 21. Kd2 Bf5 22. Qg5 Rxc3 23. Qxf5 Rec8 24. Rab1 Qh4 25. Qxf3 Qxd4 26. Ke2 Qxa4 27. Kf1 b6 28. Qd5 Kg7 29. Rg4 1-0
+
+[Event "2026 Norway Chess Open"]
+[Site "Oslo, NO"]
+[Date "2026.05.27"]
+[White "Keymer, Vincent"]
+[Black "So, Wesley"]
+[Result "0-1"]
+[WhiteElo "2759"]
+[BlackElo "2754"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "Norway Chess 2026 | Open"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. d3 b5 7. Bb3 d6 8. c3 O-O 9. h3 Na5 10. Bc2 c5 11. Re1 Nc6 12. Nbd2 Re8 13. Nf1 h6 14. Ng3 Be6 15. Nh2 d5 16. Qf3 Bf8 17. Nf5 d4 18. Bd2 Kh7 19. a4 dxc3 20. bxc3 b4 21. Rad1 Rb8 22. Ng4 Nxg4 23. hxg4 bxc3 24. Bxc3 Nd4 25. Bxd4 cxd4 26. Qg3 Qg5 27. Qxe5 g6 28. Qxd4 gxf5 29. exf5 Bg7 30. Qd6 Rbd8 31. Qg3 Bd5 32. Rxe8 Rxe8 33. d4 Kg8 34. f4 Qd8 35. g5 Re2 0-1
+
+[Event "TePe Sigeman Chess Tournament 2026"]
+[Site "Elite Plaza Hotel, Gustav Adolfs Torg 49, Malmo, Sweden"]
+[Date "2026.05.07"]
+[White "Carlsen, Magnus"]
+[Black "Erigaisi Arjun"]
+[Result "0-1"]
+[WhiteElo "2869"]
+[BlackElo "2776"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "TePe Sigeman & Co Chess Tournament 2026"]
+
+1. e4 d6 2. d4 Nf6 3. Nc3 g6 4. Nf3 Bg7 5. Be2 O-O 6. O-O e6 7. a4 Nc6 8. a5 Rb8 9. h3 h6 10. Be3 b6 11. a6 Ne7 12. Qd2 Kh7 13. Bd3 c6 14. Ne2 b5 15. Ng3 Rb6 16. b3 Qc7 17. c4 bxc4 18. bxc4 c5 19. d5 e5 20. Nh2 Bxa6 21. f4 exf4 22. Bxf4 Nd7 23. Ra2 Ne5 24. Bxe5 Bxe5 25. Ng4 Bd4+ 26. Kh1 Ng8 27. e5 dxe5 28. Ne4 f5 29. Nxh6 Nxh6 30. Ng5+ Kg7 31. Ne6+ Rxe6 32. dxe6 Bc8 33. Qg5 Bxe6 34. Ra6 Rf6 35. Rb1 e4 36. Be2 Nf7 37. Qd2 Bc8 38. Rxf6 Bxf6 39. Qd5 Bd4 0-1
+
+[Event "TePe Sigeman Chess Tournament 2026"]
+[Site "Elite Plaza Hotel, Gustav Adolfs Torg 49, Malmo, Sweden"]
+[Date "2026.05.04"]
+[White "Erigaisi Arjun"]
+[Black "Van Foreest, Jorden"]
+[Result "1-0"]
+[WhiteElo "2751"]
+[BlackElo "2735"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "TePe Sigeman & Co Chess Tournament 2026"]
+
+1. d4 d5 2. c4 c6 3. Nf3 Nf6 4. Qb3 h6 5. Nc3 dxc4 6. Qxc4 Bf5 7. Ne5 e6 8. a4 Nbd7 9. Nxd7 Qxd7 10. f3 a5 11. e4 Bh7 12. Bf4 Bb4 13. Be2 O-O 14. O-O Kh8 15. Rfd1 Ng8 16. Na2 Bd6 17. Bxd6 Qxd6 18. b4 axb4 19. Qxb4 Qxb4 20. Nxb4 Rfd8 21. Kf2 f5 22. Ke3 fxe4 23. fxe4 Nf6 24. Bf3 g5 25. h3 e5 26. dxe5 Nd7 27. e6 Nc5 28. e7 Re8 29. Rac1 Rxa4 30. Rd8 1-0
+
+[Event "TePe Sigeman Chess Tournament 2026"]
+[Site "Elite Plaza Hotel, Gustav Adolfs Torg 49, Malmo, Sweden"]
+[Date "2026.05.07"]
+[White "Erigaisi Arjun"]
+[Black "Carlsen, Magnus"]
+[Result "0-1"]
+[WhiteElo "2776"]
+[BlackElo "2869"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "TePe Sigeman & Co Chess Tournament 2026"]
+
+1. d4 Nf6 2. c4 e6 3. Nc3 Bb4 4. g3 O-O 5. Bg2 d5 6. a3 Be7 7. Qd3 b6 8. cxd5 Nxd5 9. Nf3 Bb7 10. Nxd5 exd5 11. O-O Nd7 12. Bf4 c5 13. b3 Re8 14. h4 h6 15. Rfd1 a5 16. a4 Ba6 17. Qc2 Rc8 18. Qb2 Nf6 19. Bh3 Ra8 20. Be5 Bf8 21. Rac1 Ne4 22. dxc5 bxc5 23. Bf5 Nf6 24. Bxf6 Qxf6 25. Qxf6 gxf6 26. Rxd5 Bxe2 27. Nd2 Red8 28. Be4 Rxd5 29. Bxd5 Rd8 30. Ne4 f5 31. Nc3 Ba6 32. Bc4 Bb7 33. Rd1 Rd4 34. Kf1 f4 35. Rxd4 cxd4 36. Nb5 fxg3 37. fxg3 Bc5 38. Ke2 Be4 39. Bd3 f5 40. Nc7 Kf7 41. Na6 Bd6 42. g4 Bxd3+ 43. Kxd3 fxg4 44. Kxd4 Kg6 45. Ke3 Kh5 46. Kd4 0-1
+
+[Event "Prague Chess Festival 2026 | Masters"]
+[Site "https://lichess.org/broadcast/prague-international-chess-festival-2026--masters/round-2/Q0KoeyGX/CqrWFFG0"]
+[Date "2026.02.26"]
+[White "Niemann, Hans Moke"]
+[Black "Aravindh, Chithambaram VR."]
+[Result "0-1"]
+[WhiteElo "2725"]
+[BlackElo "2700"]
+[WhiteTitle "GM"]
+[BlackTitle "GM"]
+[BroadcastName "Prague International Chess Festival 2026 | Masters"]
+
+1. e4 d6 2. d4 Nf6 3. Nc3 e5 4. Nf3 Nbd7 5. Bc4 Be7 6. O-O O-O 7. Re1 exd4 8. Nxd4 Ne5 9. Bf1 Re8 10. Bf4 Ng6 11. Bg3 Bf8 12. h3 a6 13. a4 b6 14. Nc6 Qd7 15. Nb4 c6 16. Nd3 Bb7 17. Nf4 b5 18. axb5 axb5 19. Rxa8 Bxa8 20. Nd3 h6 21. b4 Qa7 22. Qa1 Qb6 23. e5 dxe5 24. Nxe5 Bxb4 25. Nxg6 Rxe1 26. Qxe1 Qc5 27. Qa1 Bb7 28. Nb1 Ne4 29. c3 Bxc3 30. Nxc3 Nxg3 31. Bd3 fxg6 32. Qa2+ Kh7 33. Qe6 Nf5 34. g4 Nh4 35. Ne2 Qe5 36. Qxe5 Nf3+ 37. Kg2 Nxe5 38. Be4 b4 39. Nc1 Nf7 40. Nb3 Ng5 41. Bd3 c5+ 42. Kg3 Ne4+ 43. Bxe4 Bxe4 44. Nxc5 Bd5 45. f4 b3 46. Na4 Bc6 47. Nb2 Kg8 48. Kf2 Kf7 49. Ke3 Ke6 50. Kd4 Bg2 51. Nd3 Bxh3 52. Nc5+ Kf6 53. g5+ Kf5 0-1
+
