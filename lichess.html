@@ -294,6 +294,14 @@ details.cgr:not(.card){background:var(--surface);border:1px solid var(--line);bo
 .cgpill.pass{background:var(--good-soft);border-color:var(--good)}.cgpill.now{border:2px solid var(--accent);box-shadow:var(--sh)}.cgpill.locked{opacity:.45}
 .cgok{background:var(--good-soft);border-color:var(--good)}.cgalert{background:var(--bad-soft);border-color:var(--bad)}
 .row.wrap{flex-wrap:wrap;gap:6px}
+.cgsech{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.cgsec .cgles .btn{text-decoration:none;white-space:normal;text-align:left;line-height:1.25}
+.cgneed{margin:-2px 0 2px 38px}
+.cgplanl{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.cgpr{display:grid;grid-template-columns:22px 1fr;column-gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--fg);background:var(--surface)}
+.cgpr span{grid-row:span 2;font-weight:800;align-self:center;text-align:center}.cgpr small{color:var(--muted);font-size:12px}
+.cgpr.pass{background:var(--good-soft);border-color:var(--good)}.cgpr.now{border:2px solid var(--accent)}
+.lvl.cgsecrow{border-style:dashed}.lvl.cgsecrow .lnum{font-size:22px}
 @media (min-width:700px){.cgpill small{font-size:11px}.cgpills{gap:8px}}
 /* ==== /calc gym css ==== */
 
@@ -633,7 +641,7 @@ body:not(.emb) main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="brand" href="#/"><i class="b64">64</i><span class="bname">Lichess Play<small>64 Squares</small></span></a><div class="chips"><span class="chip" id="luser"></span></div></div></header>
-<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-23 07:09 UTC</p></main>
+<main><div class="wrap" id="app"></div><p class="small muted" style="text-align:center;opacity:.6;margin-top:18px">Version 2026-11-27 09:30 UTC</p></main>
 <nav class="tabs"><div class="wrap">
 <button data-go="#/" class="on"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.6 3.5 5.4 3.5 8.5s-1.1 5.9-3.5 8.5c-2.4-2.6-3.5-5.4-3.5-8.5s1.1-5.9 3.5-8.5z"/></svg></span>Lobby</button>
 <button data-go="#/road"><span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 20h9"/><path d="M9 20c0-3 1.5-5 3-6.5-2.2.4-4 .1-5-1l3.5-6.5c3.5-.5 7 2 7 7.5V20"/><circle cx="12.6" cy="8.6" r=".7" fill="currentColor"/></svg></span>Rated</button>
@@ -1562,8 +1570,33 @@ function cgPlay(el,p,step,mode,coach,done){const st0=parseFEN(p[1]),line=p[2].sp
 
 function cgLesHref(k){if(typeof NEWLES!=='undefined')return'#/les/'+k;const l=lesByKey(k);return l?`#/lesson/${l.li}/${l.lj}`:'#/'}
 function cgStepName(s){return`Depth ${s.d} · ${s.st.name}`}
+/* ---------- Gym = course ka ek section: course list mein apni jagah, aur har level ke saath uske Gym steps ----------
+   Main Course: CG_GATE (level id -> steps); Road to 3000: CG_RGATE (level n -> steps). Range = [pichla gate, is level ka gate). */
+const CG_DN=['','1 chaal','2 chaal','3 chaal','4 chaal','5 chaal','6 chaal','7 chaal','8+ chaal'];
+function cgPill(s){const S=cgS(),op=cgOpen(s.i),pass=s.i<S.f,now=s.i===S.f;
+  return`<button class="cgpill${pass?' pass':''}${now?' now':''}${op?'':' locked'}" ${op?`data-go="#/calc/run/${s.i}"`:'disabled'} title="${esc(cgStepName(s))}">${pass?'✓':op?s.st.k:'🔒'}<small>${esc(s.st.name)}</small></button>`}
+function cgLesTitle(k){const l=(typeof NEWLES!=='undefined'&&NEWLES[k])||lesByKey(k);return l?l.title:k}
+/* Gym ka sabse pehla zaroori lesson (Depth 1): course list mein Gym section isi ke level ke baad aata hai */
+const cgFirstLes=()=>CG_NEED[1];
+function cgSecHTML(a,b,o){o=o||{};a=Math.max(0,a);b=Math.min(CG_STEPS.length,b);if(b<=a)return'';const S=cgS(),steps=CG_STEPS.slice(a,b),ds=[...new Set(steps.map(s=>s.d))];
+  const pass=steps.filter(s=>s.i<S.f).length,les=[...new Set(ds.map(d=>CG_NEED[d]))],all=pass>=steps.length;
+  let h=`<div class="card stack cgsec${all?' cgok':''}"><div class="cgsech"><b>🧠 Calculation Gym · step ${a+1}${b>a+1?'-'+b:''}</b><small class="muted">${pass}/${steps.length} pass</small></div>
+   <p class="small muted">${o.sub||`Is level ka test in Gym steps ke baad khulta hai. Depth ${ds.join(', ')}: ${ds.map(d=>CG_DN[d]).join(', ')} ki calculation.`}</p><div class="cglad">`;
+  ds.forEach(d=>{h+=`<div class="cgrow"><b class="cgd">${d}</b><div class="cgpills">${steps.filter(s=>s.d===d).map(cgPill).join('')}</div></div>`});
+  h+=`</div><div class="row wrap cgles">${les.map(k=>`<a class="btn small" href="${cgLesHref(k)}">${PR.done[k]?'✓':'📘'} ${esc(cgLesTitle(k))}</a>`).join('')}</div>
+   <button class="btn${all?'':' primary'} block" data-go="${!all&&S.f>=a&&S.f<b&&cgOpen(S.f)?'#/calc/run/'+S.f:'#/calc'}">${all?'✓ Ho gaya · Gym kholo':S.f>=a&&S.f<b&&cgOpen(S.f)?`Step ${S.f+1} karo: ${esc(cgStepName(CG_STEPS[S.f]))} ›`:'🧠 Gym kholo ›'}</button></div>`;return h}
+/* Gym home par: course ke kis level ke saath kaunse steps (Road mein Road ke levels, warna Main Course ke) */
+function cgPlanHTML(){const S=cgS(),rows=[];
+  if(typeof ROAD_LEVELS!=='undefined'&&typeof CG_RGATE!=='undefined'){let p=0;ROAD_LEVELS.forEach(L=>{const g=CG_RGATE[L.n]||0;if(g>p){rows.push([`Level ${L.n}: ${L.name}`,p,g,'#/level/'+L.n]);p=g}})}
+  else{let p=0;COURSE.forEach((L,li)=>{const g=CG_GATE[L.id];if(g&&g>p){rows.push([`Level ${li+1}: ${L.title}`,p,g,'#/level/'+li]);p=g}})}
+  if(!rows.length)return'';
+  return`<details class="card cgr cgplan"><summary><b>📍 Course mein Gym kahan aata hai</b></summary><p class="small muted">Gym course ka section hai: har level ke saath uske kuch steps. Level test tabhi khulta hai jab woh steps pass ho jaayein. Level page par bhi yahi steps dikhte hain.</p>
+   <div class="cgplanl">${rows.map(([t,a,b,href])=>`<a class="cgpr${S.f>=b?' pass':S.f>=a?' now':''}" href="${href}"><span>${S.f>=b?'✓':S.f>=a?'▶':'·'}</span><b>${esc(t)}</b><small>step ${a+1}-${b} · ${esc(cgStepName(CG_STEPS[b-1]))} tak</small></a>`).join('')}</div></details>`}
+/* Main Course level id -> [from,to] steps */
+function cgLevelRange(id){const ids=COURSE.map(L=>L.id).filter(x=>CG_GATE[x]);const k=ids.indexOf(id);return k<0?null:[k?CG_GATE[ids[k-1]]:0,CG_GATE[id]]}
 function cgHome(){const app=$('#app');const S=cgS(),F=Math.min(S.f,CG_STEPS.length-1),cur=CG_STEPS[F],cs=cgStat(cur),done=S.f>=CG_STEPS.length;
-  let o=`<div class="stack"><span class="eyebrow">Calculation Gym</span><h1>🧠 1 chaal se 8 chaal tak</h1>
+  const road=typeof ROAD_LEVELS!=='undefined';
+  let o=`<div class="stack">${road?'<button class="btn small backbtn" data-go="#/">‹ Today\'s Work</button>':'<button class="back" data-go="#/">‹ Course</button>'}<span class="eyebrow">Calculation Gym · course ka section</span><h1>🧠 1 chaal se 8 chaal tak</h1>
    <p class="muted">${CG_STEPS.length} chhote steps, lagbhag 1,800+ puzzles. Har step: kam se kam 20-55 puzzles, aakhri 10 mein 8 bina hint ke sahi (GM step par 9), aur target time ke andar. Tab agla step khulta hai. Course ke har level ka test bhi Gym ke step se juda hai. Jitni practice lage utni karo: puzzles khatam nahi hote.</p>
    <div class="card stack cgnow">${done?'<b>🏆 Saare steps poore! Ab GM steps roz karte raho.</b>':`<span class="eyebrow">Tumhara step ${F+1}/${CG_STEPS.length}</span><h2>${esc(cgStepName(cur))}</h2><p class="muted">${esc(cur.st.sub)} · ${CG_MODE[cur.mode]} · target ${cgTarget(cur)}s</p>
      <div class="cgmeter"><i style="width:${Math.min(100,Math.min(cs.n/cgMinN(cur),cs.ok/cgNeedOk(cur))*100)}%"></i></div><p class="small muted">Puzzles ${Math.min(cs.n,cgMinN(cur))}/${cgMinN(cur)} · aakhri ${cs.last}: ${cs.ok} saaf sahi${cs.med?` · median ${cs.med}s`:''} · pass: ${cgNeedOk(cur)}/10 aur ≤${cgTarget(cur)}s</p>`}
@@ -1574,10 +1607,10 @@ function cgHome(){const app=$('#app');const S=cgS(),F=Math.min(S.f,CG_STEPS.leng
    <details class="card cgr"><summary><b>✂️ Kya chhodna hai (skip rules)</b></summary><ol>${CG_SKIP.map(x=>'<li>'+inl(x)+'</li>').join('')}</ol></details>
    <h2>Ladder</h2><div class="cglad">`;
   for(let d=1;d<=8;d++){o+=`<div class="cgrow"><b class="cgd">${d}</b><div class="cgpills">`;
-    for(const s of CG_STEPS.filter(x=>x.d===d)){const op=cgOpen(s.i),pass=s.i<S.f,now=s.i===S.f;
-      o+=`<button class="cgpill${pass?' pass':''}${now?' now':''}${op?'':' locked'}" ${op?`data-go="#/calc/run/${s.i}"`:'disabled'} title="${esc(cgStepName(s))}">${pass?'✓':op?s.st.k:'🔒'}<small>${esc(s.st.name)}</small></button>`}
-    o+='</div></div>'}
+    o+=CG_STEPS.filter(x=>x.d===d).map(cgPill).join('');
+    o+='</div></div>';if(!unlockAll()&&!cgKnown(CG_NEED[d])&&(d===1||cgKnown(CG_NEED[d-1])))o+=`<p class="small muted cgneed">🔒 Depth ${d} se pehle lesson: <a href="${cgLesHref(CG_NEED[d])}">${esc(cgLesTitle(CG_NEED[d]))}</a></p>`}
   o+=`</div><p class="small muted">A Asaan · B Medium · C Andhe (board chhupa) · D Mushkil · E Poori line dimaag mein · F GM. Depth = kitni apni chaalein.</p>`;
+  o+=cgPlanHTML();
   const nd=cur&&!done?CG_STEPS.find(x=>x.d===cur.d+1&&cgLesOk(x)):null;
   if(nd)o+=`<div class="card stack"><b>Pehle se aata hai?</b><p class="small muted">Depth ${nd.d} ka jump test: 5 puzzles. 4 bina hint ke sahi, target time ke andar, to seedha Depth ${nd.d} khul jaayega.</p><button class="btn block" data-go="#/calc/jump/${nd.i}">Jump test do ›</button></div>`;
   o+=`<div class="card stack"><b>📘 Rules ke lessons</b><div class="row wrap">${[['l2b.cg1','1: Routine aur 1 chaal'],['l3b.cg2','2: Skip rules aur 2 chaal'],['l3b.cg3','3: 3-5 chaal ka tree'],['l7.cg4','4: Legendary 6-8 chaal']].map(([k,t])=>`<a class="btn small" style="text-decoration:none" href="${cgLesHref(k)}">${t}</a>`).join('')}</div>

@@ -123,3 +123,9 @@ details[open]:not(.tocl){padding-bottom:10px}
 
 .pts{padding-left:20px;margin:0 0 8px}.pts li{margin:4px 0}.pts ul{padding-left:18px;margin:3px 0}.pts ul li{list-style:circle}
 .intro .pts{margin:0}
+
+/* Calculation Gym section */
+.tblw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.gymt{border-collapse:collapse;width:100%;font-size:14px;margin:6px 0}
+table.gymt th,table.gymt td{border:1px solid var(--line,#ddd);padding:6px 8px;text-align:left;vertical-align:top}
+table.gymt th{background:var(--surface2,#f3f3f3)}

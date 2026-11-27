@@ -173,6 +173,14 @@ function testSteps(L){const ks=L.lessons;const S=[];
 /* Calculation Gym ke saath: Gym ka har puzzle roz ke 'calc' quota mein ginta hai; Road ke pichle levels ke lessons "seekhe hue" maane jaate hain */
 function onCalcDone(ok){const D=sday();D.calc=(D.calc||0)+1;ssave()}
 function cgRoadKnown(k){return ROAD_LEVELS.some(L=>L.n<SP.lvl&&L.lessons.includes(k))}
+/* Road ke levels mein Gym ek section: Levels ke neeche apna card, aur har level page par us level ke Gym steps */
+function cgRoadRange(n){return[CG_RGATE[n-1]||0,CG_RGATE[n]||0]}
+function cgRoadSection(){const S=cgS(),N=CG_STEPS.length,f=Math.min(S.f,N),lk=!OPENALL()&&!cgLesOk(CG_STEPS[0]);
+  const lv=ROAD_LEVELS.find(L=>{const[a,b]=cgRoadRange(L.n);return b>a&&f<b});const cur=CG_STEPS[f];
+  return`<h2>Calculation Gym</h2><div class="card stack cgroad"><div class="cgsech"><b>🧠 1 se 8 chaal tak · ${N} steps</b><small class="muted">${lk?'🔒':f>=N?'🏅 poora':f+'/'+N+' pass'}</small></div>
+   <div class="cgmeter"><i style="width:${f/N*100}%"></i></div>
+   <p class="small muted">Road ka section: Level 2 se har level ke test se pehle kuch Gym steps. ${lk?`Pehle Level 2 ka lesson <b>${esc(cgLesTitle(cgFirstLes()))}</b>.`:lv&&cur?`Abhi: <b>${esc(cgStepName(cur))}</b> (Level ${lv.n} ke liye).`:''}</p>
+   <div class="row"><button class="btn primary block" data-go="#/calc">🧠 Gym kholo ›</button>${lv?`<button class="btn block" data-go="#/level/${lv.n}">Level ${lv.n} ke steps</button>`:''}</div></div>`}
 /* level test se pehle Gym ladder kahan tak (steps pass): pro banne ke liye practice zaroori */
 const CG_RGATE={2:5,3:11,4:17,5:23,6:29,7:35,8:41,9:47,10:47};
 function cgRoadGate(n){const need=CG_RGATE[n]||0;if(OPENALL()||cgS().f>=need)return'';const st=CG_STEPS[need-1];return`🧠 **Calculation Gym pehle:** Level ${n} test se pehle Gym mein **${cgStepName(st)}** tak pass karo (abhi ${cgS().f}/${need} steps).`}
@@ -228,9 +236,9 @@ function vHome(){const app=$('#app');sday();const L=CUR();const lock=ratingLocke
    ${dayDone()?'<div class="card okc"><b>Aaj ka poora kaam ho gaya. Shabaash!</b> Chaho to aur practice karo.</div>':''}
    <div class="card stack"><div class="row" style="justify-content:space-between"><h3>🧠 Yaad ka meter</h3><small class="muted">${srsStats().total} items</small></div>${srsMeterHTML()||'<p class="small muted">Lesson poora karte hi uske sawaal aur yaad points yahan aate hain (1, 3, 7, 21, 60, 120 din par wapas).</p>'}
     <div class="row"><button class="btn" data-go="#/review">🔁 Review (${srsDue().length})</button><button class="btn" data-go="#/viz">👁 Board-hidden drill</button></div></div>
-   <button class="btn primary block" data-go="#/calc">🧠 Calculation Gym · step ${Math.min(cgS().f+1,CG_STEPS.length)}/${CG_STEPS.length}</button>
    <div class="row"><button class="btn block" data-go="#/run/extra">♾ Unlimited Practice</button><button class="btn block" data-go="#/games">♟ My Games</button></div>
    <h2>Levels</h2><div class="lvls">${ROAD_LEVELS.map(x=>`<button class="lv${x.n===L2.n?' on':''}${x.n>L2.n&&!OPENALL()?' locked':''}" data-go="#/level/${x.n}"><b>${x.n}</b><span>${esc(x.name)}</span><small>${x.lo||0}-${x.gate}</small></button>`).join('')}</div>
+   ${cgRoadSection()}
    ${lichCard()}
    <p class="small muted">Puzzles: Lichess open puzzle database (CC0). Purane lessons: 64 Squares course.</p></div>`;
   app.innerHTML=o;if(SP.user&&(!SP.lich||Date.now()-SP.lich.at>30*60e3))sync(true)}
@@ -242,6 +250,7 @@ function vLevelS(n){const L=LV(n),app=$('#app');if(!L)return go('#/');const open
    ${!open?'<div class="card">🔒 Yeh level pichhla level aur uska Lichess darwaza paar karne par khulega.</div>':''}
    <h2>Lessons (${L.lessons.filter(isDone).length}/${L.lessons.length})</h2>${L.lessons.length?`<div class="qlist">${items}</div>`:'<div class="card">Is level ka content jald aa raha hai. Tab tak roz ka puzzle quota, opening drills aur games.</div>'}
    <p class="small muted">Naye lessons roz ki list se ek-ek karke khulte hain. ✅ wale yahan se dobara kar sakte ho.</p>
+   ${(()=>{const[a,b]=cgRoadRange(n);return b>a?`<h2>🧠 Calculation Gym (is level ka hissa)</h2>`+cgSecHTML(a,b):''})()}
    ${n===SP.lvl||OPENALL()?`<h2>Level Test</h2>${cgRoadGate(n)?`<div class="card">${md(cgRoadGate(n))}<a class="btn small" style="text-decoration:none" href="#/calc">Gym kholo ›</a></div>`:''}<button class="btn ${L.lessons.every(isDone)||OPENALL()?'primary':''} block" ${L.lessons.every(isDone)||OPENALL()?`data-go="#/test/${n}"`:'disabled'}>Take Level ${n} Test (75% to pass)</button>`+gateHTML(L):''}
    ${n%2===0&&(open||OPENALL())?`<h2>Mixed Exam</h2><button class="btn block" data-go="#/exam/${n}">🧩 Mixed Exam: Level 1-${n}${(SP.exam||{})[n]!=null?' · best '+SP.exam[n]+'%':''}</button><p class="small muted">Har 2 level baad: 25 sawaal, sab purane lessons se mila-jula. Kamzor topics pehle.</p>`:''}</div>`}
 
