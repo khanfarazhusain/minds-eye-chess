@@ -4992,8 +4992,9 @@ Jawab:
     4.6.10 Ab roz ki practice: Calculation Gym
     ------------------------------------------
 
--   Calculation Gym (Puzzles tab ya home par) mein 8 depth hain (1 se 8
-    chaal).
+-   Calculation Gym course ka apna section hai: course list mein is level ke
+    turant baad, aur har level page par us level ke Gym steps.
+-   Usmein 8 depth hain (1 se 8 chaal).
 -   Har depth ke 6 steps hain: Asaan → Medium → Andhe (board chhupa) → Mushkil
     → Poori line → GM.
 -   Har step mein aakhri 10 mein 8 sahi aur target time ke andar, tab agla
@@ -8285,6 +8286,93 @@ Jawab:
         a b c d e f g h
 
 Chaal ke baad
+
+    ######################################################################
+    ##  SECTION: 🧠 CALCULATION GYM: 1 SE 8 CHAAL TAK
+    ######################################################################
+
+Course ka section: Level 4 ke baad shuru, phir har level ke saath kuch steps.
+
+-   Gym mein 47 steps hain, 8 depth (kitni apni chaalein: 1 se 8+). Har depth
+    ke steps: Asaan (Board dikhega, coach saath), Medium (Board dikhega),
+    Andhe (Dekho, yaad karo, phir board chhup jaata hai), Mushkil (Board
+    dikhega, zyada mushkil), Poori line (Board nahi hilta: poori line dimaag
+    mein), GM (Sabse mushkil, poori line dimaag mein). Depth 1 mein "Poori
+    line" nahi.
+-   Step pass: kam se kam 20-55 puzzles, aakhri 10 mein 8 bina hint/jhaank ke
+    sahi (GM step par 9), aur sahi waalon ka median time target ke andar.
+-   Pehle rules, phir practice: har depth tabhi khulti hai jab uska rules
+    lesson ho gaya. Puzzle mein sirf woh themes aate hain jinka lesson ho
+    chuka.
+-   Level test se pehle Gym ladder us level ke step tak pass honi chahiye
+    (neeche table).
+-   Roz 10-15 puzzles: pehle sahi, phir tez. Galat puzzle 3 puzzle baad dobara
+    aata hai aur review mein bhi jaata hai.
+
+    Har puzzle ka routine (6 steps)
+    ===============================
+
+1.  Dhamki: opponent ki pichli chaal kya karna chahti hai? Mere kaunse piece
+    par khatra hai?
+2.  Target: kaunse pieces bina protection hain? King kitna khula hai? Kaun do
+    kaam kar raha hai?
+3.  Candidates: 2-3 chaalein chuno. Pehle checks, phir captures, phir threats.
+4.  Line: ek candidate ko end tak socho. Har chaal par opponent ka sabse
+    forcing jawab lo.
+5.  Ruko: line tab roko jab koi check, capture ya threat na bache. Phir
+    material gino.
+6.  Blunder check: chalne se pehle dekho ki opponent ke paas koi check,
+    capture ya threat to nahi bacha.
+
+    Kya chhodna hai (skip rules)
+    ============================
+
+1.  Pehle forcing chaalein dekho. Quiet chaal tabhi socho jab forcing se kuch
+    na mile.
+2.  Jo chaal bina check ya mate ke apna piece latka de, use chhod do.
+3.  Opponent ke jawab mein pehle uske checks aur captures dekho, phir 1 best
+    defence. Baaki jawab chhod do.
+4.  Har line ek hi baar socho aur end mein uska nateeja yaad rakho (+3,
+    barabar, mate). Dobara mat socho.
+5.  Ek candidate saaf jeet de raha ho to baaki chhod do. Simple jeet sundar
+    jeet se behtar hai.
+6.  Jahan position shaant ho jaaye, wahin ruko. Usse aage sochna time ki
+    barbaadi hai.
+
+    Ladder: depth, steps, target time, rules lesson
+    ===============================================
+
+  Depth   Steps                                                Target   Pehle yeh lesson
+  ------- ---------------------------------------------------- -------- --------------------------------------------------
+  1       Asaan · Medium · Andhe · Mushkil · GM                15s      4.6 Calculation 1: sochne ka routine aur 1 chaal
+  2       Asaan · Medium · Andhe · Mushkil · Poori line · GM   30s      6.5 Calculation 2: skip rules aur 2 chaal
+  3       Asaan · Medium · Andhe · Mushkil · Poori line · GM   50s      6.6 Calculation 3: 3-5 chaal ka tree
+  4       Asaan · Medium · Andhe · Mushkil · Poori line · GM   75s      6.6 Calculation 3: 3-5 chaal ka tree
+  5       Asaan · Medium · Andhe · Mushkil · Poori line · GM   100s     6.6 Calculation 3: 3-5 chaal ka tree
+  6       Asaan · Medium · Andhe · Mushkil · Poori line · GM   140s     14.6 Calculation 4: Legendary 6-8 chaal
+  7       Asaan · Medium · Andhe · Mushkil · Poori line · GM   180s     14.6 Calculation 4: Legendary 6-8 chaal
+  8       Asaan · Medium · Andhe · Mushkil · Poori line · GM   240s     14.6 Calculation 4: Legendary 6-8 chaal
+
+Target time "board dekh ke" steps ka hai. Andhe, Poori line aur GM steps mein
+1.5 guna time milta hai.
+
+    Kis level ke saath kaunse steps
+    ===============================
+
+  Level test                                                  Gym steps   Kahan tak pass
+  ----------------------------------------------------------- ----------- ------------------
+  Level 4: Safety, captures aur opening basics                1-2         Depth 1 · Medium
+  Level 5: Middlegame 1: Tactics ke hathiyaar                 3-5         Depth 1 · GM
+  Level 6: Middlegame 2: Advanced tactics aur calculation     6-8         Depth 2 · Andhe
+  Level 7: Middlegame 3: Checkmate patterns                   9-11        Depth 2 · GM
+  Level 8: Middlegame 4: Position aur pawn structure          12-14       Depth 3 · Andhe
+  Level 9: Middlegame 5: Plans aur positional khel            15-17       Depth 3 · GM
+  Level 10: Openings 1: ideas aur e4 openings                 18-20       Depth 4 · Andhe
+  Level 11: Openings 2: d4 openings, gambits aur traps        21-23       Depth 4 · GM
+  Level 12: Endgames 1: king aur pawns                        24-26       Depth 5 · Andhe
+  Level 13: Endgames 2: pawn, rook aur minor piece endgames   27-29       Depth 5 · GM
+  Level 14: Pro 1: practical chess                            30-32       Depth 6 · Andhe
+  Level 15: Pro 2: champions, itihaas aur training plan       33-47       Depth 8 · GM
 
     ######################################################################
     ##  LEVEL 5: MIDDLEGAME 1: TACTICS KE HATHIYAAR
