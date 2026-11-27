@@ -239,6 +239,7 @@ function vHome(){const app=$('#app');sday();const L=CUR();const lock=ratingLocke
    <div class="row"><button class="btn block" data-go="#/run/extra">♾ Unlimited Practice</button><button class="btn block" data-go="#/games">♟ My Games</button></div>
    <h2>Levels</h2><div class="lvls">${ROAD_LEVELS.map(x=>`<button class="lv${x.n===L2.n?' on':''}${x.n>L2.n&&!OPENALL()?' locked':''}" data-go="#/level/${x.n}"><b>${x.n}</b><span>${esc(x.name)}</span><small>${x.lo||0}-${x.gate}</small></button>`).join('')}</div>
    ${cgRoadSection()}
+   ${trRoadSection()}
    ${lichCard()}
    <p class="small muted">Puzzles: Lichess open puzzle database (CC0). Purane lessons: 64 Squares course.</p></div>`;
   app.innerHTML=o;if(SP.user&&(!SP.lich||Date.now()-SP.lich.at>30*60e3))sync(true)}
@@ -250,6 +251,7 @@ function vLevelS(n){const L=LV(n),app=$('#app');if(!L)return go('#/');const open
    ${!open?'<div class="card">🔒 Yeh level pichhla level aur uska Lichess darwaza paar karne par khulega.</div>':''}
    <h2>Lessons (${L.lessons.filter(isDone).length}/${L.lessons.length})</h2>${L.lessons.length?`<div class="qlist">${items}</div>`:'<div class="card">Is level ka content jald aa raha hai. Tab tak roz ka puzzle quota, opening drills aur games.</div>'}
    <p class="small muted">Naye lessons roz ki list se ek-ek karke khulte hain. ✅ wale yahan se dobara kar sakte ho.</p>
+   ${trLevelHTML(L.lessons.filter(k=>k.startsWith('tr.')))}
    ${(()=>{const[a,b]=cgRoadRange(n);return b>a?`<h2>🧠 Calculation Gym (is level ka hissa)</h2>`+cgSecHTML(a,b):''})()}
    ${n===SP.lvl||OPENALL()?`<h2>Level Test</h2>${cgRoadGate(n)?`<div class="card">${md(cgRoadGate(n))}<a class="btn small" style="text-decoration:none" href="#/calc">Gym kholo ›</a></div>`:''}<button class="btn ${L.lessons.every(isDone)||OPENALL()?'primary':''} block" ${L.lessons.every(isDone)||OPENALL()?`data-go="#/test/${n}"`:'disabled'}>Take Level ${n} Test (75% to pass)</button>`+gateHTML(L):''}
    ${n%2===0&&(open||OPENALL())?`<h2>Mixed Exam</h2><button class="btn block" data-go="#/exam/${n}">🧩 Mixed Exam: Level 1-${n}${(SP.exam||{})[n]!=null?' · best '+SP.exam[n]+'%':''}</button><p class="small muted">Har 2 level baad: 25 sawaal, sab purane lessons se mila-jula. Kamzor topics pehle.</p>`:''}</div>`}
@@ -262,7 +264,7 @@ function go(hash){if(location.hash!==hash)location.hash=hash;else route()}
 window.addEventListener('hashchange',route);
 function navOn(){const h=location.hash||'#/';const bs=[...document.querySelectorAll('nav.tabs button[data-go]')];const hit=bs.find(b=>b.dataset.go===h)||bs.find(b=>h.startsWith(b.dataset.go+'/')&&b.dataset.go!=='#/')||bs[0];bs.forEach(b=>b.classList.toggle('on',b===hit))}
 function route(){closeTutor();navOn();const p=(location.hash||'#/').slice(2).split('/');const app=$('#app');app.innerHTML='';app.onclick=null;window.scrollTo(0,0);
-  if(p[0]==='calc'){if(p[1]==='run')cgRun(+p[2]);else if(p[1]==='jump')cgRun(+p[2],{test:1});else cgHome()}else if(p[0]==='run')vPuzzleRun(p[1],p[2]);else if(p[0]==='les')runLesson(p[1],'#/');else if(p[0]==='quiz')runQuiz();else if(p[0]==='open')runOpen();
+  if(p[0]==='calc'){if(p[1]==='run')cgRun(+p[2]);else if(p[1]==='jump')cgRun(+p[2],{test:1});else cgHome()}else if(p[0]==='train'){if(p[1]==='go')return trGo(decodeURIComponent(p[2]||''));trHome(p[1])}else if(p[0]==='run')vPuzzleRun(p[1],p[2]);else if(p[0]==='les')runLesson(p[1],'#/');else if(p[0]==='quiz')runQuiz();else if(p[0]==='open')runOpen();
   else if(p[0]==='test')runTest(+p[1]);else if(p[0]==='review')srsSession(app,{back:'#/',backTxt:"Today's Work ›",self:'#/review',viz:'#/viz',onDone:n=>{const D=sday();D.srs=(D.srs||0)+n;ssave()}});else if(p[0]==='viz')vizSession(app,{back:'#/',self:'#/viz'});else if(p[0]==='exam')vExamS(+p[1]);else if(p[0]==='level')vLevelS(+p[1]);else if(p[0]==='games')vGames();else if(p[0]==='game'&&p[1])vGame(p[1]);else vHome();chips()}
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();const t=g.dataset.go;if(location.hash===t)route();else go(t);return}
   const a=e.target.closest('[data-act]');if(!a)return;

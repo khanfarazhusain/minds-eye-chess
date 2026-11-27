@@ -25,3 +25,12 @@ node tools/train/gen-spar-guess.js    # ladders/spar.json, guess.json, review.js
 node tools/train/build.js         # course.html TRAIN likho + sequence check + road.html rebuild
 ```
 `check-order.js` fail karta hai agar koi drill kisi aise lesson ya chess term ko use kare jo usse pehle (Main Course ya Road) nahi sikhaya gaya.
+
+## Pro Training section (7 modes)
+Drills course mein apni jagah rehte hain; `section.js`/`section.css` unhe ek **section** ki tarah dikhate hain (koi copy nahi, link asli lesson par, wahi taala):
+- Main Course: course list mein "Pro Training: 7 modes" row (pehle drill wale level ke baad), `#/train` (7 modes, har mode ki ladder, agla drill button), `#/train/<ev|eg|df|rs|sp|gm|mr>`, `#/train/go/<key>`, aur har level page par test se pehle "Pro Training (is level ka hissa)".
+- Road to 3000: home par Pro Training card, wahi `#/train` routes, level page par us level ke drills.
+- App (index.html): "Course ka safar" mein Pro Training padaav (har mode ek stop) aur level page par drills. Data `TR_APP` `inject-section.js` likhta hai.
+- Notes: `tools/notes/build.js` Pro Training section (har mode ki table) banata hai.
+
+`node tools/train/build.js` yeh sab inject karta hai (`inject-section.js`), phir sequence check aur road.html rebuild.

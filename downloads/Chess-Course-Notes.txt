@@ -1625,6 +1625,673 @@ Jawab:
 Exchange: knight (3) ke badle rook (5). Nxd5 ke baad White +2
 
     ######################################################################
+    ##  SECTION: 🏋 PRO TRAINING: 7 MODES
+    ######################################################################
+
+Course ka section: Level 1 se shuru, phir har level ke lessons ke beech uske
+drills. Kul 34 drills, beginner se GM tak.
+
+-   7 modes: 📊 Position eval, ♔ Endgame vs engine, 🛡 Defence, ⏱ Time
+    pressure, 🤺 Sparring, 🎯 Guess the move, 🔍 Apne games ka review. Har
+    mode ek ladder hai (4-5 drills, aasaan se GM).
+-   Har drill course mein apne zaroori lessons ke turant baad aata hai, aur
+    wahi taala: pichhla lesson poora to drill khulta hai. Koi drill aisi cheez
+    use nahi karta jo pehle nahi sikhayi.
+-   Drill: pehle practice (hint, undo), phir test (naye sawaal, ek koshish,
+    80% par pass). Drill poora = lesson poora, aur level test ke liye bhi
+    ginta hai.
+-   App mein: course list mein "Pro Training" section, har level page par test
+    se pehle us level ke drills, aur Pro Training page par har mode ka agla
+    drill ek button se.
+
+    📊 Position eval (5 drills)
+    ===========================
+
+Material gino, phir 5 elements, phir engine jaisa number aur compensation.
+
++------------------+------------------+------------------+------------------+
+| #                | Drill            | Kahan aata hai   | Pehle yeh        |
+|                  |                  |                  | lessons          |
++==================+==================+==================+==================+
+| 1                | Kaun aage?       | Main Course:     | 1.2 Chessboard   |
+|                  | Points gino      | Level 1, 1.5     | ko jaano         |
+|                  | Asli game        | Pieces ki keemat | 1.3 Pieces kaise |
+|                  | positions mein   | aur trades ke    | chalte hain      |
+|                  | material gino,   | baad             | 1.5 Pieces ki    |
+|                  | Stockfish se     | Road to 3000:    | keemat aur       |
+|                  | match            | Level 1          | trades           |
+|                  |                  |                  |                  |
+|                  | -   Pawn 1,      |                  |                  |
+|                  |     knight 3,    |                  |                  |
+|                  |     bishop 3,    |                  |                  |
+|                  |     rook 5,      |                  |                  |
+|                  |     queen 9.     |                  |                  |
+|                  | -   Dono taraf   |                  |                  |
+|                  |     alag jodo,   |                  |                  |
+|                  |     phir farak.  |                  |                  |
++------------------+------------------+------------------+------------------+
+| 2                | Development aur  | Main Course:     | 1.5 Pieces ki    |
+|                  | king safety      | Level 4, 4.3     | keemat aur       |
+|                  | Material barabar | Opening ke 10    | trades           |
+|                  | ho to kaun       | principles ke    | 4.3 Opening ke   |
+|                  | behtar? Opening  | baad             | 10 principles    |
+|                  | principles se    | Road to 3000:    |                  |
+|                  | socho            | Level 1          |                  |
+|                  |                  |                  |                  |
+|                  | -   Material     |                  |                  |
+|                  |     barabar ho   |                  |                  |
+|                  |     to dekho:    |                  |                  |
+|                  |     kis ke zyada |                  |                  |
+|                  |     pieces       |                  |                  |
+|                  |     bahar, kis   |                  |                  |
+|                  |     ka king      |                  |                  |
+|                  |     safe.        |                  |                  |
+|                  | -   Center mein  |                  |                  |
+|                  |     reh gaya     |                  |                  |
+|                  |     king =       |                  |                  |
+|                  |     khatra.      |                  |                  |
++------------------+------------------+------------------+------------------+
+| 3                | 5 elements se    | Main Course:     | 8.1 Position ke  |
+|                  | position samjho  | Level 8, 8.4     | elements aur     |
+|                  | Material, time,  | Weak squares aur | exchanges        |
+|                  | space, king      | outposts ke baad | 8.2 Pawn         |
+|                  | safety, pawn     | Road to 3000:    | structure        |
+|                  | structure: sabse | Level 5          | 8.3 Pawn         |
+|                  | bada farak       |                  | structure:       |
+|                  | kahan?           |                  | gehraai se       |
+|                  |                  |                  | 8.4 Weak squares |
+|                  | -   Accountant   |                  | aur outposts     |
+|                  |     mat bano: 5  |                  | 4.3 Opening ke   |
+|                  |     elements     |                  | 10 principles    |
+|                  |     dekho.       |                  |                  |
+|                  | -   Ek element   |                  |                  |
+|                  |     mein aage,   |                  |                  |
+|                  |     doosre mein  |                  |                  |
+|                  |     peeche ho    |                  |                  |
+|                  |     sakte ho.    |                  |                  |
++------------------+------------------+------------------+------------------+
+| 4                | Engine jaisa     | Main Course:     | 8.1 Position ke  |
+|                  | number socho     | Level 9, 9.4     | elements aur     |
+|                  | Position dekh    | Positional       | exchanges        |
+|                  | kar eval ki      | sacrifices ke    | 8.2 Pawn         |
+|                  | range batao: GM  | baad             | structure        |
+|                  | ki aadat         | Road to 3000:    | 8.4 Weak squares |
+|                  |                  | Level 6          | aur outposts     |
+|                  | -   +1 ≈ ek pawn |                  | 9.1 Open files,  |
+|                  |     ka fayda, +3 |                  | 7th rank, piece  |
+|                  |     ≈ ek piece:  |                  | activity         |
+|                  |     aksar jeet.  |                  | 9.2 Plan kaise   |
+|                  | -   Saare        |                  | banayein         |
+|                  |     elements     |                  | 9.4 Positional   |
+|                  |     milakar      |                  | sacrifices       |
+|                  |     socho, sirf  |                  |                  |
+|                  |     material     |                  |                  |
+|                  |     nahi.        |                  |                  |
++------------------+------------------+------------------+------------------+
+| 5                | Mushkil evals    | Main Course:     | 14.4 Apne games  |
+|                  | aur compensation | Level 14, 14.4   | analyse karo     |
+|                  | (GM)             | Apne games       | Pichhla drill:   |
+|                  | Range ke kinare  | analyse karo ke  | Engine jaisa     |
+|                  | wale aur         | baad             | number socho     |
+|                  | material ke ulat | Road to 3000:    |                  |
+|                  | positions        | Level 6          |                  |
+|                  |                  |                  |                  |
+|                  | -   Material sab |                  |                  |
+|                  |     kuch nahi:   |                  |                  |
+|                  |     compensation |                  |                  |
+|                  |     dekho.       |                  |                  |
+|                  | -   Pehle khud   |                  |                  |
+|                  |     socho, phir  |                  |                  |
+|                  |     engine       |                  |                  |
+|                  |     (analysis ka |                  |                  |
+|                  |     rule).       |                  |                  |
++------------------+------------------+------------------+------------------+
+
+    ♔ Endgame vs engine (5 drills)
+    ==============================
+
+Basic mates, king + pawn, Lucena/Philidor/Vancura, B+N mate.
+
++------------------+------------------+------------------+------------------+
+| #                | Drill            | Kahan aata hai   | Pehle yeh        |
+|                  |                  |                  | lessons          |
++==================+==================+==================+==================+
+| 1                | Basic mates      | Main Course:     | 2.1 Check,       |
+|                  | engine ke        | Level 3, 3.3 Do  | checkmate,       |
+|                  | against          | rooks aur        | stalemate        |
+|                  | Queen, rook aur  | Queen+Rook se    | 3.1 Queen se     |
+|                  | seedhi se mate,  | mate ke baad     | mate (K+Q vs K)  |
+|                  | engine poori     | Road to 3000:    | 3.2 Rook se mate |
+|                  | taakat se bachta | Level 1          | (K+R vs K)       |
+|                  | hai              |                  | 3.3 Do rooks aur |
+|                  |                  |                  | Queen+Rook se    |
+|                  | -   Box chhota   |                  | mate             |
+|                  |     karo, king   |                  |                  |
+|                  |     saath lao,   |                  |                  |
+|                  |     kinare par   |                  |                  |
+|                  |     mate.        |                  |                  |
+|                  | -   Queen se     |                  |                  |
+|                  |     mate karte   |                  |                  |
+|                  |     waqt         |                  |                  |
+|                  |     stalemate se |                  |                  |
+|                  |     bacho.       |                  |                  |
+|                  | -   Test: 5 mein |                  |                  |
+|                  |     se 4 bina    |                  |                  |
+|                  |     hint.        |                  |                  |
++------------------+------------------+------------------+------------------+
+| 2                | King + pawn,     | Main Course:     | 12.3 King aur    |
+|                  | jeeto aur bachao | Level 12, 12.3   | pawn: opposition |
+|                  | Opposition aur   | King aur pawn:   |                  |
+|                  | key squares      | opposition ke    |                  |
+|                  | engine ke        | baad             |                  |
+|                  | against          | Road to 3000:    |                  |
+|                  |                  | Level 3          |                  |
+|                  | -   King pawn ke |                  |                  |
+|                  |     aage = jeet  |                  |                  |
+|                  |     ka raasta.   |                  |                  |
+|                  | -   Defend karte |                  |                  |
+|                  |     waqt king    |                  |                  |
+|                  |     pawn ke      |                  |                  |
+|                  |     saamne,      |                  |                  |
+|                  |     opposition   |                  |                  |
+|                  |     lo.          |                  |                  |
++------------------+------------------+------------------+------------------+
+| 3                | Square rule aur  | Main Course:     | 12.4 Square rule |
+|                  | passed pawns     | Level 13, 13.1   | aur              |
+|                  | Pawn bhagao,     | Pawn endgame     | triangulation    |
+|                  | pawn pakdo,      | tricks ke baad   | 13.1 Pawn        |
+|                  | outside passed   | Road to 3000:    | endgame tricks   |
+|                  | pawn se jeeto    | Level 4          |                  |
+|                  |                  |                  |                  |
+|                  | -   Square rule: |                  |                  |
+|                  |     king box     |                  |                  |
+|                  |     mein = pawn  |                  |                  |
+|                  |     pakda        |                  |                  |
+|                  |     jaayega.     |                  |                  |
+|                  | -   Outside      |                  |                  |
+|                  |     passed pawn  |                  |                  |
+|                  |     dushman king |                  |                  |
+|                  |     ko door      |                  |                  |
+|                  |     kheenchta    |                  |                  |
+|                  |     hai.         |                  |                  |
++------------------+------------------+------------------+------------------+
+| 4                | Lucena,          | Main Course:     | 13.2 Rook        |
+|                  | Philidor,        | Level 13, 13.2   | endgames: Lucena |
+|                  | Vancura          | Rook endgames:   | aur Philidor     |
+|                  | Rook endgames    | Lucena aur       |                  |
+|                  | har file aur     | Philidor ke baad |                  |
+|                  | dono colours se  | Road to 3000:    |                  |
+|                  |                  | Level 5          |                  |
+|                  | -   Lucena =     |                  |                  |
+|                  |     bridge se    |                  |                  |
+|                  |     jeet.        |                  |                  |
+|                  | -   Philidor =   |                  |                  |
+|                  |     6th rank,    |                  |                  |
+|                  |     phir peeche  |                  |                  |
+|                  |     se checks.   |                  |                  |
+|                  | -   Vancura =    |                  |                  |
+|                  |     side se      |                  |                  |
+|                  |     defence.     |                  |                  |
++------------------+------------------+------------------+------------------+
+| 5                | Bishop + knight  | Main Course:     | 13.3 Minor       |
+|                  | mate (GM level)  | Level 13, 13.3   | pieces aur       |
+|                  | Sabse mushkil    | Minor pieces aur | theory           |
+|                  | basic mate,      | theory ke baad   | 3.3 Do rooks aur |
+|                  | engine ke        | Road to 3000:    | Queen+Rook se    |
+|                  | against          | Level 5          | mate             |
+|                  |                  |                  |                  |
+|                  | -   Mate bishop  |                  |                  |
+|                  |     ke colour    |                  |                  |
+|                  |     wale corner  |                  |                  |
+|                  |     mein.        |                  |                  |
+|                  | -   Knight W     |                  |                  |
+|                  |     shape mein,  |                  |                  |
+|                  |     bishop       |                  |                  |
+|                  |     diagonal     |                  |                  |
+|                  |     band kare,   |                  |                  |
+|                  |     king paas.   |                  |                  |
++------------------+------------------+------------------+------------------+
+
+    🛡 Defence (5 drills)
+    =====================
+
+Check se bacho, piece bachao, phir only-move defence 2800 tak.
+
++------------------+------------------+------------------+------------------+
+| #                | Drill            | Kahan aata hai   | Pehle yeh        |
+|                  |                  |                  | lessons          |
++==================+==================+==================+==================+
+| 1                | Check se bacho   | Main Course:     | 2.1 Check,       |
+|                  | (defence 1)      | Level 2, 2.1     | checkmate,       |
+|                  | Asli games ki    | Check,           | stalemate        |
+|                  | positions: sabse | checkmate,       |                  |
+|                  | achha bachaav    | stalemate ke     |                  |
+|                  | chuno            | baad             |                  |
+|                  |                  | Road to 3000:    |                  |
+|                  | -   Check se     | Level 1          |                  |
+|                  |     bachne ke 3  |                  |                  |
+|                  |     tareeke:     |                  |                  |
+|                  |     king hatao,  |                  |                  |
+|                  |     block,       |                  |                  |
+|                  |     capture.     |                  |                  |
+|                  | -   Sabse achha  |                  |                  |
+|                  |     woh jisme    |                  |                  |
+|                  |     kuch na      |                  |                  |
+|                  |     khoye.       |                  |                  |
++------------------+------------------+------------------+------------------+
+| 2                | Khatre mein      | Main Course:     | 1.5 Pieces ki    |
+|                  | piece bachao     | Level 4, 4.1     | keemat aur       |
+|                  | (defence 2)      | Hanging pieces   | trades           |
+|                  | Attack mein aaye | aur safety ke    | 4.1 Hanging      |
+|                  | piece ko bina    | baad             | pieces aur       |
+|                  | kuch khoye       | Road to 3000:    | safety           |
+|                  | bachao           | Level 1          |                  |
+|                  |                  |                  |                  |
+|                  | -   Har chaal se |                  |                  |
+|                  |     pehle: mera  |                  |                  |
+|                  |     koi piece    |                  |                  |
+|                  |     attack mein  |                  |                  |
+|                  |     to nahi?     |                  |                  |
+|                  | -   Bachao:      |                  |                  |
+|                  |     hatao,       |                  |                  |
+|                  |     protect      |                  |                  |
+|                  |     karo, ya     |                  |                  |
+|                  |     beech mein   |                  |                  |
+|                  |     rok do.      |                  |                  |
++------------------+------------------+------------------+------------------+
+| 3                | Only-move        | Main Course:     | 6.3 Calculation  |
+|                  | defence          | Level 6, 6.3     | ke 3 golden      |
+|                  | (1000-1500)      | Calculation ke 3 | rules            |
+|                  | Lichess ke       | golden rules ke  | 4.1 Hanging      |
+|                  | defence puzzles: | baad             | pieces aur       |
+|                  | sirf ek chaal    | Road to 3000:    | safety           |
+|                  | bachaati hai     | Level 4          |                  |
+|                  |                  |                  |                  |
+|                  | -   Pehle        |                  |                  |
+|                  |     opponent ki  |                  |                  |
+|                  |     dhamki       |                  |                  |
+|                  |     dekho.       |                  |                  |
+|                  | -   Forcing      |                  |                  |
+|                  |     jawab:       |                  |                  |
+|                  |     check,       |                  |                  |
+|                  |     capture,     |                  |                  |
+|                  |     threat.      |                  |                  |
++------------------+------------------+------------------+------------------+
+| 4                | Defence aur      | Main Course:     | 9.3 Prophylaxis  |
+|                  | quiet moves      | Level 9, 9.3     | aur restriction  |
+|                  | (1500-2100)      | Prophylaxis aur  | Pichhla drill:   |
+|                  | Prophylaxis ke   | restriction ke   | Only-move        |
+|                  | baad: shaant     | baad             | defence          |
+|                  | bachaav wali     | Road to 3000:    | (1000-1500)      |
+|                  | chaalein         | Level 6          |                  |
+|                  |                  |                  |                  |
+|                  | -   Opponent ka  |                  |                  |
+|                  |     plan pehle   |                  |                  |
+|                  |     socho        |                  |                  |
+|                  |                  |                  |                  |
+|                  |   (prophylaxis). |                  |                  |
+|                  | -   Sabse achhi  |                  |                  |
+|                  |     defence      |                  |                  |
+|                  |     aksar shaant |                  |                  |
+|                  |     chaal hoti   |                  |                  |
+|                  |     hai.         |                  |                  |
++------------------+------------------+------------------+------------------+
+| 5                | GM level defence | Main Course:     | 14.1 Deep        |
+|                  | (2100-2800)      | Level 14, 14.1   | calculation      |
+|                  | Sabse mushkil    | Deep calculation | Pichhla drill:   |
+|                  | only-move        | ke baad          | Defence aur      |
+|                  | positions        | Road to 3000:    | quiet moves      |
+|                  |                  | Level 6          | (1500-2100)      |
+|                  | -   Lamba        |                  |                  |
+|                  |     calculation: |                  |                  |
+|                  |     opponent ka  |                  |                  |
+|                  |     sabse achha  |                  |                  |
+|                  |     jawab.       |                  |                  |
+|                  | -   Haar maan ke |                  |                  |
+|                  |     mat baitho:  |                  |                  |
+|                  |     sirf ek      |                  |                  |
+|                  |     chaal bhi    |                  |                  |
+|                  |     kaafi hai.   |                  |                  |
++------------------+------------------+------------------+------------------+
+
+    ⏱ Time pressure (5 drills)
+    ==========================
+
+Clock ke saath: mate-in-1 rush se increment aur GM rush tak.
+
++------------------+------------------+------------------+------------------+
+| #                | Drill            | Kahan aata hai   | Pehle yeh        |
+|                  |                  |                  | lessons          |
++==================+==================+==================+==================+
+| 1                | Mate-in-1 rush   | Main Course:     | 2.1 Check,       |
+|                  | 3 minute mein    | Level 2, 2.4     | checkmate,       |
+|                  | jitne mate-in-1  | Tournament       | stalemate        |
+|                  |                  | rules, clock aur | 2.4 Tournament   |
+|                  | -   Clock chalti | ratings ke baad  | rules, clock aur |
+|                  |     hai: jaldi   | Road to 3000:    | ratings          |
+|                  |     par dhyan    | Level 1          |                  |
+|                  |     se.          |                  |                  |
+|                  | -   Pehle check  |                  |                  |
+|                  |     wali         |                  |                  |
+|                  |     chaalein     |                  |                  |
+|                  |     dekho.       |                  |                  |
++------------------+------------------+------------------+------------------+
+| 2                | Free piece rush  | Main Course:     | 4.1 Hanging      |
+|                  | 3 minute mein    | Level 4, 4.2     | pieces aur       |
+|                  | latakte pieces   | Samajhdaari se   | safety           |
+|                  | pakdo            | capture ke baad  | 4.2 Samajhdaari  |
+|                  |                  | Road to 3000:    | se capture       |
+|                  | -   Har          | Level 1          |                  |
+|                  |     position:    |                  |                  |
+|                  |     kaun sa      |                  |                  |
+|                  |     piece bina   |                  |                  |
+|                  |     protection   |                  |                  |
+|                  |     hai?         |                  |                  |
+|                  | -   Attackers    |                  |                  |
+|                  |     aur          |                  |                  |
+|                  |     defenders    |                  |                  |
+|                  |     gino.        |                  |                  |
++------------------+------------------+------------------+------------------+
+| 3                | Tactics rush     | Main Course:     | 5.2 Fork (do pe  |
+|                  | 5 minute: fork,  | Level 5, 5.6     | ek saath attack) |
+|                  | pin, skewer,     | Defender hatao   | 5.3 Pin          |
+|                  | discovered,      | aur overloading  | 5.4 Skewer       |
+|                  | defender hatao   | ke baad          | 5.5 Discovered   |
+|                  |                  | Road to 3000:    | attack aur       |
+|                  | -   Pehle        | Level 3          | double check     |
+|                  |     forcing      |                  | 5.6 Defender     |
+|                  |     chaalein:    |                  | hatao aur        |
+|                  |     check,       |                  | overloading      |
+|                  |     capture,     |                  |                  |
+|                  |     threat.      |                  |                  |
+|                  | -   Pattern      |                  |                  |
+|                  |     pehchano,    |                  |                  |
+|                  |     phir chalo.  |                  |                  |
++------------------+------------------+------------------+------------------+
+| 4                | Clock handling   | Main Course:     | 14.2 Time        |
+|                  | (increment)      | Level 14, 14.2   | management       |
+|                  | 1 minute + 8     | Time management  | Pichhla drill:   |
+|                  | second har sahi  | ke baad          | Tactics rush     |
+|                  | par, 3 galti =   | Road to 3000:    |                  |
+|                  | khatam           | Level 6          |                  |
+|                  |                  |                  |                  |
+|                  | -   Increment:   |                  |                  |
+|                  |     har sahi     |                  |                  |
+|                  |     chaal par    |                  |                  |
+|                  |     time judta   |                  |                  |
+|                  |     hai.         |                  |                  |
+|                  | -   Time trouble |                  |                  |
+|                  |     mein simple  |                  |                  |
+|                  |     aur safe.    |                  |                  |
++------------------+------------------+------------------+------------------+
+| 5                | GM rush          | Main Course:     | 14.2 Time        |
+|                  | (1800-2500)      | Level 14, 14.5   | management       |
+|                  | 3 minute, 3      | Improve aur      | 14.5 Improve aur |
+|                  | galti = khatam,  | jeetne ke tips   | jeetne ke tips   |
+|                  | mushkil puzzles  | ke baad          | Pichhla drill:   |
+|                  |                  | Road to 3000:    | Clock handling   |
+|                  | -   Speed ke     | Level 6          | (increment)      |
+|                  |     saath        |                  |                  |
+|                  |     accuracy:    |                  |                  |
+|                  |     pehle CCT.   |                  |                  |
+|                  | -   Ek galti ke  |                  |                  |
+|                  |     baad ruko    |                  |                  |
+|                  |     mat, agla    |                  |                  |
+|                  |     socho.       |                  |                  |
++------------------+------------------+------------------+------------------+
+
+    🤺 Sparring (5 drills)
+    ======================
+
+Engine ke against khelo: develop aur castle se full engine tak.
+
++------------------+------------------+------------------+------------------+
+| #                | Drill            | Kahan aata hai   | Pehle yeh        |
+|                  |                  |                  | lessons          |
++==================+==================+==================+==================+
+| 1                | Sparring:        | Main Course:     | 1.4 Special      |
+|                  | develop aur      | Level 4, 4.3     | moves            |
+|                  | castle           | Opening ke 10    | 4.3 Opening ke   |
+|                  | Engine ke        | principles ke    | 10 principles    |
+|                  | against opening  | baad             |                  |
+|                  | principles       | Road to 3000:    |                  |
+|                  |                  | Level 1          |                  |
+|                  | -   Knights      |                  |                  |
+|                  |     pehle, phir  |                  |                  |
+|                  |     bishops,     |                  |                  |
+|                  |     phir castle. |                  |                  |
+|                  | -   Material mat |                  |                  |
+|                  |     khona.       |                  |                  |
++------------------+------------------+------------------+------------------+
+| 2                | Sparring: fayda  | Main Course:     | 4.1 Hanging      |
+|                  | bachao           | Level 5, 5.6     | pieces aur       |
+|                  | (middlegame)     | Defender hatao   | safety           |
+|                  | Aage wali        | aur overloading  | 4.5 Sochne ka    |
+|                  | position engine  | ke baad          | tareeka: forcing |
+|                  | ke against khelo | Road to 3000:    | moves (CCT)      |
+|                  |                  | Level 3          | 5.2 Fork (do pe  |
+|                  | -   Aage ho:     |                  | ek saath attack) |
+|                  |     pehle        |                  | 5.3 Pin          |
+|                  |     safety, phir |                  | 5.6 Defender     |
+|                  |     forcing      |                  | hatao aur        |
+|                  |     chaalein.    |                  | overloading      |
+|                  | -   Pieces trade |                  | Pichhla drill:   |
+|                  |     karo jab     |                  | Kaun aage?       |
+|                  |     aage ho.     |                  | Points gino      |
++------------------+------------------+------------------+------------------+
+| 3                | Sparring: plan   | Main Course:     | 8.1 Position ke  |
+|                  | banao aur chalao | Level 9, 9.2     | elements aur     |
+|                  | Barabar          | Plan kaise       | exchanges        |
+|                  | middlegame,      | banayein ke baad | 8.4 Weak squares |
+|                  | strong engine ke | Road to 3000:    | aur outposts     |
+|                  | against          | Level 5          | 9.1 Open files,  |
+|                  |                  |                  | 7th rank, piece  |
+|                  | -   Kamzor point |                  | activity         |
+|                  |     dhundo, bura |                  | 9.2 Plan kaise   |
+|                  |     piece behtar |                  | banayein         |
+|                  |     karo.        |                  |                  |
+|                  | -   Plan badlo   |                  |                  |
+|                  |     sirf jab     |                  |                  |
+|                  |     position     |                  |                  |
+|                  |     badle.       |                  |                  |
++------------------+------------------+------------------+------------------+
+| 4                | Sparring: jeeta  | Main Course:     | 12.1 Endgame ke  |
+|                  | endgame jeeto    | Level 13, 13.3   | bade themes      |
+|                  | Endgame          | Minor pieces aur | 12.3 King aur    |
+|                  | technique engine | theory ke baad   | pawn: opposition |
+|                  | ke against       | Road to 3000:    | 13.1 Pawn        |
+|                  |                  | Level 5          | endgame tricks   |
+|                  | -   King active, |                  | 13.2 Rook        |
+|                  |     passed pawn  |                  | endgames: Lucena |
+|                  |     aage.        |                  | aur Philidor     |
+|                  | -   Aage ho to   |                  | 13.3 Minor       |
+|                  |     pieces trade |                  | pieces aur       |
+|                  |     karo, pawns  |                  | theory           |
+|                  |     nahi.        |                  |                  |
++------------------+------------------+------------------+------------------+
+| 5                | Sparring: GM     | Main Course:     | 9.3 Prophylaxis  |
+|                  | level (full      | Level 14, 14.3   | aur restriction  |
+|                  | engine)          | Psychology aur   | 14.1 Deep        |
+|                  | Barabar          | practical play   | calculation      |
+|                  | position, engine | ke baad          | 14.3 Psychology  |
+|                  | poori taakat se  | Road to 3000:    | aur practical    |
+|                  |                  | Level 6          | play             |
+|                  | -   Prophylaxis: |                  |                  |
+|                  |     opponent ka  |                  |                  |
+|                  |     plan pehle.  |                  |                  |
+|                  | -   Practical:   |                  |                  |
+|                  |     simple aur   |                  |                  |
+|                  |     safe         |                  |                  |
+|                  |     chaalein jab |                  |                  |
+|                  |     confuse ho.  |                  |                  |
++------------------+------------------+------------------+------------------+
+
+    🎯 Guess the move (5 drills)
+    ============================
+
+Traps, openings, phir asli master games (2000 se 2800).
+
++------------------+------------------+------------------+------------------+
+| #                | Drill            | Kahan aata hai   | Pehle yeh        |
+|                  |                  |                  | lessons          |
++==================+==================+==================+==================+
+| 1                | Guess the move:  | Main Course:     | 4.4 Shuruaati    |
+|                  | traps            | Level 4, 4.4     | traps aur        |
+|                  | Jo traps seekhe, | Shuruaati traps  | pitfalls         |
+|                  | unki har chaal   | aur pitfalls ke  |                  |
+|                  | khud khelo       | baad             |                  |
+|                  |                  | Road to 3000:    |                  |
+|                  | -   Jeetne wali  | Level 2          |                  |
+|                  |     side ki har  |                  |                  |
+|                  |     chaal yaad   |                  |                  |
+|                  |     se.          |                  |                  |
+|                  | -   Trap ka idea |                  |                  |
+|                  |     samjho, sirf |                  |                  |
+|                  |     ratta nahi.  |                  |                  |
++------------------+------------------+------------------+------------------+
+| 2                | Guess the move:  | Main Course:     | 10.1 Opening ke  |
+|                  | openings         | Level 11, 11.5   | ideas            |
+|                  | Seekhi hui       | Apna repertoire  | 10.3 Italian     |
+|                  | openings ki har  | banao ke baad    | Game             |
+|                  | chaal            | Road to 3000:    | 10.4 Ruy Lopez   |
+|                  |                  | Level 5          | (Spanish)        |
+|                  | -   Har chaal ka |                  | 10.5 Sicilian    |
+|                  |     idea:        |                  | Defense          |
+|                  |     center,      |                  | 10.6 French aur  |
+|                  |     development, |                  | Caro-Kann        |
+|                  |     king safety. |                  | 11.1 Queen's     |
+|                  | -   Apne         |                  | Gambit aur Slav  |
+|                  |     repertoire   |                  | 11.2 Indian      |
+|                  |     wali lines   |                  | defenses aur     |
+|                  |     sabse pehle  |                  | English          |
+|                  |     pakki.       |                  | 11.3 Gambits     |
+|                  |                  |                  | 11.5 Apna        |
+|                  |                  |                  | repertoire banao |
++------------------+------------------+------------------+------------------+
+| 3                | Guess the move:  | Main Course:     | 8.1 Position ke  |
+|                  | tournament games | Level 9, 9.2     | elements aur     |
+|                  | (2000-2400)      | Plan kaise       | exchanges        |
+|                  | Asli classical   | banayein ke baad | 9.2 Plan kaise   |
+|                  | games, FM/IM     | Road to 3000:    | banayein         |
+|                  | level            | Level 5          |                  |
+|                  |                  |                  |                  |
+|                  | -   Pehle plan,  |                  |                  |
+|                  |     phir chaal.  |                  |                  |
+|                  | -   Forcing      |                  |                  |
+|                  |     chaalein     |                  |                  |
+|                  |     pehle check  |                  |                  |
+|                  |     karo.        |                  |                  |
++------------------+------------------+------------------+------------------+
+| 4                | Guess the move:  | Main Course:     | 14.4 Apne games  |
+|                  | IM/GM games      | Level 14, 14.4   | analyse karo     |
+|                  | (2400-2600)      | Apne games       | Pichhla drill:   |
+|                  | Asli classical   | analyse karo ke  | Guess the move:  |
+|                  | games, IM aur GM | baad             | tournament games |
+|                  |                  | Road to 3000:    | (2000-2400)      |
+|                  | -   Har chaal se | Level 5          |                  |
+|                  |     pehle        |                  |                  |
+|                  |     candidates   |                  |                  |
+|                  |     (2-3).       |                  |                  |
+|                  | -   Opponent ka  |                  |                  |
+|                  |     plan bhi     |                  |                  |
+|                  |     socho.       |                  |                  |
++------------------+------------------+------------------+------------------+
+| 5                | Guess the move:  | Main Course:     | 15.1 Master      |
+|                  | famous masters   | Level 15, 15.3   | games aur chess  |
+|                  | aur elite GMs    | World champions: | ka itihaas       |
+|                  | (2600+)          | Botvinnik se     | 15.2 World       |
+|                  | Opera, Immortal, | Kasparov tak ke  | champions:       |
+|                  | Lasker aur aaj   | baad             | Anderssen se     |
+|                  | ke top GMs       | Road to 3000:    | Euwe tak         |
+|                  |                  | Level 7          | 15.3 World       |
+|                  | -   Masters ke   |                  | champions:       |
+|                  |     plans:       |                  | Botvinnik se     |
+|                  |     attack,      |                  | Kasparov tak     |
+|                  |     sacrifice,   |                  | Pichhla drill:   |
+|                  |     endgame.     |                  | Guess the move:  |
+|                  | -   Jeetne wale  |                  | IM/GM games      |
+|                  |     ki aankh se  |                  | (2400-2600)      |
+|                  |     dekho.       |                  |                  |
++------------------+------------------+------------------+------------------+
+
+    🔍 Apne games ka review (4 drills)
+    ==================================
+
+Apne game ki galtiyan: blunders se GM level review tak.
+
++------------------+------------------+------------------+------------------+
+| #                | Drill            | Kahan aata hai   | Pehle yeh        |
+|                  |                  |                  | lessons          |
++==================+==================+==================+==================+
+| 1                | Apna game        | Main Course:     | 2.3 Notation:    |
+|                  | review: blunders | Level 2, 2.3     | moves likhna aur |
+|                  | Engine tumhare   | Notation: moves  | padhna           |
+|                  | game ki badi     | likhna aur       | 1.5 Pieces ki    |
+|                  | galtiyan         | padhna ke baad   | keemat aur       |
+|                  | dhundega, har    | Road to 3000:    | trades           |
+|                  | galti ek card    | Level 1          |                  |
+|                  |                  |                  |                  |
+|                  | -   Har game ke  |                  |                  |
+|                  |     baad review. |                  |                  |
+|                  | -   Galti ka     |                  |                  |
+|                  |     card baar    |                  |                  |
+|                  |     baar aayega  |                  |                  |
+|                  |     jab tak      |                  |                  |
+|                  |     pakka na ho. |                  |                  |
++------------------+------------------+------------------+------------------+
+| 2                | Apna game        | Main Course:     | 4.5 Sochne ka    |
+|                  | review: CCT se   | Level 4, 4.5     | tareeka: forcing |
+|                  | galti samjho     | Sochne ka        | moves (CCT)      |
+|                  | Mistakes bhi,    | tareeka: forcing | Pichhla drill:   |
+|                  | aur har galti ki | moves (CCT) ke   | Apna game        |
+|                  | wajah (check,    | baad             | review: blunders |
+|                  | capture, threat) | Road to 3000:    |                  |
+|                  |                  | Level 2          |                  |
+|                  | -   Galti ki     |                  |                  |
+|                  |     wajah likho: |                  |                  |
+|                  |     kya miss     |                  |                  |
+|                  |     hua?         |                  |                  |
+|                  | -   Sabse zyada  |                  |                  |
+|                  |     wali wajah   |                  |                  |
+|                  |     par          |                  |                  |
+|                  |     practice.    |                  |                  |
++------------------+------------------+------------------+------------------+
+| 3                | Apna game        | Main Course:     | 14.4 Apne games  |
+|                  | review: pehle    | Level 14, 14.4   | analyse karo     |
+|                  | khud, phir       | Apne games       | Pichhla drill:   |
+|                  | engine           | analyse karo ke  | Apna game        |
+|                  | Pro tareeka:     | baad             | review: CCT se   |
+|                  | khud analyse     | Road to 3000:    | galti samjho     |
+|                  | karo, engine se  | Level 5          |                  |
+|                  | milao, category  |                  |                  |
+|                  | banao            |                  |                  |
+|                  |                  |                  |                  |
+|                  | -   Pehle khud,  |                  |                  |
+|                  |     phir engine. |                  |                  |
+|                  | -   Galtiyon ki  |                  |                  |
+|                  |     category:    |                  |                  |
+|                  |     tactic,      |                  |                  |
+|                  |     blunder,     |                  |                  |
+|                  |     time, plan,  |                  |                  |
+|                  |     endgame.     |                  |                  |
++------------------+------------------+------------------+------------------+
+| 4                | Apna game        | Main Course:     | 15.7 Elo badhane |
+|                  | review: GM level | Level 15, 15.7   | ka training plan |
+|                  | Inaccuracies     | Elo badhane ka   | Pichhla drill:   |
+|                  | bhi, 5 cards     | training plan ke | Apna game        |
+|                  | tak, deep engine | baad             | review: pehle    |
+|                  |                  | Road to 3000:    | khud, phir       |
+|                  | -   Chhoti       | Level 6          | engine           |
+|                  |     galtiyan bhi |                  |                  |
+|                  |     jodkar game  |                  |                  |
+|                  |     haarte hain. |                  |                  |
+|                  | -   Har hafte    |                  |                  |
+|                  |     kam se kam 3 |                  |                  |
+|                  |     games        |                  |                  |
+|                  |     review.      |                  |                  |
++------------------+------------------+------------------+------------------+
+
+    ######################################################################
     ##  LEVEL 2: SHURUAAT 2: RULES, NOTATION AUR TOURNAMENT
     ######################################################################
 
