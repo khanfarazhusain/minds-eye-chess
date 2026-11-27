@@ -1924,7 +1924,7 @@ function trTick(){const T=TR;if(!T||V.name!=='train'){clearInterval(timerInt);re
 function trNewLine(T){const src=T.o.src||'open';let name,line;
   if(src==='book'){line=pick(BOOK);name='A real opening line'}else if(src==='famous'){const f=pick(FAMOUS);name=f[0];line=f[2]}else{const f=pick(OPENINGS);name=f[0];line=f[1]}
   T.lineName=name;T.line=line.split(' ');T.li=0;T.st=startState();T.played=[]}
-function trNext(){const T=TR,m=T.m;T.persp=trPersp(T);T.tgt=null;T.fk=shuffle([...FILES]);T.rk=shuffle([1,2,3,4,5,6,7,8]);T.found=new Set();T.inp='';T.sel=null;T.bad=null;
+function trNext(){const T=TR,m=T.m;T.persp=trPersp(T);T.tgt=null;T.fk=[...FILES];T.rk=[1,2,3,4,5,6,7,8];/* keypad order fixed (a-h, 1-8) so positions never move: muscle memory */T.found=new Set();T.inp='';T.sel=null;T.bad=null;
   if(m==='file')T.q=trDraw(T,x=>x[0]);else if(m==='rank')T.q=trDraw(T,x=>x[1]);
   else if(m==='moves'){if(!T.line||T.li>=T.line.length)trNewLine(T);const s=T.line[T.li],mv=findMove(T.st,s);if(!mv){T.line=null;return trNext()}T.q=s;T.mv=mv}
   else if(m==='memory'){if(T.phase==='ask'&&T.asks.length){T.q=T.asks.shift()}
