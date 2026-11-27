@@ -9,6 +9,13 @@ if(a<0||z<0)throw new Error('course.html markers not found');
 const L=vm.runInNewContext(src.slice(a,z)+';({COURSE,LINES,parseFEN,legal,make,san,findMove,md,inl,esc,sn,si,light,START_FEN})',{console});
 const GYMX=vm.runInNewContext(src.slice(src.indexOf('/* ==== calc gym js ==== */'),src.indexOf('/* ==== /calc gym js ==== */'))+';({CG_STAGE,CG_STEPS,CG_NEED,CG_GATE,CG_SEC,CG_ROUTINE,CG_SKIP})',{localStorage:{getItem:()=>''},console});
 const GYM={first:GYMX.CG_NEED[1],need:GYMX.CG_NEED,gate:GYMX.CG_GATE,sec:GYMX.CG_SEC,stages:GYMX.CG_STAGE,routine:GYMX.CG_ROUTINE,skip:GYMX.CG_SKIP,steps:GYMX.CG_STEPS.map(x=>({d:x.d,name:x.st.name}))};
+/* Pro Training (TRAIN, tools/train/build.js likhta hai): 7 modes ke drills. Course mein har drill apne `after` lesson ke baad aata hai. */
+const TRAIN=(()=>{const i=src.indexOf('/*TRAIN-DATA*/'),j=src.indexOf('/*TRAIN-DATA-END*/');return i<0||j<0?[]:JSON.parse(src.slice(i+14,j))})();
+const TRM=vm.runInNewContext(src.slice(src.indexOf('/* ==== pro training js ==== */'),src.indexOf('/* ==== /pro training js ==== */'))+';TR_MODES',{});
+/* Road to 3000 mein drill kis level mein (tools/road/app.js jaisa hi) */
+function trRoadLevels(){const o={};try{const rc=fs.readFileSync(path.join(ROOT,'tools','road','content.js'),'utf8');const M={exports:{}};new Function('module',rc)(M);
+  const keyOf=p=>{const[c,l]=p.split('.');const C=COURSE.find(x=>x.id===c);const les=C&&C.lessons.find(x=>x.id===l);return les?(les.key||c+'.'+l):p};
+  M.exports.ROAD_LEVELS.forEach(L=>L.lessons.forEach(p=>{o[keyOf(p)]=L.n}));for(const T of TRAIN)o[T.les.key]=o[T.roadAfter||T.after]}catch(e){warnings.push('road levels: '+e.message)}return o}
 const {KP,EXTRA}=require('./keypoints.js');
 const {COURSE,LINES,parseFEN,legal,make,san,findMove,md,inl,esc,sn,si,light,START_FEN}=L;
 /* Openings Ladder (packs/opl.js) ke lessons bhi notes mein, jaise app mein */
@@ -123,7 +130,8 @@ COURSE.forEach((Lv,li)=>{
   body+=`<section class="level" id="${Lv.id}"><div class="lvhead"><span class="eyebrow">Level ${li+1}</span><h2>${esc(Lv.title)}</h2><p class="muted">${esc(Lv.sub)}</p>${Lv.intro?`<div class="intro">${pts(Lv.intro)}</div>`:''}</div>`;
   Lv.lessons.forEach((les,lj)=>{nLes++;body+=lessonHTML(Lv,li,les,lj)});
   body+=`</section>`;
-  if(Lv.lessons.some(l=>(l.key||Lv.id+'.'+l.id)===GYM.first))gymSection()});
+  if(Lv.lessons.some(l=>(l.key||Lv.id+'.'+l.id)===GYM.first))gymSection();
+  if(TRAIN.length&&li===Math.min(...TRAIN.map(T=>COURSE.findIndex(C=>C.id===T.ch))))trainSection()});
 
 /* Calculation Gym: course ka section (Depth 1 ke lesson wale level ke baad). Data course.html ke gym code se (CG_STAGE, CG_NEED, CG_GATE). */
 function gymSection(){const G=GYM,lesT=k=>{for(const C of COURSE){const i=C.lessons.findIndex(l=>(l.key||C.id+'.'+l.id)===k);if(i>=0)return[C,i]}return null};
@@ -143,6 +151,21 @@ function gymSection(){const G=GYM,lesT=k=>{for(const C of COURSE){const i=C.less
    <p class="muted">Target time "board dekh ke" steps ka hai. Andhe, Poori line aur GM steps mein 1.5 guna time milta hai.</p>
    <h3 id="calc-gym-plan">Kis level ke saath kaunse steps</h3><div class="tblw"><table class="gymt"><thead><tr><th>Level test</th><th>Gym steps</th><th>Kahan tak pass</th></tr></thead><tbody>${plan}</tbody></table></div>
    <p class="lfoot"><a href="course.html#/calc">▶ Course mein Gym kholo</a> · <a href="#top">↑ Upar</a></p></section>`}
+
+/* Pro Training: course ka section (pehle drill wale level ke baad). Har mode ki ladder: drill, kahan aata hai, pehle kaunse lessons, kya karte ho. */
+function trainSection(){const lesT=k=>{for(const C of COURSE){const i=C.lessons.findIndex(l=>(l.key||C.id+'.'+l.id)===k);if(i>=0)return[C,i]}return null};
+  const ref=k=>{const r=lesT(k);if(!r){const T=TRAIN.find(x=>x.les.key===k);return T?esc(T.les.title.replace(/^🏋\s*/,'')):esc(k)}const[C,i]=r,li=COURSE.indexOf(C);return`<a href="#${C.id}-${C.lessons[i].id}">${li+1}.${i+1} ${esc(C.lessons[i].title)}</a>`};
+  const TR_ROAD=trRoadLevels(),lvOf=id=>COURSE.findIndex(C=>C.id===id)+1,tt=t=>t.replace(/^🏋\s*/,'').replace(/^Drill:\s*/,'').replace(/^./,c=>c.toUpperCase());
+  toc+=`<details class="tocl"><summary><span class="lnum">🏋</span><span><b>Pro Training (section)</b><small>7 modes, ${TRAIN.length} drills, har level ke saath</small></span></summary><ol>${TRM.map(M=>`<li><a href="#tr-${M.id}">${M.ic} ${esc(M.t)}</a></li>`).join('')}</ol></details>`;
+  let h=`<section class="level" id="pro-training"><div class="lvhead"><span class="eyebrow">Section</span><h2>🏋 Pro Training: 7 modes</h2><p class="muted">Course ka section: Level ${Math.min(...TRAIN.map(T=>lvOf(T.ch)))} se shuru, phir har level ke lessons ke beech uske drills. Kul ${TRAIN.length} drills, beginner se GM tak.</p>
+   <div class="intro"><ul class="pts"><li>7 modes: ${TRM.map(M=>'<b>'+M.ic+' '+esc(M.t)+'</b>').join(', ')}. Har mode ek ladder hai (4-5 drills, aasaan se GM).</li>
+   <li>Har drill course mein apne zaroori lessons ke <b>turant baad</b> aata hai, aur wahi taala: pichhla lesson poora to drill khulta hai. Koi drill aisi cheez use nahi karta jo pehle nahi sikhayi.</li>
+   <li>Drill: pehle practice (hint, undo), phir test (naye sawaal, ek koshish, <b>80%</b> par pass). Drill poora = lesson poora, aur level test ke liye bhi ginta hai.</li>
+   <li>App mein: course list mein "Pro Training" section, har level page par test se pehle us level ke drills, aur Pro Training page par har mode ka agla drill ek button se.</li></ul></div></div>`;
+  for(const M of TRM){const Ts=TRAIN.filter(T=>T.les.key.slice(3,5)===M.id).sort((a,b)=>+a.les.key.slice(5)-+b.les.key.slice(5));
+    h+=`<h3 id="tr-${M.id}">${M.ic} ${esc(M.t)} (${Ts.length} drills)</h3><p class="muted">${esc(M.sub)}.</p><div class="tblw"><table class="gymt"><thead><tr><th>#</th><th>Drill</th><th>Kahan aata hai</th><th>Pehle yeh lessons</th></tr></thead><tbody>${Ts.map((T,i)=>{const nd=T.needs.filter(n=>!n.startsWith('tr.')),pd=T.needs.filter(n=>n.startsWith('tr.'));
+      return`<tr><td><b>${i+1}</b></td><td><b>${esc(tt(T.les.title))}</b><br><small>${esc(T.les.sub||'')}</small>${(T.les.yaad||[]).length?`<ul class="pts">${T.les.yaad.slice(0,3).map(x=>'<li>'+inl(x)+'</li>').join('')}</ul>`:''}</td><td>Main Course: Level ${lvOf(T.ch)}, ${ref(T.after)} ke baad${TR_ROAD[T.les.key]?`<br>Road to 3000: Level ${TR_ROAD[T.les.key]}`:''}</td><td>${nd.map(ref).join('<br>')}${pd.length?`<br><small>Pichhla drill: ${pd.map(k=>esc(tt((TRAIN.find(x=>x.les.key===k)||{les:{title:k}}).les.title))).join(', ')}</small>`:''}</td></tr>`}).join('')}</tbody></table></div>`}
+  h+=`<p class="lfoot"><a href="course.html#/train">▶ Course mein Pro Training kholo</a> · <a href="#top">↑ Upar</a></p></section>`;body+=h}
 
 const css=fs.readFileSync(__dirname+'/notes.css','utf8');
 const UIV='166'; /* ui.css / ui.js version: bump with the app version */

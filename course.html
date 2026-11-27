@@ -304,6 +304,20 @@ details.cgr:not(.card){background:var(--surface);border:1px solid var(--line);bo
 .lvl.cgsecrow{border-style:dashed}.lvl.cgsecrow .lnum{font-size:22px}
 @media (min-width:700px){.cgpill small{font-size:11px}.cgpills{gap:8px}}
 /* ==== /calc gym css ==== */
+/* ==== pro training css ==== */
+/* Pro Training section (tools/train/section.css) */
+.trmode .cgpills{grid-template-columns:repeat(5,1fr)}
+.trpill small{font-size:9.5px}
+.trchips{display:flex;flex-wrap:wrap;gap:6px}.trchips .btn small{color:inherit;opacity:.7;font-weight:600}
+.trlad{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.trr{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);text-align:left;font:inherit}
+.trr b{font-size:14.5px;line-height:1.25}.trr small{font-size:12px;color:var(--muted);line-height:1.3}
+.trn{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--surface2);font-weight:800;font-size:15px}
+.trr.pass{background:var(--good-soft);border-color:var(--good)}.trr.pass .trn{background:var(--good);color:#fff}
+.trr.now{border:2px solid var(--accent)}.trr.locked{opacity:.55}.trlk{color:var(--bad)!important}
+.trmode .row.wrap>.btn.block,.trsec .row.wrap>.btn.block{flex:1 1 220px;white-space:normal;line-height:1.25}
+@media (min-width:700px){.trpill small{font-size:11px}}
+/* ==== /pro training css ==== */
 </style>
 <link rel="stylesheet" href="ui.css?v=166">
 </head>
@@ -1328,6 +1342,83 @@ function cgRun(i,opt){opt=opt||{};const step=CG_STEPS[i],app=$('#app');if(!step|
 function cgGateMsg(levelId){const need=CG_GATE[levelId];if(!need||unlockAll()||cgS().f>=need||PR.tests[levelId]>=70)return'';const LL=COURSE.find(x=>x.id===levelId);if(LL&&LL.li<PR.placed)return'';const st=CG_STEPS[Math.min(need,CG_STEPS.length)-1];
   return`🧠 **Calculation Gym pehle:** is level ka test dene se pehle Gym mein **${cgStepName(st)}** tak pass karo (abhi step ${cgS().f}/${need}). Pro banne ke liye practice course ka hissa hai.`}
 /* ==== /calc gym js ==== */
+/* ==== pro training js ==== */
+/* Pro Training = course ka ek section (Main Course aur Road to 3000 dono mein, yeh code core ka hissa hai).
+   7 modes, har mode ek ladder. Drills khud TRAIN mein hain aur course mein apne `after` lesson ke turant baad aate hain;
+   yahan sirf unhe ek jagah dikhaate aur kholte hain (link asli lesson par, koi copy nahi). Taala wahi jo us lesson ka. */
+const TR_MODES=[
+ {id:'ev',ic:'📊',t:'Position eval',sub:'Material gino, phir 5 elements, phir engine jaisa number aur compensation'},
+ {id:'eg',ic:'♔',t:'Endgame vs engine',sub:'Basic mates, king + pawn, Lucena/Philidor/Vancura, B+N mate'},
+ {id:'df',ic:'🛡',t:'Defence',sub:'Check se bacho, piece bachao, phir only-move defence 2800 tak'},
+ {id:'rs',ic:'⏱',t:'Time pressure',sub:'Clock ke saath: mate-in-1 rush se increment aur GM rush tak'},
+ {id:'sp',ic:'🤺',t:'Sparring',sub:'Engine ke against khelo: develop aur castle se full engine tak'},
+ {id:'gm',ic:'🎯',t:'Guess the move',sub:'Traps, openings, phir asli master games (2000 se 2800)'},
+ {id:'mr',ic:'🔍',t:'Apne games ka review',sub:'Apne game ki galtiyan: blunders se GM level review tak'}];
+const trRoad=()=>typeof ROAD_LEVELS!=='undefined';
+const trMode=k=>TR_MODES.find(M=>k.slice(3,5)===M.id);
+const trKeys=m=>TRAIN.map(T=>T.les.key).filter(k=>!m||k.slice(3,5)===m).sort((a,b)=>a.slice(3,5)===b.slice(3,5)?+a.slice(5)-+b.slice(5):0);
+const trDone=k=>!!PR.done[k];
+const trT=k=>TRAIN.find(T=>T.les.key===k);
+function trTitle(k){const l=lesByKey(k);return l?l.title.replace(/^🏋\s*/,'').replace(/^Drill:\s*/,'').replace(/^./,c=>c.toUpperCase()):k}
+/* khula hai? Main Course: lessonUnlocked (Unlock all bhi wahi dekhta hai). Road: Unlock all, ho chuka, pichhla level, ya aaj ka agla lesson. */
+function trOpen(k){if(trDone(k))return true;
+  if(trRoad()){if(OPENALL())return true;const L=ROAD_LEVELS.find(L=>L.lessons.includes(k));if(!L)return false;if(L.n<SP.lvl)return true;return L.n===SP.lvl&&nextLes()===k&&canLesson().ok}
+  const l=lesByKey(k);return!!l&&lessonUnlocked(l)}
+/* drill course mein kahan: "Level 3" (Road ke levels Road mein) */
+function trWhere(k){if(trRoad()){const L=ROAD_LEVELS.find(L=>L.lessons.includes(k));return L?'Level '+L.n:''}const l=lesByKey(k);return l?'Level '+(l.li+1):''}
+/* band drill: kaunsa zaroori lesson abhi baaki hai */
+function trNeed(k){const T=trT(k);if(!T)return null;const n=T.needs.find(x=>!PR.done[x]);return n||T.after}
+function trLockMsg(k){const n=trNeed(k);return n&&!PR.done[n]?`Pehle: ${esc(cgLesTitle(n).replace(/^🏋\s*/,''))}`:`${esc(trWhere(k))} mein, pichhle lesson ke baad khulega`}
+const trHref=k=>cgLesHref(k);
+function trGo(k){location.replace(trOpen(k)&&lesByKey(k)?trHref(k):'#/train')}
+function trNextBtn(ks,label){const nx=ks.find(k=>!trDone(k));if(!nx)return`<button class="btn block" data-go="#/train">🏆 Sab poore · Pro Training kholo</button>`;
+  const op=trOpen(nx);if(op)return`<button class="btn primary block" data-go="${trHref(nx)}">▶ ${label||'Agla drill'}: ${esc(trTitle(nx))} ›</button>`;
+  const n=trNeed(nx);return`<button class="btn block" data-go="${!PR.done[n]&&lesByKey(n)?cgLesHref(n):'#/train'}">🔒 ${trLockMsg(nx)} ›</button>`}
+function trPill(k,i){const d=trDone(k),op=trOpen(k),M=trMode(k);
+  return`<button class="cgpill trpill${d?' pass':''}${!d&&op?' now':''}${op?'':' locked'}" ${op?`data-go="${trHref(k)}"`:'disabled'} title="${esc(trTitle(k))}">${d?'✓':op?(i+1):'🔒'}<small>${esc(trWhere(k))}</small></button>`}
+function trMeter(n,N){return`<div class="cgmeter"><i style="width:${N?n/N*100:0}%"></i></div>`}
+/* ek mode ka card: compact (section home) ya poori ladder (#/train/<mode>) */
+function trModeCard(M,full){const ks=trKeys(M.id),n=ks.filter(trDone).length,all=n>=ks.length;
+  let h=`<div class="card stack trmode${all?' cgok':''}" id="tr-${M.id}"><div class="cgsech"><b>${M.ic} ${esc(M.t)}</b><small class="muted">${all?'🏅 ':''}${n}/${ks.length} drills</small></div>
+   <p class="small muted">${esc(M.sub)}</p>${trMeter(n,ks.length)}`;
+  if(full){h+=`<ol class="trlad">${ks.map((k,i)=>{const d=trDone(k),op=trOpen(k),l=lesByKey(k)||{};
+     return`<li><button class="trr${d?' pass':!d&&op?' now':''}${op?'':' locked'}" ${op?`data-go="${trHref(k)}"`:'disabled'}><span class="trn">${d?'✓':op?i+1:'🔒'}</span><span class="stack" style="gap:1px;text-align:left;min-width:0"><b>${esc(trTitle(k))}</b><small>${esc(trWhere(k))} · ${esc(l.sub||'')}</small>${!op?`<small class="trlk">${trLockMsg(k)}</small>`:''}</span></button></li>`}).join('')}</ol>`}
+  else h+=`<div class="cgpills">${ks.map(trPill).join('')}</div>`;
+  h+=`<div class="row wrap">${trNextBtn(ks)}${full?'':`<button class="btn small" data-go="#/train/${M.id}">Poori ladder ›</button>`}</div></div>`;return h}
+function trHome(m){const app=$('#app'),road=trRoad(),ks=trKeys(),n=ks.filter(trDone).length,M=TR_MODES.find(x=>x.id===m);
+  let o=`<div class="stack">${M?'<button class="back" data-go="#/train">‹ Pro Training</button>':road?'<button class="btn small backbtn" data-go="#/">‹ Today\'s Work</button>':'<button class="back" data-go="#/">‹ Course</button>'}
+   <span class="eyebrow">Pro Training · course ka section</span><h1>${M?M.ic+' '+esc(M.t):'🏋 7 training modes'}</h1>
+   <p class="muted">${M?esc(M.sub)+'. Har drill course mein apne zaroori lesson ke turant baad aata hai, aur wahi se khulta hai.':`${ks.length} drills, beginner se GM tak. Har drill course mein apne zaroori lessons ke baad aata hai (wahi taala, wahi progress). Yahan se kisi bhi mode ka agla drill seedha kholo.`}</p>
+   <div class="card stack"><div class="cgsech"><b>Kul progress</b><small class="muted">${n}/${ks.length} drills</small></div>${trMeter(n,ks.length)}
+   <div class="trchips">${TR_MODES.map(X=>{const a=trKeys(X.id);return`<button class="btn small${X.id===m?' primary':''}" data-go="#/train/${X.id}">${X.ic} ${esc(X.t)} <small>${a.filter(trDone).length}/${a.length}</small></button>`}).join('')}</div></div>`;
+  if(M)o+=trModeCard(M,true);else o+=TR_MODES.map(X=>trModeCard(X,false)).join('');
+  o+=trPlanHTML();
+  o+=`<p class="small muted">Har drill: pehle practice (hint, undo), phir test (naye sawaal, 80% par pass). Drill poora = lesson poora, aur level test ke liye bhi ginta hai.</p></div>`;
+  app.innerHTML=o;if(typeof setCtx==='function')setCtx({where:'Pro Training'+(M?': '+M.t:'')})}
+/* kis level mein kaunse drills (Road mein Road ke levels) */
+function trPlanHTML(){const rows=[];
+  if(trRoad())ROAD_LEVELS.forEach(L=>{const ks=L.lessons.filter(k=>k.startsWith('tr.'));if(ks.length)rows.push([`Level ${L.n}: ${L.name}`,ks,'#/level/'+L.n])});
+  else COURSE.forEach((L,li)=>{const ks=L.lessons.filter(l=>l.tr).map(l=>l.key);if(ks.length)rows.push([`Level ${li+1}: ${L.title}`,ks,'#/level/'+li])});
+  if(!rows.length)return'';
+  return`<details class="card cgr cgplan"><summary><b>📍 Course mein drills kahan aate hain</b></summary><p class="small muted">Pro Training course ka section hai: har level ke lessons ke beech uske drills. Level page par bhi yahi drills test se pehle dikhte hain.</p>
+   <div class="cgplanl">${rows.map(([t,ks,href])=>{const d=ks.filter(trDone).length;return`<a class="cgpr${d>=ks.length?' pass':d?' now':''}" href="${href}"><span>${d>=ks.length?'✓':d?'▶':'·'}</span><b>${esc(t)}</b><small>${ks.map(k=>trMode(k).ic+' '+esc(trTitle(k))).join(' · ')}</small></a>`}).join('')}</div></details>`}
+/* level page par, test se pehle: is level ke drills */
+function trLevelHTML(ks){if(!ks.length)return'';const n=ks.filter(trDone).length,all=n>=ks.length;
+  return`<h2 class="cgh">🏋 Pro Training (is level ka hissa)</h2><div class="card stack trsec${all?' cgok':''}"><div class="cgsech"><b>${ks.length} drill${ks.length>1?'s':''} is level mein</b><small class="muted">${n}/${ks.length} poore</small></div>
+   <p class="small muted">Yeh drills is level ke lessons ke beech aate hain, aur level test se pehle poore karne hain.</p>
+   <div class="stack" style="gap:6px">${ks.map(k=>{const d=trDone(k),op=trOpen(k),M=trMode(k);return`<button class="trr${d?' pass':!d&&op?' now':''}${op?'':' locked'}" ${op?`data-go="${trHref(k)}"`:'disabled'}><span class="trn">${d?'✓':op?M.ic:'🔒'}</span><span class="stack" style="gap:1px;text-align:left;min-width:0"><b>${esc(trTitle(k))}</b><small>${M.ic} ${esc(M.t)}${!op?' · '+trLockMsg(k):''}</small></span></button>`}).join('')}</div>
+   <div class="row wrap">${trNextBtn(ks,'Drill karo')}<button class="btn small" data-go="#/train">🏋 Saare 7 modes ›</button></div></div>`}
+/* course list / Road home ka section card */
+function trFirstLi(){const ls=COURSE.flatMap(L=>L.lessons).filter(l=>l.tr);return ls.length?Math.min(...ls.map(l=>l.li)):-1}
+function trSectionRow(){const ks=trKeys(),N=ks.length,n=ks.filter(trDone).length,lk=!unlockAll()&&!ks.some(trOpen);
+  return`<button class="lvl cgsecrow trsecrow${lk?' locked':''}" data-go="#/train"><span class="lnum">🏋</span><span class="stack" style="gap:2px;text-align:left"><span class="eyebrow">Section · har level ke saath</span><b>Pro Training: 7 modes</b><small>${TR_MODES.map(M=>M.ic).join(' ')} ${N} drills: eval, endgame, defence, clock, sparring, guess the move, apne games.${lk?' Pehle: '+esc(cgLesTitle(trNeed(ks[0])||'')):''}</small>
+   <span class="prog sm"><i style="width:${N?n/N*100:0}%"></i></span></span><span class="lst">${lk?'🔒':n>=N?'🏅':n+'/'+N}</span></button>`}
+function trRoadSection(){const ks=trKeys(),N=ks.length,n=ks.filter(trDone).length;
+  return`<h2>Pro Training</h2><div class="card stack trroad"><div class="cgsech"><b>🏋 7 modes · ${N} drills</b><small class="muted">${n>=N?'🏅 poora':n+'/'+N+' poore'}</small></div>${trMeter(n,N)}
+   <p class="small muted">Road ka section: har level mein uske drills lessons ke beech aate hain. Yahan se kisi bhi mode ka agla drill kholo.</p>
+   <div class="trchips">${TR_MODES.map(M=>{const a=trKeys(M.id);return`<button class="btn small" data-go="#/train/${M.id}">${M.ic} ${esc(M.t)} <small>${a.filter(trDone).length}/${a.length}</small></button>`}).join('')}</div>
+   <button class="btn primary block" data-go="#/train">🏋 Pro Training kholo ›</button></div>`}
+/* ==== /pro training js ==== */
 /* ---------- views ---------- */
 let VIEW={};
 function go(hash){if(location.hash!==hash)location.hash=hash;else route()}
@@ -1337,7 +1428,7 @@ function route(){closeTutor();const p=(location.hash||'#/').slice(2).split('/');
   tabs(p[0]==='puzzles'?'puz':p[0]==='play'?'play':'course');
   if(p[0]==='next'){const nx=nextLesson();location.replace(nx?(nx.test?'#/test/'+nx.test.li:'#/lesson/'+nx.les.li+'/'+nx.les.lj):'#/');return}
   if(p[0]==='level')vLevel(+p[1]);else if(p[0]==='lesson')vLesson(+p[1],+p[2]);else if(p[0]==='test')vTest(+p[1]);
-  else if(p[0]==='review')vReview();else if(p[0]==='viz')vViz();else if(p[0]==='exam')vExam(+p[1]);else if(p[0]==='puzzles')vPuzzles();else if(p[0]==='calc'){if(p[1]==='run')cgRun(+p[2]);else if(p[1]==='jump')cgRun(+p[2],{test:1});else cgHome()}else if(p[0]==='play')vPlay();else if(p[0]==='place')vPlace();else vHome();chips()}
+  else if(p[0]==='review')vReview();else if(p[0]==='viz')vViz();else if(p[0]==='exam')vExam(+p[1]);else if(p[0]==='puzzles')vPuzzles();else if(p[0]==='calc'){if(p[1]==='run')cgRun(+p[2]);else if(p[1]==='jump')cgRun(+p[2],{test:1});else cgHome()}else if(p[0]==='train'){if(p[1]==='go')return trGo(decodeURIComponent(p[2]||''));trHome(p[1])}else if(p[0]==='play')vPlay();else if(p[0]==='place')vPlace();else vHome();chips()}
 function tabs(on){document.querySelectorAll('nav.tabs [data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===on))}
 function coachLine(){const nx=nextLesson(),due=dueReviews().length,weak=weakTopics()[0];touchDay();
   if(!Object.keys(PR.done).length&&!PR.placed)return'Namaste! Main tumhara chess coach hoon. Hum bilkul shuru se chalenge, ek-ek step. Agar thoda chess aata hai to pehle **placement test** de do, main sahi level se shuru karunga.';
@@ -1359,12 +1450,13 @@ function vHome(){const app=$('#app');touchDay();save();const nx=nextLesson(),due
   <div class="card stack"><div class="row" style="justify-content:space-between"><h3>🧠 Yaad ka meter</h3><small class="muted">${srsStats().total} cheezein</small></div>${srsMeterHTML()||'<p class="small muted">Lesson poora karte hi uske sawaal aur yaad points yahan aate hain, aur sahi din par wapas poochhe jaate hain (1, 3, 7, 21, 60, 120 din).</p>'}
    <div class="row"><button class="btn${due.length?' primary':''}" data-go="#/review">🔁 Review (${due.length})</button><button class="btn" data-go="#/viz">👁 Board-hidden drill</button></div></div>
   <div class="row" style="justify-content:space-between;align-items:end"><h2>Course: basics se pro tak</h2><small class="muted">${pct}%</small></div>
-  <div class="prog"><i style="width:${pct}%"></i></div>${unlockAll()?'<div class="card small">🔓 <b>Unlock all stages ON</b>: saare levels, lessons, tests, exams aur Gym steps khule hain. Band karne ke liye app ki Settings dekho.</div>':''}
+  <div class="prog"><i style="width:${pct}%"></i></div>${unlockAll()?'<div class="card small">🔓 <b>Unlock all stages ON</b>: saare levels, lessons, tests, exams, Gym steps aur Pro Training drills khule hain. Band karne ke liye app ki Settings dekho.</div>':''}
   <a class="card notescta" href="notes.html"><span class="eyebrow">📝 Study notes</span><b>Poore course ke notes, diagrams ke saath</b><small class="muted">Har lesson ka saar, board diagrams aur sawal-jawab. Revision ke liye.</small></a>`;
   for(const L of COURSE){const n=L.lessons.filter(l=>PR.done[l.key]).length,un=levelUnlocked(L.li),t=PR.tests[L.id];
     o+=`<button class="lvl${un?'':' locked'}" data-go="#/level/${L.li}"><span class="lnum">${L.li+1}</span><span class="stack" style="gap:2px;text-align:left"><b>${esc(L.title)}</b><small>${esc(L.sub)}</small>
      <span class="prog sm"><i style="width:${n/L.lessons.length*100}%"></i></span></span><span class="lst">${!un?'🔒':t>=70?'🏅':n+'/'+L.lessons.length}</span></button>`;
-    if(typeof cgS==='function'&&L.lessons.some(l=>l.key===cgFirstLes()))o+=cgSectionRow()}
+    if(typeof cgS==='function'&&L.lessons.some(l=>l.key===cgFirstLes()))o+=cgSectionRow();
+    if(typeof trSectionRow==='function'&&L.li===trFirstLi())o+=trSectionRow()}
   o+=`<p class="muted" style="font-size:13px">Progress sirf is phone/browser mein save hota hai. Internet ke bina bhi chalta hai (AI coach ko chhod ke).</p></div>`;app.innerHTML=o;
   setCtx({where:'Home screen (aaj ka plan)'})}
 /* Calculation Gym: course list mein apna section (Depth 1 ke lesson wale level ke turant baad) */
@@ -1377,6 +1469,7 @@ function vLevel(li){const L=COURSE[li],app=$('#app');if(!L)return go('#/');const
   L.lessons.forEach((les,lj)=>{const d=PR.done[les.key],u=lessonUnlocked(les),s=PR.stat[les.key];
     o+=`<button class="les${u?'':' locked'}" ${u?`data-go="#/lesson/${li}/${lj}"`:'disabled'}><span class="lck">${d?'✓':u?lj+1:'🔒'}</span><span class="stack" style="gap:2px;text-align:left"><b>${esc(les.title)}</b><small>${esc(les.sub||'')}${s&&s.ok+s.bad?` · ${Math.round(s.ok/(s.ok+s.bad)*100)}% sahi`:''}</small></span></button>`});
   if(L.test){const t=PR.tests[L.id];const u=unlockAll()||un&&L.lessons.every(l=>PR.done[l.key])||t!=null||li<PR.placed;
+    if(typeof trLevelHTML==='function')o+=trLevelHTML(L.lessons.filter(l=>l.tr).map(l=>l.key));
     {const r=typeof cgLevelRange==='function'&&cgLevelRange(L.id);if(r)o+=`<h2 class="cgh">🧠 Calculation Gym (is level ka hissa)</h2>`+cgSecHTML(r[0],r[1])}
     o+=`<button class="les test${u?'':' locked'}" ${u?`data-go="#/test/${li}"`:'disabled'}><span class="lck">${t>=70?'🏅':'📝'}</span><span class="stack" style="gap:2px;text-align:left"><b>Level test</b><small>${t!=null?'Best: '+t+'%':u?'70% par agla level khulega':'Pehle saare lessons poore karo'}</small></span></button>`}
   if(li%2===1){const t=PR.tests[L.id],ex=(PR.exam||{})[L.id],u=unlockAll()||t>=70||li<PR.placed;
